@@ -1,0 +1,68 @@
+name: CI
+on:
+  # always execute docker build when something is pushed to master or a maintenance branch
+  push:
+    branches:
+      - 'master'
+      - '[0-9]+.[1-9][0-9]*.x'
+  # in addition, execute for pull requests to those branches
+  pull_request:
+    branches:
+      - 'master'
+      - '[0-9]+.[1-9][0-9]*.x'
+defaults:
+  run:
+    shell: bash
+jobs:
+  prepare_ci_run:
+    name: Prepare CI Run
+    runs-on: ubuntu-20.04
+    outputs:
+      # metadata
+      GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
+      BRANCH: ${{ steps.extract_branch.outputs.BRANCH }}
+      BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
+      DATE: ${{ steps.get_datetime.outputs.DATE }}
+      TIME: ${{ steps.get_datetime.outputs.TIME }}
+      DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Extract branch name
+        id: extract_branch
+        # see https://github.com/keptn/gh-action-extract-branch-name for details
+        uses: keptn/gh-action-extract-branch-name@main
+
+      - name: Get current date and time
+        id: get_datetime
+        run: |
+          echo "::set-output name=DATE::$(date +'%Y%m%d')"
+          echo "::set-output name=TIME::$(date +'%H%M')"
+          echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
+
+  unit-tests-and-build:
+    name: Unit Tests and Build
+    needs: prepare_ci_run
+    runs-on: ubuntu-20.04
+    env:
+      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
+      VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
+      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Go 1.x
+        if: matrix.config.artifact != 'bridge2'
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Set up gotestsum
+        if: matrix.config.artifact != 'bridge2'
+        run: go install gotest.tools/gotestsum@v1.8.1
+
+      # TODO: Add build here

@@ -1,5 +1,6 @@
-# Keptn Lifecycle Controller
+# ⚠️This repository is still in experimental phase - we discourage any use in production. The code is provided with no expectation of support or maintenance.
 
+# Keptn Lifecycle Controller
 
 This repository hosts a prototype of the Keptn Lifecycle Controller.
 The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.

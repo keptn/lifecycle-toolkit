@@ -1,0 +1,16 @@
+domain: keptn.sh
+layout:
+- go.kubebuilder.io/v3
+projectName: operator
+repo: github.com/keptn-sandbox/lifecycle-controller/operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: Application
+  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  version: v1alpha1
+version: "3"

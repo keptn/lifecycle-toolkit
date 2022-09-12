@@ -18,7 +18,9 @@ package main
 
 import (
 	"flag"
+
 	"os"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -33,6 +35,7 @@ import (
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -72,6 +75,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "6b866dd9.keptn.sh",
+		CertDir:                "", //TODO
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
@@ -96,6 +100,11 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Application")
 		os.Exit(1)
 	}
+
+	//if !opts.Development {
+	mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
+	//}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

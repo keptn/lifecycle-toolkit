@@ -13,4 +13,8 @@ resources:
   kind: Application
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 version: "3"

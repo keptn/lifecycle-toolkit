@@ -29,9 +29,25 @@ Finally, Keptn Lifecycle Controller exposes Metrics and Traces of the whole Depl
 
 TBD
 
-## How to install
+## How to install (development)
 
-TBD
+**Prerequisites:**
+
+The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
+
+When cert-manager is installed, use the following commands to deploy the operator:
+
+```bash
+DOCKER_REGISTRY=<YOUR_DOCKER_REGISTRY>
+DOCKER_TAG=<YOUR_DOCKER_TAG>
+
+cd operator
+
+make docker-build docker-push IMG=${DOCKER_REGISTRY}/${DOCKER_TAG}:latest
+make deploy IMG=${DOCKER_REGISTRY}/${DOCKER_TAG}:latest
+```
+
 
 ## License
 

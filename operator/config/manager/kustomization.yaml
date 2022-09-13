@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: bacherfl/klo
-  newTag: latest2
+  newTag: latest

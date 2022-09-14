@@ -32,6 +32,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -46,6 +48,7 @@ type EventReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=events/finalizers,verbs=update
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;create;delete
+//+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -88,6 +91,13 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		}
 		event.Status.JobName = job.Name
 		event.Status.Phase = v1alpha1.EventRunning
+
+		k8sEvent := r.generateK8sEvent(event, "started")
+		if err := r.Create(ctx, k8sEvent); err != nil {
+			logger.Error(err, "Could not send started Event event")
+			return reconcile.Result{}, err
+		}
+
 		if err := r.Status().Update(ctx, event); err != nil {
 			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err
@@ -117,6 +127,13 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err
 		}
+
+		k8sEvent := r.generateK8sEvent(event, "finished")
+		if err := r.Create(ctx, k8sEvent); err != nil {
+			logger.Error(err, "Could not send finished Event event")
+			return reconcile.Result{}, err
+		}
+
 		return ctrl.Result{}, nil
 	}
 
@@ -158,4 +175,42 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 func (r *EventReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
+}
+
+func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType string) *corev1.Event {
+	return &corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName:    event.Name + "-" + eventType + "-",
+			Namespace:       event.Namespace,
+			ResourceVersion: "v1alpha1",
+			Labels: map[string]string{
+				"keptn.sh/application": event.Spec.Application,
+				"keptn.sh/service":     event.Spec.Service,
+				"keptn.sh/event":       event.Name,
+			},
+		},
+		InvolvedObject: v1.ObjectReference{
+			Kind:      event.Kind,
+			Namespace: event.Namespace,
+			Name:      event.Name,
+		},
+		Reason:  string(event.Status.Phase),
+		Message: "job is " + eventType,
+		Source: v1.EventSource{
+			Component: event.Kind,
+		},
+		Type: "Normal",
+		EventTime: metav1.MicroTime{
+			Time: time.Now().UTC(),
+		},
+		FirstTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		LastTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		Action:              eventType,
+		ReportingController: "event-controller",
+		ReportingInstance:   "event-controller",
+	}
 }

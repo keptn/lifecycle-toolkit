@@ -26,6 +26,13 @@ rules:
   - delete
   - get
 - apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - watch
+- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - applications

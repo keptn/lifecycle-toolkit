@@ -19,12 +19,11 @@ package controllers
 import (
 	"context"
 
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 )
 
 // ApplicationReconciler reconciles a Application object
@@ -49,9 +48,16 @@ type ApplicationReconciler struct {
 func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
 
-	logger.Info("reconciling resource")
+	logger.Info("reconciling application")
 
-	// TODO(user): your logic here
+	var application v1alpha1.Application
+	if err := r.Get(ctx, req.NamespacedName, &application); err != nil {
+		logger.Error(err, "unable to fetch Application")
+		// we'll ignore not-found errors, since they can't be fixed by an immediate
+		// requeue (we'll need to wait for a new notification), and we can get them
+		// on deleted requests.
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
 
 	return ctrl.Result{}, nil
 }
@@ -59,6 +65,6 @@ func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 // SetupWithManager sets up the controller with the Manager.
 func (r *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&lifecyclev1alpha1.Application{}).
+		For(&v1alpha1.Application{}).
 		Complete(r)
 }

@@ -103,12 +103,12 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			return reconcile.Result{}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
-	} else {
-		err = r.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: event.Status.JobName}, job)
-		if err != nil {
-			logger.Error(err, "Could not get Job")
-			return reconcile.Result{}, fmt.Errorf("could not fetch Job: %+v", err)
-		}
+	}
+
+	err = r.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: event.Status.JobName}, job)
+	if err != nil {
+		logger.Error(err, "Could not get Job")
+		return reconcile.Result{}, fmt.Errorf("could not fetch Job: %+v", err)
 	}
 
 	logger.Info("checking status")

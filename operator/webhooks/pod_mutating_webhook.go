@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	corev1 "k8s.io/api/core/v1"
@@ -38,6 +39,10 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
+	if a.isKeptnAnnotated(pod) {
+		pod.Spec.SchedulerName = "keptn-scheduler"
+	}
+
 	marshaledPod, err := json.Marshal(pod)
 	if err != nil {
 		return admission.Errored(http.StatusInternalServerError, err)
@@ -53,4 +58,14 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	a.decoder = d
 	return nil
+}
+
+func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
+	_, gotApplicationAnnotation := pod.Annotations["keptn.sh/application"]
+	_, gotServiceAnnotation := pod.Annotations["keptn.sh/application"]
+
+	if gotApplicationAnnotation && gotServiceAnnotation {
+		return true
+	}
+	return false
 }

@@ -32,7 +32,7 @@ type ApplicationSpec struct {
 
 // ApplicationStatus defines the observed state of Application
 type ApplicationStatus struct {
-	Status ApplicationPhase `json:",inline"`
+	Status ApplicationPhase `json:"status"`
 }
 
 type ApplicationPhase string

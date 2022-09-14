@@ -6,6 +6,26 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs/status
+  verbs:
+  - create
+  - delete
+  - get
+- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - applications
@@ -27,6 +47,58 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - applications/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - events
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - events/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - events/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - services/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - services/status
   verbs:
   - get
   - patch

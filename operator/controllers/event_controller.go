@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -31,7 +30,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	"github.com/go-logr/logr"
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -69,11 +67,6 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		logger.Error(nil, "Could not find Event")
 		return reconcile.Result{}, nil
 	}
-	out, err := json.MarshalIndent(event, "", "  ")
-	if err != nil {
-		logger.Info("err marshalling ", "err", err)
-	}
-	logger.Info(string(out))
 
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch Event: %+v", err)
@@ -88,23 +81,22 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	job := &batchv1.Job{}
 	if event.IsJobNotCreated() {
 		logger.Info("job does not exists, creating")
-		job, err = r.createJob(ctx, event, logger)
+		job, err = r.createJob(ctx, event)
 		if err != nil {
-			logger.Info("err1 creating job ", "err", err)
+			logger.Error(err, "Could not create Job")
 			return reconcile.Result{}, err
 		}
 		event.Status.JobName = job.Name
 		event.Status.Phase = v1alpha1.EventRunning
 		if err := r.Status().Update(ctx, event); err != nil {
-			logger.Info("err1 updating event ", "err", err)
+			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err
 		}
-		logger.Info("create job successful")
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	} else {
 		err = r.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: event.Status.JobName}, job)
 		if err != nil {
-			logger.Info("err1 getting job ", "err", err)
+			logger.Error(err, "Could not get Job")
 			return reconcile.Result{}, fmt.Errorf("could not fetch Job: %+v", err)
 		}
 	}
@@ -112,20 +104,17 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	logger.Info("checking status")
 
 	if job.Status.Active == 0 {
-		logger.Info("job is finished")
 		if job.Status.Failed == 0 {
-			logger.Info("job succeeded")
 			event.Status.Phase = v1alpha1.EventSucceeded
 		} else {
-			logger.Info("job failed")
 			event.Status.Phase = v1alpha1.EventFailed
 		}
 		if err := r.Delete(ctx, job); err != nil {
-			logger.Info("err1 deleting job ", "err", err)
+			logger.Error(err, "Could not delete Job")
 			return reconcile.Result{}, err
 		}
 		if err := r.Status().Update(ctx, event); err != nil {
-			logger.Info("err2 updating event ", "err", err)
+			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err
 		}
 		return ctrl.Result{}, nil
@@ -141,35 +130,28 @@ func (r *EventReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event, logger logr.Logger) (*batchv1.Job, error) {
-	logger.Info("create start")
+func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) (*batchv1.Job, error) {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
 				"keptn.sh/application": event.Spec.Application,
 				"keptn.sh/service":     event.Spec.Service,
 			},
-			Name:      event.Name + r.generateSuffix(),
+			Name:      event.Name + "-" + r.generateSuffix(),
 			Namespace: event.Namespace,
 		},
 		Spec: event.Spec.JobSpec,
 	}
 	for i := 0; i < 5; i++ {
-		logger.Info("loop ", "i", i)
 		if err := r.Create(ctx, job); err != nil {
-			logger.Info("loop err ", "err", err)
 			if errors.IsAlreadyExists(err) {
-				job.Name = event.Name + r.generateSuffix()
-				logger.Info("continuing")
+				job.Name = event.Name + "-" + r.generateSuffix()
 				continue
 			}
-			logger.Info("loop return err ", "err", err)
 			return nil, err
 		}
-		logger.Info("breaking")
 		break
 	}
-	logger.Info("create ok")
 	return job, nil
 }
 

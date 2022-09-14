@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/keptn-sandbox/lifecycle-controller/operator/apis/lifecycle.keptn.sh/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,7 +25,9 @@ import (
 
 // ApplicationSpec defines the desired state of Application
 type ApplicationSpec struct {
-	Services v1alpha1.Service
+	Services       []Service `json:"services,omitempty"`
+	PreDeployment  []string  `json:"pre-deployment,omitempty"`
+	PostDeployment []string  `json:"post-deployment,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application

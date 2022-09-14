@@ -61,8 +61,8 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 }
 
 func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
-	for annotation_name, _ := range pod.GetAnnotations() {
-		if annotation_name == "keptn.sh/application" || annotation_name == "keptn.sh/service" {
+	for annotationName, _ := range pod.GetAnnotations() {
+		if annotationName == "keptn.sh/application" || annotationName == "keptn.sh/service" {
 			return true
 		}
 	}

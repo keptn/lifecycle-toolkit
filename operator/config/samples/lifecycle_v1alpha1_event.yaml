@@ -3,4 +3,15 @@ kind: Event
 metadata:
   name: event-sample
 spec:
-  # TODO(user): Add fields here
+  service: Service1
+  application: Application1
+  job: 
+    backoffLimit: 5
+    activeDeadlineSeconds: 100
+    template:
+      spec:
+        containers:
+        - name: hello-world
+          image: ubuntu:latest
+          command: ["echo",  "Hello from the KLO"]
+        restartPolicy: Never

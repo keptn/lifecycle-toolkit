@@ -25,18 +25,31 @@ import (
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Service. Edit service_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	ApplicationName    string    `json:"application,omitempty"`
+	PreDeplymentChecks EventSpec `json:"preDeploymentChecks"`
 }
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase                   ServicePhase `json:"phase"`
+	PreDeploymentChecksName string       `json:"preDeploymentChecksName"`
 }
+
+type ServicePhase string
+
+const (
+	// ServicePending means the application has been accepted by the system, but one or more of its
+	// services has not been started.
+	ServicePending ServicePhase = "Pending"
+	// ServiceRunning means that all of the services have been started.
+	ServiceRunning ServicePhase = "Running"
+	// ServiceSucceeded means that all of the services have been finished successfully.
+	ServiceSucceeded ServicePhase = "Succeeded"
+	// ServiceFailed means that one or more pre-deployment checks was not successful and terminated.
+	ServiceFailed ServicePhase = "Failed"
+	// ServiceUnknown means that for some reason the state of the application could not be obtained.
+	ServiceUnknown ServicePhase = "Unknown"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
@@ -61,4 +74,18 @@ type ServiceList struct {
 
 func init() {
 	SchemeBuilder.Register(&Service{}, &ServiceList{})
+}
+
+func (s Service) IsCompleted() bool {
+	if s.Status.Phase == ServiceSucceeded || s.Status.Phase == ServiceFailed || s.Status.Phase == ServiceUnknown {
+		return true
+	}
+	return false
+}
+
+func (s Service) IsDeploymentCheckNotCreated() bool {
+	if s.Status.Phase == ServicePending || s.Status.PreDeploymentChecksName == "" {
+		return true
+	}
+	return false
 }

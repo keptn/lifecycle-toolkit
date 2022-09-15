@@ -1,6 +1,19 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: Service
 metadata:
-  name: service-sample
+  name: service-test
 spec:
-  # TODO(user): Add fields here
+  application: Application12
+  preDeploymentChecks:
+    service: service-test
+    application: Application12
+    job: 
+      backoffLimit: 5
+      activeDeadlineSeconds: 100
+      template:
+        spec:
+          containers:
+          - name: hello-world
+            image: ubuntu:latest
+            command: ["echo",  "Hello from the KLO and Flo"]
+          restartPolicy: Never

@@ -103,28 +103,6 @@ push-release-images: release-image.amd64 release-image.arm64v8
 	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
 	#DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_CONTROLLER_IMAGE) ;\
 
-.PHONY: update-vendor
-update-vendor:
-	hack/update-vendor.sh
-
-.PHONY: unit-test
-unit-test:
-	hack/unit-test.sh
-
-.PHONY: install-envtest
-install-envtest:
-	hack/install-envtest.sh
-
-.PHONY: integration-test
-integration-test: install-envtest
-	hack/integration-test.sh
-
-.PHONY: verify
-verify:
-	hack/verify-gofmt.sh
-	hack/verify-crdgen.sh
-	hack/verify-structured-logging.sh
-
 .PHONY: clean
 clean:
 	rm -rf ./bin

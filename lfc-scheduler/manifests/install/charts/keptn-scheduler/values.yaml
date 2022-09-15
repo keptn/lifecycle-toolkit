@@ -5,7 +5,7 @@
 
 scheduler:
   name: keptn-scheduler
-  image:  docker.io/annadreal/kube-scheduler:20220914-v0.24.3
+  image:  #we still do not have a register setup, edit the Makefile to point to your own register, run 'make push-release-images' copy the resulting image here
   namespace: keptn-scheduler
   replicaCount: 1
   leaderElect: false

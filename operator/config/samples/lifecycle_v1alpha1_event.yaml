@@ -1,0 +1,17 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: Event
+metadata:
+  name: event-sample
+spec:
+  service: Service12
+  application: Application12
+  job: 
+    backoffLimit: 5
+    activeDeadlineSeconds: 100
+    template:
+      spec:
+        containers:
+        - name: hello-world
+          image: ubuntu:latest
+          command: ["echo",  "Hello from the KLO and Flo"]
+        restartPolicy: Never

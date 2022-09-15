@@ -25,18 +25,29 @@ import (
 
 // ApplicationSpec defines the desired state of Application
 type ApplicationSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Application. Edit application_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Services       []Service `json:"services,omitempty"`
+	PreDeployment  []string  `json:"pre-deployment,omitempty"`
+	PostDeployment []string  `json:"post-deployment,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application
 type ApplicationStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Status ApplicationPhase `json:"status"`
 }
+
+type ApplicationPhase string
+
+const (
+	// ApplicationPending means the application has been accepted by the system, but one or more of its
+	// services has not been started.
+	ApplicationPending ApplicationPhase = "Pending"
+	// ApplicationRunning means that all of the services have been started.
+	ApplicationRunning ApplicationPhase = "Running"
+	// ApplicationFailed means that one or more pre-deployment checks was not successful and terminated.
+	ApplicationFailed ApplicationPhase = "Failed"
+	// ApplicationUnknown means that for some reason the state of the application could not be obtained.
+	ApplicationUnknown ApplicationPhase = "Unknown"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

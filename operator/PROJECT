@@ -17,4 +17,22 @@ resources:
     defaulting: true
     validation: true
     webhookVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: Service
+  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: Event
+  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  version: v1alpha1
 version: "3"

@@ -66,7 +66,6 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	event := &v1alpha1.Event{}
 	err := r.Get(ctx, req.NamespacedName, event)
 	if errors.IsNotFound(err) {
-		logger.Error(nil, "Could not find Event")
 		return reconcile.Result{}, nil
 	}
 

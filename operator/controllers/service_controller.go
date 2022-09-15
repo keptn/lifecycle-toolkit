@@ -66,7 +66,6 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	service := &v1alpha1.Service{}
 	err := r.Get(ctx, req.NamespacedName, service)
 	if errors.IsNotFound(err) {
-		logger.Error(err, "Could not find Service")
 		return reconcile.Result{}, nil
 	}
 
@@ -118,6 +117,11 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 			service.Status.Phase = v1alpha1.ServiceFailed
 		} else {
 			service.Status.Phase = v1alpha1.ServiceSucceeded
+		}
+
+		if err := r.Delete(ctx, preDeploymentCheksEvent); err != nil {
+			logger.Error(err, "Could not delete Event")
+			return reconcile.Result{}, err
 		}
 
 		if err := r.Status().Update(ctx, service); err != nil {

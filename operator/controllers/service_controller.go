@@ -104,6 +104,11 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if serviceRun.IsCompleted() {
 		service.Status.Phase = serviceRun.Status.Phase
 
+		if err := r.Delete(ctx, preDeploymentCheksEvent); err != nil {
+			logger.Error(err, "Could not delete Event")
+			return reconcile.Result{}, err
+		}
+
 		if err := r.Status().Update(ctx, service); err != nil {
 			logger.Error(err, "Could not update Service")
 			return reconcile.Result{}, err

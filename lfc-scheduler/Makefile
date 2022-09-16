@@ -21,9 +21,8 @@ LOCAL_IMAGE=kube-scheduler:latest
 LOCAL_CONTROLLER_IMAGE=controller:latest
 
 # RELEASE_REGISTRY is the container registry to push
-# into. The default is to push to the staging
-# registry, not production(k8s.gcr.io).
-RELEASE_REGISTRY?=docker.io/annadreal
+# into.
+RELEASE_REGISTRY?=
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
 RELEASE_IMAGE:=kube-scheduler:$(RELEASE_VERSION)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)

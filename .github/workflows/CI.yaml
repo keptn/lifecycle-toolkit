@@ -70,7 +70,9 @@ jobs:
       OPERATOR_ARTIFACT: ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
     strategy:
       matrix: 
-        artifacts: ${{ [env.LFC_SCHEDULER_ARTIFACT, env.OPERATOR_ARTIFACT] }}
+        artifacts: 
+          - ${{ env.LFC_SCHEDULER_ARTIFACT }}
+          - ${{ env.OPERATOR_ARTIFACT }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3

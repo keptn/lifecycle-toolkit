@@ -66,13 +66,11 @@ jobs:
       VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
-      LFC_SCHEDULER_ARTIFACT: ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
-      OPERATOR_ARTIFACT: ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
     strategy:
       matrix: 
         artifacts: 
-          - ${{ env.LFC_SCHEDULER_ARTIFACT }}
-          - ${{ env.OPERATOR_ARTIFACT }}
+          - ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
+          - ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3

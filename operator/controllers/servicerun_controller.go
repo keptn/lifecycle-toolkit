@@ -199,7 +199,7 @@ func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *v1alpha1.Service, se
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
 				"keptn.sh/application": serviceRun.Spec.ApplicationName,
-				"keptn.sh/serviceRun":  serviceRun.Name,
+				"keptn.sh/service":     serviceRun.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{

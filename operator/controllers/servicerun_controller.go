@@ -33,7 +33,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	batchv1 "k8s.io/api/batch/v1"
 )
 
 // ServiceRunRunReconciler reconciles a ServiceRunRun object
@@ -167,26 +166,26 @@ func (r *ServiceRunReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, serviceRun *v1alpha1.Service) (string, error) {
+func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, service *v1alpha1.Service) (string, error) {
 	event := &v1alpha1.Event{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
-				"keptn.sh/application": serviceRun.Spec.ApplicationName,
-				"keptn.sh/serviceRun":  serviceRun.Name,
+				"keptn.sh/application": service.Spec.ApplicationName,
+				"keptn.sh/service":     service.Name,
 			},
-			Name:      serviceRun.Name + "-" + r.generateSuffix(),
-			Namespace: serviceRun.Namespace,
+			Name:      service.Name + "-" + r.generateSuffix(),
+			Namespace: service.Namespace,
 		},
 		Spec: v1alpha1.EventSpec{
-			Service:     serviceRun.Name,
-			Application: serviceRun.Spec.ApplicationName,
-			JobSpec:     batchv1.JobSpec{},
+			Service:     service.Name,
+			Application: service.Spec.ApplicationName,
+			JobSpec:     service.Spec.PreDeplymentCheck.JobSpec,
 		},
 	}
 	for i := 0; i < 5; i++ {
 		if err := r.Create(ctx, event); err != nil {
 			if errors.IsAlreadyExists(err) {
-				event.Name = serviceRun.Name + "-" + r.generateSuffix()
+				event.Name = service.Name + "-" + r.generateSuffix()
 				continue
 			}
 			return "", err

@@ -8122,11 +8122,8 @@ spec:
             properties:
               phase:
                 type: string
-              preDeploymentChecksName:
-                type: string
             required:
             - phase
-            - preDeploymentChecksName
             type: object
         type: object
     served: true

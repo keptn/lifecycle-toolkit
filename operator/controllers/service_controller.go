@@ -28,7 +28,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
+	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ServiceReconciler reconciles a Service object
@@ -100,6 +102,33 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) error {
-
+	serviceRun := &v1alpha1.ServiceRun{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: map[string]string{
+				"keptn.sh/application": service.Spec.ApplicationName,
+				"keptn.sh/service":     service.Name,
+			},
+			Name:      service.Name + "-" + r.generateSuffix(),
+			Namespace: service.Namespace,
+		},
+		Spec: v1alpha1.ServiceRunSpec{
+			ServiceName: service.Name,
+		},
+	}
+	for i := 0; i < 5; i++ {
+		if err := r.Create(ctx, serviceRun); err != nil {
+			if errors.IsAlreadyExists(err) {
+				serviceRun.Name = service.Name + "-" + r.generateSuffix()
+				continue
+			}
+			return err
+		}
+		break
+	}
 	return nil
+}
+
+func (r *ServiceReconciler) generateSuffix() string {
+	uid := uuid.New().String()
+	return uid[:10]
 }

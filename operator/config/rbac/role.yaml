@@ -87,6 +87,38 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - service
+  verbs:
+  - get
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
   - services
   verbs:
   - create

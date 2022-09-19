@@ -1,15 +1,19 @@
 name: CI
 on:
-  # always execute docker build when something is pushed to master or a maintenance branch
+  # always execute docker build when something is pushed to main or a maintenance branch
   push:
     branches:
-      - 'master'
+      - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
   # in addition, execute for pull requests to those branches
   pull_request:
     branches:
-      - 'master'
+      - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+env:
+  GO_VERSION: "~1.18"
+  LFC_SCHEDULER_ARTIFACT: "lfc-scheduler"
+  OPERATOR_ARTIFACT: "operator"
 defaults:
   run:
     shell: bash
@@ -25,6 +29,8 @@ jobs:
       DATE: ${{ steps.get_datetime.outputs.DATE }}
       TIME: ${{ steps.get_datetime.outputs.TIME }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
+      LFC_SCHEDULER_ARTIFACT: ${{ steps.get_artifacts.outputs.LFC_SCHEDULER_ARTIFACT }}
+      OPERATOR_ARTIFACT: ${{ steps.get_artifacts.outputs.OPERATOR_ARTIFACT }}
 
     steps:
       - name: Check out code
@@ -41,6 +47,15 @@ jobs:
           echo "::set-output name=DATE::$(date +'%Y%m%d')"
           echo "::set-output name=TIME::$(date +'%H%M')"
           echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
+      
+      - name: Get artifacts
+        id: get_artifacts
+        env:
+          LFC_SCHEDULER_ARTIFACT: ${{ env.LFC_SCHEDULER_ARTIFACT }}
+          OPERATOR_ARTIFACT: ${{ env.OPERATOR_ARTIFACT }}
+        run: |
+          echo "::set-output name=LFC_SCHEDULER_ARTIFACT::$LFC_SCHEDULER_ARTIFACT"
+          echo "::set-output name=OPERATOR_ARTIFACT::$OPERATOR_ARTIFACT"
 
   unit-tests-and-build:
     name: Unit Tests and Build
@@ -51,18 +66,27 @@ jobs:
       VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
+      LFC_SCHEDULER_ARTIFACT: ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
+      OPERATOR_ARTIFACT: ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
+    strategy:
+      matrix: 
+        artifacts: ${{ [env.LFC_SCHEDULER_ARTIFACT, env.OPERATOR_ARTIFACT] }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        if: matrix.config.artifact != 'bridge2'
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Set up gotestsum
-        if: matrix.config.artifact != 'bridge2'
         run: go install gotest.tools/gotestsum@v1.8.1
+
+      - name: Test ${{ matrix.artifacts }}
+        working-directory: ./${{ matrix.artifacts}}
+        run: |
+          go mod download
+          gotestsum --no-color=false --format=testname -- -coverprofile=coverage.txt -covermode=atomic -v ./... 
 
       # TODO: Add build here

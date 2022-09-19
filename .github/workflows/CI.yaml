@@ -57,9 +57,37 @@ jobs:
           echo "::set-output name=LFC_SCHEDULER_ARTIFACT::$LFC_SCHEDULER_ARTIFACT"
           echo "::set-output name=OPERATOR_ARTIFACT::$OPERATOR_ARTIFACT"
 
-  unit-tests-and-build:
-    name: Unit Tests and Build
+  build:
+    name: Build
     needs: prepare_ci_run
+    runs-on: ubuntu-20.04
+    env:
+      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
+      VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
+      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
+    strategy:
+      matrix: 
+        artifacts: 
+          - ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
+          - ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build ${{ matrix.artifacts }}
+        working-directory: ./${{ matrix.artifacts}}
+        run: |
+          make build
+
+  test:
+    name: Unit Tests
+    needs: build
     runs-on: ubuntu-20.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}

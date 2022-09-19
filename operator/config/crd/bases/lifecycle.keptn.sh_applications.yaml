@@ -9699,8 +9699,11 @@ spec:
                       properties:
                         phase:
                           type: string
+                        serviceRunName:
+                          type: string
                       required:
                       - phase
+                      - serviceRunName
                       type: object
                   type: object
                 type: array

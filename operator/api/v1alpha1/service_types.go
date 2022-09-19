@@ -31,7 +31,8 @@ type ServiceSpec struct {
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	Phase ServiceRunPhase `json:"phase"`
+	Phase          ServiceRunPhase `json:"phase"`
+	ServiceRunName string          `json:"serviceRunName"`
 }
 
 //+kubebuilder:object:root=true

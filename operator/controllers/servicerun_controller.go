@@ -78,10 +78,6 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	service := &v1alpha1.Service{}
 	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.Spec.ServiceName, Namespace: serviceRun.Namespace}, service)
-	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
-	}
-
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
 	}

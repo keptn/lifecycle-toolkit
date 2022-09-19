@@ -23,6 +23,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	types "k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -76,13 +77,14 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if service.IsServiceRunNotCreated() {
 		logger.Info("Service Run does not exist, creating")
 
-		err := r.createServiceRun(ctx, service)
+		serviceRunName, err := r.createServiceRun(ctx, service)
 		if err != nil {
 			logger.Error(err, "Could not create ServiceRun")
 			return reconcile.Result{}, err
 		}
 
 		service.Status.Phase = v1alpha1.ServiceRunRunning
+		service.Status.ServiceRunName = serviceRunName
 
 		if err := r.Status().Update(ctx, service); err != nil {
 			logger.Error(err, "Could not update Service")
@@ -91,7 +93,25 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	return ctrl.Result{}, nil
+	logger.Info("Checking status")
+
+	serviceRun := &v1alpha1.ServiceRun{}
+	err = r.Get(ctx, types.NamespacedName{Name: service.Status.ServiceRunName, Namespace: service.Namespace}, serviceRun)
+	if err != nil {
+		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
+	}
+
+	if serviceRun.IsCompleted() {
+		service.Status.Phase = serviceRun.Status.Phase
+
+		if err := r.Status().Update(ctx, service); err != nil {
+			logger.Error(err, "Could not update Service")
+			return reconcile.Result{}, err
+		}
+		return ctrl.Result{}, nil
+	}
+
+	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -101,7 +121,7 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) error {
+func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (string, error) {
 	serviceRun := &v1alpha1.ServiceRun{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
@@ -121,11 +141,11 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 				serviceRun.Name = service.Name + "-" + r.generateSuffix()
 				continue
 			}
-			return err
+			return "", err
 		}
 		break
 	}
-	return nil
+	return serviceRun.Name, nil
 }
 
 func (r *ServiceReconciler) generateSuffix() string {

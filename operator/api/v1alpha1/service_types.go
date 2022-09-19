@@ -31,25 +31,8 @@ type ServiceSpec struct {
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	Phase                  ServicePhase `json:"phase"`
-	PreDeploymentCheckName string       `json:"preDeploymentChecksName"`
+	Phase ServiceRunPhase `json:"phase"`
 }
-
-type ServicePhase string
-
-const (
-	// ServicePending means the application has been accepted by the system, but one or more of its
-	// services has not been started.
-	ServicePending ServicePhase = "Pending"
-	// ServiceRunning means that all of the services have been started.
-	ServiceRunning ServicePhase = "Running"
-	// ServiceSucceeded means that all of the services have been finished successfully.
-	ServiceSucceeded ServicePhase = "Succeeded"
-	// ServiceFailed means that one or more pre-deployment checks was not successful and terminated.
-	ServiceFailed ServicePhase = "Failed"
-	// ServiceUnknown means that for some reason the state of the application could not be obtained.
-	ServiceUnknown ServicePhase = "Unknown"
-)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
@@ -77,14 +60,14 @@ func init() {
 }
 
 func (s Service) IsCompleted() bool {
-	if s.Status.Phase == ServiceSucceeded || s.Status.Phase == ServiceFailed || s.Status.Phase == ServiceUnknown {
+	if s.Status.Phase == ServiceRunSucceeded || s.Status.Phase == ServiceRunFailed || s.Status.Phase == ServiceRunUnknown {
 		return true
 	}
 	return false
 }
 
-func (s Service) IsDeploymentCheckNotCreated() bool {
-	if s.Status.Phase == ServicePending || s.Status.PreDeploymentCheckName == "" {
+func (s Service) IsServiceRunNotCreated() bool {
+	if s.Status.Phase == "" {
 		return true
 	}
 	return false

@@ -25,14 +25,14 @@ import (
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	ApplicationName    string    `json:"application,omitempty"`
-	PreDeplymentChecks EventSpec `json:"preDeploymentChecks"`
+	ApplicationName   string    `json:"application,omitempty"`
+	PreDeplymentCheck EventSpec `json:"preDeploymentChecks"`
 }
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	Phase                   ServicePhase `json:"phase"`
-	PreDeploymentChecksName string       `json:"preDeploymentChecksName"`
+	Phase                  ServicePhase `json:"phase"`
+	PreDeploymentCheckName string       `json:"preDeploymentChecksName"`
 }
 
 type ServicePhase string
@@ -84,7 +84,7 @@ func (s Service) IsCompleted() bool {
 }
 
 func (s Service) IsDeploymentCheckNotCreated() bool {
-	if s.Status.Phase == ServicePending || s.Status.PreDeploymentChecksName == "" {
+	if s.Status.Phase == ServicePending || s.Status.PreDeploymentCheckName == "" {
 		return true
 	}
 	return false

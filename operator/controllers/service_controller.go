@@ -82,13 +82,13 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if service.IsDeploymentCheckNotCreated() {
 		logger.Info("Deployment checks do not exist, creating")
 
-		preDeploymentCheksName, err := r.startPreDeploymentChecks(ctx, service)
+		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, service)
 		if err != nil {
 			logger.Error(err, "Could not start pre-deployment checks")
 			return reconcile.Result{}, err
 		}
 
-		service.Status.PreDeploymentChecksName = preDeploymentCheksName
+		service.Status.PreDeploymentCheckName = preDeploymentCheckName
 		service.Status.Phase = v1alpha1.ServiceRunning
 
 		k8sEvent := r.generateK8sEvent(service, "started")
@@ -166,7 +166,7 @@ func (r *ServiceReconciler) startPreDeploymentChecks(ctx context.Context, servic
 		Spec: v1alpha1.EventSpec{
 			Service:     service.Name,
 			Application: service.Spec.ApplicationName,
-			JobSpec:     service.Spec.PreDeplymentChecks.JobSpec,
+			JobSpec:     service.Spec.PreDeplymentCheck.JobSpec,
 		},
 	}
 	for i := 0; i < 5; i++ {
@@ -221,7 +221,7 @@ func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, eventTyp
 
 func (r *ServiceReconciler) getPreDeploymentChecksEvent(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.Event, error) {
 	event := &v1alpha1.Event{}
-	err := r.Get(ctx, types.NamespacedName{Name: service.Status.PreDeploymentChecksName, Namespace: service.Namespace}, event)
+	err := r.Get(ctx, types.NamespacedName{Name: service.Status.PreDeploymentCheckName, Namespace: service.Namespace}, event)
 	if errors.IsNotFound(err) {
 		return nil, err
 	}

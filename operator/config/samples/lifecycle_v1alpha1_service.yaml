@@ -5,8 +5,6 @@ metadata:
 spec:
   application: Application12
   preDeploymentChecks:
-    service: service-test
-    application: Application12
     job: 
       backoffLimit: 5
       activeDeadlineSeconds: 100

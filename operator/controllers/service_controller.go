@@ -104,7 +104,7 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	preDeploymentCheksEvent, err := r.getPreDeploymentChecksEvent(ctx, service)
+	preDeploymentChecksEvent, err := r.getPreDeploymentChecksEvent(ctx, service)
 	if err != nil {
 		logger.Error(err, "Could not retrieve pre-deployment checks Event")
 		return reconcile.Result{}, err
@@ -112,14 +112,14 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	logger.Info("Checking status")
 
-	if preDeploymentCheksEvent.IsCompleted() {
-		if preDeploymentCheksEvent.Status.Phase == v1alpha1.EventFailed {
+	if preDeploymentChecksEvent.IsCompleted() {
+		if preDeploymentChecksEvent.Status.Phase == v1alpha1.EventFailed {
 			service.Status.Phase = v1alpha1.ServiceFailed
 		} else {
 			service.Status.Phase = v1alpha1.ServiceSucceeded
 		}
 
-		if err := r.Delete(ctx, preDeploymentCheksEvent); err != nil {
+		if err := r.Delete(ctx, preDeploymentChecksEvent); err != nil {
 			logger.Error(err, "Could not delete Event")
 			return reconcile.Result{}, err
 		}

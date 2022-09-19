@@ -148,32 +148,6 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-// func (r *ServiceReconciler) createDeployment(ctx context.Context, service *v1alpha1.Service) (*appsv1.Deployment, error) {
-// 	deployment := &appsv1.Deployment{
-// 		ObjectMeta: metav1.ObjectMeta{
-// 			Annotations: map[string]string{
-// 				"keptn.sh/application": service.Spec.ApplicationName,
-// 				"keptn.sh/service":     service.Name,
-// 			},
-// 			Name:      service.Name + "-" + r.generateSuffix(),
-// 			Namespace: service.Namespace,
-// 			Labels:    service.Spec.DeploymentSpec.Selector.MatchLabels,
-// 		},
-// 		Spec: service.Spec.DeploymentSpec,
-// 	}
-// 	for i := 0; i < 5; i++ {
-// 		if err := r.Create(ctx, deployment); err != nil {
-// 			if errors.IsAlreadyExists(err) {
-// 				deployment.Name = service.Name + "-" + r.generateSuffix()
-// 				continue
-// 			}
-// 			return nil, err
-// 		}
-// 		break
-// 	}
-// 	return deployment, nil
-// }
-
 func (r *ServiceReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
@@ -254,21 +228,3 @@ func (r *ServiceReconciler) getPreDeploymentChecksEvent(ctx context.Context, ser
 
 	return event, nil
 }
-
-// func (r *ServiceReconciler) isDeploymentRunning(d *appsv1.Deployment) bool {
-// 	for _, c := range d.Status.Conditions {
-// 		if c.Type == appsv1.DeploymentAvailable && c.Status == corev1.ConditionTrue {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
-
-// func (r *ServiceReconciler) hasDeploymentFailed(d *appsv1.Deployment) bool {
-// 	for _, c := range d.Status.Conditions {
-// 		if c.Type == appsv1.DeploymentReplicaFailure {
-// 			return false
-// 		}
-// 	}
-// 	return false
-// }

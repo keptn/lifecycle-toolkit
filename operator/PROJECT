@@ -41,7 +41,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: KeptnServiceRun
+  kind: ServiceRun
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 version: "3"

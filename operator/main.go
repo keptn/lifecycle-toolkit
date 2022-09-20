@@ -101,7 +101,7 @@ func main() {
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Application")
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
 	}
 
@@ -113,14 +113,14 @@ func main() {
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Service")
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnComponent")
 		os.Exit(1)
 	}
 	if err = (&controllers.KeptnEventReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Event")
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvent")
 		os.Exit(1)
 	}
 	if err = (&controllers.ServiceRunReconciler{

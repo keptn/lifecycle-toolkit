@@ -41,6 +41,14 @@ jobs:
         # see https://github.com/keptn/gh-action-extract-branch-name for details
         uses: keptn/gh-action-extract-branch-name@main
 
+      - name: Print Branch name
+        env:
+          branch: ${{ steps.extract_branch.outputs.BRANCH }}
+          branch_slug: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
+        run: |
+          echo $branch
+          echo $branch_slug
+
       - name: Get current date and time
         id: get_datetime
         run: |

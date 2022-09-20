@@ -12,8 +12,15 @@ on:
       - '[0-9]+.[1-9][0-9]*.x'
 env:
   GO_VERSION: "~1.18"
-  LFC_SCHEDULER_ARTIFACT: "lfc-scheduler"
-  OPERATOR_ARTIFACT: "operator"
+
+  FUNCTIONS_RUNTIME_SVC_ARTIFACT: "functions-runtime"
+  FUNCTIONS_RUNTIME_SVC_FOLDER: "functions-runtime/"
+  
+  LFC_SCHEDULER_SVC_ARTIFACT: "lfc-scheduler"
+  LFC_SCHEDULER_SVC_FOLDER: "lfc-scheduler/"
+
+  OPERATOR_SVC_ARTIFACT: "operator"
+  OPERATOR_SVC_FOLDER: "operator/"
 defaults:
   run:
     shell: bash
@@ -23,6 +30,7 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       # metadata
+      BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
       GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
       BRANCH: ${{ steps.extract_branch.outputs.BRANCH }}
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
@@ -35,6 +43,26 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Get changed files
+        id: changed_files
+        uses: jitterbit/get-changed-files@v1
+        continue-on-error: true
+
+      - name: Prepare for build-everything run
+        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything'))
+        id: build_everything
+        run: |
+          BUILD_EVERYTHING=true
+          echo "##[set-output name=BUILD_EVERYTHING;]$(echo ${BUILD_EVERYTHING})"
+
+      - name: Prepare artifacts with changes
+        id: check_modified_files
+        env:
+          BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
+          GITHUB_REF_PROTECTED: ${{ env.GITHUB_REF_PROTECTED }}
+        run: |
+          ./gh-actions-scripts/prepare_changed_artifacts.sh "${{ steps.changed_files.outputs.all }}"
 
       - name: Extract branch name
         id: extract_branch
@@ -66,10 +94,7 @@ jobs:
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: 
-        artifacts: 
-          - ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
-          - ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
+      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -79,8 +104,8 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Build ${{ matrix.artifacts }}
-        working-directory: ./${{ matrix.artifacts}}
+      - name: Build ${{ matrix.config.artifact }}
+        working-directory: ./${{ matrix.config.artifact }}
         run: |
           make build
 
@@ -89,10 +114,7 @@ jobs:
     needs: prepare_ci_run
     runs-on: ubuntu-20.04
     strategy:
-      matrix: 
-        artifacts: 
-          - ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
-          - ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
+      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -105,8 +127,8 @@ jobs:
       - name: Set up gotestsum
         run: go install gotest.tools/gotestsum@v1.8.1
 
-      - name: Test ${{ matrix.artifacts }}
-        working-directory: ./${{ matrix.artifacts }}
+      - name: Test ${{ matrix.config.artifact }}
+        working-directory: ./${{ matrix.config.artifact }}
         run: |
           go mod download
           gotestsum --no-color=false --format=testname -- -coverprofile=coverage.txt -covermode=atomic -v ./... 
@@ -120,10 +142,7 @@ jobs:
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: 
-        artifacts: 
-          - ${{ needs.prepare_ci_run.outputs.LFC_SCHEDULER_ARTIFACT }}
-          - ${{ needs.prepare_ci_run.outputs.OPERATOR_ARTIFACT }}
+      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3  
@@ -150,14 +169,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-multi-buildx
 
-    - name: "Docker Build keptn-lifecycle-controller/${{ matrix.artifacts }}"
+    - name: "Docker Build keptn-lifecycle-controller/${{ matrix.config.artifact }}"
       id: docker_build_image
       uses: docker/build-push-action@v3
       with:
-        context: ${{ matrix.artifacts }}
+        context: ${{ matrix.config.working_dir }}
         tags: |
-          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}
-          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}.${{ env.DATETIME }}
+          ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}
+          ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}.${{ env.DATETIME }}
         push: true
         pull: true
         builder: ${{ steps.buildx.outputs.name }}

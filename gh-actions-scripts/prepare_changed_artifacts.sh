@@ -26,24 +26,24 @@ if [ "$BUILD_EVERYTHING" != 'true' ]; then
   echo "Preparing for build of changed artifacts..."
   artifacts=(
     "$FUNCTIONS_RUNTIME_SVC_ARTIFACT_PREFIX"
-    "$LFC_SCHEDULER_ARTIFACT_PREFIX"
-    "$OPERATOR_ARTIFACT_PREFIX"
+    "$LFC_SCHEDULER_SVC_ARTIFACT_PREFIX"
+    "$OPERATOR_SVC_ARTIFACT_PREFIX"
   )
 elif [ "$BUILD_EVERYTHING" == 'true' ] && [ "$GITHUB_REF_PROTECTED" == 'true' ]; then
   # This is a build-everything build from a protected branch, i.e. master or a maintenance branch, we should run bridge tests in this case
   echo "Preparing for master/maintenance branch build..."
   artifacts=(
     "$FUNCTIONS_RUNTIME_SVC_ARTIFACT_PREFIX"
-    "$LFC_SCHEDULER_ARTIFACT_PREFIX"
-    "$OPERATOR_ARTIFACT_PREFIX"
+    "$LFC_SCHEDULER_SVC_ARTIFACT_PREFIX"
+    "$OPERATOR_SVC_ARTIFACT_PREFIX"
   )
 elif [ "$BUILD_EVERYTHING" == 'true' ] && [ "$GITHUB_REF_PROTECTED" != 'true' ]; then
   # This is a build-everything build for integration tests, which skips bridge code style and UI tests
   echo "Preparing for build-everything build..."
   artifacts=(
     "$FUNCTIONS_RUNTIME_SVC_ARTIFACT_PREFIX"
-    "$LFC_SCHEDULER_ARTIFACT_PREFIX"
-    "$OPERATOR_ARTIFACT_PREFIX"
+    "$LFC_SCHEDULER_SVC_ARTIFACT_PREFIX"
+    "$OPERATOR_SVC_ARTIFACT_PREFIX"
   )
 fi
 

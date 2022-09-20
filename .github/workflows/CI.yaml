@@ -13,12 +13,15 @@ on:
 env:
   GO_VERSION: "~1.18"
 
+  FUNCTIONS_RUNTIME_SVC_ARTIFACT_PREFIX: "FUNCTIONS_RUNTIME_SVC"
   FUNCTIONS_RUNTIME_SVC_ARTIFACT: "functions-runtime"
   FUNCTIONS_RUNTIME_SVC_FOLDER: "functions-runtime/"
   
+  LFC_SCHEDULER_SVC_ARTIFACT_PREFIX: "LFC_SCHEDULER_SVC"
   LFC_SCHEDULER_SVC_ARTIFACT: "lfc-scheduler"
   LFC_SCHEDULER_SVC_FOLDER: "lfc-scheduler/"
 
+  OPERATOR_SVC_ARTIFACT_PREFIX: "OPERATOR_SVC"
   OPERATOR_SVC_ARTIFACT: "operator"
   OPERATOR_SVC_FOLDER: "operator/"
 defaults:
@@ -75,15 +78,6 @@ jobs:
           echo "::set-output name=DATE::$(date +'%Y%m%d')"
           echo "::set-output name=TIME::$(date +'%H%M')"
           echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
-      
-      - name: Get artifacts
-        id: get_artifacts
-        env:
-          LFC_SCHEDULER_ARTIFACT: ${{ env.LFC_SCHEDULER_ARTIFACT }}
-          OPERATOR_ARTIFACT: ${{ env.OPERATOR_ARTIFACT }}
-        run: |
-          echo "::set-output name=LFC_SCHEDULER_ARTIFACT::$LFC_SCHEDULER_ARTIFACT"
-          echo "::set-output name=OPERATOR_ARTIFACT::$OPERATOR_ARTIFACT"
 
   build:
     name: Build

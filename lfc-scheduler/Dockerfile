@@ -12,17 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ARG ARCH
-FROM golang:1.18.0
+FROM golang:1.18.0 as builder
 
 WORKDIR /lfc-scheduler
-COPY . .
+
+COPY go.mod go.sum Makefile ./
+
+RUN go mod download
+
+COPY cmd pkg ./
+
 ARG ARCH
 ARG RELEASE_VERSION
 RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
 
 FROM $ARCH/alpine:3.16
 
-COPY --from=0 /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
+COPY --from=builder /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
 
 WORKDIR /bin
 CMD ["kube-scheduler"]

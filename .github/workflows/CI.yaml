@@ -151,7 +151,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-multi-buildx
 
-    - name: "Docker Build keptn/${{ matrix.artifacts }}"
+    - name: "Docker Build keptn-lifecycle-controller/${{ matrix.artifacts }}"
       id: docker_build_image
       uses: docker/build-push-action@v3
       with:

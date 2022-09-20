@@ -14,7 +14,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -53,7 +52,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	if a.isKeptnAnnotated(pod) {
 		//pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Pod annotaded, creating ServiceRun")
-		if err := a.handleServiceRun(ctx, logger, pod); err != nil {
+		if err := a.handleServiceRun(ctx, logger, pod, req.Namespace); err != nil {
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 	}
@@ -85,7 +84,7 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
 	return false
 }
 
-func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.Logger, pod *corev1.Pod) error {
+func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 	serviceName, _ := pod.Annotations["keptn.sh/service"]
 
 	logger.Info("Service name", "service", serviceName)
@@ -101,7 +100,7 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 	logger.Info("ResplicaSerUID", "uid", replicaSetUID)
 
 	serviceRunList := &v1alpha1.ServiceRunList{}
-	_ = r.Client.List(ctx, serviceRunList, &client.ListOptions{Namespace: pod.Namespace, FieldSelector: fields.OneTermEqualSelector("spec.replicaSetUID", string(replicaSetUID))})
+	_ = r.Client.List(ctx, serviceRunList, &client.ListOptions{Namespace: namespace})
 	// if err != nil {
 	// 	logger.Error(err, "Cannot fetch ServiceRunList")
 	// 	return fmt.Errorf("could not fetch ServiceRunList: %+v", err)
@@ -113,7 +112,7 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 		logger.Info("Searching for service")
 
 		service := &v1alpha1.Service{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: pod.Namespace}, service)
+		err := r.Client.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: namespace}, service)
 		if err != nil {
 			logger.Error(err, "Cannot fetch Service")
 			return fmt.Errorf("could not fetch Service: %+v", err)

@@ -41,14 +41,6 @@ jobs:
         # see https://github.com/keptn/gh-action-extract-branch-name for details
         uses: keptn/gh-action-extract-branch-name@main
 
-      - name: Print Branch name
-        env:
-          branch: ${{ steps.extract_branch.outputs.BRANCH }}
-          branch_slug: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
-        run: |
-          echo $branch
-          echo $branch_slug
-
       - name: Get current date and time
         id: get_datetime
         run: |
@@ -126,7 +118,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
@@ -166,8 +157,8 @@ jobs:
       with:
         context: ${{ matrix.artifacts }}
         tags: |
-          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.VERSION }}
-          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.VERSION }}.${{ env.DATETIME }}
+          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}
+          ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}.${{ env.DATETIME }}
         build-args: |
           version=${{ env.VERSION }}
           buildTime=${{ env.DATETIME }}

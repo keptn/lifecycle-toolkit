@@ -1,13 +1,13 @@
-# permissions for end users to edit applications.
+# permissions for end users to edit events.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: application-editor-role
+  name: keptnevent-editor-role
 rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - applications
+  - keptnevents
   verbs:
   - create
   - delete
@@ -19,6 +19,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - applications/status
+  - keptnevents/status
   verbs:
   - get

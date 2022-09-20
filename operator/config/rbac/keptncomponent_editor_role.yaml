@@ -2,12 +2,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: service-editor-role
+  name: keptncomponent-editor-role
 rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services
+  - keptncomponents
   verbs:
   - create
   - delete
@@ -19,6 +19,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services/status
+  - keptncomponents/status
   verbs:
   - get

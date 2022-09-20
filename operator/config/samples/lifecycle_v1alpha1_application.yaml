@@ -1,5 +1,5 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
-kind: Application
+kind: KeptnApp
 metadata:
   name: application-sample
 spec:

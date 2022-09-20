@@ -23,13 +23,13 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// ServiceSpec defines the desired state of Service
+// KeptnComponentSpec defines the desired state of the KeptnComponent
 type KeptnComponentSpec struct {
 	ApplicationName    string         `json:"application,omitempty"`
 	PreDeploymentCheck KeptnEventSpec `json:"preDeploymentCheck"`
 }
 
-// ServiceStatus defines the observed state of Service
+// KeptnComponentStatus defines the observed state of the KeptnComponent
 type KeptnComponentStatus struct {
 	Phase          ServiceRunPhase `json:"phase"`
 	ServiceRunName string          `json:"serviceRunName"`
@@ -38,7 +38,7 @@ type KeptnComponentStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Service is the Schema for the services API
+// KeptnComponent is the Schema for the keptncomponent API
 type KeptnComponent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -49,7 +49,7 @@ type KeptnComponent struct {
 
 //+kubebuilder:object:root=true
 
-// ServiceList contains a list of Service
+// KeptnComponentList contains a list of KeptnComponents
 type KeptnComponentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

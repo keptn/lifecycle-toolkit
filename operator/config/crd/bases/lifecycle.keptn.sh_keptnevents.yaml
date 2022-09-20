@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Event is the Schema for the events API
+        description: KeptnEvent is the Schema for the keptnevents API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,7 +33,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: EventSpec defines the desired state of Event
+            description: KeptnEventSpec defines the desired state of KeptnEvent
             properties:
               application:
                 type: string
@@ -7661,7 +7661,7 @@ spec:
                 type: object
             type: object
           status:
-            description: EventStatus defines the observed state of Event
+            description: KeptnEventStatus defines the observed state of KeptnEvent
             properties:
               jobName:
                 type: string

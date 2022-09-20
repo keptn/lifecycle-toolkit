@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Service is the Schema for the services API
+        description: KeptnComponent is the Schema for the keptncomponent API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,12 +33,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: ServiceSpec defines the desired state of Service
+            description: KeptnComponentSpec defines the desired state of the KeptnComponent
             properties:
               application:
                 type: string
               preDeploymentCheck:
-                description: EventSpec defines the desired state of Event
+                description: KeptnEventSpec defines the desired state of KeptnEvent
                 properties:
                   application:
                     type: string
@@ -8118,7 +8118,7 @@ spec:
             - preDeploymentCheck
             type: object
           status:
-            description: ServiceStatus defines the observed state of Service
+            description: KeptnComponentStatus defines the observed state of the KeptnComponent
             properties:
               phase:
                 type: string

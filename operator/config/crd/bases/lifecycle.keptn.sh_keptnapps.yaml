@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Application is the Schema for the applications API
+        description: KeptnApp is the Schema for the keptapps API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,11 +33,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: ApplicationSpec defines the desired state of Application
+            description: KeptnAppSpec defines the desired state of KeptnApp
             properties:
               components:
                 items:
-                  description: Service is the Schema for the services API
+                  description: KeptnComponent is the Schema for the keptncomponent
+                    API
                   properties:
                     apiVersion:
                       description: 'APIVersion defines the versioned schema of this
@@ -54,12 +55,14 @@ spec:
                     metadata:
                       type: object
                     spec:
-                      description: ServiceSpec defines the desired state of Service
+                      description: KeptnComponentSpec defines the desired state of
+                        the KeptnComponent
                       properties:
                         application:
                           type: string
                         preDeploymentCheck:
-                          description: EventSpec defines the desired state of Event
+                          description: KeptnEventSpec defines the desired state of
+                            KeptnEvent
                           properties:
                             application:
                               type: string
@@ -9687,7 +9690,8 @@ spec:
                       - preDeploymentCheck
                       type: object
                     status:
-                      description: ServiceStatus defines the observed state of Service
+                      description: KeptnComponentStatus defines the observed state
+                        of the KeptnComponent
                       properties:
                         phase:
                           type: string
@@ -9709,7 +9713,7 @@ spec:
                 type: array
             type: object
           status:
-            description: ApplicationStatus defines the observed state of Application
+            description: KeptnAppStatus defines the observed state of KeptnApp
             properties:
               status:
                 type: string

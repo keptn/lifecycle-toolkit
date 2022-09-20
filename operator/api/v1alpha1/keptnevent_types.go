@@ -24,14 +24,14 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// EventSpec defines the desired state of Event
+// KeptnEventSpec defines the desired state of KeptnEvent
 type KeptnEventSpec struct {
 	Component   string          `json:"component,omitempty"`
 	Application string          `json:"application,omitempty"`
 	JobSpec     batchv1.JobSpec `json:"job,omitempty"`
 }
 
-// EventStatus defines the observed state of Event
+// KeptnEventStatus defines the observed state of KeptnEvent
 type KeptnEventStatus struct {
 	Phase   KeptnEventPhase `json:"phase"`
 	JobName string          `json:"jobName"`
@@ -56,7 +56,7 @@ const (
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Event is the Schema for the events API
+// KeptnEvent is the Schema for the keptnevents API
 type KeptnEvent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

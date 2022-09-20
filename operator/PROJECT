@@ -1,7 +1,7 @@
 domain: keptn.sh
 layout:
 - go.kubebuilder.io/v3
-projectName: operator
+projectName: keptn-lifecycle-operator
 repo: github.com/keptn-sandbox/lifecycle-controller/operator
 resources:
 - api:

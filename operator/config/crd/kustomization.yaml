@@ -2,9 +2,9 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/lifecycle.keptn.sh_applications.yaml
-- bases/lifecycle.keptn.sh_services.yaml
-- bases/lifecycle.keptn.sh_events.yaml
+- bases/lifecycle.keptn.sh_keptnapps.yaml
+- bases/lifecycle.keptn.sh_keptncomponents.yaml
+- bases/lifecycle.keptn.sh_keptnevents.yaml
 - bases/lifecycle.keptn.sh_serviceruns.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 

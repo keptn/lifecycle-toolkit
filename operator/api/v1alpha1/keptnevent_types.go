@@ -67,15 +67,15 @@ type KeptnEvent struct {
 
 //+kubebuilder:object:root=true
 
-// EventList contains a list of Event
-type EventList struct {
+// KeptnEventList contains a list of Event
+type KeptnEventList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnEvent `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KeptnEvent{}, &EventList{})
+	SchemeBuilder.Register(&KeptnEvent{}, &KeptnEventList{})
 }
 
 func (e KeptnEvent) IsCompleted() bool {

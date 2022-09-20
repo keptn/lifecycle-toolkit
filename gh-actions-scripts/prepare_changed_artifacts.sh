@@ -51,7 +51,7 @@ echo "Changed files:"
 echo "$CHANGED_FILES"
 matrix_config='{"config":['
 # shellcheck disable=SC2016
-build_artifact_template='{"artifact":$artifact,"working-dir":$working_dir,"should-run":$should_run,"should-push-image":$should_push_image}'
+build_artifact_template='{"artifact":$artifact,"working-dir":$working_dir}'
 
 # Add all changed artifacts to the build matrix
 echo "Checking changed files against artifacts now"
@@ -64,14 +64,6 @@ for changed_file in $CHANGED_FILES; do
     artifact_fullname="${artifact}_ARTIFACT"
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
-    should_push_image="${artifact}_SHOULD_PUSH_IMAGE"
-
-    # Check if this artifact needs an image to be pushed
-    if [ "${!should_push_image}" != "false" ]; then
-      should_push_image="true"
-    else
-      should_push_image="false"
-    fi
 
     if [[ ( $changed_file == ${!artifact_folder}* ) && ( "${!should_build_artifact}" != 'true' ) ]]; then
       echo "Found changes in $artifact"
@@ -82,8 +74,6 @@ for changed_file in $CHANGED_FILES; do
       artifact_config=$(jq -j -n \
         --arg artifact "${!artifact_fullname}" \
         --arg working_dir "${!artifact_folder}" \
-        --arg should_run "${!should_build_artifact}" \
-        --arg should_push_image "${should_push_image}" \
         "$build_artifact_template"
       )
 
@@ -103,14 +93,6 @@ if [[ $BUILD_EVERYTHING == 'true' ]]; then
     artifact_fullname="${artifact}_ARTIFACT"
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
-    should_push_image="${artifact}_SHOULD_PUSH_IMAGE"
-
-    # Check if this artifact needs an image to be pushed
-    if [ "${!should_push_image}" != "false" ]; then
-      should_push_image="true"
-    else
-      should_push_image="false"
-    fi
 
     if [[ "${!should_build_artifact}" != 'true' ]]; then
       # Render build matrix string for the current artifact
@@ -118,8 +100,6 @@ if [[ $BUILD_EVERYTHING == 'true' ]]; then
       artifact_config=$(jq -j -n \
         --arg artifact "${!artifact_fullname}" \
         --arg working_dir "${!artifact_folder}" \
-        --arg should_run "false" \
-        --arg should_push_image "${should_push_image}" \
         "$build_artifact_template"
       )
 

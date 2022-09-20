@@ -25,3 +25,87 @@ webhooks:
     resources:
     - pods
   sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-v1-pod
+  failurePolicy: Fail
+  name: mpod.keptn.sh
+  rules:
+  - apiGroups:
+    - lifecycle.keptn.sh
+    apiVersions:
+    - v1
+    operations:
+    - get
+    resources:
+    - service
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-v1-pod
+  failurePolicy: Fail
+  name: mpod.keptn.sh
+  rules:
+  - apiGroups:
+    - lifecycle.keptn.sh
+    apiVersions:
+    - v1
+    operations:
+    - get
+    - list
+    - watch
+    - CREATE
+    - UPDATE
+    - patch
+    - DELETE
+    resources:
+    - serviceruns
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-v1-pod
+  failurePolicy: Fail
+  name: mpod.keptn.sh
+  rules:
+  - apiGroups:
+    - lifecycle.keptn.sh
+    apiVersions:
+    - v1
+    operations:
+    - get
+    - UPDATE
+    - patch
+    resources:
+    - serviceruns/status
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-v1-pod
+  failurePolicy: Fail
+  name: mpod.keptn.sh
+  rules:
+  - apiGroups:
+    - lifecycle.keptn.sh
+    apiVersions:
+    - v1
+    operations:
+    - UPDATE
+    resources:
+    - serviceruns/finalizers
+  sideEffects: None

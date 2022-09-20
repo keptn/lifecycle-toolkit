@@ -18,16 +18,12 @@ package controllers
 
 import (
 	"context"
-	"fmt"
-	"time"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	types "k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -54,64 +50,64 @@ type ServiceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger := log.FromContext(ctx)
+	_ = log.FromContext(ctx)
 
-	logger.Info("Searching for service")
+	// logger.Info("Searching for service")
 
-	service := &v1alpha1.Service{}
-	err := r.Get(ctx, req.NamespacedName, service)
-	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
-	}
+	// service := &v1alpha1.Service{}
+	// err := r.Get(ctx, req.NamespacedName, service)
+	// if errors.IsNotFound(err) {
+	// 	return reconcile.Result{}, nil
+	// }
 
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
-	}
+	// if err != nil {
+	// 	return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
+	// }
 
-	if service.IsCompleted() {
-		return reconcile.Result{}, nil
-	}
+	// if service.IsCompleted() {
+	// 	return reconcile.Result{}, nil
+	// }
 
-	logger.Info("Reconciling Service", "service", service.Name)
+	// logger.Info("Reconciling Service", "service", service.Name)
 
-	if service.IsServiceRunNotCreated() {
-		logger.Info("Service Run does not exist, creating")
+	// if service.IsServiceRunNotCreated() {
+	// 	logger.Info("Service Run does not exist, creating")
 
-		serviceRunName, err := r.createServiceRun(ctx, service)
-		if err != nil {
-			logger.Error(err, "Could not create ServiceRun")
-			return reconcile.Result{}, err
-		}
+	// 	serviceRunName, err := r.createServiceRun(ctx, service)
+	// 	if err != nil {
+	// 		logger.Error(err, "Could not create ServiceRun")
+	// 		return reconcile.Result{}, err
+	// 	}
 
-		service.Status.Phase = v1alpha1.ServiceRunRunning
-		service.Status.ServiceRunName = serviceRunName
+	// 	service.Status.Phase = v1alpha1.ServiceRunRunning
+	// 	service.Status.ServiceRunName = serviceRunName
 
-		if err := r.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
-			return reconcile.Result{}, err
-		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
-	}
+	// 	if err := r.Status().Update(ctx, service); err != nil {
+	// 		logger.Error(err, "Could not update Service")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+	// }
 
-	logger.Info("Checking status")
+	// logger.Info("Checking status")
 
-	serviceRun := &v1alpha1.ServiceRun{}
-	err = r.Get(ctx, types.NamespacedName{Name: service.Status.ServiceRunName, Namespace: service.Namespace}, serviceRun)
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
-	}
+	// serviceRun := &v1alpha1.ServiceRun{}
+	// err = r.Get(ctx, types.NamespacedName{Name: service.Status.ServiceRunName, Namespace: service.Namespace}, serviceRun)
+	// if err != nil {
+	// 	return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
+	// }
 
-	if serviceRun.IsCompleted() {
-		service.Status.Phase = serviceRun.Status.Phase
+	// if serviceRun.IsCompleted() {
+	// 	service.Status.Phase = serviceRun.Status.Phase
 
-		if err := r.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
-			return reconcile.Result{}, err
-		}
-		return ctrl.Result{}, nil
-	}
+	// 	if err := r.Status().Update(ctx, service); err != nil {
+	// 		logger.Error(err, "Could not update Service")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// 	return ctrl.Result{}, nil
+	// }
 
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -25,7 +26,8 @@ import (
 
 // ServiceRunSpec defines the desired state of ServiceRun
 type ServiceRunSpec struct {
-	ServiceName string `json:"serviceName,omitempty"`
+	ServiceName   string    `json:"serviceName,omitempty"`
+	ReplicaSetUID types.UID `json:"replicaSetUID,omitempty"`
 }
 
 type ServiceRunPhase string

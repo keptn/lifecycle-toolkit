@@ -2,4 +2,4 @@
 
 set -eu
 
-deno run --allow-net --allow-env=DATA "$SCRIPT"
+deno run --allow-net --allow-env=DATA,SECURE_DATA "$SCRIPT"

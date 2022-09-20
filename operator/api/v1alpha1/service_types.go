@@ -26,7 +26,7 @@ import (
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
 	ApplicationName   string    `json:"application,omitempty"`
-	PreDeplymentCheck EventSpec `json:"preDeploymentChecks"`
+	PreDeplymentCheck EventSpec `json:"preDeploymentCheck"`
 }
 
 // ServiceStatus defines the observed state of Service

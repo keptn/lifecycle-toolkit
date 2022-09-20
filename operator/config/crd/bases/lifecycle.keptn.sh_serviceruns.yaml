@@ -43,11 +43,11 @@ spec:
             properties:
               phase:
                 type: string
-              preDeploymentChecksName:
+              preDeploymentCheckName:
                 type: string
             required:
             - phase
-            - preDeploymentChecksName
+            - preDeploymentCheckName
             type: object
         type: object
     served: true

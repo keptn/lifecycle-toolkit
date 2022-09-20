@@ -47,7 +47,7 @@ const (
 // ServiceRunStatus defines the observed state of ServiceRun
 type ServiceRunStatus struct {
 	Phase                  ServiceRunPhase `json:"phase"`
-	PreDeploymentCheckName string          `json:"preDeploymentChecksName"`
+	PreDeploymentCheckName string          `json:"preDeploymentCheckName"`
 }
 
 //+kubebuilder:object:root=true

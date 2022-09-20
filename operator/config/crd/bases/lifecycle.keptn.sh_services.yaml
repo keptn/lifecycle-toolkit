@@ -37,7 +37,7 @@ spec:
             properties:
               application:
                 type: string
-              preDeploymentChecks:
+              preDeploymentCheck:
                 description: EventSpec defines the desired state of Event
                 properties:
                   application:
@@ -8115,7 +8115,7 @@ spec:
                     type: string
                 type: object
             required:
-            - preDeploymentChecks
+            - preDeploymentCheck
             type: object
           status:
             description: ServiceStatus defines the observed state of Service

@@ -152,6 +152,13 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ServiceRunReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	// to make use of .spec.replicaSetUID as a FieldSelector, we need to provide an index for that field
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &v1alpha1.ServiceRun{}, ".spec.replicaSetUID", func(rawObj client.Object) []string {
+		serviceRun := rawObj.(*v1alpha1.ServiceRun)
+		return []string{string(serviceRun.Spec.ReplicaSetUID)}
+	}); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.ServiceRun{}).
 		Complete(r)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"k8s.io/apimachinery/pkg/fields"
 	"net/http"
 
 	"github.com/go-logr/logr"
@@ -97,10 +98,15 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 		}
 	}
 
-	logger.Info("ResplicaSerUID", "uid", replicaSetUID)
+	logger.Info("ReplicaSetUID", "uid", replicaSetUID)
 
 	serviceRunList := &v1alpha1.ServiceRunList{}
-	_ = r.Client.List(ctx, serviceRunList, &client.ListOptions{Namespace: namespace})
+	_ = r.Client.List(ctx,
+		serviceRunList,
+		&client.ListOptions{
+			Namespace:     namespace,
+			FieldSelector: fields.OneTermEqualSelector(".spec.replicaSetUID", string(replicaSetUID)),
+		})
 	// if err != nil {
 	// 	logger.Error(err, "Cannot fetch ServiceRunList")
 	// 	return fmt.Errorf("could not fetch ServiceRunList: %+v", err)

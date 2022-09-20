@@ -25,44 +25,44 @@ import (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // EventSpec defines the desired state of Event
-type EventSpec struct {
-	Service     string          `json:"service,omitempty"`
+type KeptnEventSpec struct {
+	Component   string          `json:"component,omitempty"`
 	Application string          `json:"application,omitempty"`
 	JobSpec     batchv1.JobSpec `json:"job,omitempty"`
 }
 
 // EventStatus defines the observed state of Event
-type EventStatus struct {
-	Phase   EventPhase `json:"phase"`
-	JobName string     `json:"jobName"`
+type KeptnEventStatus struct {
+	Phase   KeptnEventPhase `json:"phase"`
+	JobName string          `json:"jobName"`
 }
 
-type EventPhase string
+type KeptnEventPhase string
 
 const (
 	// EventPending means the application has been accepted by the system, but one or more of its
 	// services has not been started.
-	EventPending EventPhase = "Pending"
+	EventPending KeptnEventPhase = "Pending"
 	// EventRunning means that all of the services have been started.
-	EventRunning EventPhase = "Running"
+	EventRunning KeptnEventPhase = "Running"
 	// EventRunning means that all of the services have been finished successfully.
-	EventSucceeded EventPhase = "Succeeded"
+	EventSucceeded KeptnEventPhase = "Succeeded"
 	// EventFailed means that one or more pre-deployment checks was not successful and terminated.
-	EventFailed EventPhase = "Failed"
+	EventFailed KeptnEventPhase = "Failed"
 	// EventUnknown means that for some reason the state of the application could not be obtained.
-	EventUnknown EventPhase = "Unknown"
+	EventUnknown KeptnEventPhase = "Unknown"
 )
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
 // Event is the Schema for the events API
-type Event struct {
+type KeptnEvent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   EventSpec   `json:"spec,omitempty"`
-	Status EventStatus `json:"status,omitempty"`
+	Spec   KeptnEventSpec   `json:"spec,omitempty"`
+	Status KeptnEventStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -71,21 +71,21 @@ type Event struct {
 type EventList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Event `json:"items"`
+	Items           []KeptnEvent `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Event{}, &EventList{})
+	SchemeBuilder.Register(&KeptnEvent{}, &EventList{})
 }
 
-func (e Event) IsCompleted() bool {
+func (e KeptnEvent) IsCompleted() bool {
 	if e.Status.Phase == EventSucceeded || e.Status.Phase == EventFailed || e.Status.Phase == EventUnknown {
 		return true
 	}
 	return false
 }
 
-func (e Event) IsJobNotCreated() bool {
+func (e KeptnEvent) IsJobNotCreated() bool {
 	if e.Status.Phase == EventPending || e.Status.JobName == "" {
 		return true
 	}

@@ -24,13 +24,13 @@ import (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // ServiceSpec defines the desired state of Service
-type ServiceSpec struct {
-	ApplicationName   string    `json:"application,omitempty"`
-	PreDeplymentCheck EventSpec `json:"preDeploymentCheck"`
+type KeptnComponentSpec struct {
+	ApplicationName    string         `json:"application,omitempty"`
+	PreDeploymentCheck KeptnEventSpec `json:"preDeploymentCheck"`
 }
 
 // ServiceStatus defines the observed state of Service
-type ServiceStatus struct {
+type KeptnComponentStatus struct {
 	Phase          ServiceRunPhase `json:"phase"`
 	ServiceRunName string          `json:"serviceRunName"`
 }
@@ -39,35 +39,35 @@ type ServiceStatus struct {
 //+kubebuilder:subresource:status
 
 // Service is the Schema for the services API
-type Service struct {
+type KeptnComponent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ServiceSpec   `json:"spec,omitempty"`
-	Status ServiceStatus `json:"status,omitempty"`
+	Spec   KeptnComponentSpec   `json:"spec,omitempty"`
+	Status KeptnComponentStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
 // ServiceList contains a list of Service
-type ServiceList struct {
+type KeptnComponentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Service `json:"items"`
+	Items           []KeptnComponent `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Service{}, &ServiceList{})
+	SchemeBuilder.Register(&KeptnComponent{}, &KeptnComponentList{})
 }
 
-func (s Service) IsCompleted() bool {
+func (s KeptnComponent) IsCompleted() bool {
 	if s.Status.Phase == ServiceRunSucceeded || s.Status.Phase == ServiceRunFailed || s.Status.Phase == ServiceRunUnknown {
 		return true
 	}
 	return false
 }
 
-func (s Service) IsServiceRunNotCreated() bool {
+func (s KeptnComponent) IsServiceRunNotCreated() bool {
 	if s.Status.Phase == "" {
 		return true
 	}

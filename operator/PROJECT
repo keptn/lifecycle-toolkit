@@ -10,7 +10,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: Application
+  kind: KeptnApp
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
   webhooks:
@@ -23,7 +23,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: Service
+  kind: KeptnComponent
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -32,7 +32,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: Event
+  kind: KeptnEvent
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -41,7 +41,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: ServiceRun
+  kind: KeptnServiceRun
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 version: "3"

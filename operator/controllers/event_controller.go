@@ -31,13 +31,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/google/uuid"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EventReconciler reconciles a Event object
-type EventReconciler struct {
+// KeptnEventReconciler reconciles a Event object
+type KeptnEventReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
@@ -58,12 +58,12 @@ type EventReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *KeptnEventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
 
 	logger.Info("reconciling event")
 
-	event := &v1alpha1.Event{}
+	event := &klcv1alpha1.KeptnEvent{}
 	err := r.Get(ctx, req.NamespacedName, event)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -73,7 +73,7 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		return reconcile.Result{}, fmt.Errorf("could not fetch Event: %+v", err)
 	}
 
-	logger.Info("Reconciling Event", event.Spec.Application, event.Spec.Service)
+	logger.Info("Reconciling Event", event.Spec.Application, event.Spec.Component)
 
 	if event.IsCompleted() {
 		return reconcile.Result{}, nil
@@ -88,7 +88,7 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			return reconcile.Result{}, err
 		}
 		event.Status.JobName = job.Name
-		event.Status.Phase = v1alpha1.EventRunning
+		event.Status.Phase = klcv1alpha1.EventRunning
 
 		k8sEvent := r.generateK8sEvent(event, "started")
 		if err := r.Create(ctx, k8sEvent); err != nil {
@@ -113,9 +113,9 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	if job.Status.Active == 0 {
 		if job.Status.Failed == 0 {
-			event.Status.Phase = v1alpha1.EventSucceeded
+			event.Status.Phase = klcv1alpha1.EventSucceeded
 		} else {
-			event.Status.Phase = v1alpha1.EventFailed
+			event.Status.Phase = klcv1alpha1.EventFailed
 		}
 		if err := r.Delete(ctx, job); err != nil {
 			logger.Error(err, "Could not delete Job")
@@ -139,18 +139,18 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *EventReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *KeptnEventReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.Event{}).
+		For(&klcv1alpha1.KeptnEvent{}).
 		Complete(r)
 }
 
-func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) (*batchv1.Job, error) {
+func (r *KeptnEventReconciler) createJob(ctx context.Context, event *klcv1alpha1.KeptnEvent) (*batchv1.Job, error) {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
 				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Service,
+				"keptn.sh/service":     event.Spec.Component,
 			},
 			Name:      event.Name + "-" + r.generateSuffix(),
 			Namespace: event.Namespace,
@@ -170,12 +170,12 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 	return job, nil
 }
 
-func (r *EventReconciler) generateSuffix() string {
+func (r *KeptnEventReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
 }
 
-func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType string) *corev1.Event {
+func (r *KeptnEventReconciler) generateK8sEvent(event *klcv1alpha1.KeptnEvent, eventType string) *corev1.Event {
 	return &corev1.Event{
 		ObjectMeta: metav1.ObjectMeta{
 			GenerateName:    event.Name + "-" + eventType + "-",
@@ -183,7 +183,7 @@ func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType stri
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
 				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Service,
+				"keptn.sh/service":     event.Spec.Component,
 				"keptn.sh/event":       event.Name,
 			},
 		},

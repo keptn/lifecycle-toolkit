@@ -19,15 +19,15 @@ package controllers
 import (
 	"context"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-// ApplicationReconciler reconciles a Application object
-type ApplicationReconciler struct {
+// KeptnAppReconciler reconciles a Application object
+type KeptnAppReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
@@ -45,12 +45,12 @@ type ApplicationReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
 
 	logger.Info("reconciling application")
 
-	var application v1alpha1.Application
+	var application klcv1alpha1.KeptnApp
 	if err := r.Get(ctx, req.NamespacedName, &application); err != nil {
 		logger.Error(err, "unable to fetch Application")
 		// we'll ignore not-found errors, since they can't be fixed by an immediate
@@ -63,8 +63,8 @@ func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.Application{}).
+		For(&klcv1alpha1.KeptnApp{}).
 		Complete(r)
 }

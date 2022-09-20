@@ -24,14 +24,14 @@ import (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // ApplicationSpec defines the desired state of Application
-type ApplicationSpec struct {
-	Services       []Service `json:"services,omitempty"`
-	PreDeployment  []string  `json:"pre-deployment,omitempty"`
-	PostDeployment []string  `json:"post-deployment,omitempty"`
+type KeptnAppSpec struct {
+	Components     []KeptnComponent `json:"components,omitempty"`
+	PreDeployment  []string         `json:"pre-deployment,omitempty"`
+	PostDeployment []string         `json:"post-deployment,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application
-type ApplicationStatus struct {
+type KeptnAppStatus struct {
 	Status ApplicationPhase `json:"status"`
 }
 
@@ -53,23 +53,23 @@ const (
 //+kubebuilder:subresource:status
 
 // Application is the Schema for the applications API
-type Application struct {
+type KeptnApp struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ApplicationSpec   `json:"spec,omitempty"`
-	Status ApplicationStatus `json:"status,omitempty"`
+	Spec   KeptnAppSpec   `json:"spec,omitempty"`
+	Status KeptnAppStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
 // ApplicationList contains a list of Application
-type ApplicationList struct {
+type KeptnAppList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Application `json:"items"`
+	Items           []KeptnApp `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Application{}, &ApplicationList{})
+	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
 }

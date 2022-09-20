@@ -30,12 +30,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/google/uuid"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ServiceReconciler reconciles a Service object
-type ServiceReconciler struct {
+// KeptnComponentReconciler reconciles a Service object
+type KeptnComponentReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
@@ -53,13 +53,13 @@ type ServiceReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *KeptnComponentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
 
-	logger.Info("Searching for service")
+	logger.Info("Searching for component")
 
-	service := &v1alpha1.Service{}
-	err := r.Get(ctx, req.NamespacedName, service)
+	component := &klcv1alpha1.KeptnComponent{}
+	err := r.Get(ctx, req.NamespacedName, component)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
 	}
@@ -68,25 +68,25 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
 	}
 
-	if service.IsCompleted() {
+	if component.IsCompleted() {
 		return reconcile.Result{}, nil
 	}
 
-	logger.Info("Reconciling Service", "service", service.Name)
+	logger.Info("Reconciling Service", "component", component.Name)
 
-	if service.IsServiceRunNotCreated() {
+	if component.IsServiceRunNotCreated() {
 		logger.Info("Service Run does not exist, creating")
 
-		serviceRunName, err := r.createServiceRun(ctx, service)
+		serviceRunName, err := r.createServiceRun(ctx, component)
 		if err != nil {
 			logger.Error(err, "Could not create ServiceRun")
 			return reconcile.Result{}, err
 		}
 
-		service.Status.Phase = v1alpha1.ServiceRunRunning
-		service.Status.ServiceRunName = serviceRunName
+		component.Status.Phase = klcv1alpha1.ServiceRunRunning
+		component.Status.ServiceRunName = serviceRunName
 
-		if err := r.Status().Update(ctx, service); err != nil {
+		if err := r.Status().Update(ctx, component); err != nil {
 			logger.Error(err, "Could not update Service")
 			return reconcile.Result{}, err
 		}
@@ -95,16 +95,16 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	logger.Info("Checking status")
 
-	serviceRun := &v1alpha1.ServiceRun{}
-	err = r.Get(ctx, types.NamespacedName{Name: service.Status.ServiceRunName, Namespace: service.Namespace}, serviceRun)
+	serviceRun := &klcv1alpha1.ServiceRun{}
+	err = r.Get(ctx, types.NamespacedName{Name: component.Status.ServiceRunName, Namespace: component.Namespace}, serviceRun)
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
 	if serviceRun.IsCompleted() {
-		service.Status.Phase = serviceRun.Status.Phase
+		component.Status.Phase = serviceRun.Status.Phase
 
-		if err := r.Status().Update(ctx, service); err != nil {
+		if err := r.Status().Update(ctx, component); err != nil {
 			logger.Error(err, "Could not update Service")
 			return reconcile.Result{}, err
 		}
@@ -115,30 +115,30 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *KeptnComponentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.Service{}).
+		For(&klcv1alpha1.KeptnComponent{}).
 		Complete(r)
 }
 
-func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (string, error) {
-	serviceRun := &v1alpha1.ServiceRun{
+func (r *KeptnComponentReconciler) createServiceRun(ctx context.Context, component *klcv1alpha1.KeptnComponent) (string, error) {
+	serviceRun := &klcv1alpha1.ServiceRun{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     service.Name,
+				"keptn.sh/application": component.Spec.ApplicationName,
+				"keptn.sh/component":   component.Name,
 			},
-			Name:      service.Name + "-" + r.generateSuffix(),
-			Namespace: service.Namespace,
+			Name:      component.Name + "-" + r.generateSuffix(),
+			Namespace: component.Namespace,
 		},
-		Spec: v1alpha1.ServiceRunSpec{
-			ServiceName: service.Name,
+		Spec: klcv1alpha1.ServiceRunSpec{
+			ServiceName: component.Name,
 		},
 	}
 	for i := 0; i < 5; i++ {
 		if err := r.Create(ctx, serviceRun); err != nil {
 			if errors.IsAlreadyExists(err) {
-				serviceRun.Name = service.Name + "-" + r.generateSuffix()
+				serviceRun.Name = component.Name + "-" + r.generateSuffix()
 				continue
 			}
 			return "", err
@@ -148,7 +148,7 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 	return serviceRun.Name, nil
 }
 
-func (r *ServiceReconciler) generateSuffix() string {
+func (r *KeptnComponentReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
 }

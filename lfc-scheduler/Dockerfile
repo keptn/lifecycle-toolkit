@@ -15,12 +15,14 @@ FROM golang:1.18.0 as builder
 
 WORKDIR /lfc-scheduler
 
-COPY go.mod go.sum Makefile ./
+COPY go.mod go.mod
+COPY go.sum go.sum
+COPY Makefile Makefile
 
 RUN go mod download
 
-COPY cmd pkg ./
-
+COPY cmd cmd
+COPY pkg pkg
 
 ARG RELEASE_VERSION
 RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler

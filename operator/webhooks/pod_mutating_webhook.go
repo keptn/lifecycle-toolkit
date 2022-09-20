@@ -21,10 +21,10 @@ import (
 )
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
-// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="lifecycle.keptn.sh",resources=service,verbs=get,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
-// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups=lifecycle.keptn.sh,resources=serviceruns,verbs=get;list;watch;create;update;patch;delete,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
-// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups=lifecycle.keptn.sh,resources=serviceruns/status,verbs=get;update;patch,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
-// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups=lifecycle.keptn.sh,resources=serviceruns/finalizers,verbs=update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns/finalizers,verbs=update
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=services,verbs=get;list;watch
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -52,6 +52,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if a.isKeptnAnnotated(pod) {
 		//pod.Spec.SchedulerName = "keptn-scheduler"
+		logger.Info("Pod annotaded, creating ServiceRun")
 		if err := a.handleServiceRun(ctx, logger, pod); err != nil {
 			return admission.Errored(http.StatusBadRequest, err)
 		}
@@ -87,6 +88,8 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
 func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.Logger, pod *corev1.Pod) error {
 	serviceName, _ := pod.Annotations["keptn.sh/service"]
 
+	logger.Info("Service name", "service", serviceName)
+
 	var replicaSetUID types.UID
 	podRefs := pod.GetOwnerReferences()
 	for _, ref := range podRefs {
@@ -94,11 +97,17 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 			replicaSetUID = ref.UID
 		}
 	}
+
+	logger.Info("ResplicaSerUID", "uid", replicaSetUID)
+
 	serviceRunList := &v1alpha1.ServiceRunList{}
-	err := r.Client.List(ctx, serviceRunList, &client.ListOptions{Namespace: pod.Namespace, FieldSelector: fields.OneTermEqualSelector("spec.replicaSetUID", string(replicaSetUID))})
-	if err != nil {
-		return fmt.Errorf("could not fetch ServiceRunList: %+v", err)
-	}
+	_ = r.Client.List(ctx, serviceRunList, &client.ListOptions{Namespace: pod.Namespace, FieldSelector: fields.OneTermEqualSelector("spec.replicaSetUID", string(replicaSetUID))})
+	// if err != nil {
+	// 	logger.Error(err, "Cannot fetch ServiceRunList")
+	// 	return fmt.Errorf("could not fetch ServiceRunList: %+v", err)
+	// }
+
+	logger.Info("ServiceRunList", "list", serviceRunList)
 
 	if len(serviceRunList.Items) == 0 {
 		logger.Info("Searching for service")
@@ -106,6 +115,7 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 		service := &v1alpha1.Service{}
 		err := r.Client.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: pod.Namespace}, service)
 		if err != nil {
+			logger.Error(err, "Cannot fetch Service")
 			return fmt.Errorf("could not fetch Service: %+v", err)
 		}
 

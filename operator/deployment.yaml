@@ -16,6 +16,9 @@ spec:
     metadata:
       labels:
         app: nginx
+      annotations:
+        keptn.sh/application: "Application12"
+        keptn.sh/service: "service-test"
     spec:
       containers:
       - name: nginx

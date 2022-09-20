@@ -37,8 +37,8 @@ jobs:
       DATE: ${{ steps.get_datetime.outputs.DATE }}
       TIME: ${{ steps.get_datetime.outputs.TIME }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
-      LFC_SCHEDULER_ARTIFACT: ${{ steps.get_artifacts.outputs.LFC_SCHEDULER_ARTIFACT }}
-      OPERATOR_ARTIFACT: ${{ steps.get_artifacts.outputs.OPERATOR_ARTIFACT }}
+      BUILD_MATRIX: ${{ steps.check_modified_files.outputs.BUILD_MATRIX }}
+      BUILD_MATRIX_EMPTY: ${{ steps.check_modified_files.outputs.BUILD_MATRIX_EMPTY }}
 
     steps:
       - name: Check out code

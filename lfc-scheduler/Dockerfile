@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ARG ARCH
 FROM golang:1.18.0 as builder
 
 WORKDIR /lfc-scheduler
@@ -22,13 +21,14 @@ RUN go mod download
 
 COPY cmd pkg ./
 
-ARG ARCH
-ARG RELEASE_VERSION
-RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
 
-FROM $ARCH/alpine:3.16
+ARG RELEASE_VERSION
+RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler
+
+FROM gcr.io/distroless/static:nonroot
 
 COPY --from=builder /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
+USER 65532:65532
 
 WORKDIR /bin
 CMD ["kube-scheduler"]

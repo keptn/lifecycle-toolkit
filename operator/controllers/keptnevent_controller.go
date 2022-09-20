@@ -150,7 +150,7 @@ func (r *KeptnEventReconciler) createJob(ctx context.Context, event *klcv1alpha1
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
 				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Component,
+				"keptn.sh/component":   event.Spec.Component,
 			},
 			Name:      event.Name + "-" + r.generateSuffix(),
 			Namespace: event.Namespace,
@@ -183,7 +183,7 @@ func (r *KeptnEventReconciler) generateK8sEvent(event *klcv1alpha1.KeptnEvent, e
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
 				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Component,
+				"keptn.sh/component":   event.Spec.Component,
 				"keptn.sh/event":       event.Name,
 			},
 		},

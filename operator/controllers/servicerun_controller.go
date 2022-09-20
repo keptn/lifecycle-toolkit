@@ -74,10 +74,10 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
-	logger.Info("Searching for service")
+	logger.Info("Searching for component")
 
-	service := &klcv1alpha1.KeptnComponent{}
-	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.Spec.ServiceName, Namespace: serviceRun.Namespace}, service)
+	component := &klcv1alpha1.KeptnComponent{}
+	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.Spec.ServiceName, Namespace: serviceRun.Namespace}, component)
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
 	}
@@ -91,7 +91,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if serviceRun.IsDeploymentCheckNotCreated() {
 		logger.Info("Deployment checks do not exist, creating")
 
-		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, service)
+		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, component)
 		if err != nil {
 			logger.Error(err, "Could not start pre-deployment checks")
 			return reconcile.Result{}, err
@@ -100,7 +100,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		serviceRun.Status.PreDeploymentCheckName = preDeploymentCheckName
 		serviceRun.Status.Phase = klcv1alpha1.ServiceRunRunning
 
-		k8sEvent := r.generateK8sEvent(service, serviceRun, "started")
+		k8sEvent := r.generateK8sEvent(component, serviceRun, "started")
 		if err := r.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send started pre-deployment checks event")
 			return reconcile.Result{}, err
@@ -138,7 +138,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 			return reconcile.Result{}, err
 		}
 
-		k8sEvent := r.generateK8sEvent(service, serviceRun, "finished")
+		k8sEvent := r.generateK8sEvent(component, serviceRun, "finished")
 		if err := r.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send finished pre-deployment checks event")
 			return reconcile.Result{}, err
@@ -167,7 +167,7 @@ func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, com
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
 				"keptn.sh/application": component.Spec.ApplicationName,
-				"keptn.sh/service":     component.Name,
+				"keptn.sh/component":   component.Name,
 			},
 			Name:      component.Name + "-" + r.generateSuffix(),
 			Namespace: component.Namespace,
@@ -199,7 +199,7 @@ func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *klcv1alpha1.KeptnCom
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
 				"keptn.sh/application": serviceRun.Spec.ApplicationName,
-				"keptn.sh/service":     serviceRun.Name,
+				"keptn.sh/component":   serviceRun.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{

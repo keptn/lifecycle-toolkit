@@ -34,7 +34,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KeptnComponentReconciler reconciles a Service object
+// KeptnComponentReconciler reconciles a KeptnComponent object
 type KeptnComponentReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
@@ -47,7 +47,7 @@ type KeptnComponentReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the Service object against the actual cluster state, and then
+// the KeptnComponent object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
@@ -65,17 +65,17 @@ func (r *KeptnComponentReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	}
 
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
+		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnComponent: %+v", err)
 	}
 
 	if component.IsCompleted() {
 		return reconcile.Result{}, nil
 	}
 
-	logger.Info("Reconciling Service", "component", component.Name)
+	logger.Info("Reconciling KeptnComponent", "component", component.Name)
 
 	if component.IsServiceRunNotCreated() {
-		logger.Info("Service Run does not exist, creating")
+		logger.Info("ServiceRun does not exist, creating")
 
 		serviceRunName, err := r.createServiceRun(ctx, component)
 		if err != nil {
@@ -87,7 +87,7 @@ func (r *KeptnComponentReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		component.Status.ServiceRunName = serviceRunName
 
 		if err := r.Status().Update(ctx, component); err != nil {
-			logger.Error(err, "Could not update Service")
+			logger.Error(err, "Could not update KeptnComponent")
 			return reconcile.Result{}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
@@ -105,7 +105,7 @@ func (r *KeptnComponentReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		component.Status.Phase = serviceRun.Status.Phase
 
 		if err := r.Status().Update(ctx, component); err != nil {
-			logger.Error(err, "Could not update Service")
+			logger.Error(err, "Could not update KeptnComponent")
 			return reconcile.Result{}, err
 		}
 		return ctrl.Result{}, nil

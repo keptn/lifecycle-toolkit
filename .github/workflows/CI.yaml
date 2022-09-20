@@ -87,7 +87,7 @@ jobs:
 
   test:
     name: Unit Tests
-    needs: build
+    needs: [prepare_ci_run, build]
     runs-on: ubuntu-20.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
@@ -112,7 +112,7 @@ jobs:
         run: go install gotest.tools/gotestsum@v1.8.1
 
       - name: Test ${{ matrix.artifacts }}
-        working-directory: ./${{ matrix.artifacts}}
+        working-directory: ./${{ matrix.artifacts }}
         run: |
           go mod download
           gotestsum --no-color=false --format=testname -- -coverprofile=coverage.txt -covermode=atomic -v ./... 

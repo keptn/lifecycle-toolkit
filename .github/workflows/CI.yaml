@@ -63,7 +63,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      VERSION: ${{ needs.prepare_ci_run.outputs.VERSION }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
@@ -114,7 +113,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: prepare_ci_run
+    needs: [prepare_ci_run, build, test]
     runs-on: ubuntu-20.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
@@ -159,11 +158,7 @@ jobs:
         tags: |
           ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}
           ghcr.io/keptn-lifecycle-controller/${{ matrix.artifacts }}:${{ env.BRANCH }}.${{ env.DATETIME }}
-        build-args: |
-          version=${{ env.VERSION }}
-          buildTime=${{ env.DATETIME }}
-          gitSha=${{ env.GIT_SHA }}
-        push: false
+        push: true
         pull: true
         builder: ${{ steps.buildx.outputs.name }}
         cache-from: type=gha, scope=${{ github.workflow }}

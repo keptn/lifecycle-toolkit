@@ -13,5 +13,5 @@ spec:
         containers:
         - name: hello-world
           image: ubuntu:latest
-          command: ["echo",  "Hello from the KLO and Flo"]
+          command: ["echo",  "Hello from Keptn"]
         restartPolicy: Never

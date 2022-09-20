@@ -1,0 +1,24 @@
+# permissions for end users to edit serviceruns.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: servicerun-editor-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns/status
+  verbs:
+  - get

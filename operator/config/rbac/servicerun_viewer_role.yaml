@@ -1,0 +1,20 @@
+# permissions for end users to view serviceruns.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: servicerun-viewer-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - serviceruns/status
+  verbs:
+  - get

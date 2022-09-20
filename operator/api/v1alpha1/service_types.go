@@ -25,17 +25,14 @@ import (
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Service. Edit service_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	ApplicationName   string    `json:"application,omitempty"`
+	PreDeplymentCheck EventSpec `json:"preDeploymentCheck"`
 }
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase          ServiceRunPhase `json:"phase"`
+	ServiceRunName string          `json:"serviceRunName"`
 }
 
 //+kubebuilder:object:root=true
@@ -61,4 +58,18 @@ type ServiceList struct {
 
 func init() {
 	SchemeBuilder.Register(&Service{}, &ServiceList{})
+}
+
+func (s Service) IsCompleted() bool {
+	if s.Status.Phase == ServiceRunSucceeded || s.Status.Phase == ServiceRunFailed || s.Status.Phase == ServiceRunUnknown {
+		return true
+	}
+	return false
+}
+
+func (s Service) IsServiceRunNotCreated() bool {
+	if s.Status.Phase == "" {
+		return true
+	}
+	return false
 }

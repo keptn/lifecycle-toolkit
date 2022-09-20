@@ -33,7 +33,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -67,7 +66,6 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	event := &v1alpha1.Event{}
 	err := r.Get(ctx, req.NamespacedName, event)
 	if errors.IsNotFound(err) {
-		logger.Error(nil, "Could not find Event")
 		return reconcile.Result{}, nil
 	}
 
@@ -189,14 +187,14 @@ func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType stri
 				"keptn.sh/event":       event.Name,
 			},
 		},
-		InvolvedObject: v1.ObjectReference{
+		InvolvedObject: corev1.ObjectReference{
 			Kind:      event.Kind,
 			Namespace: event.Namespace,
 			Name:      event.Name,
 		},
 		Reason:  string(event.Status.Phase),
 		Message: "job is " + eventType,
-		Source: v1.EventSource{
+		Source: corev1.EventSource{
 			Component: event.Kind,
 		},
 		Type: "Normal",

@@ -1,0 +1,32 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: ServiceRun
+metadata:
+  annotations:
+    keptn.sh/application: nginx
+    keptn.sh/service: nginx
+    keptn.sh/version: 0.1.0
+  managedFields:
+    - apiVersion: lifecycle.keptn.sh/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+      manager: manager
+      operation: Update
+      time: '2022-09-20T08:49:34Z'
+    - apiVersion: lifecycle.keptn.sh/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          .: {}
+          'f:phase': {}
+          'f:preDeploymentCheckName': {}
+      manager: manager
+      operation: Update
+      subresource: status
+      time: '2022-09-20T08:49:34Z'
+  name: 'nginx-nginx-0.1.0'
+  namespace: default
+status:
+  phase: Succeeded
+  preDeploymentCheckName: service-test-a142d243-4
+spec:
+  serviceName: nginx

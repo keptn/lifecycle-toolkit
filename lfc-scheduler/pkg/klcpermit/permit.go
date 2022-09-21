@@ -43,16 +43,16 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 	switch pl.svcManager.Permit(ctx, p) {
 
 	case Wait:
-		klog.InfoS("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Wait), 30 * time.Second
 	case Failure:
-		klog.InfoS("[Keptn Permit Plugin] failed pre-deployment checks on", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Error), 0 * time.Second
 	case Success:
-		klog.InfoS("[Keptn Permit Plugin] passed pre-deployment checks on", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
-		klog.InfoS("[Keptn Permit Plugin] unknown status of pre-deployment checks for", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] unknown status of pre-deployment checks for", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Wait), 30 * time.Second //TODO what makes sense here?
 	}
 

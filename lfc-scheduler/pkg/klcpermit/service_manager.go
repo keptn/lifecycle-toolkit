@@ -2,7 +2,6 @@ package klcpermit
 
 import (
 	"context"
-	"encoding/json"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -62,8 +61,8 @@ func (sMgr *ServiceManager) Permit(ctx context.Context, pod *corev1.Pod) Status 
 		return ServiceRunNotFound
 	}
 	//check CRD status
-	phase, found, err := unstructured.NestedString(crd, "status", "phase")
-	klog.Infof("[Keptn Permit Plugin] service crd %+v, found %s with phase %s ", crd, found, phase)
+	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "phase")
+	klog.Infof("[Keptn Permit Plugin] service crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
 		switch phase {
 		case ServiceRunPending:
@@ -83,29 +82,9 @@ func (sMgr *ServiceManager) Permit(ctx context.Context, pod *corev1.Pod) Status 
 }
 
 //GetCRD returns unstructured to avoid tight coupling with the CRD resource
-func (sMgr *ServiceManager) GetCRD(ctx context.Context, namespace string, name string) (map[string]interface{}, error) {
-
-	spec := map[string]interface{}{}
-
+func (sMgr *ServiceManager) GetCRD(ctx context.Context, namespace string, name string) (*unstructured.Unstructured, error) {
 	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/servicerun/name
-	u, err := sMgr.dynamicClient.Resource(serviceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
-
-	if err != nil {
-		return spec, err
-	}
-
-	replicaRef, found, err := unstructured.NestedString(u.UnstructuredContent(), "metadata", "annotations", "kubectl.kubernetes.io/last-applied-configuration")
-	if !found || err != nil {
-		return spec, err
-	}
-
-	data := []byte(replicaRef)
-	err = json.Unmarshal(data, &spec)
-	if err != nil {
-		return spec, err
-	}
-
-	return spec, err
+	return sMgr.dynamicClient.Resource(serviceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
 }
 
 func GetCRDName(pod *corev1.Pod) string {

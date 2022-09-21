@@ -175,7 +175,7 @@ jobs:
       id: docker_build_image
       uses: docker/build-push-action@v3
       with:
-        context: ${{ matrix.config.working_dir }}
+        context: ${{ matrix.config.artifact }}
         tags: |
           ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}
           ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}.${{ env.DATETIME }}

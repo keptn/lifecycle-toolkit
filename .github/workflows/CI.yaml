@@ -134,6 +134,8 @@ jobs:
     name: Build and push Docker Image
     needs: [prepare_ci_run, build, test]
     runs-on: ubuntu-20.04
+    permissions:
+      packages: write
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}

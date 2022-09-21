@@ -64,8 +64,9 @@ for changed_file in $CHANGED_FILES; do
     artifact_fullname="${artifact}_ARTIFACT"
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
+    should_run="SHOULD_RUN_${artifact}"
 
-    if [ "SHOULD_RUN_${artifact}" != "false" ]; then
+    if [ "${!should_run}" != "false" ]; then
       should_run="true"
     else
       should_run="false"
@@ -100,8 +101,9 @@ if [[ $BUILD_EVERYTHING == 'true' ]]; then
     artifact_fullname="${artifact}_ARTIFACT"
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
+    should_run="SHOULD_RUN_${artifact}"
 
-    if [ "SHOULD_RUN_${artifact}" != "false" ]; then
+    if [ "${!should_run}" != "false" ]; then
       should_run="true"
     else
       should_run="false"

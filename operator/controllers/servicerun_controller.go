@@ -76,6 +76,10 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	logger.Info("Searching for service")
 
+	if len(serviceRun.OwnerReferences) == 0 {
+		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun OwnerReference")
+	}
+
 	service := &v1alpha1.Service{}
 	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.OwnerReferences[0].Name, Namespace: serviceRun.Namespace}, service)
 	if err != nil {

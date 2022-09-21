@@ -18,17 +18,15 @@ package controllers
 
 import (
 	"context"
-	"fmt"
+	"time"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	types "k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -55,41 +53,48 @@ type ServiceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger := log.FromContext(ctx)
+	_ = log.FromContext(ctx)
 
-	logger.Info("Searching for service")
+	// logger.Info("Searching for service")
 
-	service := &v1alpha1.Service{}
-	err := r.Get(ctx, req.NamespacedName, service)
-	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
-	}
+	// service := &v1alpha1.Service{}
+	// err := r.Get(ctx, req.NamespacedName, service)
+	// if errors.IsNotFound(err) {
+	// 	return reconcile.Result{}, nil
+	// }
 
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
-	}
+	// if err != nil {
+	// 	return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
+	// }
 
-	logger.Info("Reconciling Service", "service", service.Name)
+	// logger.Info("Reconciling Service", "service", service.Name)
 
-	serviceRun := &v1alpha1.ServiceRun{}
-	err = r.Get(ctx, types.NamespacedName{Namespace: service.Namespace, Name: service.GetServiceRunName()}, serviceRun)
-	if errors.IsNotFound(err) {
-		err := r.createServiceRun(ctx, service)
-		if err != nil {
-			logger.Error(err, "Could not create ServiceRun")
-			return reconcile.Result{}, err
-		}
+	// serviceRun := &v1alpha1.ServiceRun{}
+	// err = r.Get(ctx, types.NamespacedName{Namespace: service.Namespace, Name: service.GetServiceRunName()}, serviceRun)
+	// if errors.IsNotFound(err) {
+	// 	logger.Info("Creating serviceRun from service", "service", service.Name)
+	// 	serviceRun, err := r.createServiceRun(ctx, service)
+	// 	if err != nil {
+	// 		logger.Error(err, "Could not create ServiceRun")
+	// 		return reconcile.Result{}, err
+	// 	}
 
-		if err := r.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
-			return reconcile.Result{}, err
-		}
-		return ctrl.Result{}, nil
-	}
+	// 	k8sEvent := r.generateK8sEvent(service, serviceRun)
+	// 	if err := r.Create(ctx, k8sEvent); err != nil {
+	// 		logger.Error(err, "Could not send serviceRun created K8s event")
+	// 		return reconcile.Result{}, err
+	// 	}
 
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
-	}
+	// 	if err := r.Status().Update(ctx, service); err != nil {
+	// 		logger.Error(err, "Could not update Service")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// 	return ctrl.Result{}, nil
+	// }
+
+	// if err != nil {
+	// 	return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
+	// }
 
 	return ctrl.Result{}, nil
 }
@@ -101,7 +106,7 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) error {
+func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.ServiceRun, error) {
 	serviceRun := &v1alpha1.ServiceRun{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
@@ -120,5 +125,42 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 			},
 		},
 	}
-	return r.Create(ctx, serviceRun)
+	return serviceRun, r.Create(ctx, serviceRun)
+}
+
+func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
+	return &corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName:    serviceRun.Name + "-created-",
+			Namespace:       serviceRun.Namespace,
+			ResourceVersion: "v1alpha1",
+			Labels: map[string]string{
+				"keptn.sh/application": service.Spec.ApplicationName,
+				"keptn.sh/service":     serviceRun.Name,
+			},
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:      serviceRun.Kind,
+			Namespace: serviceRun.Namespace,
+			Name:      serviceRun.Name,
+		},
+		Reason:  "created",
+		Message: "serviceRun " + serviceRun.Name + " was created",
+		Source: corev1.EventSource{
+			Component: serviceRun.Kind,
+		},
+		Type: "Normal",
+		EventTime: metav1.MicroTime{
+			Time: time.Now().UTC(),
+		},
+		FirstTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		LastTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		Action:              "created",
+		ReportingController: "serviceRun-controller",
+		ReportingInstance:   "serviceRun-controller",
+	}
 }

@@ -7,7 +7,7 @@ metadata:
   annotations:
     keptn.sh/application: "application12"
     keptn.sh/service: "service-test"
-    keptn.sh/version: "1.0"
+    keptn.sh/version: "1.1"
 spec:
   replicas: 3
   selector:
@@ -20,7 +20,7 @@ spec:
       annotations:
         keptn.sh/application: "application12"
         keptn.sh/service: "service-test"
-        keptn.sh/version: "1.0"
+        keptn.sh/version: "1.1"
     spec:
       containers:
       - name: nginx

@@ -42,7 +42,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	if a.isKeptnAnnotated(pod) {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		//TODO uncomment this
-		//pod.Spec.SchedulerName = "keptn-scheduler"
+		pod.Spec.SchedulerName = "keptn-scheduler"
 	}
 
 	marshaledPod, err := json.Marshal(pod)

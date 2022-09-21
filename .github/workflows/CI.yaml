@@ -23,7 +23,7 @@ env:
   LFC_SCHEDULER_SVC_FOLDER: "lfc-scheduler/"
 
   OPERATOR_SVC_ARTIFACT_PREFIX: "OPERATOR_SVC"
-  OPERATOR_SVC_ARTIFACT: "operator"
+  OPERATOR_SVC_ARTIFACT: "keptn-lifecycle-operator"
   OPERATOR_SVC_FOLDER: "operator/"
 defaults:
   run:
@@ -124,10 +124,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Set up gotestsum
-        if: matrix.config.should-run == 'true'
-        run: go install gotest.tools/gotestsum@v1.8.1
-
       - name: Test ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
         working-directory: ./${{ matrix.config.artifact }}
@@ -174,7 +170,7 @@ jobs:
       id: docker_build_image
       uses: docker/build-push-action@v3
       with:
-        context: ${{ matrix.config.artifact }}
+        context: ${{ matrix.config.working-dir }}
         tags: |
           ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}
           ghcr.io/keptn-lifecycle-controller/${{ matrix.config.artifact }}:${{ env.BRANCH }}.${{ env.DATETIME }}

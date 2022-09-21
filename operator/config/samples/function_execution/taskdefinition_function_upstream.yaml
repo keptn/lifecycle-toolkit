@@ -1,0 +1,8 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+name: slack-notification
+spec:
+  function:
+    source: https://raw.githubusercontent.com/keptn-sandbox/lifecycle-controller/main/functions-runtime/samples/ts/slack.ts
+

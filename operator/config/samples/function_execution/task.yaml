@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTask
+metadata:
+  name: send-slack-notification
+spec:
+  task: slack-notification-deployment-1
+  workload: my-workload
+  application: my-app
+status:
+  job_name: job-12345
+  state: finished

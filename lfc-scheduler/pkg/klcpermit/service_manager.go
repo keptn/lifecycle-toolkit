@@ -2,15 +2,17 @@ package klcpermit
 
 import (
 	"context"
+	"encoding/json"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/klog/v2"
 )
 
-var serviceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "servicerun"}
+var serviceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "serviceruns"}
 
 type Status string
 
@@ -26,9 +28,9 @@ const (
 	// ServiceRunPending means the application has been accepted by the system, but one or more of its
 	// serviceRuns has not been started.
 	ServiceRunPending string = "Pending"
-	// ServiceRunRunning means that all of the serviceRuns have been started.
+	// ServiceRunRunning means that serviceRun has been started.
 	ServiceRunRunning string = "Running"
-	// ServiceRunSucceeded means that all of the serviceRuns have been finished successfully.
+	// ServiceRunSucceeded means that serviceRun has been finished successfully.
 	ServiceRunSucceeded string = "Succeeded"
 	// ServiceRunFailed means that one or more pre-deployment checks was not successful and terminated.
 	ServiceRunFailed string = "Failed"
@@ -44,28 +46,41 @@ type ServiceManager struct {
 	dynamicClient dynamic.Interface
 }
 
-func NewServiceManager(dy dynamic.Interface) *ServiceManager {
+func NewServiceManager(d dynamic.Interface) *ServiceManager {
 	sMgr := &ServiceManager{
-		dynamicClient: dy,
+		dynamicClient: d,
 	}
 	return sMgr
 }
 
 func (sMgr *ServiceManager) Permit(ctx context.Context, pod *corev1.Pod) Status { //This is to not have tight coupling with CRD resource
-
-	// list resources here
-	services, err := sMgr.ListServiceRun(ctx, pod.Namespace)
+	//List service run CRDs
+	services, err := sMgr.ListServiceRun(ctx, metav1.NamespaceAll)
 
 	if err != nil {
+		klog.Infof("[Keptn Permit Plugin] could not find service crd err:%s svc:%+v", err.Error(), services)
 		return ServiceRunNotSpecified
 	}
 	owner := GetPodOwner(pod)
 	for _, s := range services {
-		//get spec!
-		replicaRef, found, err := unstructured.NestedFieldCopy(s.UnstructuredContent(), "spec", "replicasetref")
 
-		if err == nil && found && replicaRef == owner {
-			phase, found, err := unstructured.NestedString(s.UnstructuredContent(), "status", "phase")
+		crd, err := GetCRD(s)
+		if err != nil {
+			klog.Infof("[Keptn Permit Plugin] spec error is %+v", err)
+			return ServiceRunNotSpecified
+		}
+
+		replicasetUID, found, err := unstructured.NestedString(crd, "spec", "replicasetUID")
+
+		if err != nil {
+			klog.Infof("[Keptn Permit Plugin] spec error is %+v", err)
+			return ServiceRunNotSpecified
+		}
+		//match pod to CRD
+		if err == nil && found && types.UID(replicasetUID) == owner {
+
+			//check CRD status
+			phase, found, err := unstructured.NestedString(crd, "status", "phase")
 			if err == nil && found {
 				switch phase {
 				case ServiceRunPending:
@@ -104,4 +119,21 @@ func GetPodOwner(pod *corev1.Pod) types.UID {
 		}
 	}
 	return ""
+}
+
+// GetCRD takes an unstructured object from a dynamic lister and returns a maps to access the last applied changes of a CRD
+func GetCRD(u unstructured.Unstructured) (map[string]interface{}, error) {
+	spec := map[string]interface{}{}
+	replicaRef, found, err := unstructured.NestedString(u.UnstructuredContent(), "metadata", "annotations", "kubectl.kubernetes.io/last-applied-configuration")
+	if !found || err != nil {
+		return spec, err
+	}
+
+	data := []byte(replicaRef)
+	err = json.Unmarshal(data, &spec)
+	if err != nil {
+		return spec, err
+	}
+
+	return spec, err
 }

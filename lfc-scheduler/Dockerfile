@@ -11,18 +11,29 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ARG ARCH
-FROM golang:1.18.0
+FROM golang:1.18.0 as builder
 
 WORKDIR /lfc-scheduler
-COPY . .
-ARG ARCH
-ARG RELEASE_VERSION
-RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
 
-FROM $ARCH/alpine:3.16
+COPY go.mod go.sum Makefile ./
 
-COPY --from=0 /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
+RUN go mod download
+
+COPY cmd cmd
+COPY pkg pkg
+
+RUN make build-scheduler
+
+FROM gcr.io/distroless/static:nonroot
+
+LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
+    org.opencontainers.image.url="https://keptn.sh" \
+    org.opencontainers.image.title="Keptn Lifecycle Scheduler" \
+    org.opencontainers.image.vendor="Keptn" \
+    org.opencontainers.image.licenses="Apache-2.0"
+
+COPY --from=builder /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
+USER 65532:65532
 
 WORKDIR /bin
 CMD ["kube-scheduler"]

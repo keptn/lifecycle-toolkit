@@ -15,9 +15,7 @@ FROM golang:1.18.0 as builder
 
 WORKDIR /lfc-scheduler
 
-COPY go.mod go.mod
-COPY go.sum go.sum
-COPY Makefile Makefile
+COPY go.mod go.sum Makefile ./
 
 RUN go mod download
 
@@ -28,6 +26,12 @@ ARG RELEASE_VERSION
 RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler
 
 FROM gcr.io/distroless/static:nonroot
+
+LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
+    org.opencontainers.image.url="https://keptn.sh" \
+    org.opencontainers.image.title="Keptn Lifecycle Scheduler" \
+    org.opencontainers.image.vendor="Keptn" \
+    org.opencontainers.image.licenses="Apache-2.0"
 
 COPY --from=builder /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
 USER 65532:65532

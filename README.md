@@ -26,6 +26,34 @@ The Application and Service Controllers watchfor the workload resources to finis
 After the Post-Deployment checks, SLOs can be validated using an interface for retrieving SLI data from a provider, e.g, [Prometheus](https://prometheus.io/).
 Finally, Keptn Lifecycle Controller exposes Metrics and Traces of the whole Deployment cycle with [OpenTelemetry](https://opentelemetry.io/).
 
+## How it works
+
+The following sections will provide insights on each component of the Keptn Lifecycle controller in terms of their purpose, responsibility, and communication with other components.
+Furthermore, there will be a description on what CRD they monitor and a general overview of their fields.
+
+### Webhook
+
+The mutating webhook works only on resources that have Keptn annotations.
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
+The webhook should be as fast as possible and should not create/change any resource.
+
+
+### Scheduler
+
+tbd
+
+### Application
+
+tbd
+
+### Workload
+
+tbd
+
+### Task
+
+tbd
+
 ## How to use
 
 TBD
@@ -53,3 +81,11 @@ make deploy IMG=${DOCKER_REGISTRY}/${DOCKER_TAG}:latest
 ## License
 
 Please find more information in the [LICENSE](LICENSE) file.
+
+## Thanks to all the people who have contributed 💜
+
+<a href="https://github.com/keptn-sandbox/lifecycle-controller/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=keptn-sandbox/lifecycle-controller" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).

@@ -9691,19 +9691,15 @@ spec:
                             service:
                               type: string
                           type: object
+                        version:
+                          type: string
                       required:
+                      - application
                       - preDeploymentCheck
+                      - version
                       type: object
                     status:
                       description: ServiceStatus defines the observed state of Service
-                      properties:
-                        phase:
-                          type: string
-                        serviceRunName:
-                          type: string
-                      required:
-                      - phase
-                      - serviceRunName
                       type: object
                   type: object
                 type: array

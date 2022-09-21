@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strings"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -60,5 +62,5 @@ func init() {
 }
 
 func (s Service) GetServiceRunName() string {
-	return s.Spec.ApplicationName + "-" + s.Name + "-" + s.Spec.Version
+	return strings.ToLower(s.Spec.ApplicationName + "-" + s.Name + "-" + s.Spec.Version)
 }

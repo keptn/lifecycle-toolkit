@@ -132,8 +132,7 @@ jobs:
         if: matrix.config.should-run == 'true'
         working-directory: ./${{ matrix.config.artifact }}
         run: |
-          go mod download
-          gotestsum --no-color=false --format=testname -- -coverprofile=coverage.txt -covermode=atomic -v ./... 
+          make test
 
   build_image:
     name: Build and push Docker Image

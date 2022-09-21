@@ -33,7 +33,10 @@ Furthermore, there will be a description on what CRD they monitor and a general 
 
 ### Webhook
 
-tbd
+The mutating webhook works only on resources that have Keptn annotations.
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
+The webhook should be as fast as possible and should not create/change any resource.
+
 
 ### Scheduler
 

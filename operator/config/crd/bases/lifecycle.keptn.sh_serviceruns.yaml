@@ -34,15 +34,6 @@ spec:
             type: object
           spec:
             description: ServiceRunSpec defines the desired state of ServiceRun
-            properties:
-              replicaSetUID:
-                description: UID is a type that holds unique ID values, including
-                  UUIDs.  Because we don't ONLY use UUIDs, this is an alias to string.  Being
-                  a type captures intent and helps make sure that UIDs and names do
-                  not get conflated.
-                type: string
-              serviceName:
-                type: string
             type: object
           status:
             description: ServiceRunStatus defines the observed state of ServiceRun

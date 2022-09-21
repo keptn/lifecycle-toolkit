@@ -110,9 +110,14 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 			},
 			Name:      service.GetServiceRunName(),
 			Namespace: service.Namespace,
-		},
-		Spec: v1alpha1.ServiceRunSpec{
-			ServiceName: service.Name,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: service.APIVersion,
+					Kind:       service.Kind,
+					Name:       service.Name,
+					UID:        service.UID,
+				},
+			},
 		},
 	}
 	return r.Create(ctx, serviceRun)

@@ -77,7 +77,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	logger.Info("Searching for service")
 
 	service := &v1alpha1.Service{}
-	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.Spec.ServiceName, Namespace: serviceRun.Namespace}, service)
+	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.OwnerReferences[0].Name, Namespace: serviceRun.Namespace}, service)
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
 	}
@@ -152,13 +152,6 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ServiceRunReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	// to make use of .spec.replicaSetUID as a FieldSelector, we need to provide an index for that field
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &v1alpha1.ServiceRun{}, ".spec.replicaSetUID", func(rawObj client.Object) []string {
-		serviceRun := rawObj.(*v1alpha1.ServiceRun)
-		return []string{string(serviceRun.Spec.ReplicaSetUID)}
-	}); err != nil {
-		return err
-	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.ServiceRun{}).
 		Complete(r)

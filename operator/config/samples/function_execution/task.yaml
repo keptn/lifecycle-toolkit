@@ -6,6 +6,7 @@ spec:
   task: slack-notification-deployment-1
   workload: my-workload
   application: my-app
+  secure_parameters: slack_secret #override TaskDefinition parameter
 status:
   job_name: job-12345
   state: finished

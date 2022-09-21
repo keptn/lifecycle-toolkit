@@ -1,0 +1,67 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: keptntaskdefinitions.lifecycle.keptn.sh
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnTaskDefinition
+    listKind: KeptnTaskDefinitionList
+    plural: keptntaskdefinitions
+    singular: keptntaskdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
+            properties:
+              function:
+                description: Foo is an example field of KeptnTaskDefinition. Edit
+                  keptntaskdefinition_types.go to remove/update
+                properties:
+                  functionRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                  httpRef:
+                    properties:
+                      url:
+                        type: string
+                    type: object
+                  inlineRef:
+                    properties:
+                      code:
+                        type: string
+                    type: object
+                type: object
+            type: object
+          status:
+            description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

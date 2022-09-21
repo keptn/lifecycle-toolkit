@@ -22,8 +22,7 @@ RUN go mod download
 COPY cmd cmd
 COPY pkg pkg
 
-ARG RELEASE_VERSION
-RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler
+RUN make build-scheduler
 
 FROM gcr.io/distroless/static:nonroot
 

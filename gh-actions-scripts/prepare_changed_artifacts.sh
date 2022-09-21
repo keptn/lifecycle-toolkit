@@ -51,7 +51,7 @@ echo "Changed files:"
 echo "$CHANGED_FILES"
 matrix_config='{"config":['
 # shellcheck disable=SC2016
-build_artifact_template='{"artifact":$artifact,"working-dir":$working_dir}'
+build_artifact_template='{"artifact":$artifact,"working-dir":$working_dir,"should-run":$should_run}'
 
 # Add all changed artifacts to the build matrix
 echo "Checking changed files against artifacts now"
@@ -65,6 +65,12 @@ for changed_file in $CHANGED_FILES; do
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
 
+    if [ "SHOULD_RUN_${artifact}" != "false" ]; then
+      should_run="true"
+    else
+      should_run="false"
+    fi
+
     if [[ ( $changed_file == ${!artifact_folder}* ) && ( "${!should_build_artifact}" != 'true' ) ]]; then
       echo "Found changes in $artifact"
       # Set the artifact's should-build variable to true
@@ -74,6 +80,7 @@ for changed_file in $CHANGED_FILES; do
       artifact_config=$(jq -j -n \
         --arg artifact "${!artifact_fullname}" \
         --arg working_dir "${!artifact_folder}" \
+        --arg should_run "${should_run}" \
         "$build_artifact_template"
       )
 
@@ -94,12 +101,19 @@ if [[ $BUILD_EVERYTHING == 'true' ]]; then
     artifact_folder="${artifact}_FOLDER"
     should_build_artifact="BUILD_${artifact}"
 
+    if [ "SHOULD_RUN_${artifact}" != "false" ]; then
+      should_run="true"
+    else
+      should_run="false"
+    fi
+
     if [[ "${!should_build_artifact}" != 'true' ]]; then
       # Render build matrix string for the current artifact
       echo "Adding unchanged artifact $artifact to build matrix since build everything was requested"
       artifact_config=$(jq -j -n \
         --arg artifact "${!artifact_fullname}" \
         --arg working_dir "${!artifact_folder}" \
+        --arg should_run "${should_run}" \
         "$build_artifact_template"
       )
 

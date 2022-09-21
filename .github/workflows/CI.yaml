@@ -103,7 +103,7 @@ jobs:
 
       - name: Build ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.artifact }}
+        working-directory: ./${{ matrix.config.working-dir }}
         run: |
           make build
 
@@ -126,7 +126,7 @@ jobs:
 
       - name: Test ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.artifact }}
+        working-directory: ./${{ matrix.config.working-dir }}
         run: |
           make test
 

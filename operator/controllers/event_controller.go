@@ -117,10 +117,10 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		} else {
 			event.Status.Phase = v1alpha1.EventFailed
 		}
-		if err := r.Delete(ctx, job); err != nil {
-			logger.Error(err, "Could not delete Job")
-			return reconcile.Result{}, err
-		}
+		// if err := r.Delete(ctx, job); err != nil {
+		// 	logger.Error(err, "Could not delete Job")
+		// 	return reconcile.Result{}, err
+		// }
 		if err := r.Status().Update(ctx, event); err != nil {
 			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err

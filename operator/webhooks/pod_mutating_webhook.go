@@ -179,6 +179,7 @@ func (r *PodMutatingWebhook) generateService(ctx context.Context, pod *corev1.Po
 				UID:  ownerUID,
 				Kind: ownerKind,
 			},
+			//for now hardcoded, will be changed in future
 			PreDeploymentCheck: v1alpha1.EventSpec{
 				Service:     r.GetServiceName(pod),
 				Application: applicationName,

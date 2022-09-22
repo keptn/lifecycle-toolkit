@@ -14,6 +14,7 @@ import (
 
 	"hash/fnv"
 
+	v1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -53,7 +54,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		//TODO uncomment this
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
-		if err := a.handleServiceRun(ctx, logger, pod, req.Namespace); err != nil {
+		if err := a.handleService(ctx, logger, pod, req.Namespace); err != nil {
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 	}
@@ -103,38 +104,28 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 	return fmt.Sprint(h.Sum32())
 }
 
-func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+func (r *PodMutatingWebhook) handleService(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 	serviceName, _ := pod.Annotations["keptn.sh/service"]
 
-	serviceRun := &v1alpha1.ServiceRun{}
-	err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: r.GetServiceRunName(pod)}, serviceRun)
+	service := &v1alpha1.Service{}
+	err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: r.GetServiceName(pod)}, service)
 	if errors.IsNotFound(err) {
 		logger.Info("Service name", "service", serviceName)
 
-		logger.Info("Fetching service", "service", serviceName)
-		service := &v1alpha1.Service{}
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: serviceName}, service)
+		logger.Info("Creating service service", "service", service.Name)
+		service = r.generateService(ctx, pod)
+		err = r.Client.Create(ctx, service)
 		if err != nil {
-			return fmt.Errorf("could not fetch Service: %+v", err)
-		}
-
-		logger.Info("Creating serviceRun from service", "service", service.Name)
-		serviceRun, err := r.createServiceRun(ctx, service, pod)
-		if err != nil {
-			logger.Error(err, "Could not create ServiceRun")
+			logger.Error(err, "Could not create Service")
 			return err
 		}
 
-		k8sEvent := r.generateK8sEvent(service, serviceRun)
+		k8sEvent := r.generateK8sEvent(service, "created")
 		if err := r.Client.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send serviceRun created K8s event")
+			logger.Error(err, "Could not send service created K8s event")
 			return err
 		}
 
-		if err := r.Client.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
-			return err
-		}
 		return nil
 	}
 
@@ -142,51 +133,94 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 		return fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
+	if service.Spec.Version == pod.Annotations["keptn.sh/version"] {
+		return nil
+	}
+
+	service = r.generateService(ctx, pod)
+	err = r.Client.Update(ctx, service)
+	if err != nil {
+		logger.Error(err, "Could not update Service")
+		return err
+	}
+
+	k8sEvent := r.generateK8sEvent(service, "updated")
+	if err := r.Client.Create(ctx, k8sEvent); err != nil {
+		logger.Error(err, "Could not send service updated K8s event")
+		return err
+	}
+
 	return nil
 }
 
-func (r *PodMutatingWebhook) createServiceRun(ctx context.Context, service *v1alpha1.Service, pod *corev1.Pod) (*v1alpha1.ServiceRun, error) {
-	serviceRun := &v1alpha1.ServiceRun{
+func (r *PodMutatingWebhook) generateService(ctx context.Context, pod *corev1.Pod) *v1alpha1.Service {
+	version, _ := pod.Annotations["keptn.sh/version"]
+	applicationName, _ := pod.Annotations["keptn.sh/application"]
+	ownerUID := pod.UID
+	ownerKind := "Pod"
+	if len(pod.OwnerReferences) != 0 {
+		for _, o := range pod.OwnerReferences {
+			if o.Kind == "ReplicaSet" {
+				ownerUID = o.UID
+				ownerKind = o.Kind
+			}
+		}
+	}
+	return &v1alpha1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     service.Name,
+			Annotations: pod.Annotations,
+			Name:        r.GetServiceName(pod),
+			Namespace:   pod.Namespace,
+		},
+		Spec: v1alpha1.ServiceSpec{
+			ApplicationName: applicationName,
+			Version:         version,
+			Owner: v1alpha1.Owner{
+				UID:  ownerUID,
+				Kind: ownerKind,
 			},
-			Name:      r.GetServiceRunName(pod),
-			Namespace: service.Namespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					APIVersion: service.APIVersion,
-					Kind:       service.Kind,
-					Name:       service.Name,
-					UID:        service.UID,
+			PreDeploymentCheck: v1alpha1.EventSpec{
+				Service:     r.GetServiceName(pod),
+				Application: applicationName,
+				JobSpec: v1.JobSpec{
+					Template: corev1.PodTemplateSpec{
+						Spec: corev1.PodSpec{
+							Containers: []corev1.Container{
+								{
+									Name:    "hello-world",
+									Image:   "ubuntu:latest",
+									Command: []string{"echo", "Hello from Keptn"},
+								},
+							},
+							RestartPolicy: corev1.RestartPolicyNever,
+						},
+					},
 				},
 			},
 		},
 	}
-	return serviceRun, r.Client.Create(ctx, serviceRun)
 }
 
-func (r *PodMutatingWebhook) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
+func (r *PodMutatingWebhook) generateK8sEvent(service *v1alpha1.Service, eventType string) *corev1.Event {
 	return &corev1.Event{
 		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    serviceRun.Name + "-created-",
-			Namespace:       serviceRun.Namespace,
+			GenerateName:    service.Name + "-" + eventType + "-",
+			Namespace:       service.Namespace,
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
 				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     serviceRun.Name,
+				"keptn.sh/service":     service.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{
-			Kind:      serviceRun.Kind,
-			Namespace: serviceRun.Namespace,
-			Name:      serviceRun.Name,
+			Kind:      service.Kind,
+			Namespace: service.Namespace,
+			Name:      service.Name,
 		},
-		Reason:  "created",
-		Message: "serviceRun " + serviceRun.Name + " was created",
+		Reason:  eventType,
+		Message: "serviceRun " + service.Name + " was " + eventType,
 		Source: corev1.EventSource{
-			Component: serviceRun.Kind,
+			Component: service.Kind,
 		},
 		Type: "Normal",
 		EventTime: metav1.MicroTime{
@@ -198,15 +232,14 @@ func (r *PodMutatingWebhook) generateK8sEvent(service *v1alpha1.Service, service
 		LastTimestamp: metav1.Time{
 			Time: time.Now().UTC(),
 		},
-		Action:              "created",
-		ReportingController: "serviceRun-controller",
-		ReportingInstance:   "serviceRun-controller",
+		Action:              eventType,
+		ReportingController: "webhook",
+		ReportingInstance:   "webhook",
 	}
 }
 
-func (r *PodMutatingWebhook) GetServiceRunName(pod *corev1.Pod) string {
+func (r *PodMutatingWebhook) GetServiceName(pod *corev1.Pod) string {
 	serviceName, _ := pod.Annotations["keptn.sh/service"]
 	applicationName, _ := pod.Annotations["keptn.sh/application"]
-	version, _ := pod.Annotations["keptn.sh/version"]
-	return strings.ToLower(applicationName + "-" + serviceName + "-" + version)
+	return strings.ToLower(applicationName + "-" + serviceName)
 }

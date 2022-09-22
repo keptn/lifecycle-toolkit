@@ -74,18 +74,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
-	logger.Info("Searching for service")
-
-	if len(serviceRun.OwnerReferences) == 0 {
-		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun OwnerReference")
-	}
-
-	service := &v1alpha1.Service{}
-	err = r.Get(ctx, types.NamespacedName{Name: serviceRun.OwnerReferences[0].Name, Namespace: serviceRun.Namespace}, service)
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
-	}
-
+	// check for post-deployment checks
 	if serviceRun.IsCompleted() {
 		return reconcile.Result{}, nil
 	}
@@ -95,16 +84,16 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if serviceRun.IsDeploymentCheckNotCreated() {
 		logger.Info("Deployment checks do not exist, creating")
 
-		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, service)
+		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, serviceRun)
 		if err != nil {
 			logger.Error(err, "Could not start pre-deployment checks")
 			return reconcile.Result{}, err
 		}
 
-		serviceRun.Status.PreDeploymentCheckName = preDeploymentCheckName
-		serviceRun.Status.Phase = v1alpha1.ServiceRunRunning
+		serviceRun.Status.PreDeploymentTaskName = preDeploymentCheckName
+		serviceRun.Status.PreDeploymentPhase = v1alpha1.ServiceRunRunning
 
-		k8sEvent := r.generateK8sEvent(service, serviceRun, "started")
+		k8sEvent := r.generateK8sEvent(serviceRun, "started")
 		if err := r.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send started pre-deployment checks event")
 			return reconcile.Result{}, err
@@ -127,9 +116,9 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	if preDeploymentChecksEvent.IsCompleted() {
 		if preDeploymentChecksEvent.Status.Phase == v1alpha1.EventFailed {
-			serviceRun.Status.Phase = v1alpha1.ServiceRunFailed
+			serviceRun.Status.PreDeploymentPhase = v1alpha1.ServiceRunFailed
 		} else {
-			serviceRun.Status.Phase = v1alpha1.ServiceRunSucceeded
+			serviceRun.Status.PreDeploymentPhase = v1alpha1.ServiceRunSucceeded
 		}
 
 		if err := r.Delete(ctx, preDeploymentChecksEvent); err != nil {
@@ -142,7 +131,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 			return reconcile.Result{}, err
 		}
 
-		k8sEvent := r.generateK8sEvent(service, serviceRun, "finished")
+		k8sEvent := r.generateK8sEvent(serviceRun, "finished")
 		if err := r.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send finished pre-deployment checks event")
 			return reconcile.Result{}, err
@@ -166,26 +155,23 @@ func (r *ServiceRunReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, service *v1alpha1.Service) (string, error) {
+func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, serviceRun *v1alpha1.ServiceRun) (string, error) {
 	event := &v1alpha1.Event{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     service.Name,
-			},
-			Name:      service.Name + "-" + r.generateSuffix(),
-			Namespace: service.Namespace,
+			Annotations: serviceRun.Annotations,
+			Name:        serviceRun.Name + "-" + r.generateSuffix(),
+			Namespace:   serviceRun.Namespace,
 		},
 		Spec: v1alpha1.EventSpec{
-			Service:     service.Name,
-			Application: service.Spec.ApplicationName,
-			JobSpec:     service.Spec.PreDeplymentCheck.JobSpec,
+			Service:     serviceRun.Name,
+			Application: serviceRun.Spec.ApplicationName,
+			JobSpec:     serviceRun.Spec.PreDeploymentCheck.JobSpec,
 		},
 	}
 	for i := 0; i < 5; i++ {
 		if err := r.Create(ctx, event); err != nil {
 			if errors.IsAlreadyExists(err) {
-				event.Name = service.Name + "-" + r.generateSuffix()
+				event.Name = serviceRun.Name + "-" + r.generateSuffix()
 				continue
 			}
 			return "", err
@@ -195,23 +181,20 @@ func (r *ServiceRunReconciler) startPreDeploymentChecks(ctx context.Context, ser
 	return event.Name, nil
 }
 
-func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *v1alpha1.Service, serviceRunRun *v1alpha1.ServiceRun, eventType string) *corev1.Event {
+func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *v1alpha1.ServiceRun, eventType string) *corev1.Event {
 	return &corev1.Event{
 		ObjectMeta: metav1.ObjectMeta{
 			GenerateName:    serviceRun.Name + "-" + eventType + "-",
 			Namespace:       serviceRun.Namespace,
 			ResourceVersion: "v1alpha1",
-			Labels: map[string]string{
-				"keptn.sh/application": serviceRun.Spec.ApplicationName,
-				"keptn.sh/service":     serviceRun.Name,
-			},
+			Labels:          serviceRun.Annotations,
 		},
 		InvolvedObject: corev1.ObjectReference{
 			Kind:      serviceRun.Kind,
 			Namespace: serviceRun.Namespace,
 			Name:      serviceRun.Name,
 		},
-		Reason:  string(serviceRunRun.Status.Phase),
+		Reason:  string(serviceRun.Status.PreDeploymentPhase),
 		Message: "pre-deployment checks are " + eventType,
 		Source: corev1.EventSource{
 			Component: serviceRun.Kind,
@@ -234,7 +217,7 @@ func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *v1alpha1.Service, se
 
 func (r *ServiceRunReconciler) getPreDeploymentChecksEvent(ctx context.Context, serviceRun *v1alpha1.ServiceRun) (*v1alpha1.Event, error) {
 	event := &v1alpha1.Event{}
-	err := r.Get(ctx, types.NamespacedName{Name: serviceRun.Status.PreDeploymentCheckName, Namespace: serviceRun.Namespace}, event)
+	err := r.Get(ctx, types.NamespacedName{Name: serviceRun.Status.PreDeploymentTaskName, Namespace: serviceRun.Namespace}, event)
 	if errors.IsNotFound(err) {
 		return nil, err
 	}

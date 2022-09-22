@@ -17,17 +17,26 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strings"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
+
+type Owner struct {
+	UID  types.UID `json:"uid"`
+	Kind string    `json:"kind"`
+}
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	ApplicationName   string    `json:"application"`
-	Version           string    `json:"version"`
-	PreDeplymentCheck EventSpec `json:"preDeploymentCheck"`
+	ApplicationName    string    `json:"application"`
+	Version            string    `json:"version"`
+	PreDeploymentCheck EventSpec `json:"preDeploymentCheck"`
+	Owner              Owner     `json:"owner"`
 }
 
 // ServiceStatus defines the observed state of Service
@@ -57,4 +66,8 @@ type ServiceList struct {
 
 func init() {
 	SchemeBuilder.Register(&Service{}, &ServiceList{})
+}
+
+func (s Service) GetServiceRunName() string {
+	return strings.ToLower(s.Spec.ApplicationName + "-" + s.Name + "-" + s.Spec.Version)
 }

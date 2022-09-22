@@ -37,6 +37,20 @@ spec:
             properties:
               application:
                 type: string
+              owner:
+                properties:
+                  kind:
+                    type: string
+                  uid:
+                    description: UID is a type that holds unique ID values, including
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
+                    type: string
+                required:
+                - kind
+                - uid
+                type: object
               preDeploymentCheck:
                 description: EventSpec defines the desired state of Event
                 properties:
@@ -8118,6 +8132,7 @@ spec:
                 type: string
             required:
             - application
+            - owner
             - preDeploymentCheck
             - version
             type: object

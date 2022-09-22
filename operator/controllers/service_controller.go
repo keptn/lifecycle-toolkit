@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -26,8 +25,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ServiceReconciler reconciles a Service object
@@ -106,61 +103,61 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.ServiceRun, error) {
-	serviceRun := &v1alpha1.ServiceRun{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     service.Name,
-			},
-			Name:      service.GetServiceRunName(),
-			Namespace: service.Namespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					APIVersion: service.APIVersion,
-					Kind:       service.Kind,
-					Name:       service.Name,
-					UID:        service.UID,
-				},
-			},
-		},
-	}
-	return serviceRun, r.Create(ctx, serviceRun)
-}
+// func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.ServiceRun, error) {
+// 	serviceRun := &v1alpha1.ServiceRun{
+// 		ObjectMeta: metav1.ObjectMeta{
+// 			Annotations: map[string]string{
+// 				"keptn.sh/application": service.Spec.ApplicationName,
+// 				"keptn.sh/service":     service.Name,
+// 			},
+// 			Name:      service.GetServiceRunName(),
+// 			Namespace: service.Namespace,
+// 			OwnerReferences: []metav1.OwnerReference{
+// 				{
+// 					APIVersion: service.APIVersion,
+// 					Kind:       service.Kind,
+// 					Name:       service.Name,
+// 					UID:        service.UID,
+// 				},
+// 			},
+// 		},
+// 	}
+// 	return serviceRun, r.Create(ctx, serviceRun)
+// }
 
-func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
-	return &corev1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    serviceRun.Name + "-created-",
-			Namespace:       serviceRun.Namespace,
-			ResourceVersion: "v1alpha1",
-			Labels: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     serviceRun.Name,
-			},
-		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:      serviceRun.Kind,
-			Namespace: serviceRun.Namespace,
-			Name:      serviceRun.Name,
-		},
-		Reason:  "created",
-		Message: "serviceRun " + serviceRun.Name + " was created",
-		Source: corev1.EventSource{
-			Component: serviceRun.Kind,
-		},
-		Type: "Normal",
-		EventTime: metav1.MicroTime{
-			Time: time.Now().UTC(),
-		},
-		FirstTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		LastTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		Action:              "created",
-		ReportingController: "serviceRun-controller",
-		ReportingInstance:   "serviceRun-controller",
-	}
-}
+// func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
+// 	return &corev1.Event{
+// 		ObjectMeta: metav1.ObjectMeta{
+// 			GenerateName:    serviceRun.Name + "-created-",
+// 			Namespace:       serviceRun.Namespace,
+// 			ResourceVersion: "v1alpha1",
+// 			Labels: map[string]string{
+// 				"keptn.sh/application": service.Spec.ApplicationName,
+// 				"keptn.sh/service":     serviceRun.Name,
+// 			},
+// 		},
+// 		InvolvedObject: corev1.ObjectReference{
+// 			Kind:      serviceRun.Kind,
+// 			Namespace: serviceRun.Namespace,
+// 			Name:      serviceRun.Name,
+// 		},
+// 		Reason:  "created",
+// 		Message: "serviceRun " + serviceRun.Name + " was created",
+// 		Source: corev1.EventSource{
+// 			Component: serviceRun.Kind,
+// 		},
+// 		Type: "Normal",
+// 		EventTime: metav1.MicroTime{
+// 			Time: time.Now().UTC(),
+// 		},
+// 		FirstTimestamp: metav1.Time{
+// 			Time: time.Now().UTC(),
+// 		},
+// 		LastTimestamp: metav1.Time{
+// 			Time: time.Now().UTC(),
+// 		},
+// 		Action:              "created",
+// 		ReportingController: "serviceRun-controller",
+// 		ReportingInstance:   "serviceRun-controller",
+// 	}
+// }

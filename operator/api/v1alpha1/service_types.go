@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"strings"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -59,8 +57,4 @@ type ServiceList struct {
 
 func init() {
 	SchemeBuilder.Register(&Service{}, &ServiceList{})
-}
-
-func (s Service) GetServiceRunName() string {
-	return strings.ToLower(s.Spec.ApplicationName + "-" + s.Name + "-" + s.Spec.Version)
 }

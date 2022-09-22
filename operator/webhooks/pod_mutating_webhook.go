@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -52,7 +52,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		//TODO uncomment this
 		pod.Spec.SchedulerName = "keptn-scheduler"
-		logger.Info("Pod annotaded, creating ServiceRun")
+		logger.Info("Annotations", "annotations", pod.Annotations)
 		if err := a.handleServiceRun(ctx, logger, pod, req.Namespace); err != nil {
 			return admission.Errored(http.StatusBadRequest, err)
 		}
@@ -80,7 +80,10 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
 	_, gotServiceAnnotation := pod.Annotations["keptn.sh/service"]
 	_, gotVersionAnnotation := pod.Annotations["keptn.sh/version"]
 
-	if gotApplicationAnnotation && gotServiceAnnotation && gotVersionAnnotation {
+	if gotApplicationAnnotation && gotServiceAnnotation {
+		if !gotVersionAnnotation {
+			pod.Annotations["keptn.sh/version"] = a.calculateVersion(pod)
+		}
 		return true
 	}
 	return false
@@ -103,23 +106,20 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 	serviceName, _ := pod.Annotations["keptn.sh/service"]
 
-	logger.Info("Service name", "service", serviceName)
-
-	service := &v1alpha1.Service{}
-	err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: serviceName}, service)
-	if errors.IsNotFound(err) {
-		return nil
-	}
-
-	if err != nil {
-		return fmt.Errorf("could not fetch Service: %+v", err)
-	}
-
 	serviceRun := &v1alpha1.ServiceRun{}
-	err = r.Client.Get(ctx, types.NamespacedName{Namespace: service.Namespace, Name: service.GetServiceRunName()}, serviceRun)
+	err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: r.GetServiceRunName(pod)}, serviceRun)
 	if errors.IsNotFound(err) {
+		logger.Info("Service name", "service", serviceName)
+
+		logger.Info("Fetching service", "service", serviceName)
+		service := &v1alpha1.Service{}
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: serviceName}, service)
+		if err != nil {
+			return fmt.Errorf("could not fetch Service: %+v", err)
+		}
+
 		logger.Info("Creating serviceRun from service", "service", service.Name)
-		serviceRun, err := r.createServiceRun(ctx, service)
+		serviceRun, err := r.createServiceRun(ctx, service, pod)
 		if err != nil {
 			logger.Error(err, "Could not create ServiceRun")
 			return err
@@ -145,14 +145,14 @@ func (r *PodMutatingWebhook) handleServiceRun(ctx context.Context, logger logr.L
 	return nil
 }
 
-func (r *PodMutatingWebhook) createServiceRun(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.ServiceRun, error) {
+func (r *PodMutatingWebhook) createServiceRun(ctx context.Context, service *v1alpha1.Service, pod *corev1.Pod) (*v1alpha1.ServiceRun, error) {
 	serviceRun := &v1alpha1.ServiceRun{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
 				"keptn.sh/application": service.Spec.ApplicationName,
 				"keptn.sh/service":     service.Name,
 			},
-			Name:      service.GetServiceRunName(),
+			Name:      r.GetServiceRunName(pod),
 			Namespace: service.Namespace,
 			OwnerReferences: []metav1.OwnerReference{
 				{
@@ -165,11 +165,6 @@ func (r *PodMutatingWebhook) createServiceRun(ctx context.Context, service *v1al
 		},
 	}
 	return serviceRun, r.Client.Create(ctx, serviceRun)
-}
-
-func (r *PodMutatingWebhook) generateSuffix() string {
-	uid := uuid.New().String()
-	return uid[:10]
 }
 
 func (r *PodMutatingWebhook) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
@@ -207,4 +202,11 @@ func (r *PodMutatingWebhook) generateK8sEvent(service *v1alpha1.Service, service
 		ReportingController: "serviceRun-controller",
 		ReportingInstance:   "serviceRun-controller",
 	}
+}
+
+func (r *PodMutatingWebhook) GetServiceRunName(pod *corev1.Pod) string {
+	serviceName, _ := pod.Annotations["keptn.sh/service"]
+	applicationName, _ := pod.Annotations["keptn.sh/application"]
+	version, _ := pod.Annotations["keptn.sh/version"]
+	return strings.ToLower(applicationName + "-" + serviceName + "-" + version)
 }

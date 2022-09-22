@@ -1,12 +1,11 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
-name: slack-notification-deployment-1
+  name: slack-notification-deployment-1
 spec:
   function:
-    functionref:
+    functionRef:
       name: slack-notification
-  secure_parameters:
-    secretref:
-      name: slack_secret // reference to secret with slack hook data
+    secureParameters:
+      secret: slack_secret
 

@@ -47,7 +47,6 @@ var (
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -105,6 +104,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	disableWebhook = true
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
 	}
@@ -131,10 +131,21 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&controllers.KeptnTaskReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTask Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
+		os.Exit(1)
+	}
+	if err = (&controllers.KeptnTaskDefinitionReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

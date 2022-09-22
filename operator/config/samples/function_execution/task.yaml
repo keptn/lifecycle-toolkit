@@ -1,12 +1,13 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTask
 metadata:
-  name: send-slack-notification
+  name: scheduled-deployment
 spec:
-  task: slack-notification-deployment-1
+  taskDefinition: scheduled-deployment
   workload: my-workload
+  workloadVersion: "1.0"
   application: my-app
-  secure_parameters: slack_secret #override TaskDefinition parameter
-status:
-  job_name: job-12345
-  state: finished
+  parameters:
+    map:
+      targetDate: "2022-04-16T06:55:31.820Z"
+

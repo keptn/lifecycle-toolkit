@@ -28,6 +28,15 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - update
+- apiGroups:
+  - ""
+  resources:
   - events
   verbs:
   - create
@@ -80,6 +89,32 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - events/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptntaskdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptntaskdefinitions/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptntaskdefinitions/status
   verbs:
   - get
   - patch

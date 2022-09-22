@@ -47,6 +47,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
   domain: keptn.sh
   group: lifecycle
   kind: KeptnTaskDefinition

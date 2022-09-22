@@ -4,6 +4,6 @@ metadata:
   name: slack-notification
 spec:
   function:
-    httpref:
+    httpRef:
       url: https://raw.githubusercontent.com/keptn-sandbox/lifecycle-controller/main/functions-runtime/samples/ts/slack.ts
 

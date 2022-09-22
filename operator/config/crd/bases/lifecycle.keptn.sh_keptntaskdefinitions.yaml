@@ -40,6 +40,11 @@ spec:
                 description: Foo is an example field of KeptnTaskDefinition. Edit
                   keptntaskdefinition_types.go to remove/update
                 properties:
+                  configMapRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
                   functionRef:
                     properties:
                       name:
@@ -55,10 +60,28 @@ spec:
                       code:
                         type: string
                     type: object
+                  parameters:
+                    properties:
+                      map:
+                        additionalProperties:
+                          type: string
+                        type: object
+                    type: object
+                  secureParameters:
+                    properties:
+                      secret:
+                        type: string
+                    type: object
                 type: object
             type: object
           status:
             description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+            properties:
+              configMap:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file'
+                type: string
             type: object
         type: object
     served: true

@@ -29,14 +29,20 @@ type KeptnTaskSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of KeptnTask. Edit keptntask_types.go to remove/update
-	Workload         string     `json:"workload"`
-	Application      string     `json:"application"`
-	Parameters       Parameters `json:"parameters,omitempty"`
-	SecureParameters Parameters `json:"secureParameters,omitempty"`
+	Workload         string           `json:"workload"`
+	WorkloadVersion  string           `json:"workloadVersion"`
+	Application      string           `json:"application"`
+	TaskDefinition   string           `json:"taskDefinition"`
+	Parameters       TaskParams       `json:"parameters,omitempty"`
+	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 
-type Parameters struct {
+type TaskParams struct {
 	Inline map[string]string `json:"map,omitempty"`
+}
+
+type SecureParameters struct {
+	Secret string `json:"secret,omitempty"`
 }
 
 // KeptnTaskStatus defines the observed state of KeptnTask

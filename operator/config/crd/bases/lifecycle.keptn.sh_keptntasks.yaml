@@ -46,18 +46,22 @@ spec:
                 type: object
               secureParameters:
                 properties:
-                  map:
-                    additionalProperties:
-                      type: string
-                    type: object
+                  secret:
+                    type: string
                 type: object
+              taskDefinition:
+                type: string
               workload:
                 description: Foo is an example field of KeptnTask. Edit keptntask_types.go
                   to remove/update
                 type: string
+              workloadVersion:
+                type: string
             required:
             - application
+            - taskDefinition
             - workload
+            - workloadVersion
             type: object
           status:
             description: KeptnTaskStatus defines the observed state of KeptnTask

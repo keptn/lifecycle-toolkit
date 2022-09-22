@@ -33,9 +33,16 @@ type KeptnTaskDefinitionSpec struct {
 }
 
 type FunctionSpec struct {
-	FunctionReference FunctionReference `json:"functionRef,omitempty"`
-	InlineReference   InlineReference   `json:"inlineRef,omitempty"`
-	HttpReference     HttpReference     `json:"httpRef,omitempty"`
+	FunctionReference  FunctionReference  `json:"functionRef,omitempty"`
+	InlineReference    InlineReference    `json:"inlineRef,omitempty"`
+	HttpReference      HttpReference      `json:"httpRef,omitempty"`
+	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
+	Parameters         TaskParams         `json:"parameters,omitempty"`
+	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
+}
+
+type ConfigMapReference struct {
+	Name string `json:"name,omitempty"`
 }
 
 type FunctionReference struct {
@@ -57,6 +64,7 @@ type ContainerSpec struct {
 type KeptnTaskDefinitionStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	ConfigMap string `json:"configMap,omitempty"`
 }
 
 //+kubebuilder:object:root=true

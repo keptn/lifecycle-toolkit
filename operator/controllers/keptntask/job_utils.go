@@ -81,14 +81,15 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		r.Recorder.Event(task, "Warning", "JobNotCreated", fmt.Sprintf("Could not create Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 		return job.Name, err
 	}
+	r.Recorder.Event(task, "Normal", "JobCreated", fmt.Sprintf("Created Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 	return job.Name, nil
 }
 
 func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha1.KeptnTask) error {
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil {
-		r.Recorder.Event(task, "Warning", "JobNotFound", fmt.Sprintf("Could not find Job / Namespace: %s, Name: %s ", task.Namespace, task.Status.JobName))
 		task.Status.JobName = ""
+		r.Recorder.Event(task, "Warning", "JobReferenceRemoved", fmt.Sprintf("Removed Job Reference as Job could not be found / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 		err = r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not update job reference reference for: "+task.Name)

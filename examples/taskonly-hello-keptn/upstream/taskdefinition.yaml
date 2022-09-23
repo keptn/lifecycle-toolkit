@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn
+spec:
+  function:
+    httpRef:
+
+

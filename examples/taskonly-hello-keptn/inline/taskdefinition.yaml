@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
-  name: hello-keptn
+  name: hello-keptn-inline
 spec:
   function:
     inlineRef:

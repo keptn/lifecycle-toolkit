@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: thschue/lifecycle-controller
-  newTag: 0.0.9
+  newTag: 0.0.11

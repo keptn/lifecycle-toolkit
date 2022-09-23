@@ -9,4 +9,4 @@ spec:
   application: my-app
   parameters:
     map:
-      name: "Developer"
+      name: "Keptn-Developer"

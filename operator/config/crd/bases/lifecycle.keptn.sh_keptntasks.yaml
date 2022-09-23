@@ -15,7 +15,23 @@ spec:
     singular: keptntask
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.application
+      name: Application
+      type: string
+    - jsonPath: .spec.workload
+      name: Workload
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: Version
+      type: string
+    - jsonPath: .status.jobName
+      name: Job Name
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KeptnTask is the Schema for the keptntasks API
@@ -68,7 +84,7 @@ spec:
             properties:
               jobName:
                 type: string
-              state:
+              status:
                 type: string
             type: object
         type: object

@@ -64,6 +64,12 @@ type ContainerSpec struct {
 type KeptnTaskDefinitionStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	Function FunctionStatus `json:"function,omitempty"`
+}
+
+type FunctionStatus struct {
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
 	ConfigMap string `json:"configMap,omitempty"`
 }
 

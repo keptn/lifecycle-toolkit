@@ -18,6 +18,8 @@ package main
 
 import (
 	"flag"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
 	"os"
 
@@ -130,7 +132,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "ServiceRun")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnTaskReconciler{
+	if err = (&keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTask Controller"),
@@ -139,7 +141,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnTaskDefinitionReconciler{
+	if err = (&keptntaskdefinition.KeptnTaskDefinitionReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),

@@ -37,6 +37,19 @@ type KeptnTaskSpec struct {
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 
+type KeptnTaskPhase string
+
+const (
+	// TaskPending means the task has been accepted by the system, but the corresponding Job did not start
+	TaskPending KeptnTaskPhase = "Pending"
+	// TaskRunning means that the Job has been started.
+	TaskRunning KeptnTaskPhase = "Running"
+	// TaskFailed means that the Job failed
+	TaskFailed KeptnTaskPhase = "Failed"
+	// TaskSucceeded means that the Job has finished successfully
+	TaskSucceeded KeptnTaskPhase = "Succeeded"
+)
+
 type TaskParams struct {
 	Inline map[string]string `json:"map,omitempty"`
 }
@@ -47,14 +60,19 @@ type SecureParameters struct {
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
-	JobName string `json:"jobName,omitempty"`
-	State   string `json:"state,omitempty"`
+	JobName string         `json:"jobName,omitempty"`
+	Status  KeptnTaskPhase `json:"status,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Application",type=string,JSONPath=`.spec.application`
+// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workload`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.workloadVersion`
+// +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`
+// +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.status`
 
 // KeptnTask is the Schema for the keptntasks API
 type KeptnTask struct {

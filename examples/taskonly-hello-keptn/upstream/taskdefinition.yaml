@@ -1,0 +1,13 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-upstream
+spec:
+  function:
+    functionRef:
+      name: hello-keptn-upstream-parent
+    parameters:
+      map:
+        name: "Developer"
+
+

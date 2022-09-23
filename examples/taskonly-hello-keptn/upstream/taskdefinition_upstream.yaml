@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
-  name: hello-keptn-http
+  name: hello-keptn-upstream-parent
 spec:
   function:
     httpRef:

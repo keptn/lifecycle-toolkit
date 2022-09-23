@@ -106,7 +106,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	disableWebhook = true
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
 	}

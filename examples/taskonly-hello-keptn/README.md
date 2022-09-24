@@ -1,7 +1,7 @@
 # Hello, Keptn!
 
 ## Goal
-This example shows how to define a function inline and pass over parameters to this function.
+This example shows how to define an inline function and pass over parameters to its execution.
 
 ## Variants
 * `inline` - shows how to specify a function directly in the `KeptnTaskDefinition`

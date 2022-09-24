@@ -30,7 +30,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	task.Status.Status = klcv1alpha1.TaskPending
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
-		r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
+		r.Log.Error(err, "could not update KeptnTask status reference for: "+ task.Name)
 	}
 	r.Log.Info("updated configmap status reference for: " + definition.Name)
 	return nil
@@ -89,10 +89,10 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil {
 		task.Status.JobName = ""
-		r.Recorder.Event(task, "Warning", "JobReferenceRemoved", fmt.Sprintf("Removed Job Reference as Job could not be found / Namespace: %s, Name: %s ", task.Namespace, task.Name))
+		r.Recorder.Event(task, "Warning", "JobReferenceRemoved", fmt.Sprintf("Removed Job Reference as Job could not be found / Namespace: %s, TaskName: %s ", task.Namespace, task.Name))
 		err = r.Client.Status().Update(ctx, task)
 		if err != nil {
-			r.Log.Error(err, "could not update job reference reference for: "+task.Name)
+			r.Log.Error(err, "could not remove job reference for: "+task.Name)
 		}
 		return err
 	}
@@ -100,7 +100,7 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 		task.Status.Status = klcv1alpha1.TaskSucceeded
 		err = r.Client.Status().Update(ctx, task)
 		if err != nil {
-			r.Log.Error(err, "could not update job reference reference for: "+task.Name)
+			r.Log.Error(err, "could not update job status for: "+task.Name)
 		}
 	}
 	return nil

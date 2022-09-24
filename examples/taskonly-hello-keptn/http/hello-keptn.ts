@@ -4,4 +4,4 @@ let name;
 data = JSON.parse(text);
 
 name = data.name
-console.log("Hello, " + name );
+console.log("Hello, " + name);

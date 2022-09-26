@@ -44,15 +44,6 @@ type KeptnTaskDefinitionReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions/finalizers,verbs=update
 //+kubebuilder:rbac:groups=core,resources=configmaps,verbs=create;get;update;list;watch
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the KeptnTaskDefinition object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling KeptnTaskDefinition")
 
@@ -69,7 +60,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 	}
 
 	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha1.FunctionSpec{}) {
-		err := r.ReconcileFunction(ctx, req, definition)
+		err := r.reconcileFunction(ctx, req, definition)
 		if err != nil {
 			return ctrl.Result{}, nil
 		}

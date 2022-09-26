@@ -68,8 +68,6 @@ spec:
               taskDefinition:
                 type: string
               workload:
-                description: Foo is an example field of KeptnTask. Edit keptntask_types.go
-                  to remove/update
                 type: string
               workloadVersion:
                 type: string

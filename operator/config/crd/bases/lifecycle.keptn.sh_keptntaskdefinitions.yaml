@@ -37,8 +37,6 @@ spec:
             description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
             properties:
               function:
-                description: Foo is an example field of KeptnTaskDefinition. Edit
-                  keptntaskdefinition_types.go to remove/update
                 properties:
                   configMapRef:
                     properties:
@@ -55,7 +53,7 @@ spec:
                       url:
                         type: string
                     type: object
-                  inlineRef:
+                  inline:
                     properties:
                       code:
                         type: string

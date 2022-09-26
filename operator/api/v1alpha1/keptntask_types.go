@@ -25,15 +25,11 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of KeptnTask. Edit keptntask_types.go to remove/update
 	Workload         string           `json:"workload"`
 	WorkloadVersion  string           `json:"workloadVersion"`
 	Application      string           `json:"application"`
 	TaskDefinition   string           `json:"taskDefinition"`
-	Parameters       TaskParams       `json:"parameters,omitempty"`
+	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 
@@ -50,7 +46,7 @@ const (
 	TaskSucceeded KeptnTaskPhase = "Succeeded"
 )
 
-type TaskParams struct {
+type TaskParameters struct {
 	Inline map[string]string `json:"map,omitempty"`
 }
 

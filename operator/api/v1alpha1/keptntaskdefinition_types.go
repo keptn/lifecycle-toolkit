@@ -25,19 +25,15 @@ import (
 
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of KeptnTaskDefinition. Edit keptntaskdefinition_types.go to remove/update
 	Function FunctionSpec `json:"function,omitempty"`
 }
 
 type FunctionSpec struct {
 	FunctionReference  FunctionReference  `json:"functionRef,omitempty"`
-	InlineReference    InlineReference    `json:"inlineRef,omitempty"`
+	Inline             Inline             `json:"inline,omitempty"`
 	HttpReference      HttpReference      `json:"httpRef,omitempty"`
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
-	Parameters         TaskParams         `json:"parameters,omitempty"`
+	Parameters         TaskParameters     `json:"parameters,omitempty"`
 	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
 }
 
@@ -49,7 +45,7 @@ type FunctionReference struct {
 	Name string `json:"name,omitempty"`
 }
 
-type InlineReference struct {
+type Inline struct {
 	Code string `json:"code,omitempty"`
 }
 

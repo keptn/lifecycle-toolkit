@@ -23,15 +23,15 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// ApplicationSpec defines the desired state of Application
-type ApplicationSpec struct {
-	Services       []Service `json:"services,omitempty"`
-	PreDeployment  []string  `json:"pre-deployment,omitempty"`
-	PostDeployment []string  `json:"post-deployment,omitempty"`
+// KeptnAppSpec defines the desired state of KeptnApp
+type KeptnAppSpec struct {
+	Workloads           []KeptnWorkload `json:"workloads,omitempty"`
+	PreDeploymentTasks  []string        `json:"preDeploymentTasks,omitempty"`
+	PostDeploymentTasks []string        `json:"postDeploymentTasks,omitempty"`
 }
 
-// ApplicationStatus defines the observed state of Application
-type ApplicationStatus struct {
+// KeptnAppStatus defines the observed state of KeptnApp
+type KeptnAppStatus struct {
 	Status ApplicationPhase `json:"status"`
 }
 
@@ -41,7 +41,7 @@ const (
 	// ApplicationPending means the application has been accepted by the system, but one or more of its
 	// services has not been started.
 	ApplicationPending ApplicationPhase = "Pending"
-	// ApplicationRunning means that all of the services have been started.
+	// ApplicationRunning means that all of the workloads have been started.
 	ApplicationRunning ApplicationPhase = "Running"
 	// ApplicationFailed means that one or more pre-deployment checks was not successful and terminated.
 	ApplicationFailed ApplicationPhase = "Failed"
@@ -52,24 +52,24 @@ const (
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Application is the Schema for the applications API
-type Application struct {
+// KeptnApp is the Schema for the keptnapps API
+type KeptnApp struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ApplicationSpec   `json:"spec,omitempty"`
-	Status ApplicationStatus `json:"status,omitempty"`
+	Spec   KeptnAppSpec   `json:"spec,omitempty"`
+	Status KeptnAppStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// ApplicationList contains a list of Application
-type ApplicationList struct {
+// KeptnAppList contains a list of KeptnApp
+type KeptnAppList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Application `json:"items"`
+	Items           []KeptnApp `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Application{}, &ApplicationList{})
+	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
 }

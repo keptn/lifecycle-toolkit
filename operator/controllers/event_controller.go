@@ -146,8 +146,8 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
-				common.ApplicationAnnotation: event.Spec.Application,
-				common.ServiceAnnotation:     event.Spec.Service,
+				common.AppAnnotation:      event.Spec.Application,
+				common.WorkloadAnnotation: event.Spec.Service,
 			},
 			Name:      r.generateSuffix(),
 			Namespace: event.Namespace,
@@ -179,9 +179,9 @@ func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType stri
 			Namespace:       event.Namespace,
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
-				common.ApplicationAnnotation: event.Spec.Application,
-				common.ServiceAnnotation:     event.Spec.Service,
-				common.EventAnnotation:       event.Name,
+				common.AppAnnotation:      event.Spec.Application,
+				common.WorkloadAnnotation: event.Spec.Service,
+				common.EventAnnotation:    event.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{

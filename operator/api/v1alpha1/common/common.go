@@ -1,6 +1,6 @@
 package common
 
-const ServiceAnnotation = "keptn.sh/service"
+const WorkloadAnnotation = "keptn.sh/workload"
 const VersionAnnotation = "keptn.sh/version"
-const ApplicationAnnotation = "keptn.sh/application"
+const AppAnnotation = "keptn.sh/app"
 const EventAnnotation = "keptn.sh/event"

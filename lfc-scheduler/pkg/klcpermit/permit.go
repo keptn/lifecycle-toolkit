@@ -18,8 +18,8 @@ const (
 
 // Permit is a plugin that implements a wait for pre-deployment checks
 type Permit struct {
-	handler    framework.Handle
-	svcManager *ServiceManager
+	handler         framework.Handle
+	workloadManager *WorkloadManager
 }
 
 var _ framework.PermitPlugin = &Permit{}
@@ -33,7 +33,7 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 
 	klog.InfoS("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
 
-	switch pl.svcManager.Permit(ctx, p) {
+	switch pl.workloadManager.Permit(ctx, p) {
 
 	case Wait:
 		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
@@ -59,8 +59,8 @@ func New(_ runtime.Object, h framework.Handle) (framework.Plugin, error) {
 	}
 
 	return &Permit{
-		svcManager: NewServiceManager(client),
-		handler:    h,
+		workloadManager: NewWorkloadManager(client),
+		handler:         h,
 	}, nil
 }
 

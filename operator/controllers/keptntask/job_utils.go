@@ -30,7 +30,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	task.Status.Status = klcv1alpha1.TaskPending
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
-		r.Log.Error(err, "could not update KeptnTask status reference for: "+ task.Name)
+		r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
 	}
 	r.Log.Info("updated configmap status reference for: " + definition.Name)
 	return nil

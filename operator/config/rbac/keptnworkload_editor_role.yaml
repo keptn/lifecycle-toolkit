@@ -1,20 +1,24 @@
-# permissions for end users to view services.
+# permissions for end users to edit keptnworkloads.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: service-viewer-role
+  name: keptnworkload-editor-role
 rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services
+  - keptnworkloads
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services/status
+  - keptnworkloads/status
   verbs:
   - get

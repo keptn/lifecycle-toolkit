@@ -10,86 +10,86 @@ import (
 	"k8s.io/klog/v2"
 )
 
-var serviceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "serviceruns"} //TODO change this resource name with workloadinstance and eventually appinstance :)
+var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "keptnworkloadinstances"} //TODO change this resource name with workloadinstance and eventually appinstance :)
 
 type Status string
 
 const (
-	ServiceRunStatusNotSpecified Status = "Service run status not specified"
-	ServiceRunNotFound           Status = "Service run not found"
-	Success                      Status = "Success"
-	Failure                      Status = "Failure"
-	Wait                         Status = "Wait"
+	WorkloadInstanceStatusNotSpecified Status = "Workload run status not specified"
+	WorkloadInstanceNotFound           Status = "Workload run not found"
+	Success                            Status = "Success"
+	Failure                            Status = "Failure"
+	Wait                               Status = "Wait"
 )
 
 const (
-	// ServiceRunPending means the application has been accepted by the system, but one or more of its
-	// serviceRuns has not been started.
-	ServiceRunPending string = "Pending"
-	// ServiceRunRunning means that serviceRun has been started.
-	ServiceRunRunning string = "Running"
-	// ServiceRunSucceeded means that serviceRun has been finished successfully.
-	ServiceRunSucceeded string = "Succeeded"
-	// ServiceRunFailed means that one or more pre-deployment checks was not successful and terminated.
-	ServiceRunFailed string = "Failed"
-	// ServiceRunUnknown means that for some reason the state of the application could not be obtained.
-	ServiceRunUnknown string = "Unknown"
+	// WorkloadInstancePending means the application has been accepted by the system, but one or more of its
+	// workloadInstances has not been started.
+	WorkloadInstancePending string = "Pending"
+	// WorkloadInstanceRunning means that workloadInstance has been started.
+	WorkloadInstanceRunning string = "Running"
+	// WorkloadInstanceSucceeded means that workloadInstance has been finished successfully.
+	WorkloadInstanceSucceeded string = "Succeeded"
+	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
+	WorkloadInstanceFailed string = "Failed"
+	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
+	WorkloadInstanceUnknown string = "Unknown"
 )
 
 type Manager interface {
 	Permit(context.Context, *corev1.Pod) Status
 }
 
-type ServiceManager struct {
+type WorkloadManager struct {
 	dynamicClient dynamic.Interface
 }
 
-func NewServiceManager(d dynamic.Interface) *ServiceManager {
-	sMgr := &ServiceManager{
+func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
+	sMgr := &WorkloadManager{
 		dynamicClient: d,
 	}
 	return sMgr
 }
 
-func (sMgr *ServiceManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
-	//List service run CRDs
+func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
+	//List workloadInstance run CRDs
 	name := GetCRDName(pod)
 	crd, err := sMgr.GetCRD(ctx, metav1.NamespaceDefault, name)
 
 	if err != nil {
-		klog.Infof("[Keptn Permit Plugin] could not find service crd %s, err:%s", name, err.Error())
-		return ServiceRunNotFound
+		klog.Infof("[Keptn Permit Plugin] could not find workloadInstance crd %s, err:%s", name, err.Error())
+		return WorkloadInstanceNotFound
 	}
 	//check CRD status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "phase")
-	klog.Infof("[Keptn Permit Plugin] service crd %s, found %s with phase %s ", crd, found, phase)
+	klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
 		switch phase {
-		case ServiceRunPending:
+		case WorkloadInstancePending:
 			return Wait
-		case ServiceRunFailed:
+		case WorkloadInstanceFailed:
 			return Failure
-		case ServiceRunSucceeded:
+		case WorkloadInstanceSucceeded:
 			return Success
-		case ServiceRunRunning:
+		case WorkloadInstanceRunning:
 			return Wait
-		case ServiceRunUnknown:
+		case WorkloadInstanceUnknown:
 			return Wait
 		}
 
 	}
-	return ServiceRunStatusNotSpecified
+	return WorkloadInstanceStatusNotSpecified
 }
 
 //GetCRD returns unstructured to avoid tight coupling with the CRD resource
-func (sMgr *ServiceManager) GetCRD(ctx context.Context, namespace string, name string) (*unstructured.Unstructured, error) {
-	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/servicerun/name
-	return sMgr.dynamicClient.Resource(serviceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
+func (sMgr *WorkloadManager) GetCRD(ctx context.Context, namespace string, name string) (*unstructured.Unstructured, error) {
+	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/workloadinstance/name
+	return sMgr.dynamicClient.Resource(workloadInstanceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
 }
 
 func GetCRDName(pod *corev1.Pod) string {
-	application := pod.Annotations["keptn.sh/application"]
-	service := pod.Annotations["keptn.sh/service"]
+	application := pod.Annotations["keptn.sh/app"]
+	workloadInstance := pod.Annotations["keptn.sh/workload"]
 	version := pod.Annotations["keptn.sh/version"]
-	return application + "-" + service + "-" + version
+	return application + "-" + workloadInstance + "-" + version
 }

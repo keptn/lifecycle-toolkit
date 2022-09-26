@@ -6,7 +6,7 @@ spec:
   taskDefinition: slack-notification-inline
   workload: my-workload
   workloadVersion: "1.0"
-  application: my-app
+  app: my-app
   secureParameters:
     secret: slack-notification
 

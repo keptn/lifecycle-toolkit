@@ -1,9 +1,0 @@
-apiVersion: lifecycle.keptn.sh/v1alpha1
-kind: Application
-metadata:
-  name: application-sample
-  annotations:
-    keptn.sh/pre-deployment-tasks: scheduled-deployment
-    keptn.sh/post-deployment-tasks: slack-notification-deployment-1
-spec:
-  # TODO(user): Add fields here

@@ -176,7 +176,7 @@ jobs:
     - name: Publish Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
-        make push-release-images
+        make push-release-images TAG=${{ env.BRANCH }}.${{ env.DATETIME }}
 
 #    - name: "Docker Build keptn-sandbox/${{ matrix.config.artifact }}"
 #      id: docker_build_image

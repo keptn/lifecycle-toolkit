@@ -23,7 +23,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-type Owner struct {
+type ResourceReference struct {
 	UID  types.UID `json:"uid"`
 	Kind string    `json:"kind"`
 }
@@ -33,10 +33,10 @@ type Owner struct {
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	ApplicationName    string    `json:"application"`
-	Version            string    `json:"version"`
-	PreDeploymentCheck EventSpec `json:"preDeploymentCheck"`
-	Owner              Owner     `json:"owner"`
+	ApplicationName    string            `json:"application"`
+	Version            string            `json:"version"`
+	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
+	ResourceReference  ResourceReference `json:"resourceReference"`
 }
 
 // ServiceStatus defines the observed state of Service

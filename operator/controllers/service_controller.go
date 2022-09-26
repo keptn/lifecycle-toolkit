@@ -126,7 +126,7 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 			ApplicationName:    service.Spec.ApplicationName,
 			Version:            service.Spec.Version,
 			PreDeploymentCheck: service.Spec.PreDeploymentCheck,
-			Owner:              service.Spec.Owner,
+			ResourceReference:  service.Spec.ResourceReference,
 		},
 	}
 	return serviceRun, r.Create(ctx, serviceRun)

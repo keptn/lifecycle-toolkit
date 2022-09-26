@@ -175,7 +175,7 @@ func (r *PodMutatingWebhook) generateService(ctx context.Context, pod *corev1.Po
 		Spec: v1alpha1.ServiceSpec{
 			ApplicationName: applicationName,
 			Version:         version,
-			Owner: v1alpha1.Owner{
+			ResourceReference: v1alpha1.ResourceReference{
 				UID:  ownerUID,
 				Kind: ownerKind,
 			},

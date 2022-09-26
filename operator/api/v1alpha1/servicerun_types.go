@@ -25,10 +25,10 @@ import (
 
 // ServiceRunSpec defines the desired state of ServiceRun
 type ServiceRunSpec struct {
-	PreDeploymentCheck EventSpec `json:"preDeploymentCheck"`
-	ApplicationName    string    `json:"application"`
-	Version            string    `json:"version"`
-	Owner              Owner     `json:"owner"`
+	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
+	ApplicationName    string            `json:"application"`
+	Version            string            `json:"version"`
+	ResourceReference  ResourceReference `json:"resourceReference"`
 }
 
 type ServiceRunPhase string

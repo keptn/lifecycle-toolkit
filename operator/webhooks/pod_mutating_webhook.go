@@ -137,7 +137,9 @@ func (r *PodMutatingWebhook) handleService(ctx context.Context, logger logr.Logg
 		return nil
 	}
 
-	service = r.generateService(ctx, pod)
+	service.Spec.Version = pod.Annotations[common.VersionAnnotation]
+	service.Spec.ResourceReference = r.getResourceReference(pod)
+	service.Annotations[common.VersionAnnotation] = pod.Annotations[common.VersionAnnotation]
 	err = r.Client.Update(ctx, service)
 	if err != nil {
 		logger.Error(err, "Could not update Service")
@@ -156,16 +158,6 @@ func (r *PodMutatingWebhook) handleService(ctx context.Context, logger logr.Logg
 func (r *PodMutatingWebhook) generateService(ctx context.Context, pod *corev1.Pod) *v1alpha1.Service {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.ApplicationAnnotation]
-	ownerUID := pod.UID
-	ownerKind := "Pod"
-	if len(pod.OwnerReferences) != 0 {
-		for _, o := range pod.OwnerReferences {
-			if o.Kind == "ReplicaSet" {
-				ownerUID = o.UID
-				ownerKind = o.Kind
-			}
-		}
-	}
 	return &v1alpha1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: pod.Annotations,
@@ -173,12 +165,9 @@ func (r *PodMutatingWebhook) generateService(ctx context.Context, pod *corev1.Po
 			Namespace:   pod.Namespace,
 		},
 		Spec: v1alpha1.ServiceSpec{
-			ApplicationName: applicationName,
-			Version:         version,
-			ResourceReference: v1alpha1.ResourceReference{
-				UID:  ownerUID,
-				Kind: ownerKind,
-			},
+			ApplicationName:   applicationName,
+			Version:           version,
+			ResourceReference: r.getResourceReference(pod),
 			//for now hardcoded, will be changed in future
 			PreDeploymentCheck: v1alpha1.EventSpec{
 				Service:     r.getServiceName(pod),
@@ -243,4 +232,20 @@ func (r *PodMutatingWebhook) getServiceName(pod *corev1.Pod) string {
 	serviceName, _ := pod.Annotations[common.ServiceAnnotation]
 	applicationName, _ := pod.Annotations[common.ApplicationAnnotation]
 	return strings.ToLower(applicationName + "-" + serviceName)
+}
+
+func (r *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) v1alpha1.ResourceReference {
+	reference := v1alpha1.ResourceReference{
+		UID:  pod.UID,
+		Kind: pod.Kind,
+	}
+	if len(pod.OwnerReferences) != 0 {
+		for _, o := range pod.OwnerReferences {
+			if o.Kind == "ReplicaSet" {
+				reference.UID = o.UID
+				reference.Kind = o.Kind
+			}
+		}
+	}
+	return reference
 }

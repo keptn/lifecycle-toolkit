@@ -30,7 +30,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycl
     org.opencontainers.image.licenses="Apache-2.0"
 
 WORKDIR /
-COPY --from=builder /workspace/manager .
+COPY --from=builder /workspace/bin/manager .
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]

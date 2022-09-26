@@ -69,5 +69,5 @@ func init() {
 }
 
 func (s Service) GetServiceRunName() string {
-	return strings.ToLower(s.Spec.ApplicationName + "-" + s.Name + "-" + s.Spec.Version)
+	return strings.ToLower(s.Name + "-" + s.Spec.Version)
 }

@@ -149,7 +149,7 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 				common.ApplicationAnnotation: event.Spec.Application,
 				common.ServiceAnnotation:     event.Spec.Service,
 			},
-			Name:      event.Name + "-" + r.generateSuffix(),
+			Name:      r.generateSuffix(),
 			Namespace: event.Namespace,
 		},
 		Spec: event.Spec.JobSpec,
@@ -157,7 +157,7 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 	for i := 0; i < 5; i++ {
 		if err := r.Create(ctx, job); err != nil {
 			if errors.IsAlreadyExists(err) {
-				job.Name = event.Name + "-" + r.generateSuffix()
+				job.Name = r.generateSuffix()
 				continue
 			}
 			return nil, err

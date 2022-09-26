@@ -171,7 +171,7 @@ jobs:
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
-        make release-image
+        make release-image TAG=${{ env.BRANCH }}.${{ env.DATETIME }}
 
     - name: Publish Docker Images
       working-directory: ./${{ matrix.config.working-dir }}

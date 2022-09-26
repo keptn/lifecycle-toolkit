@@ -17,22 +17,30 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strings"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
+
+type ResourceReference struct {
+	UID  types.UID `json:"uid"`
+	Kind string    `json:"kind"`
+}
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // ServiceSpec defines the desired state of Service
 type ServiceSpec struct {
-	ApplicationName   string    `json:"application,omitempty"`
-	PreDeplymentCheck EventSpec `json:"preDeploymentCheck"`
+	ApplicationName    string            `json:"application"`
+	Version            string            `json:"version"`
+	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
+	ResourceReference  ResourceReference `json:"resourceReference"`
 }
 
 // ServiceStatus defines the observed state of Service
 type ServiceStatus struct {
-	Phase          ServiceRunPhase `json:"phase"`
-	ServiceRunName string          `json:"serviceRunName"`
 }
 
 //+kubebuilder:object:root=true
@@ -60,16 +68,6 @@ func init() {
 	SchemeBuilder.Register(&Service{}, &ServiceList{})
 }
 
-func (s Service) IsCompleted() bool {
-	if s.Status.Phase == ServiceRunSucceeded || s.Status.Phase == ServiceRunFailed || s.Status.Phase == ServiceRunUnknown {
-		return true
-	}
-	return false
-}
-
-func (s Service) IsServiceRunNotCreated() bool {
-	if s.Status.Phase == "" {
-		return true
-	}
-	return false
+func (s Service) GetServiceRunName() string {
+	return strings.ToLower(s.Name + "-" + s.Spec.Version)
 }

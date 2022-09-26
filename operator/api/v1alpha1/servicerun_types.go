@@ -25,7 +25,10 @@ import (
 
 // ServiceRunSpec defines the desired state of ServiceRun
 type ServiceRunSpec struct {
-	ServiceName string `json:"serviceName,omitempty"`
+	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
+	ApplicationName    string            `json:"application"`
+	Version            string            `json:"version"`
+	ResourceReference  ResourceReference `json:"resourceReference"`
 }
 
 type ServiceRunPhase string
@@ -46,8 +49,9 @@ const (
 
 // ServiceRunStatus defines the observed state of ServiceRun
 type ServiceRunStatus struct {
-	Phase                  ServiceRunPhase `json:"phase"`
-	PreDeploymentCheckName string          `json:"preDeploymentCheckName"`
+	PreDeploymentPhase     ServiceRunPhase `json:"preDeploymentPhase"`
+	PreDeploymentTaskName  string          `json:"preDeploymentTaskName"`
+	PostDeploymentTaskName string          `json:"postDeploymentTaskName"`
 }
 
 //+kubebuilder:object:root=true
@@ -76,14 +80,14 @@ func init() {
 }
 
 func (s ServiceRun) IsCompleted() bool {
-	if s.Status.Phase == ServiceRunSucceeded || s.Status.Phase == ServiceRunFailed || s.Status.Phase == ServiceRunUnknown {
+	if s.Status.PreDeploymentPhase == ServiceRunSucceeded || s.Status.PreDeploymentPhase == ServiceRunFailed || s.Status.PreDeploymentPhase == ServiceRunUnknown {
 		return true
 	}
 	return false
 }
 
 func (s ServiceRun) IsDeploymentCheckNotCreated() bool {
-	if s.Status.Phase == ServiceRunPending || s.Status.PreDeploymentCheckName == "" {
+	if s.Status.PreDeploymentPhase == ServiceRunPending || s.Status.PreDeploymentTaskName == "" {
 		return true
 	}
 	return false

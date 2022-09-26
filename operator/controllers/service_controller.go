@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"time"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	types "k8s.io/apimachinery/pkg/types"
@@ -29,8 +30,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -43,6 +44,9 @@ type ServiceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=services,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=services/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=services/finalizers,verbs=update
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=serviceruns/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -68,50 +72,32 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return reconcile.Result{}, fmt.Errorf("could not fetch Service: %+v", err)
 	}
 
-	if service.IsCompleted() {
-		return reconcile.Result{}, nil
-	}
-
 	logger.Info("Reconciling Service", "service", service.Name)
 
-	if service.IsServiceRunNotCreated() {
-		logger.Info("Service Run does not exist, creating")
-
-		serviceRunName, err := r.createServiceRun(ctx, service)
+	serviceRun := &v1alpha1.ServiceRun{}
+	err = r.Get(ctx, types.NamespacedName{Namespace: service.Namespace, Name: service.GetServiceRunName()}, serviceRun)
+	if errors.IsNotFound(err) {
+		logger.Info("Creating serviceRun from service", "service", service.Name)
+		serviceRun, err := r.createServiceRun(ctx, service)
 		if err != nil {
 			logger.Error(err, "Could not create ServiceRun")
 			return reconcile.Result{}, err
 		}
 
-		service.Status.Phase = v1alpha1.ServiceRunRunning
-		service.Status.ServiceRunName = serviceRunName
-
-		if err := r.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
+		k8sEvent := r.generateK8sEvent(service, serviceRun)
+		if err := r.Create(ctx, k8sEvent); err != nil {
+			logger.Error(err, "Could not send serviceRun created K8s event")
 			return reconcile.Result{}, err
 		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+
+		return ctrl.Result{}, nil
 	}
 
-	logger.Info("Checking status")
-
-	serviceRun := &v1alpha1.ServiceRun{}
-	err = r.Get(ctx, types.NamespacedName{Name: service.Status.ServiceRunName, Namespace: service.Namespace}, serviceRun)
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
-	if serviceRun.IsCompleted() {
-		service.Status.Phase = serviceRun.Status.Phase
-
-		if err := r.Status().Update(ctx, service); err != nil {
-			logger.Error(err, "Could not update Service")
-			return reconcile.Result{}, err
-		}
-		return ctrl.Result{}, nil
-	}
-
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -121,34 +107,64 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (string, error) {
+func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alpha1.Service) (*v1alpha1.ServiceRun, error) {
 	serviceRun := &v1alpha1.ServiceRun{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     service.Name,
+			Annotations: service.Annotations,
+			Name:        service.GetServiceRunName(),
+			Namespace:   service.Namespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: service.APIVersion,
+					Kind:       service.Kind,
+					Name:       service.Name,
+					UID:        service.UID,
+				},
 			},
-			Name:      service.Name + "-" + r.generateSuffix(),
-			Namespace: service.Namespace,
 		},
 		Spec: v1alpha1.ServiceRunSpec{
-			ServiceName: service.Name,
+			ApplicationName:    service.Spec.ApplicationName,
+			Version:            service.Spec.Version,
+			PreDeploymentCheck: service.Spec.PreDeploymentCheck,
+			ResourceReference:  service.Spec.ResourceReference,
 		},
 	}
-	for i := 0; i < 5; i++ {
-		if err := r.Create(ctx, serviceRun); err != nil {
-			if errors.IsAlreadyExists(err) {
-				serviceRun.Name = service.Name + "-" + r.generateSuffix()
-				continue
-			}
-			return "", err
-		}
-		break
-	}
-	return serviceRun.Name, nil
+	return serviceRun, r.Create(ctx, serviceRun)
 }
 
-func (r *ServiceReconciler) generateSuffix() string {
-	uid := uuid.New().String()
-	return uid[:10]
+func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, serviceRun *v1alpha1.ServiceRun) *corev1.Event {
+	return &corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName:    serviceRun.Name + "-created-",
+			Namespace:       serviceRun.Namespace,
+			ResourceVersion: "v1alpha1",
+			Labels: map[string]string{
+				common.ApplicationAnnotation: service.Spec.ApplicationName,
+				common.ServiceAnnotation:     serviceRun.Name,
+			},
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:      serviceRun.Kind,
+			Namespace: serviceRun.Namespace,
+			Name:      serviceRun.Name,
+		},
+		Reason:  "created",
+		Message: "serviceRun " + serviceRun.Name + " was created",
+		Source: corev1.EventSource{
+			Component: serviceRun.Kind,
+		},
+		Type: "Normal",
+		EventTime: metav1.MicroTime{
+			Time: time.Now().UTC(),
+		},
+		FirstTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		LastTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		Action:              "created",
+		ReportingController: "service-controller",
+		ReportingInstance:   "service-controller",
+	}
 }

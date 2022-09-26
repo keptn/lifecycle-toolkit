@@ -71,6 +71,8 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 		})
 	}
 
+	// Mount the function code if a ConfigMap is provided
+	// The ConfigMap might be provided manually or created by the TaskDefinition controller
 	if params.ConfigMap != "" {
 		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: "/var/data/function.ts"})
 
@@ -105,13 +107,17 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 	return job, nil
 }
 
-func parseFunctionTaskDefinition(definition *klcv1alpha1.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
+func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha1.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
 	params := FunctionExecutionParams{}
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
 	if definition.Spec.Function.FunctionReference != (klcv1alpha1.FunctionReference{}) {
 		hasParent = true
+	}
+
+	if definition.Status.Function.ConfigMap != "" && definition.Spec.Function.HttpReference.Url != "" {
+		r.Log.Info(fmt.Sprintf("The JobDefinition contains a ConfigMap and a HTTP Reference, ConfigMap is used / Namespace: %s, Name: %s  ", definition.Namespace, definition.Name))
 	}
 
 	// Check if there is a ConfigMap with the function for this object

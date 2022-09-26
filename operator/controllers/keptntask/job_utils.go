@@ -12,7 +12,7 @@ import (
 )
 
 func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha1.KeptnTask) error {
-	job := ""
+	jobName := ""
 	definition, err := r.getTaskDefinition(ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
 		r.Recorder.Event(task, "Warning", "TaskDefinitionNotFound", fmt.Sprintf("Could not find KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
@@ -20,13 +20,13 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	}
 
 	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha1.FunctionSpec{}) {
-		job, err = r.createFunctionJob(ctx, req, task, definition)
+		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
 		}
 	}
 
-	task.Status.JobName = job
+	task.Status.JobName = jobName
 	task.Status.Status = klcv1alpha1.TaskPending
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
@@ -37,7 +37,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 }
 
 func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha1.KeptnTask, definition *klcv1alpha1.KeptnTaskDefinition) (string, error) {
-	params, hasParent, err := parseFunctionTaskDefinition(definition)
+	params, hasParent, err := r.parseFunctionTaskDefinition(definition)
 	var parentJobParams FunctionExecutionParams
 	if err != nil {
 		return "", err
@@ -48,7 +48,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 			r.Recorder.Event(task, "Warning", "TaskDefinitionNotFound", fmt.Sprintf("Could not find KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
 			return "", err
 		}
-		parentJobParams, _, err = parseFunctionTaskDefinition(parentDefinition)
+		parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
 		if err != nil {
 			return "", err
 		}

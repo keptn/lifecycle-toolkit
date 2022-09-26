@@ -74,7 +74,7 @@ func (r *ServiceRunReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return reconcile.Result{}, fmt.Errorf("could not fetch ServiceRun: %+v", err)
 	}
 
-	// check for post-deployment checks
+	// check if the serviceRun is completed (scheduled checks are finished)
 	if serviceRun.IsCompleted() {
 		return reconcile.Result{}, nil
 	}
@@ -187,7 +187,7 @@ func (r *ServiceRunReconciler) generateK8sEvent(serviceRun *v1alpha1.ServiceRun,
 			GenerateName:    serviceRun.Name + "-" + eventType + "-",
 			Namespace:       serviceRun.Namespace,
 			ResourceVersion: "v1alpha1",
-			Labels:          serviceRun.Annotations,
+			Annotations:     serviceRun.Annotations,
 		},
 		InvolvedObject: corev1.ObjectReference{
 			Kind:      serviceRun.Kind,

@@ -31,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -101,13 +102,6 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	// to make use of .spec.replicaSetUID as a FieldSelector, we need to provide an index for that field
-	// if err := mgr.GetFieldIndexer().IndexField(context.Background(), &v1alpha1.Service{}, ".spec.ownerUID", func(rawObj client.Object) []string {
-	// 	service := rawObj.(*v1alpha1.Service)
-	// 	return []string{string(service.Spec.OwnerUID)}
-	// }); err != nil {
-	// 	return err
-	// }
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.Service{}).
 		Complete(r)
@@ -132,6 +126,7 @@ func (r *ServiceReconciler) createServiceRun(ctx context.Context, service *v1alp
 			ApplicationName:    service.Spec.ApplicationName,
 			Version:            service.Spec.Version,
 			PreDeploymentCheck: service.Spec.PreDeploymentCheck,
+			Owner:              service.Spec.Owner,
 		},
 	}
 	return serviceRun, r.Create(ctx, serviceRun)
@@ -144,8 +139,8 @@ func (r *ServiceReconciler) generateK8sEvent(service *v1alpha1.Service, serviceR
 			Namespace:       serviceRun.Namespace,
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
-				"keptn.sh/application": service.Spec.ApplicationName,
-				"keptn.sh/service":     serviceRun.Name,
+				common.ApplicationAnnotation: service.Spec.ApplicationName,
+				common.ServiceAnnotation:     serviceRun.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{

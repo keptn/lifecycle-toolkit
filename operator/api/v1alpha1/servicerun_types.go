@@ -28,6 +28,7 @@ type ServiceRunSpec struct {
 	PreDeploymentCheck EventSpec `json:"preDeploymentCheck"`
 	ApplicationName    string    `json:"application"`
 	Version            string    `json:"version"`
+	Owner              Owner     `json:"owner"`
 }
 
 type ServiceRunPhase string

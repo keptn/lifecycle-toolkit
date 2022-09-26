@@ -32,6 +32,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -117,10 +118,6 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		} else {
 			event.Status.Phase = v1alpha1.EventFailed
 		}
-		// if err := r.Delete(ctx, job); err != nil {
-		// 	logger.Error(err, "Could not delete Job")
-		// 	return reconcile.Result{}, err
-		// }
 		if err := r.Status().Update(ctx, event); err != nil {
 			logger.Error(err, "Could not update Event")
 			return reconcile.Result{}, err
@@ -149,8 +146,8 @@ func (r *EventReconciler) createJob(ctx context.Context, event *v1alpha1.Event) 
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{
-				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Service,
+				common.ApplicationAnnotation: event.Spec.Application,
+				common.ServiceAnnotation:     event.Spec.Service,
 			},
 			Name:      event.Name + "-" + r.generateSuffix(),
 			Namespace: event.Namespace,
@@ -182,9 +179,9 @@ func (r *EventReconciler) generateK8sEvent(event *v1alpha1.Event, eventType stri
 			Namespace:       event.Namespace,
 			ResourceVersion: "v1alpha1",
 			Labels: map[string]string{
-				"keptn.sh/application": event.Spec.Application,
-				"keptn.sh/service":     event.Spec.Service,
-				"keptn.sh/event":       event.Name,
+				common.ApplicationAnnotation: event.Spec.Application,
+				common.ServiceAnnotation:     event.Spec.Service,
+				common.EventAnnotation:       event.Name,
 			},
 		},
 		InvolvedObject: corev1.ObjectReference{

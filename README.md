@@ -40,7 +40,7 @@ The webhook should be as fast as possible and should not create/change any resou
 When the webhook receives a request for a new pod, it will look for the following annotations:
 
 ```
-(keptn.sh/application)
+keptn.sh/application (optional)
 keptn.sh/workload
 ```
 

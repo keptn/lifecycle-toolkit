@@ -1,10 +1,12 @@
-# Keptn Lifecycle Controller Playground
+# Keptn Lifecycle Controller
 
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+[![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
 
 The purpose of this repository is to demonstrate and experiment with
-a prototype of a Keptn Lifecycle Controller.
+a prototype of a _**Keptn Lifecycle Controller**_.
 The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
+It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
 The Keptn Lifecycle Controller is composed of the following components:
 

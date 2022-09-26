@@ -39,7 +39,7 @@ type ApplicationPhase string
 
 const (
 	// ApplicationPending means the application has been accepted by the system, but one or more of its
-	// services has not been started.
+	// workloads has not been started.
 	ApplicationPending ApplicationPhase = "Pending"
 	// ApplicationRunning means that all of the workloads have been started.
 	ApplicationRunning ApplicationPhase = "Running"

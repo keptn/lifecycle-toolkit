@@ -66,7 +66,7 @@ func init() {
 type WorkloadInstancePhase string
 
 const (
-	// WorkloadInstancePhasePending means the application has been accepted by the system, but one or more of its services is still pending
+	// WorkloadInstancePhasePending means that none of the WorkloadInstances have been created.
 	WorkloadInstancePhasePending WorkloadInstancePhase = "Pending"
 	// WorkloadInstancePhaseRunning means that all of the WorkloadInstances have been started.
 	WorkloadInstancePhaseRunning WorkloadInstancePhase = "Running"

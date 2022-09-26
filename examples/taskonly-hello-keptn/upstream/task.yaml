@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTask
+metadata:
+  name: hello-developer-upstream
+spec:
+  taskDefinition: hello-keptn-upstream
+  workload: my-workload
+  workloadVersion: "1.0"
+  application: my-app

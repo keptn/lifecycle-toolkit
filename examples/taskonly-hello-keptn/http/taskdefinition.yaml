@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-http
+spec:
+  function:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn-sandbox/lifecycle-controller/main/examples/taskonly-hello-keptn/http/hello-keptn.ts
+
+

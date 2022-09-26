@@ -18,6 +18,8 @@ package main
 
 import (
 	"flag"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
 	"os"
 
@@ -47,7 +49,6 @@ var (
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -128,6 +129,24 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ServiceRun")
+		os.Exit(1)
+	}
+	if err = (&keptntask.KeptnTaskReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTask Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
+		os.Exit(1)
+	}
+	if err = (&keptntaskdefinition.KeptnTaskDefinitionReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

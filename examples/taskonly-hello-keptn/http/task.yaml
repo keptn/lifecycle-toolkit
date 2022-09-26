@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTask
+metadata:
+  name: hello-developer-http
+spec:
+  taskDefinition: hello-keptn-http
+  workload: my-workload
+  workloadVersion: "1.0"
+  application: my-app
+  parameters:
+    map:
+      name: "Keptn-Developer"

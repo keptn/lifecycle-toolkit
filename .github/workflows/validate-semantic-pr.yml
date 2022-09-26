@@ -31,25 +31,6 @@ jobs:
             revert
             style
             test
-          # Configure which scopes are allowed.
-          scopes: |
-            api
-            approval-service
-            bridge
-            cli
-            deps
-            deps-dev
-            distributor
-            docs
-            installer
-            lighthouse-service
-            mongodb-datastore
-            remediation-service
-            resource-service
-            secret-service
-            shipyard-controller
-            statistics-service
-            webhook-service
           # Configure that a scope must always be provided.
           requireScope: false
           # When using "Squash and merge" on a PR with only one commit, GitHub

@@ -23,11 +23,11 @@ release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
-	docker build --no-cache --build-arg ARCH="amd64" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build --load --no-cache --build-arg ARCH="amd64" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 
 .PHONY: release-image.arm64v8
 release-image.arm64v8: clean
-	docker build  --no-cache --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+	docker build  --load --no-cache --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 
 .PHONY: push-release-images
 push-release-images: release-image.amd64 release-image.arm64v8

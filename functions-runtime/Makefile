@@ -16,7 +16,7 @@ VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 
 .PHONY: release-image
-release-image: release-image.amd64 release-image.arm64V8
+release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean

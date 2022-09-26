@@ -2,8 +2,8 @@
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
-RELEASE_IMAGE:=functions-runtime:$(RELEASE_VERSION)
 TAG?=latest
+RELEASE_IMAGE:=functions-runtime:$(TAG)
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -20,17 +20,17 @@ release-image: release-image.amd64 release-image.arm64V8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
-	docker build --no-cache --build-arg ARCH="amd64" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64:$(TAG) .
+	docker build --no-cache --build-arg ARCH="amd64" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 
 .PHONY: release-image.arm64v8
 release-image.arm64v8: clean
-	docker build  --no-cache --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64:$(TAG) .
+	docker build  --no-cache --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 
 .PHONY: push-release-images
 push-release-images: release-image.amd64 release-image.arm64v8
 	#gcloud auth configure-docker
 	for arch in $(ARCHS); do \
-		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch}:$(TAG) ;\
+		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 	done
 	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
 	for arch in $(ARCHS); do \

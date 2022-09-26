@@ -104,24 +104,24 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 	return fmt.Sprint(h.Sum32())
 }
 
-func (r *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
 
 	workload := &klcv1alpha1.KeptnWorkload{}
-	err := r.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: r.getWorkloadName(pod)}, workload)
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
 	if errors.IsNotFound(err) {
 		logger.Info("Workload name", "workload", workloadName)
 
 		logger.Info("Creating workload workload", "workload", workload.Name)
-		workload = r.generateWorkload(pod)
-		err = r.Client.Create(ctx, workload)
+		workload = a.generateWorkload(pod, namespace)
+		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
 			return err
 		}
 
-		k8sEvent := r.generateK8sEvent(workload, "created")
-		if err := r.Client.Create(ctx, k8sEvent); err != nil {
+		k8sEvent := a.generateK8sEvent(workload, "created")
+		if err := a.Client.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send workload created K8s event")
 			return err
 		}
@@ -138,16 +138,16 @@ func (r *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	}
 
 	workload.Spec.Version = pod.Annotations[common.VersionAnnotation]
-	workload.Spec.ResourceReference = r.getResourceReference(pod)
+	workload.Spec.ResourceReference = a.getResourceReference(pod)
 	workload.Annotations[common.VersionAnnotation] = pod.Annotations[common.VersionAnnotation]
-	err = r.Client.Update(ctx, workload)
+	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
 		return err
 	}
 
-	k8sEvent := r.generateK8sEvent(workload, "updated")
-	if err := r.Client.Create(ctx, k8sEvent); err != nil {
+	k8sEvent := a.generateK8sEvent(workload, "updated")
+	if err := a.Client.Create(ctx, k8sEvent); err != nil {
 		logger.Error(err, "Could not send workload updated K8s event")
 		return err
 	}
@@ -155,22 +155,22 @@ func (r *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	return nil
 }
 
-func (r *PodMutatingWebhook) generateWorkload(pod *corev1.Pod) *klcv1alpha1.KeptnWorkload {
+func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: pod.Annotations,
-			Name:        r.getWorkloadName(pod),
-			Namespace:   pod.Namespace,
+			Name:        a.getWorkloadName(pod),
+			Namespace:   namespace,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:           applicationName,
 			Version:           version,
-			ResourceReference: r.getResourceReference(pod),
+			ResourceReference: a.getResourceReference(pod),
 			//for now hardcoded, will be changed in future
-			PreDeploymentTask: klcv1alpha1.EventSpec{
-				Service:     r.getWorkloadName(pod),
+			PreDeploymentTask: &klcv1alpha1.EventSpec{
+				Service:     a.getWorkloadName(pod),
 				Application: applicationName,
 				JobSpec: v1.JobSpec{
 					Template: corev1.PodTemplateSpec{
@@ -191,7 +191,7 @@ func (r *PodMutatingWebhook) generateWorkload(pod *corev1.Pod) *klcv1alpha1.Kept
 	}
 }
 
-func (r *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, eventType string) *corev1.Event {
+func (a *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, eventType string) *corev1.Event {
 	return &corev1.Event{
 		ObjectMeta: metav1.ObjectMeta{
 			GenerateName:    workload.Name + "-" + eventType + "-",
@@ -228,13 +228,13 @@ func (r *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkloa
 	}
 }
 
-func (r *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
+func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 	return strings.ToLower(applicationName + "-" + workloadName)
 }
 
-func (r *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {
+func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {
 	reference := klcv1alpha1.ResourceReference{
 		UID:  pod.UID,
 		Kind: pod.Kind,

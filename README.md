@@ -16,7 +16,7 @@ The Keptn Scheduler ensures that Pods are started only after the pre-deployment 
 
 ## Architecture
 
-![](./assets/architecture.jpg)
+![](./assets/architecture.png)
 
 A Kubernetes Manifest, which is annotated with Keptn specific annotations, gets applied to the Kubernetes Cluster.
 Afterward, the Keptn Scheduler gets injected (via Mutating Webhook), and Kubernetes Events for Pre-Deployment are sent to the event stream.

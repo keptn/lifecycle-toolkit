@@ -16209,8 +16209,6 @@ spec:
                 type: string
             required:
             - app
-            - postDeploymentTask
-            - preDeploymentTask
             - resourceReference
             - version
             type: object

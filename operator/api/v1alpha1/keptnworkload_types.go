@@ -30,8 +30,8 @@ type KeptnWorkloadSpec struct {
 	AppName string `json:"app"`
 	Version string `json:"version"`
 	//TODO: Replace them with KeptnTasks
-	PreDeploymentTask  EventSpec         `json:"preDeploymentTask"`
-	PostDeploymentTask EventSpec         `json:"postDeploymentTask"`
+	PreDeploymentTask  *EventSpec        `json:"preDeploymentTask,omitempty"`
+	PostDeploymentTask *EventSpec        `json:"postDeploymentTask,omitempty"`
 	ResourceReference  ResourceReference `json:"resourceReference"`
 }
 

@@ -125,7 +125,7 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
 			AppName:            workload.Spec.AppName,
 			Version:            workload.Spec.Version,
-			PreDeploymentCheck: workload.Spec.PreDeploymentTask,
+			PreDeploymentCheck: *workload.Spec.PreDeploymentTask,
 			ResourceReference:  workload.Spec.ResourceReference,
 		},
 	}

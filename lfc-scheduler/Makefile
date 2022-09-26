@@ -22,9 +22,9 @@ LOCAL_CONTROLLER_IMAGE=controller:latest
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=
+RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
-RELEASE_IMAGE:=kube-scheduler:$(RELEASE_VERSION)
+RELEASE_IMAGE:=lfc-scheduler:$(RELEASE_VERSION)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 
 # VERSION is the scheduler's version
@@ -87,6 +87,9 @@ test: fmt vet ## Run tests.
 local-image: clean
 	docker build -f ./build/scheduler/Dockerfile --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
 	#docker build -f ./build/controller/Dockerfile --build-arg ARCH="amd64" -t $(LOCAL_REGISTRY)/$(LOCAL_CONTROLLER_IMAGE) .
+
+.PHONY: release-image
+release-image: release-image.amd64 release-image.arm64V8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean

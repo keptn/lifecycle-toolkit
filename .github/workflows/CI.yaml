@@ -171,4 +171,4 @@ jobs:
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
-        make build-and-push-image TAG=${{ env.BRANCH }}.${{ env.DATETIME }}
+        make build-and-push-image TAG=dev-${{ env.DATETIME }}

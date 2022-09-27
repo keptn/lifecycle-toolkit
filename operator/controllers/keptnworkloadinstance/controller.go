@@ -24,8 +24,6 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
@@ -74,64 +72,28 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// check if the workloadInstance is completed (scheduled checks are finished)
-	if workloadInstance.IsCompleted() {
+	if workloadInstance.IsPostDeploymentCompleted() {
 		return reconcile.Result{}, nil
 	}
 
-	r.Log.Info("Reconciling KeptnWorkloadInstance", "workloadInstance", workloadInstance.Name)
-
-	if workloadInstance.IsDeploymentCheckNotCreated() {
-		r.Log.Info("Deployment checks do not exist, creating")
-
-		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, workloadInstance)
+	if workloadInstance.IsWorkloadResourceDeployed() {
+		resoncileResult, err := r.reconcilePostDeployment(ctx, req, workloadInstance)
 		if err != nil {
-			r.Log.Error(err, "Could not start pre-deployment checks")
-			return reconcile.Result{}, err
+			return ctrl.Result{}, err
 		}
-
-		workloadInstance.Status.PreDeploymentTaskName = preDeploymentCheckName
-		workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceRunning
-
-		r.Recorder.Event(workloadInstance, "Normal", "PreDeploymentChecksStarted", fmt.Sprintf("Started Pre-Deployment Checks / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
-
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			r.Log.Error(err, "Could not update KeptnWorkloadInstance")
-			return reconcile.Result{}, err
-		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+		return resoncileResult, nil
 	}
 
-	preDeploymentChecksEvent, err := r.getPreDeploymentChecksEvent(ctx, workloadInstance)
+	if workloadInstance.IsPreDeploymentCompleted() && !workloadInstance.IsWorkloadResourceDeployed() {
+		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+	}
+
+	resoncileResult, err := r.reconcilePreDeployment(ctx, req, workloadInstance)
 	if err != nil {
-		r.Log.Error(err, "Could not retrieve pre-deployment checks Event")
-		return reconcile.Result{}, err
+		return ctrl.Result{}, err
 	}
+	return resoncileResult, nil
 
-	r.Log.Info("Checking status")
-
-	if preDeploymentChecksEvent.IsCompleted() {
-		if preDeploymentChecksEvent.Status.Phase == klcv1alpha1.EventFailed {
-			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceFailed
-		} else {
-			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceSucceeded
-		}
-
-		if err := r.Delete(ctx, preDeploymentChecksEvent); err != nil {
-			r.Log.Error(err, "Could not delete Event")
-			return reconcile.Result{}, err
-		}
-
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			r.Log.Error(err, "Could not update KeptnWorkloadInstance")
-			return reconcile.Result{}, err
-		}
-
-		r.Recorder.Event(workloadInstance, "Normal", "PreDeploymentChecksFinished", fmt.Sprintf("Finished Pre-Deployment Checks / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
-
-		return reconcile.Result{}, nil
-	}
-
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -144,40 +106,4 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
-}
-
-func (r *KeptnWorkloadInstanceReconciler) startPreDeploymentChecks(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (string, error) {
-	event := &klcv1alpha1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: workloadInstance.Annotations,
-			Name:        workloadInstance.Name + "-" + r.generateSuffix(),
-			Namespace:   workloadInstance.Namespace,
-		},
-		Spec: klcv1alpha1.EventSpec{
-			Service:     workloadInstance.Name,
-			Application: workloadInstance.Spec.AppName,
-			JobSpec:     workloadInstance.Spec.PreDeploymentCheck.JobSpec,
-		},
-	}
-	for i := 0; i < 5; i++ {
-		if err := r.Create(ctx, event); err != nil {
-			if errors.IsAlreadyExists(err) {
-				event.Name = workloadInstance.Name + "-" + r.generateSuffix()
-				continue
-			}
-			return "", err
-		}
-		break
-	}
-	return event.Name, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) getPreDeploymentChecksEvent(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (*klcv1alpha1.Event, error) {
-	event := &klcv1alpha1.Event{}
-	err := r.Get(ctx, types.NamespacedName{Name: workloadInstance.Status.PreDeploymentTaskName, Namespace: workloadInstance.Namespace}, event)
-	if errors.IsNotFound(err) {
-		return nil, err
-	}
-
-	return event, nil
 }

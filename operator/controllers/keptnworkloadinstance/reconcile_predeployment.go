@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"time"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -23,7 +24,7 @@ type StatusSummary struct {
 
 var preDeploymentState StatusSummary
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (ctrl.Result, error) {
 	preDeploymentTasks := workloadInstance.Spec.PreDeploymentTasks
 	var err error
 	var newStatus []klcv1alpha1.WorkloadTaskStatus
@@ -47,7 +48,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 			if err != nil && errors.IsNotFound(err) {
 				taskIsNew = true
 			} else if err != nil {
-				return err
+				return ctrl.Result{}, err
 			}
 		} else {
 			taskIsNew = true
@@ -76,7 +77,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 			if err != nil {
 				r.Log.Error(err, "could not create KeptnTask")
 				r.Recorder.Event(workloadInstance, "Warning", "KeptnTaskNotCreated", fmt.Sprintf("Could not create KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
-				return err
+				return ctrl.Result{}, err
 			}
 			r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
 		}
@@ -90,11 +91,11 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		workloadInstance.Status.PreDeploymentTaskStatus = newStatus
 		err = r.Client.Status().Update(ctx, workloadInstance)
 		if err != nil {
-			return err
+			return ctrl.Result{}, err
 		}
 	}
 
-	return nil
+	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.WorkloadTaskStatus) klcv1alpha1.WorkloadTaskStatus {

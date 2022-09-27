@@ -83,16 +83,31 @@ const (
 	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
 )
 
-func (i KeptnWorkloadInstance) IsCompleted() bool {
+func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	if i.Status.PreDeploymentStatus == WorkloadInstanceSucceeded || i.Status.PreDeploymentStatus == WorkloadInstanceFailed || i.Status.PreDeploymentStatus == WorkloadInstanceUnknown {
 		return true
 	}
 	return false
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentCheckNotCreated() bool {
-	if i.Status.PreDeploymentStatus == WorkloadInstancePending /*|| i.Status.PreDeploymentTaskName == ""*/ {
+func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
+	if i.Status.PostDeploymentStatus == WorkloadInstanceSucceeded || i.Status.PostDeploymentStatus == WorkloadInstanceFailed || i.Status.PostDeploymentStatus == WorkloadInstanceUnknown {
 		return true
+	}
+	return false
+}
+
+func (i KeptnWorkloadInstance) IsWorkloadResourceDeployed() bool {
+	if i.Spec.ResourceReference.Kind == "Pod" {
+		if IsPodRunning(i.Spec.ResourceReference) {
+			return true
+		}
+		return false
+	} else {
+		if IsReplicaSetRunning(i.Spec.ResourceReference) {
+			return true
+		}
+		return false
 	}
 	return false
 }

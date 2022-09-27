@@ -46,32 +46,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - applications
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - applications/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - applications/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - events
   verbs:
   - create
@@ -91,6 +65,32 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - events/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnapps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnapps/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnapps/status
   verbs:
   - get
   - patch
@@ -150,13 +150,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - service
-  verbs:
-  - get
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - serviceruns
+  - keptnworkloadinstances
   verbs:
   - create
   - delete
@@ -168,13 +162,13 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - serviceruns/finalizers
+  - keptnworkloadinstances/finalizers
   verbs:
   - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - serviceruns/status
+  - keptnworkloadinstances/status
   verbs:
   - get
   - patch
@@ -182,7 +176,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services
+  - keptnworkloads
   verbs:
   - create
   - delete
@@ -194,13 +188,13 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services/finalizers
+  - keptnworkloads/finalizers
   verbs:
   - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services/status
+  - keptnworkloads/status
   verbs:
   - get
   - patch

@@ -1,13 +1,13 @@
-# permissions for end users to edit services.
+# permissions for end users to edit keptnworkloadinstances.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: service-editor-role
+  name: keptnworkloadinstance-editor-role
 rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services
+  - keptnworkloadinstances
   verbs:
   - create
   - delete
@@ -19,6 +19,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - services/status
+  - keptnworkloadinstances/status
   verbs:
   - get

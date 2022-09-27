@@ -19,40 +19,41 @@ package controllers
 import (
 	"context"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 )
 
-// ApplicationReconciler reconciles a Application object
-type ApplicationReconciler struct {
+// KeptnAppReconciler reconciles a KeptnApp object
+type KeptnAppReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=applications,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=applications/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=applications/finalizers,verbs=update
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the Application object against the actual cluster state, and then
+// the KeptnApp object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
 
-	logger.Info("reconciling application")
+	logger.Info("Reconciling KeptnApp")
 
-	var application v1alpha1.Application
-	if err := r.Get(ctx, req.NamespacedName, &application); err != nil {
-		logger.Error(err, "unable to fetch Application")
+	var keptnApp klcv1alpha1.KeptnApp
+	if err := r.Get(ctx, req.NamespacedName, &keptnApp); err != nil {
+		logger.Error(err, "unable to fetch KeptnApp")
 		// we'll ignore not-found errors, since they can't be fixed by an immediate
 		// requeue (we'll need to wait for a new notification), and we can get them
 		// on deleted requests.
@@ -63,8 +64,8 @@ func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.Application{}).
+		For(&klcv1alpha1.KeptnApp{}).
 		Complete(r)
 }

@@ -4,9 +4,6 @@ metadata:
   name: nginx-deployment
   labels:
     app: nginx
-  annotations:
-    keptn.sh/application: "application12"
-    keptn.sh/service: "service-test"
 spec:
   replicas: 3
   selector:
@@ -17,8 +14,8 @@ spec:
       labels:
         app: nginx
       annotations:
-        keptn.sh/application: "application12"
-        keptn.sh/service: "service-test"
+        keptn.sh/app: "application12"
+        keptn.sh/workload: "service-test"
     spec:
       containers:
       - name: nginx

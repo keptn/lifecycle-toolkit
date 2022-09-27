@@ -17,57 +17,58 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"strings"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"strings"
 )
+
+// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
+// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+// KeptnWorkloadSpec defines the desired state of KeptnWorkload
+type KeptnWorkloadSpec struct {
+	AppName string `json:"app"`
+	Version string `json:"version"`
+	//TODO: Replace them with KeptnTasks
+	PreDeploymentTask  *EventSpec        `json:"preDeploymentTask,omitempty"`
+	PostDeploymentTask *EventSpec        `json:"postDeploymentTask,omitempty"`
+	ResourceReference  ResourceReference `json:"resourceReference"`
+}
+
+// KeptnWorkloadStatus defines the observed state of KeptnWorkload
+type KeptnWorkloadStatus struct {
+}
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// KeptnWorkload is the Schema for the keptnworkloads API
+type KeptnWorkload struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   KeptnWorkloadSpec   `json:"spec,omitempty"`
+	Status KeptnWorkloadStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// KeptnWorkloadList contains a list of KeptnWorkload
+type KeptnWorkloadList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []KeptnWorkload `json:"items"`
+}
 
 type ResourceReference struct {
 	UID  types.UID `json:"uid"`
 	Kind string    `json:"kind"`
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// ServiceSpec defines the desired state of Service
-type ServiceSpec struct {
-	ApplicationName    string            `json:"application"`
-	Version            string            `json:"version"`
-	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
-	ResourceReference  ResourceReference `json:"resourceReference"`
-}
-
-// ServiceStatus defines the observed state of Service
-type ServiceStatus struct {
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// Service is the Schema for the services API
-type Service struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   ServiceSpec   `json:"spec,omitempty"`
-	Status ServiceStatus `json:"status,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-
-// ServiceList contains a list of Service
-type ServiceList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Service `json:"items"`
-}
-
 func init() {
-	SchemeBuilder.Register(&Service{}, &ServiceList{})
+	SchemeBuilder.Register(&KeptnWorkload{}, &KeptnWorkloadList{})
 }
 
-func (s Service) GetServiceRunName() string {
-	return strings.ToLower(s.Name + "-" + s.Spec.Version)
+func (w KeptnWorkload) GetWorkloadInstanceName() string {
+	return strings.ToLower(w.Name + "-" + w.Spec.Version)
 }

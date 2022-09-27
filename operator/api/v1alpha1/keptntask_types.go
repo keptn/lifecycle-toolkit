@@ -27,7 +27,7 @@ import (
 type KeptnTaskSpec struct {
 	Workload         string           `json:"workload"`
 	WorkloadVersion  string           `json:"workloadVersion"`
-	Application      string           `json:"application"`
+	AppName          string           `json:"app"`
 	TaskDefinition   string           `json:"taskDefinition"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
@@ -64,7 +64,7 @@ type KeptnTaskStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Application",type=string,JSONPath=`.spec.application`
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workload`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.workloadVersion`
 // +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`

@@ -18,13 +18,13 @@ The Keptn Scheduler ensures that Pods are started only after the pre-deployment 
 
 ## Architecture
 
-![](./assets/architecture.jpg)
+![](./assets/architecture.png)
 
 A Kubernetes Manifest, which is annotated with Keptn specific annotations, gets applied to the Kubernetes Cluster.
 Afterward, the Keptn Scheduler gets injected (via Mutating Webhook), and Kubernetes Events for Pre-Deployment are sent to the event stream.
 The Event Controller watches for events and triggers a Kubernetes Job to fullfil the Pre-Deployment.
 After the Pre-Deployment has finished, the Keptn Scheduler schedules the Pod to be deployed.
-The Application and Service Controllers watchfor the workload resources to finish and then generate a Post-Deployment Event.
+The KeptnApp and KeptnWorkload Controllers watchfor the workload resources to finish and then generate a Post-Deployment Event.
 After the Post-Deployment checks, SLOs can be validated using an interface for retrieving SLI data from a provider, e.g, [Prometheus](https://prometheus.io/).
 Finally, Keptn Lifecycle Controller exposes Metrics and Traces of the whole Deployment cycle with [OpenTelemetry](https://opentelemetry.io/).
 
@@ -42,7 +42,7 @@ The webhook should be as fast as possible and should not create/change any resou
 When the webhook receives a request for a new pod, it will look for the following annotations:
 
 ```
-keptn.sh/application (optional)
+keptn.sh/app (optional)
 keptn.sh/workload
 ```
 
@@ -65,24 +65,28 @@ After either one of those actions has been taken, the webhook will set the sched
 
 tbd
 
-### Application
+### Keptn App
 
 tbd
 
-### Workload
+### Keptn Workload
 
 A Workload contains information about which tasks should be performed during the `preDeployment` as well as the `postDeployment`
 phase of a deployment. In its state it keeps track of the currently active `Workload Instances`, which are responsible for doing those checks for
 a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version). 
 
-### Workload Instance
+### Keptn Workload Instance
 
-A Workload Instance is responsilbe for executing the pre- and post deployment checks of a workload. In its state, it keeps track of the current status of all checks, as well as the overall state of
+A Workload Instance is responsible for executing the pre- and post deployment checks of a workload. In its state, it keeps track of the current status of all checks, as well as the overall state of
 the Pre Deployment phase, which can be used by the scheduler to tell that a pod can be allowed to be placed on a node.
 Workload Instances have a reference to the respective Deployment/StatefulSet/ReplicaSet, to check if it has reached the desired state. If it detects that the referenced object has reached
 its desired state (e.g. all pods of a deployment are up and running), it will be able to tell that a `PostDeploymentCheck` can be triggered.
 
-### Task
+### Keptn Task
+
+tbd
+
+### Keptn Task Definition
 
 tbd
 

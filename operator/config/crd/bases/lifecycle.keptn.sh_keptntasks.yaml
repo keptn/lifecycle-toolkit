@@ -16,8 +16,8 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.application
-      name: Application
+    - jsonPath: .spec.app
+      name: AppName
       type: string
     - jsonPath: .spec.workload
       name: Workload
@@ -51,7 +51,7 @@ spec:
           spec:
             description: KeptnTaskSpec defines the desired state of KeptnTask
             properties:
-              application:
+              app:
                 type: string
               parameters:
                 properties:
@@ -72,7 +72,7 @@ spec:
               workloadVersion:
                 type: string
             required:
-            - application
+            - app
             - taskDefinition
             - workload
             - workloadVersion

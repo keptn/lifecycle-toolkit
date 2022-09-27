@@ -147,7 +147,6 @@ func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context
 func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
 	podList := &corev1.PodList{}
 	listOpts := []client.ListOption{
-		client.MatchingFieldsSelector{},
 		client.MatchingFields{"metadata.uid": string(resource.UID)},
 		client.MatchingFields{"status.phase": "Running"},
 		client.InNamespace(namespace),
@@ -164,8 +163,8 @@ func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, reso
 func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
 	podList := &corev1.PodList{}
 	listOpts := []client.ListOption{
-		client.MatchingFieldsSelector{},
-		client.MatchingFields{"metadata.uid": string(resource.UID)},
+		//client.MatchingFieldsSelector{},
+		client.MatchingFields{"metadata.ownerReferences[0].uid": string(resource.UID)},
 		client.InNamespace(namespace),
 	}
 

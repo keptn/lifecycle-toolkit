@@ -93,8 +93,6 @@ spec:
                       type: string
                     taskName:
                       type: string
-                  required:
-                  - TaskDefinitionName
                   type: object
                 type: array
               preDeploymentStatus:
@@ -108,15 +106,8 @@ spec:
                       type: string
                     taskName:
                       type: string
-                  required:
-                  - TaskDefinitionName
                   type: object
                 type: array
-            required:
-            - postDeploymentStatus
-            - postDeploymentTaskStatus
-            - preDeploymentStatus
-            - preDeploymentTaskStatus
             type: object
         type: object
     served: true

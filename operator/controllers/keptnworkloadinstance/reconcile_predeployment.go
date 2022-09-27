@@ -3,16 +3,14 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"math/rand"
-	"time"
-
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"math/rand"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 type StatusSummary struct {
@@ -24,55 +22,71 @@ type StatusSummary struct {
 
 var preDeploymentState StatusSummary
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (ctrl.Result, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 
+	// Check if pre-deployment is already done
 	if workloadInstance.IsPreDeploymentCompleted() {
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return nil
 	}
 
-	if workloadInstance.Status.PreDeploymentStatus == common.StatePending || workloadInstance.Status.PreDeploymentStatus == "" {
-		var newStatus []klcv1alpha1.WorkloadTaskStatus
-		// tasks not created yet, need to create them
-		for _, taskDefinition := range workloadInstance.Spec.PreDeploymentTasks {
-			taskName, err := r.createKeptnTask(ctx, req, workloadInstance, taskDefinition)
-			if err != nil {
-				return reconcile.Result{}, err
-			}
-			newStatus = append(newStatus, klcv1alpha1.WorkloadTaskStatus{
-				TaskDefinitionName: taskDefinition,
+	// Check current state of the PreDeploymentTasks
+	var newStatus []klcv1alpha1.WorkloadTaskStatus
+	for _, taskDefinitionName := range workloadInstance.Spec.PreDeploymentTasks {
+		taskStatus := r.getTaskStatus(taskDefinitionName, workloadInstance.Status.PreDeploymentTaskStatus)
+		task := &klcv1alpha1.KeptnTask{}
+		taskExists := false
+
+		// Create new state entry for the pre-deployment Task if it does not exist
+		if taskStatus == (klcv1alpha1.WorkloadTaskStatus{}) {
+			taskStatus = klcv1alpha1.WorkloadTaskStatus{
+				TaskDefinitionName: taskDefinitionName,
 				Status:             common.StatePending,
-				TaskName:           taskName,
-			})
+				TaskName:           "",
+			}
 		}
-		workloadInstance.Status.PreDeploymentTaskStatus = newStatus
-		workloadInstance.Status.PreDeploymentStatus = common.StateRunning
-		err := r.Client.Status().Update(ctx, workloadInstance)
-		if err != nil {
-			return ctrl.Result{}, err
+		// Check if task has already succeeded or failed
+		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
+			continue
 		}
 
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-	}
-	// tasks exist, check status
-	summary := StatusSummary{0, 0, 0, 0}
-	for _, taskStatus := range workloadInstance.Status.PreDeploymentTaskStatus {
-		if taskStatus.Status != common.StateFailed && taskStatus.Status != common.StateSucceeded {
-			task, err := r.getKeptnTask(ctx, taskStatus.TaskName, workloadInstance.Namespace)
-			if err != nil {
-				return ctrl.Result{}, err
+		// Check if Task is already created
+		if taskStatus.TaskName != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: workloadInstance.Namespace}, task)
+			if err != nil && errors.IsNotFound(err) {
+				taskStatus.TaskName = ""
+			} else {
+				return err
 			}
+			taskExists = true
+		}
+
+		// Create new Task if it does not exist
+		if !taskExists {
+			taskName, err := r.createKeptnTask(ctx, req.Namespace, workloadInstance, taskDefinitionName)
+			if err != nil {
+				return err
+			}
+			taskStatus.TaskName = taskName
+		} else {
+			// Update state of Task if it is already created
 			taskStatus.Status = task.Status.Status
 		}
-		updateStatusSummary(taskStatus.Status, summary)
+		// Update state of the Pre-Deployment Task
+		newStatus = append(newStatus, taskStatus)
+
+		// Update overall state for Pre-Deployment
+		updateStatusSummary(taskStatus.Status, preDeploymentState)
 	}
 
-	workloadInstance.Status.PreDeploymentStatus = getOverallState(summary)
+	workloadInstance.Status.PreDeploymentStatus = getOverallState(preDeploymentState)
+	workloadInstance.Status.PreDeploymentTaskStatus = newStatus
+
+	// Write Status Field
 	err := r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return ctrl.Result{}, err
+		return err
 	}
-
-	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	return nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.WorkloadTaskStatus) klcv1alpha1.WorkloadTaskStatus {
@@ -124,11 +138,11 @@ func generateTaskName(instance klcv1alpha1.KeptnWorkloadInstance, taskName strin
 	return fmt.Sprintf("%s-%s-%d", instance.Name, taskName, randomId)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string) (string, error) {
+func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string) (string, error) {
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      generateTaskName(*workloadInstance, taskDefinition),
-			Namespace: req.Namespace,
+			Namespace: namespace,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
 			Workload:         workloadInstance.Spec.WorkloadName,

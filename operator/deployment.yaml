@@ -1,3 +1,16 @@
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-world
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Hello World");
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +29,7 @@ spec:
       annotations:
         keptn.sh/app: "application12"
         keptn.sh/workload: "service-test"
-        keptn.sh/pre-deployment-tasks: "slack-notification"
+        keptn.sh/pre-deployment-tasks: "hello-world"
     spec:
       containers:
       - name: nginx

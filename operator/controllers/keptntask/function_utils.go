@@ -112,7 +112,7 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
-	if definition.Spec.Function.FunctionReference != nil {
+	if definition.Spec.Function.FunctionReference != (klcv1alpha1.FunctionReference{}) {
 		hasParent = true
 	}
 

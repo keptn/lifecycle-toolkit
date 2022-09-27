@@ -70,13 +70,18 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if err != nil {
+		r.Log.Error(err, "Workload Instance not found")
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
+
+	r.Log.Info("Workload Instance found", "instance", workloadInstance)
 
 	// check if the workloadInstance is completed (scheduled checks are finished)
 	if workloadInstance.IsPostDeploymentCompleted() {
 		return reconcile.Result{}, nil
 	}
+
+	r.Log.Info("Post deployment checks not finished")
 
 	if r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
 		resoncileResult, err := r.reconcilePostDeployment(ctx, req, workloadInstance)
@@ -86,9 +91,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return resoncileResult, nil
 	}
 
+	r.Log.Info("deployment not finished")
+
 	if workloadInstance.IsPreDeploymentCompleted() {
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
+
+	r.Log.Info("pre-deployment checks not finished")
 
 	resoncileResult, err := r.reconcilePreDeployment(ctx, req, workloadInstance)
 	if err != nil {
@@ -120,10 +129,10 @@ func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context
 
 func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
 	// TODO implement
-	return true
+	return false
 }
 
 func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
 	// TODO implement
-	return true
+	return false
 }

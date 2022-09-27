@@ -16,7 +16,7 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.application
+    - jsonPath: .spec.app
       name: AppName
       type: string
     - jsonPath: .spec.workload

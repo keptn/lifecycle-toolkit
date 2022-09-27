@@ -66,27 +66,27 @@ func init() {
 type WorkloadInstancePhase string
 
 const (
-	// WorkloadInstancePhasePending means that none of the WorkloadInstances have been created.
-	WorkloadInstancePhasePending WorkloadInstancePhase = "Pending"
-	// WorkloadInstancePhaseRunning means that all of the WorkloadInstances have been started.
-	WorkloadInstancePhaseRunning WorkloadInstancePhase = "Running"
-	// WorkloadInstancePhaseSucceeded means that all of the WorkloadInstances have been finished successfully.
-	WorkloadInstancePhaseSucceeded WorkloadInstancePhase = "Succeeded"
-	// WorkloadInstancePhaseFailed means that one or more pre-deployment checks was not successful and terminated.
-	WorkloadInstancePhaseFailed WorkloadInstancePhase = "Failed"
-	// WorkloadInstancePhaseUnknown means that for some reason the state of the application could not be obtained.
-	WorkloadInstancePhaseUnknown WorkloadInstancePhase = "Unknown"
+	// WorkloadInstancePending means that none of the WorkloadInstances have been created.
+	WorkloadInstancePending WorkloadInstancePhase = "Pending"
+	// WorkloadInstanceRunning means that all of the WorkloadInstances have been started.
+	WorkloadInstanceRunning WorkloadInstancePhase = "Running"
+	// WorkloadInstanceSucceeded means that all of the WorkloadInstances have been finished successfully.
+	WorkloadInstanceSucceeded WorkloadInstancePhase = "Succeeded"
+	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
+	WorkloadInstanceFailed WorkloadInstancePhase = "Failed"
+	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
+	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
 )
 
 func (i KeptnWorkloadInstance) IsCompleted() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstancePhaseSucceeded || i.Status.PreDeploymentPhase == WorkloadInstancePhaseFailed || i.Status.PreDeploymentPhase == WorkloadInstancePhaseUnknown {
+	if i.Status.PreDeploymentPhase == WorkloadInstanceSucceeded || i.Status.PreDeploymentPhase == WorkloadInstanceFailed || i.Status.PreDeploymentPhase == WorkloadInstanceUnknown {
 		return true
 	}
 	return false
 }
 
 func (i KeptnWorkloadInstance) IsDeploymentCheckNotCreated() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstancePhasePending || i.Status.PreDeploymentTaskName == "" {
+	if i.Status.PreDeploymentPhase == WorkloadInstancePending || i.Status.PreDeploymentTaskName == "" {
 		return true
 	}
 	return false

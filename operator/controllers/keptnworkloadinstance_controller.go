@@ -19,13 +19,14 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -90,7 +91,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 
 		workloadInstance.Status.PreDeploymentTaskName = preDeploymentCheckName
-		workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstancePhaseRunning
+		workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceRunning
 
 		k8sEvent := r.generateK8sEvent(workloadInstance, "started")
 		if err := r.Create(ctx, k8sEvent); err != nil {
@@ -115,9 +116,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if preDeploymentChecksEvent.IsCompleted() {
 		if preDeploymentChecksEvent.Status.Phase == klcv1alpha1.EventFailed {
-			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstancePhaseFailed
+			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceFailed
 		} else {
-			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstancePhaseSucceeded
+			workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceSucceeded
 		}
 
 		if err := r.Delete(ctx, preDeploymentChecksEvent); err != nil {

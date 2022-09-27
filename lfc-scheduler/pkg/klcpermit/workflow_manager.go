@@ -2,6 +2,7 @@ package klcpermit
 
 import (
 	"context"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -10,7 +11,7 @@ import (
 	"k8s.io/klog/v2"
 )
 
-var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "keptnworkloadinstances"} //TODO change this resource name with workloadinstance and eventually appinstance :)
+var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha1", Resource: "keptnworkloadinstances"}
 
 type Status string
 
@@ -22,18 +23,20 @@ const (
 	Wait                               Status = "Wait"
 )
 
+type WorkloadInstancePhase string
+
 const (
 	// WorkloadInstancePending means the application has been accepted by the system, but one or more of its
 	// workloadInstances has not been started.
-	WorkloadInstancePending string = "Pending"
+	WorkloadInstancePending WorkloadInstancePhase = "Pending"
 	// WorkloadInstanceRunning means that workloadInstance has been started.
-	WorkloadInstanceRunning string = "Running"
+	WorkloadInstanceRunning WorkloadInstancePhase = "Running"
 	// WorkloadInstanceSucceeded means that workloadInstance has been finished successfully.
-	WorkloadInstanceSucceeded string = "Succeeded"
+	WorkloadInstanceSucceeded WorkloadInstancePhase = "Succeeded"
 	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
-	WorkloadInstanceFailed string = "Failed"
+	WorkloadInstanceFailed WorkloadInstancePhase = "Failed"
 	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
-	WorkloadInstanceUnknown string = "Unknown"
+	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
 )
 
 type Manager interface {
@@ -64,7 +67,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "phase")
 	klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
-		switch phase {
+		switch WorkloadInstancePhase(phase) {
 		case WorkloadInstancePending:
 			return Wait
 		case WorkloadInstanceFailed:

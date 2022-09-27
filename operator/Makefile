@@ -1,3 +1,6 @@
+# Image URL to use all building/pushing image targets
+IMG ?= controller:latest
+
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn-sandbox

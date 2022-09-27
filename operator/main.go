@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
@@ -136,13 +137,15 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&controllers.KeptnWorkloadReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnWorkloadInstanceReconciler{
+	if err = (&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

@@ -14,32 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controllers
+package keptnworkloadinstance
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	"github.com/go-logr/logr"
 	"github.com/google/uuid"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 )
 
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme   *runtime.Scheme
+	Recorder record.EventRecorder
+	Log      logr.Logger
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -60,9 +61,7 @@ type KeptnWorkloadInstanceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger := log.FromContext(ctx)
-
-	logger.Info("Searching for Keptn Workload Instance")
+	r.Log.Info("Searching for Keptn Workload Instance")
 
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
 	err := r.Get(ctx, req.NamespacedName, workloadInstance)
@@ -79,28 +78,24 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, nil
 	}
 
-	logger.Info("Reconciling KeptnWorkloadInstance", "workloadInstance", workloadInstance.Name)
+	r.Log.Info("Reconciling KeptnWorkloadInstance", "workloadInstance", workloadInstance.Name)
 
 	if workloadInstance.IsDeploymentCheckNotCreated() {
-		logger.Info("Deployment checks do not exist, creating")
+		r.Log.Info("Deployment checks do not exist, creating")
 
 		preDeploymentCheckName, err := r.startPreDeploymentChecks(ctx, workloadInstance)
 		if err != nil {
-			logger.Error(err, "Could not start pre-deployment checks")
+			r.Log.Error(err, "Could not start pre-deployment checks")
 			return reconcile.Result{}, err
 		}
 
 		workloadInstance.Status.PreDeploymentTaskName = preDeploymentCheckName
 		workloadInstance.Status.PreDeploymentPhase = klcv1alpha1.WorkloadInstanceRunning
 
-		k8sEvent := r.generateK8sEvent(workloadInstance, "started")
-		if err := r.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send started pre-deployment checks event")
-			return reconcile.Result{}, err
-		}
+		r.Recorder.Event(workloadInstance, "Normal", "PreDeploymentChecksStarted", fmt.Sprintf("Started Pre-Deployment Checks / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
 
 		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			logger.Error(err, "Could not update KeptnWorkloadInstance")
+			r.Log.Error(err, "Could not update KeptnWorkloadInstance")
 			return reconcile.Result{}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
@@ -108,11 +103,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	preDeploymentChecksEvent, err := r.getPreDeploymentChecksEvent(ctx, workloadInstance)
 	if err != nil {
-		logger.Error(err, "Could not retrieve pre-deployment checks Event")
+		r.Log.Error(err, "Could not retrieve pre-deployment checks Event")
 		return reconcile.Result{}, err
 	}
 
-	logger.Info("Checking status")
+	r.Log.Info("Checking status")
 
 	if preDeploymentChecksEvent.IsCompleted() {
 		if preDeploymentChecksEvent.Status.Phase == klcv1alpha1.EventFailed {
@@ -122,20 +117,16 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 
 		if err := r.Delete(ctx, preDeploymentChecksEvent); err != nil {
-			logger.Error(err, "Could not delete Event")
+			r.Log.Error(err, "Could not delete Event")
 			return reconcile.Result{}, err
 		}
 
 		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			logger.Error(err, "Could not update KeptnWorkloadInstance")
+			r.Log.Error(err, "Could not update KeptnWorkloadInstance")
 			return reconcile.Result{}, err
 		}
 
-		k8sEvent := r.generateK8sEvent(workloadInstance, "finished")
-		if err := r.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send finished pre-deployment checks event")
-			return reconcile.Result{}, err
-		}
+		r.Recorder.Event(workloadInstance, "Normal", "PreDeploymentChecksFinished", fmt.Sprintf("Finished Pre-Deployment Checks / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
 
 		return reconcile.Result{}, nil
 	}
@@ -179,40 +170,6 @@ func (r *KeptnWorkloadInstanceReconciler) startPreDeploymentChecks(ctx context.C
 		break
 	}
 	return event.Name, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) generateK8sEvent(workloadInstance *klcv1alpha1.KeptnWorkloadInstance, eventType string) *corev1.Event {
-	return &corev1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    workloadInstance.Name + "-" + eventType + "-",
-			Namespace:       workloadInstance.Namespace,
-			ResourceVersion: "v1alpha1",
-			Annotations:     workloadInstance.Annotations,
-		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:      workloadInstance.Kind,
-			Namespace: workloadInstance.Namespace,
-			Name:      workloadInstance.Name,
-		},
-		Reason:  string(workloadInstance.Status.PreDeploymentPhase),
-		Message: "pre-deployment checks are " + eventType,
-		Source: corev1.EventSource{
-			Component: workloadInstance.Kind,
-		},
-		Type: "Normal",
-		EventTime: metav1.MicroTime{
-			Time: time.Now().UTC(),
-		},
-		FirstTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		LastTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		Action:              eventType,
-		ReportingController: "workloadInstance-controller",
-		ReportingInstance:   "workloadInstance-controller",
-	}
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getPreDeploymentChecksEvent(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (*klcv1alpha1.Event, error) {

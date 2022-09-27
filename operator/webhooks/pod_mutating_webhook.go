@@ -15,7 +15,6 @@ import (
 
 	"hash/fnv"
 
-	v1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -158,6 +157,28 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
+
+	var preDeploymentTasks []string
+	var postDeploymentTasks []string
+	var preDeploymentAnalysis []string
+	var postDeploymentAnalysis []string
+
+	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
+		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
+		preDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
+		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
+		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	}
+
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: pod.Annotations,
@@ -165,28 +186,13 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 			Namespace:   namespace,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:           applicationName,
-			Version:           version,
-			ResourceReference: a.getResourceReference(pod),
-			//for now hardcoded, will be changed in future
-			PreDeploymentTask: &klcv1alpha1.EventSpec{
-				Service:     a.getWorkloadName(pod),
-				Application: applicationName,
-				JobSpec: v1.JobSpec{
-					Template: corev1.PodTemplateSpec{
-						Spec: corev1.PodSpec{
-							Containers: []corev1.Container{
-								{
-									Name:    "hello-world",
-									Image:   "ubuntu:latest",
-									Command: []string{"echo", "Hello from Keptn"},
-								},
-							},
-							RestartPolicy: corev1.RestartPolicyNever,
-						},
-					},
-				},
-			},
+			AppName:                applicationName,
+			Version:                version,
+			ResourceReference:      a.getResourceReference(pod),
+			PreDeploymentTasks:     preDeploymentTasks,
+			PostDeploymentTasks:    postDeploymentTasks,
+			PreDeploymentAnalysis:  preDeploymentAnalysis,
+			PostDeploymentAnalysis: postDeploymentAnalysis,
 		},
 	}
 }

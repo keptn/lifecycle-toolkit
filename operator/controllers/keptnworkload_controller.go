@@ -19,26 +19,30 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"github.com/go-logr/logr"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"time"
 
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 )
 
 // KeptnWorkloadReconciler reconciles a KeptnWorkload object
 type KeptnWorkloadReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme   *runtime.Scheme
+	Recorder record.EventRecorder
+	Log      logr.Logger
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
@@ -58,9 +62,7 @@ type KeptnWorkloadReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger := log.FromContext(ctx)
-
-	logger.Info("Searching for workload")
+	r.Log.Info("Searching for workload")
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
@@ -72,31 +74,42 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return reconcile.Result{}, fmt.Errorf("could not fetch Workload: %+v", err)
 	}
 
-	logger.Info("Reconciling Keptn Workload", "workload", workload.Name)
+	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
-	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
-	if errors.IsNotFound(err) {
-		logger.Info("Creating KeptnWorkloadInstance from workload", "workload", workload.Name)
-		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
-		if err != nil {
-			logger.Error(err, "Could not create WorkloadInstance")
-			return reconcile.Result{}, err
-		}
-
-		k8sEvent := r.generateK8sEvent(workload, workloadInstance)
-		if err := r.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send WorkloadInstance created K8s event")
-			return reconcile.Result{}, err
-		}
-
-		return ctrl.Result{}, nil
-	}
-
+	newWorkloadInstance, err := r.createWorkloadInstance(workload)
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch WorkloadInstance: %+v", err)
+		return reconcile.Result{}, err
 	}
 
+	// Try to find the workload instance
+	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
+	// If the workload instance does not exist, create it
+	if err != nil && errors.IsNotFound(err) {
+		err = r.Client.Create(ctx, newWorkloadInstance)
+		if err != nil {
+			r.Log.Error(err, "could not create Workload Instance")
+			r.Recorder.Event(workload, "Warning", "WorkloadInstanceNotCreated", fmt.Sprintf("Could not create KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+			return ctrl.Result{}, err
+		}
+		r.Recorder.Event(workload, "Normal", "WorkloadInstanceCreated", fmt.Sprintf("Created KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+	} else if err != nil {
+		r.Log.Error(err, "could not get Workload Instance")
+		return ctrl.Result{}, err
+	}
+
+	// If the workload instance exists, check if it is up to date, update it if it is not
+	if !reflect.DeepEqual(workloadInstance.Spec, newWorkloadInstance.Spec) {
+		workloadInstance.Spec = newWorkloadInstance.Spec
+		err = r.Client.Update(ctx, workloadInstance)
+		if err != nil {
+			r.Log.Error(err, "could not update Workload Instance")
+			r.Recorder.Event(workload, "Warning", "WorkloadInstanceNotUpdated", fmt.Sprintf("Could not update KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+			return ctrl.Result{}, err
+		}
+		r.Recorder.Event(workload, "Normal", "WorkloadInstanceUpdated", fmt.Sprintf("Updated KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{}, nil
 }
 
@@ -107,29 +120,23 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: workload.Annotations,
 			Name:        workload.GetWorkloadInstanceName(),
 			Namespace:   workload.Namespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					APIVersion: workload.APIVersion,
-					Kind:       workload.Kind,
-					Name:       workload.Name,
-					UID:        workload.UID,
-				},
-			},
 		},
 		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-			AppName:            workload.Spec.AppName,
-			Version:            workload.Spec.Version,
-			PreDeploymentCheck: *workload.Spec.PreDeploymentTask,
-			ResourceReference:  workload.Spec.ResourceReference,
+			KeptnWorkloadSpec: workload.Spec,
+			WorkloadName:      workload.Name,
 		},
 	}
-	return workloadInstance, r.Create(ctx, workloadInstance)
+	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)
+	if err != nil {
+		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
+	}
+	return workloadInstance, err
 }
 
 func (r *KeptnWorkloadReconciler) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) *corev1.Event {

@@ -27,12 +27,13 @@ import (
 
 // KeptnWorkloadSpec defines the desired state of KeptnWorkload
 type KeptnWorkloadSpec struct {
-	AppName string `json:"app"`
-	Version string `json:"version"`
-	//TODO: Replace them with KeptnTasks
-	PreDeploymentTask  *EventSpec        `json:"preDeploymentTask,omitempty"`
-	PostDeploymentTask *EventSpec        `json:"postDeploymentTask,omitempty"`
-	ResourceReference  ResourceReference `json:"resourceReference"`
+	AppName                string            `json:"app"`
+	Version                string            `json:"version"`
+	PreDeploymentTasks     []string          `json:"preDeploymentTasks,omitempty"`
+	PostDeploymentTasks    []string          `json:"postDeploymentTasks,omitempty"`
+	PreDeploymentAnalysis  []string          `json:"preDeploymentAnalysis,omitempty"`
+	PostDeploymentAnalysis []string          `json:"postDeploymentAnalysis,omitempty"`
+	ResourceReference      ResourceReference `json:"resourceReference"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload

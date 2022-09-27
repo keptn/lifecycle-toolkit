@@ -25,17 +25,22 @@ import (
 
 // KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceSpec struct {
-	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
-	AppName            string            `json:"app"`
-	Version            string            `json:"version"`
-	ResourceReference  ResourceReference `json:"resourceReference"`
+	KeptnWorkloadSpec `json:",inline"`
+	WorkloadName      string `json:"workloadName"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
-	PreDeploymentPhase     WorkloadInstancePhase `json:"preDeploymentPhase"`
-	PreDeploymentTaskName  string                `json:"preDeploymentTaskName"`
-	PostDeploymentTaskName string                `json:"postDeploymentTaskName"`
+	PreDeploymentStatus      WorkloadInstancePhase `json:"preDeploymentStatus"`
+	PostDeploymentStatus     WorkloadInstancePhase `json:"postDeploymentStatus"`
+	PreDeploymentTaskStatus  []WorkloadTaskStatus  `json:"preDeploymentTaskStatus"`
+	PostDeploymentTaskStatus []WorkloadTaskStatus  `json:"postDeploymentTaskStatus"`
+}
+
+type WorkloadTaskStatus struct {
+	TaskDefinitionName string         `json:"TaskDefinitionName"`
+	Status             KeptnTaskPhase `json:"status,omitempty"`
+	TaskName           string         `json:"taskName,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -79,14 +84,14 @@ const (
 )
 
 func (i KeptnWorkloadInstance) IsCompleted() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstanceSucceeded || i.Status.PreDeploymentPhase == WorkloadInstanceFailed || i.Status.PreDeploymentPhase == WorkloadInstanceUnknown {
+	if i.Status.PreDeploymentStatus == WorkloadInstanceSucceeded || i.Status.PreDeploymentStatus == WorkloadInstanceFailed || i.Status.PreDeploymentStatus == WorkloadInstanceUnknown {
 		return true
 	}
 	return false
 }
 
 func (i KeptnWorkloadInstance) IsDeploymentCheckNotCreated() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstancePending || i.Status.PreDeploymentTaskName == "" {
+	if i.Status.PreDeploymentStatus == WorkloadInstancePending /*|| i.Status.PreDeploymentTaskName == ""*/ {
 		return true
 	}
 	return false

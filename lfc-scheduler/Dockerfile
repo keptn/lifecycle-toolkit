@@ -13,6 +13,9 @@
 # limitations under the License.
 FROM golang:1.18.0 as builder
 
+ARG ARCH
+ARG RELEASE_VERSION
+
 WORKDIR /lfc-scheduler
 
 COPY go.mod go.sum Makefile ./
@@ -22,7 +25,7 @@ RUN go mod download
 COPY cmd cmd
 COPY pkg pkg
 
-RUN make build-scheduler
+RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
 
 FROM gcr.io/distroless/static:nonroot
 

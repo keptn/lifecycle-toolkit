@@ -15,6 +15,7 @@
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
+TAG?=latest
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins
 LOCAL_IMAGE=kube-scheduler:latest
@@ -22,9 +23,9 @@ LOCAL_CONTROLLER_IMAGE=controller:latest
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=
+RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
-RELEASE_IMAGE:=kube-scheduler:$(RELEASE_VERSION)
+RELEASE_IMAGE:=lfc-scheduler:$(TAG)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 
 # VERSION is the scheduler's version
@@ -85,24 +86,30 @@ test: fmt vet ## Run tests.
 
 .PHONY: local-image
 local-image: clean
-	docker build -f ./build/scheduler/Dockerfile --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
+	docker build --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
 	#docker build -f ./build/controller/Dockerfile --build-arg ARCH="amd64" -t $(LOCAL_REGISTRY)/$(LOCAL_CONTROLLER_IMAGE) .
+
+.PHONY: build-and-push-image
+build-and-push-image: release-image push-release-images
+
+.PHONY: release-image
+release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
-	docker build --no-cache -f ./Dockerfile --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build --load --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 	#docker build -f ./build/controller/Dockerfile --build-arg ARCH="amd64" -t $(RELEASE_REGISTRY)/$(RELEASE_CONTROLLER_IMAGE)-amd64 .
 
 .PHONY: release-image.arm64v8
 release-image.arm64v8: clean
-	docker build  --no-cache -f ./Dockerfile --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+	docker build  --load --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 	#docker build -f ./build/controller/Dockerfile --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_CONTROLLER_IMAGE)-arm64 .
 
 .PHONY: push-release-images
 push-release-images: release-image.amd64 release-image.arm64v8
 	#gcloud auth configure-docker
 	for arch in $(ARCHS); do \
-		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch}
+		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		#docker push $(RELEASE_REGISTRY)/$(RELEASE_CONTROLLER_IMAGE)-$${arch} ;\
 	done
 	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))

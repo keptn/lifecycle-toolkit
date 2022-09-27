@@ -1,10 +1,12 @@
 # Build the manager binary
 FROM golang:1.18 as builder
 
+ARG ARCH
+
 WORKDIR /workspace
 
 # Copy the Go Modules manifests
-COPY go.mod go.sum ./
+COPY go.mod go.sum Makefile ./
 
 # cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
@@ -12,12 +14,13 @@ RUN go mod download
 
 # Copy the go source
 COPY main.go main.go
+COPY hack/ hack/
 COPY api/ api/
 COPY controllers/ controllers/
 COPY webhooks/ webhooks/
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o manager main.go
+RUN make build.$ARCH
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
@@ -30,7 +33,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycl
     org.opencontainers.image.licenses="Apache-2.0"
 
 WORKDIR /
-COPY --from=builder /workspace/manager .
+COPY --from=builder /workspace/bin/manager .
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]

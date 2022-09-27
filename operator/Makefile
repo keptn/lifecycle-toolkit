@@ -1,6 +1,22 @@
-
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
+
+# RELEASE_REGISTRY is the container registry to push
+# into.
+RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
+RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
+TAG?=latest
+RELEASE_IMAGE:=keptn-lifecycle-operator:$(TAG)
+
+ARCHS = amd64 arm64
+COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
+BUILDENVVAR=CGO_ENABLED=0
+
+# The RELEASE_VERSION variable can have one of two formats:
+# v20201009-v0.18.800-46-g939c1c0 - automated build for a commit(not a tag) and also a local build
+# v20200521-v0.18.800             - automated build for a tag
+VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
+
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.24.2
 
@@ -59,22 +75,21 @@ test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 ##@ Build
-
 .PHONY: build
 build: generate fmt vet ## Build manager binary.
-	go build -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w' -o bin/manager main.go
+
+.PHONY: build.amd64
+build.amd64: generate fmt vet ## Build manager binary.
+	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w' -o bin/manager main.go
+
+.PHONY: build.arm64v8
+build.arm64v8: generate fmt vet ## Build manager binary.
+	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w' -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
-
-.PHONY: docker-build
-docker-build: test ## Build docker image with the manager.
-	docker build -t ${IMG} .
-
-.PHONY: docker-push
-docker-push: ## Push docker image with the manager.
-	docker push ${IMG}
 
 ##@ Deployment
 
@@ -130,3 +145,33 @@ $(CONTROLLER_GEN): $(LOCALBIN)
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+.PHONY: build-and-push-image
+build-and-push-image: release-image push-release-images
+
+.PHONY: release-image
+release-image: release-image.amd64 release-image.arm64v8
+
+.PHONY: release-image.amd64
+release-image.amd64: clean
+	docker build --load --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+
+.PHONY: release-image.arm64v8
+release-image.arm64v8: clean
+	docker build --load --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+
+.PHONY: push-release-images
+push-release-images: release-image.amd64 release-image.arm64v8
+	#gcloud auth configure-docker
+	for arch in $(ARCHS); do \
+		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+	done
+	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
+	for arch in $(ARCHS); do \
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+	done
+	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
+
+.PHONY: clean
+clean:
+	rm -rf ./bin

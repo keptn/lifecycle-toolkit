@@ -168,17 +168,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-multi-buildx
 
-    - name: "Docker Build keptn-sandbox/${{ matrix.config.artifact }}"
-      id: docker_build_image
-      uses: docker/build-push-action@v3
-      with:
-        context: ${{ matrix.config.working-dir }}
-        tags: |
-          ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:${{ env.BRANCH }}
-          ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:${{ env.BRANCH }}.${{ env.DATETIME }}
-        push: true
-        pull: true
-        builder: ${{ steps.buildx.outputs.name }}
-        cache-from: type=gha, scope=${{ github.workflow }}
-        cache-to: type=gha, scope=${{ github.workflow }}
-
+    - name: Build Docker Images
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: |
+        make build-and-push-image TAG=dev-${{ env.DATETIME }}

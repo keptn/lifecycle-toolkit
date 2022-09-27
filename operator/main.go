@@ -146,8 +146,10 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)

@@ -19,6 +19,9 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"time"
+
 	"github.com/go-logr/logr"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
@@ -26,10 +29,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
-	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"time"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -130,6 +131,10 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.K
 		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
 			KeptnWorkloadSpec: workload.Spec,
 			WorkloadName:      workload.Name,
+		},
+		Status: klcv1alpha1.KeptnWorkloadInstanceStatus{
+			PreDeploymentStatus:  klcv1alpha1.WorkloadInstancePending,
+			PostDeploymentStatus: klcv1alpha1.WorkloadInstancePending,
 		},
 	}
 	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)

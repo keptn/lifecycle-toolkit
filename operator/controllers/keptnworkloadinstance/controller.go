@@ -80,7 +80,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return resoncileResult, nil
 	}
 
-	if workloadInstance.IsPreDeploymentCompleted() && !r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
+	if workloadInstance.IsPreDeploymentCompleted() {
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 

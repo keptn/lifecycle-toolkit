@@ -140,27 +140,45 @@ func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context
 	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
 		return r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	} else {
-		return r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference)
+		return r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	}
 }
 
 func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
 	podList := &corev1.PodList{}
-	r.Client.List(ctx, podList, client.InNamespace(namespace))
+	listOpts := []client.ListOption{
+		client.MatchingFieldsSelector{},
+		client.MatchingFields{"metadata.uid": string(resource.UID)},
+		client.MatchingFields{"status.phase": "Running"},
+		client.InNamespace(namespace),
+	}
 
-	for _, p := range podList.Items {
-		if p.UID == resource.UID {
-			if p.Status.Phase == corev1.PodRunning {
-				return true
-			}
-			return false
-		}
+	r.Client.List(ctx, podList, listOpts...)
+	if podList.Size() == 1 {
+		return true
 	}
 
 	return false
 }
 
-func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
+func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
+	podList := &corev1.PodList{}
+	listOpts := []client.ListOption{
+		client.MatchingFieldsSelector{},
+		client.MatchingFields{"metadata.uid": string(resource.UID)},
+		client.InNamespace(namespace),
+	}
+
+	r.Client.List(ctx, podList, listOpts...)
+	run := 0
+	for _, p := range podList.Items {
+		if p.Status.Phase == corev1.PodRunning {
+			run += 1
+		}
+	}
+	if podList.Size() > 0 && podList.Size() == run {
+		return true
+	}
 
 	return false
 }

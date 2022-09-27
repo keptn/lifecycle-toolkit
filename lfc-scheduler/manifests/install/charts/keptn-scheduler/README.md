@@ -15,7 +15,7 @@ Quick start instructions for the setup and configuration of as-a-second-schedule
 ```bash
 $ git clone git@github.com::keptn-sandbox/lifecycle-controller.git
 $ cd lifecycle-controller/lfc-scheduler/manifests/install/charts
-$ helm install keptn-scheduler keptn-scheduler/ -n operator-system
+$ helm install keptn-scheduler keptn-scheduler/
 ```
 
 #### Verify that scheduler and plugin-controller pod are running properly.

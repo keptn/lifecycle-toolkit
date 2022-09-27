@@ -17,18 +17,18 @@ make push-release-images RELEASE_REGISTRY=<some-registry>
 
 **NOTE:** Run `make --help` for more information on all potential `make` targets
 
-2. Deploy the scheduler using helm, make sure it is in the same namespace of the operator:
+2. Deploy the scheduler using helm, if you change the operator namespace, make sure you specify the same namespace (--set scheduler.namespace=<your-lfc-operator-namespace> ):
 
 ```sh
 cd manifest/install/charts
-helm upgrade --install keptn-scheduler keptn-scheduler/ --set scheduler.image=<your-generated-image>  -n operator-system
+helm upgrade --install keptn-scheduler keptn-scheduler/ --set scheduler.image=<your-generated-image> 
 ```
 
 ### Uninstall 
 To delete the scheduler:
 
 ```sh
-helm uninstall keptn-scheduler -n operator-system
+helm uninstall keptn-scheduler
 ```
 
 ## Contributing

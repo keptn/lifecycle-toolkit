@@ -30,12 +30,12 @@ keptn-scheduler                 1/1     1            1           7s
 
 The following table lists the configurable parameters of the scheduler chart and their default values.
 
-| Parameter                               | Description                   | Default                                                                                         |
-| --------------------------------------- |-------------------------------|-------------------------------------------------------------------------------------------------|
-| `scheduler.name`                        | Scheduler name                | `keptn-scheduler`                                                                               |
-| `scheduler.image`                       | Scheduler image               | `k8s.gcr.io/scheduler-plugins/kube-scheduler:v0.23.10`                                          |
-| `scheduler.namespace`                   | Scheduler namespace           | `scheduler-plugins`                                                                             |
-| `scheduler.replicaCount`                | Scheduler replicaCount        | `1`                                                                                             |
-| `plugins.enabled`                       | Plugins enabled by default    | `["Coscheduling","CapacityScheduling","NodeResourceTopologyMatch", "NodeResourcesAllocatable"]` |
-| `plugins.enabled`                       | Plugins disabled by default   | `["PrioritySort"]`                                                                              |
+| Parameter                               | Description                   | Default                               |
+| --------------------------------------- |-------------------------------|---------------------------------------|
+| `scheduler.name`                        | Scheduler name                | `keptn-scheduler`                     |
+| `scheduler.image`                       | Scheduler image               | ``                                    |
+| `scheduler.namespace`                   | Scheduler namespace           | `keptn-lifecycle-controller-system`   |
+| `scheduler.replicaCount`                | Scheduler replicaCount        | `1`                                   |
+| `plugins.enabled`                       | Plugins enabled by default    | `["KLCPermit"]`                       |
+| `plugins.enabled`                       | Plugins disabled by default   | `[""]`                                | 
 

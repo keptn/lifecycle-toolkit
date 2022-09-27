@@ -28,7 +28,7 @@ keptn-scheduler                 1/1     1            1           7s
 
 ### Configuration
 
-The following table lists the configurable parameters of the as-a-second-scheduler chart and their default values.
+The following table lists the configurable parameters of the scheduler chart and their default values.
 
 | Parameter                               | Description                   | Default                                                                                         |
 | --------------------------------------- |-------------------------------|-------------------------------------------------------------------------------------------------|

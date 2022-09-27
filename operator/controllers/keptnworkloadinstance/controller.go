@@ -44,10 +44,6 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=events,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=events/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=events/finalizers,verbs=update
-//+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -76,7 +72,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, nil
 	}
 
-	if workloadInstance.IsWorkloadResourceDeployed() {
+	if r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
 		resoncileResult, err := r.reconcilePostDeployment(ctx, req, workloadInstance)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -84,7 +80,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return resoncileResult, nil
 	}
 
-	if workloadInstance.IsPreDeploymentCompleted() && !workloadInstance.IsWorkloadResourceDeployed() {
+	if workloadInstance.IsPreDeploymentCompleted() && !r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
@@ -106,4 +102,23 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
+}
+
+func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) bool {
+	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
+		return r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference)
+	} else {
+		return r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference)
+	}
+	return false
+}
+
+func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
+	// TODO implement
+	return true
+}
+
+func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
+	// TODO implement
+	return true
 }

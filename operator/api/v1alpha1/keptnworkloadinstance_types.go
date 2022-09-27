@@ -96,18 +96,3 @@ func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	}
 	return false
 }
-
-func (i KeptnWorkloadInstance) IsWorkloadResourceDeployed() bool {
-	if i.Spec.ResourceReference.Kind == "Pod" {
-		if IsPodRunning(i.Spec.ResourceReference) {
-			return true
-		}
-		return false
-	} else {
-		if IsReplicaSetRunning(i.Spec.ResourceReference) {
-			return true
-		}
-		return false
-	}
-	return false
-}

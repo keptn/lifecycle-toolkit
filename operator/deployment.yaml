@@ -16,6 +16,7 @@ spec:
       annotations:
         keptn.sh/app: "application12"
         keptn.sh/workload: "service-test"
+        keptn.sh/pre-deployment-tasks: "slack-notification"
     spec:
       containers:
       - name: nginx

@@ -42,7 +42,7 @@ spec:
                 items:
                   type: string
                 type: array
-              postDeploymentTask:
+              postDeploymentTasks:
                 items:
                   type: string
                 type: array
@@ -50,7 +50,7 @@ spec:
                 items:
                   type: string
                 type: array
-              preDeploymentTask:
+              preDeploymentTasks:
                 items:
                   type: string
                 type: array
@@ -70,10 +70,13 @@ spec:
                 type: object
               version:
                 type: string
+              workloadName:
+                type: string
             required:
             - app
             - resourceReference
             - version
+            - workloadName
             type: object
           status:
             description: KeptnWorkloadInstanceStatus defines the observed state of
@@ -84,12 +87,14 @@ spec:
               postDeploymentTaskStatus:
                 items:
                   properties:
-                    name:
+                    TaskDefinitionName:
                       type: string
                     status:
                       type: string
+                    taskName:
+                      type: string
                   required:
-                  - name
+                  - TaskDefinitionName
                   type: object
                 type: array
               preDeploymentStatus:
@@ -97,12 +102,14 @@ spec:
               preDeploymentTaskStatus:
                 items:
                   properties:
-                    name:
+                    TaskDefinitionName:
                       type: string
                     status:
                       type: string
+                    taskName:
+                      type: string
                   required:
-                  - name
+                  - TaskDefinitionName
                   type: object
                 type: array
             required:

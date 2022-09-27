@@ -29,7 +29,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	if workloadInstance.Status.PreDeploymentStatus == klcv1alpha1.WorkloadInstancePending {
+	if workloadInstance.Status.PreDeploymentStatus == klcv1alpha1.WorkloadInstancePending || workloadInstance.Status.PreDeploymentStatus == "" {
 		var newStatus []klcv1alpha1.WorkloadTaskStatus
 		// tasks not created yet, need to create them
 		for _, taskDefinition := range workloadInstance.Spec.PreDeploymentTasks {
@@ -56,7 +56,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 	summary := StatusSummary{0, 0, 0, 0}
 	for _, taskStatus := range workloadInstance.Status.PreDeploymentTaskStatus {
 		if taskStatus.Status != klcv1alpha1.TaskFailed && taskStatus.Status != klcv1alpha1.TaskSucceeded {
-			task, err := r.getKeptnTask(ctx, taskStatus.TaskName, req.Namespace)
+			task, err := r.getKeptnTask(ctx, taskStatus.TaskName, workloadInstance.Namespace)
 			if err != nil {
 				return ctrl.Result{}, err
 			}

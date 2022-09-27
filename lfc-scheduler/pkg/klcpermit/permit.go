@@ -37,7 +37,7 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 
 	case Wait:
 		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 30 * time.Second
+		return framework.NewStatus(framework.Wait), 2 * time.Minute
 	case Failure:
 		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Error), 0 * time.Second
@@ -46,7 +46,7 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
 		klog.Infof("[Keptn Permit Plugin] unknown status of pre-deployment checks for", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 30 * time.Second //TODO what makes sense here?
+		return framework.NewStatus(framework.Wait), 2 * time.Minute //TODO what makes sense here?
 	}
 
 }

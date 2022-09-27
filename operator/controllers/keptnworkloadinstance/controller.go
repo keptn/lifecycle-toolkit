@@ -19,6 +19,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	corev1 "k8s.io/api/core/v1"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -49,6 +50,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
 //+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -78,6 +80,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// check if the workloadInstance is completed (scheduled checks are finished)
 	if workloadInstance.IsPostDeploymentCompleted() {
+		r.Log.Info("Waiting for post deployments", "instance", workloadInstance)
 		return reconcile.Result{}, nil
 	}
 
@@ -121,18 +124,29 @@ func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 
 func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) bool {
 	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
-		return r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference)
+		return r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	} else {
 		return r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference)
 	}
 }
 
-func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
-	// TODO implement
+func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
+	podList := &corev1.PodList{}
+	r.Client.List(ctx, podList, client.InNamespace(namespace))
+
+	for _, p := range podList.Items {
+		if p.UID == resource.UID {
+			if p.Status.Phase == corev1.PodRunning {
+				return true
+			}
+			return false
+		}
+	}
+
 	return false
 }
 
 func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference) bool {
-	// TODO implement
+
 	return false
 }

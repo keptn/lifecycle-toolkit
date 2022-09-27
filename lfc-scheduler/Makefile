@@ -130,7 +130,7 @@ release-image.arm64v8: clean
 
 .PHONY: push-release-images
 push-release-images: release-image.amd64 release-image.arm64v8
-	#gcloud auth configure-docker
+	gcloud auth configure-docker
 	for arch in $(ARCHS); do \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		#docker push $(RELEASE_REGISTRY)/$(RELEASE_CONTROLLER_IMAGE)-$${arch} ;\

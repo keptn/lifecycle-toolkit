@@ -1,6 +1,8 @@
 # Build the manager binary
 FROM golang:1.18 as builder
 
+ARG ARCH
+
 WORKDIR /workspace
 
 # Copy the Go Modules manifests
@@ -18,7 +20,7 @@ COPY controllers/ controllers/
 COPY webhooks/ webhooks/
 
 # Build
-RUN make build
+RUN make build.$ARCH
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details

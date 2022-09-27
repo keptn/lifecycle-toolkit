@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"reflect"
@@ -27,7 +28,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	}
 
 	task.Status.JobName = jobName
-	task.Status.Status = klcv1alpha1.TaskPending
+	task.Status.Status = common.StatePending
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
 		r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
@@ -97,7 +98,7 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 	if job.Status.Succeeded > 0 {
-		task.Status.Status = klcv1alpha1.TaskSucceeded
+		task.Status.Status = common.StateSucceeded
 		err = r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not update job status for: "+task.Name)

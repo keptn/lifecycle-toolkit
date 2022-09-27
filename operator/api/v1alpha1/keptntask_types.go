@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -33,19 +34,6 @@ type KeptnTaskSpec struct {
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 
-type KeptnTaskPhase string
-
-const (
-	// TaskPending means the task has been accepted by the system, but the corresponding Job did not start
-	TaskPending KeptnTaskPhase = "Pending"
-	// TaskRunning means that the Job has been started.
-	TaskRunning KeptnTaskPhase = "Running"
-	// TaskFailed means that the Job failed
-	TaskFailed KeptnTaskPhase = "Failed"
-	// TaskSucceeded means that the Job has finished successfully
-	TaskSucceeded KeptnTaskPhase = "Succeeded"
-)
-
 type TaskParameters struct {
 	Inline map[string]string `json:"map,omitempty"`
 }
@@ -56,8 +44,8 @@ type SecureParameters struct {
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
-	JobName string         `json:"jobName,omitempty"`
-	Status  KeptnTaskPhase `json:"status,omitempty"`
+	JobName string            `json:"jobName,omitempty"`
+	Status  common.KeptnState `json:"status,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }

@@ -89,7 +89,7 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			return reconcile.Result{}, err
 		}
 		event.Status.JobName = job.Name
-		event.Status.Phase = v1alpha1.EventRunning
+		event.Status.Phase = common.StateRunning
 
 		k8sEvent := r.generateK8sEvent(event, "started")
 		if err := r.Create(ctx, k8sEvent); err != nil {
@@ -114,9 +114,9 @@ func (r *EventReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	if job.Status.Active == 0 {
 		if job.Status.Failed == 0 {
-			event.Status.Phase = v1alpha1.EventSucceeded
+			event.Status.Phase = common.StateSucceeded
 		} else {
-			event.Status.Phase = v1alpha1.EventFailed
+			event.Status.Phase = common.StateFailed
 		}
 		if err := r.Status().Update(ctx, event); err != nil {
 			logger.Error(err, "Could not update Event")

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -31,16 +32,16 @@ type KeptnWorkloadInstanceSpec struct {
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
-	PreDeploymentStatus      WorkloadInstancePhase `json:"preDeploymentStatus"`
-	PostDeploymentStatus     WorkloadInstancePhase `json:"postDeploymentStatus"`
-	PreDeploymentTaskStatus  []WorkloadTaskStatus  `json:"preDeploymentTaskStatus"`
-	PostDeploymentTaskStatus []WorkloadTaskStatus  `json:"postDeploymentTaskStatus"`
+	PreDeploymentStatus      common.KeptnState    `json:"preDeploymentStatus"`
+	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus"`
+	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus"`
+	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus"`
 }
 
 type WorkloadTaskStatus struct {
-	TaskDefinitionName string         `json:"TaskDefinitionName"`
-	Status             KeptnTaskPhase `json:"status,omitempty"`
-	TaskName           string         `json:"taskName,omitempty"`
+	TaskDefinitionName string            `json:"TaskDefinitionName"`
+	Status             common.KeptnState `json:"status,omitempty"`
+	TaskName           string            `json:"taskName,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -68,30 +69,15 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
-type WorkloadInstancePhase string
-
-const (
-	// WorkloadInstancePending means that none of the WorkloadInstances have been created.
-	WorkloadInstancePending WorkloadInstancePhase = "Pending"
-	// WorkloadInstanceRunning means that all of the WorkloadInstances have been started.
-	WorkloadInstanceRunning WorkloadInstancePhase = "Running"
-	// WorkloadInstanceSucceeded means that all of the WorkloadInstances have been finished successfully.
-	WorkloadInstanceSucceeded WorkloadInstancePhase = "Succeeded"
-	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
-	WorkloadInstanceFailed WorkloadInstancePhase = "Failed"
-	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
-	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
-)
-
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
-	if i.Status.PreDeploymentStatus == WorkloadInstanceSucceeded || i.Status.PreDeploymentStatus == WorkloadInstanceFailed || i.Status.PreDeploymentStatus == WorkloadInstanceUnknown {
+	if i.Status.PreDeploymentStatus == common.StateSucceeded || i.Status.PreDeploymentStatus == common.StateFailed || i.Status.PreDeploymentStatus == common.StateUnknown {
 		return true
 	}
 	return false
 }
 
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
-	if i.Status.PostDeploymentStatus == WorkloadInstanceSucceeded || i.Status.PostDeploymentStatus == WorkloadInstanceFailed || i.Status.PostDeploymentStatus == WorkloadInstanceUnknown {
+	if i.Status.PostDeploymentStatus == common.StateSucceeded || i.Status.PostDeploymentStatus == common.StateFailed || i.Status.PostDeploymentStatus == common.StateUnknown {
 		return true
 	}
 	return false

@@ -3,6 +3,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"math/rand"
 	"time"
 
@@ -29,7 +30,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	if workloadInstance.Status.PreDeploymentStatus == klcv1alpha1.WorkloadInstancePending || workloadInstance.Status.PreDeploymentStatus == "" {
+	if workloadInstance.Status.PreDeploymentStatus == common.StatePending || workloadInstance.Status.PreDeploymentStatus == "" {
 		var newStatus []klcv1alpha1.WorkloadTaskStatus
 		// tasks not created yet, need to create them
 		for _, taskDefinition := range workloadInstance.Spec.PreDeploymentTasks {
@@ -39,12 +40,12 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 			}
 			newStatus = append(newStatus, klcv1alpha1.WorkloadTaskStatus{
 				TaskDefinitionName: taskDefinition,
-				Status:             klcv1alpha1.TaskPending,
+				Status:             common.StatePending,
 				TaskName:           taskName,
 			})
 		}
 		workloadInstance.Status.PreDeploymentTaskStatus = newStatus
-		workloadInstance.Status.PreDeploymentStatus = klcv1alpha1.WorkloadInstanceRunning
+		workloadInstance.Status.PreDeploymentStatus = common.StateRunning
 		err := r.Client.Status().Update(ctx, workloadInstance)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -55,7 +56,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 	// tasks exist, check status
 	summary := StatusSummary{0, 0, 0, 0}
 	for _, taskStatus := range workloadInstance.Status.PreDeploymentTaskStatus {
-		if taskStatus.Status != klcv1alpha1.TaskFailed && taskStatus.Status != klcv1alpha1.TaskSucceeded {
+		if taskStatus.Status != common.StateFailed && taskStatus.Status != common.StateSucceeded {
 			task, err := r.getKeptnTask(ctx, taskStatus.TaskName, workloadInstance.Namespace)
 			if err != nil {
 				return ctrl.Result{}, err
@@ -92,30 +93,30 @@ func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, task
 	return task, nil
 }
 
-func updateStatusSummary(status klcv1alpha1.KeptnTaskPhase, summary StatusSummary) {
+func updateStatusSummary(status common.KeptnState, summary StatusSummary) {
 	switch status {
-	case klcv1alpha1.TaskFailed:
+	case common.StateFailed:
 		summary.failed++
-	case klcv1alpha1.TaskSucceeded:
+	case common.StateSucceeded:
 		summary.succeeded++
-	case klcv1alpha1.TaskRunning:
+	case common.StateRunning:
 		summary.running++
-	case klcv1alpha1.TaskPending:
+	case common.StatePending:
 		summary.pending++
 	}
 }
 
-func getOverallState(summary StatusSummary) klcv1alpha1.WorkloadInstancePhase {
+func getOverallState(summary StatusSummary) common.KeptnState {
 	if summary.failed > 0 {
-		return klcv1alpha1.WorkloadInstanceFailed
+		return common.StateFailed
 	}
 	if summary.running > 0 {
-		return klcv1alpha1.WorkloadInstanceRunning
+		return common.StateRunning
 	}
 	if summary.pending > 0 {
-		return klcv1alpha1.WorkloadInstanceRunning
+		return common.StatePending
 	}
-	return klcv1alpha1.WorkloadInstanceSucceeded
+	return common.StateSucceeded
 }
 
 func generateTaskName(instance klcv1alpha1.KeptnWorkloadInstance, taskName string) string {

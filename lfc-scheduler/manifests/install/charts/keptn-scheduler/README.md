@@ -23,7 +23,7 @@ $ helm install keptn-scheduler keptn-scheduler/
 ```bash
 $ kubectl get deploy -n scheduler-plugins
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-scheduler-plugins-scheduler    1/1     1            1           7s
+keptn-scheduler                 1/1     1            1           7s
 ```
 
 ### Configuration

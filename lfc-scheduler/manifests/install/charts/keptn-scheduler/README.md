@@ -32,7 +32,7 @@ The following table lists the configurable parameters of the scheduler chart and
 
 | Parameter                               | Description                   | Default                                                                                         |
 | --------------------------------------- |-------------------------------|-------------------------------------------------------------------------------------------------|
-| `scheduler.name`                        | Scheduler name                | `scheduler-plugins-scheduler`                                                                   |
+| `scheduler.name`                        | Scheduler name                | `keptn-scheduler`                                                                               |
 | `scheduler.image`                       | Scheduler image               | `k8s.gcr.io/scheduler-plugins/kube-scheduler:v0.23.10`                                          |
 | `scheduler.namespace`                   | Scheduler namespace           | `scheduler-plugins`                                                                             |
 | `scheduler.replicaCount`                | Scheduler replicaCount        | `1`                                                                                             |

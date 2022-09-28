@@ -27,7 +27,7 @@ COPY pkg pkg
 
 RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
 
-FROM gcr.io/distroless/static:nonroot
+FROM gcr.io/distroless/base-debian11:nonroot
 
 LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
     org.opencontainers.image.url="https://keptn.sh" \

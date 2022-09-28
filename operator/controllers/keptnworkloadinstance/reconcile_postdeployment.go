@@ -13,6 +13,7 @@ var PostDeploymentState StatusSummary
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 
+	var PostDeploymentState StatusSummary
 	// Check if pre-deployment is already done
 	if workloadInstance.IsPostDeploymentCompleted() {
 		return nil
@@ -35,6 +36,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 		}
 		// Check if task has already succeeded or failed
 		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
+			newStatus = append(newStatus, taskStatus)
 			continue
 		}
 
@@ -51,7 +53,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 
 		// Create new Task if it does not exist
 		if !taskExists {
-			taskName, err := r.createKeptnTask(ctx, req.Namespace, workloadInstance, taskDefinitionName)
+			taskName, err := r.createKeptnTask(ctx, req.Namespace, workloadInstance, taskDefinitionName, "post")
 			if err != nil {
 				return err
 			}
@@ -62,11 +64,11 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 		}
 		// Update state of the Pre-Deployment Task
 		newStatus = append(newStatus, taskStatus)
-
-		// Update overall state for Pre-Deployment
-		updateStatusSummary(taskStatus.Status, PostDeploymentState)
 	}
 
+	for _, ns := range newStatus {
+		PostDeploymentState = updateStatusSummary(ns.Status, PostDeploymentState)
+	}
 	workloadInstance.Status.PostDeploymentStatus = getOverallState(PostDeploymentState)
 	workloadInstance.Status.PostDeploymentTaskStatus = newStatus
 

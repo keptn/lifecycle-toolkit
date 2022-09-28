@@ -20,10 +20,8 @@ type StatusSummary struct {
 	pending   int
 }
 
-var preDeploymentState StatusSummary
-
 func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
-
+	var preDeploymentState StatusSummary
 	// Check if pre-deployment is already done
 	if workloadInstance.IsPreDeploymentCompleted() {
 		return nil
@@ -46,6 +44,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		}
 		// Check if task has already succeeded or failed
 		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
+			newStatus = append(newStatus, taskStatus)
 			continue
 		}
 
@@ -62,7 +61,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 
 		// Create new Task if it does not exist
 		if !taskExists {
-			taskName, err := r.createKeptnTask(ctx, req.Namespace, workloadInstance, taskDefinitionName)
+			taskName, err := r.createKeptnTask(ctx, req.Namespace, workloadInstance, taskDefinitionName, "pre")
 			if err != nil {
 				return err
 			}
@@ -73,11 +72,11 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		}
 		// Update state of the Pre-Deployment Task
 		newStatus = append(newStatus, taskStatus)
-
-		// Update overall state for Pre-Deployment
-		updateStatusSummary(taskStatus.Status, preDeploymentState)
 	}
 
+	for _, ns := range newStatus {
+		preDeploymentState = updateStatusSummary(ns.Status, preDeploymentState)
+	}
 	workloadInstance.Status.PreDeploymentStatus = getOverallState(preDeploymentState)
 	workloadInstance.Status.PreDeploymentTaskStatus = newStatus
 
@@ -107,7 +106,7 @@ func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, task
 	return task, nil
 }
 
-func updateStatusSummary(status common.KeptnState, summary StatusSummary) {
+func updateStatusSummary(status common.KeptnState, summary StatusSummary) StatusSummary {
 	switch status {
 	case common.StateFailed:
 		summary.failed++
@@ -118,6 +117,7 @@ func updateStatusSummary(status common.KeptnState, summary StatusSummary) {
 	case common.StatePending, "":
 		summary.pending++
 	}
+	return summary
 }
 
 func getOverallState(summary StatusSummary) common.KeptnState {
@@ -133,15 +133,15 @@ func getOverallState(summary StatusSummary) common.KeptnState {
 	return common.StateSucceeded
 }
 
-func generateTaskName(instance klcv1alpha1.KeptnWorkloadInstance, taskName string) string {
+func generateTaskName(checkType string, taskName string) string {
 	randomId := rand.Intn(99999-10000) + 10000
-	return fmt.Sprintf("%s-%s-%d", instance.Name, taskName, randomId)
+	return fmt.Sprintf("%s-%s-%d", checkType, taskName, randomId)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string) (string, error) {
+func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType string) (string, error) {
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      generateTaskName(*workloadInstance, taskDefinition),
+			Name:      generateTaskName(checkType, taskDefinition),
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{

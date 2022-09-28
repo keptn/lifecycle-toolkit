@@ -20,7 +20,7 @@ type FunctionExecutionParams struct {
 
 func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
 	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%s-%s-%d", task.Spec.AppName, task.Spec.Workload, task.Spec.WorkloadVersion, randomId)
+	jobId := fmt.Sprintf("klc-%s-%d", task.Name, randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      jobId,

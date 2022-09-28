@@ -30,7 +30,7 @@ spec:
         keptn.sh/app: "application12"
         keptn.sh/workload: "service-test"
         keptn.sh/pre-deployment-tasks: "hello-world"
-        keptn.sh/post-deployment-tasks: "hello-world"
+        keptn.sh/post-deployment-tasks: "hello-world,hello-world"
     spec:
       containers:
       - name: nginx

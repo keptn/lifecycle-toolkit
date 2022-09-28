@@ -2,6 +2,8 @@ package common
 
 import (
 	"fmt"
+
+	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -45,3 +47,7 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+
+type KeptnMeters struct {
+	DeploymentCount syncfloat64.Counter
+}

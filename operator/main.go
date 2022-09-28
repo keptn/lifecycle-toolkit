@@ -96,7 +96,7 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 	meters := common.KeptnMeters{
-		deploymentCount: deploymentCount,
+		DeploymentCount: deploymentCount,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

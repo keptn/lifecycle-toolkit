@@ -20,7 +20,10 @@ spec:
       labels:
         component: podtato-head-entry
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-tasks: pre-deployment-hello
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -68,6 +71,7 @@ spec:
       labels:
         component: podtato-head-hat
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
@@ -116,6 +120,7 @@ spec:
       labels:
         component: podtato-head-left-leg
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-left-leg
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
@@ -164,6 +169,7 @@ spec:
       labels:
         component: podtato-head-left-arm
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-left-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
@@ -212,6 +218,7 @@ spec:
       labels:
         component: podtato-head-right-leg
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-right-leg
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
@@ -260,6 +267,7 @@ spec:
       labels:
         component: podtato-head-right-arm
       annotations:
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-right-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: pre-deployment-hello

@@ -1,0 +1,37 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - run: |
+          cd functions-runtime
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          cd ../lfc-scheduler
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          cd ../operator
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make controller-gen release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: config/rendered/release.yaml

@@ -18,11 +18,20 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"os"
+
+	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
+	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/sdk/metric"
 
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
@@ -38,6 +47,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
@@ -61,6 +71,25 @@ func main() {
 	var probeAddr string
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
+
+	// OTEL SETUP
+	// The exporter embeds a default OpenTelemetry Reader and
+	// implements prometheus.Collector, allowing it to be used as
+	// both a Reader and Collector.
+
+	exporter := otelprom.New()
+	provider := metric.NewMeterProvider(metric.WithReader(exporter))
+	meter := provider.Meter("keptn/task")
+	deploymentCount, err := meter.SyncFloat64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn deployment"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	meters := common.KeptnMeters{
+		deploymentCount: deploymentCount,
+	}
+
+	// Start the prometheus HTTP server and pass the exporter Collector to it
+	go serveMetrics(exporter.Collector)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -115,6 +144,7 @@ func main() {
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTask Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
+		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
@@ -167,4 +197,21 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+func serveMetrics(collector prometheus.Collector) {
+	registry := prometheus.NewRegistry()
+	err := registry.Register(collector)
+	if err != nil {
+		fmt.Printf("error registering collector: %v", err)
+		return
+	}
+
+	log.Printf("serving metrics at localhost:2222/metrics")
+	http.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
+	err = http.ListenAndServe(":2222", nil)
+	if err != nil {
+		fmt.Printf("error serving http: %v", err)
+		return
+	}
 }

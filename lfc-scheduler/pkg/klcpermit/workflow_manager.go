@@ -51,7 +51,7 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
 	//List workloadInstance run CRDs
 	name := GetCRDName(pod)
-	crd, err := sMgr.GetCRD(ctx, metav1.NamespaceDefault, name)
+	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
 	if err != nil {
 		klog.Infof("[Keptn Permit Plugin] could not find workloadInstance crd %s, err:%s", name, err.Error())

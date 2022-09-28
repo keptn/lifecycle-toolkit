@@ -168,7 +168,7 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 	}
 
 	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
-		preDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
 	}
 
 	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {

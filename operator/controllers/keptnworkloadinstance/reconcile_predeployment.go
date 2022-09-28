@@ -115,7 +115,7 @@ func updateStatusSummary(status common.KeptnState, summary StatusSummary) {
 		summary.succeeded++
 	case common.StateRunning:
 		summary.running++
-	case common.StatePending:
+	case common.StatePending, "":
 		summary.pending++
 	}
 }

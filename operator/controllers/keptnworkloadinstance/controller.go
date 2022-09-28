@@ -77,7 +77,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	r.Log.Info("Workload Instance found", "instance", workloadInstance)
-	
+
 	if workloadInstance.IsPreDeploymentCompleted() {
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}

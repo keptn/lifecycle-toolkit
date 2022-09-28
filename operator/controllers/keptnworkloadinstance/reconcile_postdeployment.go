@@ -7,7 +7,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (ctrl.Result, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 	// TODO implement
-	return ctrl.Result{}, nil
+	return nil
 }

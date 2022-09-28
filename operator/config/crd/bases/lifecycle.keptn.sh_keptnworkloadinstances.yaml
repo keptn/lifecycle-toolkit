@@ -15,7 +15,26 @@ spec:
     singular: keptnworkloadinstance
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.workload
+      name: Workload
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: Version
+      type: string
+    - jsonPath: .status.preDeploymentStatus
+      name: PreDeploymentStatus
+      type: string
+    - jsonPath: .status.deploymentStatus
+      name: DeploymentStatus
+      type: string
+    - jsonPath: .status.postDeploymentStatus
+      name: PostDeploymentStatus
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KeptnWorkloadInstance is the Schema for the keptnworkloadinstances
@@ -82,6 +101,8 @@ spec:
             description: KeptnWorkloadInstanceStatus defines the observed state of
               KeptnWorkloadInstance
             properties:
+              deploymentStatus:
+                type: string
               postDeploymentStatus:
                 type: string
               postDeploymentTaskStatus:

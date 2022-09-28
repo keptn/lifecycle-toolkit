@@ -19,15 +19,15 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	corev1 "k8s.io/api/core/v1"
-	"time"
-
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"time"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -79,7 +79,16 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	r.Log.Info("Workload Instance found", "instance", workloadInstance)
 
 	if workloadInstance.IsPreDeploymentCompleted() {
-		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+		r.Log.Info("Post deployment checks not finished")
+
+		if r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
+			err := r.reconcilePostDeployment(ctx, req, workloadInstance)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		}
+
 	}
 
 	r.Log.Info("pre-deployment checks not finished")
@@ -146,38 +155,32 @@ func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context
 
 func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
 	podList := &corev1.PodList{}
-	listOpts := []client.ListOption{
-		client.MatchingFields{"metadata.uid": string(resource.UID)},
-		client.MatchingFields{"status.phase": "Running"},
-		client.InNamespace(namespace),
-	}
+	r.Client.List(ctx, podList, client.InNamespace(namespace))
 
-	r.Client.List(ctx, podList, listOpts...)
-	if podList.Size() == 1 {
-		return true
+	for _, p := range podList.Items {
+		if p.UID == resource.UID {
+			if p.Status.Phase == corev1.PodRunning {
+				return true
+			}
+			return false
+		}
 	}
-
 	return false
 }
 
 func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
-	podList := &corev1.PodList{}
-	listOpts := []client.ListOption{
-		//client.MatchingFieldsSelector{},
-		client.MatchingFields{"metadata.ownerReferences[0].uid": string(resource.UID)},
-		client.InNamespace(namespace),
-	}
 
-	r.Client.List(ctx, podList, listOpts...)
-	run := 0
-	for _, p := range podList.Items {
-		if p.Status.Phase == corev1.PodRunning {
-			run += 1
+	replica := &appsv1.ReplicaSetList{}
+	r.Client.List(ctx, replica, client.InNamespace(namespace))
+
+	for _, re := range replica.Items {
+		if re.UID == resource.UID {
+			if re.Status.ReadyReplicas == *re.Spec.Replicas {
+				return true
+			}
+			return false
 		}
 	}
-	if podList.Size() > 0 && podList.Size() == run {
-		return true
-	}
-
 	return false
+
 }

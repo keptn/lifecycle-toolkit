@@ -78,6 +78,22 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	r.Log.Info("Workload Instance found", "instance", workloadInstance)
 
+	if workloadInstance.IsPostDeploymentCompleted() {
+		return reconcile.Result{}, nil
+	}
+
+	r.Log.Info("Post deployment checks not finished")
+
+	if r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
+		err := r.reconcilePostDeployment(ctx, req, workloadInstance)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	}
+
+	r.Log.Info("deployment not finished")
+
 	if workloadInstance.IsPreDeploymentCompleted() {
 		r.Log.Info("Post deployment checks not finished")
 
@@ -98,37 +114,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{}, err
 	}
 
-	/*
-		// check if the workloadInstance is completed (scheduled checks are finished)
-		if workloadInstance.IsPostDeploymentCompleted() {
-			return reconcile.Result{}, nil
-		}
-
-		r.Log.Info("Post deployment checks not finished")
-
-		if r.IsWorkloadResourceDeployed(ctx, workloadInstance) {
-			resoncileResult, err := r.reconcilePostDeployment(ctx, req, workloadInstance)
-			if err != nil {
-				return ctrl.Result{}, err
-			}
-			return resoncileResult, nil
-		}
-
-		r.Log.Info("deployment not finished")
-
-		if workloadInstance.IsPreDeploymentCompleted() {
-			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
-		}
-
-		r.Log.Info("pre-deployment checks not finished")
-
-		err = r.reconcilePreDeployment(ctx, req, workloadInstance)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-
-
-	*/
 	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 
 }

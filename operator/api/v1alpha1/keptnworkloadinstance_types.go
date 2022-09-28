@@ -33,6 +33,7 @@ type KeptnWorkloadInstanceSpec struct {
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
 	PreDeploymentStatus      common.KeptnState    `json:"preDeploymentStatus,omitempty"`
+	DeploymentStatus         common.KeptnState    `json:"deploymentStatus,omitempty"`
 	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
@@ -46,6 +47,12 @@ type WorkloadTaskStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
+// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workload`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.workloadVersion`
+// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 type KeptnWorkloadInstance struct {

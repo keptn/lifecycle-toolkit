@@ -1,0 +1,13 @@
+{
+    "packages": {
+      ".": {
+        "release-type": "go",
+        "prerelease": false,
+        "bump-minor-pre-major": true,
+        "bump-patch-for-minor-pre-major": true,
+        "extra-files": [
+          "README.md"
+        ]
+      }
+    }
+  }

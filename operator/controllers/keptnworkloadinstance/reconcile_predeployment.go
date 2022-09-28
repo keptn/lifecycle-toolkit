@@ -34,14 +34,6 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
-		// Create new state entry for the pre-deployment Task if it does not exist
-		if taskStatus == (klcv1alpha1.WorkloadTaskStatus{}) {
-			taskStatus = klcv1alpha1.WorkloadTaskStatus{
-				TaskDefinitionName: taskDefinitionName,
-				Status:             common.StatePending,
-				TaskName:           "",
-			}
-		}
 		// Check if task has already succeeded or failed
 		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
 			newStatus = append(newStatus, taskStatus)
@@ -53,7 +45,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: workloadInstance.Namespace}, task)
 			if err != nil && errors.IsNotFound(err) {
 				taskStatus.TaskName = ""
-			} else {
+			} else if err != nil {
 				return err
 			}
 			taskExists = true
@@ -94,7 +86,11 @@ func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanc
 			return status
 		}
 	}
-	return klcv1alpha1.WorkloadTaskStatus{}
+	return klcv1alpha1.WorkloadTaskStatus{
+		TaskDefinitionName: taskName,
+		Status:             common.StatePending,
+		TaskName:           "",
+	}
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, taskName string, namespace string) (*klcv1alpha1.KeptnTask, error) {
@@ -124,11 +120,11 @@ func getOverallState(summary StatusSummary) common.KeptnState {
 	if summary.failed > 0 {
 		return common.StateFailed
 	}
-	if summary.running > 0 {
-		return common.StateRunning
-	}
 	if summary.pending > 0 {
 		return common.StatePending
+	}
+	if summary.running > 0 {
+		return common.StateRunning
 	}
 	return common.StateSucceeded
 }

@@ -9,8 +9,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-var PostDeploymentState StatusSummary
-
 func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 
 	var PostDeploymentState StatusSummary
@@ -26,14 +24,6 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
-		// Create new state entry for the pre-deployment Task if it does not exist
-		if taskStatus == (klcv1alpha1.WorkloadTaskStatus{}) {
-			taskStatus = klcv1alpha1.WorkloadTaskStatus{
-				TaskDefinitionName: taskDefinitionName,
-				Status:             common.StatePending,
-				TaskName:           "",
-			}
-		}
 		// Check if task has already succeeded or failed
 		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
 			newStatus = append(newStatus, taskStatus)
@@ -45,7 +35,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: workloadInstance.Namespace}, task)
 			if err != nil && errors.IsNotFound(err) {
 				taskStatus.TaskName = ""
-			} else {
+			} else if err != nil {
 				return err
 			}
 			taskExists = true

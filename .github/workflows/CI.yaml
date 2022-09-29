@@ -80,8 +80,8 @@ jobs:
           echo "::set-output name=TIME::$(date +'%H%M')"
           echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
 
-  build:
-    name: Build
+  compile:
+    name: Compile
     needs: prepare_ci_run
     runs-on: ubuntu-20.04
     env:
@@ -101,7 +101,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Build ${{ matrix.config.artifact }}
+      - name: Compile ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
         working-directory: ./${{ matrix.config.working-dir }}
         run: |
@@ -132,7 +132,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [prepare_ci_run, build, test]
+    needs: [prepare_ci_run, compile, test]
     runs-on: ubuntu-20.04
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -172,3 +172,20 @@ jobs:
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
         make build-and-push-image TAG=dev-${{ env.DATETIME }}
+
+    - name: Install controller-gen
+      if: matrix.config.artifact == 'keptn-lifecycle-operator'
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: make controller-gen
+
+    - name: Generate release.yaml
+      if: matrix.config.artifact != 'functions-runtime'
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: make release-manifests TAG=dev-${{ env.DATETIME }}
+
+    - name: Upload release.yaml
+      if: matrix.config.artifact != 'functions-runtime'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.config.artifact }}-manifest
+        path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml

@@ -172,3 +172,16 @@ jobs:
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
         make build-and-push-image TAG=dev-${{ env.DATETIME }}
+
+    - name: Generate release.yaml
+      id: generate_release_yaml
+      run: |
+        cd operator
+        make controller-gen release-manifests TAG=dev-${{ env.DATETIME }}
+
+    - name: Upload release.yaml
+      id: upload_release_yaml
+      uses: actions/upload-artifact@v3
+      with:
+        name: release.yaml
+        path: operator/config/rendered/release.yaml

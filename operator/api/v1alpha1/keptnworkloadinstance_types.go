@@ -51,8 +51,8 @@ type WorkloadTaskStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workload`
-// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.workloadVersion`
+// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
 // +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`

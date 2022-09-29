@@ -34,4 +34,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: config/rendered/release.yaml
+          files: operator/config/rendered/release.yaml

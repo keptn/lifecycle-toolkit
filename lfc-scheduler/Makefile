@@ -35,6 +35,19 @@ RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 # v20200521-v0.18.800             - automated build for a tag
 VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
+
+## Location to install dependencies to
+LOCALBIN ?= $(shell pwd)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+
+## Tool Versions
+KUSTOMIZE_VERSION ?= v3.8.7
+
+## Tool Binaries
+KUSTOMIZE ?= $(LOCALBIN)/kustomize
+KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
+
 .PHONY: all
 all: build
 
@@ -83,6 +96,16 @@ vet: ## Run go vet against code.
 .PHONY: test
 test: fmt vet ## Run tests.
 	go test ./... -coverprofile cover.out
+
+.PHONY: kustomize
+kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
+$(KUSTOMIZE): $(LOCALBIN)
+	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
+
+.PHONY: release-manifests
+release-manifests: kustomize
+	cd manifests/install && $(KUSTOMIZE) edit set image klfc-scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
 
 .PHONY: local-image
 local-image: clean

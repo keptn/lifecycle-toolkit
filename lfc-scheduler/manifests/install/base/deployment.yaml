@@ -3,13 +3,13 @@ kind: Deployment
 metadata:
   labels:
     component: scheduler
-  name: {{ .Values.scheduler.name }}
-  namespace: {{ .Values.scheduler.namespace }}
+  name: keptn-scheduler
+  namespace: keptn-lifecycle-controller-system
 spec:
   selector:
     matchLabels:
       component: scheduler
-  replicas: {{ .Values.scheduler.replicaCount }}
+  replicas: 1
   template:
     metadata:
       labels:
@@ -20,7 +20,7 @@ spec:
         - command:
             - /bin/kube-scheduler
             - --config=/etc/kubernetes/scheduler-config.yaml
-          image: {{ .Values.scheduler.image }}
+          image: klfc-scheduler:latest
           livenessProbe:
             httpGet:
               path: /healthz
@@ -35,7 +35,7 @@ spec:
               scheme: HTTPS
           resources:
             requests:
-              cpu: '0.1'
+              cpu: '100m'
           securityContext:
             privileged: false
           volumeMounts:

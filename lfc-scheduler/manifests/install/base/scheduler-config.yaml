@@ -3,11 +3,11 @@ kind: KubeSchedulerConfiguration
 leaderElection:
   leaderElect: false
 profiles:
-# Compose all plugins in one profile
-- schedulerName: keptn-scheduler
-  plugins:
-    multiPoint:
-      enabled:
-      - name: "KLCPermit"
-      disabled: []
-  pluginConfig: {}
+  # Compose all plugins in one profile
+  - schedulerName: keptn-scheduler
+    plugins:
+      multiPoint:
+        enabled:
+          - name: "KLCPermit"
+        disabled: []
+    pluginConfig: {}

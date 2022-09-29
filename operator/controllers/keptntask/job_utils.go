@@ -3,6 +3,8 @@ package keptntask
 import (
 	"context"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	"reflect"
 
 	"github.com/imdario/mergo"

@@ -132,7 +132,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [prepare_ci_run, build, test]
+    needs: [prepare_ci_run, compile, test]
     runs-on: ubuntu-20.04
     permissions:
       packages: write # Needed for pushing images to the registry

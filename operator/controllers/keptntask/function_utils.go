@@ -3,11 +3,13 @@ package keptntask
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
+
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"math/rand"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
@@ -20,7 +22,7 @@ type FunctionExecutionParams struct {
 
 func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
 	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%s-%s-%d", task.Spec.AppName, task.Spec.Workload, task.Spec.WorkloadVersion, randomId)
+	jobId := fmt.Sprintf("klc-%s-%d", common.TruncateString(task.Name, common.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      jobId,
@@ -112,7 +114,7 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
-	if definition.Spec.Function.FunctionReference != nil {
+	if definition.Spec.Function.FunctionReference != (klcv1alpha1.FunctionReference{}) {
 		hasParent = true
 	}
 

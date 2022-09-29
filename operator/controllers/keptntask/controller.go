@@ -20,6 +20,7 @@ import (
 	"context"
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -64,7 +65,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	}
 
-	if task.Status.Status != klcv1alpha1.TaskSucceeded {
+	if task.Status.Status != common.StateSucceeded {
 		err := r.updateJob(ctx, req, task)
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err

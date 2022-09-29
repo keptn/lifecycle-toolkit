@@ -19,6 +19,10 @@ package main
 import (
 	"flag"
 
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkload"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
@@ -38,7 +42,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
@@ -102,14 +105,6 @@ func main() {
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
 	}
-
-	if err = (&controllers.EventReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Event")
-		os.Exit(1)
-	}
 	if err = (&keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
@@ -128,23 +123,27 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnAppReconciler{
+	if err = (&keptnapp.KeptnAppReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnWorkloadReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+	if err = (&keptnworkload.KeptnWorkloadReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnWorkloadInstanceReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+	if err = (&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -32,22 +33,8 @@ type KeptnAppSpec struct {
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
-	Status ApplicationPhase `json:"status"`
+	Status common.KeptnState `json:"status"`
 }
-
-type ApplicationPhase string
-
-const (
-	// ApplicationPending means the application has been accepted by the system, but one or more of its
-	// workloads has not been started.
-	ApplicationPending ApplicationPhase = "Pending"
-	// ApplicationRunning means that all of the workloads have been started.
-	ApplicationRunning ApplicationPhase = "Running"
-	// ApplicationFailed means that one or more pre-deployment checks was not successful and terminated.
-	ApplicationFailed ApplicationPhase = "Failed"
-	// ApplicationUnknown means that for some reason the state of the application could not be obtained.
-	ApplicationUnknown ApplicationPhase = "Unknown"
-)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

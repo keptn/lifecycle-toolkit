@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -33,25 +34,9 @@ type EventSpec struct {
 
 // EventStatus defines the observed state of Event
 type EventStatus struct {
-	Phase   EventPhase `json:"phase"`
-	JobName string     `json:"jobName"`
+	Phase   common.KeptnState `json:"phase"`
+	JobName string            `json:"jobName"`
 }
-
-type EventPhase string
-
-const (
-	// EventPending means the application has been accepted by the system, but one or more of its
-	// services has not been started.
-	EventPending EventPhase = "Pending"
-	// EventRunning means that all of the services have been started.
-	EventRunning EventPhase = "Running"
-	// EventRunning means that all of the services have been finished successfully.
-	EventSucceeded EventPhase = "Succeeded"
-	// EventFailed means that one or more pre-deployment checks was not successful and terminated.
-	EventFailed EventPhase = "Failed"
-	// EventUnknown means that for some reason the state of the application could not be obtained.
-	EventUnknown EventPhase = "Unknown"
-)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
@@ -79,14 +64,14 @@ func init() {
 }
 
 func (e Event) IsCompleted() bool {
-	if e.Status.Phase == EventSucceeded || e.Status.Phase == EventFailed || e.Status.Phase == EventUnknown {
+	if e.Status.Phase == common.StateSucceeded || e.Status.Phase == common.StateFailed || e.Status.Phase == common.StateUnknown {
 		return true
 	}
 	return false
 }
 
 func (e Event) IsJobNotCreated() bool {
-	if e.Status.Phase == EventPending || e.Status.JobName == "" {
+	if e.Status.Phase == common.StatePending || e.Status.JobName == "" {
 		return true
 	}
 	return false

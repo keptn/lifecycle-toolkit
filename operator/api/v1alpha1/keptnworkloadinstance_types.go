@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,21 +26,36 @@ import (
 
 // KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceSpec struct {
-	PreDeploymentCheck EventSpec         `json:"preDeploymentCheck"`
-	AppName            string            `json:"app"`
-	Version            string            `json:"version"`
-	ResourceReference  ResourceReference `json:"resourceReference"`
+	KeptnWorkloadSpec `json:",inline"`
+	WorkloadName      string `json:"workloadName"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
-	PreDeploymentPhase     WorkloadInstancePhase `json:"preDeploymentPhase"`
-	PreDeploymentTaskName  string                `json:"preDeploymentTaskName"`
-	PostDeploymentTaskName string                `json:"postDeploymentTaskName"`
+	// +kubebuilder:default:=Pending
+	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
+}
+
+type WorkloadTaskStatus struct {
+	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
+	Status             common.KeptnState `json:"status,omitempty"`
+	TaskName           string            `json:"taskName,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
+// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
+// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 type KeptnWorkloadInstance struct {
@@ -63,31 +79,10 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
-type WorkloadInstancePhase string
-
-const (
-	// WorkloadInstancePending means that none of the WorkloadInstances have been created.
-	WorkloadInstancePending WorkloadInstancePhase = "Pending"
-	// WorkloadInstanceRunning means that all of the WorkloadInstances have been started.
-	WorkloadInstanceRunning WorkloadInstancePhase = "Running"
-	// WorkloadInstanceSucceeded means that all of the WorkloadInstances have been finished successfully.
-	WorkloadInstanceSucceeded WorkloadInstancePhase = "Succeeded"
-	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
-	WorkloadInstanceFailed WorkloadInstancePhase = "Failed"
-	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
-	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
-)
-
-func (i KeptnWorkloadInstance) IsCompleted() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstanceSucceeded || i.Status.PreDeploymentPhase == WorkloadInstanceFailed || i.Status.PreDeploymentPhase == WorkloadInstanceUnknown {
-		return true
-	}
-	return false
+func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
+	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentCheckNotCreated() bool {
-	if i.Status.PreDeploymentPhase == WorkloadInstancePending || i.Status.PreDeploymentTaskName == "" {
-		return true
-	}
-	return false
+func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
+	return i.Status.PostDeploymentStatus.IsCompleted()
 }

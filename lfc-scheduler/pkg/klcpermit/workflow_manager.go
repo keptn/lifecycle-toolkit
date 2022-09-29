@@ -23,20 +23,14 @@ const (
 	Wait                               Status = "Wait"
 )
 
-type WorkloadInstancePhase string
+type KeptnState string
 
 const (
-	// WorkloadInstancePending means the application has been accepted by the system, but one or more of its
-	// workloadInstances has not been started.
-	WorkloadInstancePending WorkloadInstancePhase = "Pending"
-	// WorkloadInstanceRunning means that workloadInstance has been started.
-	WorkloadInstanceRunning WorkloadInstancePhase = "Running"
-	// WorkloadInstanceSucceeded means that workloadInstance has been finished successfully.
-	WorkloadInstanceSucceeded WorkloadInstancePhase = "Succeeded"
-	// WorkloadInstanceFailed means that one or more pre-deployment checks was not successful and terminated.
-	WorkloadInstanceFailed WorkloadInstancePhase = "Failed"
-	// WorkloadInstanceUnknown means that for some reason the state of the application could not be obtained.
-	WorkloadInstanceUnknown WorkloadInstancePhase = "Unknown"
+	StateRunning   KeptnState = "Running"
+	StateSucceeded KeptnState = "Succeeded"
+	StateFailed    KeptnState = "Failed"
+	StateUnknown   KeptnState = "Unknown"
+	StatePending   KeptnState = "Pending"
 )
 
 type Manager interface {
@@ -57,26 +51,26 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
 	//List workloadInstance run CRDs
 	name := GetCRDName(pod)
-	crd, err := sMgr.GetCRD(ctx, metav1.NamespaceDefault, name)
+	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
 	if err != nil {
 		klog.Infof("[Keptn Permit Plugin] could not find workloadInstance crd %s, err:%s", name, err.Error())
 		return WorkloadInstanceNotFound
 	}
 	//check CRD status
-	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "phase")
+	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentStatus")
 	klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
-		switch WorkloadInstancePhase(phase) {
-		case WorkloadInstancePending:
+		switch KeptnState(phase) {
+		case StatePending:
 			return Wait
-		case WorkloadInstanceFailed:
+		case StateFailed:
 			return Failure
-		case WorkloadInstanceSucceeded:
+		case StateSucceeded:
 			return Success
-		case WorkloadInstanceRunning:
+		case StateRunning:
 			return Wait
-		case WorkloadInstanceUnknown:
+		case StateUnknown:
 			return Wait
 		}
 

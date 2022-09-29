@@ -15,7 +15,6 @@ import (
 
 	"hash/fnv"
 
-	v1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +49,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	if a.isKeptnAnnotated(pod) {
+	isAnnotated, err := a.isKeptnAnnotated(pod)
+	if err != nil {
+		return admission.Errored(http.StatusBadRequest, err)
+	}
+	if isAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
@@ -76,18 +79,22 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	return nil
 }
 
-func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
-	_, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
-	_, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
-	_, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
+func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
+	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
+	workload, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
+	version, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
+
+	if len(app) > common.MaxAppNameLength || len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+		return false, common.ErrTooLongAnnotations
+	}
 
 	if gotAppAnnotation && gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
 		}
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
@@ -158,6 +165,28 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
+
+	var preDeploymentTasks []string
+	var postDeploymentTasks []string
+	var preDeploymentAnalysis []string
+	var postDeploymentAnalysis []string
+
+	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
+		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
+		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
+		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
+		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	}
+
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: pod.Annotations,
@@ -165,28 +194,13 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 			Namespace:   namespace,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:           applicationName,
-			Version:           version,
-			ResourceReference: a.getResourceReference(pod),
-			//for now hardcoded, will be changed in future
-			PreDeploymentTask: &klcv1alpha1.EventSpec{
-				Service:     a.getWorkloadName(pod),
-				Application: applicationName,
-				JobSpec: v1.JobSpec{
-					Template: corev1.PodTemplateSpec{
-						Spec: corev1.PodSpec{
-							Containers: []corev1.Container{
-								{
-									Name:    "hello-world",
-									Image:   "ubuntu:latest",
-									Command: []string{"echo", "Hello from Keptn"},
-								},
-							},
-							RestartPolicy: corev1.RestartPolicyNever,
-						},
-					},
-				},
-			},
+			AppName:                applicationName,
+			Version:                version,
+			ResourceReference:      a.getResourceReference(pod),
+			PreDeploymentTasks:     preDeploymentTasks,
+			PostDeploymentTasks:    postDeploymentTasks,
+			PreDeploymentAnalysis:  preDeploymentAnalysis,
+			PostDeploymentAnalysis: postDeploymentAnalysis,
 		},
 	}
 }

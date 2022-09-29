@@ -4,7 +4,7 @@ metadata:
   name: scheduled-deployment
 spec:
   function:
-    inlineRef:
+    inline:
       code: |
         let text = Deno.env.get("DATA");
         let data;

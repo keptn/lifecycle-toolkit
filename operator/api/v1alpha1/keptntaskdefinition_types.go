@@ -29,12 +29,12 @@ type KeptnTaskDefinitionSpec struct {
 }
 
 type FunctionSpec struct {
-	FunctionReference  *FunctionReference  `json:"functionRef,omitempty"`
-	Inline             *Inline             `json:"inline,omitempty"`
-	HttpReference      *HttpReference      `json:"httpRef,omitempty"`
-	ConfigMapReference *ConfigMapReference `json:"configMapRef,omitempty"`
-	Parameters         TaskParameters      `json:"parameters,omitempty"`
-	SecureParameters   SecureParameters    `json:"secureParameters,omitempty"`
+	FunctionReference  FunctionReference  `json:"functionRef,omitempty"`
+	Inline             Inline             `json:"inline,omitempty"`
+	HttpReference      HttpReference      `json:"httpRef,omitempty"`
+	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
+	Parameters         TaskParameters     `json:"parameters,omitempty"`
+	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
 }
 
 type ConfigMapReference struct {

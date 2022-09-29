@@ -14,13 +14,13 @@ import (
 )
 
 func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, req ctrl.Request, definition *klcv1alpha1.KeptnTaskDefinition) error {
-	if definition.Spec.Function.Inline != nil {
+	if definition.Spec.Function.Inline != (klcv1alpha1.Inline{}) {
 		err := r.reconcileFunctionInline(ctx, req, definition)
 		if err != nil {
 			return err
 		}
 	}
-	if definition.Spec.Function.ConfigMapReference != nil {
+	if definition.Spec.Function.ConfigMapReference != (klcv1alpha1.ConfigMapReference{}) {
 		err := r.reconcileFunctionConfigMap(ctx, req, definition)
 		if err != nil {
 			return err

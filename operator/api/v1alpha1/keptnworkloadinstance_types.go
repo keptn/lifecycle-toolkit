@@ -80,15 +80,9 @@ func init() {
 }
 
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
-	if i.Status.PreDeploymentStatus == common.StateSucceeded || i.Status.PreDeploymentStatus == common.StateFailed || i.Status.PreDeploymentStatus == common.StateUnknown {
-		return true
-	}
-	return false
+	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
-	if i.Status.PostDeploymentStatus == common.StateSucceeded || i.Status.PostDeploymentStatus == common.StateFailed || i.Status.PostDeploymentStatus == common.StateUnknown {
-		return true
-	}
-	return false
+	return i.Status.PostDeploymentStatus.IsCompleted()
 }

@@ -10,7 +10,7 @@ import (
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 
-	newStatus, postDeploymentState, err := r.genericPrePost(ctx, common.PostDeploymentCheckType, workloadInstance)
+	newStatus, postDeploymentState, err := r.reconcileChecks(ctx, common.PostDeploymentCheckType, workloadInstance)
 	if err != nil {
 		return err
 	}

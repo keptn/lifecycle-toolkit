@@ -111,14 +111,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	r.Log.Info("deployment not finished")
+	r.Log.Info("Deployment of pods not finished")
 
 	if workloadInstance.IsPreDeploymentCompleted() {
 		r.Log.Info("Post deployment checks not finished")
 		return ctrl.Result{Requeue: true}, nil
 	}
 
-	r.Log.Info("pre-deployment checks not finished")
+	r.Log.Info("Pre deployment checks not finished")
 
 	err = r.reconcilePreDeployment(ctx, req, workloadInstance)
 	if err != nil {
@@ -284,7 +284,7 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	return newTask.Name, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) genericPrePost(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.WorkloadTaskStatus, StatusSummary, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.WorkloadTaskStatus, StatusSummary, error) {
 	tasks := workloadInstance.Spec.PreDeploymentTasks
 	statuses := workloadInstance.Status.PreDeploymentTaskStatus
 	if checkType == common.PostDeploymentCheckType {
@@ -327,7 +327,7 @@ func (r *KeptnWorkloadInstanceReconciler) genericPrePost(ctx context.Context, ch
 			// Update state of Task if it is already created
 			taskStatus.Status = task.Status.Status
 		}
-		// Update state of the Pre-Deployment Task
+		// Update state of the Check
 		newStatus = append(newStatus, taskStatus)
 	}
 

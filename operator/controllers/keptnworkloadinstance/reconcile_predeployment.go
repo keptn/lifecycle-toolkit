@@ -9,7 +9,7 @@ import (
 )
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
-	newStatus, preDeploymentState, err := r.genericPrePost(ctx, common.PreDeploymentCheckType, workloadInstance)
+	newStatus, preDeploymentState, err := r.reconcileChecks(ctx, common.PreDeploymentCheckType, workloadInstance)
 	if err != nil {
 		return err
 	}

@@ -102,8 +102,10 @@ spec:
               KeptnWorkloadInstance
             properties:
               deploymentStatus:
+                default: Pending
                 type: string
               postDeploymentStatus:
+                default: Pending
                 type: string
               postDeploymentTaskStatus:
                 items:
@@ -117,6 +119,7 @@ spec:
                   type: object
                 type: array
               preDeploymentStatus:
+                default: Pending
                 type: string
               preDeploymentTaskStatus:
                 items:

@@ -49,7 +49,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	if a.isKeptnAnnotated(pod) {
+	isAnnotated, err := a.isKeptnAnnotated(pod)
+	if err != nil {
+		return admission.Errored(http.StatusBadRequest, err)
+	}
+	if isAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
@@ -75,18 +79,22 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	return nil
 }
 
-func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) bool {
-	_, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
-	_, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
-	_, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
+func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
+	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
+	workload, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
+	version, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
+
+	if len(app) > 20 || len(workload) > 20 || len(version) > 20 {
+		return false, common.ErrTooLongAnnotationsErr
+	}
 
 	if gotAppAnnotation && gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
 		}
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {

@@ -32,8 +32,11 @@ type KeptnWorkloadInstanceSpec struct {
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
-	PreDeploymentStatus      common.KeptnState    `json:"preDeploymentStatus,omitempty"`
-	DeploymentStatus         common.KeptnState    `json:"deploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
 	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`

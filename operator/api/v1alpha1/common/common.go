@@ -1,5 +1,7 @@
 package common
 
+import "fmt"
+
 const WorkloadAnnotation = "keptn.sh/workload"
 const VersionAnnotation = "keptn.sh/version"
 const AppAnnotation = "keptn.sh/app"
@@ -18,3 +20,5 @@ const (
 	StateUnknown   KeptnState = "Unknown"
 	StatePending   KeptnState = "Pending"
 )
+
+var ErrTooLongAnnotationsErr = fmt.Errorf("too long annotations")

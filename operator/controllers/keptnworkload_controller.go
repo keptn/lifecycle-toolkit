@@ -19,7 +19,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -120,10 +119,6 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.K
 		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
 			KeptnWorkloadSpec: workload.Spec,
 			WorkloadName:      workload.Name,
-		},
-		Status: klcv1alpha1.KeptnWorkloadInstanceStatus{
-			PreDeploymentStatus:  common.StatePending,
-			PostDeploymentStatus: common.StatePending,
 		},
 	}
 	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)

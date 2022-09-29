@@ -67,6 +67,8 @@ spec:
                 type: object
               taskDefinition:
                 type: string
+              type:
+                type: string
               workload:
                 type: string
               workloadVersion:

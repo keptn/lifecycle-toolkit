@@ -2,13 +2,14 @@ package klcpermit
 
 import (
 	"context"
+	"time"
+
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 	"k8s.io/kubernetes/pkg/scheduler/framework"
-	"time"
 )
 
 // Name is the name of the plugin used in the plugin registry and configurations.
@@ -37,7 +38,7 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 
 	case Wait:
 		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 2 * time.Minute
+		return framework.NewStatus(framework.Wait), 30 * time.Second
 	case Failure:
 		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Error), 0 * time.Second
@@ -46,7 +47,7 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
 		klog.Infof("[Keptn Permit Plugin] unknown status of pre-deployment checks for", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 2 * time.Minute //TODO what makes sense here?
+		return framework.NewStatus(framework.Wait), 30 * time.Second
 	}
 
 }

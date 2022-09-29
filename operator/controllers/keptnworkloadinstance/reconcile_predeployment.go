@@ -3,12 +3,13 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"math/rand"
+
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"math/rand"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
@@ -147,6 +148,7 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 			TaskDefinition:   taskDefinition,
 			Parameters:       klcv1alpha1.TaskParameters{},
 			SecureParameters: klcv1alpha1.SecureParameters{},
+			Type:             checkType,
 		},
 	}
 	err := controllerutil.SetControllerReference(workloadInstance, newTask, r.Scheme)

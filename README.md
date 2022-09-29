@@ -63,9 +63,9 @@ After either one of those actions has been taken, the webhook will set the sched
 
 ### Scheduler
 
-After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows that of the default scheduler, 
+After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows the default scheduler, 
 since it implements a scheduler plugin based on the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
-For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is binded to a node.
+For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a node.
 
 
 ### Keptn App

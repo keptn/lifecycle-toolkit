@@ -21,6 +21,8 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
+        metrics.dynatrace.com/scrape: 'true'
+        metrics.dynatrace.com/port: '2222'
       labels:
         control-plane: controller-manager
     spec:

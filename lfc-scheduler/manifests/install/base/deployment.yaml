@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: scheduler
+  name: keptn-scheduler
+  namespace: keptn-lifecycle-controller-system
+spec:
+  selector:
+    matchLabels:
+      component: scheduler
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: scheduler
+    spec:
+      serviceAccountName: keptn-scheduler
+      containers:
+        - command:
+            - /bin/kube-scheduler
+            - --config=/etc/kubernetes/scheduler-config.yaml
+          image: klfc-scheduler:latest
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 10259
+              scheme: HTTPS
+            initialDelaySeconds: 15
+          name: keptn-scheduler
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 10259
+              scheme: HTTPS
+          resources:
+            requests:
+              cpu: '100m'
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - name: scheduler-config
+              mountPath: /etc/kubernetes
+              readOnly: true
+      hostNetwork: false
+      hostPID: false
+      volumes:
+        - name: scheduler-config
+          configMap:
+            name: scheduler-config

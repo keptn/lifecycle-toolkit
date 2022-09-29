@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
@@ -103,14 +104,6 @@ func main() {
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
 	}
-	//
-	//if err = (&controllers.EventReconciler{
-	//	Client: mgr.GetClient(),
-	//	Scheme: mgr.GetScheme(),
-	//}).SetupWithManager(mgr); err != nil {
-	//	setupLog.Error(err, "unable to create controller", "controller", "Event")
-	//	os.Exit(1)
-	//}
 	if err = (&keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),

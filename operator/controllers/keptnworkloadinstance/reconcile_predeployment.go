@@ -8,13 +8,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-type StatusSummary struct {
-	failed    int
-	succeeded int
-	running   int
-	pending   int
-}
-
 func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
 	newStatus, preDeploymentState, err := r.genericPrePost(ctx, common.PreDeploymentCheckType, workloadInstance)
 	if err != nil {

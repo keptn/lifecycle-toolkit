@@ -5,7 +5,6 @@ import "fmt"
 const WorkloadAnnotation = "keptn.sh/workload"
 const VersionAnnotation = "keptn.sh/version"
 const AppAnnotation = "keptn.sh/app"
-const EventAnnotation = "keptn.sh/event"
 const PreDeploymentTaskAnnotation = "keptn.sh/pre-deployment-tasks"
 const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
@@ -21,4 +20,4 @@ const (
 	StatePending   KeptnState = "Pending"
 )
 
-var ErrTooLongAnnotationsErr = fmt.Errorf("too long annotations")
+var ErrTooLongAnnotationsErr = fmt.Errorf("Too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")

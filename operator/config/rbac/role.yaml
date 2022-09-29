@@ -19,10 +19,8 @@ rules:
   - jobs
   verbs:
   - create
-  - delete
   - get
   - list
-  - patch
   - update
   - watch
 - apiGroups:
@@ -30,8 +28,6 @@ rules:
   resources:
   - jobs/status
   verbs:
-  - create
-  - delete
   - get
   - list
 - apiGroups:
@@ -59,32 +55,6 @@ rules:
   - get
   - list
   - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - events
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - events/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - events/status
-  verbs:
-  - get
-  - patch
-  - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:

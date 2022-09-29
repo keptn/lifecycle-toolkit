@@ -53,6 +53,8 @@ spec:
             properties:
               app:
                 type: string
+              checkType:
+                type: string
               parameters:
                 properties:
                   map:
@@ -66,8 +68,6 @@ spec:
                     type: string
                 type: object
               taskDefinition:
-                type: string
-              type:
                 type: string
               workload:
                 type: string

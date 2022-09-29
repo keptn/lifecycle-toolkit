@@ -84,7 +84,7 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
 	workload, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
 	version, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
 
-	if len(app) > 25 || len(workload) > 25 || len(version) > 12 {
+	if len(app) > common.MaxAppNameLength || len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, common.ErrTooLongAnnotations
 	}
 

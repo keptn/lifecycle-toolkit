@@ -10,6 +10,11 @@ const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
 const PostDeploymentAnalysisAnnotation = "keptn.sh/post-deployment-analysis"
 
+const MaxAppNameLength = 25
+const MaxWorkloadNameLength = 25
+const MaxTaskNameLength = 25
+const MaxVersionLength = 12
+
 type KeptnState string
 
 const (
@@ -27,8 +32,8 @@ func (k KeptnState) IsCompleted() bool {
 }
 
 func TruncateString(s string, max int) string {
-	if len(s) > 32 {
-		return s[:32]
+	if len(s) > max {
+		return s[:max]
 	}
 	return s
 }

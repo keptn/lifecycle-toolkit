@@ -25,3 +25,10 @@ var ErrTooLongAnnotationsErr = fmt.Errorf("Too long annotations, maximum length 
 func (k KeptnState) IsCompleted() bool {
 	return k == StateSucceeded || k == StateFailed || k == StateUnknown
 }
+
+func TruncateString(s string, max int) string {
+	if len(s) > 32 {
+		return s[:32]
+	}
+	return s
+}

@@ -132,7 +132,7 @@ func getOverallState(summary StatusSummary) common.KeptnState {
 
 func generateTaskName(checkType string, taskName string) string {
 	randomId := rand.Intn(99999-10000) + 10000
-	return fmt.Sprintf("%s-%s-%d", checkType, taskName, randomId)
+	return fmt.Sprintf("%s-%s-%d", checkType, common.TruncateString(taskName, 32), randomId)
 }
 
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType string) (string, error) {

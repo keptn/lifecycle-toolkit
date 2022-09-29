@@ -87,7 +87,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	r.Log.Info("Post deployment checks not finished")
 
-	isDeployed, err := r.IsWorkloadResourceDeployed(ctx, workloadInstance)
+	isDeployed, err := r.UpdateWorkloadResourceDeploymentStatus(ctx, workloadInstance)
 	if err != nil {
 		return reconcile.Result{}, err
 	}
@@ -129,51 +129,61 @@ func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *KeptnWorkloadInstanceReconciler) IsWorkloadResourceDeployed(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) UpdateWorkloadResourceDeploymentStatus(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (bool, error) {
 	if workloadInstance.Status.DeploymentStatus == common.StateSucceeded {
 		return true, nil
 	}
 	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
-		if r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace) {
+		isPodRunning, err := r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+		if err != nil {
+			return isPodRunning, err
+		}
+		if isPodRunning {
 			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
 			return true, r.Client.Status().Update(ctx, workloadInstance)
 		}
 		return false, nil
 	}
-	if r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace) {
+	isReplicaRunning, err := r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	if err != nil {
+		return isReplicaRunning, err
+	}
+	if isReplicaRunning {
 		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
 		return true, r.Client.Status().Update(ctx, workloadInstance)
 	}
 	return false, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
+func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 	podList := &corev1.PodList{}
-	r.Client.List(ctx, podList, client.InNamespace(namespace))
+	if err := r.Client.List(ctx, podList, client.InNamespace(namespace)); err != nil {
+		return false, err
+	}
 	for _, p := range podList.Items {
 		if p.UID == resource.UID {
 			if p.Status.Phase == corev1.PodRunning {
-				return true
+				return true, nil
 			}
-			return false
+			return false, nil
 		}
 	}
-	return false
+	return false, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) bool {
-
+func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 	replica := &appsv1.ReplicaSetList{}
-	r.Client.List(ctx, replica, client.InNamespace(namespace))
-
+	if err := r.Client.List(ctx, replica, client.InNamespace(namespace)); err != nil {
+		return false, err
+	}
 	for _, re := range replica.Items {
 		if re.UID == resource.UID {
 			if re.Status.ReadyReplicas == *re.Spec.Replicas {
-				return true
+				return true, nil
 			}
-			return false
+			return false, nil
 		}
 	}
-	return false
+	return false, nil
 
 }

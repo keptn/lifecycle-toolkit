@@ -32,3 +32,8 @@ func TruncateString(s string, max int) string {
 	}
 	return s
 }
+
+type CheckType string
+
+const PreDeploymentCheckType CheckType = "pre"
+const PostDeploymentCheckType CheckType = "post"

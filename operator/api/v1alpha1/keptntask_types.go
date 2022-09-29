@@ -32,7 +32,7 @@ type KeptnTaskSpec struct {
 	TaskDefinition   string           `json:"taskDefinition"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
-	Type             string           `json:"type,omitempty"`
+	Type             common.CheckType `json:"checkType,omitempty"`
 }
 
 type TaskParameters struct {

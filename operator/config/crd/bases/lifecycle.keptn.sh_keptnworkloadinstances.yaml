@@ -19,10 +19,10 @@ spec:
     - jsonPath: .spec.app
       name: AppName
       type: string
-    - jsonPath: .spec.workload
+    - jsonPath: .spec.workloadName
       name: Workload
       type: string
-    - jsonPath: .spec.workloadVersion
+    - jsonPath: .spec.version
       name: Version
       type: string
     - jsonPath: .status.preDeploymentStatus

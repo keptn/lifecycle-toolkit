@@ -15,6 +15,12 @@ webhooks:
           operator: NotIn
           values:
             - "controller-manager"
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - "kube-system"
+            - "kube-public"
+            - "kube-node-lease"
 #---
 #apiVersion: admissionregistration.k8s.io/v1
 #kind: ValidatingWebhookConfiguration

@@ -54,7 +54,7 @@ jobs:
         continue-on-error: true
 
       - name: Prepare for build-everything run
-        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything'))
+        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything')) || contains(github.event.pull_request.labels.*.name, format('autorelease{0} pending', ':'))
         id: build_everything
         run: |
           BUILD_EVERYTHING=true

@@ -6,8 +6,6 @@ profiles:
   # Compose all plugins in one profile
   - schedulerName: keptn-scheduler
     plugins:
-      multiPoint:
+      permit:
         enabled:
           - name: "KLCPermit"
-        disabled: []
-    pluginConfig: {}

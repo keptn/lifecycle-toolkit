@@ -16,17 +16,82 @@ The Keptn Lifecycle Controller is composed of the following components:
 The Keptn Lifecycle Operator contains several controllers for Keptn CRDs and a Mutating Webhook.
 The Keptn Scheduler ensures that Pods are started only after the pre-deployment checks have finished.
 
-## Architecture
 
-![](./assets/architecture.png)
+## Goals
+
+The Keptn Lifecycle Controller aims at supporting Cloud Native teams with:
+
+- Pre-requisite evaluation before deploying Workloads and applications
+- Finding out when an application (not workload) is ready and working
+- Checking the Application Health in a declarative (cloud-native) way
+- Standardized way for pre- and post-deployment tasks
+
+![](./assets/operator-maturity.jpg)
+
+The Keptn Lifecycle Controller could be seen as a general purpose and declarative Level 3 operator for your Application.
+For this reason, the Keptn Lifecycle Controller is agnostic to the Deployment tool that is being used and works with any GitOps solution.
+
+## How to install
+
+**Prerequisites:**
+
+The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
+
+
+When the *cert-manager* is installed, you can run
+
+```bash
+kubectl apply -f <insert link of release>
+```
+
+## How to use
+
+The Keptn Lifecycle Controller monitors manifests that are applied against the KubeAPI and reacts if it finds a workload with special annotations.
+For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
+
+```yaml
+keptn.sh/app: myAwesomeAppName
+keptn.sh/workload: myAwesomeWorkload
+```
+
+In the case you want to run pre- and post-deployment checks, further annotations are necessary:
+
+```yaml
+keptn.sh/pre-deployment-tasks: verify-infrastructure-problems
+keptn.sh/post-deployment-tasks: slack-notification,performance-test
+```
+
+In this example, before the deployment starts, a check for open problems in your infrastructure are performed. If everything is fine, the deployment continues and afterward, a slack notification is sent with the result of the deployment and a pipeline to run performance tests is invoked.
+
+A more comprehensive example can be found in our [examples folder](./examples/podtatohead-deployment/) where we use [Podtato-Head](https://github.com/podtato-head/podtato-head) to run pre-deployment checks.
+
+To run the example, use the following commands:
+
+```bash
+cd ./examples/podtatohead-deployment/
+kubectl apply -f .
+```
+
+Afterward, you can monitor the status of the deployment using
+
+```bash
+kubectl get keptnworkloadinstance -n podtato-kubectl -w
+```
+
+The deployment for a Workload will stay in a `Pending` state until the respective pre-deployment check is completed. Afterward, the deployment will start and when it is `Succeeded`, the post-deployment checks will start.
+
+## Architecture
 
 A Kubernetes Manifest, which is annotated with Keptn specific annotations, gets applied to the Kubernetes Cluster.
 Afterward, the Keptn Scheduler gets injected (via Mutating Webhook), and Kubernetes Events for Pre-Deployment are sent to the event stream.
 The Event Controller watches for events and triggers a Kubernetes Job to fullfil the Pre-Deployment.
 After the Pre-Deployment has finished, the Keptn Scheduler schedules the Pod to be deployed.
-The KeptnApp and KeptnWorkload Controllers watchfor the workload resources to finish and then generate a Post-Deployment Event.
+The KeptnApp and KeptnWorkload Controllers watch for the workload resources to finish and then generate a Post-Deployment Event.
 After the Post-Deployment checks, SLOs can be validated using an interface for retrieving SLI data from a provider, e.g, [Prometheus](https://prometheus.io/).
 Finally, Keptn Lifecycle Controller exposes Metrics and Traces of the whole Deployment cycle with [OpenTelemetry](https://opentelemetry.io/).
+
+![](./assets/architecture.png)
 
 ## How it works
 
@@ -42,7 +107,7 @@ The webhook should be as fast as possible and should not create/change any resou
 When the webhook receives a request for a new pod, it will look for the following annotations:
 
 ```
-keptn.sh/app (optional)
+keptn.sh/app
 keptn.sh/workload
 ```
 
@@ -51,7 +116,7 @@ Additionally, it will compute a version string, using a hash function that takes
 Next, it will look for an existing instance of a `Workload CRD` for the given workload name:
 
 - If it finds the `Workload`, it will update its version according to the previously computed version string. In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
-- If it does not find a workload instance, it will create one containing the previously computed version string. In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner. 
+- If it does not find a workload instance, it will create one containing the previously computed version string. In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
 It will use the following annotations for
 the specification of the pre/post deployment checks that should be executed for the `Workload`:
   - `keptn.sh/pre-deployment-tasks: task1,task2`
@@ -63,7 +128,7 @@ After either one of those actions has been taken, the webhook will set the sched
 
 ### Scheduler
 
-After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows the default scheduler, 
+After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows the default scheduler,
 since it implements a scheduler plugin based on the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a node.
 
@@ -76,7 +141,7 @@ tbd
 
 A Workload contains information about which tasks should be performed during the `preDeployment` as well as the `postDeployment`
 phase of a deployment. In its state it keeps track of the currently active `Workload Instances`, which are responsible for doing those checks for
-a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version). 
+a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version).
 
 ### Keptn Workload Instance
 
@@ -85,26 +150,97 @@ the Pre Deployment phase, which can be used by the scheduler to tell that a pod 
 Workload Instances have a reference to the respective Deployment/StatefulSet/ReplicaSet, to check if it has reached the desired state. If it detects that the referenced object has reached
 its desired state (e.g. all pods of a deployment are up and running), it will be able to tell that a `PostDeploymentCheck` can be triggered.
 
-### Keptn Task
-
-tbd
-
 ### Keptn Task Definition
 
-tbd
+A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Controller
+as part of pre- and post-deployment phases of a deployment.
+The task definition is a [Deno](https://deno.land/) script
+Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
+In the future, we will support also other runtime, especially running a container image directly.
 
-## How to use
+A task definition can be configured in three different way:
 
-TBD
+- inline
+- referring an HTTP script
+- referring another `KeptnTaskDefinition`
 
-## How to install (development)
+An inline task definition looks like the following:
 
-**Prerequisites:**
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: deployment-hello
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Deployment Task has been executed");
+```
 
-The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
-is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
+In the code section, it is possible to define a full-fletch Deno script.
+A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
-When cert-manager is installed, use the following commands to deploy the operator:
+To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-http
+spec:
+  function:
+    httpRef:
+      url: <url>
+```
+
+An example is available [here](./examples/taskonly-hello-keptn/http/taskdefinition.yaml).
+
+Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`.
+This is a common use case where a general function can be re-used in multiple places with different parameters.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: slack-notification-dev
+spec:
+  function:
+    functionRef:
+      name: slack-notification
+    parameters:
+      map:
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: slack-token
+```
+
+As you might have noticed, Task Definitions have also the possibility to have parameters.
+The Lifecycle Controller passes the values defined inside the `map` field a JSON object.
+The JSON object can be read through the env var `DATA`.
+K8s secrets can also be passed to the function using the `secureParameters` field.
+Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the env var `SECURE_DATA`.
+
+
+### Keptn Task
+
+A Task is responsible for executing the TaskDefinition of a workload.
+The execution is done spawning a K8s Job to handle a single Task.
+In its state, it keeps track of the current status of the K8s Job created.
+
+
+## Install a dev build
+
+The [GH CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
+
+```bash
+gh run list --repo keptn-sandbox/lifecycle-controller # find the id of a run
+gh run download 3152895000 --repo keptn-sandbox/lifecycle-controller # download the artifacts
+kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
+kubectl apply -f ./lfc-scheduler-manifest/release.yaml # install the scheduler
+```
+
+Instead, if you want to build and deploy the operator into your cluster directly from the code, you can type:
 
 ```bash
 DOCKER_REGISTRY=<YOUR_DOCKER_REGISTRY>

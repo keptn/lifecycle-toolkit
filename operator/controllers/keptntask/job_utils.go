@@ -72,7 +72,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		params.SecureParameters = task.Spec.SecureParameters.Secret
 	}
 
-	job, _ := r.generateFunctionJob(task, params)
+	job, err := r.generateFunctionJob(task, params)
 	if err != nil {
 		return "", err
 	}

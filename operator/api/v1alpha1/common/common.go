@@ -1,6 +1,8 @@
 package common
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const WorkloadAnnotation = "keptn.sh/workload"
 const VersionAnnotation = "keptn.sh/version"
@@ -9,6 +11,7 @@ const PreDeploymentTaskAnnotation = "keptn.sh/pre-deployment-tasks"
 const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
 const PostDeploymentAnalysisAnnotation = "keptn.sh/post-deployment-analysis"
+const TaskNameAnnotation = "keptn.sh/task-name"
 
 const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25

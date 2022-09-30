@@ -27,11 +27,7 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      jobId,
 			Namespace: task.Namespace,
-			Annotations: map[string]string{
-				"keptn.sh/app":      task.Spec.AppName,
-				"keptn.sh/workload": task.Spec.Workload,
-				"keptn.sh/version":  task.Spec.WorkloadVersion,
-			},
+			Labels:    createKeptnLabels(*task),
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{

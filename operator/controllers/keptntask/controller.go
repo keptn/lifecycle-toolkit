@@ -18,6 +18,7 @@ package keptntask
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
@@ -58,10 +59,16 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if task.Status.JobName == "" {
-		err := r.createJob(ctx, req, task)
+	isRunning, err := r.IsJobRunning(ctx, *task, req.Namespace)
+	if err != nil {
+		r.Log.Error(err, "Could not check if job is running")
+		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+	}
+
+	if !isRunning {
+		err = r.createJob(ctx, req, task)
 		if err != nil {
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+			return ctrl.Result{Requeue: true}, err
 		}
 	}
 
@@ -82,4 +89,27 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&klcv1alpha1.KeptnTask{}).
 		Owns(&batchv1.Job{}).
 		Complete(r)
+}
+
+func (r *KeptnTaskReconciler) IsJobRunning(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
+	jobList := &batchv1.JobList{}
+
+	jobLabels := client.MatchingLabels{}
+	for k, v := range createKeptnLabels(task) {
+		jobLabels[k] = v
+	}
+
+	if len(jobLabels) == 0 {
+		return false, fmt.Errorf("no labels found for task: %s", task.Name)
+	}
+
+	if err := r.Client.List(ctx, jobList, client.InNamespace(namespace), jobLabels); err != nil {
+		return false, err
+	}
+
+	if len(jobList.Items) > 0 {
+		return true, nil
+	}
+
+	return false, nil
 }

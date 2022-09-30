@@ -27,6 +27,7 @@ jobs:
           cd ../lfc-scheduler
           go mod tidy
           make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
           cd ../operator
           go mod tidy
           make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
@@ -34,4 +35,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: operator/config/rendered/release.yaml
+          files: |
+            lfc-scheduler/config/rendered/release.yaml
+            operator/config/rendered/release.yaml

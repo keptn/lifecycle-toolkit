@@ -25,6 +25,7 @@ The Keptn Lifecycle Controller aims at supporting Cloud Native teams with:
 - Finding out when an application (not workload) is ready and working
 - Checking the Application Health in a declarative (cloud-native) way
 - Standardized way for pre- and post-deployment tasks
+- Provide out-of-the-box Observability of the deployment cycle
 
 ![](./assets/operator-maturity.jpg)
 

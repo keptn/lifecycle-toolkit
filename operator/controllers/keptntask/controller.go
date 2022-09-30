@@ -95,7 +95,7 @@ func (r *KeptnTaskReconciler) IsJobRunning(ctx context.Context, task klcv1alpha1
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}
-	for k, v := range createJobLabels(task) {
+	for k, v := range createKeptnLabels(task) {
 		jobLabels[k] = v
 	}
 

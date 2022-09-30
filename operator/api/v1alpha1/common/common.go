@@ -50,4 +50,5 @@ const PostDeploymentCheckType CheckType = "post"
 
 type KeptnMeters struct {
 	DeploymentCount syncfloat64.Counter
+	TaskCount       syncfloat64.Counter
 }

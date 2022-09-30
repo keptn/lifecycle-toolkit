@@ -95,8 +95,14 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	taskCount, err := meter.SyncFloat64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn tasks"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
 	meters := common.KeptnMeters{
 		DeploymentCount: deploymentCount,
+		TaskCount:       taskCount,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -206,6 +212,7 @@ func main() {
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)

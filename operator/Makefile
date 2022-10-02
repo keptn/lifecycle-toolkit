@@ -151,6 +151,9 @@ envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
+
+#### pipeline build  ####
+
 .PHONY: build-and-push-image
 build-and-push-image: release-image push-release-images
 
@@ -180,3 +183,28 @@ push-release-images: release-image.amd64 release-image.arm64v8
 .PHONY: clean
 clean:
 	rm -rf ./bin
+
+
+#### developer build   ####
+
+.PHONY: build-and-push-local
+build-and-push-local: release-local
+
+.PHONY: release-local
+release-local: release-local.amd64 release-local.arm64v8
+	for arch in $(ARCHS); do \
+			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
+		for arch in $(ARCHS); do \
+			DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
+
+.PHONY: release-local.amd64
+release-local.amd64: clean
+	docker build --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+
+.PHONY: release-local.arm64v8
+release-local.arm64v8: clean
+	docker build --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .

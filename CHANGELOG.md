@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/mowies/lifecycle-controller/compare/v0.1.3...v0.1.4) (2022-10-03)
+
+
+### Bug Fixes
+
+* Fix release pipeline ([f91a18a](https://github.com/mowies/lifecycle-controller/commit/f91a18a90f79f86c9e11e31b924986a3387655c1))
+* Fix release pipeline ([5e2b7e2](https://github.com/mowies/lifecycle-controller/commit/5e2b7e2cfa8d441e67ef7dbbe00a58728a6e8001))
+
 ## [0.1.3](https://github.com/mowies/lifecycle-controller/compare/v0.1.2...v0.1.3) (2022-10-03)
 
 

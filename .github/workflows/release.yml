@@ -1,53 +1,64 @@
-name: release
+name: Release Please
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # also run workflow when triggered manually
+  workflow_dispatch:
 
 jobs:
-  build:
+  release-please:
     runs-on: ubuntu-22.04
+    outputs:
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - name: Run release please
+        uses: google-github-actions/release-please-action@v3
         id: release
         with:
           command: manifest
           token: ${{secrets.GITHUB_TOKEN}}
           default-branch: main
 
+  build-release:
+    if: needs.release-please.outputs.releases_created == 'true'
+    needs:
+      - release-please
+    runs-on: ubuntu-22.04
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
-        if: ${{ steps.release.outputs.releases_created }}
         with:
           submodules: recursive
 
-      - name: Get the version
-        id: get_version
-        if: ${{ steps.release.outputs.releases_created }}
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
 
-      - name: Create image and manifests
+      - name: Set up Go
         uses: actions/setup-go@v3
-        if: ${{ steps.release.outputs.releases_created }}
         with:
           go-version: '1.18'
-      - run: |
+
+      - name: Create images and manifests
+        run: |
           cd functions-runtime
-          go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../lfc-scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
-          make release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
-          make controller-gen release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ..
-          cat fc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
-      - name: Release
+          cat lfc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
+
+      - name: Attach release assets
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: manifest.yaml

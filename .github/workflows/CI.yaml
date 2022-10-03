@@ -144,7 +144,7 @@ jobs:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
     - name: Check out code
-      uses: actions/checkout@v3  
+      uses: actions/checkout@v3
 
     - name: Set up Docker Buildx
       id: buildx

@@ -22,7 +22,7 @@ jobs:
           default-branch: main
           
   build-release:
-    if: jobs.release-please.outputs.releases_created
+    if: needs.release-please.outputs.releases_created
     needs:
       - release-please
     runs-on: ubuntu-22.04
@@ -45,15 +45,15 @@ jobs:
       - name: Create images and manifests
         run: |
           cd functions-runtime
-          make build-and-push-image TAG=${{ jobs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../lfc-scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ jobs.release-please.outputs.tag_name }}
-          make release-manifests TAG=${{ jobs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ jobs.release-please.outputs.tag_name }}
-          make controller-gen release-manifests TAG=${{ jobs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ..
           cat lfc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
 

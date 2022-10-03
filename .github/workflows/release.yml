@@ -10,8 +10,8 @@ jobs:
   release-please:
     runs-on: ubuntu-22.04
     outputs:
-      tag_name: jobs.release-please.outputs.tag_name
-      releases_created: steps.release.outputs.releases_created
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - name: Run release please
         uses: google-github-actions/release-please-action@v3
@@ -20,7 +20,12 @@ jobs:
           command: manifest
           token: ${{secrets.GITHUB_TOKEN}}
           default-branch: main
-          
+
+      - name:  Debug outputs
+        run: |
+          echo "releases created: ${{ steps.release.outputs.releases_created }}"
+          echo "tag name: ${{ steps.release-please.outputs.tag_name }}"
+
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:

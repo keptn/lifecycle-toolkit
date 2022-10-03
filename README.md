@@ -236,7 +236,7 @@ spec:
 As you might have noticed, Task Definitions have also the possibility to have parameters.
 The Lifecycle Controller passes the values defined inside the `map` field a JSON object.
 At the moment, multi-level maps are not supported.
-The JSON object can be read through the env var `DATA` using `Deno.env.get("DATA");`.
+The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
 Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the environment variable `SECURE_DATA`.
 

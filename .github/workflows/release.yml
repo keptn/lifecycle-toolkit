@@ -56,3 +56,43 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: manifest.yaml
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          submodules: recursive
+
+      - name: Get the version
+        id: get_version
+        if: ${{ steps.release.outputs.release_created }}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          go-version: '1.18'
+
+      - name: Create images and manifests
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          cd functions-runtime
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          cd ../lfc-scheduler
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          cd ../operator
+          go mod tidy
+          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make controller-gen release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          cd ..
+          cat fc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
+
+      - name: Release
+        if: ${{ steps.release.outputs.release_created }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: manifest.yaml

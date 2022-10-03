@@ -1,12 +1,27 @@
 # Keptn Lifecycle Controller
 
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+![build](https://img.shields.io/github/workflow/status/keptn-sandbox/lifecycle-controller/CI)
+![goversion](https://img.shields.io/github/go-mod/go-version/keptn-sandbox/lifecycle-controller?filename=operator%2Fgo.mod)
+![version](https://img.shields.io/badge/version-pre--alpha-green)
+![status](https://img.shields.io/badge/status-not--for--production-red)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
 
 The purpose of this repository is to demonstrate and experiment with
 a prototype of a _**Keptn Lifecycle Controller**_.
 The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
 It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
+
+## Deploy the latest release
+
+_Requires [cert manager](https://cert-manager.io/docs/installation/kubernetes/) installed_
+
+<!---x-release-please-start-version-->
+
+```
+kubectl apply -f https://github.com/keptn-sandbox/lifecycle-controller/releases/download/v0.1.0/release.yaml
+```
+
+<!---x-release-please-end-->
 
 The Keptn Lifecycle Controller is composed of the following components:
 

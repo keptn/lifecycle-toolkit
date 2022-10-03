@@ -233,7 +233,7 @@ spec:
       secret: slack-token
 ```
 
-As you might have noticed, Task Definitions have also the possibility to have parameters.
+As you might have noticed, Task Definitions also have the possibility to use input parameters.
 The Lifecycle Controller passes the values defined inside the `map` field as a JSON object.
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.

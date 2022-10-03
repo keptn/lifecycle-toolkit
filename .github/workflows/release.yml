@@ -1,4 +1,4 @@
-name: release
+name: Release Please
 
 on:
   push:
@@ -50,7 +50,9 @@ jobs:
           make controller-gen release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
           cd ..
           cat fc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
+
       - name: Release
+        if: ${{ steps.release.outputs.releases_created }}
         uses: softprops/action-gh-release@v1
         with:
           files: manifest.yaml

@@ -174,7 +174,7 @@ A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Kep
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
 Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
-In the future, we intend to support also other runtime, especially running a container image directly.
+In the future, we also intend to support other runtimes, especially running a container image directly.
 
 A task definition can be configured in three different way:
 

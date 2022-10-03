@@ -13,6 +13,12 @@ It is an experimental project, under the umbrella of the [Keptn Application Life
 
 ## Deploy the latest release
 
+**Known Limitations**
+* Kubernetes >=1.24 is needed to deploy the Lifecycle Controller
+* The Lifecycle Controller is currently not compatible with vcluster
+
+**Installation**
+
 The lifecycle controller includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
 is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
 

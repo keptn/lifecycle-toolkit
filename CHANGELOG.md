@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/mowies/lifecycle-controller/compare/v0.1.4...v0.1.5) (2022-10-03)
+
+
+### Features
+
+* Debugging ([a073941](https://github.com/mowies/lifecycle-controller/commit/a07394129af4942edd251ef2c34fa6790de46fc9))
+
 ## [0.1.4](https://github.com/mowies/lifecycle-controller/compare/v0.1.3...v0.1.4) (2022-10-03)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/mowies/lifecycle-controller/compare/v0.1.2...v0.1.3) (2022-10-03)
+
+
+### Features
+
+* Use buildx ([cc814e8](https://github.com/mowies/lifecycle-controller/commit/cc814e822a0d2d1e098d76983f32540953f4e2e6))
+
 ## [0.1.2](https://github.com/mowies/lifecycle-controller/compare/v0.1.1...v0.1.2) (2022-10-03)
 
 

@@ -22,7 +22,7 @@ jobs:
           default-branch: main
           
   build-release:
-    if: needs.release-please.outputs.releases_created
+    if: needs.release-please.outputs.releases_created == 'true'
     needs:
       - release-please
     runs-on: ubuntu-22.04

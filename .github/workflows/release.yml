@@ -19,12 +19,12 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: '1.18'
+          go-version: "1.18"
       - run: |
           cd functions-runtime
           go mod tidy
           make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
-          cd ../lfc-scheduler
+          cd ../scheduler
           go mod tidy
           make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
           make release-manifests TAG=${{ steps.get_version.outputs.VERSION }}

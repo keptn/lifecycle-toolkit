@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/mowies/lifecycle-controller/compare/v0.1.1...v0.1.2) (2022-10-03)
+
+
+### Features
+
+* Remove image pushing ([bfbc1f4](https://github.com/mowies/lifecycle-controller/commit/bfbc1f4303a260038f09cbb7d045d736a6e27a76))
+
 ## [0.1.1](https://github.com/mowies/lifecycle-controller/compare/v0.1.0...v0.1.1) (2022-10-03)
 
 

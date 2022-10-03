@@ -13,7 +13,12 @@ It is an experimental project, under the umbrella of the [Keptn Application Life
 
 ## Deploy the latest release
 
-_Requires [cert manager](https://cert-manager.io/docs/installation/kubernetes/) installed_
+**Prerequisites:**
+
+The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
+
+When the *cert-manager* is installed, you can run
 
 <!---x-release-please-start-version-->
 
@@ -23,14 +28,7 @@ kubectl apply -f https://github.com/keptn-sandbox/lifecycle-controller/releases/
 
 <!---x-release-please-end-->
 
-The Keptn Lifecycle Controller is composed of the following components:
-
-- Keptn Lifecycle Operator
-- Keptn Scheduler
-
-The Keptn Lifecycle Operator contains several controllers for Keptn CRDs and a Mutating Webhook.
-The Keptn Scheduler ensures that Pods are started only after the pre-deployment checks have finished.
-
+to install the latest release of the lifecycle controller.
 
 ## Goals
 
@@ -46,20 +44,6 @@ The Keptn Lifecycle Controller aims at supporting Cloud Native teams with:
 
 The Keptn Lifecycle Controller could be seen as a general purpose and declarative Level 3 operator for your Application.
 For this reason, the Keptn Lifecycle Controller is agnostic to the Deployment tool that is being used and works with any GitOps solution.
-
-## How to install
-
-**Prerequisites:**
-
-The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
-is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
-
-
-When the *cert-manager* is installed, you can run
-
-```bash
-kubectl apply -f <insert link of release>
-```
 
 ## How to use
 
@@ -98,6 +82,15 @@ kubectl get keptnworkloadinstance -n podtato-kubectl -w
 The deployment for a Workload will stay in a `Pending` state until the respective pre-deployment check is completed. Afterward, the deployment will start and when it is `Succeeded`, the post-deployment checks will start.
 
 ## Architecture
+
+
+The Keptn Lifecycle Controller is composed of the following components:
+
+- Keptn Lifecycle Operator
+- Keptn Scheduler
+
+The Keptn Lifecycle Operator contains several controllers for Keptn CRDs and a Mutating Webhook.
+The Keptn Scheduler ensures that Pods are started only after the pre-deployment checks have finished.
 
 A Kubernetes Manifest, which is annotated with Keptn specific annotations, gets applied to the Kubernetes Cluster.
 Afterward, the Keptn Scheduler gets injected (via Mutating Webhook), and Kubernetes Events for Pre-Deployment are sent to the event stream.

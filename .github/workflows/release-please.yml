@@ -16,5 +16,5 @@ jobs:
         id: release
         with:
           command: manifest
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.KEPTN_BOT_TOKEN}}
           default-branch: main

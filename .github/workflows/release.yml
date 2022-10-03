@@ -21,11 +21,6 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           default-branch: main
 
-      - name:  Debug outputs
-        run: |
-          echo "releases created: ${{ steps.release.outputs.releases_created }}"
-          echo "tag name: ${{ steps.release-please.outputs.tag_name }}"
-
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:
@@ -65,4 +60,5 @@ jobs:
       - name: Attach release assets
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: manifest.yaml

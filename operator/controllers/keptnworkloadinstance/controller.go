@@ -66,6 +66,8 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apps,resources=replicasets,verbs=get;list;watch
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
+//+kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

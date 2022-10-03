@@ -187,7 +187,7 @@ spec:
         console.log("Deployment Task has been executed");
 ```
 
-In the code section, it is possible to define a full-fletch Deno script.
+In the code section, it is possible to define a full-fletched Deno script.
 A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
 To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:

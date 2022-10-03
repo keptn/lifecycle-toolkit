@@ -40,7 +40,7 @@ The Keptn Lifecycle Controller aims to support Cloud Native teams with:
 
 ![](./assets/operator-maturity.jpg)
 
-The Keptn Lifecycle Controller could be seen as a general purpose and declarative Level 3 operator for your Application.
+The Keptn Lifecycle Controller could be seen as a general purpose and declarative [Level 3 operator](https://operatorframework.io/operator-capabilities/) for your Application.
 For this reason, the Keptn Lifecycle Controller is agnostic to deployment tools that are used and works with any GitOps solution.
 
 ## How to use

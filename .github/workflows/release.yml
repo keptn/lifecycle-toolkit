@@ -10,7 +10,7 @@ jobs:
   release-please:
     runs-on: ubuntu-22.04
     outputs:
-      tag_name: ${{ steps.release-please.outputs.tag_name }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
       releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - name: Run release please

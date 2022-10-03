@@ -25,7 +25,7 @@ LOCAL_CONTROLLER_IMAGE=controller:latest
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
-RELEASE_IMAGE:=lfc-scheduler:$(TAG)
+RELEASE_IMAGE:=scheduler:$(TAG)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 
 # VERSION is the scheduler's version

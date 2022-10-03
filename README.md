@@ -13,10 +13,10 @@ It is an experimental project, under the umbrella of the [Keptn Application Life
 
 ## Deploy the latest release
 
-The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+The lifecycle controller includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
 is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
 
-When the *cert-manager* is installed, you can run
+When *cert-manager* is installed, you can run
 
 <!---x-release-please-start-version-->
 
@@ -30,9 +30,9 @@ to install the latest release of the lifecycle controller.
 
 ## Goals
 
-The Keptn Lifecycle Controller aims at supporting Cloud Native teams with:
+The Keptn Lifecycle Controller aims to support Cloud Native teams with:
 
-- Pre-requisite evaluation before deploying Workloads and applications
+- Pre-requisite evaluation before deploying workloads and applications
 - Finding out when an application (not workload) is ready and working
 - Checking the Application Health in a declarative (cloud-native) way
 - Standardized way for pre- and post-deployment tasks
@@ -60,9 +60,15 @@ keptn.sh/pre-deployment-tasks: verify-infrastructure-problems
 keptn.sh/post-deployment-tasks: slack-notification,performance-test
 ```
 
-In this example, before the deployment starts, a check for open problems in your infrastructure are performed. If everything is fine, the deployment continues and afterward, a slack notification is sent with the result of the deployment and a pipeline to run performance tests is invoked.
+The value of these annotations are Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+called [KeptnTaskDefinition](#keptn-task-definition)s. These CRDs contains re-usable "functions" that can
+executed before and after the deployment. In this example, before the deployment starts, a check for open problems in your infrastructure
+is performed. If everything is fine, the deployment continues and afterward, a slack notification is sent with the result of
+the deployment and a pipeline to run performance tests is invoked. Otherwise, the deployment is kept in a pending state until
+the infrastructure is capable to accept deployments again.
 
-A more comprehensive example can be found in our [examples folder](./examples/podtatohead-deployment/) where we use [Podtato-Head](https://github.com/podtato-head/podtato-head) to run pre-deployment checks.
+A more comprehensive example can be found in our [examples folder](./examples/podtatohead-deployment/) where we
+use [Podtato-Head](https://github.com/podtato-head/podtato-head) to run some simple pre-deployment checks.
 
 To run the example, use the following commands:
 

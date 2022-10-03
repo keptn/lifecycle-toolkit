@@ -192,7 +192,11 @@ func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Contex
 	}
 	for _, re := range replica.Items {
 		if re.UID == resource.UID {
-			if re.Status.ReadyReplicas == *re.Spec.Replicas {
+			replicas, err := r.GetDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
+			if err != nil {
+				return false, err
+			}
+			if re.Status.ReadyReplicas == replicas {
 				return true, nil
 			}
 			return false, nil

@@ -13,8 +13,6 @@ It is an experimental project, under the umbrella of the [Keptn Application Life
 
 ## Deploy the latest release
 
-**Prerequisites:**
-
 The lifecycle controllers includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
 is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
 
@@ -47,7 +45,7 @@ For this reason, the Keptn Lifecycle Controller is agnostic to the Deployment to
 
 ## How to use
 
-The Keptn Lifecycle Controller monitors manifests that are applied against the KubeAPI and reacts if it finds a workload with special annotations.
+The Keptn Lifecycle Controller monitors manifests that have been applied against the KubeAPI and reacts if it finds a workload with special annotations.
 For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
 
 ```yaml
@@ -124,10 +122,15 @@ Additionally, it will compute a version string, using a hash function that takes
 (e.g. the images of its containers).
 Next, it will look for an existing instance of a `Workload CRD` for the given workload name:
 
-- If it finds the `Workload`, it will update its version according to the previously computed version string. In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
-- If it does not find a workload instance, it will create one containing the previously computed version string. In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
+- If it finds the `Workload`, it will update its version according to the previously computed version string.
+  In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner),
+  or the pod itself, if it does not have an owner.
+- If it does not find a workload instance, it will create one containing the previously computed version string.
+  In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
+
 It will use the following annotations for
 the specification of the pre/post deployment checks that should be executed for the `Workload`:
+
   - `keptn.sh/pre-deployment-tasks: task1,task2`
   - `keptn.sh/post-deployment-tasks: task1,task2`
 
@@ -165,7 +168,7 @@ A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Kep
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
 Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
-In the future, we will support also other runtime, especially running a container image directly.
+In the future, we intend to support also other runtime, especially running a container image directly.
 
 A task definition can be configured in three different way:
 
@@ -226,7 +229,8 @@ spec:
 
 As you might have noticed, Task Definitions have also the possibility to have parameters.
 The Lifecycle Controller passes the values defined inside the `map` field a JSON object.
-The JSON object can be read through the env var `DATA`.
+At the moment, multi-level maps are not supported.
+The JSON object can be read through the env var `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
 Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the env var `SECURE_DATA`.
 

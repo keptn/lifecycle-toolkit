@@ -53,7 +53,7 @@ keptn.sh/app: myAwesomeAppName
 keptn.sh/workload: myAwesomeWorkload
 ```
 
-In the case you want to run pre- and post-deployment checks, further annotations are necessary:
+In case you want to run pre- and post-deployment checks, further annotations are necessary:
 
 ```yaml
 keptn.sh/pre-deployment-tasks: verify-infrastructure-problems

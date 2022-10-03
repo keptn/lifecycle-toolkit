@@ -111,7 +111,7 @@ local-image: clean
 	docker build --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
 
 .PHONY: build-and-push-image
-build-and-push-image: release-image
+build-and-push-image: release-image push-release-images
 
 .PHONY: release-image
 release-image: release-image.amd64 release-image.arm64v8

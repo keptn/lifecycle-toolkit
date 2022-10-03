@@ -214,7 +214,7 @@ spec:
 
 An example is available [here](./examples/taskonly-hello-keptn/http/taskdefinition.yaml).
 
-Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`.
+Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
 
 ```yaml

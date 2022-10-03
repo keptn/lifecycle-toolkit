@@ -250,7 +250,7 @@ In its state, it keeps track of the current status of the K8s Job created.
 
 ## Install a dev build
 
-The [GH CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
+The [GitHub CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
 
 ```bash
 gh run list --repo keptn-sandbox/lifecycle-controller # find the id of a run

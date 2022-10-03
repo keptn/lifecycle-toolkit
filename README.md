@@ -45,7 +45,7 @@ For this reason, the Keptn Lifecycle Controller is agnostic to deployment tools 
 
 ## How to use
 
-The Keptn Lifecycle Controller monitors manifests that have been applied against the KubeAPI and reacts if it finds a workload with special annotations.
+The Keptn Lifecycle Controller monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations.
 For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
 
 ```yaml

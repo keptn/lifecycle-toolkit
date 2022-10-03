@@ -23,11 +23,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Get the version
-        id: get_version
-        if: ${{ steps.release.outputs.releases_created }}
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
       - name: Set up Go
         uses: actions/setup-go@v3
         if: ${{ steps.release.outputs.releases_created }}
@@ -39,15 +34,15 @@ jobs:
         run: |
           cd functions-runtime
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
           cd ../lfc-scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
-          make release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
+          make release-manifests TAG=${{ steps.release.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version.outputs.VERSION }}
-          make controller-gen release-manifests TAG=${{ steps.get_version.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
+          make controller-gen release-manifests TAG=${{ steps.release.outputs.tag_name }}
           cd ..
           cat fc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
 
@@ -63,11 +58,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Get the version
-        id: get_version2
-        if: ${{ steps.release.outputs.release_created }}
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
       - name: Set up Go
         uses: actions/setup-go@v3
         if: ${{ steps.release.outputs.release_created }}
@@ -79,15 +69,15 @@ jobs:
         run: |
           cd functions-runtime
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version2.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
           cd ../lfc-scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version2.outputs.VERSION }}
-          make release-manifests TAG=${{ steps.get_version2.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
+          make release-manifests TAG=${{ steps.release.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ steps.get_version2.outputs.VERSION }}
-          make controller-gen release-manifests TAG=${{ steps.get_version2.outputs.VERSION }}
+          make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
+          make controller-gen release-manifests TAG=${{ steps.release.outputs.tag_name }}
           cd ..
           cat fc-scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
 

@@ -3,13 +3,13 @@ on:
   # always execute docker build when something is pushed to main or a maintenance branch
   push:
     branches:
-      - "main"
-      - "[0-9]+.[1-9][0-9]*.x"
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
   # in addition, execute for pull requests to those branches
   pull_request:
     branches:
-      - "main"
-      - "[0-9]+.[1-9][0-9]*.x"
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
 env:
   GO_VERSION: "~1.18"
 
@@ -17,7 +17,7 @@ env:
   FUNCTIONS_RUNTIME_SVC_ARTIFACT: "functions-runtime"
   FUNCTIONS_RUNTIME_SVC_FOLDER: "functions-runtime/"
   SHOULD_RUN_FUNCTIONS_RUNTIME_SVC: "false"
-
+  
   LFC_SCHEDULER_SVC_ARTIFACT_PREFIX: "LFC_SCHEDULER_SVC"
   LFC_SCHEDULER_SVC_ARTIFACT: "scheduler"
   LFC_SCHEDULER_SVC_FOLDER: "scheduler/"
@@ -143,49 +143,49 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+    - name: Check out code
+      uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-        with:
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+      with:
           install: true
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: "ghcr.io"
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: "ghcr.io"
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          # Key is named differently to avoid collision
-          key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-multi-buildx
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        # Key is named differently to avoid collision
+        key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-multi-buildx
 
-      - name: Build Docker Images
-        working-directory: ./${{ matrix.config.working-dir }}
-        run: |
-          make build-and-push-image TAG=dev-${{ env.DATETIME }}
+    - name: Build Docker Images
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: |
+        make build-and-push-image TAG=dev-${{ env.DATETIME }}
 
-      - name: Install controller-gen
-        if: matrix.config.artifact == 'keptn-lifecycle-operator'
-        working-directory: ./${{ matrix.config.working-dir }}
-        run: make controller-gen
+    - name: Install controller-gen
+      if: matrix.config.artifact == 'keptn-lifecycle-operator'
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: make controller-gen
 
-      - name: Generate release.yaml
-        if: matrix.config.artifact != 'functions-runtime'
-        working-directory: ./${{ matrix.config.working-dir }}
-        run: make release-manifests TAG=dev-${{ env.DATETIME }}
+    - name: Generate release.yaml
+      if: matrix.config.artifact != 'functions-runtime'
+      working-directory: ./${{ matrix.config.working-dir }}
+      run: make release-manifests TAG=dev-${{ env.DATETIME }}
 
-      - name: Upload release.yaml
-        if: matrix.config.artifact != 'functions-runtime'
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.config.artifact }}-manifest
-          path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml
+    - name: Upload release.yaml
+      if: matrix.config.artifact != 'functions-runtime'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.config.artifact }}-manifest
+        path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml

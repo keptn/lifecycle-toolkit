@@ -33,7 +33,6 @@ jobs:
         if: ${{ steps.release.outputs.releases_created }}
         run: |
           cd functions-runtime
-          go mod tidy
           make build-and-push-image TAG=${{ steps.release.outputs.tag_name }}
           cd ../lfc-scheduler
           go mod tidy

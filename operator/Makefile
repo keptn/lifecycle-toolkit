@@ -155,7 +155,7 @@ $(ENVTEST): $(LOCALBIN)
 #### pipeline build  ####
 
 .PHONY: build-and-push-image
-build-and-push-image: release-image push-release-images
+build-and-push-image: release-image
 
 .PHONY: release-image
 release-image: release-image.amd64 release-image.arm64v8

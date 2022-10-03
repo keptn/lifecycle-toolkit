@@ -15,7 +15,7 @@ It is an experimental project, under the umbrella of the [Keptn Application Life
 
 **Known Limitations**
 * Kubernetes >=1.24 is needed to deploy the Lifecycle Controller
-* The Lifecycle Controller is currently not compatible with vcluster
+* The Lifecycle Controller is currently not compatible with [vcluster](https://github.com/loft-sh/vcluster)
 
 **Installation**
 

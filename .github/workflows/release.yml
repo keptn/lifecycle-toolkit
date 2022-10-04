@@ -18,7 +18,7 @@ jobs:
         id: release
         with:
           command: manifest
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ secrets.GITHUB_TOKEN }}
           default-branch: main
 
   build-release:
@@ -26,6 +26,9 @@ jobs:
     needs:
       - release-please
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -41,6 +44,13 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.18'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: "ghcr.io"
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create images and manifests
         run: |

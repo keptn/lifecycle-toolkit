@@ -158,7 +158,7 @@ $(ENVTEST): $(LOCALBIN)
 build-and-push-image: release-image push-release-images
 
 .PHONY: release-image
-release-image: release-image.amd64 release-image.arm64v8
+release-image: release-image.amd64
 
 .PHONY: release-image.amd64
 release-image.amd64: clean

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/mowies/lifecycle-controller/compare/v0.1.0...v0.1.1) (2022-10-04)
+
+
+### Features
+
+* Use personal GHCR ([3810946](https://github.com/mowies/lifecycle-controller/commit/38109465109eb6fea8b4de607af84ff41c380119))
+
 ## [0.1.0](https://github.com/mowies/lifecycle-controller/compare/v0.1.0...v0.1.0) (2022-10-04)
 
 

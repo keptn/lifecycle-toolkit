@@ -118,8 +118,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		return ctrl.Result{Requeue: true}, nil
 	}
-	return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

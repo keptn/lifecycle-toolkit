@@ -138,9 +138,11 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
 	}
 
-	if !reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
-		workload.Spec = newWorkload.Spec
+	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
+		return nil
 	}
+
+	workload.Spec = newWorkload.Spec
 
 	err = a.Client.Update(ctx, workload)
 	if err != nil {

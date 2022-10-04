@@ -5,7 +5,7 @@ RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --m
 TAG?=latest
 RELEASE_IMAGE:=functions-runtime:$(TAG)
 
-ARCHS = amd64 arm64
+ARCHS = amd64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
 
@@ -30,7 +30,7 @@ release-image.arm64v8: clean
 	docker build  --load --no-cache --build-arg ARCH="arm64v8" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 
 .PHONY: push-release-images
-push-release-images: release-image.amd64
+push-release-images:
 	#gcloud auth configure-docker
 	for arch in $(ARCHS); do \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\

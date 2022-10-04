@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/mowies/lifecycle-controller/compare/v0.1.3...v0.1.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* Add release write permissions ([754d1f7](https://github.com/mowies/lifecycle-controller/commit/754d1f75be2743741445890e9ec797d85a343bd5))
+
 ## [0.1.3](https://github.com/mowies/lifecycle-controller/compare/v0.1.2...v0.1.3) (2022-10-04)
 
 

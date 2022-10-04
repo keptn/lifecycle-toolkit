@@ -58,7 +58,7 @@ build: build-scheduler
 build.amd64: build-controller.amd64 build-scheduler.amd64
 
 .PHONY: build.arm64v8
-build.arm64v8: build-controller.arm64v8
+build.arm64v8: build-controller.arm64v8 build-scheduler.arm64v8
 
 .PHONY: build-controller
 build-controller:

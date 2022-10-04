@@ -12,6 +12,9 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"hash/fnv"
@@ -29,11 +32,16 @@ import (
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
 	Client  client.Client
+	Tracer  trace.Tracer
 	decoder *admission.Decoder
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
+
+	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	defer span.End()
+
 	logger := log.FromContext(ctx).WithValues("webhook", "/mutate-v1-pod", "object", map[string]interface{}{
 		"name":      req.Name,
 		"namespace": req.Namespace,
@@ -52,19 +60,30 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	isAnnotated, err := a.isKeptnAnnotated(pod)
 	if err != nil {
+		span.SetStatus(codes.Error, "Invalid annotations")
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 	if isAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
+
+		app, _ := pod.Annotations[common.AppAnnotation]
+		workload, _ := pod.Annotations[common.WorkloadAnnotation]
+		version, _ := pod.Annotations[common.VersionAnnotation]
+		span.SetAttributes(attribute.String("keptn.deployment.app_name", app))
+		span.SetAttributes(attribute.String("keptn.deployment.workload", workload))
+		span.SetAttributes(attribute.String("keptn.deployment.version", version))
+
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 	}
 
 	marshaledPod, err := json.Marshal(pod)
 	if err != nil {
+		span.SetStatus(codes.Error, "Failed to marshal")
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 

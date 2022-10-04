@@ -65,7 +65,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
 //+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
-//+kubebuilder:rbac:groups=apps,resources=replicasets,verbs=get;list;watch
+//+kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -192,7 +192,11 @@ func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Contex
 	}
 	for _, re := range replica.Items {
 		if re.UID == resource.UID {
-			if re.Status.ReadyReplicas == *re.Spec.Replicas {
+			replicas, err := r.GetDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
+			if err != nil {
+				return false, err
+			}
+			if re.Status.ReadyReplicas == replicas {
 				return true, nil
 			}
 			return false, nil

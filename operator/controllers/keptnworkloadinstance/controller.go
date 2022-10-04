@@ -24,8 +24,6 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
-	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -63,7 +61,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
-//+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch
+//+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets,verbs=get;list;watch
 
@@ -91,44 +89,37 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
 
-	r.Log.Info("Workload Instance found", "instance", workloadInstance)
-
-	if workloadInstance.IsPostDeploymentCompleted() {
-		return reconcile.Result{}, nil
-	}
-
-	r.Log.Info("Post deployment checks not finished")
-
-	isDeployed, err := r.UpdateWorkloadResourceDeploymentStatus(ctx, workloadInstance)
-	if err != nil {
-		return reconcile.Result{}, err
-	}
-	if isDeployed {
-		err = r.reconcilePostDeployment(ctx, req, workloadInstance)
+	if !workloadInstance.IsPreDeploymentCompleted() {
+		r.Log.Info("Pre deployment checks not finished")
+		err := r.reconcilePreDeployment(ctx, req, workloadInstance)
 		if err != nil {
-			r.Log.Error(err, "Error reconciling post-deployment checks")
-			return ctrl.Result{}, err
+			r.Log.Error(err, "Error reconciling pre-deployment checks")
+			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	r.Log.Info("Deployment of pods not finished")
+	if !workloadInstance.IsDeploymentCompleted() {
+		r.Log.Info("Deployment not finished")
+		err := r.reconcileDeployment(ctx, workloadInstance)
+		if err != nil {
+			r.Log.Error(err, "Error reconciling deployment")
+			return ctrl.Result{Requeue: true}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	}
 
-	if workloadInstance.IsPreDeploymentCompleted() {
+	if !workloadInstance.IsPostDeploymentCompleted() {
 		r.Log.Info("Post deployment checks not finished")
-		return ctrl.Result{Requeue: true}, nil
+		err = r.reconcilePostDeployment(ctx, req, workloadInstance)
+		if err != nil {
+			r.Log.Error(err, "Error reconciling post-deployment checks")
+			return ctrl.Result{Requeue: true}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	r.Log.Info("Pre deployment checks not finished")
-
-	err = r.reconcilePreDeployment(ctx, req, workloadInstance)
-	if err != nil {
-		r.Log.Error(err, "Error reconciling pre-deployment checks")
-		return ctrl.Result{}, err
-	}
-
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
-
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -141,69 +132,6 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
-}
-
-func (r *KeptnWorkloadInstanceReconciler) UpdateWorkloadResourceDeploymentStatus(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (bool, error) {
-	if workloadInstance.Status.DeploymentStatus == common.StateSucceeded {
-		return true, nil
-	}
-	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
-		isPodRunning, err := r.IsPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
-		if err != nil {
-			return isPodRunning, err
-		}
-		if isPodRunning {
-			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
-			return true, r.Client.Status().Update(ctx, workloadInstance)
-		}
-		return false, nil
-	}
-	isReplicaRunning, err := r.IsReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
-	if err != nil {
-		return isReplicaRunning, err
-	}
-	if isReplicaRunning {
-		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
-		return true, r.Client.Status().Update(ctx, workloadInstance)
-	}
-	return false, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) IsPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
-	podList := &corev1.PodList{}
-	if err := r.Client.List(ctx, podList, client.InNamespace(namespace)); err != nil {
-		return false, err
-	}
-	for _, p := range podList.Items {
-		if p.UID == resource.UID {
-			if p.Status.Phase == corev1.PodRunning {
-				return true, nil
-			}
-			return false, nil
-		}
-	}
-	return false, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) IsReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
-	replica := &appsv1.ReplicaSetList{}
-	if err := r.Client.List(ctx, replica, client.InNamespace(namespace)); err != nil {
-		return false, err
-	}
-	for _, re := range replica.Items {
-		if re.UID == resource.UID {
-			replicas, err := r.GetDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
-			if err != nil {
-				return false, err
-			}
-			if re.Status.ReadyReplicas == replicas {
-				return true, nil
-			}
-			return false, nil
-		}
-	}
-	return false, nil
-
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.WorkloadTaskStatus) klcv1alpha1.WorkloadTaskStatus {

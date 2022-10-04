@@ -20,7 +20,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithLists(podList).Build(),
 	}
-	isPodRunning, err := r.IsPodRunning(context.TODO(), v1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
+	isPodRunning, err := r.isPodRunning(context.TODO(), v1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
 	testrequire.Nil(t, err)
 	if !isPodRunning {
 		t.Errorf("Wrong!")
@@ -29,7 +29,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r2 := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithLists(podList2).Build(),
 	}
-	isPodRunning, err = r2.IsPodRunning(context.TODO(), v1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
+	isPodRunning, err = r2.isPodRunning(context.TODO(), v1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
 	testrequire.Nil(t, err)
 	if isPodRunning {
 		t.Errorf("Wrong!")

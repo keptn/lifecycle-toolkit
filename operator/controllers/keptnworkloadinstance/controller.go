@@ -106,24 +106,18 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.Log.Error(err, "Error reconciling deployment")
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{Requeue: true}, nil
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	if !workloadInstance.IsPostDeploymentCompleted() {
+		r.Log.Info("Post deployment checks not finished")
 		err = r.reconcilePostDeployment(ctx, req, workloadInstance)
 		if err != nil {
 			r.Log.Error(err, "Error reconciling post-deployment checks")
 			return ctrl.Result{Requeue: true}, err
 		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+		return ctrl.Result{Requeue: true}, nil
 	}
-
-	if workloadInstance.IsPostDeploymentCompleted() {
-		return reconcile.Result{}, nil
-	}
-
-	r.Log.Info("Post deployment checks not finished")
-
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 
 }

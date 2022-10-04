@@ -86,3 +86,7 @@ func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
 }
+
+func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
+	return i.Status.DeploymentStatus.IsCompleted()
+}

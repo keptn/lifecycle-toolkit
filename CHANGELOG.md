@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/mowies/lifecycle-controller/compare/v0.1.2...v0.1.3) (2022-10-04)
+
+
+### Bug Fixes
+
+* Add missing login setup for GHCR ([15237eb](https://github.com/mowies/lifecycle-controller/commit/15237eb357d2ce356b1eaf1ae443c056bd3377b4))
+
 ## [0.1.2](https://github.com/mowies/lifecycle-controller/compare/v0.1.1...v0.1.2) (2022-10-04)
 
 

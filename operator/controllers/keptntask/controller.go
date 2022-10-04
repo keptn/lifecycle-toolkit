@@ -38,7 +38,6 @@ type KeptnTaskReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
-	Meters   common.KeptnMeters
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete

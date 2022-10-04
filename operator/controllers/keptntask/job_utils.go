@@ -3,9 +3,9 @@ package keptntask
 import (
 	"context"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"go.opentelemetry.io/otel/attribute"
 	"reflect"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -86,14 +86,6 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		r.Recorder.Event(task, "Warning", "JobNotCreated", fmt.Sprintf("Could not create Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 		return job.Name, err
 	}
-
-	attrs := []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(task.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(task.Spec.Workload),
-		attribute.Key("KeptnVersion").String(task.Spec.WorkloadVersion),
-		attribute.Key("TaskName").String(task.Name),
-	}
-	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
 
 	r.Recorder.Event(task, "Normal", "JobCreated", fmt.Sprintf("Created Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 	return job.Name, nil

@@ -24,6 +24,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel/attribute"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -216,6 +217,17 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 		return "", err
 	}
 	r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+
+	// metrics: increment task counter
+	attrs := []attribute.KeyValue{
+		attribute.Key("KeptnApp").String(newTask.Spec.AppName),
+		attribute.Key("KeptnWorkload").String(newTask.Spec.Workload),
+		attribute.Key("KeptnVersion").String(newTask.Spec.WorkloadVersion),
+		attribute.Key("TaskName").String(newTask.Name),
+		attribute.Key("Type").String(string(newTask.Spec.Type)),
+	}
+	r.Meters.TaskCount.Add(ctx, 1, attrs...)
+
 	return newTask.Name, nil
 }
 

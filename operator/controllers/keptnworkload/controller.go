@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
+	"go.opentelemetry.io/otel/attribute"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -30,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -41,6 +43,7 @@ type KeptnWorkloadReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
+	Meters   common.KeptnMeters
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
@@ -81,7 +84,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
 	// If the workload instance does not exist, create it
 	if errors.IsNotFound(err) {
-		workloadInstance, err := r.createWorkloadInstance(workload)
+		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -109,7 +112,7 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: workload.Annotations,
@@ -125,5 +128,15 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.K
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
 	}
+
+	// metrics: increment deployment counter
+	attrs := []attribute.KeyValue{
+		attribute.Key("KeptnApp").String(workloadInstance.Spec.AppName),
+		attribute.Key("KeptnWorkload").String(workloadInstance.Spec.WorkloadName),
+		attribute.Key("KeptnVersion").String(workloadInstance.Spec.Version),
+		attribute.Key("Namespace").String(workloadInstance.Namespace),
+	}
+	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+
 	return workloadInstance, err
 }

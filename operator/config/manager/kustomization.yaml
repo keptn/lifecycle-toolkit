@@ -10,10 +10,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-<<<<<<< HEAD
-  newName: keptn-lifecycle-operator
-  newTag: 0.1.1-amd64
-=======
   newName: docker.io/annadreal/keptn-lifecycle-operator
   newTag: latest
->>>>>>> chore: added helpers in make for development

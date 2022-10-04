@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/keptn-sandbox/lifecycle-controller/lfc-scheduler/pkg/klcpermit"
+	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/klcpermit"
 	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/component-base/cli"
 	"k8s.io/kubernetes/cmd/kube-scheduler/app"

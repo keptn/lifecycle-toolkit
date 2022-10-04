@@ -16,7 +16,7 @@ FROM golang:1.18.0 as builder
 ARG ARCH
 ARG RELEASE_VERSION
 
-WORKDIR /lfc-scheduler
+WORKDIR /scheduler
 
 COPY go.mod go.sum Makefile ./
 
@@ -35,7 +35,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycl
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
-COPY --from=builder /lfc-scheduler/bin/kube-scheduler /bin/kube-scheduler
+COPY --from=builder /scheduler/bin/kube-scheduler /bin/kube-scheduler
 USER 65532:65532
 
 WORKDIR /bin

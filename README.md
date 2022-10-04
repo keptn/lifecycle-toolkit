@@ -262,7 +262,7 @@ The [GitHub CLI](https://cli.github.com/) can be used to download the manifests 
 gh run list --repo keptn-sandbox/lifecycle-controller # find the id of a run
 gh run download 3152895000 --repo keptn-sandbox/lifecycle-controller # download the artifacts
 kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
-kubectl apply -f ./lfc-scheduler-manifest/release.yaml # install the scheduler
+kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
 
 Instead, if you want to build and deploy the operator into your cluster directly from the code, you can type:

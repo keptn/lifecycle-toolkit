@@ -11,6 +11,9 @@ defaults:
 jobs:
   validate:
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Validate Pull Request
         uses: amannn/action-semantic-pull-request@4682b170e7c31dfbef288e994fe07853755229b4

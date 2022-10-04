@@ -32,6 +32,9 @@ jobs:
   prepare_ci_run:
     name: Prepare CI Run
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     outputs:
       # metadata
       BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
@@ -84,6 +87,9 @@ jobs:
     name: Compile
     needs: prepare_ci_run
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
@@ -111,6 +117,9 @@ jobs:
     name: Unit Tests
     needs: prepare_ci_run
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     strategy:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
@@ -134,6 +143,9 @@ jobs:
     name: Build and push Docker Image
     needs: [prepare_ci_run, compile, test]
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     permissions:
       packages: write # Needed for pushing images to the registry
     env:

@@ -45,14 +45,14 @@ jobs:
       - name: Create images and manifests
         run: |
           cd functions-runtime
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }} RELEASE_REGISTRY=ghcr.io/mowies
           cd ../scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }} RELEASE_REGISTRY=ghcr.io/mowies
           make release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }} RELEASE_REGISTRY=ghcr.io/mowies
           make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ..
           cat scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml

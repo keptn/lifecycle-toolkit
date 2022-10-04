@@ -174,23 +174,23 @@ jobs:
         make release-image TAG=dev-${{ env.DATETIME }}
 
     - name: Push Docker Images
-      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && github.event.pull_request.head.repo.full_name == github.repository
+      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
         make push-release-images TAG=dev-${{ env.DATETIME }}
 
     - name: Install controller-gen
-      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && github.event.pull_request.head.repo.full_name == github.repository
+      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       run: make controller-gen
 
     - name: Generate release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && github.event.pull_request.head.repo.full_name == github.repository
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       run: make release-manifests TAG=dev-${{ env.DATETIME }}
 
     - name: Upload release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && github.event.pull_request.head.repo.full_name == github.repository
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.config.artifact }}-manifest

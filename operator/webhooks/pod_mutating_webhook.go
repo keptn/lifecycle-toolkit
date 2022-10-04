@@ -12,8 +12,10 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -47,6 +49,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		"namespace": req.Namespace,
 		"kind":      req.Kind,
 	})
+	logger.Info("Creating SpanID: " + span.SpanContext().TraceID().String())
 	logger.Info("webhook for pod called")
 
 	pod := &corev1.Pod{}
@@ -133,6 +136,10 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 	newWorkload := a.generateWorkload(pod, namespace)
+
+	carrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, carrier)
+	// carrier should be added to a TraceContext field in form of a map into Keptn CRDs
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)

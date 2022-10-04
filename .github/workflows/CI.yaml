@@ -101,6 +101,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
 
       - name: Compile ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
@@ -125,6 +127,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
 
       - name: Test ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'

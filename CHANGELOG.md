@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/mowies/lifecycle-controller/compare/v0.1.1...v0.1.2) (2022-10-04)
+
+
+### Bug Fixes
+
+* Add correct github token permissions in release pipeline ([5d7a333](https://github.com/mowies/lifecycle-controller/commit/5d7a3338138795adb51e99db199fde59b5772ce1))
+
 ## [0.1.1](https://github.com/mowies/lifecycle-controller/compare/v0.1.0...v0.1.1) (2022-10-04)
 
 

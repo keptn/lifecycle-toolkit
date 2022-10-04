@@ -12,8 +12,8 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/semconv"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -49,7 +49,6 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		"namespace": req.Namespace,
 		"kind":      req.Kind,
 	})
-	logger.Info("Creating SpanID: " + span.SpanContext().TraceID().String())
 	logger.Info("webhook for pod called")
 
 	pod := &corev1.Pod{}
@@ -74,9 +73,9 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		app, _ := pod.Annotations[common.AppAnnotation]
 		workload, _ := pod.Annotations[common.WorkloadAnnotation]
 		version, _ := pod.Annotations[common.VersionAnnotation]
-		span.SetAttributes(attribute.String("keptn.deployment.app_name", app))
-		span.SetAttributes(attribute.String("keptn.deployment.workload", workload))
-		span.SetAttributes(attribute.String("keptn.deployment.version", version))
+		span.SetAttributes(semconv.ApplicationName.String(app))
+		span.SetAttributes(semconv.Workload.String(workload))
+		span.SetAttributes(semconv.Version.String(version))
 
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -135,11 +134,15 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 }
 
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
-	newWorkload := a.generateWorkload(pod, namespace)
 
-	carrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, carrier)
-	// carrier should be added to a TraceContext field in form of a map into Keptn CRDs
+	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newWorkload := a.generateWorkload(ctx, pod, namespace)
+
+	span.SetAttributes(semconv.ApplicationName.String(newWorkload.Spec.AppName))
+	span.SetAttributes(semconv.Workload.String(newWorkload.Name))
+	span.SetAttributes(semconv.Version.String(newWorkload.Spec.Version))
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
@@ -149,18 +152,21 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
+			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
 		k8sEvent := a.generateK8sEvent(workload, "created")
 		if err := a.Client.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send workload created K8s event")
+			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 		return nil
 	}
 
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
 	}
 
@@ -168,24 +174,24 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		return nil
 	}
 
-	workload.Spec = newWorkload.Spec
-
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
+		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
 	k8sEvent := a.generateK8sEvent(workload, "updated")
 	if err := a.Client.Create(ctx, k8sEvent); err != nil {
 		logger.Error(err, "Could not send workload updated K8s event")
+		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
 	return nil
 }
 
-func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
+func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 
@@ -210,6 +216,10 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
 	}
 
+	// create TraceContext
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      a.getWorkloadName(pod),
@@ -218,6 +228,7 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                applicationName,
 			Version:                version,
+			TraceContext:           traceContextCarrier,
 			ResourceReference:      a.getResourceReference(pod),
 			PreDeploymentTasks:     preDeploymentTasks,
 			PostDeploymentTasks:    postDeploymentTasks,

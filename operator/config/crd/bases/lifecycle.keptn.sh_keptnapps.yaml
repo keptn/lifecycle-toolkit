@@ -99,6 +99,10 @@ spec:
                           - kind
                           - uid
                           type: object
+                        tracecontext:
+                          additionalProperties:
+                            type: string
+                          type: object
                         version:
                           type: string
                       required:

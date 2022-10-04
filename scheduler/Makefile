@@ -146,7 +146,7 @@ clean:
 build-and-push-local: release-local
 
 .PHONY: release-local
-release-local: release-local.amd64
+release-local: release-local.amd64 release-local.arm64v8
 	for arch in $(ARCHS); do \
 			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done

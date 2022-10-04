@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strings"
 	"time"
 
@@ -112,15 +113,13 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 }
 
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
-	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
+	newWorkload := a.generateWorkload(pod, namespace)
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
 	if errors.IsNotFound(err) {
-		logger.Info("Workload name", "workload", workloadName)
-
-		logger.Info("Creating workload workload", "workload", workload.Name)
-		workload = a.generateWorkload(pod, namespace)
+		logger.Info("Creating workload", "workload", workload.Name)
+		workload = newWorkload
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
@@ -132,7 +131,6 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 			logger.Error(err, "Could not send workload created K8s event")
 			return err
 		}
-
 		return nil
 	}
 
@@ -140,13 +138,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
 	}
 
-	if workload.Spec.Version == pod.Annotations[common.VersionAnnotation] {
+	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
 		return nil
 	}
 
-	workload.Spec.Version = pod.Annotations[common.VersionAnnotation]
-	workload.Spec.ResourceReference = a.getResourceReference(pod)
-	workload.Annotations[common.VersionAnnotation] = pod.Annotations[common.VersionAnnotation]
+	workload.Spec = newWorkload.Spec
+
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
@@ -189,9 +186,8 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: pod.Annotations,
-			Name:        a.getWorkloadName(pod),
-			Namespace:   namespace,
+			Name:      a.getWorkloadName(pod),
+			Namespace: namespace,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                applicationName,

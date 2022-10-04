@@ -65,7 +65,8 @@ jobs:
           make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
           make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
           cd ..
-          cat scheduler/config/rendered/release.yaml operator/config/rendered/release.yaml > manifest.yaml
+          echo "---" >> operator/config/rendered/release.yaml
+          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml  > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1

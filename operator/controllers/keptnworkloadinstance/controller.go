@@ -118,7 +118,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		return ctrl.Result{Requeue: true}, nil
 	}
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+	return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 
 }
 

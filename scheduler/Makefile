@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARCHS = amd64
+ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
 TAG?=latest
@@ -114,7 +114,7 @@ local-image: clean
 build-and-push-image: release-image push-release-images
 
 .PHONY: release-image
-release-image: release-image.amd64
+release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
@@ -146,7 +146,7 @@ clean:
 build-and-push-local: release-local
 
 .PHONY: release-local
-release-local: release-local.amd64
+release-local: release-local.amd64 release-local.arm64v8
 	for arch in $(ARCHS); do \
 			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done

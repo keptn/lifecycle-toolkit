@@ -113,15 +113,12 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 }
 
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
-	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
 	newWorkload := a.generateWorkload(pod, namespace)
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
 	if errors.IsNotFound(err) {
-		logger.Info("Workload name", "workload", workloadName)
-
-		logger.Info("Creating workload workload", "workload", workload.Name)
+		logger.Info("Creating workload", "workload", workload.Name)
 		workload = newWorkload
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
@@ -134,7 +131,6 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 			logger.Error(err, "Could not send workload created K8s event")
 			return err
 		}
-
 		return nil
 	}
 

@@ -188,6 +188,7 @@ func main() {
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTask Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
+		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
@@ -213,7 +214,6 @@ func main() {
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
-		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)

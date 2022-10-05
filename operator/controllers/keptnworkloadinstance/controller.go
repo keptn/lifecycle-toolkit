@@ -238,14 +238,14 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
 
 	// metrics: increment task counter
-	attrs := []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(newTask.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(newTask.Spec.Workload),
-		attribute.Key("KeptnVersion").String(newTask.Spec.WorkloadVersion),
-		attribute.Key("TaskName").String(newTask.Name),
-		attribute.Key("Type").String(string(newTask.Spec.Type)),
-	}
-	r.Meters.TaskCount.Add(ctx, 1, attrs...)
+	// attrs := []attribute.KeyValue{
+	// 	attribute.Key("KeptnApp").String(newTask.Spec.AppName),
+	// 	attribute.Key("KeptnWorkload").String(newTask.Spec.Workload),
+	// 	attribute.Key("KeptnVersion").String(newTask.Spec.WorkloadVersion),
+	// 	attribute.Key("TaskName").String(newTask.Name),
+	// 	attribute.Key("Type").String(string(newTask.Spec.Type)),
+	// }
+	// r.Meters.TaskCount.Add(ctx, 1, attrs...)
 
 	return newTask.Name, nil
 }
@@ -289,9 +289,13 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 				return nil, summary, err
 			}
 			taskStatus.TaskName = taskName
+			taskStatus.SetStartTime()
 		} else {
 			// Update state of Task if it is already created
 			taskStatus.Status = task.Status.Status
+			if taskStatus.Status.IsCompleted() {
+				taskStatus.SetEndTime()
+			}
 		}
 		// Update state of the Check
 		newStatus = append(newStatus, taskStatus)

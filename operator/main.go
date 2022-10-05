@@ -100,6 +100,10 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	deploymentActive, err := meter.SyncInt64().UpDownCounter("keptn.deployment.active", instrument.WithDescription("a simple counter of active deployments for Keptn deployment"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn tasks"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
@@ -108,12 +112,18 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	taskActive, err := meter.SyncInt64().UpDownCounter("keptn.task.active", instrument.WithDescription("a simple counter of active tasks for Keptn tasks"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 
 	meters := common.KeptnMeters{
-		DeploymentCount:    deploymentCount,
 		TaskCount:          taskCount,
 		TaskDuration:       taskDuration,
+		TaskActive:         taskActive,
+		DeploymentCount:    deploymentCount,
 		DeploymentDuration: deploymentDuration,
+		DeploymentActive:   deploymentActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

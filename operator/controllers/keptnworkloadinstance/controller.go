@@ -24,7 +24,6 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
-	"go.opentelemetry.io/otel/attribute"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -93,6 +92,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
 
+	if !workloadInstance.IsStartTimeSet() {
+		// metrics: increment active deployment counter
+		r.Meters.DeploymentActive.Add(ctx, 1, workloadInstance.GetActiveMetricsAttributes()...)
+	}
 	workloadInstance.SetStartTime()
 
 	if !workloadInstance.IsPreDeploymentCompleted() {
@@ -127,6 +130,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// WorkloadInstance is completed at this place
 
+	if !workloadInstance.IsEndTimeSet() {
+		// metrics: decrement active deployment counter
+		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
+	}
 	workloadInstance.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
@@ -134,13 +141,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	attrs := []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(workloadInstance.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(workloadInstance.Spec.WorkloadName),
-		attribute.Key("KeptnVersion").String(workloadInstance.Spec.Version),
-		attribute.Key("Namespace").String(workloadInstance.Namespace),
-		attribute.Key("Status").String(string(workloadInstance.Status.PostDeploymentStatus)),
-	}
+	attrs := workloadInstance.GetMetricsAttributes()
 
 	r.Log.Info("Increasing deployment count")
 

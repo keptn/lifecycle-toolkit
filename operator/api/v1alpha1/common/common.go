@@ -50,8 +50,10 @@ const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
 
 type KeptnMeters struct {
-	DeploymentCount    syncint64.Counter
 	TaskCount          syncint64.Counter
 	TaskDuration       syncfloat64.Histogram
+	TaskActive         syncint64.UpDownCounter
+	DeploymentCount    syncint64.Counter
 	DeploymentDuration syncfloat64.Histogram
+	DeploymentActive   syncint64.UpDownCounter
 }

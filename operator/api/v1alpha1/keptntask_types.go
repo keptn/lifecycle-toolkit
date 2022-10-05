@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -94,5 +95,34 @@ func (i *KeptnTask) SetStartTime() {
 func (i *KeptnTask) SetEndTime() {
 	if i.Status.EndTime.IsZero() {
 		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *KeptnTask) IsStartTimeSet() bool {
+	return !i.Status.StartTime.IsZero()
+}
+
+func (i *KeptnTask) IsEndTimeSet() bool {
+	return !i.Status.EndTime.IsZero()
+}
+
+func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		attribute.Key("KeptnApp").String(i.Spec.AppName),
+		attribute.Key("KeptnWorkload").String(i.Spec.Workload),
+		attribute.Key("KeptnVersion").String(i.Spec.WorkloadVersion),
+		attribute.Key("TaskName").String(i.Name),
+		attribute.Key("Type").String(string(i.Spec.Type)),
+	}
+}
+
+func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		attribute.Key("KeptnApp").String(i.Spec.AppName),
+		attribute.Key("KeptnWorkload").String(i.Spec.Workload),
+		attribute.Key("KeptnVersion").String(i.Spec.WorkloadVersion),
+		attribute.Key("TaskName").String(i.Name),
+		attribute.Key("Type").String(string(i.Spec.Type)),
+		attribute.Key("Status").String(string(i.Status.Status)),
 	}
 }

@@ -24,7 +24,6 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"go.opentelemetry.io/otel/attribute"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -64,6 +63,10 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
+	if !task.IsStartTimeSet() {
+		// metrics: increment active task counter
+		r.Meters.TaskActive.Add(ctx, 1, task.GetActiveMetricsAttributes()...)
+	}
 	task.SetStartTime()
 
 	err := r.Client.Status().Update(ctx, task)
@@ -97,6 +100,10 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// WorkloadInstance is completed at this place
 
+	if !task.IsEndTimeSet() {
+		// metrics: decrement active task counter
+		r.Meters.TaskActive.Add(ctx, -1, task.GetActiveMetricsAttributes()...)
+	}
 	task.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, task)
@@ -104,14 +111,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	attrs := []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(task.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(task.Spec.Workload),
-		attribute.Key("KeptnVersion").String(task.Spec.WorkloadVersion),
-		attribute.Key("TaskName").String(task.Name),
-		attribute.Key("Type").String(string(task.Spec.Type)),
-		attribute.Key("Status").String(string(task.Status.Status)),
-	}
+	attrs := task.GetMetricsAttributes()
 
 	r.Log.Info("Increasing task count")
 

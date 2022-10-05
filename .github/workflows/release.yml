@@ -26,10 +26,10 @@ jobs:
         uses: google-github-actions/release-please-action@v3
         id: release
         with:
-          command: manifest
+          command: release-pr
           token: ${{ secrets.GITHUB_TOKEN }}
           default-branch: main
-          config-file: ./release-please-config.json
+          config-file: release-please-config.json
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

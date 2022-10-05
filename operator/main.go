@@ -57,6 +57,10 @@ import (
 var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
+	// TODO: Attach to OTel Resource
+	gitCommit    string
+	buildTime    string
+	buildVersion string
 )
 
 func init() {
@@ -197,7 +201,6 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
-
 }
 
 func newExporter() (trace.SpanExporter, error) {

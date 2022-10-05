@@ -91,6 +91,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
 
+	workloadInstance.SetStartTime()
+
 	if !workloadInstance.IsPreDeploymentCompleted() {
 		r.Log.Info("Pre deployment checks not finished")
 		err := r.reconcilePreDeployment(ctx, req, workloadInstance)
@@ -120,6 +122,23 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
+
+	workloadInstance.SetEndTime()
+
+	attrs := []attribute.KeyValue{
+		attribute.Key("KeptnApp").String(workloadInstance.Spec.AppName),
+		attribute.Key("KeptnWorkload").String(workloadInstance.Spec.WorkloadName),
+		attribute.Key("KeptnVersion").String(workloadInstance.Spec.Version),
+		attribute.Key("Namespace").String(workloadInstance.Namespace),
+		attribute.Key("Status").String(string(workloadInstance.Status.PostDeploymentStatus)),
+	}
+
+	// metrics: increment deployment counter
+	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+
+	// metrics: add deployment duration
+	duration := workloadInstance.Status.EndTime.Sub(workloadInstance.Status.StartTime)
+	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	return ctrl.Result{}, nil
 }

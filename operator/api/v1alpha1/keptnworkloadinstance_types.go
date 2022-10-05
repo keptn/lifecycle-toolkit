@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -40,12 +42,16 @@ type KeptnWorkloadInstanceStatus struct {
 	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
+	StartTime                time.Time            `json:"startTime,omitempty"`
+	EndTime                  time.Time            `json:"endTime,omitempty"`
 }
 
 type WorkloadTaskStatus struct {
 	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
 	Status             common.KeptnState `json:"status,omitempty"`
 	TaskName           string            `json:"taskName,omitempty"`
+	StartTime          time.Time         `json:"startTime,omitempty"`
+	EndTime            time.Time         `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -89,4 +95,28 @@ func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
+}
+
+func (i KeptnWorkloadInstance) SetStartTime() {
+	if i.Status.StartTime.IsZero() {
+		i.Status.StartTime = time.Now().UTC()
+	}
+}
+
+func (i KeptnWorkloadInstance) SetEndTime() {
+	if i.Status.EndTime.IsZero() {
+		i.Status.EndTime = time.Now().UTC()
+	}
+}
+
+func (i WorkloadTaskStatus) SetStartTime() {
+	if i.StartTime.IsZero() {
+		i.StartTime = time.Now().UTC()
+	}
+}
+
+func (i WorkloadTaskStatus) SetEndTime() {
+	if i.EndTime.IsZero() {
+		i.EndTime = time.Now().UTC()
+	}
 }

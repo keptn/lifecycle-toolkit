@@ -21,7 +21,6 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	"go.opentelemetry.io/otel/attribute"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -128,15 +127,6 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
 	}
-
-	// metrics: increment deployment counter
-	attrs := []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(workloadInstance.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(workloadInstance.Spec.WorkloadName),
-		attribute.Key("KeptnVersion").String(workloadInstance.Spec.Version),
-		attribute.Key("Namespace").String(workloadInstance.Namespace),
-	}
-	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
 
 	return workloadInstance, err
 }

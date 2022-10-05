@@ -85,13 +85,13 @@ func init() {
 	SchemeBuilder.Register(&KeptnTask{}, &KeptnTaskList{})
 }
 
-func (i KeptnTask) SetStartTime() {
+func (i *KeptnTask) SetStartTime() {
 	if i.Status.StartTime.IsZero() {
 		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i KeptnTask) SetEndTime() {
+func (i *KeptnTask) SetEndTime() {
 	if i.Status.EndTime.IsZero() {
 		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}

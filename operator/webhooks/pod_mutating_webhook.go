@@ -70,12 +70,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
-		app, _ := pod.Annotations[common.AppAnnotation]
-		workload, _ := pod.Annotations[common.WorkloadAnnotation]
-		version, _ := pod.Annotations[common.VersionAnnotation]
-		span.SetAttributes(semconv.ApplicationName.String(app))
-		span.SetAttributes(semconv.Workload.String(workload))
-		span.SetAttributes(semconv.Version.String(version))
+		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -140,9 +135,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	newWorkload := a.generateWorkload(ctx, pod, namespace)
 
-	span.SetAttributes(semconv.ApplicationName.String(newWorkload.Spec.AppName))
-	span.SetAttributes(semconv.Workload.String(newWorkload.Name))
-	span.SetAttributes(semconv.Version.String(newWorkload.Spec.Version))
+	semconv.AddAttributeFromWorkload(span, *newWorkload)
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)

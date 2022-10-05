@@ -23,7 +23,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -60,20 +59,20 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	isRunning, err := r.IsJobRunning(ctx, *task, req.Namespace)
+	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
 	if err != nil {
 		r.Log.Error(err, "Could not check if job is running")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !isRunning {
+	if !jobExists {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
 			return ctrl.Result{Requeue: true}, err
 		}
 	}
 
-	if task.Status.Status != common.StateSucceeded {
+	if !task.Status.Status.IsCompleted() {
 		err := r.updateJob(ctx, req, task)
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
@@ -92,7 +91,7 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnTaskReconciler) IsJobRunning(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
+func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}

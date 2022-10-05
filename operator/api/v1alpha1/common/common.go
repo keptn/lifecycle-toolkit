@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
+	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -49,6 +50,8 @@ const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
 
 type KeptnMeters struct {
-	DeploymentCount syncfloat64.Counter
-	TaskCount       syncfloat64.Counter
+	DeploymentCount    syncint64.Counter
+	TaskCount          syncint64.Counter
+	TaskDuration       syncfloat64.Histogram
+	DeploymentDuration syncfloat64.Histogram
 }

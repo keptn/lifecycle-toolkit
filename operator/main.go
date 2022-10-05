@@ -92,18 +92,28 @@ func main() {
 	exporter := otelprom.New()
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
-	deploymentCount, err := meter.SyncFloat64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn deployment"))
+	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn deployment"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	taskCount, err := meter.SyncFloat64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn tasks"))
+	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn deployment"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn tasks"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn tasks"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
 
 	meters := common.KeptnMeters{
-		DeploymentCount: deploymentCount,
-		TaskCount:       taskCount,
+		DeploymentCount:    deploymentCount,
+		TaskCount:          taskCount,
+		TaskDuration:       taskDuration,
+		DeploymentDuration: deploymentDuration,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

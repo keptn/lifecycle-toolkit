@@ -42,16 +42,16 @@ type KeptnWorkloadInstanceStatus struct {
 	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
-	StartTime                time.Time            `json:"startTime,omitempty"`
-	EndTime                  time.Time            `json:"endTime,omitempty"`
+	StartTime                metav1.Time          `json:"startTime,omitempty"`
+	EndTime                  metav1.Time          `json:"endTime,omitempty"`
 }
 
 type WorkloadTaskStatus struct {
 	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
 	Status             common.KeptnState `json:"status,omitempty"`
 	TaskName           string            `json:"taskName,omitempty"`
-	StartTime          time.Time         `json:"startTime,omitempty"`
-	EndTime            time.Time         `json:"endTime,omitempty"`
+	StartTime          metav1.Time       `json:"startTime,omitempty"`
+	EndTime            metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -97,26 +97,26 @@ func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) SetStartTime() {
+func (i *KeptnWorkloadInstance) SetStartTime() {
 	if i.Status.StartTime.IsZero() {
-		i.Status.StartTime = time.Now().UTC()
+		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i KeptnWorkloadInstance) SetEndTime() {
+func (i *KeptnWorkloadInstance) SetEndTime() {
 	if i.Status.EndTime.IsZero() {
-		i.Status.EndTime = time.Now().UTC()
+		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i WorkloadTaskStatus) SetStartTime() {
+func (i *WorkloadTaskStatus) SetStartTime() {
 	if i.StartTime.IsZero() {
-		i.StartTime = time.Now().UTC()
+		i.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i WorkloadTaskStatus) SetEndTime() {
+func (i *WorkloadTaskStatus) SetEndTime() {
 	if i.EndTime.IsZero() {
-		i.EndTime = time.Now().UTC()
+		i.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }

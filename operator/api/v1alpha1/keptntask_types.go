@@ -49,8 +49,8 @@ type SecureParameters struct {
 type KeptnTaskStatus struct {
 	JobName   string            `json:"jobName,omitempty"`
 	Status    common.KeptnState `json:"status,omitempty"`
-	StartTime time.Time         `json:"startTime,omitempty"`
-	EndTime   time.Time         `json:"endTime,omitempty"`
+	StartTime metav1.Time       `json:"startTime,omitempty"`
+	EndTime   metav1.Time       `json:"endTime,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -87,12 +87,12 @@ func init() {
 
 func (i KeptnTask) SetStartTime() {
 	if i.Status.StartTime.IsZero() {
-		i.Status.StartTime = time.Now().UTC()
+		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
 func (i KeptnTask) SetEndTime() {
 	if i.Status.EndTime.IsZero() {
-		i.Status.EndTime = time.Now().UTC()
+		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }

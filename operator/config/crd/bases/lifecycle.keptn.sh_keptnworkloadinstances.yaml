@@ -104,6 +104,9 @@ spec:
               deploymentStatus:
                 default: Pending
                 type: string
+              endTime:
+                format: date-time
+                type: string
               postDeploymentStatus:
                 default: Pending
                 type: string
@@ -111,6 +114,12 @@ spec:
                 items:
                   properties:
                     TaskDefinitionName:
+                      type: string
+                    endTime:
+                      format: date-time
+                      type: string
+                    startTime:
+                      format: date-time
                       type: string
                     status:
                       type: string
@@ -126,12 +135,21 @@ spec:
                   properties:
                     TaskDefinitionName:
                       type: string
+                    endTime:
+                      format: date-time
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
                     status:
                       type: string
                     taskName:
                       type: string
                   type: object
                 type: array
+              startTime:
+                format: date-time
+                type: string
             type: object
         type: object
     served: true

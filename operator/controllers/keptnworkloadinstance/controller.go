@@ -29,8 +29,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -123,7 +125,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
+	// WorkloadInstance is completed at this place
+
 	workloadInstance.SetEndTime()
+
+	err = r.Client.Status().Update(ctx, workloadInstance)
+	if err != nil {
+		return ctrl.Result{Requeue: true}, err
+	}
 
 	attrs := []attribute.KeyValue{
 		attribute.Key("KeptnApp").String(workloadInstance.Spec.AppName),
@@ -133,11 +142,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		attribute.Key("Status").String(string(workloadInstance.Status.PostDeploymentStatus)),
 	}
 
+	r.Log.Info("Increasing deployment count")
+
 	// metrics: increment deployment counter
 	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
 
 	// metrics: add deployment duration
-	duration := workloadInstance.Status.EndTime.Sub(workloadInstance.Status.StartTime)
+	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	return ctrl.Result{}, nil
@@ -146,7 +157,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnWorkloadInstance{}).
+		// predicate disabling the auto reconciliation after updating the object status
+		For(&klcv1alpha1.KeptnWorkloadInstance{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 

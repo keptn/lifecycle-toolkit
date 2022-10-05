@@ -66,8 +66,8 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if !task.IsStartTimeSet() {
 		// metrics: increment active task counter
 		r.Meters.TaskActive.Add(ctx, 1, task.GetActiveMetricsAttributes()...)
+		task.SetStartTime()
 	}
-	task.SetStartTime()
 
 	err := r.Client.Status().Update(ctx, task)
 	if err != nil {
@@ -103,8 +103,8 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if !task.IsEndTimeSet() {
 		// metrics: decrement active task counter
 		r.Meters.TaskActive.Add(ctx, -1, task.GetActiveMetricsAttributes()...)
+		task.SetEndTime()
 	}
-	task.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {

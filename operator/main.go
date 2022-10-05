@@ -45,6 +45,7 @@ import (
 
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
 
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -96,7 +97,7 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn deployment"))
+	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn deployment"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
@@ -108,7 +109,7 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn tasks"))
+	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn tasks"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}

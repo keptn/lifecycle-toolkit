@@ -95,8 +95,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if !workloadInstance.IsStartTimeSet() {
 		// metrics: increment active deployment counter
 		r.Meters.DeploymentActive.Add(ctx, 1, workloadInstance.GetActiveMetricsAttributes()...)
+		workloadInstance.SetStartTime()
 	}
-	workloadInstance.SetStartTime()
 
 	if !workloadInstance.IsPreDeploymentCompleted() {
 		r.Log.Info("Pre deployment checks not finished")
@@ -133,8 +133,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if !workloadInstance.IsEndTimeSet() {
 		// metrics: decrement active deployment counter
 		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
+		workloadInstance.SetEndTime()
 	}
-	workloadInstance.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {

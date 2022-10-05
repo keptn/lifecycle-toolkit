@@ -1,7 +1,6 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
-  namespace: podtato-kubectl
   name: pre-deployment-hello
 spec:
   function:

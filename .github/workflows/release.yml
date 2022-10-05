@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
 
       - name: Run release please
         uses: google-github-actions/release-please-action@v3

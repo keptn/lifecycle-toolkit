@@ -13,6 +13,11 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
       - name: Run release please
         uses: google-github-actions/release-please-action@v3
         id: release
@@ -20,8 +25,8 @@ jobs:
           command: manifest
           token: ${{ secrets.GITHUB_TOKEN }}
           default-branch: main
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
+          config-file: ./release-please-config.json
+          manifest-file: ./.release-please-manifest.json
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

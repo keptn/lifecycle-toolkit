@@ -18,6 +18,10 @@ jobs:
         with:
           submodules: recursive
 
+      - run: |
+          ls -la
+          pwd
+
       - name: Run release please
         uses: google-github-actions/release-please-action@v3
         id: release
@@ -25,6 +29,7 @@ jobs:
           command: manifest
           token: ${{ secrets.GITHUB_TOKEN }}
           default-branch: main
+          config-file: release-please-config.json
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

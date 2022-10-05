@@ -2,7 +2,7 @@
 
 ![build](https://img.shields.io/github/workflow/status/keptn-sandbox/lifecycle-controller/CI)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn-sandbox/lifecycle-controller?filename=operator%2Fgo.mod)
-![version](https://img.shields.io/badge/version-pre--alpha-green)
+![version](https://img.shields.io/github/v/release/keptn-sandbox/lifecycle-controller)
 ![status](https://img.shields.io/badge/status-not--for--production-red)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
 

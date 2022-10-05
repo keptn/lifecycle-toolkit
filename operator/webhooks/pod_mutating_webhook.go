@@ -210,18 +210,19 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 
 	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      a.getWorkloadName(pod),
-			Namespace: namespace,
+			Name:        a.getWorkloadName(pod),
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                applicationName,
 			Version:                version,
-			TraceContext:           traceContextCarrier,
 			ResourceReference:      a.getResourceReference(pod),
 			PreDeploymentTasks:     preDeploymentTasks,
 			PostDeploymentTasks:    postDeploymentTasks,

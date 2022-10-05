@@ -30,7 +30,6 @@ import (
 type KeptnWorkloadSpec struct {
 	AppName                string            `json:"app"`
 	Version                string            `json:"version"`
-	TraceContext           map[string]string `json:"tracecontext,omitempty"`
 	PreDeploymentTasks     []string          `json:"preDeploymentTasks,omitempty"`
 	PostDeploymentTasks    []string          `json:"postDeploymentTasks,omitempty"`
 	PreDeploymentAnalysis  []string          `json:"preDeploymentAnalysis,omitempty"`

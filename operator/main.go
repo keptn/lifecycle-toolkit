@@ -89,7 +89,7 @@ func main() {
 	// Enabling OTel
 	exp, err := newExporter()
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel exported")
+		setupLog.Error(err, "unable to start OTel exporter")
 		os.Exit(1)
 	}
 
@@ -99,7 +99,7 @@ func main() {
 	)
 	defer func() {
 		if err := tp.Shutdown(context.Background()); err != nil {
-			setupLog.Error(err, "unable to shutdown  OTel exported")
+			setupLog.Error(err, "unable to shutdown  OTel exporter")
 			os.Exit(1)
 		}
 	}()

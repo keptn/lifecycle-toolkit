@@ -45,7 +45,6 @@ type KeptnWorkloadStatus struct {
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
-// +kubebuilder:printcolumn:name="Trace",type=string,priority=1,JSONPath=`.spec.tracecontext`
 
 // KeptnWorkload is the Schema for the keptnworkloads API
 type KeptnWorkload struct {

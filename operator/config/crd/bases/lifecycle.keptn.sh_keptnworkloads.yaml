@@ -22,10 +22,6 @@ spec:
     - jsonPath: .spec.version
       name: Version
       type: string
-    - jsonPath: .spec.tracecontext
-      name: Trace
-      priority: 1
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -77,10 +73,6 @@ spec:
                 required:
                 - kind
                 - uid
-                type: object
-              tracecontext:
-                additionalProperties:
-                  type: string
                 type: object
               version:
                 type: string

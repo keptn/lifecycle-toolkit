@@ -4,7 +4,9 @@ IMG ?= controller:latest
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
-RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
+RELEASE_TIME=$(shell date +%Y%m%d%s)
+BUILD_TIME=$(shell date -u "+%F_%T")
+RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
 TAG?=latest
 RELEASE_IMAGE:=keptn-lifecycle-operator:$(TAG)
 
@@ -31,6 +33,9 @@ endif
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
+
+# Compute the current Git commit hash
+HASH?=$(shell git rev-parse HEAD)
 
 .PHONY: all
 all: build
@@ -77,15 +82,15 @@ test: manifests generate fmt vet envtest ## Run tests.
 ##@ Build
 .PHONY: build
 build: generate fmt vet ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w' -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: build.amd64
 build.amd64: generate fmt vet ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w' -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: build.arm64v8
 build.arm64v8: generate fmt vet ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w' -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
@@ -162,11 +167,11 @@ release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
-	docker build --load --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build --load --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 
 .PHONY: release-image.arm64v8
 release-image.arm64v8: clean
-	docker build --load --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+	docker build --load --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 
 .PHONY: push-release-images
 push-release-images:
@@ -203,8 +208,8 @@ release-local: release-local.amd64 release-local.arm64v8
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 
 .PHONY: release-local.arm64v8
 release-local.arm64v8: clean
-	docker build --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+	docker build --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .

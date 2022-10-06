@@ -55,8 +55,11 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	scheme       = runtime.NewScheme()
+	setupLog     = ctrl.Log.WithName("setup")
+	gitCommit    string
+	buildTime    string
+	buildVersion string
 )
 
 func init() {
@@ -197,7 +200,6 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
-
 }
 
 func newExporter() (trace.SpanExporter, error) {
@@ -214,8 +216,9 @@ func newResource() *resource.Resource {
 		resource.Default(),
 		resource.NewWithAttributes(
 			semconv.SchemaURL,
+			semconv.TelemetrySDKLanguageGo,
 			semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
-			semconv.ServiceVersionKey.String("v0.1.0"),
+			semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
 		),
 	)
 	return r

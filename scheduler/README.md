@@ -26,14 +26,14 @@ make release-manifests RELEASE_REGISTRY=<some-registry>
 3. Deploy the scheduler using kubectl, if you change the operator namespace, make sure you specify the same namespace (--set scheduler.namespace=<your-operator-namespace> ):
 
 ```sh
-kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
+kubectl apply -f ./config/rendered/release.yaml # install the scheduler
 ```
 
 ### Uninstall 
 To delete the scheduler:
 
 ```sh
-kubectl delete -f ./scheduler-manifest/release.yaml # install the scheduler
+kubectl delete -f ./config/rendered/release.yaml # install the scheduler
 ```
 
 ## Contributing

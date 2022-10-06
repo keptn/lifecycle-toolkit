@@ -64,6 +64,7 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 		waitingPodHandler.Allow(Name)
 	default:
 		klog.Infof("[Keptn Permit Plugin] waiting pre-deployment checks for", p.GetObjectMeta().GetName())
+		time.Sleep(5 * time.Second)
 		pl.monitorPod(ctx, p)
 	}
 

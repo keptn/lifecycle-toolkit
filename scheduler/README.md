@@ -23,7 +23,7 @@ make build-and-push-local RELEASE_REGISTRY=<some-registry>
 make release-manifests RELEASE_REGISTRY=<some-registry>
 ```
 
-3. Deploy the scheduler using kubectl, if you change the operator namespace, make sure you specify the same namespace (--set scheduler.namespace=<your-operator-namespace> ):
+3. Deploy the scheduler using kubectl:
 
 ```sh
 kubectl apply -f ./config/rendered/release.yaml # install the scheduler

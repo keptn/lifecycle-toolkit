@@ -35,6 +35,8 @@ type FunctionSpec struct {
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
 	Parameters         TaskParameters     `json:"parameters,omitempty"`
 	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
+	Timeouts           Timeouts           `json:"timeouts,omitempty"`
+	Retries            Retries            `json:"retries,omitempty"`
 }
 
 type ConfigMapReference struct {
@@ -51,6 +53,14 @@ type Inline struct {
 
 type HttpReference struct {
 	Url string `json:"url,omitempty"`
+}
+
+type Retries struct {
+	Attempts int `json:"attempts,omitempty"`
+}
+
+type Timeouts struct {
+	Seconds int `json:"seconds,omitempty"`
 }
 
 type ContainerSpec struct {

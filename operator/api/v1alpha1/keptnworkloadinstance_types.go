@@ -17,7 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,12 +43,16 @@ type KeptnWorkloadInstanceStatus struct {
 	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
+	StartTime                metav1.Time          `json:"startTime,omitempty"`
+	EndTime                  metav1.Time          `json:"endTime,omitempty"`
 }
 
 type WorkloadTaskStatus struct {
 	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
 	Status             common.KeptnState `json:"status,omitempty"`
 	TaskName           string            `json:"taskName,omitempty"`
+	StartTime          metav1.Time       `json:"startTime,omitempty"`
+	EndTime            metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -89,4 +96,55 @@ func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
+}
+
+func (i *KeptnWorkloadInstance) SetStartTime() {
+	if i.Status.StartTime.IsZero() {
+		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *KeptnWorkloadInstance) SetEndTime() {
+	if i.Status.EndTime.IsZero() {
+		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *KeptnWorkloadInstance) IsStartTimeSet() bool {
+	return !i.Status.StartTime.IsZero()
+}
+
+func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
+	return !i.Status.EndTime.IsZero()
+}
+
+func (i *WorkloadTaskStatus) SetStartTime() {
+	if i.StartTime.IsZero() {
+		i.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *WorkloadTaskStatus) SetEndTime() {
+	if i.EndTime.IsZero() {
+		i.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.WorkloadName),
+		common.Version.String(i.Spec.Version),
+		common.Namespace.String(i.Namespace),
+	}
+}
+
+func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.WorkloadName),
+		common.Version.String(i.Spec.Version),
+		common.Namespace.String(i.Namespace),
+		common.DeploymentStatus.String(string(i.Status.PostDeploymentStatus)),
+	}
 }

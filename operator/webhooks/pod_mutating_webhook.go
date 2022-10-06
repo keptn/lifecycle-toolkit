@@ -12,7 +12,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/semconv"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -72,7 +72,10 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 
+		logger.Info("Attributes from annotations set")
+
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
+			logger.Error(err, "Could not handle Workload")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
@@ -137,6 +140,8 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	semconv.AddAttributeFromWorkload(span, *newWorkload)
 
+	logger.Info("Searching for workload")
+
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
 	if errors.IsNotFound(err) {
@@ -164,8 +169,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	}
 
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
+		logger.Info("Pod not changed, not updating anything")
 		return nil
 	}
+
+	logger.Info("Pod changed, updating workload")
+	workload.Spec = newWorkload.Spec
 
 	err = a.Client.Update(ctx, workload)
 	if err != nil {

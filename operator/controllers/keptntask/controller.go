@@ -19,6 +19,8 @@ package keptntask
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
@@ -27,8 +29,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"time"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
 // KeptnTaskReconciler reconciles a KeptnTask object
@@ -37,6 +40,7 @@ type KeptnTaskReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
+	Meters   common.KeptnMeters
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
@@ -59,39 +63,78 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	isRunning, err := r.IsJobRunning(ctx, *task, req.Namespace)
+	if !task.IsStartTimeSet() {
+		// metrics: increment active task counter
+		r.Meters.TaskActive.Add(ctx, 1, task.GetActiveMetricsAttributes()...)
+		task.SetStartTime()
+	}
+
+	err := r.Client.Status().Update(ctx, task)
+	if err != nil {
+		return ctrl.Result{Requeue: true}, err
+	}
+
+	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
 	if err != nil {
 		r.Log.Error(err, "Could not check if job is running")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !isRunning {
+	if !jobExists {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
 			return ctrl.Result{Requeue: true}, err
 		}
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	if task.Status.Status != common.StateSucceeded {
+	if !task.Status.Status.IsCompleted() {
 		err := r.updateJob(ctx, req, task)
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	r.Log.Info("Finished Reconciling KeptnTask")
-	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+
+	// WorkloadInstance is completed at this place
+
+	if !task.IsEndTimeSet() {
+		// metrics: decrement active task counter
+		r.Meters.TaskActive.Add(ctx, -1, task.GetActiveMetricsAttributes()...)
+		task.SetEndTime()
+	}
+
+	err = r.Client.Status().Update(ctx, task)
+	if err != nil {
+		return ctrl.Result{Requeue: true}, err
+	}
+
+	attrs := task.GetMetricsAttributes()
+
+	r.Log.Info("Increasing task count")
+
+	// metrics: increment task counter
+	r.Meters.TaskCount.Add(ctx, 1, attrs...)
+
+	// metrics: add task duration
+	duration := task.Status.EndTime.Time.Sub(task.Status.StartTime.Time)
+	r.Meters.TaskDuration.Record(ctx, duration.Seconds(), attrs...)
+
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnTask{}).
+		// predicate disabling the auto reconciliation after updating the object status
+		For(&klcv1alpha1.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Owns(&batchv1.Job{}).
 		Complete(r)
 }
 
-func (r *KeptnTaskReconciler) IsJobRunning(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
+func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}

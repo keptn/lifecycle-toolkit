@@ -3,12 +3,14 @@ package keptntask
 import (
 	"context"
 	"fmt"
+	"reflect"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -82,6 +84,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		r.Recorder.Event(task, "Warning", "JobNotCreated", fmt.Sprintf("Could not create Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 		return job.Name, err
 	}
+
 	r.Recorder.Event(task, "Normal", "JobCreated", fmt.Sprintf("Created Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
 	return job.Name, nil
 }

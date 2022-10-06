@@ -17,7 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -45,8 +48,10 @@ type SecureParameters struct {
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
-	JobName string            `json:"jobName,omitempty"`
-	Status  common.KeptnState `json:"status,omitempty"`
+	JobName   string            `json:"jobName,omitempty"`
+	Status    common.KeptnState `json:"status,omitempty"`
+	StartTime metav1.Time       `json:"startTime,omitempty"`
+	EndTime   metav1.Time       `json:"endTime,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -79,4 +84,45 @@ type KeptnTaskList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTask{}, &KeptnTaskList{})
+}
+
+func (i *KeptnTask) SetStartTime() {
+	if i.Status.StartTime.IsZero() {
+		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *KeptnTask) SetEndTime() {
+	if i.Status.EndTime.IsZero() {
+		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *KeptnTask) IsStartTimeSet() bool {
+	return !i.Status.StartTime.IsZero()
+}
+
+func (i *KeptnTask) IsEndTimeSet() bool {
+	return !i.Status.EndTime.IsZero()
+}
+
+func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.Workload),
+		common.Version.String(i.Spec.WorkloadVersion),
+		common.TaskName.String(i.Name),
+		common.TaskType.String(string(i.Spec.Type)),
+	}
+}
+
+func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.Workload),
+		common.Version.String(i.Spec.WorkloadVersion),
+		common.TaskName.String(i.Name),
+		common.TaskType.String(string(i.Spec.Type)),
+		common.TaskStatus.String(string(i.Status.Status)),
+	}
 }

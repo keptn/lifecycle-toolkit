@@ -81,7 +81,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
 	// If the workload instance does not exist, create it
 	if errors.IsNotFound(err) {
-		workloadInstance, err := r.createWorkloadInstance(workload)
+		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -109,7 +109,7 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: workload.Annotations,
@@ -125,5 +125,6 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(workload *klcv1alpha1.K
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
 	}
+
 	return workloadInstance, err
 }

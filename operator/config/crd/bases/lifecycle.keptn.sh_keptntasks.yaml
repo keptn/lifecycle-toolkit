@@ -82,7 +82,13 @@ spec:
           status:
             description: KeptnTaskStatus defines the observed state of KeptnTask
             properties:
+              endTime:
+                format: date-time
+                type: string
               jobName:
+                type: string
+              startTime:
+                format: date-time
                 type: string
               status:
                 type: string

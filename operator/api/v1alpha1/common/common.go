@@ -2,6 +2,10 @@ package common
 
 import (
 	"fmt"
+
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
+	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -45,3 +49,23 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+
+type KeptnMeters struct {
+	TaskCount          syncint64.Counter
+	TaskDuration       syncfloat64.Histogram
+	TaskActive         syncint64.UpDownCounter
+	DeploymentCount    syncint64.Counter
+	DeploymentDuration syncfloat64.Histogram
+	DeploymentActive   syncint64.UpDownCounter
+}
+
+const (
+	ApplicationName  attribute.Key = attribute.Key("keptn.deployment.app_name")
+	Workload         attribute.Key = attribute.Key("keptn.deployment.workload")
+	Version          attribute.Key = attribute.Key("keptn.deployment.version")
+	Namespace        attribute.Key = attribute.Key("keptn.deployment.namespace")
+	DeploymentStatus attribute.Key = attribute.Key("keptn.deployment.status")
+	TaskStatus       attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName         attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType         attribute.Key = attribute.Key("keptn.deployment.taks.type")
+)

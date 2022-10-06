@@ -19,6 +19,11 @@ package keptnworkload
 import (
 	"context"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -41,6 +46,7 @@ type KeptnWorkloadReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
+	Tracer   trace.Tracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
@@ -68,10 +74,17 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
 	}
-
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("could not fetch Workload: %+v", err)
 	}
+
+	traceContextCarrier := propagation.MapCarrier(workload.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromWorkload(span, *workload)
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
@@ -83,11 +96,13 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if errors.IsNotFound(err) {
 		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			return reconcile.Result{}, err
 		}
 		err = r.Client.Create(ctx, workloadInstance)
 		if err != nil {
 			r.Log.Error(err, "could not create Workload Instance")
+			span.SetStatus(codes.Error, err.Error())
 			r.Recorder.Event(workload, "Warning", "WorkloadInstanceNotCreated", fmt.Sprintf("Could not create KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
 			return ctrl.Result{}, err
 		}
@@ -96,6 +111,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	}
 	if err != nil {
 		r.Log.Error(err, "could not get Workload Instance")
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{}, err
 	}
 
@@ -110,9 +126,19 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
+	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	semconv.AddAttributeFromWorkload(span, *workload)
+
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: workload.Annotations,
+			Annotations: traceContextCarrier,
 			Name:        workload.GetWorkloadInstanceName(),
 			Namespace:   workload.Namespace,
 		},

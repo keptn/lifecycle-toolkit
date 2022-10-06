@@ -278,6 +278,8 @@ func newResource() *resource.Resource {
 		),
 	)
 	return r
+}
+
 func serveMetrics(collector prometheus.Collector) {
 	registry := prometheus.NewRegistry()
 	err := registry.Register(collector)

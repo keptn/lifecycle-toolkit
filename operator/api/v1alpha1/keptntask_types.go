@@ -108,21 +108,21 @@ func (i *KeptnTask) IsEndTimeSet() bool {
 
 func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(i.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(i.Spec.Workload),
-		attribute.Key("KeptnVersion").String(i.Spec.WorkloadVersion),
-		attribute.Key("TaskName").String(i.Name),
-		attribute.Key("Type").String(string(i.Spec.Type)),
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.Workload),
+		common.Version.String(i.Spec.WorkloadVersion),
+		common.Task.String(i.Name),
+		common.TaskType.String(string(i.Spec.Type)),
 	}
 }
 
 func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		attribute.Key("KeptnApp").String(i.Spec.AppName),
-		attribute.Key("KeptnWorkload").String(i.Spec.Workload),
-		attribute.Key("KeptnVersion").String(i.Spec.WorkloadVersion),
-		attribute.Key("TaskName").String(i.Name),
-		attribute.Key("Type").String(string(i.Spec.Type)),
-		attribute.Key("Status").String(string(i.Status.Status)),
+		common.ApplicationName.String(i.Spec.AppName),
+		common.Workload.String(i.Spec.Workload),
+		common.Version.String(i.Spec.WorkloadVersion),
+		common.Task.String(i.Name),
+		common.TaskType.String(string(i.Spec.Type)),
+		common.Status.String(string(i.Status.Status)),
 	}
 }

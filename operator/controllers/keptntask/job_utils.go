@@ -9,8 +9,6 @@ import (
 
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"go.opentelemetry.io/otel/attribute"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"

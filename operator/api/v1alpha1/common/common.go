@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
 	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 )
@@ -57,3 +58,13 @@ type KeptnMeters struct {
 	DeploymentDuration syncfloat64.Histogram
 	DeploymentActive   syncint64.UpDownCounter
 }
+
+const (
+	ApplicationName attribute.Key = attribute.Key("keptn.app_name")
+	Workload        attribute.Key = attribute.Key("keptn.workload")
+	Version         attribute.Key = attribute.Key("keptn.version")
+	Namespace       attribute.Key = attribute.Key("keptn.namespace")
+	Status          attribute.Key = attribute.Key("keptn.status")
+	Task            attribute.Key = attribute.Key("keptn.task")
+	TaskType        attribute.Key = attribute.Key("keptn.task_type")
+)

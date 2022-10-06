@@ -239,6 +239,7 @@ func main() {
 		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
 		Meters:   meters,
+		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)

@@ -17,15 +17,26 @@ limitations under the License.
 package main
 
 import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/klcpermit"
 	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/component-base/cli"
 	"k8s.io/kubernetes/cmd/kube-scheduler/app"
-	"os"
-	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/stdout"
+	"go.opentelemetry.io/otel/propagation"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
 func main() {
+
+	tp := initOTel()
 
 	rand.Seed(time.Now().UnixNano())
 	command := app.NewSchedulerCommand(
@@ -33,5 +44,27 @@ func main() {
 	)
 
 	code := cli.Run(command)
+
+	err := tp.Shutdown(context.TODO())
+	if err != nil {
+		fmt.Println(err)
+	}
 	os.Exit(code)
+
+}
+
+func initOTel() *sdktrace.TracerProvider {
+	var err error
+	exp, err := stdout.NewExporter(stdout.WithPrettyPrint())
+	if err != nil {
+		log.Panicf("failed to initialize stdout exporter %v\n", err)
+	}
+	bsp := sdktrace.NewSimpleSpanProcessor(exp)
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+		sdktrace.WithSpanProcessor(bsp),
+	)
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	return tp
 }

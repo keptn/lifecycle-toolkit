@@ -33,7 +33,7 @@ kubectl apply -f ./config/rendered/release.yaml # install the scheduler
 To delete the scheduler:
 
 ```sh
-kubectl delete -f ./config/rendered/release.yaml # install the scheduler
+kubectl delete -f ./config/rendered/release.yaml # uninstall the scheduler
 ```
 
 ## Contributing

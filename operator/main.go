@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkload"
@@ -25,6 +26,13 @@ import (
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 
 	"os"
 
@@ -78,6 +86,26 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	// Enabling OTel
+	exp, err := newExporter()
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel exporter")
+		os.Exit(1)
+	}
+
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exp),
+		trace.WithResource(newResource()),
+	)
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			setupLog.Error(err, "unable to shutdown  OTel exporter")
+			os.Exit(1)
+		}
+	}()
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -103,7 +131,11 @@ func main() {
 	}
 
 	if !disableWebhook {
-		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &webhooks.PodMutatingWebhook{Client: mgr.GetClient()}})
+		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{
+			Handler: &webhooks.PodMutatingWebhook{
+				Client: mgr.GetClient(),
+				Tracer: otel.Tracer("keptn/webhook"),
+			}})
 	}
 	if err = (&keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
@@ -166,4 +198,25 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+func newExporter() (trace.SpanExporter, error) {
+	return stdouttrace.New(
+		// Use human readable output.
+		stdouttrace.WithPrettyPrint(),
+		// Do not print timestamps for the demo.
+		stdouttrace.WithoutTimestamps(),
+	)
+}
+
+func newResource() *resource.Resource {
+	r, _ := resource.Merge(
+		resource.Default(),
+		resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
+			semconv.ServiceVersionKey.String("v0.1.0"),
+		),
+	)
+	return r
 }

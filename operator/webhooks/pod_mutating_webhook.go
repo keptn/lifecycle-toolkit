@@ -12,6 +12,11 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/semconv"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"hash/fnv"
@@ -29,11 +34,16 @@ import (
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
 	Client  client.Client
+	Tracer  trace.Tracer
 	decoder *admission.Decoder
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
+
+	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	defer span.End()
+
 	logger := log.FromContext(ctx).WithValues("webhook", "/mutate-v1-pod", "object", map[string]interface{}{
 		"name":      req.Name,
 		"namespace": req.Namespace,
@@ -52,19 +62,25 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	isAnnotated, err := a.isKeptnAnnotated(pod)
 	if err != nil {
+		span.SetStatus(codes.Error, "Invalid annotations")
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 	if isAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
+
+		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
+
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 	}
 
 	marshaledPod, err := json.Marshal(pod)
 	if err != nil {
+		span.SetStatus(codes.Error, "Failed to marshal")
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 
@@ -113,7 +129,13 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 }
 
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
-	newWorkload := a.generateWorkload(pod, namespace)
+
+	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newWorkload := a.generateWorkload(ctx, pod, namespace)
+
+	semconv.AddAttributeFromWorkload(span, *newWorkload)
 
 	workload := &klcv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
@@ -123,18 +145,21 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
+			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
 		k8sEvent := a.generateK8sEvent(workload, "created")
 		if err := a.Client.Create(ctx, k8sEvent); err != nil {
 			logger.Error(err, "Could not send workload created K8s event")
+			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 		return nil
 	}
 
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
 	}
 
@@ -142,24 +167,24 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		return nil
 	}
 
-	workload.Spec = newWorkload.Spec
-
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
+		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
 	k8sEvent := a.generateK8sEvent(workload, "updated")
 	if err := a.Client.Create(ctx, k8sEvent); err != nil {
 		logger.Error(err, "Could not send workload updated K8s event")
+		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
 	return nil
 }
 
-func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
+func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
 	version, _ := pod.Annotations[common.VersionAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 
@@ -184,10 +209,16 @@ func (a *PodMutatingWebhook) generateWorkload(pod *corev1.Pod, namespace string)
 		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
 	}
 
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      a.getWorkloadName(pod),
-			Namespace: namespace,
+			Name:        a.getWorkloadName(pod),
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                applicationName,

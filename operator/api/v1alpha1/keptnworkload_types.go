@@ -17,9 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strings"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"strings"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -42,6 +43,8 @@ type KeptnWorkloadStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 
 // KeptnWorkload is the Schema for the keptnworkloads API
 type KeptnWorkload struct {

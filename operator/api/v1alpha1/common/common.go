@@ -60,11 +60,12 @@ type KeptnMeters struct {
 }
 
 const (
-	ApplicationName attribute.Key = attribute.Key("keptn.app_name")
-	Workload        attribute.Key = attribute.Key("keptn.workload")
-	Version         attribute.Key = attribute.Key("keptn.version")
-	Namespace       attribute.Key = attribute.Key("keptn.namespace")
-	Status          attribute.Key = attribute.Key("keptn.status")
-	Task            attribute.Key = attribute.Key("keptn.task")
-	TaskType        attribute.Key = attribute.Key("keptn.task_type")
+	ApplicationName  attribute.Key = attribute.Key("keptn.deployment.app_name")
+	Workload         attribute.Key = attribute.Key("keptn.deployment.workload")
+	Version          attribute.Key = attribute.Key("keptn.deployment.version")
+	Namespace        attribute.Key = attribute.Key("keptn.deployment.namespace")
+	DeploymentStatus attribute.Key = attribute.Key("keptn.deployment.status")
+	TaskStatus       attribute.Key = attribute.Key("keptn.task.status")
+	TaskName         attribute.Key = attribute.Key("keptn.task.name")
+	TaskType         attribute.Key = attribute.Key("keptn.taks.type")
 )

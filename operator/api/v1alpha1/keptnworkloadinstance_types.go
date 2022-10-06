@@ -145,6 +145,6 @@ func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 		common.Workload.String(i.Spec.WorkloadName),
 		common.Version.String(i.Spec.Version),
 		common.Namespace.String(i.Namespace),
-		common.Status.String(string(i.Status.PostDeploymentStatus)),
+		common.DeploymentStatus.String(string(i.Status.PostDeploymentStatus)),
 	}
 }

@@ -12,23 +12,28 @@ You’ll need a Kubernetes cluster v0.24.0 or higher to run against. You can use
 1. Build and push your image to the location specified by `RELEASE_REGISTRY`:
 	
 ```sh
-make push-release-images RELEASE_REGISTRY=<some-registry>
+make build-and-push-local RELEASE_REGISTRY=<some-registry>
 ```
 
 **NOTE:** Run `make --help` for more information on all potential `make` targets
 
-2. Deploy the scheduler using helm, if you change the operator namespace, make sure you specify the same namespace (--set scheduler.namespace=<your-lfc-operator-namespace> ):
+2. Generate your release manifest
 
 ```sh
-cd manifest/install/charts
-helm upgrade --install keptn-scheduler keptn-scheduler/ --set scheduler.image=<your-generated-image> 
+make release-manifests RELEASE_REGISTRY=<some-registry>
+```
+
+3. Deploy the scheduler using kubectl:
+
+```sh
+kubectl apply -f ./config/rendered/release.yaml # install the scheduler
 ```
 
 ### Uninstall 
 To delete the scheduler:
 
 ```sh
-helm uninstall keptn-scheduler
+kubectl delete -f ./config/rendered/release.yaml # uninstall the scheduler
 ```
 
 ## Contributing

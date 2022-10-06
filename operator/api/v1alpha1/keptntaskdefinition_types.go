@@ -35,8 +35,8 @@ type FunctionSpec struct {
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
 	Parameters         TaskParameters     `json:"parameters,omitempty"`
 	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
-	Timeouts           Timeouts           `json:"timeouts,omitempty"`
 	Retries            Retries            `json:"retries,omitempty"`
+	Timeouts           Timeouts           `json:"timeouts,omitempty"`
 }
 
 type ConfigMapReference struct {

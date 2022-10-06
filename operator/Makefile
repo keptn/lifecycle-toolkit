@@ -35,7 +35,7 @@ SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
 # Compute the current Git commit hash
-HASH=$(shell git rev-parse HEAD)
+HASH?=$(shell git rev-parse HEAD)
 
 .PHONY: all
 all: build

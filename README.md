@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller
+# Keptn Lifecycle Controller (KLC)
 
 ![build](https://img.shields.io/github/workflow/status/keptn-sandbox/lifecycle-controller/CI)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn-sandbox/lifecycle-controller?filename=operator%2Fgo.mod)
@@ -7,9 +7,43 @@
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
 
 The purpose of this repository is to demonstrate and experiment with
-a prototype of a _**Keptn Lifecycle Controller**_.
+a prototype of a _**Keptn Lifecycle Controller (KLC)**_.
 The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
 It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
+
+## Keptn Lifecycle Controller in a nutshell
+
+The idea for **Keptn Lifecycle Controller** is to allow managing the App Lifecycle without writing operator code.
+This approach is also known as a _Level 3 Operator_
+It targets cloud native applications deployed in Kubernetes and managed via modern approaches like GitOps.
+It is not yet another deployment tool but an add-on that can easily integrate into your application management and CD ecosystem
+to enable cloud native app operations.
+
+Keptn Lifecycle Controller:
+
+- Provides a standardized way to ensure that applications are running perfectly:
+  Pre-Deployment, Post-Deployment, and Application Health Checks.
+- Supports connecting Event Hooks to other stages of the application lifecycle.
+- Allows running Pre- and Post-Deployment Tasks and Analysis without Pipelines.
+  External pipeline engines can be connected for more complex automation and synchronous operations.
+- Includes a Typescript based [functions runtime](./functions-runtime) for micro-scripting of event handlers.
+  Scripts could shared 
+- Later: allows handling of Kubernetes events, e.g. Deployments once implemented by the [Keptn App Lifecycle working group](https://github.com/keptn/wg-app-lifecycle) or CloudEvents
+
+### Implementation
+
+Keptn Lifecycle Controller has an operator architecture, managed in a GitOps way.
+
+TODO: Add Diagram
+<!-- https://docs.google.com/presentation/d/1satTEbjIoCZXLyx40i-IdV3hWd8ctnMz/edit#slide=id.g161f27e139b_0_0 -->
+
+### References
+
+- TODO: Overview slidedeck
+- [Keptn Lifecycle Controller v0.1.0 Demo - October 2022](https://www.youtube.com/watch?v=mQtUrlyPi44&list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ&index=2) - 
+  First demo and walkthrough by Thomas Schuetz
+- [YouTube Playlist](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ) - 
+  Most important Keptn Lifecycle Controller videos
 
 ## Deploy the latest release
 

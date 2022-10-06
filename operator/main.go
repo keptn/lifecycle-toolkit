@@ -55,9 +55,8 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
-	// TODO: Attach to OTel Resource
+	scheme       = runtime.NewScheme()
+	setupLog     = ctrl.Log.WithName("setup")
 	gitCommit    string
 	buildTime    string
 	buildVersion string
@@ -217,8 +216,9 @@ func newResource() *resource.Resource {
 		resource.Default(),
 		resource.NewWithAttributes(
 			semconv.SchemaURL,
+			semconv.TelemetrySDKLanguageGo,
 			semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
-			semconv.ServiceVersionKey.String("v0.1.0"),
+			semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
 		),
 	)
 	return r

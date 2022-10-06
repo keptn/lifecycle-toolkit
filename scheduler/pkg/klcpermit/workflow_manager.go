@@ -2,7 +2,7 @@ package klcpermit
 
 import (
 	"context"
-	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/tracing"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -36,38 +36,6 @@ const (
 	StatePending   KeptnState = "Pending"
 )
 
-// TextMapCarrier is the storage medium used by a TextMapPropagator.
-type TextMapCarrier interface {
-	// Get returns the value associated with the passed key.
-	Get(key string) string
-	// Set stores the key-value pair.
-	Set(key string, value string)
-	// Keys lists the keys stored in this carrier.
-	Keys() []string
-}
-
-// KeptnCarrier carries the TraceContext
-type KeptnCarrier map[string]interface{}
-
-// Get returns the value associated with the passed key.
-func (kc KeptnCarrier) Get(key string) string {
-	return fmt.Sprintf("%v", kc[key])
-}
-
-// Set stores the key-value pair.
-func (kc KeptnCarrier) Set(key string, value string) {
-	kc[key] = value
-}
-
-// Keys lists the keys stored in this carrier.
-func (kc KeptnCarrier) Keys() []string {
-	keys := make([]string, 0, len(kc))
-	for k := range kc {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
 type Manager interface {
 	Permit(context.Context, *corev1.Pod) Status
 }
@@ -98,7 +66,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	// search for annotations
 	annotations, found, err := unstructured.NestedMap(crd.UnstructuredContent(), "metadata", "annotations")
 	if found {
-		ctx = otel.GetTextMapPropagator().Extract(ctx, KeptnCarrier(annotations))
+		ctx = otel.GetTextMapPropagator().Extract(ctx, tracing.KeptnCarrier(annotations))
 	}
 
 	ctx, span := sMgr.Tracer.Start(ctx, "schedule")

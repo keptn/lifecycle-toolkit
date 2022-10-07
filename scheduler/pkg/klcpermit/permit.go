@@ -17,7 +17,7 @@ const (
 	PluginName = "KLCPermit"
 )
 
-// Permit is a plugin that implements a wait for pre-deployment checks
+// Permit is a plugin that waits for pre-deployment checks
 type Permit struct {
 	handler         framework.Handle
 	workloadManager *WorkloadManager
@@ -32,10 +32,10 @@ func (pl *Permit) Name() string {
 
 func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (*framework.Status, time.Duration) {
 
-	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
+	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
+
 	//start async CRD monitoring
 	go pl.monitorPod(ctx, p)
-
 	//queue pod and set eviction deadline
 	return framework.NewStatus(framework.Wait), 5 * time.Minute
 

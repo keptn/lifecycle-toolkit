@@ -241,7 +241,7 @@ func generateTaskName(checkType common.CheckType, taskName string) string {
 }
 
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
-	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)

@@ -34,15 +34,29 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 
 	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
 
-	//start async CRD monitoring
-	go pl.monitorPod(ctx, p)
-	//queue pod and set eviction deadline
-	return framework.NewStatus(framework.Wait), 5 * time.Minute
+	// check the permit immediately, to fail early in case the pod cannot be queued
+	switch pl.workloadManager.Permit(ctx, p) {
+
+	case Wait:
+		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
+		go pl.monitorPod(ctx, p)
+		return framework.NewStatus(framework.Wait), 5 * time.Minute
+	case Failure:
+		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on %s", p.GetObjectMeta().GetName())
+		return framework.NewStatus(framework.Error), 0 * time.Second
+	case Success:
+		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on %s", p.GetObjectMeta().GetName())
+		return framework.NewStatus(framework.Success), 0 * time.Second
+	default:
+		klog.Infof("[Keptn Permit Plugin] unknown status of pre-deployment checks for %s", p.GetObjectMeta().GetName())
+		return framework.NewStatus(framework.Wait), 5 * time.Minute
+	}
 
 }
 
 func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 	waitingPodHandler := pl.handler.GetWaitingPod(p.UID)
+
 	switch pl.workloadManager.Permit(ctx, p) {
 	case Failure:
 		waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
@@ -52,7 +66,6 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 		time.Sleep(10 * time.Second)
 		pl.monitorPod(ctx, p)
 	}
-
 }
 
 // New initializes a new plugin and returns it.

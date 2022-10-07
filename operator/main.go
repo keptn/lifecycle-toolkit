@@ -203,6 +203,7 @@ func main() {
 		Log:      ctrl.Log.WithName("KeptnTask Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
 		Meters:   meters,
+		Tracer:   otel.Tracer("keptn/operator/task"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)

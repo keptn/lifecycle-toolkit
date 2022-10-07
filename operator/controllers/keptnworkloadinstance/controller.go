@@ -19,6 +19,11 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	"math/rand"
 	"time"
 
@@ -56,6 +61,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Recorder record.EventRecorder
 	Log      logr.Logger
 	Meters   common.KeptnMeters
+	Tracer   trace.Tracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -92,6 +98,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
 
+	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
+
 	if !workloadInstance.IsStartTimeSet() {
 		// metrics: increment active deployment counter
 		r.Meters.DeploymentActive.Add(ctx, 1, workloadInstance.GetActiveMetricsAttributes()...)
@@ -103,6 +117,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		err := r.reconcilePreDeployment(ctx, req, workloadInstance)
 		if err != nil {
 			r.Log.Error(err, "Error reconciling pre-deployment checks")
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
@@ -113,6 +128,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		err := r.reconcileDeployment(ctx, workloadInstance)
 		if err != nil {
 			r.Log.Error(err, "Error reconciling deployment")
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
@@ -123,6 +139,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		err = r.reconcilePostDeployment(ctx, req, workloadInstance)
 		if err != nil {
 			r.Log.Error(err, "Error reconciling post-deployment checks")
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
@@ -138,6 +155,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
@@ -223,10 +241,20 @@ func generateTaskName(checkType common.CheckType, taskName string) string {
 }
 
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
+	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
+
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      generateTaskName(checkType, taskDefinition),
-			Namespace: namespace,
+			Name:        generateTaskName(checkType, taskDefinition),
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
 			Workload:         workloadInstance.Spec.WorkloadName,

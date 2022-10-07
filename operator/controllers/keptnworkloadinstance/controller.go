@@ -101,7 +101,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.Tracer.Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)

@@ -59,14 +59,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	r.Log.Info("Reconciling KeptnTask")
 	task := &klcv1alpha1.KeptnTask{}
 
-	traceContextCarrier := propagation.MapCarrier(task.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
-
-	semconv.AddAttributeFromTask(span, *task)
-
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
@@ -74,9 +66,16 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTask")
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
+
+	traceContextCarrier := propagation.MapCarrier(task.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromTask(span, *task)
 
 	if !task.IsStartTimeSet() {
 		// metrics: increment active task counter

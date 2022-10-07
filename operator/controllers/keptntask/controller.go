@@ -24,6 +24,11 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,6 +46,7 @@ type KeptnTaskReconciler struct {
 	Recorder record.EventRecorder
 	Log      logr.Logger
 	Meters   common.KeptnMeters
+	Tracer   trace.Tracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +59,14 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	r.Log.Info("Reconciling KeptnTask")
 	task := &klcv1alpha1.KeptnTask{}
 
+	traceContextCarrier := propagation.MapCarrier(task.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromTask(span, *task)
+
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
@@ -60,6 +74,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTask")
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
@@ -71,18 +86,21 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	err := r.Client.Status().Update(ctx, task)
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
 	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
 	if err != nil {
 		r.Log.Error(err, "Could not check if job is running")
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
 	if !jobExists {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
@@ -91,6 +109,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if !task.Status.Status.IsCompleted() {
 		err := r.updateJob(ctx, req, task)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
@@ -108,6 +127,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 

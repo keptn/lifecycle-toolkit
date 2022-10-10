@@ -25,10 +25,22 @@ import (
 
 // SloSpec defines the desired state of Slo
 type SloSpec struct {
-	Comparison SLOComparison `json:"comparison"`
-	Filter
-	Objectives
-	TotalScore
+	Comparison SloComparison `json:"comparison"`
+	Filter     SloFilter     `json:"filter"`
+	Objectives []Objective   `json:"objectives"`
+	TotalScore SloTotalScore `json:"total_score"`
+}
+
+type SloComparison struct {
+}
+
+type SloFilter struct {
+}
+
+type Objective struct {
+}
+
+type SloTotalScore struct {
 }
 
 // SloStatus defines the observed state of Slo

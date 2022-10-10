@@ -188,3 +188,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes/status
+  verbs:
+  - get
+  - patch
+  - update

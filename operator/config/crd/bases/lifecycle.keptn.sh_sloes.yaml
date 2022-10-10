@@ -80,12 +80,15 @@ spec:
                       required:
                       - criteria
                       type: object
+                    weight:
+                      type: integer
                   required:
                   - displayName
                   - key_sli
                   - pass
                   - sli
                   - warning
+                  - weight
                   type: object
                 type: array
               total_score:

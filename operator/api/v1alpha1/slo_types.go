@@ -47,6 +47,7 @@ type Objective struct {
 	KeySli          bool     `json:"key_sli"`
 	PassCriteria    Criteria `json:"pass"`
 	WarningCriteria Criteria `json:"warning"`
+	Weight          int      `json:"weight"`
 }
 
 type StringList []string

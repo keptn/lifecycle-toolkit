@@ -54,15 +54,19 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 	waitingPodHandler := pl.handler.GetWaitingPod(p.UID)
 
-	switch pl.workloadManager.Permit(ctx, p) {
-	case Failure:
-		waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
-	case Success:
-		waitingPodHandler.Allow(PluginName)
-	default:
-		time.Sleep(10 * time.Second)
-		pl.monitorPod(ctx, p)
+	for {
+		switch pl.workloadManager.Permit(ctx, p) {
+		case Failure:
+			waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
+			return
+		case Success:
+			waitingPodHandler.Allow(PluginName)
+			return
+		default:
+			time.Sleep(10 * time.Second)
+		}
 	}
+
 }
 
 // New initializes a new plugin and returns it.

@@ -20,6 +20,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 	"log"
 	"net/http"
 
@@ -28,11 +29,12 @@ import (
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkload"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -243,6 +245,13 @@ func main() {
 		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
+		os.Exit(1)
+	}
+	if err = (&keptnappversion.KeptnAppVersionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

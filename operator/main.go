@@ -160,7 +160,6 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// Enabling OTel
-
 	tpOptions, err := getOTelTracerProviderOptions(env)
 	if err != nil {
 		setupLog.Error(err, "unable to initialize OTel tracer options")
@@ -276,9 +275,8 @@ func main() {
 }
 
 func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, error) {
-	tracerProviderOptions := []trace.TracerProviderOption{
-		trace.WithResource(newResource()),
-	}
+	tracerProviderOptions := []trace.TracerProviderOption{}
+
 	stdOutExp, err := newStdOutExporter()
 	if err != nil {
 		return nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
@@ -295,6 +293,7 @@ func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, 
 			tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(otelExporter))
 		}
 	}
+	tracerProviderOptions = append(tracerProviderOptions, trace.WithResource(newResource()))
 
 	return tracerProviderOptions, nil
 }
@@ -323,14 +322,11 @@ func newOTelExporter(env envConfig) (trace.SpanExporter, error) {
 }
 
 func newResource() *resource.Resource {
-	r, _ := resource.Merge(
-		resource.Default(),
-		resource.NewWithAttributes(
-			semconv.SchemaURL,
-			semconv.TelemetrySDKLanguageGo,
-			semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
-			semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
-		),
+	r := resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.TelemetrySDKLanguageGo,
+		semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
+		semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
 	)
 	return r
 }

@@ -2,18 +2,17 @@ package keptnworkloadinstance
 
 import (
 	"context"
-
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
-
 	newStatus, postDeploymentState, err := r.reconcileChecks(ctx, common.PostDeploymentCheckType, workloadInstance)
 	if err != nil {
 		return err
 	}
+	r.Log.Info("Post-Deployment Information", "Post-Deployment State", postDeploymentState, "Post-Deployment Workload State", newStatus)
 	workloadInstance.Status.PostDeploymentStatus = common.GetOverallState(postDeploymentState)
 	workloadInstance.Status.PostDeploymentTaskStatus = newStatus
 

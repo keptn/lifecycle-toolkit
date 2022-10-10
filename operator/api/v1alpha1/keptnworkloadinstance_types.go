@@ -48,11 +48,12 @@ type KeptnWorkloadInstanceStatus struct {
 }
 
 type TaskStatus struct {
-	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
-	Status             common.KeptnState `json:"status,omitempty"`
-	TaskName           string            `json:"taskName,omitempty"`
-	StartTime          metav1.Time       `json:"startTime,omitempty"`
-	EndTime            metav1.Time       `json:"endTime,omitempty"`
+	TaskDefinitionName string `json:"TaskDefinitionName,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status    common.KeptnState `json:"status,omitempty"`
+	TaskName  string            `json:"taskName,omitempty"`
+	StartTime metav1.Time       `json:"startTime,omitempty"`
+	EndTime   metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true

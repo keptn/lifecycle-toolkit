@@ -48,19 +48,20 @@ type KeptnAppVersionStatus struct {
 }
 
 type WorkloadStatus struct {
-	Workload KeptnWorkloadRef  `json:"workload,omitempty"`
-	Status   common.KeptnState `json:"status,omitempty"`
+	Workload KeptnWorkloadRef `json:"workload,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status common.KeptnState `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-//// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
-//// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
-//// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-//// +kubebuilder:printcolumn:name="WorkloadStatus",type=string,JSONPath=`.status.workloadStatus`
-//// +kubebuilder:printcolumn:name="WorkloadOverallStatus",type=string,JSONPath=`.status.workloadOverallStatus`
-//// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
+// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
+// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="WorkloadStatus",type=string,JSONPath=`.status.workloadStatus`
+// +kubebuilder:printcolumn:name="WorkloadOverallStatus",type=string,JSONPath=`.status.workloadOverallStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {
@@ -88,10 +89,34 @@ func (v KeptnAppVersion) IsPreDeploymentCompleted() bool {
 	return v.Status.PreDeploymentStatus.IsCompleted()
 }
 
+func (v KeptnAppVersion) IsPreDeploymentSucceeded() bool {
+	return v.Status.PreDeploymentStatus.IsSucceeded()
+}
+
+func (v KeptnAppVersion) IsPreDeploymentFailed() bool {
+	return v.Status.PreDeploymentStatus.IsFailed()
+}
+
 func (v KeptnAppVersion) IsPostDeploymentCompleted() bool {
 	return v.Status.PostDeploymentStatus.IsCompleted()
 }
 
+func (v KeptnAppVersion) IsPostDeploymentFailed() bool {
+	return v.Status.PostDeploymentStatus.IsFailed()
+}
+
+func (v KeptnAppVersion) IsPostDeploymentSucceeded() bool {
+	return v.Status.PostDeploymentStatus.IsSucceeded()
+}
+
 func (v KeptnAppVersion) AreWorkloadsCompleted() bool {
 	return v.Status.WorkloadOverallStatus.IsCompleted()
+}
+
+func (v KeptnAppVersion) AreWorkloadsSucceeded() bool {
+	return v.Status.WorkloadOverallStatus.IsSucceeded()
+}
+
+func (v KeptnAppVersion) AreWorkloadsFailed() bool {
+	return v.Status.WorkloadOverallStatus.IsFailed()
 }

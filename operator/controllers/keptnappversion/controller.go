@@ -77,36 +77,64 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
 	}
 
-	if !appVersion.IsPreDeploymentCompleted() {
+	if !appVersion.IsPreDeploymentSucceeded() {
 		r.Log.Info("Pre deployment checks not finished")
-		err := r.reconcilePreDeployment(ctx, req, appVersion)
+		if appVersion.IsPreDeploymentFailed() {
+			r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentFailed", fmt.Sprintf("Application PreDeployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentNotFinished", fmt.Sprintf("Application Pre-Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		state, err := r.reconcilePreDeployment(ctx, req, appVersion)
 		if err != nil {
+			r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentReconcileErrored", fmt.Sprintf("Application Pre-Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 			r.Log.Error(err, "Error reconciling pre-deployment checks")
 			return ctrl.Result{Requeue: true}, err
+		}
+		if state.IsSucceeded() {
+			r.Recorder.Event(appVersion, "Normal", "AppPreDeploymentSucceeeded", fmt.Sprintf("Application Pre-Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	if !appVersion.AreWorkloadsCompleted() {
-		r.Log.Info("Workloads post deployments not finished")
-		err := r.reconcileWorkloads(ctx, appVersion)
+	if !appVersion.AreWorkloadsSucceeded() {
+		r.Log.Info("Workloads post deployments not succeeded")
+		if appVersion.AreWorkloadsFailed() {
+			r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentFailed", fmt.Sprintf("Application Workload Deployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentNotFinished", fmt.Sprintf("Application Workload Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		state, err := r.reconcileWorkloads(ctx, appVersion)
 		if err != nil {
+			r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentReconcileErrored", fmt.Sprintf("Application Workload Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 			r.Log.Error(err, "Error reconciling workloads post deployments")
 			return ctrl.Result{Requeue: true}, err
+		}
+		if state.IsSucceeded() {
+			r.Recorder.Event(appVersion, "Normal", "AppWorkloadDeploymentSucceeeded", fmt.Sprintf("Application Workload Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	if !appVersion.IsPostDeploymentCompleted() {
-		r.Log.Info("Post deployment checks not finished")
-		err = r.reconcilePostDeployment(ctx, req, appVersion)
+	if !appVersion.IsPostDeploymentSucceeded() {
+		r.Log.Info("Post-Deployment checks not finished")
+		if appVersion.IsPostDeploymentFailed() {
+			r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentFailed", fmt.Sprintf("Application Post-Deployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentNotFinished", fmt.Sprintf("Application Post-Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		state, err := r.reconcilePostDeployment(ctx, appVersion)
 		if err != nil {
+			r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentReconcileErrored", fmt.Sprintf("Application Post-Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 			r.Log.Error(err, "Error reconciling post-deployment checks")
 			return ctrl.Result{Requeue: true}, err
+		}
+		if state.IsSucceeded() {
+			r.Recorder.Event(appVersion, "Normal", "AppPostDeploymentSucceeeded", fmt.Sprintf("Application Post-Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
+	r.Recorder.Event(appVersion, "Normal", "AppPostDeploymentFinished", fmt.Sprintf("Application Post-Deployment is finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
 	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
@@ -166,6 +194,7 @@ func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkTy
 		statuses = appVersion.Status.PostDeploymentTaskStatus
 	}
 	var summary common.StatusSummary
+	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
@@ -210,7 +239,7 @@ func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkTy
 	}
 
 	for _, ns := range newStatus {
-		summary.UpdateStatusSummary(ns.Status)
+		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
 	return newStatus, summary, nil
 }

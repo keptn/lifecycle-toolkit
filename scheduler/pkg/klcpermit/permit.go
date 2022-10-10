@@ -17,7 +17,7 @@ const (
 	PluginName = "KLCPermit"
 )
 
-// Permit is a plugin that waits for pre-deployment checks
+// Permit is a plugin that waits for pre-deployment checks to be successfully finished
 type Permit struct {
 	handler         framework.Handle
 	workloadManager *WorkloadManager

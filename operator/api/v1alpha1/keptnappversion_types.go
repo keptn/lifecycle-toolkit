@@ -51,8 +51,8 @@ type KeptnAppVersionStatus struct {
 //+kubebuilder:subresource:status
 
 type WorkloadStatus struct {
-	Workload KeptnWorkloadRef
-	status   common.KeptnState
+	Workload KeptnWorkloadRef  `json:"workload,omitempty"`
+	Status   common.KeptnState `json:"status,omitempty"`
 }
 
 // KeptnAppVersion is the Schema for the keptnappversions API

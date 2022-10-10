@@ -35,16 +35,112 @@ spec:
           spec:
             description: KeptnAppVersionSpec defines the desired state of KeptnAppVersion
             properties:
-              foo:
-                description: Foo is an example field of KeptnAppVersion. Edit keptnappversion_types.go
-                  to remove/update
+              appName:
                 type: string
+              postDeploymentAnalysis:
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              preDeploymentAnalysis:
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              version:
+                type: string
+              workloads:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    version:
+                      type: string
+                  required:
+                  - name
+                  - version
+                  type: object
+                type: array
+            required:
+            - appName
+            - version
             type: object
           status:
             description: KeptnAppVersionStatus defines the observed state of KeptnAppVersion
+            properties:
+              endTime:
+                format: date-time
+                type: string
+              postDeploymentStatus:
+                default: Pending
+                type: string
+              postDeploymentTaskStatus:
+                items:
+                  properties:
+                    TaskDefinitionName:
+                      type: string
+                    endTime:
+                      format: date-time
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
+                    status:
+                      type: string
+                    taskName:
+                      type: string
+                  type: object
+                type: array
+              preDeploymentStatus:
+                default: Pending
+                type: string
+              preDeploymentTaskStatus:
+                items:
+                  properties:
+                    TaskDefinitionName:
+                      type: string
+                    endTime:
+                      format: date-time
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
+                    status:
+                      type: string
+                    taskName:
+                      type: string
+                  type: object
+                type: array
+              startTime:
+                format: date-time
+                type: string
+              workloadOverallStatus:
+                default: Pending
+                type: string
+              workloadStatus:
+                items:
+                  properties:
+                    status:
+                      type: string
+                    workload:
+                      properties:
+                        name:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - name
+                      - version
+                      type: object
+                  type: object
+                type: array
             type: object
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}

@@ -14,7 +14,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Co
 	if err != nil {
 		return err
 	}
-	workloadInstance.Status.PostDeploymentStatus = getOverallState(postDeploymentState)
+	workloadInstance.Status.PostDeploymentStatus = common.GetOverallState(postDeploymentState)
 	workloadInstance.Status.PostDeploymentTaskStatus = newStatus
 
 	// Write Status Field

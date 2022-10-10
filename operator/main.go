@@ -252,8 +252,10 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnappversion.KeptnAppVersionReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)

@@ -29,9 +29,9 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload"`
-	WorkloadVersion  string           `json:"workloadVersion"`
-	AppName          string           `json:"app"`
+	Workload         string           `json:"workload,omitempty"` //TODO make autofill logic
+	Version          string           `json:"version"`
+	AppName          string           `json:"app,omitempty"` //TODO make autofill logic
 	TaskDefinition   string           `json:"taskDefinition"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
@@ -110,7 +110,7 @@ func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.ApplicationName.String(i.Spec.AppName),
 		common.Workload.String(i.Spec.Workload),
-		common.Version.String(i.Spec.WorkloadVersion),
+		common.Version.String(i.Spec.Version),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 	}
@@ -120,7 +120,7 @@ func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.ApplicationName.String(i.Spec.AppName),
 		common.Workload.String(i.Spec.Workload),
-		common.Version.String(i.Spec.WorkloadVersion),
+		common.Version.String(i.Spec.Version),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 		common.TaskStatus.String(string(i.Status.Status)),

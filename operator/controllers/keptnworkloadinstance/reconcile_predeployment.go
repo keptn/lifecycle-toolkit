@@ -13,7 +13,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePreDeployment(ctx context.Con
 	if err != nil {
 		return err
 	}
-	workloadInstance.Status.PreDeploymentStatus = getOverallState(preDeploymentState)
+	workloadInstance.Status.PreDeploymentStatus = common.GetOverallState(preDeploymentState)
 	workloadInstance.Status.PreDeploymentTaskStatus = newStatus
 
 	// Write Status Field

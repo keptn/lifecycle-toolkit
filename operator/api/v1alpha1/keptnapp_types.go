@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strings"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -65,4 +67,8 @@ type KeptnAppList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
+}
+
+func (w KeptnApp) GetAppVersionName() string {
+	return strings.ToLower(w.Name + "-" + w.Spec.Version)
 }

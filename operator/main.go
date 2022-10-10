@@ -20,9 +20,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 	"log"
 	"net/http"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
@@ -220,8 +221,11 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnapp.KeptnAppReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnApp Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
+		Tracer:   otel.Tracer("keptn/operator/app"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)

@@ -69,15 +69,13 @@ spec:
                 type: object
               taskDefinition:
                 type: string
+              version:
+                type: string
               workload:
                 type: string
-              workloadVersion:
-                type: string
             required:
-            - app
             - taskDefinition
-            - workload
-            - workloadVersion
+            - version
             type: object
           status:
             description: KeptnTaskStatus defines the observed state of KeptnTask

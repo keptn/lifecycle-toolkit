@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"math/rand"
 
 	"go.opentelemetry.io/otel/attribute"
@@ -104,19 +103,6 @@ const (
 	TaskName         attribute.Key = attribute.Key("keptn.deployment.task.name")
 	TaskType         attribute.Key = attribute.Key("keptn.deployment.taks.type")
 )
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             StatePending,
-		TaskName:           "",
-	}
-}
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
 	randomId := rand.Intn(99999-10000) + 10000

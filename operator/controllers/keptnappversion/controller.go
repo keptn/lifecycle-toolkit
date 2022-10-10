@@ -19,6 +19,8 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-logr/logr"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel"
@@ -29,7 +31,6 @@ import (
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -168,7 +169,7 @@ func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkTy
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
-		taskStatus := common.GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
@@ -212,4 +213,17 @@ func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkTy
 		summary.UpdateStatusSummary(ns.Status)
 	}
 	return newStatus, summary, nil
+}
+
+func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
+	for _, status := range instanceStatus {
+		if status.TaskDefinitionName == taskName {
+			return status
+		}
+	}
+	return klcv1alpha1.TaskStatus{
+		TaskDefinitionName: taskName,
+		Status:             common.StatePending,
+		TaskName:           "",
+	}
 }

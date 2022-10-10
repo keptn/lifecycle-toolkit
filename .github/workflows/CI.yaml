@@ -158,9 +158,6 @@ jobs:
       with:
           install: true
 
-    - name: Debug output
-      run: ls -la /tmp/
-
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
@@ -173,9 +170,9 @@ jobs:
       with:
         path: /tmp/.buildx-cache
         # Key is named differently to avoid collision
-        key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+        key: ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-multi-buildx
+          ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}
 
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}

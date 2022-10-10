@@ -25,29 +25,26 @@ import (
 
 // SloSpec defines the desired state of Slo
 type SloSpec struct {
-	Comparison SloComparison `json:"comparison"`
-	Filter     SloFilter     `json:"filter,omitempty"`
-	Objectives []Objective   `json:"objectives"`
-	TotalScore SloTotalScore `json:"total_score"`
+	Comparison SloComparison     `json:"comparison"`
+	Filter     map[string]string `json:"filter"`
+	Objectives []Objective       `json:"objectives"`
+	TotalScore SloTotalScore     `json:"total_score"`
 }
 
 type SloComparison struct {
-	AggregateFunction         string `json:"aggregate_function"`
-	CompareWith               string `json:"compare_with"`
-	IncludeResultWithScore    string `json:"include_result_with_score"`
-	NumberOfComparisonResults int    `json:"number_of_comparison_results"`
-}
-
-type SloFilter struct {
+	AggregateFunction         string `json:"aggregate_function,omitempty"`
+	CompareWith               string `json:"compare_with,omitempty"`
+	IncludeResultWithScore    string `json:"include_result_with_score,omitempty"`
+	NumberOfComparisonResults int    `json:"number_of_comparison_results,omitempty"`
 }
 
 type Objective struct {
 	Sli             string   `json:"sli"`
-	Name            string   `json:"displayName"`
-	KeySli          bool     `json:"key_sli"`
+	Name            string   `json:"displayName,omitempty"`
+	KeySli          bool     `json:"key_sli,omitempty"`
 	PassCriteria    Criteria `json:"pass"`
-	WarningCriteria Criteria `json:"warning"`
-	Weight          int      `json:"weight"`
+	WarningCriteria Criteria `json:"warning,omitempty"`
+	Weight          int      `json:"weight,omitempty"`
 }
 
 type StringList []string

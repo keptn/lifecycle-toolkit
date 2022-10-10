@@ -45,13 +45,10 @@ spec:
                     type: string
                   number_of_comparison_results:
                     type: integer
-                required:
-                - aggregate_function
-                - compare_with
-                - include_result_with_score
-                - number_of_comparison_results
                 type: object
               filter:
+                additionalProperties:
+                  type: string
                 type: object
               objectives:
                 items:
@@ -83,12 +80,8 @@ spec:
                     weight:
                       type: integer
                   required:
-                  - displayName
-                  - key_sli
                   - pass
                   - sli
-                  - warning
-                  - weight
                   type: object
                 type: array
               total_score:
@@ -103,6 +96,7 @@ spec:
                 type: object
             required:
             - comparison
+            - filter
             - objectives
             - total_score
             type: object

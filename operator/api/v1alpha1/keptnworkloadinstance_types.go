@@ -40,14 +40,14 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
-	StartTime                metav1.Time          `json:"startTime,omitempty"`
-	EndTime                  metav1.Time          `json:"endTime,omitempty"`
+	PostDeploymentStatus     common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus  []TaskStatus      `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []TaskStatus      `json:"postDeploymentTaskStatus,omitempty"`
+	StartTime                metav1.Time       `json:"startTime,omitempty"`
+	EndTime                  metav1.Time       `json:"endTime,omitempty"`
 }
 
-type WorkloadTaskStatus struct {
+type TaskStatus struct {
 	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
 	Status             common.KeptnState `json:"status,omitempty"`
 	TaskName           string            `json:"taskName,omitempty"`
@@ -118,13 +118,13 @@ func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
 	return !i.Status.EndTime.IsZero()
 }
 
-func (i *WorkloadTaskStatus) SetStartTime() {
+func (i *TaskStatus) SetStartTime() {
 	if i.StartTime.IsZero() {
 		i.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *WorkloadTaskStatus) SetEndTime() {
+func (i *TaskStatus) SetEndTime() {
 	if i.EndTime.IsZero() {
 		i.EndTime = metav1.NewTime(time.Now().UTC())
 	}

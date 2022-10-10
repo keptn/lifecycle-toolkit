@@ -186,13 +186,13 @@ func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.WorkloadTaskStatus) klcv1alpha1.WorkloadTaskStatus {
+func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
 	for _, status := range instanceStatus {
 		if status.TaskDefinitionName == taskName {
 			return status
 		}
 	}
-	return klcv1alpha1.WorkloadTaskStatus{
+	return klcv1alpha1.TaskStatus{
 		TaskDefinitionName: taskName,
 		Status:             common.StatePending,
 		TaskName:           "",
@@ -281,7 +281,7 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	return newTask.Name, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.WorkloadTaskStatus, StatusSummary, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.TaskStatus, StatusSummary, error) {
 	tasks := workloadInstance.Spec.PreDeploymentTasks
 	statuses := workloadInstance.Status.PreDeploymentTaskStatus
 	if checkType == common.PostDeploymentCheckType {
@@ -290,7 +290,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 	}
 	var summary StatusSummary
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha1.WorkloadTaskStatus
+	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
 		taskStatus := r.getTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}

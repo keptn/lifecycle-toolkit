@@ -24,7 +24,6 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	"math/rand"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -46,13 +45,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-type StatusSummary struct {
-	failed    int
-	succeeded int
-	running   int
-	pending   int
-}
 
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
@@ -186,19 +178,6 @@ func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
-}
-
 func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, taskName string, namespace string) (*klcv1alpha1.KeptnTask, error) {
 	task := &klcv1alpha1.KeptnTask{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: namespace}, task)
@@ -206,38 +185,6 @@ func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, task
 		return task, err
 	}
 	return task, nil
-}
-
-func updateStatusSummary(status common.KeptnState, summary StatusSummary) StatusSummary {
-	switch status {
-	case common.StateFailed:
-		summary.failed++
-	case common.StateSucceeded:
-		summary.succeeded++
-	case common.StateRunning:
-		summary.running++
-	case common.StatePending, "":
-		summary.pending++
-	}
-	return summary
-}
-
-func getOverallState(summary StatusSummary) common.KeptnState {
-	if summary.failed > 0 {
-		return common.StateFailed
-	}
-	if summary.pending > 0 {
-		return common.StatePending
-	}
-	if summary.running > 0 {
-		return common.StateRunning
-	}
-	return common.StateSucceeded
-}
-
-func generateTaskName(checkType common.CheckType, taskName string) string {
-	randomId := rand.Intn(99999-10000) + 10000
-	return fmt.Sprintf("%s-%s-%d", checkType, common.TruncateString(taskName, 32), randomId)
 }
 
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
@@ -252,13 +199,12 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        generateTaskName(checkType, taskDefinition),
+			Name:        common.GenerateTaskName(checkType, taskDefinition),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
-			Workload:         workloadInstance.Spec.WorkloadName,
-			WorkloadVersion:  workloadInstance.Spec.Version,
+			Version:          workloadInstance.Spec.Version,
 			AppName:          workloadInstance.Spec.AppName,
 			TaskDefinition:   taskDefinition,
 			Parameters:       klcv1alpha1.TaskParameters{},
@@ -281,18 +227,18 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	return newTask.Name, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.TaskStatus, StatusSummary, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.TaskStatus, common.StatusSummary, error) {
 	tasks := workloadInstance.Spec.PreDeploymentTasks
 	statuses := workloadInstance.Status.PreDeploymentTaskStatus
 	if checkType == common.PostDeploymentCheckType {
 		tasks = workloadInstance.Spec.PostDeploymentTasks
 		statuses = workloadInstance.Status.PostDeploymentTaskStatus
 	}
-	var summary StatusSummary
+	var summary common.StatusSummary
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
-		taskStatus := r.getTaskStatus(taskDefinitionName, statuses)
+		taskStatus := common.GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
@@ -333,7 +279,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 	}
 
 	for _, ns := range newStatus {
-		summary = updateStatusSummary(ns.Status, summary)
+		summary.UpdateStatusSummary(ns.Status)
 	}
 	return newStatus, summary, nil
 }

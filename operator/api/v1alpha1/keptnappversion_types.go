@@ -83,3 +83,15 @@ type KeptnAppVersionList struct {
 func init() {
 	SchemeBuilder.Register(&KeptnAppVersion{}, &KeptnAppVersionList{})
 }
+
+func (v KeptnAppVersion) IsPreDeploymentCompleted() bool {
+	return v.Status.PreDeploymentStatus.IsCompleted()
+}
+
+func (v KeptnAppVersion) IsPostDeploymentCompleted() bool {
+	return v.Status.PostDeploymentStatus.IsCompleted()
+}
+
+func (v KeptnAppVersion) AreWorkloadsCompleted() bool {
+	return v.Status.WorkloadOverallStatus.IsCompleted()
+}

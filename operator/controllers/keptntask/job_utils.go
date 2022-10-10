@@ -122,7 +122,7 @@ func createKeptnLabels(task klcv1alpha1.KeptnTask) map[string]string {
 	return map[string]string{
 		common.AppAnnotation:      task.Spec.AppName,
 		common.WorkloadAnnotation: task.Spec.Workload,
-		common.VersionAnnotation:  task.Spec.WorkloadVersion,
+		common.VersionAnnotation:  task.Spec.Version,
 		common.TaskNameAnnotation: task.Name,
 	}
 }

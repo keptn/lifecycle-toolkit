@@ -19,12 +19,13 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
@@ -238,7 +239,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
-		taskStatus := common.GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
@@ -282,4 +283,17 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 		summary.UpdateStatusSummary(ns.Status)
 	}
 	return newStatus, summary, nil
+}
+
+func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
+	for _, status := range instanceStatus {
+		if status.TaskDefinitionName == taskName {
+			return status
+		}
+	}
+	return klcv1alpha1.TaskStatus{
+		TaskDefinitionName: taskName,
+		Status:             common.StatePending,
+		TaskName:           "",
+	}
 }

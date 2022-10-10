@@ -4,6 +4,7 @@ import (
 	"context"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 )
 
@@ -14,8 +15,10 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	var newStatus []klcv1alpha1.WorkloadStatus
 	for _, w := range appVersion.Spec.Workloads {
 		workload, err := r.getWorkload(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
-		if err != nil {
-			return err
+		if err != nil && errors.IsNotFound(err) {
+			workload.Status.PreDeploymentStatus = common.StatePending
+		} else if err != nil {
+			workload.Status.PreDeploymentStatus = common.StateUnknown
 		}
 		workloadStatus := workload.Status.PostDeploymentStatus
 

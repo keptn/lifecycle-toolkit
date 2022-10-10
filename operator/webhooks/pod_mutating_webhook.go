@@ -70,6 +70,19 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
+		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
+		if err != nil {
+			span.SetStatus(codes.Error, "Invalid annotations")
+			return admission.Errored(http.StatusBadRequest, err)
+		}
+		if !isAppAnnotationPresent {
+			if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
+				logger.Error(err, "Could not handle App")
+				span.SetStatus(codes.Error, err.Error())
+				return admission.Errored(http.StatusBadRequest, err)
+			}
+		}
+
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 
 		logger.Info("Attributes from annotations set")
@@ -100,20 +113,34 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 }
 
 func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
 	workload, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
 	version, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
 
-	if len(app) > common.MaxAppNameLength || len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, common.ErrTooLongAnnotations
 	}
 
-	if gotAppAnnotation && gotWorkloadAnnotation {
+	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
 		}
 		return true, nil
 	}
+	return false, nil
+}
+
+func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
+	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
+
+	if len(app) > common.MaxAppNameLength {
+		return false, common.ErrTooLongAnnotations
+	}
+
+	if gotAppAnnotation {
+		return true, nil
+	}
+
+	pod.Annotations[common.AppAnnotation] = pod.Annotations[common.WorkloadAnnotation]
 	return false, nil
 }
 
@@ -165,7 +192,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
+		return fmt.Errorf("could not fetch Workload"+": %+v", err)
 	}
 
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
@@ -186,6 +213,68 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	k8sEvent := a.generateK8sEvent(workload, "updated")
 	if err := a.Client.Create(ctx, k8sEvent); err != nil {
 		logger.Error(err, "Could not send workload updated K8s event")
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+
+	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newApp := a.generateApp(ctx, pod, namespace)
+
+	semconv.AddAttributeFromApp(span, *newApp)
+
+	logger.Info("Searching for app")
+
+	app := &klcv1alpha1.KeptnApp{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, app)
+	if errors.IsNotFound(err) {
+		logger.Info("Creating app", "app", app.Name)
+		app = newApp
+		err = a.Client.Create(ctx, app)
+		if err != nil {
+			logger.Error(err, "Could not create App")
+			span.SetStatus(codes.Error, err.Error())
+			return err
+		}
+
+		k8sEvent := a.generateK8sEventApp(app, "created")
+		if err := a.Client.Create(ctx, k8sEvent); err != nil {
+			logger.Error(err, "Could not send app created K8s event")
+			span.SetStatus(codes.Error, err.Error())
+			return err
+		}
+		return nil
+	}
+
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return fmt.Errorf("could not fetch App"+": %+v", err)
+	}
+
+	if reflect.DeepEqual(app.Spec, newApp.Spec) {
+		logger.Info("Pod not changed, not updating anything")
+		return nil
+	}
+
+	logger.Info("Pod changed, updating app")
+	app.Spec = newApp.Spec
+
+	err = a.Client.Update(ctx, app)
+	if err != nil {
+		logger.Error(err, "Could not update App")
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	k8sEvent := a.generateK8sEventApp(app, "updated")
+	if err := a.Client.Create(ctx, k8sEvent); err != nil {
+		logger.Error(err, "Could not send app updated K8s event")
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
@@ -241,6 +330,51 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 }
 
+func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
+	version, _ := pod.Annotations[common.VersionAnnotation]
+
+	var preDeploymentTasks []string
+	var postDeploymentTasks []string
+	var preDeploymentAnalysis []string
+	var postDeploymentAnalysis []string
+
+	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
+		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
+		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
+		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	}
+
+	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
+		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	}
+
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	return &klcv1alpha1.KeptnApp{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        a.getAppName(pod),
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: klcv1alpha1.KeptnAppSpec{
+			Version:                version,
+			PreDeploymentTasks:     preDeploymentTasks,
+			PostDeploymentTasks:    postDeploymentTasks,
+			PreDeploymentAnalysis:  preDeploymentAnalysis,
+			PostDeploymentAnalysis: postDeploymentAnalysis,
+		},
+	}
+}
+
 func (a *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, eventType string) *corev1.Event {
 	return &corev1.Event{
 		ObjectMeta: metav1.ObjectMeta{
@@ -278,10 +412,51 @@ func (a *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkloa
 	}
 }
 
+func (a *PodMutatingWebhook) generateK8sEventApp(app *klcv1alpha1.KeptnApp, eventType string) *corev1.Event {
+	return &corev1.Event{
+		ObjectMeta: metav1.ObjectMeta{
+			GenerateName:    app.Name + "-" + eventType + "-",
+			Namespace:       app.Namespace,
+			ResourceVersion: "v1alpha1",
+			Labels: map[string]string{
+				common.AppAnnotation: app.Name,
+			},
+		},
+		InvolvedObject: corev1.ObjectReference{
+			Kind:      app.Kind,
+			Namespace: app.Namespace,
+			Name:      app.Name,
+		},
+		Reason:  eventType,
+		Message: "App " + app.Name + " was " + eventType,
+		Source: corev1.EventSource{
+			Component: app.Kind,
+		},
+		Type: "Normal",
+		EventTime: metav1.MicroTime{
+			Time: time.Now().UTC(),
+		},
+		FirstTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		LastTimestamp: metav1.Time{
+			Time: time.Now().UTC(),
+		},
+		Action:              eventType,
+		ReportingController: "webhook",
+		ReportingInstance:   "webhook",
+	}
+}
+
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 	return strings.ToLower(applicationName + "-" + workloadName)
+}
+
+func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
+	applicationName, _ := pod.Annotations[common.AppAnnotation]
+	return strings.ToLower(applicationName)
 }
 
 func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {

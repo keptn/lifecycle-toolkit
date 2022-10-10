@@ -61,15 +61,25 @@ spec:
                     key_sli:
                       type: boolean
                     pass:
-                      items:
-                        type: string
-                      type: array
+                      properties:
+                        criteria:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - criteria
+                      type: object
                     sli:
                       type: string
                     warning:
-                      items:
-                        type: string
-                      type: array
+                      properties:
+                        criteria:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - criteria
+                      type: object
                   required:
                   - displayName
                   - key_sli

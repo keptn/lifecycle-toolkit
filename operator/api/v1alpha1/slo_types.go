@@ -49,10 +49,10 @@ type Objective struct {
 	WarningCriteria Criteria `json:"warning"`
 }
 
-type Criterium []string
+type StringList []string
 
 type Criteria struct {
-	Criterium `json:",inline"`
+	StringList `json:"criteria"`
 }
 
 type SloTotalScore struct {

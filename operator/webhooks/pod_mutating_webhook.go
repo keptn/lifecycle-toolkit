@@ -132,11 +132,10 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
 	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
 
-	if len(app) > common.MaxAppNameLength {
-		return false, common.ErrTooLongAnnotations
-	}
-
 	if gotAppAnnotation {
+		if len(app) > common.MaxAppNameLength {
+			return false, common.ErrTooLongAnnotations
+		}
 		return true, nil
 	}
 
@@ -232,7 +231,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	logger.Info("Searching for app")
 
 	app := &klcv1alpha1.KeptnApp{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, app)
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getAppName(pod)}, app)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating app", "app", app.Name)
 		app = newApp

@@ -268,13 +268,13 @@ kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 Instead, if you want to build and deploy the operator into your cluster directly from the code, you can type:
 
 ```bash
-DOCKER_REGISTRY=<YOUR_DOCKER_REGISTRY>
-DOCKER_TAG=<YOUR_DOCKER_TAG>
+RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
+# (optional)ARCH=<amd64(default)|arm64v8>
+# (optional)TAG=<YOUR_PREFERRED_TAG (defaulting to current time)>
 
-cd operator
+# Build and deploy the dev images to the current kubernetes cluster
+make build-deploy-dev-environment
 
-make docker-build docker-push IMG=${DOCKER_REGISTRY}/${DOCKER_TAG}:latest
-make deploy IMG=${DOCKER_REGISTRY}/${DOCKER_TAG}:latest
 ```
 
 

@@ -17,3 +17,7 @@
 .idea
 
 .dccache*
+
+manifests/
+/scheduler/config/rendered/release.yaml
+/operator/config/rendered/release.yaml

@@ -1,0 +1,20 @@
+# permissions for end users to view sloes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: slo-viewer-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes/status
+  verbs:
+  - get

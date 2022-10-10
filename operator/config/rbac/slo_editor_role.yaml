@@ -1,0 +1,24 @@
+# permissions for end users to edit sloes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: slo-editor-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sloes/status
+  verbs:
+  - get

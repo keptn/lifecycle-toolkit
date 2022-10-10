@@ -15,7 +15,11 @@ spec:
     singular: keptnappversion
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KeptnAppVersion is the Schema for the keptnappversions API
@@ -144,3 +148,5 @@ spec:
         type: object
     served: true
     storage: true
+    subresources:
+      status: {}

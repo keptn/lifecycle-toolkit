@@ -26,21 +26,38 @@ import (
 // SloSpec defines the desired state of Slo
 type SloSpec struct {
 	Comparison SloComparison `json:"comparison"`
-	Filter     SloFilter     `json:"filter"`
+	Filter     SloFilter     `json:"filter,omitempty"`
 	Objectives []Objective   `json:"objectives"`
 	TotalScore SloTotalScore `json:"total_score"`
 }
 
 type SloComparison struct {
+	AggregateFunction         string `json:"aggregate_function"`
+	CompareWith               string `json:"compare_with"`
+	IncludeResultWithScore    string `json:"include_result_with_score"`
+	NumberOfComparisonResults int    `json:"number_of_comparison_results"`
 }
 
 type SloFilter struct {
 }
 
 type Objective struct {
+	Sli             string   `json:"sli"`
+	Name            string   `json:"displayName"`
+	KeySli          bool     `json:"key_sli"`
+	PassCriteria    Criteria `json:"pass"`
+	WarningCriteria Criteria `json:"warning"`
+}
+
+type Criterium []string
+
+type Criteria struct {
+	Criterium `json:",inline"`
 }
 
 type SloTotalScore struct {
+	Pass    string `json:"pass"`
+	Warning string `json:"warning"`
 }
 
 // SloStatus defines the observed state of Slo

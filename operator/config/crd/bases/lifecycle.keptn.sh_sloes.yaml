@@ -36,18 +36,60 @@ spec:
             description: SloSpec defines the desired state of Slo
             properties:
               comparison:
+                properties:
+                  aggregate_function:
+                    type: string
+                  compare_with:
+                    type: string
+                  include_result_with_score:
+                    type: string
+                  number_of_comparison_results:
+                    type: integer
+                required:
+                - aggregate_function
+                - compare_with
+                - include_result_with_score
+                - number_of_comparison_results
                 type: object
               filter:
                 type: object
               objectives:
                 items:
+                  properties:
+                    displayName:
+                      type: string
+                    key_sli:
+                      type: boolean
+                    pass:
+                      items:
+                        type: string
+                      type: array
+                    sli:
+                      type: string
+                    warning:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - displayName
+                  - key_sli
+                  - pass
+                  - sli
+                  - warning
                   type: object
                 type: array
               total_score:
+                properties:
+                  pass:
+                    type: string
+                  warning:
+                    type: string
+                required:
+                - pass
+                - warning
                 type: object
             required:
             - comparison
-            - filter
             - objectives
             - total_score
             type: object

@@ -34,6 +34,7 @@ import (
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/slo"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -63,7 +64,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
@@ -247,7 +247,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
-	if err = (&controllers.SloReconciler{
+	if err = (&slo.SloReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

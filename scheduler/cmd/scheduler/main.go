@@ -40,7 +40,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 	command := app.NewSchedulerCommand(
-		app.WithPlugin(klcpermit.Name, klcpermit.New),
+		app.WithPlugin(klcpermit.PluginName, klcpermit.New),
 	)
 
 	code := cli.Run(command)

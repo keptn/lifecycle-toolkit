@@ -12,12 +12,12 @@ import (
 	"k8s.io/kubernetes/pkg/scheduler/framework"
 )
 
-// Name is the name of the plugin used in the plugin registry and configurations.
+// PluginName is the name of the plugin used in the plugin registry and configurations.
 const (
-	Name = "KLCPermit"
+	PluginName = "KLCPermit"
 )
 
-// Permit is a plugin that implements a wait for pre-deployment checks
+// Permit is a plugin that waits for pre-deployment checks to be successfully finished
 type Permit struct {
 	handler         framework.Handle
 	workloadManager *WorkloadManager
@@ -25,29 +25,46 @@ type Permit struct {
 
 var _ framework.PermitPlugin = &Permit{}
 
-// Name returns name of the plugin.
+// PluginName returns name of the plugin.
 func (pl *Permit) Name() string {
-	return Name
+	return PluginName
 }
 
 func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (*framework.Status, time.Duration) {
 
-	klog.InfoS("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
+	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
 
+	// check the permit immediately, to fail early in case the pod cannot be queued
 	switch pl.workloadManager.Permit(ctx, p) {
 
-	case Wait:
-		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 30 * time.Second
 	case Failure:
-		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on %s", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Error), 0 * time.Second
 	case Success:
-		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on %s", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
-		klog.Infof("[Keptn Permit Plugin] unknown status of pre-deployment checks for", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Wait), 30 * time.Second
+		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
+		go pl.monitorPod(ctx, p)
+		return framework.NewStatus(framework.Wait), 5 * time.Minute
+	}
+
+}
+
+func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
+	waitingPodHandler := pl.handler.GetWaitingPod(p.UID)
+
+	for {
+		switch pl.workloadManager.Permit(ctx, p) {
+		case Failure:
+			waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
+			return
+		case Success:
+			waitingPodHandler.Allow(PluginName)
+			return
+		default:
+			time.Sleep(10 * time.Second)
+		}
 	}
 
 }

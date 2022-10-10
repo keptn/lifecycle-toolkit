@@ -309,7 +309,7 @@ func newStdOutExporter() (trace.SpanExporter, error) {
 }
 
 func newOTelExporter(env envConfig) (trace.SpanExporter, error) {
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
 	defer cancel()
 	conn, err := grpc.DialContext(ctx, env.OTelCollectorURL, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 	if err != nil {

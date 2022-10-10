@@ -123,7 +123,7 @@ func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha1.KeptnApp) (*klcv1alpha1.KeptnAppVersion, error) {
-	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
 	semconv.AddAttributeFromApp(span, *app)

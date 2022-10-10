@@ -332,27 +332,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 
 func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
 	version, _ := pod.Annotations[common.VersionAnnotation]
-
-	var preDeploymentTasks []string
-	var postDeploymentTasks []string
-	var preDeploymentAnalysis []string
-	var postDeploymentAnalysis []string
-
-	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
-		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
-	}
-
-	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
-		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
-	}
-
-	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
-		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
-	}
-
-	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
-		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
-	}
+	appName := a.getAppName(pod)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
@@ -361,16 +341,22 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 
 	return &klcv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        a.getAppName(pod),
+			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
 			Version:                version,
-			PreDeploymentTasks:     preDeploymentTasks,
-			PostDeploymentTasks:    postDeploymentTasks,
-			PreDeploymentAnalysis:  preDeploymentAnalysis,
-			PostDeploymentAnalysis: postDeploymentAnalysis,
+			PreDeploymentTasks:     []string{},
+			PostDeploymentTasks:    []string{},
+			PreDeploymentAnalysis:  []string{},
+			PostDeploymentAnalysis: []string{},
+			Workloads: []klcv1alpha1.KeptnWorkloadRef{
+				{
+					Name:    appName,
+					Version: version,
+				},
+			},
 		},
 	}
 }

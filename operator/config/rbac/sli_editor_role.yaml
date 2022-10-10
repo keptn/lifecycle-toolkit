@@ -1,0 +1,24 @@
+# permissions for end users to edit sli.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sli-editor-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sli
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sli/status
+  verbs:
+  - get

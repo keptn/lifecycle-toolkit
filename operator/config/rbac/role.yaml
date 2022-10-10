@@ -188,3 +188,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sli
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sli/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - sli/status
+  verbs:
+  - get
+  - patch
+  - update

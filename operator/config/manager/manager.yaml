@@ -44,7 +44,7 @@ spec:
         name: manager
         imagePullPolicy: Always
         env:
-          - name: OPEN_TELEMETRY_COLLECTOR_URL
+          - name: OTEL_COLLECTOR_URL
             value: otel-collector:4317
         securityContext:
           allowPrivilegeEscalation: false

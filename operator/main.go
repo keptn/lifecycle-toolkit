@@ -86,7 +86,7 @@ func init() {
 }
 
 type envConfig struct {
-	OTelCollectorURL string `envconfig:"OPEN_TELEMETRY_COLLECTOR_URL" default:""`
+	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 func main() {

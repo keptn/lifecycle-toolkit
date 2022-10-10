@@ -43,6 +43,9 @@ spec:
         image: controller:latest
         name: manager
         imagePullPolicy: Always
+        env:
+          - name: OTEL_SDK_DISABLED
+            value: "true"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

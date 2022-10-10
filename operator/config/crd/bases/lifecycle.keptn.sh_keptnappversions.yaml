@@ -19,6 +19,24 @@ spec:
     - jsonPath: .spec.app
       name: AppName
       type: string
+    - jsonPath: .spec.workloadName
+      name: Workload
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .status.preDeploymentStatus
+      name: PreDeploymentStatus
+      type: string
+    - jsonPath: .status.workloadStatus
+      name: WorkloadStatus
+      type: string
+    - jsonPath: .status.workloadOverallStatus
+      name: WorkloadOverallStatus
+      type: string
+    - jsonPath: .status.postDeploymentStatus
+      name: PostDeploymentStatus
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -96,6 +114,7 @@ spec:
                       format: date-time
                       type: string
                     status:
+                      default: Pending
                       type: string
                     taskName:
                       type: string
@@ -116,6 +135,7 @@ spec:
                       format: date-time
                       type: string
                     status:
+                      default: Pending
                       type: string
                     taskName:
                       type: string
@@ -131,6 +151,7 @@ spec:
                 items:
                   properties:
                     status:
+                      default: Pending
                       type: string
                     workload:
                       properties:

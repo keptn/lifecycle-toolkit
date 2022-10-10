@@ -8,24 +8,41 @@ TAG := $(TAG)
 RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
 ARCH?=amd64
 
-.PHONY: build-and-push-dev-images
-build-and-push-dev-images:
-	RELEASE_TAG=$(TAG)
+.PHONY: cleanup-manifests
+cleanup-manifests:
+	rm -rf manifests
+
+.PHONY: build-deploy-operator
+build-deploy-operator:
 	$(MAKE) -C operator release-local.$(ARCH) TAG=$(TAG)
-	$(MAKE) -C scheduler release-local.$(ARCH) TAG=$(TAG)
 	$(MAKE) -C operator push-local TAG=$(TAG)
+	$(MAKE) -C operator release-manifests TAG=$(TAG) ARCH=$(ARCH)
+	if [ ! -d manifests ]; then mkdir manifests; fi
+
+	kubectl apply -f operator/config/rendered/release.yaml
+
+
+.PHONY: build-deploy-scheduler
+build-deploy-scheduler:
+	$(MAKE) -C scheduler release-local.$(ARCH) TAG=$(TAG)
 	$(MAKE) -C scheduler push-local TAG=$(TAG)
+	$(MAKE) -C scheduler release-manifests TAG=$(TAG) ARCH=$(ARCH)
+	if [ ! -d manifests ]; then mkdir manifests; fi
+	kubectl create ns keptn-lifecycle-controller-system
+	kubectl apply -f scheduler/config/rendered/release.yaml
+	echo "---" >> manifests/dev.yaml
+
+.PHONY: build-deploy-dev-environment
 
 .PHONY: build-dev-manifests
 build-dev-manifests:
 	$(MAKE) -C operator release-manifests TAG=$(TAG) ARCH=$(ARCH)
 	$(MAKE) -C scheduler release-manifests TAG=$(TAG) ARCH=$(ARCH)
-	if [[ ! -d manifests ]]; then mkdir manifests; fi
+	if [ ! -d manifests ]; then mkdir manifests; fi
 	cat operator/config/rendered/release.yaml > manifests/dev.yaml
 	echo "---" >> manifests/dev.yaml
 	cat scheduler/config/rendered/release.yaml >> manifests/dev.yaml
 
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-and-push-dev-images build-dev-manifests
+build-deploy-dev-environment: build-deploy-operator build-deploy-scheduler
 	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
-	kubectl apply -f manifests/dev.yaml

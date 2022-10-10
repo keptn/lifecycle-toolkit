@@ -236,6 +236,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 		statuses = workloadInstance.Status.PostDeploymentTaskStatus
 	}
 	var summary common.StatusSummary
+	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
@@ -280,7 +281,10 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, c
 	}
 
 	for _, ns := range newStatus {
-		summary.UpdateStatusSummary(ns.Status)
+		summary = common.UpdateStatusSummary(ns.Status, summary)
+	}
+	if common.GetOverallState(summary) != common.StateSucceeded {
+		r.Recorder.Event(workloadInstance, "Warning", "TasksNotFinished", fmt.Sprintf("Tasks have not finished / Namespace: %s, Name: %s, Summary: %v ", workloadInstance.Namespace, workloadInstance.Name, summary))
 	}
 	return newStatus, summary, nil
 }

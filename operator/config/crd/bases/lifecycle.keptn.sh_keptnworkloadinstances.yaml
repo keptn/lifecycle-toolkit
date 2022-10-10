@@ -122,6 +122,7 @@ spec:
                       format: date-time
                       type: string
                     status:
+                      default: Pending
                       type: string
                     taskName:
                       type: string
@@ -142,6 +143,7 @@ spec:
                       format: date-time
                       type: string
                     status:
+                      default: Pending
                       type: string
                     taskName:
                       type: string

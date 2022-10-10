@@ -42,7 +42,7 @@ $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
 ## Tool Versions
-KUSTOMIZE_VERSION ?= v3.8.7
+KUSTOMIZE_VERSION ?= v4.2.0
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize

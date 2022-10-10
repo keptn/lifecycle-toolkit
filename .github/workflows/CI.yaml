@@ -182,11 +182,6 @@ jobs:
       run: |
         make release-image TAG=dev-${{ env.DATETIME }}
 
-    - name: Debug output
-      run: |
-        ls -la /var/lib/docker
-        ls -la /var/lib/docker/buildkit
-
     - name: Push Docker Images
       if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}

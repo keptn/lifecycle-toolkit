@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,21 +26,34 @@ import (
 
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of KeptnAppVersion. Edit keptnappversion_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	KeptnAppSpec `json:",inline"`
+	AppName      string `json:"appName"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
 type KeptnAppVersionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// +kubebuilder:default:=Pending
+	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"` // WLV watches this, Scheduler watches this?
+	// +kubebuilder:default:=Pending
+	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
+	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"` //Workload Instance post dep check
+
+	PreDeploymentTaskStatus  []TaskStatus `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []TaskStatus `json:"postDeploymentTaskStatus,omitempty"`
+
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	EndTime   metav1.Time `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+
+type WorkloadStatus struct {
+	Workload KeptnWorkloadRef
+	status   common.KeptnState
+}
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {

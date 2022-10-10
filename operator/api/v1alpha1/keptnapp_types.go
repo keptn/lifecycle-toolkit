@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,14 +25,21 @@ import (
 
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
-	Workloads           []KeptnWorkload `json:"workloads,omitempty"`
-	PreDeploymentTasks  []string        `json:"preDeploymentTasks,omitempty"`
-	PostDeploymentTasks []string        `json:"postDeploymentTasks,omitempty"`
+	Version                string             `json:"version"`
+	Workloads              []KeptnWorkloadRef `json:"workloads,omitempty"`
+	PreDeploymentTasks     []string           `json:"preDeploymentTasks,omitempty"`
+	PostDeploymentTasks    []string           `json:"postDeploymentTasks,omitempty"`
+	PreDeploymentAnalysis  []string           `json:"preDeploymentAnalysis,omitempty"`
+	PostDeploymentAnalysis []string           `json:"postDeploymentAnalysis,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
-	Status common.KeptnState `json:"status"`
+}
+
+type KeptnWorkloadRef struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
 }
 
 //+kubebuilder:object:root=true

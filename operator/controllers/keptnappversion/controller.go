@@ -156,7 +156,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{Requeue: true}, err
 		}
 		if state.IsSucceeded() {
-			r.recordEvent(phase, "Normal", appVersion, "Succeeeded", "has succeeded")
+			r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}

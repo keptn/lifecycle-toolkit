@@ -38,7 +38,7 @@ spec:
       labels:
         app: nginx
       annotations:
-        keptn.sh/app: "application12"
+        keptn.sh/version: 0.1.1
         keptn.sh/workload: "service-test"
         keptn.sh/pre-deployment-tasks: "hello-world,hello-world2"
         keptn.sh/post-deployment-tasks: "hello-world,hello-world2"

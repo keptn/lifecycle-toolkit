@@ -11,7 +11,7 @@ kind: Kustomization
 images:
 - name: controller
   newName: docker.io/thschue/keptn-lifecycle-operator
-  newTag: "202210111665501228"
+  newTag: "202210111665511714"
 patches:
 - patch: |-
     - op: add

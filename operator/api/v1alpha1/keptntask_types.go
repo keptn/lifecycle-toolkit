@@ -48,7 +48,8 @@ type SecureParameters struct {
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
-	JobName   string            `json:"jobName,omitempty"`
+	JobName string `json:"jobName,omitempty"`
+	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`

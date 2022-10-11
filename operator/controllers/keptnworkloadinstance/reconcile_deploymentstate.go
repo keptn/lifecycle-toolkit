@@ -23,12 +23,14 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 		}
 	}
 
-	isReplicaRunning, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	isReplicaRunning, count, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	if err != nil {
 		return common.StateUnknown, err
 	}
 	if isReplicaRunning {
 		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
+	} else if count > 0 {
+		workloadInstance.Status.DeploymentStatus = common.StateProgressing
 	}
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
@@ -38,24 +40,24 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, int32, error) {
 	replica := &appsv1.ReplicaSetList{}
 	if err := r.Client.List(ctx, replica, client.InNamespace(namespace)); err != nil {
-		return false, err
+		return false, 0, err
 	}
 	for _, re := range replica.Items {
 		if re.UID == resource.UID {
 			replicas, err := r.getDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
 			if err != nil {
-				return false, err
+				return false, re.Status.ReadyReplicas, err
 			}
 			if re.Status.ReadyReplicas == replicas {
-				return true, nil
+				return true, re.Status.ReadyReplicas, nil
 			}
-			return false, nil
+			return false, re.Status.ReadyReplicas, nil
 		}
 	}
-	return false, nil
+	return false, 0, nil
 
 }
 

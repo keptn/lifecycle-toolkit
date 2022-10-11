@@ -30,16 +30,13 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -134,7 +131,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		state, err := r.reconcilePreDeployment(ctx, workloadInstance)
+		state, err := r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		if err != nil {
 			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
 			span.SetStatus(codes.Error, err.Error())
@@ -170,14 +167,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	phase = common.PhaseWorkloadDeployment
+	phase = common.PhaseWorkloadPostDeployment
 	if !workloadInstance.IsPostDeploymentSucceeded() {
 		r.Log.Info("Post-Deployment checks not finished")
 		if workloadInstance.IsPostDeploymentFailed() {
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		state, err := r.reconcilePostDeployment(ctx, workloadInstance)
+		state, err := r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		if err != nil {
 			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling post-deployment checks")
@@ -233,134 +230,6 @@ func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	return uid[:10]
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, taskName string, namespace string) (*klcv1alpha1.KeptnTask, error) {
-	task := &klcv1alpha1.KeptnTask{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: namespace}, task)
-	if err != nil {
-		return task, err
-	}
-	return task, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
-	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
-
-	// create TraceContext
-	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
-	newTask := &klcv1alpha1.KeptnTask{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   namespace,
-			Annotations: traceContextCarrier,
-		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
-			Version:          workloadInstance.Spec.Version,
-			AppName:          workloadInstance.Spec.AppName,
-			TaskDefinition:   taskDefinition,
-			Parameters:       klcv1alpha1.TaskParameters{},
-			SecureParameters: klcv1alpha1.SecureParameters{},
-			Type:             checkType,
-		},
-	}
-	err := controllerutil.SetControllerReference(workloadInstance, newTask, r.Scheme)
-	if err != nil {
-		r.Log.Error(err, "could not set controller reference:")
-	}
-	err = r.Client.Create(ctx, newTask)
-	if err != nil {
-		r.Log.Error(err, "could not create KeptnTask")
-		r.Recorder.Event(workloadInstance, "Warning", "KeptnTaskNotCreated", fmt.Sprintf("Could not create KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
-		return "", err
-	}
-	r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
-
-	return newTask.Name, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.TaskStatus, common.StatusSummary, error) {
-	var tasks []string
-	var statuses []klcv1alpha1.TaskStatus
-
-	switch checkType {
-	case common.PreDeploymentCheckType:
-		tasks = workloadInstance.Spec.PreDeploymentTasks
-		statuses = workloadInstance.Status.PreDeploymentTaskStatus
-	case common.PostDeploymentCheckType:
-		tasks = workloadInstance.Spec.PostDeploymentTasks
-		statuses = workloadInstance.Status.PostDeploymentTaskStatus
-	}
-
-	var summary common.StatusSummary
-	summary.Total = len(tasks)
-	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha1.TaskStatus
-	for _, taskDefinitionName := range tasks {
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
-		task := &klcv1alpha1.KeptnTask{}
-		taskExists := false
-
-		// Check if task has already succeeded or failed
-		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
-			newStatus = append(newStatus, taskStatus)
-			continue
-		}
-
-		// Check if Task is already created
-		if taskStatus.TaskName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: workloadInstance.Namespace}, task)
-			if err != nil && errors.IsNotFound(err) {
-				taskStatus.TaskName = ""
-			} else if err != nil {
-				return nil, summary, err
-			}
-			taskExists = true
-		}
-
-		// Create new Task if it does not exist
-		if !taskExists {
-			taskName, err := r.createKeptnTask(ctx, workloadInstance.Namespace, workloadInstance, taskDefinitionName, checkType)
-			if err != nil {
-				return nil, summary, err
-			}
-			taskStatus.TaskName = taskName
-			taskStatus.SetStartTime()
-		} else {
-			// Update state of Task if it is already created
-			taskStatus.Status = task.Status.Status
-			if taskStatus.Status.IsCompleted() {
-				taskStatus.SetEndTime()
-			}
-		}
-		// Update state of the Check
-		newStatus = append(newStatus, taskStatus)
-	}
-
-	for _, ns := range newStatus {
-		summary = common.UpdateStatusSummary(ns.Status, summary)
-	}
-	if common.GetOverallState(summary) != common.StateSucceeded {
-		r.Recorder.Event(workloadInstance, "Warning", "TasksNotFinished", fmt.Sprintf("Tasks have not finished / Namespace: %s, Name: %s, Summary: %v ", workloadInstance.Namespace, workloadInstance.Name, summary))
-	}
-	return newStatus, summary, nil
-}
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
-}
 func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, shortReason string, longReason string) {
 	r.Recorder.Event(workloadInstance, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
 }

@@ -26,11 +26,11 @@ const MaxVersionLength = 12
 type KeptnState string
 
 const (
-	StateRunning   KeptnState = "Running"
-	StateSucceeded KeptnState = "Succeeded"
-	StateFailed    KeptnState = "Failed"
-	StateUnknown   KeptnState = "Unknown"
-	StatePending   KeptnState = "Pending"
+	StateProgressing KeptnState = "Progressing"
+	StateSucceeded   KeptnState = "Succeeded"
+	StateFailed      KeptnState = "Failed"
+	StateUnknown     KeptnState = "Unknown"
+	StatePending     KeptnState = "Pending"
 )
 
 var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
@@ -48,12 +48,12 @@ func (k KeptnState) IsFailed() bool {
 }
 
 type StatusSummary struct {
-	Total     int
-	failed    int
-	succeeded int
-	running   int
-	pending   int
-	unknown   int
+	Total       int
+	progressing int
+	failed      int
+	succeeded   int
+	pending     int
+	unknown     int
 }
 
 func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary {
@@ -62,8 +62,8 @@ func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary
 		summary.failed++
 	case StateSucceeded:
 		summary.succeeded++
-	case StateRunning:
-		summary.running++
+	case StateProgressing:
+		summary.progressing++
 	case StatePending, "":
 		summary.pending++
 	case StateUnknown:
@@ -73,15 +73,15 @@ func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary
 }
 
 func (s StatusSummary) GetTotalCount() int {
-	return s.failed + s.succeeded + s.running + s.pending + s.unknown
+	return s.failed + s.succeeded + s.progressing + s.pending + s.unknown
 }
 
 func GetOverallState(s StatusSummary) KeptnState {
 	if s.failed > 0 {
 		return StateFailed
 	}
-	if s.running > 0 {
-		return StateRunning
+	if s.progressing > 0 {
+		return StateProgressing
 	}
 	if s.pending > 0 {
 		return StatePending

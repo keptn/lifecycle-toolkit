@@ -106,6 +106,28 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	phase := common.PhaseWorkloadPreDeployment
+
+	appVersion, err := r.getAppVersion(ctx, types.NamespacedName{Namespace: req.Namespace, Name: workloadInstance.Spec.AppName})
+	if errors.IsNotFound(err) {
+		r.recordEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found")
+		r.Log.Error(err, "Related App Version not found")
+		return reconcile.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
+	} else if err != nil {
+		r.recordEvent(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved")
+		r.Log.Error(err, "Could not retrieve App Version")
+		return reconcile.Result{}, fmt.Errorf("could not fetch AppVersion: %+v", err)
+	}
+
+	appPreDepStatus := appVersion.Status.PreDeploymentStatus
+	if !appPreDepStatus.IsSucceeded() {
+		if appPreDepStatus.IsFailed() {
+			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed")
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.recordEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre deployment tasks for app not finished")
+		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
+	}
+
 	if !workloadInstance.IsPreDeploymentSucceeded() {
 		r.Log.Info("Pre deployment tasks not finished")
 		if workloadInstance.IsPreDeploymentFailed() {
@@ -338,4 +360,20 @@ func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klc
 }
 func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, shortReason string, longReason string) {
 	r.Recorder.Event(workloadInstance, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
+}
+
+func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
+	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
+}
+
+func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, appName types.NamespacedName) (*klcv1alpha1.KeptnAppVersion, error) {
+	app := &klcv1alpha1.KeptnApp{}
+	err := r.Get(ctx, appName, app)
+	if err != nil {
+		return nil, err
+	}
+
+	appVersion := &klcv1alpha1.KeptnAppVersion{}
+	err = r.Get(ctx, GetAppVersionName(appName.Namespace, appName.Name, app.Spec.Version), appVersion)
+	return appVersion, err
 }

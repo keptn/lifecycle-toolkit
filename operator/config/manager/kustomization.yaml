@@ -11,8 +11,7 @@ kind: Kustomization
 images:
 - name: controller
   newName: docker.io/odubajdt/keptn-lifecycle-operator
-  newTag: app4
-
+  newTag: app12
 patches:
 - patch: |-
     - op: add

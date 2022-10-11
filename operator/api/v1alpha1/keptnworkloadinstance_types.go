@@ -91,12 +91,36 @@ func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
+func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
+	return i.Status.PreDeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
+	return i.Status.PreDeploymentStatus.IsFailed()
+}
+
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
 }
 
+func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
+	return i.Status.PostDeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
+	return i.Status.PostDeploymentStatus.IsFailed()
+}
+
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
+}
+
+func (i KeptnWorkloadInstance) IsDeploymentSucceeded() bool {
+	return i.Status.DeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsDeploymentFailed() bool {
+	return i.Status.DeploymentStatus.IsFailed()
 }
 
 func (i *KeptnWorkloadInstance) SetStartTime() {

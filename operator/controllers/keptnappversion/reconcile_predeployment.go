@@ -5,11 +5,10 @@ import (
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-func (r *KeptnAppVersionReconciler) reconcilePreDeployment(ctx context.Context, req ctrl.Request, appVersion *klcv1alpha1.KeptnAppVersion) (common.KeptnState, error) {
-	newStatus, preDeploymentState, err := r.reconcileChecks(ctx, common.PreDeploymentCheckType, appVersion)
+func (r *KeptnAppVersionReconciler) reconcilePreDeployment(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion) (common.KeptnState, error) {
+	newStatus, preDeploymentState, err := r.reconcileTasks(ctx, common.PreDeploymentCheckType, appVersion)
 	if err != nil {
 		return common.StateUnknown, err
 	}

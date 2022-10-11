@@ -11,11 +11,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
+func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (common.KeptnState, error) {
 	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
+
 		isPodRunning, err := r.isPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 		if err != nil {
-			return err
+			return common.StateUnknown, err
 		}
 		if isPodRunning {
 			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
@@ -24,7 +25,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 
 	isReplicaRunning, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	if err != nil {
-		return err
+		return common.StateUnknown, err
 	}
 	if isReplicaRunning {
 		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
@@ -32,9 +33,9 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return err
+		return common.StateUnknown, err
 	}
-	return nil
+	return common.StateSucceeded, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {

@@ -134,7 +134,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 		state, err := r.reconcilePreDeployment(ctx, workloadInstance)
 		if err != nil {
 			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
@@ -143,6 +142,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
@@ -154,7 +155,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "is not finished")
 		state, err := r.reconcileDeployment(ctx, workloadInstance)
 		if err != nil {
 			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
@@ -164,6 +164,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
@@ -175,7 +177,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 		state, err := r.reconcilePostDeployment(ctx, workloadInstance)
 		if err != nil {
 			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
@@ -185,6 +186,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}

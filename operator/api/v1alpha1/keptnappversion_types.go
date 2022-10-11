@@ -57,12 +57,11 @@ type WorkloadStatus struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:path=keptnappversions,shortName=kav
 //+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
+//+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appname`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-// +kubebuilder:printcolumn:name="WorkloadStatus",type=string,JSONPath=`.status.workloadStatus`
 // +kubebuilder:printcolumn:name="WorkloadOverallStatus",type=string,JSONPath=`.status.workloadOverallStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 

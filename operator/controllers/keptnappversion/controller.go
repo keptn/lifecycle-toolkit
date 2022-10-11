@@ -187,12 +187,18 @@ func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespa
 }
 
 func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, appVersion *klcv1alpha1.KeptnAppVersion) ([]klcv1alpha1.TaskStatus, common.StatusSummary, error) {
-	tasks := appVersion.Spec.PreDeploymentTasks
-	statuses := appVersion.Status.PreDeploymentTaskStatus
-	if checkType == common.PostDeploymentCheckType {
+	var tasks []string
+	var statuses []klcv1alpha1.TaskStatus
+
+	switch checkType {
+	case common.PreDeploymentCheckType:
+		tasks = appVersion.Spec.PreDeploymentTasks
+		statuses = appVersion.Status.PreDeploymentTaskStatus
+	case common.PostDeploymentCheckType:
 		tasks = appVersion.Spec.PostDeploymentTasks
 		statuses = appVersion.Status.PostDeploymentTaskStatus
 	}
+
 	var summary common.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks

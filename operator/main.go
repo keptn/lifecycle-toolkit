@@ -196,8 +196,10 @@ func main() {
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{
 			Handler: &webhooks.PodMutatingWebhook{
-				Client: mgr.GetClient(),
-				Tracer: otel.Tracer("keptn/webhook"),
+				Client:   mgr.GetClient(),
+				Tracer:   otel.Tracer("keptn/webhook"),
+				Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
+				Log:      ctrl.Log.WithName("Mutating Webhook"),
 			}})
 	}
 	if err = (&keptntask.KeptnTaskReconciler{

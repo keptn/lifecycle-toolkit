@@ -77,64 +77,66 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
 	}
 
+	phase := common.PhaseAppPreDeployment
 	if !appVersion.IsPreDeploymentSucceeded() {
-		r.Log.Info("Pre deployment checks not finished")
+		r.Log.Info(fmt.Sprintf("%s Tasks not finished", phase.LongName))
 		if appVersion.IsPreDeploymentFailed() {
-			r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentFailed", fmt.Sprintf("Application PreDeployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentNotFinished", fmt.Sprintf("Application Pre-Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
-		state, err := r.reconcilePreDeployment(ctx, req, appVersion)
+		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
+		state, err := r.reconcilePreDeployment(ctx, appVersion)
 		if err != nil {
-			r.Recorder.Event(appVersion, "Warning", "AppPreDeploymentReconcileErrored", fmt.Sprintf("Application Pre-Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
-			r.Log.Error(err, "Error reconciling pre-deployment checks")
+			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			return ctrl.Result{Requeue: true}, err
 		}
 		if state.IsSucceeded() {
-			r.Recorder.Event(appVersion, "Normal", "AppPreDeploymentSucceeeded", fmt.Sprintf("Application Pre-Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
+	phase = common.PhaseAppDeployment
 	if !appVersion.AreWorkloadsSucceeded() {
 		r.Log.Info("Workloads post deployments not succeeded")
 		if appVersion.AreWorkloadsFailed() {
-			r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentFailed", fmt.Sprintf("Application Workload Deployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentNotFinished", fmt.Sprintf("Application Workload Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "is not finished")
 		state, err := r.reconcileWorkloads(ctx, appVersion)
 		if err != nil {
-			r.Recorder.Event(appVersion, "Warning", "AppWorkloadDeploymentReconcileErrored", fmt.Sprintf("Application Workload Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling workloads post deployments")
 			return ctrl.Result{Requeue: true}, err
 		}
 		if state.IsSucceeded() {
-			r.Recorder.Event(appVersion, "Normal", "AppWorkloadDeploymentSucceeeded", fmt.Sprintf("Application Workload Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Normal", appVersion, "Succeeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
+	phase = common.PhaseAppPostDeployment
 	if !appVersion.IsPostDeploymentSucceeded() {
 		r.Log.Info("Post-Deployment checks not finished")
 		if appVersion.IsPostDeploymentFailed() {
-			r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentFailed", fmt.Sprintf("Application Post-Deployment has failed / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentNotFinished", fmt.Sprintf("Application Post-Deployment is not finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		state, err := r.reconcilePostDeployment(ctx, appVersion)
 		if err != nil {
-			r.Recorder.Event(appVersion, "Warning", "AppPostDeploymentReconcileErrored", fmt.Sprintf("Application Post-Deployment could not get reconciled / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling post-deployment checks")
 			return ctrl.Result{Requeue: true}, err
 		}
 		if state.IsSucceeded() {
-			r.Recorder.Event(appVersion, "Normal", "AppPostDeploymentSucceeeded", fmt.Sprintf("Application Post-Deployment has succeeded / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			r.recordEvent(phase, "Normal", appVersion, "Succeeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	r.Recorder.Event(appVersion, "Normal", "AppPostDeploymentFinished", fmt.Sprintf("Application Post-Deployment is finished / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+	r.recordEvent(phase, "Normal", appVersion, "Finished", "is finished")
 	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
@@ -152,6 +154,10 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespace string, appVersion *klcv1alpha1.KeptnAppVersion, taskDefinition string, checkType common.CheckType) (string, error) {
 
+	phase := common.KeptnPhaseType{
+		ShortName: "KeptnTaskCreate",
+		LongName:  "Keptn Task Create",
+	}
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
@@ -178,15 +184,20 @@ func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespa
 	err = r.Client.Create(ctx, newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.Recorder.Event(appVersion, "Warning", "KeptnTaskNotCreated", fmt.Sprintf("Could not create KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+		r.recordEvent(phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask")
 		return "", err
 	}
-	r.Recorder.Event(appVersion, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+	r.recordEvent(phase, "Normal", appVersion, "Created", "created")
 
 	return newTask.Name, nil
 }
 
-func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, appVersion *klcv1alpha1.KeptnAppVersion) ([]klcv1alpha1.TaskStatus, common.StatusSummary, error) {
+func (r *KeptnAppVersionReconciler) reconcileTasks(ctx context.Context, checkType common.CheckType, appVersion *klcv1alpha1.KeptnAppVersion) ([]klcv1alpha1.TaskStatus, common.StatusSummary, error) {
+	phase := common.KeptnPhaseType{
+		ShortName: "ReconcileTasks",
+		LongName:  "Reconcile Tasks",
+	}
+
 	var tasks []string
 	var statuses []klcv1alpha1.TaskStatus
 
@@ -247,6 +258,9 @@ func (r *KeptnAppVersionReconciler) reconcileChecks(ctx context.Context, checkTy
 	for _, ns := range newStatus {
 		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
+	if common.GetOverallState(summary) != common.StateSucceeded {
+		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
+	}
 	return newStatus, summary, nil
 }
 
@@ -261,4 +275,8 @@ func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klc
 		Status:             common.StatePending,
 		TaskName:           "",
 	}
+}
+
+func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, appVersion *klcv1alpha1.KeptnAppVersion, shortReason string, longReason string) {
+	r.Recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, appVersion.Namespace, appVersion.Name, appVersion.Spec.Version))
 }

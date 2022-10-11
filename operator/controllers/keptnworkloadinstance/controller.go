@@ -105,41 +105,69 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		workloadInstance.SetStartTime()
 	}
 
-	if !workloadInstance.IsPreDeploymentCompleted() {
-		r.Log.Info("Pre deployment checks not finished")
-		err := r.reconcilePreDeployment(ctx, req, workloadInstance)
+	phase := common.PhaseWorkloadPreDeployment
+	if !workloadInstance.IsPreDeploymentSucceeded() {
+		r.Log.Info("Pre deployment tasks not finished")
+		if workloadInstance.IsPreDeploymentFailed() {
+			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
+		state, err := r.reconcilePreDeployment(ctx, workloadInstance)
 		if err != nil {
-			r.Log.Error(err, "Error reconciling pre-deployment checks")
+			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
+		}
+		if state.IsSucceeded() {
+			r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
-	if !workloadInstance.IsDeploymentCompleted() {
+	phase = common.PhaseWorkloadDeployment
+	if !workloadInstance.IsDeploymentSucceeded() {
 		r.Log.Info("Deployment not finished")
-		err := r.reconcileDeployment(ctx, workloadInstance)
+		if workloadInstance.IsDeploymentFailed() {
+			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "is not finished")
+		state, err := r.reconcileDeployment(ctx, workloadInstance)
 		if err != nil {
+			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling deployment")
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
+		if state.IsSucceeded() {
+			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
+		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	if !workloadInstance.IsPostDeploymentCompleted() {
-		r.Log.Info("Post deployment checks not finished")
-		err = r.reconcilePostDeployment(ctx, req, workloadInstance)
+	phase = common.PhaseWorkloadDeployment
+	if !workloadInstance.IsPostDeploymentSucceeded() {
+		r.Log.Info("Post-Deployment checks not finished")
+		if workloadInstance.IsPostDeploymentFailed() {
+			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		}
+		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
+		state, err := r.reconcilePostDeployment(ctx, workloadInstance)
 		if err != nil {
+			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling post-deployment checks")
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
+		}
+		if state.IsSucceeded() {
+			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
 
 	// WorkloadInstance is completed at this place
-
 	if !workloadInstance.IsEndTimeSet() {
 		// metrics: decrement active deployment counter
 		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
@@ -162,6 +190,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
+	r.recordEvent(phase, "Normal", workloadInstance, "Finished", "is finished")
+	
 	return ctrl.Result{}, nil
 }
 
@@ -305,4 +335,7 @@ func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klc
 		Status:             common.StatePending,
 		TaskName:           "",
 	}
+}
+func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, shortReason string, longReason string) {
+	r.Recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
 }

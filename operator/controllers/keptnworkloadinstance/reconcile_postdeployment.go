@@ -4,22 +4,21 @@ import (
 	"context"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, req ctrl.Request, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) error {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePostDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (common.KeptnState, error) {
 	newStatus, postDeploymentState, err := r.reconcileChecks(ctx, common.PostDeploymentCheckType, workloadInstance)
 	if err != nil {
-		return err
+		return common.StateUnknown, err
 	}
-	r.Log.Info("Post-Deployment Information", "Post-Deployment State", postDeploymentState, "Post-Deployment Workload State", newStatus)
-	workloadInstance.Status.PostDeploymentStatus = common.GetOverallState(postDeploymentState)
+	overallState := common.GetOverallState(postDeploymentState)
+	workloadInstance.Status.PostDeploymentStatus = overallState
 	workloadInstance.Status.PostDeploymentTaskStatus = newStatus
 
 	// Write Status Field
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return err
+		return common.StateUnknown, err
 	}
-	return nil
+	return overallState, nil
 }

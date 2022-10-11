@@ -9,7 +9,7 @@ import (
 
 func (r *KeptnAppVersionReconciler) reconcilePostDeployment(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion) (common.KeptnState, error) {
 
-	newStatus, postDeploymentState, err := r.reconcileChecks(ctx, common.PostDeploymentCheckType, appVersion)
+	newStatus, postDeploymentState, err := r.reconcileTasks(ctx, common.PostDeploymentCheckType, appVersion)
 	if err != nil {
 		return common.StateUnknown, err
 	}

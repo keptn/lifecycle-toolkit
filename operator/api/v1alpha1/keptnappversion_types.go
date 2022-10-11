@@ -17,7 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -119,4 +122,41 @@ func (v KeptnAppVersion) AreWorkloadsSucceeded() bool {
 
 func (v KeptnAppVersion) AreWorkloadsFailed() bool {
 	return v.Status.WorkloadOverallStatus.IsFailed()
+}
+
+func (v *KeptnAppVersion) SetStartTime() {
+	if v.Status.StartTime.IsZero() {
+		v.Status.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (v *KeptnAppVersion) SetEndTime() {
+	if v.Status.EndTime.IsZero() {
+		v.Status.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (v *KeptnAppVersion) IsStartTimeSet() bool {
+	return !v.Status.StartTime.IsZero()
+}
+
+func (v *KeptnAppVersion) IsEndTimeSet() bool {
+	return !v.Status.EndTime.IsZero()
+}
+
+func (v KeptnAppVersion) GetActiveMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.AppNamespace.String(v.Namespace),
+	}
+}
+
+func (v KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.AppNamespace.String(v.Namespace),
+		common.AppStatus.String(string(v.Status.PostDeploymentStatus)),
+	}
 }

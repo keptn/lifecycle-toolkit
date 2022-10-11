@@ -157,19 +157,19 @@ func (i *TaskStatus) SetEndTime() {
 
 func (i KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.WorkloadName),
-		common.Version.String(i.Spec.Version),
-		common.Namespace.String(i.Namespace),
+		common.DeploymentAppName.String(i.Spec.AppName),
+		common.DeploymentWorkload.String(i.Spec.WorkloadName),
+		common.DeploymentVersion.String(i.Spec.Version),
+		common.DeploymentNamespace.String(i.Namespace),
 	}
 }
 
 func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.WorkloadName),
-		common.Version.String(i.Spec.Version),
-		common.Namespace.String(i.Namespace),
+		common.DeploymentAppName.String(i.Spec.AppName),
+		common.DeploymentWorkload.String(i.Spec.WorkloadName),
+		common.DeploymentVersion.String(i.Spec.Version),
+		common.DeploymentNamespace.String(i.Namespace),
 		common.DeploymentStatus.String(string(i.Status.PostDeploymentStatus)),
 	}
 }

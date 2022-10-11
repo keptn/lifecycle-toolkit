@@ -19,12 +19,13 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
@@ -52,6 +53,7 @@ type KeptnAppVersionReconciler struct {
 	Log      logr.Logger
 	Recorder record.EventRecorder
 	Tracer   trace.Tracer
+	Meters   common.KeptnMeters
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -81,6 +83,12 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err != nil {
 		r.Log.Error(err, "App Version not found")
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
+	}
+
+	if !appVersion.IsStartTimeSet() {
+		// metrics: increment active app counter
+		r.Meters.AppActive.Add(ctx, 1, appVersion.GetActiveMetricsAttributes()...)
+		appVersion.SetStartTime()
 	}
 
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
@@ -144,7 +152,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
 			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
-			r.Log.Error(err, "Error reconciling post-deployment checks")
+			r.Log.Error(err, "Error reconciling post-app checks")
 			return ctrl.Result{Requeue: true}, err
 		}
 		if state.IsSucceeded() {
@@ -159,6 +167,30 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
+
+	// AppVersion is completed at this place
+
+	if !appVersion.IsEndTimeSet() {
+		// metrics: decrement active app counter
+		r.Meters.AppActive.Add(ctx, -1, appVersion.GetActiveMetricsAttributes()...)
+		appVersion.SetEndTime()
+	}
+
+	err = r.Client.Status().Update(ctx, appVersion)
+	if err != nil {
+		return ctrl.Result{Requeue: true}, err
+	}
+
+	attrs := appVersion.GetMetricsAttributes()
+
+	r.Log.Info("Increasing app count")
+
+	// metrics: increment app counter
+	r.Meters.AppCount.Add(ctx, 1, attrs...)
+
+	// metrics: add app duration
+	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)
+	r.Meters.AppDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	return ctrl.Result{}, nil
 }

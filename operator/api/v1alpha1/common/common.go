@@ -80,11 +80,11 @@ func GetOverallState(s StatusSummary) KeptnState {
 	if s.failed > 0 {
 		return StateFailed
 	}
-	if s.pending > 0 {
-		return StatePending
-	}
 	if s.running > 0 {
 		return StateRunning
+	}
+	if s.pending > 0 {
+		return StatePending
 	}
 	if s.unknown > 0 || s.GetTotalCount() != s.Total {
 		return StateUnknown

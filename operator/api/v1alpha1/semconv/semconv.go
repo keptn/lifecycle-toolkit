@@ -23,6 +23,11 @@ func AddAttributeFromApp(s trace.Span, a v1alpha1.KeptnApp) {
 	s.SetAttributes(common.Version.String(a.Spec.Version))
 }
 
+func AddAttributeFromAppVersion(s trace.Span, a v1alpha1.KeptnAppVersion) {
+	s.SetAttributes(common.ApplicationName.String(a.Name))
+	s.SetAttributes(common.Version.String(a.Spec.Version))
+}
+
 func AddAttributeFromTask(s trace.Span, t v1alpha1.KeptnTask) {
 	s.SetAttributes(common.ApplicationName.String(t.Spec.AppName))
 	s.SetAttributes(common.Workload.String(t.Spec.Workload))

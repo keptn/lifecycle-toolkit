@@ -19,6 +19,9 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"time"
@@ -48,6 +51,7 @@ type KeptnAppVersionReconciler struct {
 	Scheme   *runtime.Scheme
 	Log      logr.Logger
 	Recorder record.EventRecorder
+	Tracer   trace.Tracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -79,6 +83,14 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
 	}
 
+	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromAppVersion(span, *appVersion)
+
 	phase := common.PhaseAppPreDeployment
 	if !appVersion.IsPreDeploymentSucceeded() {
 		r.Log.Info(fmt.Sprintf("%s Tasks not finished", phase.LongName))
@@ -89,6 +101,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		state, err := r.reconcilePreDeployment(ctx, appVersion)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			return ctrl.Result{Requeue: true}, err
 		}
@@ -108,6 +121,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "is not finished")
 		state, err := r.reconcileWorkloads(ctx, appVersion)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling workloads post deployments")
 			return ctrl.Result{Requeue: true}, err
@@ -128,6 +142,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		state, err := r.reconcilePostDeployment(ctx, appVersion)
 		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
 			r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 			r.Log.Error(err, "Error reconciling post-deployment checks")
 			return ctrl.Result{Requeue: true}, err
@@ -141,6 +156,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	r.recordEvent(phase, "Normal", appVersion, "Finished", "is finished")
 	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
@@ -156,14 +172,21 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespace string, appVersion *klcv1alpha1.KeptnAppVersion, taskDefinition string, checkType common.CheckType) (string, error) {
 
-	phase := common.KeptnPhaseType{
-		ShortName: "KeptnTaskCreate",
-		LongName:  "Keptn Task Create",
-	}
+	ctx, span := r.Tracer.Start(ctx, "create_app_task", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	semconv.AddAttributeFromAppVersion(span, *appVersion)
+
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	phase := common.KeptnPhaseType{
+		ShortName: "KeptnTaskCreate",
+		LongName:  "Keptn Task Create",
+	}
+
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        common.GenerateTaskName(checkType, taskDefinition),

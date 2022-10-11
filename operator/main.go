@@ -267,6 +267,7 @@ func main() {
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:   otel.Tracer("keptn/operator/appversion"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)

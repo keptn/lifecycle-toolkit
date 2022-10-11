@@ -155,7 +155,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	attrs := workloadInstance.GetMetricsAttributes()
 
 	r.Log.Info("Increasing deployment count")
-
 	// metrics: increment deployment counter
 	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
 
@@ -229,12 +228,18 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 }
 
 func (r *KeptnWorkloadInstanceReconciler) reconcileChecks(ctx context.Context, checkType common.CheckType, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) ([]v1alpha1.TaskStatus, common.StatusSummary, error) {
-	tasks := workloadInstance.Spec.PreDeploymentTasks
-	statuses := workloadInstance.Status.PreDeploymentTaskStatus
-	if checkType == common.PostDeploymentCheckType {
+	var tasks []string
+	var statuses []klcv1alpha1.TaskStatus
+
+	switch checkType {
+	case common.PreDeploymentCheckType:
+		tasks = workloadInstance.Spec.PreDeploymentTasks
+		statuses = workloadInstance.Status.PreDeploymentTaskStatus
+	case common.PostDeploymentCheckType:
 		tasks = workloadInstance.Spec.PostDeploymentTasks
 		statuses = workloadInstance.Status.PostDeploymentTaskStatus
 	}
+
 	var summary common.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks

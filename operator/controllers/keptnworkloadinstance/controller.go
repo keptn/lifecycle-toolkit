@@ -191,7 +191,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	r.recordEvent(phase, "Normal", workloadInstance, "Finished", "is finished")
-	
+
 	return ctrl.Result{}, nil
 }
 
@@ -337,5 +337,5 @@ func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klc
 	}
 }
 func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, shortReason string, longReason string) {
-	r.Recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
+	r.Recorder.Event(workloadInstance, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
 }

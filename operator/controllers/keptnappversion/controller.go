@@ -106,7 +106,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		state, err := r.reconcilePreDeployment(ctx, appVersion)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -115,6 +114,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
@@ -126,7 +127,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "is not finished")
 		state, err := r.reconcileWorkloads(ctx, appVersion)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -136,6 +136,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", appVersion, "Succeeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
@@ -147,7 +149,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		state, err := r.reconcilePostDeployment(ctx, appVersion)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -157,6 +158,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 		if state.IsSucceeded() {
 			r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
+		} else {
+			r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 	}
@@ -272,9 +275,20 @@ func (r *KeptnAppVersionReconciler) reconcileTasks(ctx context.Context, checkTyp
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha1.TaskStatus
 	for _, taskDefinitionName := range tasks {
+		var oldstatus common.KeptnState
+		for _, ts := range statuses {
+			if ts.TaskDefinitionName == taskDefinitionName {
+				oldstatus = ts.Status
+			}
+		}
+
 		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
+
+		if oldstatus != taskStatus.Status {
+			r.recordEvent(phase, "Normal", appVersion, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status))
+		}
 
 		// Check if task has already succeeded or failed
 		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {

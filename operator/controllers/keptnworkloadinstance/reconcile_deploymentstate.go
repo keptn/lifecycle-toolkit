@@ -35,7 +35,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	if err != nil {
 		return common.StateUnknown, err
 	}
-	return common.StateSucceeded, nil
+	return workloadInstance.Status.DeploymentStatus, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {

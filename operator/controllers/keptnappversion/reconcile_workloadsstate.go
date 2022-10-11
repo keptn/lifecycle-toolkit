@@ -32,7 +32,6 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 			Status:   workloadStatus,
 		})
 		summary = common.UpdateStatusSummary(workloadStatus, summary)
-
 	}
 
 	overallState := common.GetOverallState(summary)

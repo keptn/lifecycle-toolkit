@@ -57,8 +57,10 @@ type TaskStatus struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
+// +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`

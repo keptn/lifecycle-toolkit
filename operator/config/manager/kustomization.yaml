@@ -10,8 +10,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: docker.io/thschue/keptn-lifecycle-operator
-  newTag: "202210101665421645"
+  newName: docker.io/odubajdt/keptn-lifecycle-operator
+  newTag: app4
 
 patches:
 - patch: |-

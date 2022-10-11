@@ -111,17 +111,24 @@ type KeptnMeters struct {
 	DeploymentCount    syncint64.Counter
 	DeploymentDuration syncfloat64.Histogram
 	DeploymentActive   syncint64.UpDownCounter
+	AppCount           syncint64.Counter
+	AppDuration        syncfloat64.Histogram
+	AppActive          syncint64.UpDownCounter
 }
 
 const (
-	ApplicationName  attribute.Key = attribute.Key("keptn.deployment.app_name")
-	Workload         attribute.Key = attribute.Key("keptn.deployment.workload")
-	Version          attribute.Key = attribute.Key("keptn.deployment.version")
-	Namespace        attribute.Key = attribute.Key("keptn.deployment.namespace")
-	DeploymentStatus attribute.Key = attribute.Key("keptn.deployment.status")
-	TaskStatus       attribute.Key = attribute.Key("keptn.deployment.task.status")
-	TaskName         attribute.Key = attribute.Key("keptn.deployment.task.name")
-	TaskType         attribute.Key = attribute.Key("keptn.deployment.taks.type")
+	AppName             attribute.Key = attribute.Key("keptn.app.name")
+	AppVersion          attribute.Key = attribute.Key("keptn.app.version")
+	AppNamespace        attribute.Key = attribute.Key("keptn.app.namespace")
+	AppStatus           attribute.Key = attribute.Key("keptn.app.status")
+	DeploymentAppName   attribute.Key = attribute.Key("keptn.deployment.app_name")
+	DeploymentWorkload  attribute.Key = attribute.Key("keptn.deployment.workload")
+	DeploymentVersion   attribute.Key = attribute.Key("keptn.deployment.version")
+	DeploymentNamespace attribute.Key = attribute.Key("keptn.deployment.namespace")
+	DeploymentStatus    attribute.Key = attribute.Key("keptn.deployment.status")
+	TaskStatus          attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName            attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType            attribute.Key = attribute.Key("keptn.deployment.taks.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {

@@ -12,6 +12,8 @@ spec:
     kind: KeptnWorkloadInstance
     listKind: KeptnWorkloadInstanceList
     plural: keptnworkloadinstances
+    shortNames:
+    - kwi
     singular: keptnworkloadinstance
   scope: Namespaced
   versions:

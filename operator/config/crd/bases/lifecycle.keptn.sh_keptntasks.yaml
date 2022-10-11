@@ -89,6 +89,7 @@ spec:
                 format: date-time
                 type: string
               status:
+                default: Pending
                 type: string
             type: object
         type: object

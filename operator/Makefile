@@ -167,11 +167,11 @@ release-image: release-image.amd64 release-image.arm64v8
 
 .PHONY: release-image.amd64
 release-image.amd64: clean
-	docker build --load --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 
 .PHONY: release-image.arm64v8
 release-image.arm64v8: clean
-	docker build --load --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 
 .PHONY: push-release-images
 push-release-images:

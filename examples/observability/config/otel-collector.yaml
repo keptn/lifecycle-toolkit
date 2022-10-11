@@ -22,9 +22,6 @@ data:
               scrape_interval: 5s
               static_configs:
                 - targets: ['klc-controller-manager-metrics-service:2222']
-      #prometheus_simple:
-      #  collection_interval: 10s
-      #  endpoint: "klc-controller-manager-metrics-service:2222"
     processors:
     extensions:
       health_check: {}

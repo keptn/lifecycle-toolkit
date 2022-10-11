@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -25,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -33,9 +33,11 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client  client.Client
-	Tracer  trace.Tracer
-	decoder *admission.Decoder
+	Client   client.Client
+	Tracer   trace.Tracer
+	decoder  *admission.Decoder
+	Recorder record.EventRecorder
+	Log      logr.Logger
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
@@ -169,23 +171,19 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	logger.Info("Searching for workload")
 
 	workload := &klcv1alpha1.KeptnWorkload{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating workload", "workload", workload.Name)
 		workload = newWorkload
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
+			a.Recorder.Event(workload, "Warning", "WorkloadNotCreated", fmt.Sprintf("Could not create KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		k8sEvent := a.generateK8sEvent(workload, "created")
-		if err := a.Client.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send workload created K8s event")
-			span.SetStatus(codes.Error, err.Error())
-			return err
-		}
+		a.Recorder.Event(workload, "Normal", "WorkloadCreated", fmt.Sprintf("KeptnWorkload created / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 		return nil
 	}
 
@@ -205,16 +203,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
+		a.Recorder.Event(workload, "Warning", "WorkloadNotUpdated", fmt.Sprintf("Could not update KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	k8sEvent := a.generateK8sEvent(workload, "updated")
-	if err := a.Client.Create(ctx, k8sEvent); err != nil {
-		logger.Error(err, "Could not send workload updated K8s event")
-		span.SetStatus(codes.Error, err.Error())
-		return err
-	}
+	a.Recorder.Event(workload, "Normal", "WorkloadUpdated", fmt.Sprintf("KeptnWorkload updated / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 
 	return nil
 }
@@ -231,23 +225,19 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	logger.Info("Searching for app")
 
 	app := &klcv1alpha1.KeptnApp{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getAppName(pod)}, app)
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating app", "app", app.Name)
 		app = newApp
 		err = a.Client.Create(ctx, app)
 		if err != nil {
 			logger.Error(err, "Could not create App")
+			a.Recorder.Event(app, "Warning", "AppNotCreated", fmt.Sprintf("Could not create KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		k8sEvent := a.generateK8sEventApp(app, "created")
-		if err := a.Client.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send app created K8s event")
-			span.SetStatus(codes.Error, err.Error())
-			return err
-		}
+		a.Recorder.Event(app, "Normal", "AppCreated", fmt.Sprintf("KeptnApp created / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 		return nil
 	}
 
@@ -267,16 +257,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	err = a.Client.Update(ctx, app)
 	if err != nil {
 		logger.Error(err, "Could not update App")
+		a.Recorder.Event(app, "Warning", "AppNotUpdated", fmt.Sprintf("Could not update KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	k8sEvent := a.generateK8sEventApp(app, "updated")
-	if err := a.Client.Create(ctx, k8sEvent); err != nil {
-		logger.Error(err, "Could not send app updated K8s event")
-		span.SetStatus(codes.Error, err.Error())
-		return err
-	}
+	a.Recorder.Event(app, "Normal", "AppUpdated", fmt.Sprintf("KeptnApp updated / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 
 	return nil
 }
@@ -357,79 +343,6 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 				},
 			},
 		},
-	}
-}
-
-func (a *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, eventType string) *corev1.Event {
-	return &corev1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    workload.Name + "-" + eventType + "-",
-			Namespace:       workload.Namespace,
-			ResourceVersion: "v1alpha1",
-			Labels: map[string]string{
-				common.AppAnnotation:      workload.Spec.AppName,
-				common.WorkloadAnnotation: workload.Name,
-			},
-		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:      workload.Kind,
-			Namespace: workload.Namespace,
-			Name:      workload.Name,
-		},
-		Reason:  eventType,
-		Message: "WorkloadInstance " + workload.Name + " was " + eventType,
-		Source: corev1.EventSource{
-			Component: workload.Kind,
-		},
-		Type: "Normal",
-		EventTime: metav1.MicroTime{
-			Time: time.Now().UTC(),
-		},
-		FirstTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		LastTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		Action:              eventType,
-		ReportingController: "webhook",
-		ReportingInstance:   "webhook",
-	}
-}
-
-func (a *PodMutatingWebhook) generateK8sEventApp(app *klcv1alpha1.KeptnApp, eventType string) *corev1.Event {
-	return &corev1.Event{
-		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    app.Name + "-" + eventType + "-",
-			Namespace:       app.Namespace,
-			ResourceVersion: "v1alpha1",
-			Labels: map[string]string{
-				common.AppAnnotation: app.Name,
-			},
-		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:      app.Kind,
-			Namespace: app.Namespace,
-			Name:      app.Name,
-		},
-		Reason:  eventType,
-		Message: "App " + app.Name + " was " + eventType,
-		Source: corev1.EventSource{
-			Component: app.Kind,
-		},
-		Type: "Normal",
-		EventTime: metav1.MicroTime{
-			Time: time.Now().UTC(),
-		},
-		FirstTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		LastTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		Action:              eventType,
-		ReportingController: "webhook",
-		ReportingInstance:   "webhook",
 	}
 }
 

@@ -19,14 +19,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+	"os"
+	"time"
+
 	"github.com/kelseyhightower/envconfig"
 	"go.opentelemetry.io/otel/exporters/otlp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpgrpc"
 	"google.golang.org/grpc"
 	"k8s.io/klog/v2"
-	"log"
-	"os"
-	"time"
 
 	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/klcpermit"
 	"k8s.io/apimachinery/pkg/util/rand"
@@ -124,6 +126,11 @@ func newStdOutExporter() (sdktrace.SpanExporter, error) {
 func newOTelExporter(env envConfig) (sdktrace.SpanExporter, error) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
 	defer cancel()
+
+	_, err := net.DialTimeout("tcp", env.OTelCollectorURL, 2*time.Second)
+	if err != nil {
+		return nil, err
+	}
 
 	driver := otlpgrpc.NewDriver(
 		otlpgrpc.WithInsecure(),

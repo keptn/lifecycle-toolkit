@@ -19,6 +19,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/kelseyhightower/envconfig"
+	"go.opentelemetry.io/otel/exporters/otlp"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpgrpc"
+	"google.golang.org/grpc"
+	"k8s.io/klog/v2"
 	"log"
 	"os"
 	"time"
@@ -34,9 +39,17 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
-func main() {
+type envConfig struct {
+	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
+}
 
-	tp := initOTel()
+func main() {
+	var env envConfig
+	if err := envconfig.Process("", &env); err != nil {
+		log.Fatalf("Failed to process env var: %s", err)
+	}
+
+	tp := initOTel(env)
 
 	rand.Seed(time.Now().UnixNano())
 	command := app.NewSchedulerCommand(
@@ -53,18 +66,57 @@ func main() {
 
 }
 
-func initOTel() *sdktrace.TracerProvider {
-	var err error
-	exp, err := stdout.NewExporter(stdout.WithPrettyPrint())
+func initOTel(env envConfig) *sdktrace.TracerProvider {
+	tpOptions, err := getOTelTracerProviderOptions(env)
 	if err != nil {
-		log.Panicf("failed to initialize stdout exporter %v\n", err)
+		log.Panicf("failed to initialize OTel options")
 	}
-	bsp := sdktrace.NewSimpleSpanProcessor(exp)
-	tp := sdktrace.NewTracerProvider(
-		sdktrace.WithSampler(sdktrace.AlwaysSample()),
-		sdktrace.WithSpanProcessor(bsp),
-	)
+	tp := sdktrace.NewTracerProvider(tpOptions...)
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	return tp
+}
+
+func getOTelTracerProviderOptions(env envConfig) ([]sdktrace.TracerProviderOption, error) {
+	tracerProviderOptions := []sdktrace.TracerProviderOption{}
+
+	stdOutExp, err := newStdOutExporter()
+	if err != nil {
+		return nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
+	}
+	tracerProviderOptions = append(tracerProviderOptions, sdktrace.WithBatcher(stdOutExp))
+
+	if env.OTelCollectorURL != "" {
+		// try to set OTel exporter for Jaeger
+		otelExporter, err := newOTelExporter(env)
+		if err != nil {
+			// log the error, but do not break if Jaeger exporter cannot be created
+			klog.Errorf("Could not set up OTel exporter: %v", err)
+		} else if otelExporter != nil {
+			tracerProviderOptions = append(tracerProviderOptions, sdktrace.WithBatcher(otelExporter))
+		}
+	}
+	tracerProviderOptions = append(tracerProviderOptions, sdktrace.WithSampler(sdktrace.AlwaysSample()))
+
+	return tracerProviderOptions, nil
+}
+
+func newStdOutExporter() (sdktrace.SpanExporter, error) {
+	return stdout.NewExporter(stdout.WithPrettyPrint())
+}
+
+func newOTelExporter(env envConfig) (sdktrace.SpanExporter, error) {
+	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
+	defer cancel()
+
+	driver := otlpgrpc.NewDriver(
+		otlpgrpc.WithInsecure(),
+		otlpgrpc.WithEndpoint(env.OTelCollectorURL),
+		otlpgrpc.WithDialOption(grpc.WithBlock()), // useful for testing
+	)
+	traceExporter, err := otlp.NewExporter(ctx, driver)
+	if err != nil {
+		return nil, err
+	}
+	return traceExporter, nil
 }

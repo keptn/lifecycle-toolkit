@@ -36,11 +36,25 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout"
 	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/semconv"
+)
+
+var (
+	gitCommit    string
+	buildTime    string
+	buildVersion string
 )
 
 type envConfig struct {
 	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
+}
+
+type keptnSchedulerOTelErrorHandler struct{}
+
+func (keptnSchedulerOTelErrorHandler) Handle(_ error) {
+	// ignoring any OTel errors
 }
 
 func main() {
@@ -74,6 +88,7 @@ func initOTel(env envConfig) *sdktrace.TracerProvider {
 	tp := sdktrace.NewTracerProvider(tpOptions...)
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	otel.SetErrorHandler(keptnSchedulerOTelErrorHandler{})
 	return tp
 }
 
@@ -97,6 +112,7 @@ func getOTelTracerProviderOptions(env envConfig) ([]sdktrace.TracerProviderOptio
 		}
 	}
 	tracerProviderOptions = append(tracerProviderOptions, sdktrace.WithSampler(sdktrace.AlwaysSample()))
+	tracerProviderOptions = append(tracerProviderOptions, sdktrace.WithResource(newResource()))
 
 	return tracerProviderOptions, nil
 }
@@ -119,4 +135,12 @@ func newOTelExporter(env envConfig) (sdktrace.SpanExporter, error) {
 		return nil, err
 	}
 	return traceExporter, nil
+}
+
+func newResource() *resource.Resource {
+	return resource.NewWithAttributes(
+		semconv.TelemetrySDKLanguageGo,
+		semconv.ServiceNameKey.String("keptn-lifecycle-scheduler"),
+		semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
+	)
 }

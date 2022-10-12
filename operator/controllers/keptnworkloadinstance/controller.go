@@ -19,8 +19,6 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -77,6 +75,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	r.Log = log.FromContext(ctx)
 	r.Log.Info("Searching for Keptn Workload Instance")
 
+	//retrieve workload instance
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
 	err := r.Get(ctx, req.NamespacedName, workloadInstance)
 	if errors.IsNotFound(err) {
@@ -88,6 +87,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
 	}
 
+	//setup otel
 	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
@@ -102,7 +102,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		workloadInstance.SetStartTime()
 	}
 
-	phase := common.PhaseWorkloadPreDeployment
+	//Wait for pre-deployment checks of App
+	phase := common.PhaseAppPreDeployment
 
 	appVersion, err := r.getAppVersion(ctx, types.NamespacedName{Namespace: req.Namespace, Name: workloadInstance.Spec.AppName})
 	if errors.IsNotFound(err) {
@@ -125,68 +126,31 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 	}
 
+	//Wait for pre-deployment checks of Workload
+	phase = common.PhaseWorkloadPreDeployment
 	if !workloadInstance.IsPreDeploymentSucceeded() {
-		r.Log.Info("Pre deployment tasks not finished")
-		if workloadInstance.IsPreDeploymentFailed() {
-			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
-			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		reconcilePre := func() (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		}
-		state, err := r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
-		if err != nil {
-			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
-			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true}, err
-		}
-		if state.IsSucceeded() {
-			r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
-		} else {
-			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
-		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
 	}
 
+	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {
-		r.Log.Info("Deployment not finished")
-		if workloadInstance.IsDeploymentFailed() {
-			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
-			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		reconcileWorkloadInstance := func() (common.KeptnState, error) {
+			return r.reconcileDeployment(ctx, workloadInstance)
 		}
-		state, err := r.reconcileDeployment(ctx, workloadInstance)
-		if err != nil {
-			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
-			r.Log.Error(err, "Error reconciling deployment")
-			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true}, err
-		}
-		if state.IsSucceeded() {
-			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
-		} else {
-			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
-		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsDeploymentFailed, reconcileWorkloadInstance)
 	}
 
+	//Wait for post-deployment checks of Workload
 	phase = common.PhaseWorkloadPostDeployment
 	if !workloadInstance.IsPostDeploymentSucceeded() {
-		r.Log.Info("Post-Deployment checks not finished")
-		if workloadInstance.IsPostDeploymentFailed() {
-			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
-			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+		reconcilePostDeployment := func() (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
-		state, err := r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
-		if err != nil {
-			r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
-			r.Log.Error(err, "Error reconciling post-deployment checks")
-			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true}, err
-		}
-		if state.IsSucceeded() {
-			r.recordEvent(phase, "Normal", workloadInstance, "Succeeeded", "has succeeded")
-		} else {
-			r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
-		}
-		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
 	}
 
 	// WorkloadInstance is completed at this place
@@ -215,6 +179,27 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	r.recordEvent(phase, "Normal", workloadInstance, "Finished", "is finished")
 
 	return ctrl.Result{}, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) handlePhase(workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
+
+	r.Log.Info(phase.LongName + " not finished")
+	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
+		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+		return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+	}
+	state, err := reconcilePhase()
+	if err != nil {
+		r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
+		span.SetStatus(codes.Error, err.Error())
+		return ctrl.Result{Requeue: true}, err
+	}
+	if state.IsSucceeded() {
+		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
+	} else {
+		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
+	}
+	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

@@ -17,7 +17,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	var newStatus []klcv1alpha1.WorkloadStatus
 	for _, w := range appVersion.Spec.Workloads {
 		r.Log.Info("Reconciling workload " + w.Name)
-		workload, err := r.getWorkload(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
+		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
 		if err != nil && errors.IsNotFound(err) {
 			r.Recorder.Event(appVersion, "Warning", "WorkloadNotFound", fmt.Sprintf("Could not find KeptnWorkloadInstance / Namespace: %s, Name: %s ", appVersion.Namespace, w.Name))
 			workload.Status.PostDeploymentStatus = common.StatePending
@@ -46,7 +46,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	return overallState, err
 }
 
-func (r *KeptnAppVersionReconciler) getWorkload(ctx context.Context, workload types.NamespacedName) (klcv1alpha1.KeptnWorkloadInstance, error) {
+func (r *KeptnAppVersionReconciler) getWorkloadInstance(ctx context.Context, workload types.NamespacedName) (klcv1alpha1.KeptnWorkloadInstance, error) {
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
 	err := r.Get(ctx, workload, workloadInstance)
 	return *workloadInstance, err

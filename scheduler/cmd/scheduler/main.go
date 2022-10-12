@@ -51,6 +51,12 @@ type envConfig struct {
 	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
+type keptnSchedulerOTelErrorHandler struct{}
+
+func (keptnSchedulerOTelErrorHandler) Handle(_ error) {
+	// ignoring any OTel errors
+}
+
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
@@ -82,6 +88,7 @@ func initOTel(env envConfig) *sdktrace.TracerProvider {
 	tp := sdktrace.NewTracerProvider(tpOptions...)
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	otel.SetErrorHandler(keptnSchedulerOTelErrorHandler{})
 	return tp
 }
 

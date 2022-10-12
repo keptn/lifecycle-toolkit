@@ -21,6 +21,9 @@ spec:
             - /bin/kube-scheduler
             - --config=/etc/kubernetes/scheduler-config.yaml
           image: klfc-scheduler:latest
+          env:
+            - name: OTEL_COLLECTOR_URL
+              value: otel-collector:4317
           livenessProbe:
             httpGet:
               path: /healthz

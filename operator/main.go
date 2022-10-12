@@ -20,15 +20,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 

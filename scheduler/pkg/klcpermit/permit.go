@@ -45,7 +45,12 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
 		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
-		go pl.monitorPod(ctx, p)
+		go func() {
+			// create a new context since we are in a new goroutine
+			ctx2, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			pl.monitorPod(ctx2, p)
+		}()
 		return framework.NewStatus(framework.Wait), 5 * time.Minute
 	}
 

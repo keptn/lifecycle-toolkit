@@ -18,4 +18,4 @@ kind: Kustomization
 images:
 - name: klfc-scheduler
   newName: docker.io/thschue/scheduler
-  newTag: "202210111665501228"
+  newTag: "202210121665564822"

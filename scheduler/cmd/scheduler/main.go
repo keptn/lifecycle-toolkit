@@ -124,7 +124,7 @@ func newStdOutExporter() (sdktrace.SpanExporter, error) {
 }
 
 func newOTelExporter(env envConfig) (sdktrace.SpanExporter, error) {
-	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
 	_, err := net.DialTimeout("tcp", env.OTelCollectorURL, 2*time.Second)

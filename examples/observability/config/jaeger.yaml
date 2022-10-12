@@ -2,4 +2,4 @@ apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:
   name: jaeger
-  namespace: keptn-lifecycle-controller-
+  namespace: keptn-lifecycle-controller-system

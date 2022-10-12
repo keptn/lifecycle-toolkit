@@ -15,6 +15,7 @@ FROM golang:1.18.0 as builder
 
 ARG ARCH
 ARG RELEASE_VERSION
+ARG GIT_HASH
 
 WORKDIR /scheduler
 
@@ -25,7 +26,7 @@ RUN go mod download
 COPY cmd cmd
 COPY pkg pkg
 
-RUN RELEASE_VERSION=${RELEASE_VERSION} make build-scheduler.$ARCH
+RUN RELEASE_VERSION=${RELEASE_VERSION} HASH=${GIT_HASH} make build-scheduler.$ARCH
 
 FROM gcr.io/distroless/base-debian11:nonroot
 

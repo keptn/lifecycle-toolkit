@@ -20,7 +20,6 @@ build-deploy-operator: deploy-cert-manager
 
 	kubectl apply -f operator/config/rendered/release.yaml
 
-
 .PHONY: build-deploy-scheduler
 build-deploy-scheduler:
 	$(MAKE) -C scheduler release-local.$(ARCH) TAG=$(TAG)
@@ -28,18 +27,6 @@ build-deploy-scheduler:
 	$(MAKE) -C scheduler release-manifests TAG=$(TAG) ARCH=$(ARCH)
 	kubectl create namespace keptn-lifecycle-controller-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
-
-
-.PHONY: build-deploy-dev-environment
-
-.PHONY: build-dev-manifests
-build-dev-manifests:
-	$(MAKE) -C operator release-manifests TAG=$(TAG) ARCH=$(ARCH)
-	$(MAKE) -C scheduler release-manifests TAG=$(TAG) ARCH=$(ARCH)
-	if [ ! -d manifests ]; then mkdir manifests; fi
-	cat operator/config/rendered/release.yaml > manifests/dev.yaml
-	echo "---" >> manifests/dev.yaml
-	cat scheduler/config/rendered/release.yaml >> manifests/dev.yaml
 
 .PHONY: deploy-cert-manager
 deploy-cert-manager:

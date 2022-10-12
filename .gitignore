@@ -21,3 +21,6 @@
 manifests/
 /scheduler/config/rendered/release.yaml
 /operator/config/rendered/release.yaml
+
+# macOS
+.DS_Store

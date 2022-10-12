@@ -20,8 +20,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/kelseyhightower/envconfig"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
@@ -43,6 +47,7 @@ import (
 
 	"os"
 
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
@@ -80,7 +85,15 @@ func init() {
 	//+kubebuilder:scaffold:scheme
 }
 
+type envConfig struct {
+	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
+}
+
 func main() {
+	var env envConfig
+	if err := envconfig.Process("", &env); err != nil {
+		log.Fatalf("Failed to process env var: %s", err)
+	}
 	var metricsAddr string
 	var enableLeaderElection bool
 	var disableWebhook bool
@@ -147,16 +160,13 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// Enabling OTel
-	exp, err := newExporter()
+	tpOptions, err := getOTelTracerProviderOptions(env)
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel exporter")
-		os.Exit(1)
+		setupLog.Error(err, "unable to initialize OTel tracer options")
 	}
 
-	tp := trace.NewTracerProvider(
-		trace.WithBatcher(exp),
-		trace.WithResource(newResource()),
-	)
+	tp := trace.NewTracerProvider(tpOptions...)
+
 	defer func() {
 		if err := tp.Shutdown(context.Background()); err != nil {
 			setupLog.Error(err, "unable to shutdown  OTel exporter")
@@ -264,7 +274,31 @@ func main() {
 	}
 }
 
-func newExporter() (trace.SpanExporter, error) {
+func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, error) {
+	tracerProviderOptions := []trace.TracerProviderOption{}
+
+	stdOutExp, err := newStdOutExporter()
+	if err != nil {
+		return nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
+	}
+	tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(stdOutExp))
+
+	if env.OTelCollectorURL != "" {
+		// try to set OTel exporter for Jaeger
+		otelExporter, err := newOTelExporter(env)
+		if err != nil {
+			// log the error, but do not break if Jaeger exporter cannot be created
+			setupLog.Error(err, "Could not set up OTel exporter")
+		} else if otelExporter != nil {
+			tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(otelExporter))
+		}
+	}
+	tracerProviderOptions = append(tracerProviderOptions, trace.WithResource(newResource()))
+
+	return tracerProviderOptions, nil
+}
+
+func newStdOutExporter() (trace.SpanExporter, error) {
 	return stdouttrace.New(
 		// Use human readable output.
 		stdouttrace.WithPrettyPrint(),
@@ -273,15 +307,26 @@ func newExporter() (trace.SpanExporter, error) {
 	)
 }
 
+func newOTelExporter(env envConfig) (trace.SpanExporter, error) {
+	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
+	defer cancel()
+	conn, err := grpc.DialContext(ctx, env.OTelCollectorURL, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gRPC connection to collector at %s: %w", env.OTelCollectorURL, err)
+	}
+	traceExporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithGRPCConn(conn))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create trace exporter: %w", err)
+	}
+	return traceExporter, nil
+}
+
 func newResource() *resource.Resource {
-	r, _ := resource.Merge(
-		resource.Default(),
-		resource.NewWithAttributes(
-			semconv.SchemaURL,
-			semconv.TelemetrySDKLanguageGo,
-			semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
-			semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
-		),
+	r := resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.TelemetrySDKLanguageGo,
+		semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
+		semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
 	)
 	return r
 }

@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.2.0](https://github.com/keptn-sandbox/lifecycle-controller/compare/v0.1.0...v0.2.0) (2022-10-12)
+
+
+### Features
+
+* Added tutorial for setting up observability example ([#145](https://github.com/keptn-sandbox/lifecycle-controller/issues/145)) ([28f5a9c](https://github.com/keptn-sandbox/lifecycle-controller/commit/28f5a9c24d031694e2066318bc85ae6e79dfd095))
+* **main:** Make LFC development environment installable with one command ([#138](https://github.com/keptn-sandbox/lifecycle-controller/issues/138)) ([832ca37](https://github.com/keptn-sandbox/lifecycle-controller/commit/832ca37d5a19297a63e17a8d367c126af37275c4))
+* **operator:** Add commit hash, buildtime, buildversion to OTel resource attributes ([#121](https://github.com/keptn-sandbox/lifecycle-controller/issues/121)) ([5a2ef61](https://github.com/keptn-sandbox/lifecycle-controller/commit/5a2ef61b965472cfe850672d04b4361f5d48ca0d))
+* **operator:** Add Spans for handling webhook requests and inject TraceContext ([#115](https://github.com/keptn-sandbox/lifecycle-controller/issues/115)) ([812f2c5](https://github.com/keptn-sandbox/lifecycle-controller/commit/812f2c5d49314617cb9c7532262e15edecd9f078))
+* **operator:** Add support for OTel collector ([#139](https://github.com/keptn-sandbox/lifecycle-controller/issues/139)) ([ac3f0d2](https://github.com/keptn-sandbox/lifecycle-controller/commit/ac3f0d222f43abff7f35f1eb8de5ec80ff7dd8dc))
+* **operator:** Added metrics ([#55](https://github.com/keptn-sandbox/lifecycle-controller/issues/55)) ([f8a3cee](https://github.com/keptn-sandbox/lifecycle-controller/commit/f8a3ceea6d1628750e7c3a7c9cd3372642bd0611))
+* **operator:** Introduce OTel tracing for Task controller ([#128](https://github.com/keptn-sandbox/lifecycle-controller/issues/128)) ([0baf7a9](https://github.com/keptn-sandbox/lifecycle-controller/commit/0baf7a9d8058877247bc264eb6fdb645b0a77a60))
+* **operator:** Introduce OTel tracing for Workload controller ([#125](https://github.com/keptn-sandbox/lifecycle-controller/issues/125)) ([bc03709](https://github.com/keptn-sandbox/lifecycle-controller/commit/bc03709b744d61ad966b5fba9f70dbeaffa10119))
+* **operator:** Introduce OTel tracing for WorkloadInstance controller ([#131](https://github.com/keptn-sandbox/lifecycle-controller/issues/131)) ([a195614](https://github.com/keptn-sandbox/lifecycle-controller/commit/a1956141fe80e5b1afd79fb33198313e1dbff7fa))
+* **scheduler:** Add OTel Resource Attributes ([#147](https://github.com/keptn-sandbox/lifecycle-controller/issues/147)) ([b952156](https://github.com/keptn-sandbox/lifecycle-controller/commit/b9521568e95e7855ee4fef5d55559376e2d398d9))
+* **scheduler:** Add support for OTel collector ([#146](https://github.com/keptn-sandbox/lifecycle-controller/issues/146)) ([9fd210d](https://github.com/keptn-sandbox/lifecycle-controller/commit/9fd210d0355e5d17316f5daa8a8e289a03755d46))
+* **scheduler:** Add tracing support ([#129](https://github.com/keptn-sandbox/lifecycle-controller/issues/129)) ([60651d1](https://github.com/keptn-sandbox/lifecycle-controller/commit/60651d15c78f9e0aa786d4dd4836c9ae828b14f3))
+* **scheduler:** Background check for pod status in permit plugin ([#124](https://github.com/keptn-sandbox/lifecycle-controller/issues/124)) ([97ceef6](https://github.com/keptn-sandbox/lifecycle-controller/commit/97ceef6938603e315c4e1c8d2bb697aabc3dd7f8))
+* **scheduler:** Disable gRPC logs when creating OTLP exporter ([#151](https://github.com/keptn-sandbox/lifecycle-controller/issues/151)) ([d0f69b9](https://github.com/keptn-sandbox/lifecycle-controller/commit/d0f69b9509543a5a11f22e8940a71018509ba048))
+
+
+### Bug Fixes
+
+* **scheduler:** Create new context when starting background routine for pod checks ([#148](https://github.com/keptn-sandbox/lifecycle-controller/issues/148)) ([543ca87](https://github.com/keptn-sandbox/lifecycle-controller/commit/543ca876b27d90cb906ddb2643112a62dc923f56))
+* **scheduler:** Ignoring OTel error logs ([#150](https://github.com/keptn-sandbox/lifecycle-controller/issues/150)) ([0be89a5](https://github.com/keptn-sandbox/lifecycle-controller/commit/0be89a56445a0356275f040dedad8fc8716a0fdd))
+
+
+### Docs
+
+* Add proper version badge in readme ([#114](https://github.com/keptn-sandbox/lifecycle-controller/issues/114)) ([e4add2d](https://github.com/keptn-sandbox/lifecycle-controller/commit/e4add2de2340f160fe30bd0cd6831107339b175e))
+* Improve podtato example with HTTP service lookup ([#113](https://github.com/keptn-sandbox/lifecycle-controller/issues/113)) ([81b1236](https://github.com/keptn-sandbox/lifecycle-controller/commit/81b1236dcff7bd37afd0e39f11638fe01406c7c4))
+* Update manifest name in readme ([#111](https://github.com/keptn-sandbox/lifecycle-controller/issues/111)) ([e51dbbc](https://github.com/keptn-sandbox/lifecycle-controller/commit/e51dbbc0198f734fb3905b280bc1ff2e0b24d39e))
+
+
+### Other
+
+* Updated scheduler readme and developer instructions ([#123](https://github.com/keptn-sandbox/lifecycle-controller/issues/123)) ([9bd5d14](https://github.com/keptn-sandbox/lifecycle-controller/commit/9bd5d1461cdeeca851b6ccb78ee7e6ff0b500c1c))
+
+
+### Build
+
+* Prepare release ([#149](https://github.com/keptn-sandbox/lifecycle-controller/issues/149)) ([5be4504](https://github.com/keptn-sandbox/lifecycle-controller/commit/5be4504e365b1c89ffc3069871a3f0fc0ecc7482))
+
 ## 0.1.0 (2022-10-04)
 
 

@@ -6,7 +6,7 @@ The Collector will then be used to forward the gathered data to [Jaeger](https:/
 # TL;DR
 * You can install the whole demo using: `make install`
 * Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
-* Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action-otel-in-action)
+* Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action)
 
 ## Prerequisites:
 

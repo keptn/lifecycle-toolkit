@@ -56,17 +56,19 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create images and manifests
+        env:
+          TAG: ${{ needs.release-please.outputs.tag_name }}
         run: |
           cd functions-runtime
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image
           cd ../scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
-          make release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image
+          make release-manifests
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
-          make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image
+          make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml > manifest.yaml

@@ -176,14 +176,18 @@ jobs:
 
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
+      env:
+        TAG: dev-${{ env.DATETIME }}
       run: |
-        make release-image TAG=dev-${{ env.DATETIME }}
+        make release-image
 
     - name: Push Docker Images
       if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
+      env:
+        TAG: dev-${{ env.DATETIME }}
       run: |
-        make push-release-images TAG=dev-${{ env.DATETIME }}
+        make push-release-images
 
     - name: Install controller-gen
       if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
@@ -193,7 +197,9 @@ jobs:
     - name: Generate release.yaml
       if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
-      run: make release-manifests TAG=dev-${{ env.DATETIME }}
+      env:
+        TAG: dev-${{ env.DATETIME }}
+      run: make release-manifests
 
     - name: Upload release.yaml
       if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )

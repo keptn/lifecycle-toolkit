@@ -58,15 +58,15 @@ jobs:
       - name: Create images and manifests
         run: |
           cd functions-runtime
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../scheduler
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
-          make release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=${{ needs.release-please.outputs.tag_name }}
+          make release-manifests RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=${{ needs.release-please.outputs.tag_name }}
           cd ../operator
           go mod tidy
-          make build-and-push-image TAG=${{ needs.release-please.outputs.tag_name }}
-          make controller-gen release-manifests TAG=${{ needs.release-please.outputs.tag_name }}
+          make build-and-push-image RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=${{ needs.release-please.outputs.tag_name }}
+          make controller-gen release-manifests RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=${{ needs.release-please.outputs.tag_name }}
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml > manifest.yaml

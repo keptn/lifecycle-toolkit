@@ -46,6 +46,8 @@ spec:
         env:
           - name: OTEL_COLLECTOR_URL
             value: otel-collector:4317
+          - name: FUNCTION_RUNNER_IMAGE
+            value: docker.io/thschue/functions-runtime:latest
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

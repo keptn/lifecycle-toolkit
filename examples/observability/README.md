@@ -17,14 +17,15 @@ have a basic installation up and running.
 
 ```shell
 
-# Install Jaeger into the observability namespace
+# Install Jaeger into the observability namespace and the Jaeger resource into the lifecycle-controller namespace
 kubectl create namespace observability
-kubectl create -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml -n observability
+kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml -n observability
+kubectl apply -f config/jaeger.yaml -n keptn-lifecycle-controller-system
 
 # Install Prometheus
+kubectl create namespace monitoring
 kubectl apply --server-side -f config/prometheus/setup
 kubectl apply -f config/prometheus/
-
 ```
 
 With these commands, the Jaeger and Prometheus Operator will be installed in the `observability` and `monitoring` namespaces, respectively.
@@ -34,7 +35,7 @@ With these commands, the Jaeger and Prometheus Operator will be installed in the
 Once Jaeger and Prometheus are installed, you can deploy and configure the OpenTelemetry collector using the manifests in the `config` directory:
 
 ```sh 
-kubectl apply -f config/
+kubectl apply -f config/otel-collector.yaml -n keptn-lifecycle-controller-system
 ```
 
 Also, please ensure that the `OTEL_COLLECTOR_URL` env vars of both the `klc-controller-manager`, 

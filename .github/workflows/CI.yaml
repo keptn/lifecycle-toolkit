@@ -45,10 +45,6 @@ jobs:
       BUILD_MATRIX_EMPTY: ${{ steps.check_modified_files.outputs.BUILD_MATRIX_EMPTY }}
 
     steps:
-      - run: |
-          echo "Repo owner: ${{ github.repository_owner }}"
-          echo "Repo actor: ${{ github.actor }}"
-          echo "Repo triggering actor: ${{ github.triggering_actor }}"
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -181,35 +177,32 @@ jobs:
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
       env:
-        RELEASE_REGISTRY: "ghcr.io/${{ github.actor }}"
-        TAG: "dev-${{ env.DATETIME }}"
+        TAG: dev-${{ env.DATETIME }}
       run: |
         make release-image
 
     - name: Push Docker Images
-      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
+      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       env:
-        RELEASE_REGISTRY: "ghcr.io/${{ github.actor }}"
-        TAG: "dev-${{ env.DATETIME }}"
+        TAG: dev-${{ env.DATETIME }}
       run: |
         make push-release-images
 
     - name: Install controller-gen
-      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
+      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       run: make controller-gen
 
     - name: Generate release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       env:
-        RELEASE_REGISTRY: "ghcr.io/${{ github.actor }}"
-        TAG: "dev-${{ env.DATETIME }}"
+        TAG: dev-${{ env.DATETIME }}
       run: make release-manifests
 
     - name: Upload release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.config.artifact }}-manifest

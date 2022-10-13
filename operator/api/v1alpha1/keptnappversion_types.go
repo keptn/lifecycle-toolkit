@@ -36,12 +36,12 @@ type KeptnAppVersionSpec struct {
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
 type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
-	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"` // WLV watches this, Scheduler watches this?
+	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
 	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
-	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"` //Workload Instance post dep check
+	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"`
 
 	PreDeploymentTaskStatus  []TaskStatus `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus []TaskStatus `json:"postDeploymentTaskStatus,omitempty"`

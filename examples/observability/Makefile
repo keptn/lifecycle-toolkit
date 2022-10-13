@@ -9,7 +9,7 @@ install:
 	@echo "-----------------------------------"
 	kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/$(JAEGER_VERSION)/jaeger-operator.yaml -n observability
-	kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=120s
+	kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=300s
 	kubectl apply -f config/jaeger.yaml -n "$(LFC_NAMESPACE)"
 
 	@echo ""

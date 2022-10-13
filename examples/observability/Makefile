@@ -1,6 +1,4 @@
 JAEGER_VERSION ?= v1.38.0
-JAEGER_NAMESPACE = observability
-PROM_NAMESPACE = monitoring
 LFC_NAMESPACE ?= keptn-lifecycle-controller-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 

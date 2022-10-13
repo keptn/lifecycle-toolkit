@@ -45,6 +45,10 @@ jobs:
       BUILD_MATRIX_EMPTY: ${{ steps.check_modified_files.outputs.BUILD_MATRIX_EMPTY }}
 
     steps:
+      - run: |
+          echo "Repo owner: ${{ github.repository_owner }}"
+          echo "Repo actor: ${{ github.actor }}"
+          echo "Repo triggering actor: ${{ github.triggering_actor }}"
       - name: Check out code
         uses: actions/checkout@v3
 

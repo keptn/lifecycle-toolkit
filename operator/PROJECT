@@ -56,6 +56,17 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnAppVersion
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluationDefinition
+  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluationProvider
   path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 version: "3"

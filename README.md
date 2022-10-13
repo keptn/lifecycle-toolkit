@@ -255,7 +255,7 @@ In its state, it keeps track of the current status of the K8s Job created.
 
 ### Keptn Evaluation Definition
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Controller
-as part of pre- and post-analysis phases of a deployment or application.
+as part of pre- and post-analysis phases of a workload or application.
 
 A Keptn evaluation definition looks like the following:
 
@@ -278,7 +278,7 @@ spec:
 
 ### Keptn Evaluation Provider
 A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the 
-pre- and post-analysis phases of a deployment or application.
+pre- and post-analysis phases of a workload or application.
 
 A Keptn evaluation provider looks like the following:
 

@@ -22,10 +22,10 @@ spec:
       name: AppName
       type: string
     - jsonPath: .spec.workloadName
-      name: Workload
+      name: WorkloadName
       type: string
     - jsonPath: .spec.version
-      name: Version
+      name: WorkloadVersion
       type: string
     - jsonPath: .status.preDeploymentStatus
       name: PreDeploymentStatus

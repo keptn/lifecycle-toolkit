@@ -12,14 +12,4 @@ images:
 - name: controller
   newName: docker.io/thschue/keptn-lifecycle-operator
   newTag: "202210111665511714"
-patches:
-- patch: |-
-    - op: add
-      path: "/spec/template/spec/containers/0/env/-"
-      value:
-        name: OTEL_SDK_DISABLED
-        value: "true"
-  target:
-    kind: Deployment
-    name: controller-manager
-    namespace: system
+

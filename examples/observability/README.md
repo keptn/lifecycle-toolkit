@@ -1,4 +1,3 @@
-
 # Sending Traces and Metrics to the OpenTelemetry Collector
 
 In this example, we will show you an example configuration for enabling the operator to send OpenTelemetry traces and metrics to the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector).

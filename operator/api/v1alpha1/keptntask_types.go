@@ -29,9 +29,9 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload"`
-	WorkloadVersion  string           `json:"workloadVersion"`
-	AppName          string           `json:"app"`
+	Workload         string           `json:"workload,omitempty"` //TODO make autofill logic
+	Version          string           `json:"version"`
+	AppName          string           `json:"app,omitempty"` //TODO make autofill logic
 	TaskDefinition   string           `json:"taskDefinition"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
@@ -48,7 +48,8 @@ type SecureParameters struct {
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
-	JobName   string            `json:"jobName,omitempty"`
+	JobName string `json:"jobName,omitempty"`
+	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
@@ -59,8 +60,8 @@ type KeptnTaskStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workload`
-// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.workloadVersion`
+// +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
+// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.status`
 
@@ -108,9 +109,9 @@ func (i *KeptnTask) IsEndTimeSet() bool {
 
 func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.Workload),
-		common.Version.String(i.Spec.WorkloadVersion),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.Workload),
+		common.WorkloadVersion.String(i.Spec.Version),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 	}
@@ -118,9 +119,9 @@ func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 
 func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.Workload),
-		common.Version.String(i.Spec.WorkloadVersion),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.Workload),
+		common.WorkloadVersion.String(i.Spec.Version),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 		common.TaskStatus.String(string(i.Status.Status)),

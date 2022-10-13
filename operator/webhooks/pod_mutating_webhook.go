@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -25,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -33,9 +33,11 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client  client.Client
-	Tracer  trace.Tracer
-	decoder *admission.Decoder
+	Client   client.Client
+	Tracer   trace.Tracer
+	decoder  *admission.Decoder
+	Recorder record.EventRecorder
+	Log      logr.Logger
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
@@ -70,6 +72,19 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
+		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
+		if err != nil {
+			span.SetStatus(codes.Error, "Invalid annotations")
+			return admission.Errored(http.StatusBadRequest, err)
+		}
+		if !isAppAnnotationPresent {
+			if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
+				logger.Error(err, "Could not handle App")
+				span.SetStatus(codes.Error, err.Error())
+				return admission.Errored(http.StatusBadRequest, err)
+			}
+		}
+
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 
 		logger.Info("Attributes from annotations set")
@@ -100,20 +115,33 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 }
 
 func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
 	workload, gotWorkloadAnnotation := pod.Annotations[common.WorkloadAnnotation]
 	version, gotVersionAnnotation := pod.Annotations[common.VersionAnnotation]
 
-	if len(app) > common.MaxAppNameLength || len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, common.ErrTooLongAnnotations
 	}
 
-	if gotAppAnnotation && gotWorkloadAnnotation {
+	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
 		}
 		return true, nil
 	}
+	return false, nil
+}
+
+func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
+	app, gotAppAnnotation := pod.Annotations[common.AppAnnotation]
+
+	if gotAppAnnotation {
+		if len(app) > common.MaxAppNameLength {
+			return false, common.ErrTooLongAnnotations
+		}
+		return true, nil
+	}
+
+	pod.Annotations[common.AppAnnotation] = pod.Annotations[common.WorkloadAnnotation]
 	return false, nil
 }
 
@@ -143,29 +171,25 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	logger.Info("Searching for workload")
 
 	workload := &klcv1alpha1.KeptnWorkload{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: a.getWorkloadName(pod)}, workload)
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating workload", "workload", workload.Name)
 		workload = newWorkload
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
+			a.Recorder.Event(workload, "Warning", "WorkloadNotCreated", fmt.Sprintf("Could not create KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		k8sEvent := a.generateK8sEvent(workload, "created")
-		if err := a.Client.Create(ctx, k8sEvent); err != nil {
-			logger.Error(err, "Could not send workload created K8s event")
-			span.SetStatus(codes.Error, err.Error())
-			return err
-		}
+		a.Recorder.Event(workload, "Normal", "WorkloadCreated", fmt.Sprintf("KeptnWorkload created / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 		return nil
 	}
 
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch WorkloadInstance"+": %+v", err)
+		return fmt.Errorf("could not fetch Workload"+": %+v", err)
 	}
 
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
@@ -179,16 +203,66 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
+		a.Recorder.Event(workload, "Warning", "WorkloadNotUpdated", fmt.Sprintf("Could not update KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	k8sEvent := a.generateK8sEvent(workload, "updated")
-	if err := a.Client.Create(ctx, k8sEvent); err != nil {
-		logger.Error(err, "Could not send workload updated K8s event")
+	a.Recorder.Event(workload, "Normal", "WorkloadUpdated", fmt.Sprintf("KeptnWorkload updated / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
+
+	return nil
+}
+
+func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+
+	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newApp := a.generateApp(ctx, pod, namespace)
+
+	semconv.AddAttributeFromApp(span, *newApp)
+
+	logger.Info("Searching for app")
+
+	app := &klcv1alpha1.KeptnApp{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
+	if errors.IsNotFound(err) {
+		logger.Info("Creating app", "app", app.Name)
+		app = newApp
+		err = a.Client.Create(ctx, app)
+		if err != nil {
+			logger.Error(err, "Could not create App")
+			a.Recorder.Event(app, "Warning", "AppNotCreated", fmt.Sprintf("Could not create KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+			span.SetStatus(codes.Error, err.Error())
+			return err
+		}
+
+		a.Recorder.Event(app, "Normal", "AppCreated", fmt.Sprintf("KeptnApp created / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+		return nil
+	}
+
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return fmt.Errorf("could not fetch App"+": %+v", err)
+	}
+
+	if reflect.DeepEqual(app.Spec, newApp.Spec) {
+		logger.Info("Pod not changed, not updating anything")
+		return nil
+	}
+
+	logger.Info("Pod changed, updating app")
+	app.Spec = newApp.Spec
+
+	err = a.Client.Update(ctx, app)
+	if err != nil {
+		logger.Error(err, "Could not update App")
+		a.Recorder.Event(app, "Warning", "AppNotUpdated", fmt.Sprintf("Could not update KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
+
+	a.Recorder.Event(app, "Normal", "AppUpdated", fmt.Sprintf("KeptnApp updated / Namespace: %s, Name: %s ", app.Namespace, app.Name))
 
 	return nil
 }
@@ -241,40 +315,34 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 }
 
-func (a *PodMutatingWebhook) generateK8sEvent(workload *klcv1alpha1.KeptnWorkload, eventType string) *corev1.Event {
-	return &corev1.Event{
+func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
+	version, _ := pod.Annotations[common.VersionAnnotation]
+	appName := a.getAppName(pod)
+
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	return &klcv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    workload.Name + "-" + eventType + "-",
-			Namespace:       workload.Namespace,
-			ResourceVersion: "v1alpha1",
-			Labels: map[string]string{
-				common.AppAnnotation:      workload.Spec.AppName,
-				common.WorkloadAnnotation: workload.Name,
+			Name:        appName,
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: klcv1alpha1.KeptnAppSpec{
+			Version:                version,
+			PreDeploymentTasks:     []string{},
+			PostDeploymentTasks:    []string{},
+			PreDeploymentAnalysis:  []string{},
+			PostDeploymentAnalysis: []string{},
+			Workloads: []klcv1alpha1.KeptnWorkloadRef{
+				{
+					Name:    appName,
+					Version: version,
+				},
 			},
 		},
-		InvolvedObject: corev1.ObjectReference{
-			Kind:      workload.Kind,
-			Namespace: workload.Namespace,
-			Name:      workload.Name,
-		},
-		Reason:  eventType,
-		Message: "WorkloadInstance " + workload.Name + " was " + eventType,
-		Source: corev1.EventSource{
-			Component: workload.Kind,
-		},
-		Type: "Normal",
-		EventTime: metav1.MicroTime{
-			Time: time.Now().UTC(),
-		},
-		FirstTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		LastTimestamp: metav1.Time{
-			Time: time.Now().UTC(),
-		},
-		Action:              eventType,
-		ReportingController: "webhook",
-		ReportingInstance:   "webhook",
 	}
 }
 
@@ -282,6 +350,11 @@ func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := pod.Annotations[common.WorkloadAnnotation]
 	applicationName, _ := pod.Annotations[common.AppAnnotation]
 	return strings.ToLower(applicationName + "-" + workloadName)
+}
+
+func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
+	applicationName, _ := pod.Annotations[common.AppAnnotation]
+	return strings.ToLower(applicationName)
 }
 
 func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {

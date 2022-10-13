@@ -20,9 +20,9 @@ spec:
       name: AppName
       type: string
     - jsonPath: .spec.workload
-      name: Workload
+      name: WorkloadName
       type: string
-    - jsonPath: .spec.workloadVersion
+    - jsonPath: .spec.version
       name: Version
       type: string
     - jsonPath: .status.jobName
@@ -69,15 +69,13 @@ spec:
                 type: object
               taskDefinition:
                 type: string
+              version:
+                type: string
               workload:
                 type: string
-              workloadVersion:
-                type: string
             required:
-            - app
             - taskDefinition
-            - workload
-            - workloadVersion
+            - version
             type: object
           status:
             description: KeptnTaskStatus defines the observed state of KeptnTask
@@ -91,6 +89,7 @@ spec:
                 format: date-time
                 type: string
               status:
+                default: Pending
                 type: string
             type: object
         type: object

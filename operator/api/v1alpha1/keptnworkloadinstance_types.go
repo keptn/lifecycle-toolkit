@@ -40,26 +40,28 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus     common.KeptnState    `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus  []WorkloadTaskStatus `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus []WorkloadTaskStatus `json:"postDeploymentTaskStatus,omitempty"`
-	StartTime                metav1.Time          `json:"startTime,omitempty"`
-	EndTime                  metav1.Time          `json:"endTime,omitempty"`
+	PostDeploymentStatus     common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus  []TaskStatus      `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []TaskStatus      `json:"postDeploymentTaskStatus,omitempty"`
+	StartTime                metav1.Time       `json:"startTime,omitempty"`
+	EndTime                  metav1.Time       `json:"endTime,omitempty"`
 }
 
-type WorkloadTaskStatus struct {
-	TaskDefinitionName string            `json:"TaskDefinitionName,omitempty"`
-	Status             common.KeptnState `json:"status,omitempty"`
-	TaskName           string            `json:"taskName,omitempty"`
-	StartTime          metav1.Time       `json:"startTime,omitempty"`
-	EndTime            metav1.Time       `json:"endTime,omitempty"`
+type TaskStatus struct {
+	TaskDefinitionName string `json:"TaskDefinitionName,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status    common.KeptnState `json:"status,omitempty"`
+	TaskName  string            `json:"taskName,omitempty"`
+	StartTime metav1.Time       `json:"startTime,omitempty"`
+	EndTime   metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
-// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
+// +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
+// +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
 // +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
@@ -90,12 +92,36 @@ func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
+func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
+	return i.Status.PreDeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
+	return i.Status.PreDeploymentStatus.IsFailed()
+}
+
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
 }
 
+func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
+	return i.Status.PostDeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
+	return i.Status.PostDeploymentStatus.IsFailed()
+}
+
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
+}
+
+func (i KeptnWorkloadInstance) IsDeploymentSucceeded() bool {
+	return i.Status.DeploymentStatus.IsSucceeded()
+}
+
+func (i KeptnWorkloadInstance) IsDeploymentFailed() bool {
+	return i.Status.DeploymentStatus.IsFailed()
 }
 
 func (i *KeptnWorkloadInstance) SetStartTime() {
@@ -118,13 +144,13 @@ func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
 	return !i.Status.EndTime.IsZero()
 }
 
-func (i *WorkloadTaskStatus) SetStartTime() {
+func (i *TaskStatus) SetStartTime() {
 	if i.StartTime.IsZero() {
 		i.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *WorkloadTaskStatus) SetEndTime() {
+func (i *TaskStatus) SetEndTime() {
 	if i.EndTime.IsZero() {
 		i.EndTime = metav1.NewTime(time.Now().UTC())
 	}
@@ -132,19 +158,19 @@ func (i *WorkloadTaskStatus) SetEndTime() {
 
 func (i KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.WorkloadName),
-		common.Version.String(i.Spec.Version),
-		common.Namespace.String(i.Namespace),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.WorkloadName),
+		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadNamespace.String(i.Namespace),
 	}
 }
 
 func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.ApplicationName.String(i.Spec.AppName),
-		common.Workload.String(i.Spec.WorkloadName),
-		common.Version.String(i.Spec.Version),
-		common.Namespace.String(i.Namespace),
-		common.DeploymentStatus.String(string(i.Status.PostDeploymentStatus)),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.WorkloadName),
+		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadNamespace.String(i.Namespace),
+		common.WorkloadStatus.String(string(i.Status.PostDeploymentStatus)),
 	}
 }

@@ -5,7 +5,7 @@ metadata:
 spec:
   taskDefinition: hello-keptn-inline
   workload: my-workload
-  workloadVersion: "1.0"
+  version: "1.0"
   application: my-app
   parameters:
     map:

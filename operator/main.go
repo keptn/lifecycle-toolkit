@@ -21,6 +21,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -32,11 +33,12 @@ import (
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkload"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -133,6 +135,18 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn apps"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn apps"), instrument.WithUnit(unit.Unit("s")))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	appActive, err := meter.SyncInt64().UpDownCounter("keptn.app.active", instrument.WithDescription("a simple counter of active apps for Keptn apps"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
@@ -141,6 +155,9 @@ func main() {
 		DeploymentCount:    deploymentCount,
 		DeploymentDuration: deploymentDuration,
 		DeploymentActive:   deploymentActive,
+		AppCount:           appCount,
+		AppDuration:        appDuration,
+		AppActive:          appActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -203,8 +220,10 @@ func main() {
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{
 			Handler: &webhooks.PodMutatingWebhook{
-				Client: mgr.GetClient(),
-				Tracer: otel.Tracer("keptn/webhook"),
+				Client:   mgr.GetClient(),
+				Tracer:   otel.Tracer("keptn/webhook"),
+				Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
+				Log:      ctrl.Log.WithName("Mutating Webhook"),
 			}})
 	}
 	if err = (&keptntask.KeptnTaskReconciler{
@@ -228,8 +247,11 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnapp.KeptnAppReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnApp Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
+		Tracer:   otel.Tracer("keptn/operator/app"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
@@ -253,6 +275,17 @@ func main() {
 		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
+		os.Exit(1)
+	}
+	if err = (&keptnappversion.KeptnAppVersionReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:   otel.Tracer("keptn/operator/appversion"),
+		Meters:   meters,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

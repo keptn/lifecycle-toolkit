@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"math/rand"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
@@ -25,17 +26,70 @@ const MaxVersionLength = 12
 type KeptnState string
 
 const (
-	StateRunning   KeptnState = "Running"
-	StateSucceeded KeptnState = "Succeeded"
-	StateFailed    KeptnState = "Failed"
-	StateUnknown   KeptnState = "Unknown"
-	StatePending   KeptnState = "Pending"
+	StateProgressing KeptnState = "Progressing"
+	StateSucceeded   KeptnState = "Succeeded"
+	StateFailed      KeptnState = "Failed"
+	StateUnknown     KeptnState = "Unknown"
+	StatePending     KeptnState = "Pending"
 )
 
 var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateUnknown
+	return k == StateSucceeded || k == StateFailed
+}
+
+func (k KeptnState) IsSucceeded() bool {
+	return k == StateSucceeded
+}
+
+func (k KeptnState) IsFailed() bool {
+	return k == StateFailed
+}
+
+type StatusSummary struct {
+	Total       int
+	progressing int
+	failed      int
+	succeeded   int
+	pending     int
+	unknown     int
+}
+
+func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary {
+	switch status {
+	case StateFailed:
+		summary.failed++
+	case StateSucceeded:
+		summary.succeeded++
+	case StateProgressing:
+		summary.progressing++
+	case StatePending, "":
+		summary.pending++
+	case StateUnknown:
+		summary.unknown++
+	}
+	return summary
+}
+
+func (s StatusSummary) GetTotalCount() int {
+	return s.failed + s.succeeded + s.progressing + s.pending + s.unknown
+}
+
+func GetOverallState(s StatusSummary) KeptnState {
+	if s.failed > 0 {
+		return StateFailed
+	}
+	if s.progressing > 0 {
+		return StateProgressing
+	}
+	if s.pending > 0 {
+		return StatePending
+	}
+	if s.unknown > 0 || s.GetTotalCount() != s.Total {
+		return StateUnknown
+	}
+	return StateSucceeded
 }
 
 func TruncateString(s string, max int) string {
@@ -57,15 +111,26 @@ type KeptnMeters struct {
 	DeploymentCount    syncint64.Counter
 	DeploymentDuration syncfloat64.Histogram
 	DeploymentActive   syncint64.UpDownCounter
+	AppCount           syncint64.Counter
+	AppDuration        syncfloat64.Histogram
+	AppActive          syncint64.UpDownCounter
 }
 
 const (
-	ApplicationName  attribute.Key = attribute.Key("keptn.deployment.app_name")
-	Workload         attribute.Key = attribute.Key("keptn.deployment.workload")
-	Version          attribute.Key = attribute.Key("keptn.deployment.version")
-	Namespace        attribute.Key = attribute.Key("keptn.deployment.namespace")
-	DeploymentStatus attribute.Key = attribute.Key("keptn.deployment.status")
-	TaskStatus       attribute.Key = attribute.Key("keptn.deployment.task.status")
-	TaskName         attribute.Key = attribute.Key("keptn.deployment.task.name")
-	TaskType         attribute.Key = attribute.Key("keptn.deployment.taks.type")
+	AppName           attribute.Key = attribute.Key("keptn.deployment.app.name")
+	AppVersion        attribute.Key = attribute.Key("keptn.deployment.app.version")
+	AppNamespace      attribute.Key = attribute.Key("keptn.deployment.app.namespace")
+	AppStatus         attribute.Key = attribute.Key("keptn.deployment.app.status")
+	WorkloadName      attribute.Key = attribute.Key("keptn.deployment.workload.name")
+	WorkloadVersion   attribute.Key = attribute.Key("keptn.deployment.workload.version")
+	WorkloadNamespace attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
+	WorkloadStatus    attribute.Key = attribute.Key("keptn.deployment.workload.status")
+	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
 )
+
+func GenerateTaskName(checkType CheckType, taskName string) string {
+	randomId := rand.Intn(99_999-10_000) + 10000
+	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(taskName, 32), randomId)
+}

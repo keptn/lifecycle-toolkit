@@ -23,7 +23,7 @@ spec:
       name: WorkloadName
       type: string
     - jsonPath: .spec.version
-      name: WorkloadVersion
+      name: Version
       type: string
     - jsonPath: .status.jobName
       name: Job Name

@@ -3,6 +3,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
@@ -66,6 +67,7 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
 			Version:          workloadInstance.Spec.Version,
+			Workload:         workloadInstance.Spec.WorkloadName,
 			AppName:          workloadInstance.Spec.AppName,
 			TaskDefinition:   taskDefinition,
 			Parameters:       klcv1alpha1.TaskParameters{},

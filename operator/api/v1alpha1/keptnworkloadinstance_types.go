@@ -60,10 +60,10 @@ type TaskStatus struct {
 //+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
-// +kubebuilder:printcolumn:name="Workload",type=string,JSONPath=`.spec.workloadName`
-// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
+// +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
+// +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
+// +kubebuilder:printcolumn:name="WorkloadStatus",type=string,JSONPath=`.status.deploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
@@ -158,19 +158,19 @@ func (i *TaskStatus) SetEndTime() {
 
 func (i KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.DeploymentAppName.String(i.Spec.AppName),
-		common.DeploymentWorkload.String(i.Spec.WorkloadName),
-		common.DeploymentVersion.String(i.Spec.Version),
-		common.DeploymentNamespace.String(i.Namespace),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.WorkloadName),
+		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadNamespace.String(i.Namespace),
 	}
 }
 
 func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.DeploymentAppName.String(i.Spec.AppName),
-		common.DeploymentWorkload.String(i.Spec.WorkloadName),
-		common.DeploymentVersion.String(i.Spec.Version),
-		common.DeploymentNamespace.String(i.Namespace),
-		common.DeploymentStatus.String(string(i.Status.PostDeploymentStatus)),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.WorkloadName),
+		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadNamespace.String(i.Namespace),
+		common.WorkloadStatus.String(string(i.Status.PostDeploymentStatus)),
 	}
 }

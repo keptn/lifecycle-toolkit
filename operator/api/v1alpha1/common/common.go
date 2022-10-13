@@ -117,18 +117,17 @@ type KeptnMeters struct {
 }
 
 const (
-	AppName             attribute.Key = attribute.Key("keptn.app.name")
-	AppVersion          attribute.Key = attribute.Key("keptn.app.version")
-	AppNamespace        attribute.Key = attribute.Key("keptn.app.namespace")
-	AppStatus           attribute.Key = attribute.Key("keptn.app.status")
-	DeploymentAppName   attribute.Key = attribute.Key("keptn.deployment.app_name")
-	DeploymentWorkload  attribute.Key = attribute.Key("keptn.deployment.workload")
-	DeploymentVersion   attribute.Key = attribute.Key("keptn.deployment.version")
-	DeploymentNamespace attribute.Key = attribute.Key("keptn.deployment.namespace")
-	DeploymentStatus    attribute.Key = attribute.Key("keptn.deployment.status")
-	TaskStatus          attribute.Key = attribute.Key("keptn.deployment.task.status")
-	TaskName            attribute.Key = attribute.Key("keptn.deployment.task.name")
-	TaskType            attribute.Key = attribute.Key("keptn.deployment.taks.type")
+	AppName           attribute.Key = attribute.Key("keptn.deployment.app.name")
+	AppVersion        attribute.Key = attribute.Key("keptn.deployment.app.version")
+	AppNamespace      attribute.Key = attribute.Key("keptn.deployment.app.namespace")
+	AppStatus         attribute.Key = attribute.Key("keptn.deployment.app.status")
+	WorkloadName      attribute.Key = attribute.Key("keptn.deployment.workload.name")
+	WorkloadVersion   attribute.Key = attribute.Key("keptn.deployment.workload.version")
+	WorkloadNamespace attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
+	WorkloadStatus    attribute.Key = attribute.Key("keptn.deployment.workload.status")
+	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {

@@ -3,6 +3,11 @@
 In this example, we will show you an example configuration for enabling the operator to send OpenTelemetry traces and metrics to the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector).
 The Collector will then be used to forward the gathered data to [Jaeger](https://www.jaegertracing.io) and [Prometheus](https://prometheus.io).
 
+# TL;DR
+* You can install the whole demo using: `make install`
+* Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
+* Afterward, see it in action as defined here: [OpenTelemetry in Action](#otel-in-action)
+
 ## Prerequisites:
 
 This tutorial assumes that you have both Jaeger and the Prometheus Operator installed in your Cluster. 
@@ -58,7 +63,7 @@ pick up the new configuration.
 kubectl rollout restart deployment -n keptn-lifecycle-controller-system keptn-scheduler klc-controller-manager
 ```
 
-## Seeing the OpenTelemetry Collector in action
+## Seeing the OpenTelemetry Collector in action {#otel-in-action}
 
 After everything has been set up, use the lifecycle operator to deploy a workload (e.g. using the `single-service` or `podtato-head` example in the `examples` folder).
 Once either of these examples have been deployed, you can view the generated traces in Jaeger. To do so, please create a port-forward for the `jaeger-query` service:

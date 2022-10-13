@@ -5,13 +5,13 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
-  name: keptnevaluationdprovider.lifecycle.keptn.sh
+  name: keptnevaluationprovider.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
   names:
     kind: KeptnEvaluationProvider
     listKind: KeptnEvaluationProviderList
-    plural: keptnevaluationdprovider
+    plural: keptnevaluationprovider
     shortNames:
     - kep
     singular: keptnevaluationprovider

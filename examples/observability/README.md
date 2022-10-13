@@ -3,6 +3,11 @@
 In this example, we will show you an example configuration for enabling the operator to send OpenTelemetry traces and metrics to the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector).
 The Collector will then be used to forward the gathered data to [Jaeger](https://www.jaegertracing.io) and [Prometheus](https://prometheus.io).
 
+# TL;DR
+* You can install the whole demo using: `make install`
+* Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
+* Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action)
+
 ## Prerequisites:
 
 This tutorial assumes that you have both Jaeger and the Prometheus Operator installed in your Cluster. 
@@ -12,14 +17,30 @@ For setting up both Jaeger and Prometheus, please refer to their docs:
 - [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator) 
 - [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md)
 
-In this tutorial, we will assume that Jaeger will be installed in the `keptn-lifecycle-controller-system`, and the Jaeger collector endpoint is reachable under `http://jaeger-collector:14250`.
+If you don't have an already existing installation of Jaeger or Prometheus, you can run these commands to
+have a basic installation up and running.
+
+```shell
+
+# Install Jaeger into the observability namespace and the Jaeger resource into the lifecycle-controller namespace
+kubectl create namespace observability
+kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml -n observability
+kubectl apply -f config/jaeger.yaml -n keptn-lifecycle-controller-system
+
+# Install Prometheus
+kubectl create namespace monitoring
+kubectl apply --server-side -f config/prometheus/setup
+kubectl apply -f config/prometheus/
+```
+
+With these commands, the Jaeger and Prometheus Operator will be installed in the `observability` and `monitoring` namespaces, respectively.
 
 ## Configuring the OpenTelemetry Collector and Prometheus ServiceMonitor
 
 Once Jaeger and Prometheus are installed, you can deploy and configure the OpenTelemetry collector using the manifests in the `config` directory:
 
 ```sh 
-kubectl apply -f config/
+kubectl apply -f config/otel-collector.yaml -n keptn-lifecycle-controller-system
 ```
 
 Also, please ensure that the `OTEL_COLLECTOR_URL` env vars of both the `klc-controller-manager`, 
@@ -32,7 +53,14 @@ Eventually, there should be a pod for the `otel-collector` deployment up and run
 $ kubectl get pods -lapp=opentelemetry -n keptn-lifecycle-controller-system
 
 NAME                              READY   STATUS    RESTARTS      AGE
-otel-collector-6fc4cc84d6-7hnvp   1/1     Running   6 (51m ago)   92m
+otel-collector-6fc4cc84d6-7hnvp   1/1     Running   0             92m
+```
+
+When the `otel-collector` pod is up and running, restart the `keptn-scheduler` and `klc-controller-manager` so they can
+pick up the new configuration.
+
+```shell
+kubectl rollout restart deployment -n keptn-lifecycle-controller-system keptn-scheduler klc-controller-manager
 ```
 
 ## Seeing the OpenTelemetry Collector in action

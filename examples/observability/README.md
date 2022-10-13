@@ -6,7 +6,7 @@ The Collector will then be used to forward the gathered data to [Jaeger](https:/
 # TL;DR
 * You can install the whole demo using: `make install`
 * Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
-* Afterward, see it in action as defined here: [OpenTelemetry in Action](#otel-in-action)
+* Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action-otel-in-action)
 
 ## Prerequisites:
 
@@ -63,7 +63,7 @@ pick up the new configuration.
 kubectl rollout restart deployment -n keptn-lifecycle-controller-system keptn-scheduler klc-controller-manager
 ```
 
-## Seeing the OpenTelemetry Collector in action {#otel-in-action}
+## Seeing the OpenTelemetry Collector in action
 
 After everything has been set up, use the lifecycle operator to deploy a workload (e.g. using the `single-service` or `podtato-head` example in the `examples` folder).
 Once either of these examples have been deployed, you can view the generated traces in Jaeger. To do so, please create a port-forward for the `jaeger-query` service:

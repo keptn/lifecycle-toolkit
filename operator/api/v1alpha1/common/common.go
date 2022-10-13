@@ -132,6 +132,6 @@ const (
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
-	randomId := rand.Intn(99999-10000) + 10000
+	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(taskName, 32), randomId)
 }

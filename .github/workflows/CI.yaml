@@ -176,27 +176,36 @@ jobs:
 
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
+      env:
+        RELEASE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+        TAG: "dev-${{ env.DATETIME }}"
       run: |
-        make release-image RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+        make release-image
 
     - name: Push Docker Images
-      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
       working-directory: ./${{ matrix.config.working-dir }}
+      env:
+        RELEASE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+        TAG: "dev-${{ env.DATETIME }}"
       run: |
-        make push-release-images RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+        make push-release-images
 
     - name: Install controller-gen
-      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
       working-directory: ./${{ matrix.config.working-dir }}
       run: make controller-gen
 
     - name: Generate release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
       working-directory: ./${{ matrix.config.working-dir }}
-      run: make release-manifests RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+      env:
+        RELEASE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+        TAG: "dev-${{ env.DATETIME }}"
+      run: make release-manifests
 
     - name: Upload release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' )
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.config.artifact }}-manifest

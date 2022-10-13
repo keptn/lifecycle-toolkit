@@ -63,7 +63,7 @@ type TaskStatus struct {
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-// +kubebuilder:printcolumn:name="WorkloadStatus",type=string,JSONPath=`.status.deploymentStatus`
+// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API

@@ -177,13 +177,13 @@ jobs:
     - name: Build Docker Images
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
-        make release-image RELEASE_REGISTRY?=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+        make release-image RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
 
     - name: Push Docker Images
       if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
       run: |
-        make push-release-images RELEASE_REGISTRY?=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+        make push-release-images RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
 
     - name: Install controller-gen
       if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
@@ -193,7 +193,7 @@ jobs:
     - name: Generate release.yaml
       if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
       working-directory: ./${{ matrix.config.working-dir }}
-      run: make release-manifests RELEASE_REGISTRY?=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
+      run: make release-manifests RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=dev-${{ env.DATETIME }}
 
     - name: Upload release.yaml
       if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )

@@ -12,6 +12,8 @@ spec:
     kind: KeptnEvaluationDefinition
     listKind: KeptnEvaluationDefinitionList
     plural: keptnevaluationdefinitions
+    shortNames:
+    - ked
     singular: keptnevaluationdefinition
   scope: Namespaced
   versions:

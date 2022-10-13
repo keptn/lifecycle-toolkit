@@ -12,6 +12,8 @@ spec:
     kind: KeptnEvaluationProvider
     listKind: KeptnEvaluationProviderList
     plural: keptnevaluationproviders
+    shortNames:
+    - kep
     singular: keptnevaluationprovider
   scope: Namespaced
   versions:

@@ -37,6 +37,7 @@ type KeptnEvaluationProviderStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:path=keptnevaluationdprovider,shortName=kep
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
 type KeptnEvaluationProvider struct {

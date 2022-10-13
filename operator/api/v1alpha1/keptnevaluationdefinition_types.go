@@ -43,6 +43,7 @@ type KeptnEvaluationDefinitionStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:path=keptnevaluationdefinition,shortName=ked
 
 // KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
 type KeptnEvaluationDefinition struct {

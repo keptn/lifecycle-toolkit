@@ -57,7 +57,7 @@ jobs:
 
       - name: Create images and manifests
         env:
-          RELEASE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+          RELEASE_REGISTRY: "ghcr.io/${{ github.actor }}"
           TAG: "${{ needs.release-please.outputs.tag_name }}"
         run: |
           cd functions-runtime

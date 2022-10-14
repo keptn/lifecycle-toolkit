@@ -89,7 +89,8 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsCompleted() && evaluation.Status.RetryCount <= evaluation.Spec.Retries {
-		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, req.NamespacedName) //TODO we need to fetch using the right name not the Evaluation name
+		namespacedDefinition := types.NamespacedName{req.NamespacedName.Namespace, evaluation.Spec.EvaluationDefinition}
+		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, namespacedDefinition)
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 		}
@@ -164,9 +165,9 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespace types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
+func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
 	evaluationDefinition := &klcv1alpha1.KeptnEvaluationDefinition{}
-	if err := r.Client.Get(ctx, namespace, evaluationDefinition); err != nil {
+	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
 			r.Log.Info("KeptnEvaluationDefinition resource not found. Ignoring since object must be deleted")
@@ -176,8 +177,9 @@ func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Contex
 		return nil, nil, err
 	}
 
+	namespacedProvider := types.NamespacedName{Namespace: namespacedDefinition.Namespace, Name: evaluationDefinition.Spec.Source}
 	evaluationProvider := &klcv1alpha1.KeptnEvaluationProvider{}
-	if err := r.Client.Get(ctx, namespace, evaluationProvider); err != nil {
+	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
 			r.Log.Info("KeptnEvaluationProvider resource not found. Ignoring since object must be deleted")

@@ -147,6 +147,18 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - keptnevaluationdefinitions
+  verbs:
+  - get
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnevaluationproviders
+  verbs:
+  - get
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
   - keptnevaluations
   verbs:
   - create

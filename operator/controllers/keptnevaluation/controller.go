@@ -89,11 +89,15 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsCompleted() && evaluation.Status.RetryCount <= evaluation.Spec.Retries {
-		namespacedDefinition := types.NamespacedName{req.NamespacedName.Namespace, evaluation.Spec.EvaluationDefinition}
+		namespacedDefinition := types.NamespacedName{
+			Namespace: req.NamespacedName.Namespace,
+			Name:      evaluation.Spec.EvaluationDefinition,
+		}
 		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, namespacedDefinition)
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 		}
+
 		if evaluationDefinition == nil && evaluationProvider == nil {
 			return ctrl.Result{}, nil
 		}
@@ -167,6 +171,7 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
 	evaluationDefinition := &klcv1alpha1.KeptnEvaluationDefinition{}
+
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
@@ -177,8 +182,13 @@ func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Contex
 		return nil, nil, err
 	}
 
-	namespacedProvider := types.NamespacedName{Namespace: namespacedDefinition.Namespace, Name: evaluationDefinition.Spec.Source}
+	namespacedProvider := types.NamespacedName{
+		Namespace: namespacedDefinition.Namespace,
+		Name:      evaluationDefinition.Spec.Source,
+	}
+
 	evaluationProvider := &klcv1alpha1.KeptnEvaluationProvider{}
+
 	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
@@ -196,11 +206,14 @@ func (r KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objecti
 	query := &klcv1alpha1.EvaluationStatusItem{
 		Name:   objective.Name,
 		Value:  "",
-		Status: "",
+		Status: common.StateFailed, //setting status per default to failed
 	}
 
-	//TODO query provider like prometheus service does
-	//TODO decide and update status in query
+	//TODO query provider like prometheus service does, save result in value THIS SHALL BE SOLVED IN TICKET #163
+	// will be something like
+	// import apiv1 "github.com/prometheus/client_golang/api/prometheus/v1"
+	// if provider ==prometheus   {  result, w, err := apiv1.PrometheusAPI.Query(context.TODO(), query, endUnix)	if err != nil {		return 0, fmt.Errorf("unable to query prometheus api: %w", err)}}
+	//TODO check value with evaluation target and update status in query
 
 	return query
 }

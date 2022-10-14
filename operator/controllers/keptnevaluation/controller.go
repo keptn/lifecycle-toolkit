@@ -26,6 +26,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -87,14 +88,44 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluation.SetStartTime()
 	}
 
-	// TODO logic of evaluation controller
-	//
-	//
-	//
-	//
-	//
-	//
-	//
+	if !evaluation.Status.OverallStatus.IsCompleted() && evaluation.Status.RetryCount <= evaluation.Spec.Retries {
+		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, req.NamespacedName)
+		if err != nil {
+			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+		}
+		if evaluationDefinition == nil && evaluationProvider == nil {
+			return ctrl.Result{}, nil
+		}
+
+		if len(evaluation.Status.EvaluationStatus) != len(evaluationDefinition.Spec.Objectives) {
+			evaluation.InitializeEvaluationStatuses(*evaluationDefinition)
+		}
+
+		statusSummary := common.StatusSummary{}
+
+		for i, query := range evaluationDefinition.Spec.Objectives {
+			if evaluation.Status.EvaluationStatus[i].Status.IsSucceeded() {
+				statusSummary = common.UpdateStatusSummary(common.StateSucceeded, statusSummary)
+				continue
+			}
+			statusItem := r.queryEvaluation(query, *evaluationProvider)
+			statusSummary = common.UpdateStatusSummary(statusItem.Status, statusSummary)
+			evaluation.Status.EvaluationStatus[i] = *statusItem
+		}
+
+		evaluation.Status.RetryCount++
+		evaluation.Status.OverallStatus = common.GetOverallState(statusSummary)
+	}
+
+	err := r.Client.Status().Update(ctx, evaluation)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return ctrl.Result{Requeue: true}, err
+	}
+
+	if !evaluation.Status.OverallStatus.IsCompleted() {
+		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
+	}
 
 	r.Log.Info("Finished Reconciling KeptnEvaluation")
 
@@ -106,7 +137,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluation.SetEndTime()
 	}
 
-	err := r.Client.Status().Update(ctx, evaluation)
+	err = r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
@@ -131,4 +162,34 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha1.KeptnEvaluation{}).
 		Complete(r)
+}
+
+func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespace types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
+	evaluationDefinition := &klcv1alpha1.KeptnEvaluationDefinition{}
+	if err := r.Client.Get(ctx, namespace, evaluationDefinition); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("KeptnEvaluationDefinition resource not found. Ignoring since object must be deleted")
+			return nil, nil, nil
+		}
+		r.Log.Error(err, "Failed to get the KeptnEvaluationDefinition")
+		return nil, nil, err
+	}
+
+	evaluationProvider := &klcv1alpha1.KeptnEvaluationProvider{}
+	if err := r.Client.Get(ctx, namespace, evaluationProvider); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("KeptnEvaluationProvider resource not found. Ignoring since object must be deleted")
+			return nil, nil, nil
+		}
+		r.Log.Error(err, "Failed to get the KeptnEvaluationProvider")
+		return nil, nil, err
+	}
+
+	return evaluationDefinition, evaluationProvider, nil
+}
+
+func (r KeptnEvaluationReconciler) queryEvaluation(klcv1alpha1.Objective, klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
+	return nil
 }

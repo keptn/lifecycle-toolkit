@@ -14,4 +14,4 @@ kind: Kustomization
 images:
 - name: klfc-scheduler
   newName: docker.io/annadreal/scheduler
-  newTag: "202210141665745045"
+  newTag: "202210141665746454"

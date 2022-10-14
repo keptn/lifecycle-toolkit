@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -26,12 +28,17 @@ import (
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
-	EvaluationDefinition string `json:"evaluationDefinition"`
-	Source               string `json:"source"`
+	EvaluationDefinition string        `json:"evaluationDefinition"`
+	Source               string        `json:"source"`
+	Timeframe            time.Duration `json:"timeframe,omitempty"`
+	Retries              int           `json:"retries,omitempty"`
+	RetryInterval        time.Duration `json:"retryInterval,omitempty"`
+	FailAction           string        `json:"failAction,omitempty"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 type KeptnEvaluationStatus struct {
+	RetryCount       int                    `json:"retryCount"`
 	EvaluationStatus []EvaluationStatusItem `json:"evaluationStatus"`
 	OverallStatus    common.KeptnState      `json:"overallStatus"`
 }

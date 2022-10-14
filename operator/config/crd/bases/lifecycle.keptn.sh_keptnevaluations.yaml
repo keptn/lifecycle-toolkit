@@ -75,6 +75,9 @@ spec:
           status:
             description: KeptnEvaluationStatus defines the observed state of KeptnEvaluation
             properties:
+              endTime:
+                format: date-time
+                type: string
               evaluationStatus:
                 items:
                   properties:
@@ -94,6 +97,9 @@ spec:
                 type: string
               retryCount:
                 type: integer
+              startTime:
+                format: date-time
+                type: string
             required:
             - evaluationStatus
             - overallStatus

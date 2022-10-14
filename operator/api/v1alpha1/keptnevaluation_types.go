@@ -125,3 +125,13 @@ func (i KeptnEvaluation) GetMetricsAttributes() []attribute.KeyValue {
 		common.EvaluationStatus.String(string(i.Status.OverallStatus)),
 	}
 }
+
+func (e *KeptnEvaluation) InitializeEvaluationStatuses(definition KeptnEvaluationDefinition) {
+	for _, query := range definition.Spec.Objectives {
+		evaluationStatusItem := EvaluationStatusItem{
+			Name:   query.Name,
+			Status: common.StatePending,
+		}
+		e.Status.EvaluationStatus = append(e.Status.EvaluationStatus, evaluationStatusItem)
+	}
+}

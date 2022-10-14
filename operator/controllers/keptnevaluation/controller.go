@@ -18,6 +18,7 @@ package keptnevaluation
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -122,46 +123,53 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 		evaluation.Status.RetryCount++
 		evaluation.Status.OverallStatus = common.GetOverallState(statusSummary)
+
 	}
 
+	if evaluation.Status.OverallStatus.IsCompleted() {
+
+		r.Log.Info("Finished Reconciling KeptnEvaluation")
+
+		if !evaluation.IsEndTimeSet() {
+			// metrics: decrement active evaluation counter
+			r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
+			evaluation.SetEndTime()
+		}
+
+		err := r.Client.Status().Update(ctx, evaluation)
+		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
+			r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+			return ctrl.Result{Requeue: true}, err
+		}
+
+		r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
+
+		attrs := evaluation.GetMetricsAttributes()
+
+		r.Log.Info("Increasing evaluation count")
+
+		// metrics: increment evaluation counter
+		r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
+
+		// metrics: add evaluation duration
+		duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
+		r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
+
+		return ctrl.Result{}, nil
+	}
+
+	// Evaluation is uncompleted , update status anyway
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
+		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	if !evaluation.Status.OverallStatus.IsCompleted() {
-		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
-	}
+	r.recordEvent("Warning", evaluation, "NotFinished", "has not finished")
 
-	r.Log.Info("Finished Reconciling KeptnEvaluation")
-
-	// Evaluation is completed at this place
-
-	if !evaluation.IsEndTimeSet() {
-		// metrics: decrement active evaluation counter
-		r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
-		evaluation.SetEndTime()
-	}
-
-	err = r.Client.Status().Update(ctx, evaluation)
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		return ctrl.Result{Requeue: true}, err
-	}
-
-	attrs := evaluation.GetMetricsAttributes()
-
-	r.Log.Info("Increasing evaluation count")
-
-	// metrics: increment evaluation counter
-	r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
-
-	// metrics: add evaluation duration
-	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
-	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
-
-	return ctrl.Result{}, nil
+	return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -218,4 +226,8 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 	//TODO check value with evaluation target and update status in query
 
 	return query
+}
+
+func (r *KeptnEvaluationReconciler) recordEvent(eventType string, evaluation *klcv1alpha1.KeptnEvaluation, shortReason string, longReason string) {
+	r.Recorder.Event(evaluation, eventType, shortReason, fmt.Sprintf("%s / Namespace: %s, Name: %s, WorkloadVersion: %s ", longReason, evaluation.Namespace, evaluation.Name, evaluation.Spec.WorkloadVersion))
 }

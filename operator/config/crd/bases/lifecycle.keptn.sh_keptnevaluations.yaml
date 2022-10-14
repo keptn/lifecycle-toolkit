@@ -55,8 +55,6 @@ spec:
                   representable duration to approximately 290 years.
                 format: int64
                 type: integer
-              source:
-                type: string
               timeframe:
                 description: A Duration represents the elapsed time between two instants
                   as an int64 nanosecond count. The representation limits the largest
@@ -69,7 +67,6 @@ spec:
                 type: string
             required:
             - evaluationDefinition
-            - source
             - workloadVersion
             type: object
           status:

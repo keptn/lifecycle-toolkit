@@ -34,7 +34,6 @@ type KeptnEvaluationSpec struct {
 	AppName              string           `json:"app,omitempty"`
 	AppVersion           string           `json:"appVersion,omitempty"`
 	EvaluationDefinition string           `json:"evaluationDefinition"`
-	Source               string           `json:"source"`
 	Timeframe            time.Duration    `json:"timeframe,omitempty"`
 	Retries              int              `json:"retries,omitempty"`
 	RetryInterval        time.Duration    `json:"retryInterval,omitempty"`

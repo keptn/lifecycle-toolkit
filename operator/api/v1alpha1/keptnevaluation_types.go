@@ -28,12 +28,17 @@ import (
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
-	EvaluationDefinition string        `json:"evaluationDefinition"`
-	Source               string        `json:"source"`
-	Timeframe            time.Duration `json:"timeframe,omitempty"`
-	Retries              int           `json:"retries,omitempty"`
-	RetryInterval        time.Duration `json:"retryInterval,omitempty"`
-	FailAction           string        `json:"failAction,omitempty"`
+	Workload             string           `json:"workload,omitempty"`
+	WorkloadVersion      string           `json:"workloadVersion"`
+	AppName              string           `json:"app,omitempty"`
+	AppVersion           string           `json:"appVersion,omitempty"`
+	EvaluationDefinition string           `json:"evaluationDefinition"`
+	Source               string           `json:"source"`
+	Timeframe            time.Duration    `json:"timeframe,omitempty"`
+	Retries              int              `json:"retries,omitempty"`
+	RetryInterval        time.Duration    `json:"retryInterval,omitempty"`
+	FailAction           string           `json:"failAction,omitempty"`
+	Type                 common.CheckType `json:"checkType,omitempty"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation

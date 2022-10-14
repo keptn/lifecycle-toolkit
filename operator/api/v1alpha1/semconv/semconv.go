@@ -36,6 +36,15 @@ func AddAttributeFromTask(s trace.Span, t v1alpha1.KeptnTask) {
 	s.SetAttributes(common.TaskType.String(string(t.Spec.Type)))
 }
 
+func AddAttributeFromEvaluation(s trace.Span, t v1alpha1.KeptnEvaluation) {
+	s.SetAttributes(common.AppName.String(t.Spec.AppName))
+	s.SetAttributes(common.AppVersion.String(t.Spec.AppVersion))
+	s.SetAttributes(common.WorkloadName.String(t.Spec.Workload))
+	s.SetAttributes(common.WorkloadVersion.String(t.Spec.WorkloadVersion))
+	s.SetAttributes(common.EvaluationName.String(t.Name))
+	s.SetAttributes(common.EvaluationType.String(string(t.Spec.Type)))
+}
+
 func AddAttributeFromAnnotations(s trace.Span, annotations map[string]string) {
 	s.SetAttributes(common.AppName.String(annotations[common.AppAnnotation]))
 	s.SetAttributes(common.WorkloadName.String(annotations[common.WorkloadAnnotation]))

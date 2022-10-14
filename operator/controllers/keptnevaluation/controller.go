@@ -89,7 +89,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsCompleted() && evaluation.Status.RetryCount <= evaluation.Spec.Retries {
-		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, req.NamespacedName)
+		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, req.NamespacedName) //TODO we need to fetch using the right name not the Evaluation name
 		if err != nil {
 			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 		}
@@ -196,6 +196,9 @@ func (r KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objecti
 		Value:  "",
 		Status: "",
 	}
+
+	//TODO query provider like prometheus service does
+	//TODO decide and update status in query
 
 	return query
 }

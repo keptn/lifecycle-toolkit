@@ -20,13 +20,15 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/kelseyhightower/envconfig"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
@@ -69,6 +71,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
@@ -286,6 +289,13 @@ func main() {
 		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
+		os.Exit(1)
+	}
+	if err = (&controllers.KeptnEvaluationReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

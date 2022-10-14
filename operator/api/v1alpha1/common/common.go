@@ -121,7 +121,7 @@ type KeptnMeters struct {
 	AppActive          syncint64.UpDownCounter
 	AnalysisCount      syncint64.Counter
 	AnalysisDuration   syncfloat64.Histogram
-	AnalysusActive     syncint64.UpDownCounter
+	AnalysisActive     syncint64.UpDownCounter
 }
 
 const (

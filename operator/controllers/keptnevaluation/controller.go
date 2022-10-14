@@ -18,17 +18,22 @@ package keptnevaluation
 
 import (
 	"context"
+	"time"
 
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/go-logr/logr"
-	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 )
 
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
@@ -55,9 +60,68 @@ type KeptnEvaluationReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	r.Log.Info("Reconciling KeptnEvaluation")
+	evaluation := &klcv1alpha1.KeptnEvaluation{}
 
-	// TODO(user): your logic here
+	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("KeptnEvaluation resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{}, nil
+		}
+		r.Log.Error(err, "Failed to get the KeptnEvaluation")
+		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+	}
+
+	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
+	defer span.End()
+
+	semconv.AddAttributeFromEvaluation(span, *evaluation)
+
+	if !evaluation.IsStartTimeSet() {
+		// metrics: increment active evaluation counter
+		r.Meters.AnalysisActive.Add(ctx, 1, evaluation.GetActiveMetricsAttributes()...)
+		evaluation.SetStartTime()
+	}
+
+	// TODO logic of evaluation controller
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+
+	r.Log.Info("Finished Reconciling KeptnEvaluation")
+
+	// Evaluation is completed at this place
+
+	if !evaluation.IsEndTimeSet() {
+		// metrics: decrement active evaluation counter
+		r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
+		evaluation.SetEndTime()
+	}
+
+	err := r.Client.Status().Update(ctx, evaluation)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return ctrl.Result{Requeue: true}, err
+	}
+
+	attrs := evaluation.GetMetricsAttributes()
+
+	r.Log.Info("Increasing evaluation count")
+
+	// metrics: increment evaluation counter
+	r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
+
+	// metrics: add evaluation duration
+	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
+	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	return ctrl.Result{}, nil
 }
@@ -65,6 +129,6 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&lifecyclev1alpha1.KeptnEvaluation{}).
+		For(&klcv1alpha1.KeptnEvaluation{}).
 		Complete(r)
 }

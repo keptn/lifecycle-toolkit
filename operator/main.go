@@ -176,7 +176,7 @@ func main() {
 		AppActive:          appActive,
 		AnalysisCount:      analysisCount,
 		AnalysisDuration:   analysisDuration,
-		AnalysusActive:     analysisActive,
+		AnalysisActive:     analysisActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

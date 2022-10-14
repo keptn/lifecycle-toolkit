@@ -151,6 +151,18 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	analysisCount, err := meter.SyncInt64().Counter("keptn.analysis.count", instrument.WithDescription("a simple counter for Keptn analysis for Evaluations"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	analysisDuration, err := meter.SyncFloat64().Histogram("keptn.analysis.duration", instrument.WithDescription("a histogram of duration for Keptn analysis for Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	analysisActive, err := meter.SyncInt64().UpDownCounter("keptn.analysis.active", instrument.WithDescription("a simple counter of active apps for Keptn analysis for Evaluations"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
@@ -162,6 +174,9 @@ func main() {
 		AppCount:           appCount,
 		AppDuration:        appDuration,
 		AppActive:          appActive,
+		AnalysisCount:      analysisCount,
+		AnalysisDuration:   analysisDuration,
+		AnalysusActive:     analysisActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -293,8 +308,12 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnevaluation.KeptnEvaluationReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:   otel.Tracer("keptn/operator/appversion"),
+		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)

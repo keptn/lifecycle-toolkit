@@ -37,6 +37,12 @@ spec:
           spec:
             description: KeptnEvaluationSpec defines the desired state of KeptnEvaluation
             properties:
+              app:
+                type: string
+              appVersion:
+                type: string
+              checkType:
+                type: string
               evaluationDefinition:
                 type: string
               failAction:
@@ -57,9 +63,14 @@ spec:
                   representable duration to approximately 290 years.
                 format: int64
                 type: integer
+              workload:
+                type: string
+              workloadVersion:
+                type: string
             required:
             - evaluationDefinition
             - source
+            - workloadVersion
             type: object
           status:
             description: KeptnEvaluationStatus defines the observed state of KeptnEvaluation

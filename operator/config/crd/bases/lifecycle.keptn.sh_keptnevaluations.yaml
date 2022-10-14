@@ -39,8 +39,24 @@ spec:
             properties:
               evaluationDefinition:
                 type: string
+              failAction:
+                type: string
+              retries:
+                type: integer
+              retryInterval:
+                description: A Duration represents the elapsed time between two instants
+                  as an int64 nanosecond count. The representation limits the largest
+                  representable duration to approximately 290 years.
+                format: int64
+                type: integer
               source:
                 type: string
+              timeframe:
+                description: A Duration represents the elapsed time between two instants
+                  as an int64 nanosecond count. The representation limits the largest
+                  representable duration to approximately 290 years.
+                format: int64
+                type: integer
             required:
             - evaluationDefinition
             - source
@@ -65,9 +81,12 @@ spec:
                 type: array
               overallStatus:
                 type: string
+              retryCount:
+                type: integer
             required:
             - evaluationStatus
             - overallStatus
+            - retryCount
             type: object
         type: object
     served: true

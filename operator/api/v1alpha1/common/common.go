@@ -107,6 +107,8 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+const PreAnalysisCheckType CheckType = "pre"
+const PostAnalysisCheckType CheckType = "post"
 
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter
@@ -118,6 +120,9 @@ type KeptnMeters struct {
 	AppCount           syncint64.Counter
 	AppDuration        syncfloat64.Histogram
 	AppActive          syncint64.UpDownCounter
+	AnalysisCount      syncint64.Counter
+	AnalysisDuration   syncfloat64.Histogram
+	AnalysusActive     syncint64.UpDownCounter
 }
 
 const (
@@ -132,6 +137,9 @@ const (
 	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
 	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
 	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
+	EvaluationStatus  attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
+	EvaluationName    attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
+	EvaluationType    attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {

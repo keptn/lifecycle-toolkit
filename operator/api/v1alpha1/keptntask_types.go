@@ -29,9 +29,9 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload,omitempty"` //TODO make autofill logic
+	Workload         string           `json:"workload,omitempty"`
 	Version          string           `json:"version"`
-	AppName          string           `json:"app,omitempty"` //TODO make autofill logic
+	AppName          string           `json:"app,omitempty"`
 	TaskDefinition   string           `json:"taskDefinition"`
 	Context          TaskContext      `json:"context"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`

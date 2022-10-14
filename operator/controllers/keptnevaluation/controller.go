@@ -19,18 +19,26 @@ package keptnevaluation
 import (
 	"context"
 
+	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	"github.com/go-logr/logr"
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 )
 
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
 type KeptnEvaluationReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme   *runtime.Scheme
+	Recorder record.EventRecorder
+	Log      logr.Logger
+	Meters   common.KeptnMeters
+	Tracer   trace.Tracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations,verbs=get;list;watch;create;update;patch;delete

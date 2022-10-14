@@ -190,6 +190,12 @@ func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Contex
 	return evaluationDefinition, evaluationProvider, nil
 }
 
-func (r KeptnEvaluationReconciler) queryEvaluation(klcv1alpha1.Objective, klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
-	return nil
+func (r KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
+	query := &klcv1alpha1.EvaluationStatusItem{
+		Name:   objective.Name,
+		Value:  "",
+		Status: "",
+	}
+
+	return query
 }

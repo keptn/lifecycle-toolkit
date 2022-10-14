@@ -39,6 +39,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnevaluation"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
@@ -71,7 +72,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
@@ -291,7 +292,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&controllers.KeptnEvaluationReconciler{
+	if err = (&keptnevaluation.KeptnEvaluationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

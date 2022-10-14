@@ -50,6 +50,8 @@ type KeptnEvaluationReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations/finalizers,verbs=update
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationproviders,verbs=get
+//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationdefinitions,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -169,7 +171,7 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
+func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha1.KeptnEvaluationDefinition, *klcv1alpha1.KeptnEvaluationProvider, error) {
 	evaluationDefinition := &klcv1alpha1.KeptnEvaluationDefinition{}
 
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
@@ -202,7 +204,7 @@ func (r KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Contex
 	return evaluationDefinition, evaluationProvider, nil
 }
 
-func (r KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
+func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
 	query := &klcv1alpha1.EvaluationStatusItem{
 		Name:   objective.Name,
 		Value:  "",
@@ -210,9 +212,9 @@ func (r KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objecti
 	}
 
 	//TODO query provider like prometheus service does, save result in value THIS SHALL BE SOLVED IN TICKET #163
-	// will be something like
+	// it will be something hardcoded like
 	// import apiv1 "github.com/prometheus/client_golang/api/prometheus/v1"
-	// if provider ==prometheus   {  result, w, err := apiv1.PrometheusAPI.Query(context.TODO(), query, endUnix)	if err != nil {		return 0, fmt.Errorf("unable to query prometheus api: %w", err)}}
+	// if provider ==prometheus   {  result, w, err := apiv1.PrometheusAPI.Query(context.Background(), query, endUnix)	if err != nil {		return 0, fmt.Errorf("unable to query prometheus api: %w", err)}}
 	//TODO check value with evaluation target and update status in query
 
 	return query

@@ -3,4 +3,5 @@ kind: KeptnEvaluation
 metadata:
   name: keptnevaluation-sample
 spec:
-  # TODO(user): Add fields here
+  evaluationDefinition: my-prometheus-definition #name of the KeptnEvaluationDefinition to use
+  workloadVersion: "1.3"

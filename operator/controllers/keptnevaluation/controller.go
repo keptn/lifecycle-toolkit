@@ -126,50 +126,51 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	}
 
-	if evaluation.Status.OverallStatus.IsCompleted() {
-
-		r.Log.Info("Finished Reconciling KeptnEvaluation")
-
-		if !evaluation.IsEndTimeSet() {
-			// metrics: decrement active evaluation counter
-			r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
-			evaluation.SetEndTime()
-		}
-
+	if !evaluation.Status.OverallStatus.IsCompleted() {
+		// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 		err := r.Client.Status().Update(ctx, evaluation)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true}, err
 		}
 
-		r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
+		r.recordEvent("Warning", evaluation, "NotFinished", "has not finished")
 
-		attrs := evaluation.GetMetricsAttributes()
+		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
 
-		r.Log.Info("Increasing evaluation count")
-
-		// metrics: increment evaluation counter
-		r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
-
-		// metrics: add evaluation duration
-		duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
-		r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
-
-		return ctrl.Result{}, nil
 	}
 
-	// Evaluation is uncompleted , update status anyway
+	r.Log.Info("Finished Reconciling KeptnEvaluation")
+
+	if !evaluation.IsEndTimeSet() {
+		// metrics: decrement active evaluation counter
+		r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
+		evaluation.SetEndTime()
+	}
+
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
 		span.SetStatus(codes.Error, err.Error())
+		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.recordEvent("Warning", evaluation, "NotFinished", "has not finished")
+	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
 
-	return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
+	attrs := evaluation.GetMetricsAttributes()
+
+	r.Log.Info("Increasing evaluation count")
+
+	// metrics: increment evaluation counter
+	r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
+
+	// metrics: add evaluation duration
+	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
+	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
+
+	return ctrl.Result{}, nil
+
 }
 
 // SetupWithManager sets up the controller with the Manager.

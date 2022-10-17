@@ -2,14 +2,17 @@ package klcpermit
 
 import (
 	"context"
+	"fmt"
 	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/tracing"
 	"go.opentelemetry.io/otel/codes"
+	"hash/fnv"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/klog/v2"
+	"strings"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
@@ -36,6 +39,13 @@ const (
 	StateUnknown   KeptnState = "Unknown"
 	StatePending   KeptnState = "Pending"
 )
+
+const WorkloadAnnotation = "keptn.sh/workload"
+const VersionAnnotation = "keptn.sh/version"
+const AppAnnotation = "keptn.sh/app"
+const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
+const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
+const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 
 type Manager interface {
 	Permit(context.Context, *corev1.Pod) Status
@@ -112,13 +122,51 @@ func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unst
 }
 
 func getCRDName(pod *corev1.Pod) string {
-	application := pod.Annotations["keptn.sh/app"]
-	workloadInstance := pod.Annotations["keptn.sh/workload"]
-	version := pod.Annotations["keptn.sh/version"]
+	application, _ := getLabelOrAnnotation(pod, AppAnnotation, K8sRecommendedAppAnnotations)
+	workloadInstance, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)
+	version, versionExists := getLabelOrAnnotation(pod, VersionAnnotation, K8sRecommendedVersionAnnotations)
+	if !versionExists {
+		version = calculateVersion(pod)
+	}
 	return application + "-" + workloadInstance + "-" + version
 }
 
 func unbindSpan(pod *corev1.Pod) {
 	name := getCRDName(pod)
 	delete(bindCRDSpan, name)
+}
+
+func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+	if pod.Annotations[primaryAnnotation] != "" {
+		return pod.Annotations[primaryAnnotation], true
+	} else if pod.Labels[primaryAnnotation] != "" {
+		return pod.Labels[primaryAnnotation], true
+	} else if pod.Annotations[secondaryAnnotation] != "" {
+		return pod.Annotations[secondaryAnnotation], true
+	} else if pod.Labels[secondaryAnnotation] != "" {
+		return pod.Labels[secondaryAnnotation], true
+	}
+	return "", false
+}
+
+func calculateVersion(pod *corev1.Pod) string {
+	name := ""
+
+	if len(pod.Spec.Containers) == 1 {
+		image := strings.Split(pod.Spec.Containers[0].Image, ":")
+		if len(image) > 0 && image[1] != "" && image[1] != "latest" {
+			return image[1]
+		}
+	}
+
+	for _, item := range pod.Spec.Containers {
+		name = name + item.Name + item.Image
+		for _, e := range item.Env {
+			name = name + e.Name + e.Value
+		}
+	}
+
+	h := fnv.New32a()
+	h.Write([]byte(name))
+	return fmt.Sprint(h.Sum32())
 }

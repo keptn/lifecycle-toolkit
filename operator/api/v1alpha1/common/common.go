@@ -16,6 +16,9 @@ const PreDeploymentTaskAnnotation = "keptn.sh/pre-deployment-tasks"
 const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
 const PostDeploymentAnalysisAnnotation = "keptn.sh/post-deployment-analysis"
+const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
+const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
+const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 const TaskNameAnnotation = "keptn.sh/task-name"
 
 const MaxAppNameLength = 25

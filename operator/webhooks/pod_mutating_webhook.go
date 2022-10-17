@@ -411,18 +411,3 @@ func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAn
 	}
 	return "", false
 }
-
-func (a *PodMutatingWebhook) getNamespaceAnnotations(ctx context.Context, namespace string) (map[string]string, error) {
-	ns := &corev1.Namespace{}
-	if err := a.Client.Get(ctx, types.NamespacedName{Name: namespace}, &corev1.Namespace{}); err != nil {
-		return nil, fmt.Errorf("namespace %s not found", namespace)
-	}
-	out := make(map[string]string)
-	for k, v := range ns.Annotations {
-		out[k] = v
-	}
-	for k, v := range ns.Labels {
-		out[k] = v
-	}
-	return out, nil
-}

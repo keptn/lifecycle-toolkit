@@ -34,7 +34,11 @@ type KeptnEvaluationSpec struct {
 	AppName              string `json:"app,omitempty"`
 	AppVersion           string `json:"appVersion,omitempty"`
 	EvaluationDefinition string `json:"evaluationDefinition"`
-	// +kubebuilder:default:=30
+	// +optional
+	// +kubebuilder:default:="30s"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
 	Timeframe metav1.Duration `json:"timeframe,omitempty"`
 	// +kubebuilder:default:=10
 	Retries       int              `json:"retries,omitempty"`

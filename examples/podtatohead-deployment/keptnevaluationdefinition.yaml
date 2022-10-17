@@ -1,0 +1,15 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: query-1 #string
+      query: "xxxx" #string:  promQL query
+      evaluationTarget: <20 #string: can only be starting with < or >
+    - name: query-2
+      query: "yyyy"
+      evaluationTarget: >4
+

@@ -101,7 +101,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluation.Status.OverallStatus = common.StateFailed
 		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 
-		return ctrl.Result{}, err
+		return ctrl.Result{}, nil
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
@@ -245,7 +245,7 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
 	query := &klcv1alpha1.EvaluationStatusItem{
 		Value:  "",
-		Status: common.StateSucceeded, //setting status per default to failed
+		Status: common.StateFailed, //setting status per default to failed
 	}
 
 	//TODO query provider like prometheus service does, save result in value THIS SHALL BE SOLVED IN TICKET #163

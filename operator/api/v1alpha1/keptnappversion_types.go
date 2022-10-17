@@ -40,11 +40,17 @@ type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	PreEvaluationStatus common.KeptnState `json:"preEvaluationStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	PostEvaluationStatus common.KeptnState `json:"postEvaluationStatus,omitempty"`
+	// +kubebuilder:default:=Pending
 	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
 	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"`
 
-	PreDeploymentTaskStatus  []TaskStatus `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus []TaskStatus `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentTaskStatus  []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
+	PreEvaluationTaskStatus  []EvaluationStatus `json:"preEvaluationTaskStatus,omitempty"`
+	PostEvaluationTaskStatus []EvaluationStatus `json:"postEvaluationTaskStatus,omitempty"`
 
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	EndTime   metav1.Time `json:"endTime,omitempty"`
@@ -91,6 +97,10 @@ func (v KeptnAppVersion) IsPreDeploymentCompleted() bool {
 	return v.Status.PreDeploymentStatus.IsCompleted()
 }
 
+func (v KeptnAppVersion) IsPreEvaluationCompleted() bool {
+	return v.Status.PreEvaluationStatus.IsCompleted()
+}
+
 func (v KeptnAppVersion) IsPreDeploymentSucceeded() bool {
 	return v.Status.PreDeploymentStatus.IsSucceeded()
 }
@@ -99,12 +109,32 @@ func (v KeptnAppVersion) IsPreDeploymentFailed() bool {
 	return v.Status.PreDeploymentStatus.IsFailed()
 }
 
+func (v KeptnAppVersion) IsPreEvaluationSucceeded() bool {
+	return v.Status.PreEvaluationStatus.IsSucceeded()
+}
+
+func (v KeptnAppVersion) IsPreEvaluationFailed() bool {
+	return v.Status.PreEvaluationStatus.IsFailed()
+}
+
 func (v KeptnAppVersion) IsPostDeploymentCompleted() bool {
 	return v.Status.PostDeploymentStatus.IsCompleted()
 }
 
+func (v KeptnAppVersion) IsPostEvaluationCompleted() bool {
+	return v.Status.PostEvaluationStatus.IsCompleted()
+}
+
 func (v KeptnAppVersion) IsPostDeploymentFailed() bool {
 	return v.Status.PostDeploymentStatus.IsFailed()
+}
+
+func (v KeptnAppVersion) IsPostEvaluationSucceeded() bool {
+	return v.Status.PostEvaluationStatus.IsSucceeded()
+}
+
+func (v KeptnAppVersion) IsPostEvaluationFailed() bool {
+	return v.Status.PostEvaluationStatus.IsFailed()
 }
 
 func (v KeptnAppVersion) IsPostDeploymentSucceeded() bool {

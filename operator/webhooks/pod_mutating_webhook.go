@@ -344,11 +344,11 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
-			Version:                  version,
-			PreDeploymentTasks:       []string{},
-			PostDeploymentTasks:      []string{},
-			PreDeploymentEvaluation:  []string{},
-			PostDeploymentEvaluation: []string{},
+			Version:                   version,
+			PreDeploymentTasks:        []string{},
+			PostDeploymentTasks:       []string{},
+			PreDeploymentEvaluations:  []string{},
+			PostDeploymentEvaluations: []string{},
 			Workloads: []klcv1alpha1.KeptnWorkloadRef{
 				{
 					Name:    appName,

@@ -41,7 +41,12 @@ type KeptnEvaluationSpec struct {
 	// +optional
 	Timeframe metav1.Duration `json:"timeframe,omitempty"`
 	// +kubebuilder:default:=10
-	Retries       int              `json:"retries,omitempty"`
+	Retries int `json:"retries,omitempty"`
+	// +optional
+	// +kubebuilder:default:="5s"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
 	RetryInterval metav1.Duration  `json:"retryInterval,omitempty"`
 	FailAction    string           `json:"failAction,omitempty"`
 	Type          common.CheckType `json:"checkType,omitempty"`

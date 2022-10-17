@@ -19,4 +19,6 @@ spec:
     - name: podtato-head-hat
       version: 0.1.0
   postDeploymentTasks:
-    - post-deployment-hello 
+    - post-deployment-hello
+  preDeploymentEvaluations:
+    - my-prometheus-definition

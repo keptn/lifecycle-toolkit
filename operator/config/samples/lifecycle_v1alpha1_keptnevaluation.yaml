@@ -5,3 +5,4 @@ metadata:
 spec:
   evaluationDefinition: my-prometheus-definition #name of the KeptnEvaluationDefinition to use
   workloadVersion: "1.3"
+

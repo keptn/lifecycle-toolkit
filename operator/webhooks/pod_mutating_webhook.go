@@ -286,8 +286,8 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
-	var preDeploymentAnalysis []string
-	var postDeploymentAnalysis []string
+	var preDeploymentEvaluation []string
+	var postDeploymentEvaluation []string
 
 	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
 		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
@@ -297,12 +297,12 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
 	}
 
-	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
-		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	if pod.Annotations[common.PreDeploymentEvaluationAnnotation] != "" {
+		preDeploymentEvaluation = strings.Split(pod.Annotations[common.PreDeploymentEvaluationAnnotation], ",")
 	}
 
-	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
-		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	if pod.Annotations[common.PostDeploymentEvaluationAnnotation] != "" {
+		postDeploymentEvaluation = strings.Split(pod.Annotations[common.PostDeploymentEvaluationAnnotation], ",")
 	}
 
 	// create TraceContext
@@ -317,13 +317,13 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:                applicationName,
-			Version:                version,
-			ResourceReference:      a.getResourceReference(pod),
-			PreDeploymentTasks:     preDeploymentTasks,
-			PostDeploymentTasks:    postDeploymentTasks,
-			PreDeploymentAnalysis:  preDeploymentAnalysis,
-			PostDeploymentAnalysis: postDeploymentAnalysis,
+			AppName:                  applicationName,
+			Version:                  version,
+			ResourceReference:        a.getResourceReference(pod),
+			PreDeploymentTasks:       preDeploymentTasks,
+			PostDeploymentTasks:      postDeploymentTasks,
+			PreDeploymentEvaluation:  preDeploymentEvaluation,
+			PostDeploymentEvaluation: postDeploymentEvaluation,
 		},
 	}
 }
@@ -344,11 +344,11 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
-			Version:                version,
-			PreDeploymentTasks:     []string{},
-			PostDeploymentTasks:    []string{},
-			PreDeploymentAnalysis:  []string{},
-			PostDeploymentAnalysis: []string{},
+			Version:                  version,
+			PreDeploymentTasks:       []string{},
+			PostDeploymentTasks:      []string{},
+			PreDeploymentEvaluation:  []string{},
+			PostDeploymentEvaluation: []string{},
 			Workloads: []klcv1alpha1.KeptnWorkloadRef{
 				{
 					Name:    appName,

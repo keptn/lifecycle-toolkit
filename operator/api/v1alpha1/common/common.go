@@ -14,11 +14,11 @@ const VersionAnnotation = "keptn.sh/version"
 const AppAnnotation = "keptn.sh/app"
 const PreDeploymentTaskAnnotation = "keptn.sh/pre-deployment-tasks"
 const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
-const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
-const PostDeploymentAnalysisAnnotation = "keptn.sh/post-deployment-analysis"
 const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
+const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluation"
+const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluation"
 const TaskNameAnnotation = "keptn.sh/task-name"
 
 const MaxAppNameLength = 25
@@ -106,8 +106,8 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
-const PreAnalysisCheckType CheckType = "pre"
-const PostAnalysisCheckType CheckType = "post"
+const PreEvaluationCheckType CheckType = "pre"
+const PostEvaluationCheckType CheckType = "post"
 
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter
@@ -119,9 +119,9 @@ type KeptnMeters struct {
 	AppCount           syncint64.Counter
 	AppDuration        syncfloat64.Histogram
 	AppActive          syncint64.UpDownCounter
-	AnalysisCount      syncint64.Counter
-	AnalysisDuration   syncfloat64.Histogram
-	AnalysisActive     syncint64.UpDownCounter
+	EvaluationCount    syncint64.Counter
+	EvaluationDuration syncfloat64.Histogram
+	EvaluationActive   syncint64.UpDownCounter
 }
 
 const (

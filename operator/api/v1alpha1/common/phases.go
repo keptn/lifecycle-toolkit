@@ -10,12 +10,12 @@ type KeptnPhaseType struct {
 var (
 	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment", ShortName: "WorkloadPreDeploy"}
 	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment", ShortName: "WorkloadPostDeploy"}
-	PhaseWorkloadPreAnalysis    = KeptnPhaseType{LongName: "Workload Pre-Analysis", ShortName: "WorkloadPreAnalysis"}
-	PhaseWorkloadPostAnalysis   = KeptnPhaseType{LongName: "Workload Post-Analysis", ShortName: "WorkloadPostAnalysis"}
+	PhaseWorkloadPreEvaluation  = KeptnPhaseType{LongName: "Workload Pre-Evaluation", ShortName: "WorkloadPreEvaluation"}
+	PhaseWorkloadPostEvaluation = KeptnPhaseType{LongName: "Workload Post-Evaluation", ShortName: "WorkloadPostEvaluation"}
 	PhaseWorkloadDeployment     = KeptnPhaseType{LongName: "Workload Deployment", ShortName: "WorkloadDeploy"}
 	PhaseAppPreDeployment       = KeptnPhaseType{LongName: "App Pre-Deployment", ShortName: "AppPreDeploy"}
 	PhaseAppPostDeployment      = KeptnPhaseType{LongName: "App Post-Deployment", ShortName: "AppPostDeploy"}
-	PhaseAppPreAnalysis         = KeptnPhaseType{LongName: "App Pre-Analysis", ShortName: "AppPreAnalysis"}
-	PhaseAppPostAnalysis        = KeptnPhaseType{LongName: "App Post-Analysis", ShortName: "AppPostAnalysis"}
+	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Evaluation", ShortName: "AppPreEvaluation"}
+	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Evaluation", ShortName: "AppPostEvaluation"}
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
 )

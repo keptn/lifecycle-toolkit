@@ -19,9 +19,10 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	"time"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -89,7 +90,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if !evaluation.IsStartTimeSet() {
 		// metrics: increment active evaluation counter
-		r.Meters.AnalysisActive.Add(ctx, 1, evaluation.GetActiveMetricsAttributes()...)
+		r.Meters.EvaluationActive.Add(ctx, 1, evaluation.GetActiveMetricsAttributes()...)
 		evaluation.SetStartTime()
 	}
 
@@ -177,7 +178,7 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 
 	if !evaluation.IsEndTimeSet() {
 		// metrics: decrement active evaluation counter
-		r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
+		r.Meters.EvaluationActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
 		evaluation.SetEndTime()
 	}
 
@@ -193,11 +194,11 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	r.Log.Info("Increasing evaluation count")
 
 	// metrics: increment evaluation counter
-	r.Meters.AnalysisCount.Add(ctx, 1, attrs...)
+	r.Meters.EvaluationCount.Add(ctx, 1, attrs...)
 
 	// metrics: add evaluation duration
 	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
-	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
+	r.Meters.EvaluationDuration.Record(ctx, duration.Seconds(), attrs...)
 	return nil
 }
 

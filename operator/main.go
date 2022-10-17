@@ -151,15 +151,15 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	analysisCount, err := meter.SyncInt64().Counter("keptn.analysis.count", instrument.WithDescription("a simple counter for Keptn analysis for Evaluations"))
+	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn evaluation for Evaluations"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	analysisDuration, err := meter.SyncFloat64().Histogram("keptn.analysis.duration", instrument.WithDescription("a histogram of duration for Keptn analysis for Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn evaluation for Evaluations"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	analysisActive, err := meter.SyncInt64().UpDownCounter("keptn.analysis.active", instrument.WithDescription("a simple counter of active apps for Keptn analysis for Evaluations"))
+	evaluationActive, err := meter.SyncInt64().UpDownCounter("keptn.evaluation.active", instrument.WithDescription("a simple counter of active apps for Keptn evaluation for Evaluations"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
@@ -174,9 +174,9 @@ func main() {
 		AppCount:           appCount,
 		AppDuration:        appDuration,
 		AppActive:          appActive,
-		AnalysisCount:      analysisCount,
-		AnalysisDuration:   analysisDuration,
-		AnalysisActive:     analysisActive,
+		EvaluationCount:    evaluationCount,
+		EvaluationDuration: evaluationDuration,
+		EvaluationActive:   evaluationActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

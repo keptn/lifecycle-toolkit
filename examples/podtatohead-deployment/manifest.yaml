@@ -23,6 +23,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
+        keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:

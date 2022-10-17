@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
@@ -18,6 +19,7 @@ type FunctionExecutionParams struct {
 	Parameters       map[string]string
 	SecureParameters string
 	URL              string
+	Context          klcv1alpha1.TaskContext
 }
 
 func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
@@ -44,7 +46,7 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 
 	container := corev1.Container{
 		Name:  "keptn-function-runner",
-		Image: "ghcr.io/keptn-sandbox/functions-runtime:main.202209211413",
+		Image: os.Getenv("FUNCTION_RUNNER_IMAGE"),
 	}
 
 	var envVars []corev1.EnvVar
@@ -56,6 +58,12 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
 	}
+
+	jsonParams, err := json.Marshal(params.Context)
+	if err != nil {
+		return job, fmt.Errorf("could not marshal parameters")
+	}
+	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
 	if params.SecureParameters != "" {
 		envVars = append(envVars, corev1.EnvVar{

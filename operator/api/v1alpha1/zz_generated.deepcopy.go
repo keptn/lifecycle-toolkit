@@ -228,13 +228,13 @@ func (in *KeptnAppSpec) DeepCopyInto(out *KeptnAppSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PreDeploymentAnalysis != nil {
-		in, out := &in.PreDeploymentAnalysis, &out.PreDeploymentAnalysis
+	if in.PreDeploymentEvaluation != nil {
+		in, out := &in.PreDeploymentEvaluation, &out.PreDeploymentEvaluation
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PostDeploymentAnalysis != nil {
-		in, out := &in.PostDeploymentAnalysis, &out.PostDeploymentAnalysis
+	if in.PostDeploymentEvaluation != nil {
+		in, out := &in.PostDeploymentEvaluation, &out.PostDeploymentEvaluation
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
@@ -1035,13 +1035,13 @@ func (in *KeptnWorkloadSpec) DeepCopyInto(out *KeptnWorkloadSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PreDeploymentAnalysis != nil {
-		in, out := &in.PreDeploymentAnalysis, &out.PreDeploymentAnalysis
+	if in.PreDeploymentEvaluation != nil {
+		in, out := &in.PreDeploymentEvaluation, &out.PreDeploymentEvaluation
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PostDeploymentAnalysis != nil {
-		in, out := &in.PostDeploymentAnalysis, &out.PostDeploymentAnalysis
+	if in.PostDeploymentEvaluation != nil {
+		in, out := &in.PostDeploymentEvaluation, &out.PostDeploymentEvaluation
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}

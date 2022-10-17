@@ -8,7 +8,8 @@
       "bump-patch-for-minor-pre-major": true,
       "draft": false,
       "extra-files": [
-        "README.md"
+        "README.md",
+        "operator/config/manager/manager.yaml"
       ],
       "changelog-sections": [
         {

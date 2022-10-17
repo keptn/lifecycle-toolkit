@@ -62,6 +62,10 @@ type EvaluationStatusItem struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=keptnevaluations,shortName=ke
+//+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
+// +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
+// +kubebuilder:printcolumn:name="EvaluationStatus",type=string,JSONPath=`.status.evaluationStatus`
+// +kubebuilder:printcolumn:name="OverallStatus",type=string,JSONPath=`.status.overallStatus`
 
 // KeptnEvaluation is the Schema for the keptnevaluations API
 type KeptnEvaluation struct {

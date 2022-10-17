@@ -3,6 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: podtato-kubectl
+annotations:
+  keptn.sh/enabled: "true"
 ---
 apiVersion: apps/v1
 kind: Deployment

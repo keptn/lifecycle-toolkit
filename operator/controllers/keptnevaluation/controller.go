@@ -118,6 +118,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 
 		statusSummary := common.StatusSummary{}
+		statusSummary.Total = len(evaluationDefinition.Spec.Objectives)
 		newStatus := make(map[string]klcv1alpha1.EvaluationStatusItem)
 
 		if evaluation.Status.EvaluationStatus == nil {

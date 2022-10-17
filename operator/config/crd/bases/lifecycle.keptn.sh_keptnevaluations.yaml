@@ -68,7 +68,7 @@ spec:
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               timeframe:
-                default: 30s
+                default: 2m
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
@@ -86,20 +86,17 @@ spec:
                 format: date-time
                 type: string
               evaluationStatus:
-                items:
+                additionalProperties:
                   properties:
-                    name:
-                      type: string
                     status:
                       type: string
                     value:
                       type: string
                   required:
-                  - name
                   - status
                   - value
                   type: object
-                type: array
+                type: object
               overallStatus:
                 default: Pending
                 type: string

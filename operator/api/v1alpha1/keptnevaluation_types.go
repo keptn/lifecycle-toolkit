@@ -35,7 +35,7 @@ type KeptnEvaluationSpec struct {
 	AppVersion           string `json:"appVersion,omitempty"`
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// +optional
-	// +kubebuilder:default:="30s"
+	// +kubebuilder:default:="2m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
@@ -55,8 +55,8 @@ type KeptnEvaluationSpec struct {
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 type KeptnEvaluationStatus struct {
 	// +kubebuilder:default:=0
-	RetryCount       int                    `json:"retryCount"`
-	EvaluationStatus []EvaluationStatusItem `json:"evaluationStatus"`
+	RetryCount       int                             `json:"retryCount"`
+	EvaluationStatus map[string]EvaluationStatusItem `json:"evaluationStatus"`
 	// +kubebuilder:default:=Pending
 	OverallStatus common.KeptnState `json:"overallStatus"`
 	StartTime     metav1.Time       `json:"startTime,omitempty"`
@@ -64,7 +64,6 @@ type KeptnEvaluationStatus struct {
 }
 
 type EvaluationStatusItem struct {
-	Name   string            `json:"name"`
 	Value  string            `json:"value"`
 	Status common.KeptnState `json:"status"`
 }
@@ -142,12 +141,11 @@ func (i KeptnEvaluation) GetMetricsAttributes() []attribute.KeyValue {
 	}
 }
 
-func (e *KeptnEvaluation) InitializeEvaluationStatuses(definition KeptnEvaluationDefinition) {
-	for _, query := range definition.Spec.Objectives {
-		evaluationStatusItem := EvaluationStatusItem{
-			Name:   query.Name,
-			Status: common.StatePending,
-		}
-		e.Status.EvaluationStatus = append(e.Status.EvaluationStatus, evaluationStatusItem)
+func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
+
+	evaluationStatusItem := EvaluationStatusItem{
+		Status: common.StatePending,
 	}
+	e.Status.EvaluationStatus[objective.Name] = evaluationStatusItem
+
 }

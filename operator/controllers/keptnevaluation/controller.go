@@ -91,7 +91,15 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluation.SetStartTime()
 	}
 
-	if !evaluation.Status.OverallStatus.IsCompleted() && evaluation.Status.RetryCount <= evaluation.Spec.Retries {
+	currentDuration := time.Now().UTC().Sub(evaluation.Status.StartTime.Time)
+	if evaluation.Status.RetryCount >= evaluation.Spec.Retries || currentDuration > evaluation.Spec.Timeframe {
+		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "timeOut or retryCount exceeded")
+		err := fmt.Errorf("TimeOut or retryCount for evaluation exceeded")
+		span.SetStatus(codes.Error, err.Error())
+		return ctrl.Result{}, err
+	}
+
+	if !evaluation.Status.OverallStatus.IsCompleted() {
 		namespacedDefinition := types.NamespacedName{
 			Namespace: req.NamespacedName.Namespace,
 			Name:      evaluation.Spec.EvaluationDefinition,
@@ -137,7 +145,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 		r.recordEvent("Warning", evaluation, "NotFinished", "has not finished")
 
-		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval * time.Second}, nil
+		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval}, nil
 
 	}
 

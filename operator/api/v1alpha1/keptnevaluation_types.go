@@ -43,11 +43,13 @@ type KeptnEvaluationSpec struct {
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 type KeptnEvaluationStatus struct {
+	// +kubebuilder:default:=0
 	RetryCount       int                    `json:"retryCount"`
 	EvaluationStatus []EvaluationStatusItem `json:"evaluationStatus"`
-	OverallStatus    common.KeptnState      `json:"overallStatus"`
-	StartTime        metav1.Time            `json:"startTime,omitempty"`
-	EndTime          metav1.Time            `json:"endTime,omitempty"`
+	// +kubebuilder:default:=Pending
+	OverallStatus common.KeptnState `json:"overallStatus"`
+	StartTime     metav1.Time       `json:"startTime,omitempty"`
+	EndTime       metav1.Time       `json:"endTime,omitempty"`
 }
 
 type EvaluationStatusItem struct {

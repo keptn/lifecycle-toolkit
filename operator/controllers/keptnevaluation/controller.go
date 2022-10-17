@@ -96,10 +96,11 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "timeOut or retryCount exceeded")
 		err := fmt.Errorf("TimeOut or retryCount for evaluation exceeded")
 		span.SetStatus(codes.Error, err.Error())
+		r.updateFinishedEvaluationMetrics(ctx, evaluation)
 		return ctrl.Result{}, err
 	}
 
-	if !evaluation.Status.OverallStatus.IsCompleted() {
+	if !evaluation.Status.OverallStatus.IsSucceeded() {
 		namespacedDefinition := types.NamespacedName{
 			Namespace: req.NamespacedName.Namespace,
 			Name:      evaluation.Spec.EvaluationDefinition,
@@ -109,32 +110,38 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 		}
 
-		if evaluationDefinition == nil && evaluationProvider == nil {
+		if evaluationDefinition == nil || evaluationProvider == nil {
 			return ctrl.Result{}, nil
 		}
 
-		if len(evaluation.Status.EvaluationStatus) != len(evaluationDefinition.Spec.Objectives) {
-			evaluation.InitializeEvaluationStatuses(*evaluationDefinition)
+		statusSummary := common.StatusSummary{}
+		newStatus := make(map[string]klcv1alpha1.EvaluationStatusItem)
+
+		if evaluation.Status.EvaluationStatus == nil {
+			evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha1.EvaluationStatusItem)
 		}
 
-		statusSummary := common.StatusSummary{}
-
-		for i, query := range evaluationDefinition.Spec.Objectives {
-			if evaluation.Status.EvaluationStatus[i].Status.IsSucceeded() {
+		for _, query := range evaluationDefinition.Spec.Objectives {
+			if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
+				evaluation.AddEvaluationStatus(query)
+			}
+			if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
 				statusSummary = common.UpdateStatusSummary(common.StateSucceeded, statusSummary)
+				newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
 				continue
 			}
 			statusItem := r.queryEvaluation(query, *evaluationProvider)
 			statusSummary = common.UpdateStatusSummary(statusItem.Status, statusSummary)
-			evaluation.Status.EvaluationStatus[i] = *statusItem
+			newStatus[query.Name] = *statusItem
 		}
 
 		evaluation.Status.RetryCount++
+		evaluation.Status.EvaluationStatus = newStatus
 		evaluation.Status.OverallStatus = common.GetOverallState(statusSummary)
 
 	}
 
-	if !evaluation.Status.OverallStatus.IsCompleted() {
+	if !evaluation.Status.OverallStatus.IsSucceeded() {
 		// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 		err := r.Client.Status().Update(ctx, evaluation)
 		if err != nil {
@@ -143,7 +150,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{Requeue: true}, err
 		}
 
-		r.recordEvent("Warning", evaluation, "NotFinished", "has not finished")
+		r.recordEvent("Normal", evaluation, "NotFinished", "has not finished")
 
 		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval.Duration}, nil
 
@@ -164,6 +171,13 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{Requeue: true}, err
 	}
 
+	r.updateFinishedEvaluationMetrics(ctx, evaluation)
+
+	return ctrl.Result{}, nil
+
+}
+
+func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation) {
 	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
 
 	attrs := evaluation.GetMetricsAttributes()
@@ -176,9 +190,6 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	// metrics: add evaluation duration
 	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
 	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
-
-	return ctrl.Result{}, nil
-
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -223,7 +234,6 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 
 func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
 	query := &klcv1alpha1.EvaluationStatusItem{
-		Name:   objective.Name,
 		Value:  "",
 		Status: common.StateFailed, //setting status per default to failed
 	}

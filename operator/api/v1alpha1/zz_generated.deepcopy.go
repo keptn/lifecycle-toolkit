@@ -640,8 +640,10 @@ func (in *KeptnEvaluationStatus) DeepCopyInto(out *KeptnEvaluationStatus) {
 	*out = *in
 	if in.EvaluationStatus != nil {
 		in, out := &in.EvaluationStatus, &out.EvaluationStatus
-		*out = make([]EvaluationStatusItem, len(*in))
-		copy(*out, *in)
+		*out = make(map[string]EvaluationStatusItem, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 	in.StartTime.DeepCopyInto(&out.StartTime)
 	in.EndTime.DeepCopyInto(&out.EndTime)

@@ -17,7 +17,20 @@ spec:
     singular: keptnevaluation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.appName
+      name: AppName
+      type: string
+    - jsonPath: .spec.appVersion
+      name: AppVersion
+      type: string
+    - jsonPath: .status.evaluationStatus
+      name: EvaluationStatus
+      type: string
+    - jsonPath: .status.overallStatus
+      name: OverallStatus
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KeptnEvaluation is the Schema for the keptnevaluations API

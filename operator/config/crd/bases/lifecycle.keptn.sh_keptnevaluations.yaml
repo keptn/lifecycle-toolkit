@@ -66,6 +66,7 @@ spec:
               retryInterval:
                 type: string
               timeframe:
+                default: 30
                 type: string
               workload:
                 type: string

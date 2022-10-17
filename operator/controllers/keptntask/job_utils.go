@@ -62,6 +62,21 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		}
 	}
 
+	taskContext := klcv1alpha1.TaskContext{}
+
+	if task.Spec.Workload != "" {
+		taskContext.WorkloadName = task.Spec.Workload
+		taskContext.WorkloadVersion = task.Spec.Version
+		taskContext.ObjectType = "Workload"
+
+	} else {
+		taskContext.ObjectType = "Application"
+		taskContext.AppVersion = task.Spec.Version
+	}
+	taskContext.AppName = task.Spec.AppName
+
+	params.Context = taskContext
+
 	if len(task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, task.Spec.Parameters.Inline)
 		if err != nil {

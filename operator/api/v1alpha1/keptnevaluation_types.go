@@ -29,12 +29,13 @@ import (
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
-	Workload             string          `json:"workload,omitempty"`
-	WorkloadVersion      string          `json:"workloadVersion"`
-	AppName              string          `json:"app,omitempty"`
-	AppVersion           string          `json:"appVersion,omitempty"`
-	EvaluationDefinition string          `json:"evaluationDefinition"`
-	Timeframe            metav1.Duration `json:"timeframe,omitempty"`
+	Workload             string `json:"workload,omitempty"`
+	WorkloadVersion      string `json:"workloadVersion"`
+	AppName              string `json:"app,omitempty"`
+	AppVersion           string `json:"appVersion,omitempty"`
+	EvaluationDefinition string `json:"evaluationDefinition"`
+	// +kubebuilder:default:=30s
+	Timeframe metav1.Duration `json:"timeframe,omitempty"`
 	// +kubebuilder:default:=10
 	Retries       int              `json:"retries,omitempty"`
 	RetryInterval metav1.Duration  `json:"retryInterval,omitempty"`

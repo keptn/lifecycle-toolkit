@@ -19,6 +19,8 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -91,12 +93,13 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluation.SetStartTime()
 	}
 
-	currentDuration := time.Now().UTC().Sub(evaluation.Status.StartTime.Time)
-	if evaluation.Status.RetryCount >= evaluation.Spec.Retries || currentDuration > evaluation.Spec.Timeframe.Duration {
-		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "timeOut or retryCount exceeded")
-		err := fmt.Errorf("TimeOut or retryCount for evaluation exceeded")
+	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
+		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
+		err := fmt.Errorf("RetryCount for evaluation exceeded")
 		span.SetStatus(codes.Error, err.Error())
-		r.updateFinishedEvaluationMetrics(ctx, evaluation)
+		evaluation.Status.OverallStatus = common.StateFailed
+		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
+
 		return ctrl.Result{}, err
 	}
 
@@ -137,7 +140,11 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 		evaluation.Status.RetryCount++
 		evaluation.Status.EvaluationStatus = newStatus
-		evaluation.Status.OverallStatus = common.GetOverallState(statusSummary)
+		if common.GetOverallState(statusSummary) == common.StateSucceeded {
+			evaluation.Status.OverallStatus = common.StateSucceeded
+		} else {
+			evaluation.Status.OverallStatus = common.StatePending
+		}
 
 	}
 
@@ -158,6 +165,15 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	r.Log.Info("Finished Reconciling KeptnEvaluation")
 
+	err := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
+
+	return ctrl.Result{}, err
+
+}
+
+func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) error {
+	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
+
 	if !evaluation.IsEndTimeSet() {
 		// metrics: decrement active evaluation counter
 		r.Meters.AnalysisActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
@@ -168,17 +184,8 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
-		return ctrl.Result{Requeue: true}, err
+		return err
 	}
-
-	r.updateFinishedEvaluationMetrics(ctx, evaluation)
-
-	return ctrl.Result{}, nil
-
-}
-
-func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation) {
-	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
 
 	attrs := evaluation.GetMetricsAttributes()
 
@@ -190,12 +197,13 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	// metrics: add evaluation duration
 	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
 	r.Meters.AnalysisDuration.Record(ctx, duration.Seconds(), attrs...)
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnEvaluation{}).
+		For(&klcv1alpha1.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
@@ -235,7 +243,7 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
 	query := &klcv1alpha1.EvaluationStatusItem{
 		Value:  "",
-		Status: common.StateFailed, //setting status per default to failed
+		Status: common.StateSucceeded, //setting status per default to failed
 	}
 
 	//TODO query provider like prometheus service does, save result in value THIS SHALL BE SOLVED IN TICKET #163
@@ -243,6 +251,7 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 	// import apiv1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	// if provider ==prometheus   {  result, w, err := apiv1.PrometheusAPI.Query(context.Background(), query, endUnix)	if err != nil {		return 0, fmt.Errorf("unable to query prometheus api: %w", err)}}
 	//TODO check value with evaluation target and update status in query
+	// result, w, err := prometheus.API().Query(context.Background(), query, time.Now())
 
 	return query
 }

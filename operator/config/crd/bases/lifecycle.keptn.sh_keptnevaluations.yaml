@@ -67,10 +67,6 @@ spec:
                 default: 5s
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
-              timeframe:
-                default: 2m
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
               workload:
                 type: string
               workloadVersion:

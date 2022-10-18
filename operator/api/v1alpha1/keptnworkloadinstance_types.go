@@ -40,11 +40,17 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus     common.KeptnState `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus  []TaskStatus      `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus []TaskStatus      `json:"postDeploymentTaskStatus,omitempty"`
-	StartTime                metav1.Time       `json:"startTime,omitempty"`
-	EndTime                  metav1.Time       `json:"endTime,omitempty"`
+	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
+	// +kubebuilder:default:=Pending
+	PostDeploymentStatus               common.KeptnState  `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus            []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	StartTime                          metav1.Time        `json:"startTime,omitempty"`
+	EndTime                            metav1.Time        `json:"endTime,omitempty"`
 }
 
 type TaskStatus struct {
@@ -101,6 +107,10 @@ func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
+func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
+	return v.Status.PreDeploymentEvaluationStatus.IsCompleted()
+}
+
 func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
 	return i.Status.PreDeploymentStatus.IsSucceeded()
 }
@@ -109,8 +119,20 @@ func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
 	return i.Status.PreDeploymentStatus.IsFailed()
 }
 
+func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
+	return v.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+}
+
+func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
+	return v.Status.PreDeploymentEvaluationStatus.IsFailed()
+}
+
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
+}
+
+func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
+	return v.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
 func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
@@ -119,6 +141,14 @@ func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
 
 func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
 	return i.Status.PostDeploymentStatus.IsFailed()
+}
+
+func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
+	return v.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+}
+
+func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
+	return v.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {

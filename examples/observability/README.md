@@ -2,6 +2,7 @@
 
 In this example, we will show you an example configuration for enabling the operator to send OpenTelemetry traces and metrics to the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector).
 The Collector will then be used to forward the gathered data to [Jaeger](https://www.jaegertracing.io) and [Prometheus](https://prometheus.io).
+The application deployed uses an example of pre-Deployment Evaluation based on prometheus metrics.
 
 # TL;DR
 * You can install the whole demo using: `make install`

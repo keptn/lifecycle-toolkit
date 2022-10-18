@@ -135,6 +135,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
 	}
 
+	//Wait for pre-evaluation checks of Workload
+	phase = common.PhaseAppPreEvaluation
+	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
+		reconcilePreEval := func() (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
+		}
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentEvaluationFailed, reconcilePreEval)
+	}
+
 	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {
@@ -151,6 +160,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
 		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
+	}
+
+	//Wait for post-evaluation checks of Workload
+	phase = common.PhaseAppPostEvaluation
+	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
+		reconcilePostEval := func() (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
+		}
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentEvaluationFailed, reconcilePostEval)
 	}
 
 	// WorkloadInstance is completed at this place

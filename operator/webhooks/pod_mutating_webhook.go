@@ -330,13 +330,13 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:                  applicationName,
-			Version:                  version,
-			ResourceReference:        a.getResourceReference(pod),
-			PreDeploymentTasks:       preDeploymentTasks,
-			PostDeploymentTasks:      postDeploymentTasks,
-			PreDeploymentEvaluation:  preDeploymentEvaluation,
-			PostDeploymentEvaluation: postDeploymentEvaluation,
+			AppName:                   applicationName,
+			Version:                   version,
+			ResourceReference:         a.getResourceReference(pod),
+			PreDeploymentTasks:        preDeploymentTasks,
+			PostDeploymentTasks:       postDeploymentTasks,
+			PreDeploymentEvaluations:  preDeploymentEvaluation,
+			PostDeploymentEvaluations: postDeploymentEvaluation,
 		},
 	}
 }

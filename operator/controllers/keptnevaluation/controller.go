@@ -19,18 +19,13 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
-	"math"
-	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	promapi "github.com/prometheus/client_golang/api"
-	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
-	"github.com/prometheus/common/model"
+	providers "github.com/keptn/lifecycle-toolkit/operator/controllers/keptnevaluation/providers"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -60,6 +55,7 @@ type KeptnEvaluationReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations/finalizers,verbs=update
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationproviders,verbs=get;list;watch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationdefinitions,verbs=get;list;watch
+//+kubebuilder:rbac:groups=core,resources=secrets,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -71,6 +67,7 @@ type KeptnEvaluationReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+
 	r.Log.Info("Reconciling KeptnEvaluation")
 	evaluation := &klcv1alpha2.KeptnEvaluation{}
 
@@ -115,11 +112,23 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}
 			r.Log.Error(err, "Failed to retrieve a resource")
+			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{}, nil
 		}
+		// load the provider
+		provider, err2 := providers.NewProvider(evaluationDefinition.Spec.Source, r.Log, r.Client)
+		if err2 != nil {
+			r.recordEvent("Error", evaluation, "ProviderNotFound", "evaluation provider was not found")
+			r.Log.Error(err2, "Failed to get the correct Metric Provider")
+			span.SetStatus(codes.Error, err2.Error())
+			return ctrl.Result{Requeue: false}, err2
+		}
+
+		r.Log.Info("Metric Provider selected: " + evaluationDefinition.Spec.Source)
 
 		statusSummary := apicommon.StatusSummary{}
 		statusSummary.Total = len(evaluationDefinition.Spec.Objectives)
@@ -138,7 +147,25 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 				newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
 				continue
 			}
-			statusItem := r.queryEvaluation(query, *evaluationProvider)
+			// resolving the SLI value
+			value, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
+			statusItem := &klcv1alpha2.EvaluationStatusItem{
+				Value:  value,
+				Status: apicommon.StateFailed,
+			}
+			if err != nil {
+				statusItem.Message = err.Error()
+				statusItem.Status = apicommon.StateFailed
+			}
+			// Evaluating SLO
+			check, err := checkValue(query, statusItem)
+			if err != nil {
+				statusItem.Message = err.Error()
+				r.Log.Error(err, "Could not check query result")
+			}
+			if check {
+				statusItem.Status = apicommon.StateSucceeded
+			}
 			statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
 			newStatus[query.Name] = *statusItem
 		}
@@ -208,117 +235,18 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationProvider, error) {
 	evaluationDefinition := &klcv1alpha2.KeptnEvaluationDefinition{}
-
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
 		return nil, nil, err
 	}
-
 	namespacedProvider := types.NamespacedName{
 		Namespace: namespacedDefinition.Namespace,
 		Name:      evaluationDefinition.Spec.Source,
 	}
-
 	evaluationProvider := &klcv1alpha2.KeptnEvaluationProvider{}
-
 	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
 		return nil, nil, err
 	}
-
 	return evaluationDefinition, evaluationProvider, nil
-}
-
-func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.EvaluationStatusItem {
-	query := &klcv1alpha2.EvaluationStatusItem{
-		Value:  "",
-		Status: apicommon.StateFailed, //setting status per default to failed
-	}
-
-	queryTime := time.Now().UTC()
-	r.Log.Info("Running query: /api/v1/query?query=" + objective.Query + "&time=" + queryTime.String())
-
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &http.Client{}})
-	if err != nil {
-		query.Message = err.Error()
-		return query
-	}
-	api := prometheus.NewAPI(client)
-	result, w, err := api.Query(
-		context.Background(),
-		objective.Query,
-		queryTime,
-		[]prometheus.Option{}...,
-	)
-
-	if err != nil {
-		query.Message = err.Error()
-		return query
-	}
-
-	if len(w) != 0 {
-		query.Message = w[0]
-		r.Log.Info("Prometheus API returned warnings: " + w[0])
-	}
-
-	// check if we can cast the result to a vector, it might be another data struct which we can't process
-	resultVector, ok := result.(model.Vector)
-	if !ok {
-		query.Message = "could not cast result"
-		return query
-	}
-
-	// We are only allowed to return one value, if not the query may be malformed
-	// we are using two different errors to give the user more information about the result
-	if len(resultVector) == 0 {
-		r.Log.Info("No values in query result")
-		query.Message = "No values in query result"
-		return query
-	} else if len(resultVector) > 1 {
-		r.Log.Info("Too many values in the query result")
-		query.Message = "Too many values in the query result"
-		return query
-	}
-
-	query.Value = resultVector[0].Value.String()
-	check, err := r.checkValue(objective, query)
-
-	if err != nil {
-		query.Message = err.Error()
-		r.Log.Error(err, "Could not check query result")
-	}
-	if check {
-		query.Status = apicommon.StateSucceeded
-	}
-	return query
-}
-
-func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha2.Objective, query *klcv1alpha2.EvaluationStatusItem) (bool, error) {
-
-	if len(query.Value) == 0 || len(objective.EvaluationTarget) == 0 {
-		return false, controllererrors.ErrNoValues
-	}
-
-	eval := objective.EvaluationTarget[1:]
-	sign := objective.EvaluationTarget[:1]
-
-	resultValue, err := strconv.ParseFloat(query.Value, 64)
-	if err != nil || math.IsNaN(resultValue) {
-		return false, err
-	}
-
-	compareValue, err := strconv.ParseFloat(eval, 64)
-	if err != nil || math.IsNaN(compareValue) {
-		return false, err
-	}
-
-	// choose comparator
-	switch sign {
-	case ">":
-		return resultValue > compareValue, nil
-	case "<":
-		return resultValue < compareValue, nil
-	default:
-		return false, controllererrors.ErrInvalidOperator
-	}
 }
 
 func (r *KeptnEvaluationReconciler) recordEvent(eventType string, evaluation *klcv1alpha2.KeptnEvaluation, shortReason string, longReason string) {

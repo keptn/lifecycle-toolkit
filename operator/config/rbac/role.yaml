@@ -68,6 +68,12 @@ rules:
   - list
   - watch
 - apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - keptnapps

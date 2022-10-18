@@ -17,7 +17,9 @@ limitations under the License.
 package v1alpha2
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"strings"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -25,8 +27,8 @@ import (
 
 // KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
 type KeptnEvaluationProviderSpec struct {
-	TargetServer string `json:"targetServer"`
-	SecretName   string `json:"secretName,omitempty"`
+	TargetServer string                   `json:"targetServer"`
+	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
 // KeptnEvaluationProviderStatus defines the observed state of KeptnEvaluationProvider
@@ -60,4 +62,14 @@ type KeptnEvaluationProviderList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnEvaluationProvider{}, &KeptnEvaluationProviderList{})
+}
+
+func (p *KeptnEvaluationProvider) HasSecretDefined() bool {
+	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
+		return false
+	}
+	if strings.TrimSpace(p.Spec.SecretKeyRef.Name) == "" || strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
+		return false
+	}
+	return true
 }

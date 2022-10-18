@@ -6,9 +6,9 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  url: https://github.com/thschue/lifecycle-controller
+  url: https://github.com/keptn-sandbox/lifecycle-controller
   ref:
-    branch: feat/flux_example
+    branch: main
   ignore: |
     # exclude all
     /*

@@ -1,6 +1,6 @@
 # Deploying an application using the Keptn Lifecycle Controller and ArgoCD
 
-In this example, we will show you how to install our sample application *podtatohead* using the Keptn Lifecycle Controller and ArgoCD.
+In this example, we will show you how to install our sample application *podtatohead* using the Keptn Lifecycle Controller and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 
 # TL;DR
 * You can install ArgoCD using: `make install`

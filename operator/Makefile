@@ -84,14 +84,6 @@ test: manifests generate fmt vet envtest ## Run tests.
 build: generate fmt vet ## Build manager binary.
 	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
-.PHONY: build.amd64
-build.amd64: generate fmt vet ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
-
-.PHONY: build.arm64v8
-build.arm64v8: generate fmt vet ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
-
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
@@ -157,46 +149,16 @@ $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
 
-#### pipeline build  ####
-
-.PHONY: build-and-push-image
-build-and-push-image: release-image push-release-images
-
-.PHONY: release-image
-release-image: release-image.amd64 release-image.arm64v8
-
-.PHONY: release-image.amd64
-release-image.amd64: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
-
-.PHONY: release-image.arm64v8
-release-image.arm64v8: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
-
-.PHONY: push-release-images
-push-release-images:
-	#gcloud auth configure-docker
-	for arch in $(ARCHS); do \
-		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
-	for arch in $(ARCHS); do \
-		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
-
+#### developer build   ####
 .PHONY: clean
 clean:
 	rm -rf ./bin
-
-
-#### developer build   ####
 
 .PHONY: build-and-push-local
 build-and-push-local: release-local
 
 .PHONY: release-local
-release-local: release-local.amd64 release-local.arm64v8
+release-local: release-local.amd64 release-local.arm64
 	for arch in $(ARCHS); do \
 			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done
@@ -208,19 +170,31 @@ release-local: release-local.amd64 release-local.arm64v8
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+		--platform linux/amd64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
-.PHONY: release-local.arm64v8
-release-local.arm64v8: clean
-	docker build --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+.PHONY: release-local.arm64
+release-local.arm64: clean
+	docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .\
+		--platform linux/arm64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: push-local
 push-local:
 	if [[ "${ARCH}" == "amd64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 ;\
-	elif [[ "${ARCH}" == "arm64v8" ]]; then \
+	elif [[ "${ARCH}" == "arm64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)

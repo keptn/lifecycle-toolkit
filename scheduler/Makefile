@@ -19,21 +19,19 @@ TAG?=latest
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins
 LOCAL_IMAGE=kube-scheduler:latest
-LOCAL_CONTROLLER_IMAGE=controller:latest
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn
-RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
+RELEASE_VERSION?=$(shell date +%Y%m%d%s) #$(shell git describe --tags --match "v*")
 RELEASE_IMAGE:=scheduler:$(TAG)
-RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 
 # VERSION is the scheduler's version
 #
-# The RELEASE_VERSION variable can have one of two formats:
+# The SCHEDULER_COMPATIBLE_K8S_VERSION variable can have one of two formats:
 # v20201009-v0.18.800-46-g939c1c0 - automated build for a commit(not a tag) and also a local build
 # v20200521-v0.18.800             - automated build for a tag
-VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
+SCHEDULER_COMPATIBLE_K8S_VERSION?=v0.24.3
 
 BUILD_TIME=$(shell date -u "+%F_%T")
 
@@ -58,35 +56,15 @@ all: build
 .PHONY: build
 build: build-scheduler
 
-.PHONY: build.amd64
-build.amd64: build-controller.amd64 build-scheduler.amd64
-
-.PHONY: build.arm64v8
-build.arm64v8: build-controller.arm64v8 build-scheduler.arm64v8
-
-.PHONY: build-controller
-build-controller:
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
-.PHONY: build-controller.amd64
-build-controller.amd64:
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
-.PHONY: build-controller.arm64v8
-build-controller.arm64v8:
-	GOOS=linux $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
 .PHONY: build-scheduler
 build-scheduler:
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
-
-.PHONY: build-scheduler.amd64
-build-scheduler.amd64:
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
-
-.PHONY: build-scheduler.arm64v8
-build-scheduler.arm64v8:
-	GOOS=linux $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '\
+		-X k8s.io/component-base/version.gitVersion=$(SCHEDULER_COMPATIBLE_K8S_VERSION) \
+		-X main.gitCommit=$(HASH) \
+		-X main.buildTime=$(BUILD_TIME) \
+		-X main.buildVersion=$(TAG) \
+		-w' \
+		-o bin/kube-scheduler cmd/scheduler/main.go
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -112,32 +90,12 @@ release-manifests: kustomize
 
 .PHONY: local-image
 local-image: clean
-	docker build --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
-
-.PHONY: build-and-push-image
-build-and-push-image: release-image push-release-images
-
-.PHONY: release-image
-release-image: release-image.amd64 release-image.arm64v8
-
-.PHONY: release-image.amd64
-release-image.amd64: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg GIT_HASH="$(HASH)" --build-arg ARCH="amd64" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
-
-.PHONY: release-image.arm64v8
-release-image.arm64v8: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg GIT_HASH="$(HASH)" --build-arg ARCH="arm64v8" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
-
-.PHONY: push-release-images
-push-release-images:
-	for arch in $(ARCHS); do \
-		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
-	for arch in $(ARCHS); do \
-		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
+	docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
+		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		-t $(LOCAL_REGISTRY)/$(LOCAL_IMAGE) .
 
 .PHONY: clean
 clean:
@@ -150,7 +108,7 @@ clean:
 build-and-push-local: release-local
 
 .PHONY: release-local
-release-local: release-local.amd64 release-local.arm64v8
+release-local: release-local.amd64 release-local.arm64
 	for arch in $(ARCHS); do \
 			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done
@@ -162,19 +120,31 @@ release-local: release-local.amd64 release-local.arm64v8
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+	docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
+		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+		--platform linux/amd64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
-.PHONY: release-local.arm64v8
-release-local.arm64v8: clean
-	docker build --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+.PHONY: release-local.arm64
+release-local.arm64: clean
+	docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
+		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+		--platform linux/arm64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: push-local
 push-local:
 	if [[ "${ARCH}" == "amd64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64; \
-	elif [[ "${ARCH}" == "arm64v8" ]]; then \
+	elif [[ "${ARCH}" == "arm64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)

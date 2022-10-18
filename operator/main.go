@@ -20,13 +20,15 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/kelseyhightower/envconfig"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 
@@ -37,6 +39,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
+	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnevaluation"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
@@ -69,6 +72,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
@@ -147,6 +151,18 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn evaluation for Evaluations"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn evaluation for Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	evaluationActive, err := meter.SyncInt64().UpDownCounter("keptn.evaluation.active", instrument.WithDescription("a simple counter of active apps for Keptn evaluation for Evaluations"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
@@ -158,6 +174,9 @@ func main() {
 		AppCount:           appCount,
 		AppDuration:        appDuration,
 		AppActive:          appActive,
+		EvaluationCount:    evaluationCount,
+		EvaluationDuration: evaluationDuration,
+		EvaluationActive:   evaluationActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -286,6 +305,17 @@ func main() {
 		Meters:   meters,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
+		os.Exit(1)
+	}
+	if err = (&keptnevaluation.KeptnEvaluationReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnEvaluation Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnevaluation-controller"),
+		Tracer:   otel.Tracer("keptn/operator/evaluation"),
+		Meters:   meters,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

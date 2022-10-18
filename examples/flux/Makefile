@@ -38,7 +38,7 @@ install: check-repo-url-empty check-github-user-empty check-flux-binary
 
 .PHONY: manifests
 manifests:
-	cp -r ../podtatohead-deployment/. $(REPO_PATH)/$(REPO_CLUSTER_PATH)
+	cp config/flux-config.yaml $(REPO_PATH)/$(REPO_CLUSTER_PATH)
 	cd $(REPO_PATH) && git add . && git commit -m "Add podtatohead manifests" && git push
 
 .PHONY: check-repo-url-empty

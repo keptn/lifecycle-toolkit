@@ -60,7 +60,7 @@ type KeptnEvaluationStatus struct {
 type EvaluationStatusItem struct {
 	Value  string            `json:"value"`
 	Status common.KeptnState `json:"status"`
-	Error  string            `json:"error,omitempty"`
+	ErrMsg string            `json:"errMsg,omitempty"`
 }
 
 //+kubebuilder:object:root=true

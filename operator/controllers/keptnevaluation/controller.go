@@ -255,19 +255,19 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 	)
 
 	if err != nil {
-		query.Error = err.Error()
+		query.ErrMsg = err.Error()
 		return query
 	}
 
 	if len(w) != 0 {
-		query.Error = w[0]
+		query.ErrMsg = w[0]
 		r.Log.Info("Prometheus API returned warnings: " + w[0])
 	}
 
 	// check if we can cast the result to a vector, it might be another data struct which we can't process
 	resultVector, ok := result.(model.Vector)
 	if !ok {
-		query.Error = "could not cast result"
+		query.ErrMsg = "could not cast result"
 		return query
 	}
 
@@ -275,21 +275,19 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 	// we are using two different errors to give the user more information about the result
 	if len(resultVector) == 0 {
 		r.Log.Info("No values in query result")
-		query.Error = "No values in query result"
+		query.ErrMsg = "No values in query result"
 		return query
 	} else if len(resultVector) > 1 {
 		r.Log.Info("Too many values in the query result")
-		query.Error = "Too many values in the query result"
+		query.ErrMsg = "Too many values in the query result"
 		return query
 	}
 
-	// parse the first entry as float and return the value if it's a valid float value
 	query.Value = resultVector[0].Value.String()
-
 	check, err := r.checkValue(objective, query)
 
 	if err != nil {
-		query.Error = err.Error()
+		query.ErrMsg = err.Error()
 		r.Log.Error(err, "Could not check query result")
 	}
 	if check {

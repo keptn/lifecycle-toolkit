@@ -84,7 +84,7 @@ spec:
               evaluationStatus:
                 additionalProperties:
                   properties:
-                    error:
+                    errMsg:
                       type: string
                     status:
                       type: string

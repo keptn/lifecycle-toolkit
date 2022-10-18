@@ -8,6 +8,7 @@ In this example, we will show you how to install our sample application *podtato
 * Then you can port-forward the ArgoUI using: `make argo-port-forward`
   * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
+  * This will need a slack-secret as described [here](../podtatohead-deployment/README.md#Create-Secret-for-Slack-here)
 * Watch the progress on your ArgoUI: `http://localhost:8080`
 
 ## Prerequisites:

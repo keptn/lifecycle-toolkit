@@ -106,7 +106,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		span.SetStatus(codes.Error, err.Error())
 		evaluation.Status.OverallStatus = common.StateFailed
 		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
-		return ctrl.Result{}, err
+		return ctrl.Result{}, nil
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {

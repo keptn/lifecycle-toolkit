@@ -1,10 +1,12 @@
 JAEGER_VERSION ?= v1.38.0
 LFC_NAMESPACE ?= keptn-lifecycle-controller-system
 PODTATO_NAMESPACE ?= podtato-kubectl
-REPO_LOCAL_PATH ?= clusters/demo-cluster
+REPO_PATH ?= flux-demo
+REPO_CLUSTER_PATH ?= clusters/demo-cluster
 GITHUB_REPO ?= ""
 GITHUB_BRANCH ?= "main"
 GITHUB_USER ?= ""
+GITHUB_TOKEN ?= ""
 
 
 .PHONY: install
@@ -16,28 +18,28 @@ install: check-repo-url-empty check-github-user-empty check-flux-binary
 	@echo "(i) You will need all permissions under repo (according to https://fluxcd.io/flux/installation/#github-and-github-enterprise)"
 	@echo ""
 	@sleep 5
-	mkdir -p $(REPO_LOCAL_PATH) | true
 	flux bootstrap github \
 		--owner=$(GITHUB_USER) \
 		--repository=$(GITHUB_REPO) \
 		--branch=$(GITHUB_BRANCH) \
-		--path=$(REPO_LOCAL_PATH) \
+		--path=$(REPO_CLUSTER_PATH) \
 		--personal
+	rm -rf $(REPO_CLUSTER_PATH)
+
+	@echo "----------------------------------------"
+	@echo "Cloning your flux repo"
+	@echo "----------------------------------------"
+	git clone $(GITHUB_REPO) $(REPO_PATH)
+
+	@echo "-----------------------------------------------------------------------------"
+	@echo "Flux is prepared, you can find the repo at $(REPO_PATH)"
+	@echo "Then you can proceed with the next step: make manifests <YOUR_REPO_PATH>"
+	@echo "-----------------------------------------------------------------------------"
 
 .PHONY: manifests
-manifests: check-flux-binary
-	@echo "----------------------------------------"
-	@echo "Generating manifests for flux"
-	@echo "----------------------------------------"
-	flux create source git podtato-head \
- 	 --url=https://github.com/keptn-sandbox/lifecycle-controller \
-	 --branch=main \
- 	 --interval=30s \
-  	 --export > $(REPO_LOCAL_PATH)/lfc-source.yaml
-	cp -r ../podtatohead-deployment/. $(REPO_LOCAL_PATH)/
-
-
-
+manifests:
+	cp -r ../podtatohead-deployment/. $(REPO_PATH)/$(REPO_CLUSTER_PATH)
+	cd $(REPO_PATH) && git add . && git commit -m "Add podtatohead manifests" && git push
 
 .PHONY: check-repo-url-empty
 check-repo-url-empty:
@@ -59,3 +61,10 @@ check-flux-binary:
 		echo "ERROR: flux binary not found. Please install flux"; \
 		exit 1; \
 	fi
+
+.PHONY: uninstall
+uninstall: check-flux-binary
+	@echo "----------------------------------------"
+	@echo "Uninstalling flux"
+	@echo "----------------------------------------"
+	flux uninstall

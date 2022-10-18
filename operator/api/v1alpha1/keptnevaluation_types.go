@@ -58,8 +58,9 @@ type KeptnEvaluationStatus struct {
 }
 
 type EvaluationStatusItem struct {
-	Value  string            `json:"value"`
-	Status common.KeptnState `json:"status"`
+	Value   string            `json:"value"`
+	Status  common.KeptnState `json:"status"`
+	Message string            `json:"message,omitempty"`
 }
 
 //+kubebuilder:object:root=true

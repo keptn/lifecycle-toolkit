@@ -84,6 +84,8 @@ spec:
               evaluationStatus:
                 additionalProperties:
                   properties:
+                    message:
+                      type: string
                     status:
                       type: string
                     value:

@@ -115,8 +115,6 @@ spec:
               postDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -125,6 +123,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      type: string
+                    taskDefinitionName:
                       type: string
                     taskName:
                       type: string
@@ -136,8 +136,6 @@ spec:
               preDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -146,6 +144,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      type: string
+                    taskDefinitionName:
                       type: string
                     taskName:
                       type: string

@@ -48,12 +48,21 @@ type KeptnWorkloadInstanceStatus struct {
 }
 
 type TaskStatus struct {
-	TaskDefinitionName string `json:"TaskDefinitionName,omitempty"`
+	TaskDefinitionName string `json:"taskDefinitionName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
 	TaskName  string            `json:"taskName,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
+}
+
+type EvaluationStatus struct {
+	EvaluationDefinitionName string `json:"evaluationDefinitionName,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status         common.KeptnState `json:"status,omitempty"`
+	EvaluationName string            `json:"evaluationName,omitempty"`
+	StartTime      metav1.Time       `json:"startTime,omitempty"`
+	EndTime        metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -151,6 +160,18 @@ func (i *TaskStatus) SetStartTime() {
 }
 
 func (i *TaskStatus) SetEndTime() {
+	if i.EndTime.IsZero() {
+		i.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *EvaluationStatus) SetStartTime() {
+	if i.StartTime.IsZero() {
+		i.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (i *EvaluationStatus) SetEndTime() {
 	if i.EndTime.IsZero() {
 		i.EndTime = metav1.NewTime(time.Now().UTC())
 	}

@@ -118,13 +118,9 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
-			} else {
-				r.Log.Error(err, "Failed to retrieve a resource")
+				return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 			}
-			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
-		}
-
-		if evaluationDefinition == nil || evaluationProvider == nil {
+			r.Log.Error(err, "Failed to retrieve a resource")
 			return ctrl.Result{}, nil
 		}
 

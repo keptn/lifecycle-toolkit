@@ -14,11 +14,11 @@ const VersionAnnotation = "keptn.sh/version"
 const AppAnnotation = "keptn.sh/app"
 const PreDeploymentTaskAnnotation = "keptn.sh/pre-deployment-tasks"
 const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
-const PreDeploymentAnalysisAnnotation = "keptn.sh/pre-deployment-analysis"
-const PostDeploymentAnalysisAnnotation = "keptn.sh/post-deployment-analysis"
 const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
+const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluation"
+const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluation"
 const TaskNameAnnotation = "keptn.sh/task-name"
 const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-controller"
 
@@ -107,6 +107,8 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+const PreEvaluationCheckType CheckType = "pre"
+const PostEvaluationCheckType CheckType = "post"
 
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter
@@ -118,6 +120,9 @@ type KeptnMeters struct {
 	AppCount           syncint64.Counter
 	AppDuration        syncfloat64.Histogram
 	AppActive          syncint64.UpDownCounter
+	EvaluationCount    syncint64.Counter
+	EvaluationDuration syncfloat64.Histogram
+	EvaluationActive   syncint64.UpDownCounter
 }
 
 const (
@@ -132,6 +137,9 @@ const (
 	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
 	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
 	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
+	EvaluationStatus  attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
+	EvaluationName    attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
+	EvaluationType    attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {

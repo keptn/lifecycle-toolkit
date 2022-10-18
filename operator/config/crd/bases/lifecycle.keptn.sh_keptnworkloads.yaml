@@ -44,7 +44,7 @@ spec:
             properties:
               app:
                 type: string
-              postDeploymentAnalysis:
+              postDeploymentEvaluation:
                 items:
                   type: string
                 type: array
@@ -52,7 +52,7 @@ spec:
                 items:
                   type: string
                 type: array
-              preDeploymentAnalysis:
+              preDeploymentEvaluation:
                 items:
                   type: string
                 type: array

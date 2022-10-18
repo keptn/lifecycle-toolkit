@@ -56,6 +56,13 @@ NAME                              READY   STATUS    RESTARTS      AGE
 otel-collector-6fc4cc84d6-7hnvp   1/1     Running   0             92m
 ```
 
+If you want to extend the OTel Collector configuration to send your telemetry data to other Observability platform, you
+can edit the Collector ConfigMap with the following command:
+
+```shell
+kubectl edit configmap otel-collector-conf -n keptn-lifecycle-controller-system
+```
+
 When the `otel-collector` pod is up and running, restart the `keptn-scheduler` and `klc-controller-manager` so they can
 pick up the new configuration.
 

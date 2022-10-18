@@ -11,8 +11,7 @@ In this example, we will show you how to install our sample application *podtato
 * Watch the progress on your ArgoUI: `http://localhost:8080`
 
 ## Prerequisites:
-This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn-sandbox/lifecycle-service). Furthermore, you have to install ArgoCD, as in the following docs:
-* https://argoproj.github.io/argo-cd/getting_started/
+This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn-sandbox/lifecycle-service). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argoproj.github.io/argo-cd/getting_started/).
 
 ### Install ArgoCD
 If you don't have an already existing installation of ArgoCD, you can install it using the following commands:
@@ -45,7 +44,7 @@ You will see that the application will be deployed using ArgoCD. You can watch t
 ![img.png](assets/argo-screen.png)
 
 In the meanwhile you can watch the progress of the deployment using:
-* `kubectl get pods -n podtato-kubectl`
+> `kubectl get pods -n podtato-kubectl`
   * See that the pods are pending until the pre-deployment tasks have passed
   * Pre-Deployment Tasks are started
   * Pods get scheduled

@@ -116,7 +116,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	r.Log.Info("Finished Reconciling KeptnTask")
 
-	// WorkloadInstance is completed at this place
+	// Task is completed at this place
 
 	if !task.IsEndTimeSet() {
 		// metrics: decrement active task counter

@@ -1,4 +1,3 @@
-../podtatohead-deployment/manifest.yaml---
 apiVersion: v1
 kind: Namespace
 metadata:

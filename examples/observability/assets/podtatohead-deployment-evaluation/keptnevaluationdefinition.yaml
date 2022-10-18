@@ -7,9 +7,9 @@ spec:
   source: prometheus
   objectives:
     - name: query-1
-      query: "sum(prometheus_engine_query_duration_seconds_count)"
+      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
       evaluationTarget: ">10" #string: can only be starting with < or >
     - name: query-2
-      query: "sum(kube_pod_container_resource_limits{resource='mem'}) - sum(kube_node_status_capacity{resource='mem'})"
-      evaluationTarget: "<100000000000000000" #string: can only be starting with < or >
+      query: "sum(kube_pod_container_resource_limits{resource='memory'}) - sum(kube_node_status_capacity{resource='memory'})"
+      evaluationTarget: "<1000000000" #string: can only be starting with < or >
 

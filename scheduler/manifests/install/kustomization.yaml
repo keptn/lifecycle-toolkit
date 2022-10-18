@@ -13,5 +13,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: klfc-scheduler
-  newName: docker.io/thschue/scheduler
-  newTag: "202210171665987043"
+  newName: docker.io/annadreal/scheduler
+  newTag: "202210181666093765"

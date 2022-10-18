@@ -21,11 +21,8 @@ spec:
     metadata:
       labels:
         component: podtato-head-entry
-      annotations:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
-        keptn.sh/version: 0.1.0
-        keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:
@@ -34,7 +31,7 @@ spec:
         command: ['sh', '-c', 'sleep 30']
       containers:
       - name: server
-        image: ghcr.io/podtato-head/entry:latest
+        image: ghcr.io/podtato-head/entry:0.2.7
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
@@ -76,16 +73,16 @@ spec:
     metadata:
       labels:
         component: podtato-head-hat
+        app.kubernetes.io/version: 0.1.0
       annotations:
-        keptn.sh/app: podtato-head
-        keptn.sh/workload: podtato-head-hat
-        keptn.sh/version: 0.1.0
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-hat
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/hat:latest
+          image:  ghcr.io/podtato-head/hat:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -126,15 +123,14 @@ spec:
       labels:
         component: podtato-head-left-leg
       annotations:
-        keptn.sh/app: podtato-head
-        keptn.sh/workload: podtato-head-left-leg
-        keptn.sh/version: 0.1.0
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-left-leg
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-leg:latest
+          image:  ghcr.io/podtato-head/left-leg:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -174,16 +170,15 @@ spec:
     metadata:
       labels:
         component: podtato-head-left-arm
+        app.kubernetes.io/part-of: podtato-head
       annotations:
-        keptn.sh/app: podtato-head
-        keptn.sh/workload: podtato-head-left-arm
-        keptn.sh/version: 0.1.0
+        app.kubernetes.io/name: podtato-head-left-arm
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-arm:latest
+          image:  ghcr.io/podtato-head/left-arm:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -224,15 +219,14 @@ spec:
       labels:
         component: podtato-head-right-leg
       annotations:
-        keptn.sh/app: podtato-head
-        keptn.sh/workload: podtato-head-right-leg
-        keptn.sh/version: 0.1.0
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-right-leg
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:latest
+          image:  ghcr.io/podtato-head/right-leg:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -273,7 +267,7 @@ spec:
       labels:
         component: podtato-head-right-arm
       annotations:
-        keptn.sh/app: podtato-head
+        app.kubernetes.io/part-of: podtato-head
         keptn.sh/workload: podtato-head-right-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
@@ -281,7 +275,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-arm:latest
+          image:  ghcr.io/podtato-head/right-arm:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

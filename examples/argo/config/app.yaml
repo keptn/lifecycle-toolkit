@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/thschue/lifecycle-controller 
     targetRevision: main
-    path: examples/argo/podtatohead
+    path: examples/podtatohead-deployment
   destination: 
     server: https://kubernetes.default.svc
     namespace: podtato-kubectl

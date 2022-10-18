@@ -302,20 +302,20 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	var preDeploymentAnalysis []string
 	var postDeploymentAnalysis []string
 
-	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
-		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentTaskAnnotation, ""); found {
+		preDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
-		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentTaskAnnotation, ""); found {
+		postDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
-		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentAnalysisAnnotation, ""); found {
+		preDeploymentAnalysis = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
-		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentAnalysisAnnotation, ""); found {
+		postDeploymentAnalysis = strings.Split(annotations, ",")
 	}
 
 	// create TraceContext
@@ -402,11 +402,21 @@ func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.R
 func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
 	if pod.Annotations[primaryAnnotation] != "" {
 		return pod.Annotations[primaryAnnotation], true
-	} else if pod.Labels[primaryAnnotation] != "" {
+	}
+
+	if pod.Labels[primaryAnnotation] != "" {
 		return pod.Labels[primaryAnnotation], true
-	} else if pod.Annotations[secondaryAnnotation] != "" {
+	}
+
+	if secondaryAnnotation == "" {
+		return "", false
+	}
+
+	if pod.Annotations[secondaryAnnotation] != "" {
 		return pod.Annotations[secondaryAnnotation], true
-	} else if pod.Labels[secondaryAnnotation] != "" {
+	}
+
+	if pod.Labels[secondaryAnnotation] != "" {
 		return pod.Labels[secondaryAnnotation], true
 	}
 	return "", false

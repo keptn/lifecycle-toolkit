@@ -146,3 +146,8 @@ func GenerateTaskName(checkType CheckType, taskName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(taskName, 32), randomId)
 }
+
+func GenerateEvaluationName(checkType CheckType, evalName string) string {
+	randomId := rand.Intn(99_999-10_000) + 10000
+	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
+}

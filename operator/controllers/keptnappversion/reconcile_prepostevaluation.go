@@ -143,7 +143,7 @@ func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, n
 
 	newEvaluation := &klcv1alpha1.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, evaluationDefinition),
+			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},

@@ -95,6 +95,27 @@ spec:
               endTime:
                 format: date-time
                 type: string
+              postDeploymentEvaluationStatus:
+                default: Pending
+                type: string
+              postDeploymentEvaluationTaskStatus:
+                items:
+                  properties:
+                    endTime:
+                      format: date-time
+                      type: string
+                    evaluationDefinitionName:
+                      type: string
+                    evaluationName:
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
               postDeploymentStatus:
                 default: Pending
                 type: string
@@ -116,10 +137,10 @@ spec:
                       type: string
                   type: object
                 type: array
-              postEvaluationStatus:
+              preDeploymentEvaluationStatus:
                 default: Pending
                 type: string
-              postEvaluationTaskStatus:
+              preDeploymentEvaluationTaskStatus:
                 items:
                   properties:
                     endTime:
@@ -155,27 +176,6 @@ spec:
                     taskDefinitionName:
                       type: string
                     taskName:
-                      type: string
-                  type: object
-                type: array
-              preEvaluationStatus:
-                default: Pending
-                type: string
-              preEvaluationTaskStatus:
-                items:
-                  properties:
-                    endTime:
-                      format: date-time
-                      type: string
-                    evaluationDefinitionName:
-                      type: string
-                    evaluationName:
-                      type: string
-                    startTime:
-                      format: date-time
-                      type: string
-                    status:
-                      default: Pending
                       type: string
                   type: object
                 type: array

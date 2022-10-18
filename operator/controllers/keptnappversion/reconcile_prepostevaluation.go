@@ -25,12 +25,12 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 	overallState := common.GetOverallState(state)
 
 	switch checkType {
-	case common.PreEvaluationCheckType:
-		appVersion.Status.PreEvaluationStatus = overallState
-		appVersion.Status.PreEvaluationTaskStatus = newStatus
-	case common.PostEvaluationCheckType:
-		appVersion.Status.PostEvaluationStatus = overallState
-		appVersion.Status.PostEvaluationTaskStatus = newStatus
+	case common.PreDeploymentEvaluationCheckType:
+		appVersion.Status.PreDeploymentEvaluationStatus = overallState
+		appVersion.Status.PreDeploymentEvaluationTaskStatus = newStatus
+	case common.PostDeploymentEvaluationCheckType:
+		appVersion.Status.PostDeploymentEvaluationStatus = overallState
+		appVersion.Status.PostDeploymentEvaluationTaskStatus = newStatus
 	}
 
 	// Write Status Field
@@ -51,12 +51,12 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 	var statuses []klcv1alpha1.EvaluationStatus
 
 	switch checkType {
-	case common.PreEvaluationCheckType:
+	case common.PreDeploymentEvaluationCheckType:
 		evaluations = appVersion.Spec.PreDeploymentEvaluations
-		statuses = appVersion.Status.PreEvaluationTaskStatus
-	case common.PostEvaluationCheckType:
+		statuses = appVersion.Status.PreDeploymentEvaluationTaskStatus
+	case common.PostDeploymentEvaluationCheckType:
 		evaluations = appVersion.Spec.PostDeploymentEvaluations
-		statuses = appVersion.Status.PostEvaluationTaskStatus
+		statuses = appVersion.Status.PostDeploymentEvaluationTaskStatus
 	}
 
 	var summary common.StatusSummary

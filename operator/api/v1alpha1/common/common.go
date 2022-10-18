@@ -107,8 +107,8 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
-const PreEvaluationCheckType CheckType = "pre"
-const PostEvaluationCheckType CheckType = "post"
+const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
+const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter

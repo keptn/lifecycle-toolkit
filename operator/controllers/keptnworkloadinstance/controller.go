@@ -116,7 +116,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch AppVersion: %+v", err)
 	}
 
-	appPreEvalStatus := appVersion.Status.PreEvaluationStatus
+	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed")

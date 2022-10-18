@@ -76,9 +76,8 @@ jobs:
       - name: Get current date and time
         id: get_datetime
         run: |
-          echo "::set-output name=DATE::$(date +'%Y%m%d')"
-          echo "::set-output name=TIME::$(date +'%H%M')"
-          echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
+          DATETIME=$(date +'%Y%m%d%H%M')
+          echo "DATETIME=$DATETIME" >> "$GITHUB_OUTPUT"
 
   compile:
     name: Compile
@@ -138,7 +137,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [prepare_ci_run, compile, test]
+    needs: [ prepare_ci_run, compile, test ]
     runs-on: ubuntu-20.04
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -149,61 +148,54 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v2
-      with:
-          install: true
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        platforms: arm64
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: "ghcr.io"
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        # Key is named differently to avoid collision
-        key: ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: "ghcr.io"
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Docker Images
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: |
-        make release-image
+      - name: Build Docker Image
+        if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.config.working-dir }}
+          platforms: linux/amd64, linux/arm64
+          tags: |
+            ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:dev-${{ env.DATETIME }}
+          builds-args: |
+            GIT_HASH=${{ env.GIT_SHA }}
+            RELEASE_VERSION=dev-${{ env.DATETIME }}
+          pull: true
+          push: ${{ inputs.should-push-image }}
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
 
-    - name: Push Docker Images
-      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: |
-        make push-release-images
+      - name: Install controller-gen
+        if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.config.working-dir }}
+        run: make controller-gen
 
-    - name: Install controller-gen
-      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      run: make controller-gen
+      - name: Generate release.yaml
+        if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.config.working-dir }}
+        env:
+          TAG: dev-${{ env.DATETIME }}
+        run: make release-manifests
 
-    - name: Generate release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: make release-manifests
-
-    - name: Upload release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.config.artifact }}-manifest
-        path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml
+      - name: Upload release.yaml
+        if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.config.artifact }}-manifest
+          path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml

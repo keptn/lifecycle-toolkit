@@ -19,12 +19,13 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
@@ -101,8 +102,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		workloadInstance.SetStartTime()
 	}
 
-	//Wait for pre-deployment checks of App
-	phase := common.PhaseAppPreDeployment
+	//Wait for pre-evaluation checks of App
+	phase := common.PhaseAppPreEvaluation
 
 	appVersion, err := r.getAppVersion(ctx, types.NamespacedName{Namespace: req.Namespace, Name: workloadInstance.Spec.AppName})
 	if errors.IsNotFound(err) {
@@ -115,13 +116,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf("could not fetch AppVersion: %+v", err)
 	}
 
-	appPreDepStatus := appVersion.Status.PreDeploymentStatus
-	if !appPreDepStatus.IsSucceeded() {
-		if appPreDepStatus.IsFailed() {
+	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
+	if !appPreEvalStatus.IsSucceeded() {
+		if appPreEvalStatus.IsFailed() {
 			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed")
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre deployment tasks for app not finished")
+		r.recordEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished")
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 	}
 
@@ -132,6 +133,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		}
 		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
+	}
+
+	//Wait for pre-evaluation checks of Workload
+	phase = common.PhaseAppPreEvaluation
+	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
+		reconcilePreEval := func() (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
+		}
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentEvaluationFailed, reconcilePreEval)
 	}
 
 	//Wait for deployment of Workload
@@ -150,6 +160,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
 		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
+	}
+
+	//Wait for post-evaluation checks of Workload
+	phase = common.PhaseAppPostEvaluation
+	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
+		reconcilePostEval := func() (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
+		}
+		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentEvaluationFailed, reconcilePostEval)
 	}
 
 	// WorkloadInstance is completed at this place

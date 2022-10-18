@@ -35,7 +35,7 @@ spec:
           spec:
             description: KeptnAppSpec defines the desired state of KeptnApp
             properties:
-              postDeploymentEvaluation:
+              postDeploymentEvaluations:
                 items:
                   type: string
                 type: array
@@ -43,7 +43,7 @@ spec:
                 items:
                   type: string
                 type: array
-              preDeploymentEvaluation:
+              preDeploymentEvaluations:
                 items:
                   type: string
                 type: array

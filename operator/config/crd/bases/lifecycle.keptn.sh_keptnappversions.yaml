@@ -27,11 +27,17 @@ spec:
     - jsonPath: .status.preDeploymentStatus
       name: PreDeploymentStatus
       type: string
+    - jsonPath: .status.preDeploymentEvaluationStatus
+      name: PreDeploymentEvaluationStatus
+      type: string
     - jsonPath: .status.workloadOverallStatus
       name: WorkloadOverallStatus
       type: string
     - jsonPath: .status.postDeploymentStatus
       name: PostDeploymentStatus
+      type: string
+    - jsonPath: .status.postDeploymentEvaluationStatus
+      name: PostDeploymentEvaluationStatus
       type: string
     name: v1alpha1
     schema:
@@ -55,7 +61,7 @@ spec:
             properties:
               appName:
                 type: string
-              postDeploymentEvaluation:
+              postDeploymentEvaluations:
                 items:
                   type: string
                 type: array
@@ -63,7 +69,7 @@ spec:
                 items:
                   type: string
                 type: array
-              preDeploymentEvaluation:
+              preDeploymentEvaluations:
                 items:
                   type: string
                 type: array
@@ -95,14 +101,33 @@ spec:
               endTime:
                 format: date-time
                 type: string
+              postDeploymentEvaluationStatus:
+                default: Pending
+                type: string
+              postDeploymentEvaluationTaskStatus:
+                items:
+                  properties:
+                    endTime:
+                      format: date-time
+                      type: string
+                    evaluationDefinitionName:
+                      type: string
+                    evaluationName:
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
               postDeploymentStatus:
                 default: Pending
                 type: string
               postDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -112,7 +137,30 @@ spec:
                     status:
                       default: Pending
                       type: string
+                    taskDefinitionName:
+                      type: string
                     taskName:
+                      type: string
+                  type: object
+                type: array
+              preDeploymentEvaluationStatus:
+                default: Pending
+                type: string
+              preDeploymentEvaluationTaskStatus:
+                items:
+                  properties:
+                    endTime:
+                      format: date-time
+                      type: string
+                    evaluationDefinitionName:
+                      type: string
+                    evaluationName:
+                      type: string
+                    startTime:
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
                       type: string
                   type: object
                 type: array
@@ -122,8 +170,6 @@ spec:
               preDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -132,6 +178,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      type: string
+                    taskDefinitionName:
                       type: string
                     taskName:
                       type: string

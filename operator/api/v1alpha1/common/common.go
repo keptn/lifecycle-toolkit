@@ -17,8 +17,8 @@ const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
-const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluation"
-const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluation"
+const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluations"
+const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluations"
 const TaskNameAnnotation = "keptn.sh/task-name"
 const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-controller"
 
@@ -107,8 +107,8 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
-const PreEvaluationCheckType CheckType = "pre"
-const PostEvaluationCheckType CheckType = "post"
+const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
+const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter
@@ -145,4 +145,9 @@ const (
 func GenerateTaskName(checkType CheckType, taskName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(taskName, 32), randomId)
+}
+
+func GenerateEvaluationName(checkType CheckType, evalName string) string {
+	randomId := rand.Intn(99_999-10_000) + 10000
+	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
 }

@@ -330,13 +330,13 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:                  applicationName,
-			Version:                  version,
-			ResourceReference:        a.getResourceReference(pod),
-			PreDeploymentTasks:       preDeploymentTasks,
-			PostDeploymentTasks:      postDeploymentTasks,
-			PreDeploymentEvaluation:  preDeploymentEvaluation,
-			PostDeploymentEvaluation: postDeploymentEvaluation,
+			AppName:                   applicationName,
+			Version:                   version,
+			ResourceReference:         a.getResourceReference(pod),
+			PreDeploymentTasks:        preDeploymentTasks,
+			PostDeploymentTasks:       postDeploymentTasks,
+			PreDeploymentEvaluations:  preDeploymentEvaluation,
+			PostDeploymentEvaluations: postDeploymentEvaluation,
 		},
 	}
 }
@@ -357,11 +357,11 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
-			Version:                  version,
-			PreDeploymentTasks:       []string{},
-			PostDeploymentTasks:      []string{},
-			PreDeploymentEvaluation:  []string{},
-			PostDeploymentEvaluation: []string{},
+			Version:                   version,
+			PreDeploymentTasks:        []string{},
+			PostDeploymentTasks:       []string{},
+			PreDeploymentEvaluations:  []string{},
+			PostDeploymentEvaluations: []string{},
 			Workloads: []klcv1alpha1.KeptnWorkloadRef{
 				{
 					Name:    appName,

@@ -8,7 +8,4 @@ spec:
     - name: prometheus
       query: "sum(prometheus_engine_query_duration_seconds_count)"
       evaluationTarget: ">1000" #string: can only be starting with < or >
-    - name: prometheus2
-      query: "sum(prometheus_engine_query_duration_seconds_count)"
-      evaluationTarget: "<1000" #string: can only be starting with < or >
 

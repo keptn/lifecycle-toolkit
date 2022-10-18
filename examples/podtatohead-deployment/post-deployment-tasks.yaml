@@ -6,4 +6,4 @@ spec:
   function:
     inline:
       code: |
-        console.log("Pre-Deployment Task has been executed");
+        console.log("Post-Deployment Task has been executed");

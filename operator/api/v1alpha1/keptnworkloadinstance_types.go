@@ -78,8 +78,10 @@ type EvaluationStatus struct {
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
 // +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 type KeptnWorkloadInstance struct {

@@ -30,11 +30,17 @@ spec:
     - jsonPath: .status.preDeploymentStatus
       name: PreDeploymentStatus
       type: string
+    - jsonPath: .status.preDeploymentEvaluationStatus
+      name: PreDeploymentEvaluationStatus
+      type: string
     - jsonPath: .status.deploymentStatus
       name: DeploymentStatus
       type: string
     - jsonPath: .status.postDeploymentStatus
       name: PostDeploymentStatus
+      type: string
+    - jsonPath: .status.postDeploymentEvaluationStatus
+      name: PostDeploymentEvaluationStatus
       type: string
     name: v1alpha1
     schema:

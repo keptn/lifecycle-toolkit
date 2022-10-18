@@ -20,5 +20,3 @@ spec:
       version: 0.1.0
   postDeploymentTasks:
     - post-deployment-hello
-  preDeploymentEvaluations:
-    - my-prometheus-definition

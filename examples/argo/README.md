@@ -50,11 +50,11 @@ In the meanwhile you can watch the progress of the deployment using:
   * Pre-Deployment Tasks are started
   * Pods get scheduled
 
-* `kubectl get keptnworkloadinstances -n podtato-kubectl`
+> `kubectl get keptnworkloadinstances -n podtato-kubectl`
   * Get the current status of the workloads
   * See in which phase your workload deployments are at the moment
   
-* `kubectl get keptnapplicationversions -n podtato-kubectl`
+> `kubectl get keptnapplicationversions -n podtato-kubectl`
     * Get the current status of the application
     * See in which phase your application deployment is at the moment
     * You might notice that post-deployment-tasks fail (this is expected, as the secret for the post-deployment task is not available)

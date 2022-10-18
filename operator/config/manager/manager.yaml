@@ -47,7 +47,7 @@ spec:
           - name: OTEL_COLLECTOR_URL
             value: otel-collector:4317
           - name: FUNCTION_RUNNER_IMAGE
-            value: docker.io/keptn-sandbox/functions-runtime:0.2.0 #x-release-please-version
+            value: ghcr.io/keptn-sandbox/functions-runtime:v0.2.0 #x-release-please-version
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

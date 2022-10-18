@@ -20,6 +20,7 @@ const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 const TaskNameAnnotation = "keptn.sh/task-name"
+const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-controller"
 
 const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25

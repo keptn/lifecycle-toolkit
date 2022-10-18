@@ -90,6 +90,7 @@ uninstall:
 .PHONY: deploy-podtatohead
 deploy-podtatohead:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
+	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
 	kubectl apply -f ../podtatohead-deployment/.
 	kubectl wait --for=condition=available deployment/podtato-head-entry -n podtato-kubectl --timeout=120s
 	@echo "Watch Workload Deployment Progress: kubectl get keptnworkloadinstances -n podtato-kubectl -w"

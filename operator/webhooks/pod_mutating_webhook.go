@@ -30,6 +30,7 @@ import (
 )
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
+//+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -58,6 +59,18 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	err := a.decoder.Decode(req, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
+	}
+
+	// check if Lifecycle Controller is enabled for this namespace
+	namespace := &corev1.Namespace{}
+	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
+		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
+		return admission.Errored(http.StatusInternalServerError, err)
+	}
+
+	if namespace.GetAnnotations()[common.NamespaceEnabledAnnotation] != "enabled" {
+		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
+		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))

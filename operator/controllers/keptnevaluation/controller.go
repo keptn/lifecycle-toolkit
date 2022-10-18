@@ -102,11 +102,10 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
-		err := fmt.Errorf("RetryCount for evaluation exceeded")
+		err := fmt.Errorf("retryCount for evaluation exceeded")
 		span.SetStatus(codes.Error, err.Error())
 		evaluation.Status.OverallStatus = common.StateFailed
 		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
-
 		return ctrl.Result{}, err
 	}
 
@@ -117,6 +116,11 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, namespacedDefinition)
 		if err != nil {
+			if errors.IsNotFound(err) {
+				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+			} else {
+				r.Log.Error(err, "Failed to retrieve a resource")
+			}
 			return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 		}
 
@@ -219,12 +223,6 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 	evaluationDefinition := &klcv1alpha1.KeptnEvaluationDefinition{}
 
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
-		if errors.IsNotFound(err) {
-			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnEvaluationDefinition resource not found. Ignoring since object must be deleted")
-			return nil, nil, nil
-		}
-		r.Log.Error(err, "Failed to get the KeptnEvaluationDefinition")
 		return nil, nil, err
 	}
 
@@ -236,12 +234,6 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 	evaluationProvider := &klcv1alpha1.KeptnEvaluationProvider{}
 
 	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
-		if errors.IsNotFound(err) {
-			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnEvaluationProvider resource not found. Ignoring since object must be deleted")
-			return nil, nil, nil
-		}
-		r.Log.Error(err, "Failed to get the KeptnEvaluationProvider")
 		return nil, nil, err
 	}
 

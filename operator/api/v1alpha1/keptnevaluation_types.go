@@ -31,7 +31,7 @@ import (
 type KeptnEvaluationSpec struct {
 	Workload             string `json:"workload,omitempty"`
 	WorkloadVersion      string `json:"workloadVersion"`
-	AppName              string `json:"app,omitempty"`
+	AppName              string `json:"appName,omitempty"`
 	AppVersion           string `json:"appVersion,omitempty"`
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// +kubebuilder:default:=10
@@ -67,9 +67,12 @@ type EvaluationStatusItem struct {
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=keptnevaluations,shortName=ke
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
-// +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
-// +kubebuilder:printcolumn:name="EvaluationStatus",type=string,JSONPath=`.status.evaluationStatus`
-// +kubebuilder:printcolumn:name="OverallStatus",type=string,JSONPath=`.status.overallStatus`
+//+kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
+//+kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
+//+kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
+//+kubebuilder:printcolumn:name="RetryCount",type=string,JSONPath=`.status.retryCount`
+//+kubebuilder:printcolumn:name="EvaluationStatus",type=string,JSONPath=`.status.evaluationStatus`
+//+kubebuilder:printcolumn:name="OverallStatus",type=string,JSONPath=`.status.overallStatus`
 
 // KeptnEvaluation is the Schema for the keptnevaluations API
 type KeptnEvaluation struct {

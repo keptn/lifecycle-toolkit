@@ -24,6 +24,15 @@ spec:
     - jsonPath: .spec.appVersion
       name: AppVersion
       type: string
+    - jsonPath: .spec.workload
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.retryCount
+      name: RetryCount
+      type: string
     - jsonPath: .status.evaluationStatus
       name: EvaluationStatus
       type: string
@@ -50,7 +59,7 @@ spec:
           spec:
             description: KeptnEvaluationSpec defines the desired state of KeptnEvaluation
             properties:
-              app:
+              appName:
                 type: string
               appVersion:
                 type: string

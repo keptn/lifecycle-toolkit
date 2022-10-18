@@ -68,8 +68,10 @@ type WorkloadStatus struct {
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
 // +kubebuilder:printcolumn:name="WorkloadOverallStatus",type=string,JSONPath=`.status.workloadOverallStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {

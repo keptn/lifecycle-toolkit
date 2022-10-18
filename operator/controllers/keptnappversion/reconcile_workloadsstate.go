@@ -3,6 +3,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -20,12 +21,12 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
 		if err != nil && errors.IsNotFound(err) {
 			r.Recorder.Event(appVersion, "Warning", "WorkloadNotFound", fmt.Sprintf("Could not find KeptnWorkloadInstance / Namespace: %s, Name: %s ", appVersion.Namespace, w.Name))
-			workload.Status.PostDeploymentStatus = common.StatePending
+			workload.Status.PostDeploymentEvaluationStatus = common.StatePending
 		} else if err != nil {
 			r.Log.Error(err, "Could not get workload")
-			workload.Status.PostDeploymentStatus = common.StateUnknown
+			workload.Status.PostDeploymentEvaluationStatus = common.StateUnknown
 		}
-		workloadStatus := workload.Status.PostDeploymentStatus
+		workloadStatus := workload.Status.PostDeploymentEvaluationStatus
 
 		newStatus = append(newStatus, klcv1alpha1.WorkloadStatus{
 			Workload: w,

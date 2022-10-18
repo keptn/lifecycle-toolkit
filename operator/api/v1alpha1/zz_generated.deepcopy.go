@@ -993,6 +993,20 @@ func (in *KeptnWorkloadInstanceStatus) DeepCopyInto(out *KeptnWorkloadInstanceSt
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.PreDeploymentEvaluationTaskStatus != nil {
+		in, out := &in.PreDeploymentEvaluationTaskStatus, &out.PreDeploymentEvaluationTaskStatus
+		*out = make([]EvaluationStatus, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.PostDeploymentEvaluationTaskStatus != nil {
+		in, out := &in.PostDeploymentEvaluationTaskStatus, &out.PostDeploymentEvaluationTaskStatus
+		*out = make([]EvaluationStatus, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	in.StartTime.DeepCopyInto(&out.StartTime)
 	in.EndTime.DeepCopyInto(&out.EndTime)
 }
@@ -1067,13 +1081,13 @@ func (in *KeptnWorkloadSpec) DeepCopyInto(out *KeptnWorkloadSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PreDeploymentEvaluation != nil {
-		in, out := &in.PreDeploymentEvaluation, &out.PreDeploymentEvaluation
+	if in.PreDeploymentEvaluations != nil {
+		in, out := &in.PreDeploymentEvaluations, &out.PreDeploymentEvaluations
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.PostDeploymentEvaluation != nil {
-		in, out := &in.PostDeploymentEvaluation, &out.PostDeploymentEvaluation
+	if in.PostDeploymentEvaluations != nil {
+		in, out := &in.PostDeploymentEvaluations, &out.PostDeploymentEvaluations
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}

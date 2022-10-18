@@ -8,7 +8,6 @@ In this example, we will show you how to install our sample application *podtato
 * Then you can port-forward the ArgoUI using: `make argo-port-forward`
   * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
-  * This will need a slack-secret as described [here](../podtatohead-deployment/README.md#Create-Secret-for-Slack-here)
 * Watch the progress on your ArgoUI: `http://localhost:8080`
 
 ## Prerequisites:
@@ -57,8 +56,5 @@ In the meanwhile you can watch the progress of the deployment using:
 > `kubectl get keptnapplicationversions -n podtato-kubectl`
     * Get the current status of the application
     * See in which phase your application deployment is at the moment
-    * You might notice that post-deployment-tasks fail (this is expected, as the secret for the post-deployment task is not available)
-    * Therefore, you can create the post-deployment secret using the following command:
-      * `kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":"<WebHook>","text":"Deployed PodTatoHead Application"}' -n podtato-kubectl`
 
 After some time all resources should be in a succeeded state. In the Argo-UI you will see that the application is in sync.

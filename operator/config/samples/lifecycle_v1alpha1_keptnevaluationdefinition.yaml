@@ -1,6 +1,14 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnEvaluationDefinition
 metadata:
-  name: keptnevaluationdefinition-sample
+  name: my-prometheus-definition
 spec:
-  # TODO(user): Add fields here
+  source: prometheus
+  objectives:
+    - name: prometheus
+      query: "sum(prometheus_engine_query_duration_seconds_count)"
+      evaluationTarget: ">1000" #string: can only be starting with < or >
+    - name: prometheus2
+      query: "sum(prometheus_engine_query_duration_seconds_count)"
+      evaluationTarget: "<1000" #string: can only be starting with < or >
+

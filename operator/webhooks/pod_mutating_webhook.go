@@ -30,6 +30,7 @@ import (
 )
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
+//+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -58,6 +59,18 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	err := a.decoder.Decode(req, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
+	}
+
+	// check if Lifecycle Controller is enabled for this namespace
+	namespace := &corev1.Namespace{}
+	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
+		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
+		return admission.Errored(http.StatusInternalServerError, err)
+	}
+
+	if namespace.GetAnnotations()[common.NamespaceEnabledAnnotation] != "enabled" {
+		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
+		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
@@ -286,23 +299,23 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
-	var preDeploymentAnalysis []string
-	var postDeploymentAnalysis []string
+	var preDeploymentEvaluation []string
+	var postDeploymentEvaluation []string
 
-	if pod.Annotations[common.PreDeploymentTaskAnnotation] != "" {
-		preDeploymentTasks = strings.Split(pod.Annotations[common.PreDeploymentTaskAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentTaskAnnotation, ""); found {
+		preDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PostDeploymentTaskAnnotation] != "" {
-		postDeploymentTasks = strings.Split(pod.Annotations[common.PostDeploymentTaskAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentTaskAnnotation, ""); found {
+		postDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PreDeploymentAnalysisAnnotation] != "" {
-		preDeploymentAnalysis = strings.Split(pod.Annotations[common.PreDeploymentAnalysisAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentEvaluationAnnotation, ""); found {
+		preDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
-	if pod.Annotations[common.PostDeploymentAnalysisAnnotation] != "" {
-		postDeploymentAnalysis = strings.Split(pod.Annotations[common.PostDeploymentAnalysisAnnotation], ",")
+	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentEvaluationAnnotation, ""); found {
+		postDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
 	// create TraceContext
@@ -317,13 +330,13 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
-			AppName:                applicationName,
-			Version:                version,
-			ResourceReference:      a.getResourceReference(pod),
-			PreDeploymentTasks:     preDeploymentTasks,
-			PostDeploymentTasks:    postDeploymentTasks,
-			PreDeploymentAnalysis:  preDeploymentAnalysis,
-			PostDeploymentAnalysis: postDeploymentAnalysis,
+			AppName:                  applicationName,
+			Version:                  version,
+			ResourceReference:        a.getResourceReference(pod),
+			PreDeploymentTasks:       preDeploymentTasks,
+			PostDeploymentTasks:      postDeploymentTasks,
+			PreDeploymentEvaluation:  preDeploymentEvaluation,
+			PostDeploymentEvaluation: postDeploymentEvaluation,
 		},
 	}
 }
@@ -344,11 +357,11 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
-			Version:                version,
-			PreDeploymentTasks:     []string{},
-			PostDeploymentTasks:    []string{},
-			PreDeploymentAnalysis:  []string{},
-			PostDeploymentAnalysis: []string{},
+			Version:                  version,
+			PreDeploymentTasks:       []string{},
+			PostDeploymentTasks:      []string{},
+			PreDeploymentEvaluation:  []string{},
+			PostDeploymentEvaluation: []string{},
 			Workloads: []klcv1alpha1.KeptnWorkloadRef{
 				{
 					Name:    appName,
@@ -389,11 +402,21 @@ func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.R
 func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
 	if pod.Annotations[primaryAnnotation] != "" {
 		return pod.Annotations[primaryAnnotation], true
-	} else if pod.Labels[primaryAnnotation] != "" {
+	}
+
+	if pod.Labels[primaryAnnotation] != "" {
 		return pod.Labels[primaryAnnotation], true
-	} else if pod.Annotations[secondaryAnnotation] != "" {
+	}
+
+	if secondaryAnnotation == "" {
+		return "", false
+	}
+
+	if pod.Annotations[secondaryAnnotation] != "" {
 		return pod.Annotations[secondaryAnnotation], true
-	} else if pod.Labels[secondaryAnnotation] != "" {
+	}
+
+	if pod.Labels[secondaryAnnotation] != "" {
 		return pod.Labels[secondaryAnnotation], true
 	}
 	return "", false

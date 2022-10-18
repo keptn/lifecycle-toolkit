@@ -33,9 +33,19 @@ type KeptnTaskSpec struct {
 	Version          string           `json:"version"`
 	AppName          string           `json:"app,omitempty"` //TODO make autofill logic
 	TaskDefinition   string           `json:"taskDefinition"`
+	Context          TaskContext      `json:"context"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
+}
+
+type TaskContext struct {
+	WorkloadName    string `json:"workloadName"`
+	AppName         string `json:"appName"`
+	AppVersion      string `json:"appVersion"`
+	WorkloadVersion string `json:"workloadVersion"`
+	TaskType        string `json:"taskType"`
+	ObjectType      string `json:"objectType"`
 }
 
 type TaskParameters struct {

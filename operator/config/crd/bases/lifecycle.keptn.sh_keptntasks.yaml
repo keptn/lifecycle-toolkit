@@ -55,6 +55,28 @@ spec:
                 type: string
               checkType:
                 type: string
+              context:
+                properties:
+                  appName:
+                    type: string
+                  appVersion:
+                    type: string
+                  objectType:
+                    type: string
+                  taskType:
+                    type: string
+                  workloadName:
+                    type: string
+                  workloadVersion:
+                    type: string
+                required:
+                - appName
+                - appVersion
+                - objectType
+                - taskType
+                - workloadName
+                - workloadVersion
+                type: object
               parameters:
                 properties:
                   map:
@@ -74,6 +96,7 @@ spec:
               workload:
                 type: string
             required:
+            - context
             - taskDefinition
             - version
             type: object

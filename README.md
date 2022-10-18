@@ -51,13 +51,24 @@ For this reason, the Keptn Lifecycle Controller is agnostic to deployment tools 
 
 ## How to use
 
-The Keptn Lifecycle Controller monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations.
+The Keptn Lifecycle Controller monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations/labels.
 For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
 
 ```yaml
 keptn.sh/app: myAwesomeAppName
 keptn.sh/workload: myAwesomeWorkload
+keptn.sh/version: myAwesomeWorkloadVersion
 ```
+
+Alternatively, you can use Kubernetes [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) to annotate your workload:
+
+```yaml
+app.kubernetes.io/part-of: myAwesomeAppName
+app.kubernetes.io/name: myAwesomeWorkload
+app.kubernetes.io/version: myAwesomeWorkloadVersion
+```
+
+In general, the Keptn Annotations/Labels take precedence over the Kubernetes recommended labels. If there is no version annotation/label and there is only one container in the pod, the Lifecycle Controller will take the image tag as version (if it is not "latest").
 
 In case you want to run pre- and post-deployment checks, further annotations are necessary:
 

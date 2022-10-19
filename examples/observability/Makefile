@@ -14,11 +14,10 @@ install:undeploy-podtatohead
 
 	@echo ""
 	@echo "------------------"
-	@echo "Install Prometheus"
+	@echo "Configure Prometheus"
 	@echo "------------------"
 	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply --server-side -f config/prometheus/setup
-	kubectl apply -f config/prometheus/
 
 	@echo ""
 	@echo "-------------------------------"
@@ -31,11 +30,11 @@ install:undeploy-podtatohead
 	@echo "Wait for Resources to get ready"
 	@echo "-------------------------------"
 	kubectl wait --for=condition=available deployment/jaeger -n "$(LFC_NAMESPACE)" --timeout=120s
-	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+	#kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+#	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+#	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/otel-collector -n "$(LFC_NAMESPACE)" --timeout=120s
-	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+	#kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
 
 	@echo ""
 	@echo "----------------------------------"
@@ -45,6 +44,18 @@ install:undeploy-podtatohead
 	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" klc-controller-manager --watch
 	kubectl rollout restart deployment -n "$(LFC_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-controller-system
 	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" keptn-scheduler --watch
+
+
+	@echo ""
+	@echo "------------------"
+	@echo "Install Prometheus"
+	@echo "------------------"
+	kubectl apply -f config/prometheus/
+	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+
 
 	@echo ""
 	@echo "#######################################################"

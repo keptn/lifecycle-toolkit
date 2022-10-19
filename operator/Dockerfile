@@ -34,9 +34,20 @@ RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS
     -X main.buildVersion=$TAG' \
     -o bin/manager main.go
 
-# Use distroless as minimal base image to package the manager binary
-# Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/base-debian11:nonroot
+FROM gcr.io/distroless/base-debian11:debug-nonroot as debug
+
+LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
+    org.opencontainers.image.url="https://keptn.sh" \
+    org.opencontainers.image.title="Keptn Lifecycle Operator" \
+    org.opencontainers.image.vendor="Keptn" \
+    org.opencontainers.image.licenses="Apache-2.0"
+
+WORKDIR /
+COPY --from=builder /workspace/bin/manager .
+
+ENTRYPOINT ["/manager"]
+
+FROM gcr.io/distroless/base-debian11:nonroot as production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
     org.opencontainers.image.url="https://keptn.sh" \

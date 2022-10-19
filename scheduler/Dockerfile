@@ -39,7 +39,20 @@ RUN go build -ldflags '\
     -w' \
     -o bin/kube-scheduler cmd/scheduler/main.go
 
-FROM gcr.io/distroless/base-debian11:nonroot
+FROM gcr.io/distroless/base-debian11:debug-nonroot as debug
+
+LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
+    org.opencontainers.image.url="https://keptn.sh" \
+    org.opencontainers.image.title="Keptn Lifecycle Scheduler" \
+    org.opencontainers.image.vendor="Keptn" \
+    org.opencontainers.image.licenses="Apache-2.0"
+
+COPY --from=builder /scheduler/bin/kube-scheduler /bin/kube-scheduler
+
+WORKDIR /bin
+CMD ["kube-scheduler"]
+
+FROM gcr.io/distroless/base-debian11:nonroot as production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
     org.opencontainers.image.url="https://keptn.sh" \

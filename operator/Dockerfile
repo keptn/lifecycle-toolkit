@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM --platform=linux/amd64 golang:1.18.7-alpine3.16 as builder
+FROM --platform=linux/amd64 golang:1.18.7 as builder
 
 ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 ARG GIT_HASH
@@ -7,12 +7,11 @@ ARG RELEASE_VERSION
 ARG BUILD_TIME
 ARG TARGETOS
 ARG TARGETARCH
-ARG GOOS=$TARGETOS
-ARG GOARCH=$TARGETARCH
 
 ENV CGO_ENABLED=0
 
 WORKDIR /workspace
+RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -25,8 +24,8 @@ COPY controllers/ controllers/
 COPY webhooks/ webhooks/
 
 # Build
-RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION && \
-  controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \
+RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \
+  GOOS=$TARGETOS GOARCH=$TARGETARCH \
   go build -ldflags '\
     -w \
     -X main.gitCommit=$GIT_HASH \

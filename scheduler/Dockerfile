@@ -18,8 +18,6 @@ ARG GIT_HASH
 ARG BUILD_TIME
 ARG TARGETOS
 ARG TARGETARCH
-ARG GOOS=$TARGETOS
-ARG GOARCH=$TARGETARCH
 
 ENV CGO_ENABLED=0
 
@@ -31,7 +29,7 @@ RUN go mod download
 COPY cmd cmd
 COPY pkg pkg
 
-RUN go build -ldflags '\
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags '\
     -X k8s.io/component-base/version.gitVersion=$RELEASE_VERSION \
     -X main.gitCommit=$GIT_HASH \
     -X main.buildTime=$BUILD_TIME \

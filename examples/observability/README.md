@@ -74,7 +74,9 @@ kubectl rollout restart deployment -n keptn-lifecycle-controller-system keptn-sc
 ## Seeing the OpenTelemetry Collector in action
 
 After everything has been set up, use the lifecycle operator to deploy a workload (e.g. using the `single-service` or `podtato-head` example in the `examples` folder).
-Once either of these examples have been deployed, you can view the generated traces in Jaeger. To do so, please create a port-forward for the `jaeger-query` service:
+To showcase pre-Evaluation checks we created a new version of podtato-head app in assets/podtetohead-deployment-evaluation.
+You can run ``make deploy-podtatohead`` to check pre-Evaluations of prometheus metrics both at app and workload instance level.
+Once an example has been deployed, you can view the generated traces in Jaeger. To do so, please create a port-forward for the `jaeger-query` service:
 
 ```sh
 kubectl port-forward -n keptn-lifecycle-controller-system svc/jaeger-query 16686 

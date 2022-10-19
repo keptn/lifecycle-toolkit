@@ -99,7 +99,7 @@ clean:
 build-and-push-local: release-local
 
 .PHONY: release-local
-release-local: release-local.amd64 release-local.arm64v8
+release-local: release-local.amd64 release-local.arm64
 	for arch in $(ARCHS); do \
 			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done
@@ -114,16 +114,16 @@ release-local.amd64: clean
 	docker build --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
-.PHONY: release-local.arm64v8
-release-local.arm64v8: clean
-	docker build --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+.PHONY: release-local.arm64
+release-local.arm64: clean
+	docker build --build-arg ARCH="arm64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(RELEASE_VERSION)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: push-local
 push-local:
 	if [[ "${ARCH}" == "amd64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64; \
-	elif [[ "${ARCH}" == "arm64v8" ]]; then \
+	elif [[ "${ARCH}" == "arm64" ]]; then \
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)

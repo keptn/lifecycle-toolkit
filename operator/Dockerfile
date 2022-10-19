@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM --platform=linux/amd64 golang:1.18.7-alpine3.16 as builder
+FROM --platform=$BUILDPLATFORM golang:1.18.7-alpine3.16 as builder
 
 ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 ARG GIT_HASH

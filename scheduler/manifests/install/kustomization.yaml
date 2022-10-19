@@ -12,6 +12,6 @@ configMapGenerator:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: klfc-scheduler
-  newName: docker.io/annadreal/scheduler
-  newTag: "202210191666183196"
+- name: image
+  newName: ghcr.io/keptn-sandbox/scheduler
+  newTag: "202210171665987043"

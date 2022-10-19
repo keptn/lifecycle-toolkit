@@ -157,40 +157,10 @@ $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
 
-#### pipeline build  ####
-
-.PHONY: build-and-push-image
-build-and-push-image: release-image push-release-images
-
-.PHONY: release-image
-release-image: release-image.amd64 release-image.arm64v8
-
-.PHONY: release-image.amd64
-release-image.amd64: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="amd64" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
-
-.PHONY: release-image.arm64v8
-release-image.arm64v8: clean
-	docker build --load --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --build-arg ARCH="arm64v8" --build-arg GIT_HASH="$(HASH)" --build-arg RELEASE_VERSION="$(TAG)" -t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
-
-.PHONY: push-release-images
-push-release-images:
-	#gcloud auth configure-docker
-	for arch in $(ARCHS); do \
-		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
-	for arch in $(ARCHS); do \
-		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
-	done
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
-
+#### developer build   ####
 .PHONY: clean
 clean:
 	rm -rf ./bin
-
-
-#### developer build   ####
 
 .PHONY: build-and-push-local
 build-and-push-local: release-local

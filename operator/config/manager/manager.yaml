@@ -40,7 +40,7 @@ spec:
         - /manager
         args:
         - --leader-elect
-        image: controller:latest
+        image: image:latest
         name: manager
         imagePullPolicy: Always
         env:

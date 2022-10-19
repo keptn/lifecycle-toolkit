@@ -121,7 +121,7 @@ echo "$matrix_config"
 echo "::endgroup::"
 
 # print job outputs (make sure they are also set in needs.prepare_ci_run.outputs !!!)
-echo "::set-output name=BUILD_MATRIX::$matrix_config"
+echo "BUILD_MATRIX=$matrix_config" >> "$GITHUB_OUTPUT"
 echo ""
 echo "The following artifacts have changes and will be built fresh:"
 echo "BUILD_FUNCTIONS_RUNTIME_SVC: $BUILD_FUNCTIONS_RUNTIME_SVC"
@@ -130,8 +130,8 @@ echo "BUILD_OPERATOR_SVC: $BUILD_OPERATOR_SVC"
 
 if [[ "$matrix_config" == '{"config":[]}' ]]; then
   echo "Build matrix is emtpy, setting output..."
-  echo "::set-output name=BUILD_MATRIX_EMPTY::true"
+  echo "BUILD_MATRIX_EMPTY=true" >> "$GITHUB_OUTPUT"
 else
   echo "Build matrix is NOT emtpy, setting output..."
-  echo "::set-output name=BUILD_MATRIX_EMPTY::false"
+  echo "BUILD_MATRIX_EMPTY=false" >> "$GITHUB_OUTPUT"
 fi

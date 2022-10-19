@@ -56,9 +56,7 @@ jobs:
       - name: Prepare for build-everything run
         if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything')) || contains(github.event.pull_request.labels.*.name, format('autorelease{0} pending', ':'))
         id: build_everything
-        run: |
-          BUILD_EVERYTHING=true
-          echo "##[set-output name=BUILD_EVERYTHING;]$(echo ${BUILD_EVERYTHING})"
+        run: echo "BUILD_EVERYTHING=true" >> "$GITHUB_OUTPUT"
 
       - name: Prepare artifacts with changes
         id: check_modified_files
@@ -108,20 +106,17 @@ jobs:
       - name: Go fmt
         if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
         working-directory: ./${{ matrix.config.working-dir }}
-        run: |
-          go vet ./...
+        run: go vet ./...
 
       - name: Go fmt
         if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
         working-directory: ./${{ matrix.config.working-dir }}
-        run: |
-          go fmt ./...
+        run: go fmt ./...
 
       - name: Compile ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
         working-directory: ./${{ matrix.config.working-dir }}
-        run: |
-          make build
+        run: make build
 
   test:
     name: Unit Tests

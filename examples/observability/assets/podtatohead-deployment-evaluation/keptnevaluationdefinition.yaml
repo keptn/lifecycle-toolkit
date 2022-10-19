@@ -11,5 +11,5 @@ spec:
       evaluationTarget: ">1" #string: can only be starting with < or >
     - name: query-2
       query: "sum(kube_node_status_capacity{resource='memory'})"
-      evaluationTarget: "<10000000000" #string: can only be starting with < or >
+      evaluationTarget: "<1000000000000" #string: can only be starting with < or >
 

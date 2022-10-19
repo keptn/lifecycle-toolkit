@@ -26,7 +26,7 @@ RUN go mod download
 COPY cmd cmd
 COPY pkg pkg
 
-RUN RELEASE_VERSION=${RELEASE_VERSION} HASH=${GIT_HASH} make build-scheduler.$ARCH
+RUN RELEASE_VERSION=${RELEASE_VERSION} HASH=${GIT_HASH} make build-scheduler
 
 FROM gcr.io/distroless/base-debian11:nonroot
 

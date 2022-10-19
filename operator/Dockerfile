@@ -22,7 +22,7 @@ COPY controllers/ controllers/
 COPY webhooks/ webhooks/
 
 # Build
-RUN make build.$ARCH HASH=${GIT_HASH} TAG=${RELEASE_VERSION}
+RUN make build HASH=${GIT_HASH} TAG=${RELEASE_VERSION}
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details

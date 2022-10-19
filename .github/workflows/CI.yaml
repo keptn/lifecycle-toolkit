@@ -102,6 +102,18 @@ jobs:
           cache: true
           cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
 
+      - name: Go fmt
+        if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
+        working-directory: ./${{ matrix.config.working-dir }}
+        run: |
+          go vet ./...
+
+      - name: Go fmt
+        if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
+        working-directory: ./${{ matrix.config.working-dir }}
+        run: |
+          go fmt ./...
+
       - name: Compile ${{ matrix.config.artifact }}
         if: matrix.config.should-run == 'true'
         working-directory: ./${{ matrix.config.working-dir }}
@@ -151,10 +163,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: linux/arm64
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#        with:
+#          platforms: linux/arm64
 
       - name: Set up Docker Buildx
         id: buildx
@@ -175,9 +187,10 @@ jobs:
           platforms: linux/amd64, linux/arm64
           tags: |
             ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:dev-${{ env.DATETIME }}
-          builds-args: |
+          build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
+            CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
           pull: true
           push: ${{ inputs.should-push-image == 'true' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}

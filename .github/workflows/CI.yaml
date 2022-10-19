@@ -157,6 +157,7 @@ jobs:
           platforms: linux/arm64
 
       - name: Set up Docker Buildx
+        id: buildx
         if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
         uses: docker/setup-buildx-action@v2
 
@@ -178,6 +179,7 @@ jobs:
           builds-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
+          builder: ${{ steps.buildx.outputs.name }}
           pull: true
           push: ${{ inputs.should-push-image == 'true' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
           cache-from: type=gha, scope=${{ github.workflow }}

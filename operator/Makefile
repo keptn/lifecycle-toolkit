@@ -37,6 +37,9 @@ SHELL = /usr/bin/env bash -o pipefail
 # Compute the current Git commit hash
 HASH?=$(shell git rev-parse HEAD)
 
+.PHONY: all
+all: build
+
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
@@ -75,6 +78,11 @@ vet: ## Run go vet against code.
 .PHONY: test
 test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+##@ Build
+.PHONY: build
+build: generate fmt vet ## Build manager binary.
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.

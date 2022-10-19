@@ -52,6 +52,16 @@ KUSTOMIZE_VERSION ?= v4.2.0
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 
+.PHONY: all
+all: build
+
+.PHONY: build
+build: build-scheduler
+
+.PHONY: build-scheduler
+build-scheduler:
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
+
 .PHONY: fmt
 fmt: ## Run go fmt against code.
 	go fmt ./...

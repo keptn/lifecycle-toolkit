@@ -26,7 +26,7 @@ COPY webhooks/ webhooks/
 
 # Build
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION && \
-  /go/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \
+  controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \
   go build -ldflags '\
     -w \
     -X main.gitCommit=$GIT_HASH \

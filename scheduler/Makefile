@@ -52,42 +52,6 @@ KUSTOMIZE_VERSION ?= v4.2.0
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 
-.PHONY: all
-all: build
-
-.PHONY: build
-build: build-scheduler
-
-.PHONY: build.amd64
-build.amd64: build-controller.amd64 build-scheduler.amd64
-
-.PHONY: build.arm64v8
-build.arm64v8: build-controller.arm64v8 build-scheduler.arm64v8
-
-.PHONY: build-controller
-build-controller:
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
-.PHONY: build-controller.amd64
-build-controller.amd64:
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
-.PHONY: build-controller.arm64v8
-build-controller.arm64v8:
-	GOOS=linux $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-w' -o bin/controller cmd/controller/controller.go
-
-.PHONY: build-scheduler
-build-scheduler:
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
-
-.PHONY: build-scheduler.amd64
-build-scheduler.amd64:
-	$(COMMONENVVAR) $(BUILDENVVAR) GOARCH=amd64 go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
-
-.PHONY: build-scheduler.arm64v8
-build-scheduler.arm64v8:
-	GOOS=linux $(BUILDENVVAR) GOARCH=arm64 go build -ldflags '-X k8s.io/component-base/version.gitVersion=$(VERSION) -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG) -w' -o bin/kube-scheduler cmd/scheduler/main.go
-
 .PHONY: fmt
 fmt: ## Run go fmt against code.
 	go fmt ./...

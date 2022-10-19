@@ -1,17 +1,20 @@
 # Build the manager binary
-FROM golang:1.18 as builder
+FROM golang:1.18.7-alpine3.16 as builder
 
-ARG ARCH
+ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 ARG GIT_HASH
 ARG RELEASE_VERSION
+ARG BUILD_TIME
+ARG TARGETOS
+ARG TARGETARCH
+ARG GOOS=$TARGETOS
+ARG GOARCH=$TARGETARCH
+
+ENV CGO_ENABLED=0
 
 WORKDIR /workspace
 
-# Copy the Go Modules manifests
-COPY go.mod go.sum Makefile ./
-
-# cache deps before building and copying source so that we don't need to re-download as much
-# and so that source changes don't invalidate our downloaded layer
+COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the go source
@@ -22,7 +25,14 @@ COPY controllers/ controllers/
 COPY webhooks/ webhooks/
 
 # Build
-RUN make build HASH=${GIT_HASH} TAG=${RELEASE_VERSION}
+RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION && \
+  controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \
+  go build -ldflags '\
+    -w \
+    -X main.gitCommit=$GIT_HASH \
+    -X main.buildTime=$BUILD_TIME \
+    -X main.buildVersion=$TAG' \
+    -o bin/manager main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details

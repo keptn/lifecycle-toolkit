@@ -32,7 +32,7 @@ defaults:
 jobs:
   prepare_ci_run:
     name: Prepare CI Run
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       # metadata
       BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
@@ -85,7 +85,7 @@ jobs:
     name: Compile
     needs: prepare_ci_run
     if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
@@ -127,7 +127,7 @@ jobs:
     name: Unit Tests
     needs: prepare_ci_run
     if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
@@ -151,9 +151,8 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [ prepare_ci_run ]
-#    needs: [ prepare_ci_run, compile, test ]
-    runs-on: ubuntu-20.04
+    needs: [ prepare_ci_run, compile, test ]
+    runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry
     env:

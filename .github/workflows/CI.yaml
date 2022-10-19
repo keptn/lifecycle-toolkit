@@ -171,7 +171,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker Image
-        if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
         uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.config.working-dir }}
@@ -182,7 +181,7 @@ jobs:
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
           pull: true
-          push: ${{ inputs.should-push-image }}
+          push: ${{ inputs.should-push-image }} && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 

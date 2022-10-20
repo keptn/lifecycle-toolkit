@@ -113,8 +113,8 @@ deploy-podtatohead:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
 	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
-	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1-passed.yaml
-	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition2-passed.yaml
+	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1.yaml
+	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition2.yaml
 	kubectl wait --for=condition=available deployment/podtato-head-entry -n podtato-kubectl --timeout=120s
 	@echo "Watch Workload Deployment Progress: kubectl get keptnworkloadinstances -n podtato-kubectl -w"
 
@@ -123,8 +123,8 @@ deploy-podtatohead-failed:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
 	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
-	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1-passed.yaml
-	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition2-failed.yaml
+	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1.yaml
+	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition3.yaml
 	kubectl wait --for=condition=available deployment/podtato-head-entry -n podtato-kubectl --timeout=120s
 	@echo "Watch Workload Deployment Progress: kubectl get keptnworkloadinstances -n podtato-kubectl -w"
 

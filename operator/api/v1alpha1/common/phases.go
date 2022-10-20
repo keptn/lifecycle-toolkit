@@ -8,14 +8,14 @@ type KeptnPhaseType struct {
 }
 
 var (
-	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment", ShortName: "WorkloadPreDeploy"}
-	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment", ShortName: "WorkloadPostDeploy"}
-	PhaseWorkloadPreEvaluation  = KeptnPhaseType{LongName: "Workload Pre-Evaluation", ShortName: "WorkloadPreEvaluation"}
-	PhaseWorkloadPostEvaluation = KeptnPhaseType{LongName: "Workload Post-Evaluation", ShortName: "WorkloadPostEvaluation"}
+	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
+	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}
+	PhaseWorkloadPreEvaluation  = KeptnPhaseType{LongName: "Workload Pre-Deployment Evaluations", ShortName: "WorkloadPreDeployEvaluations"}
+	PhaseWorkloadPostEvaluation = KeptnPhaseType{LongName: "Workload Post-Deployment Evaluations", ShortName: "WorkloadPostDeployEvaluations"}
 	PhaseWorkloadDeployment     = KeptnPhaseType{LongName: "Workload Deployment", ShortName: "WorkloadDeploy"}
-	PhaseAppPreDeployment       = KeptnPhaseType{LongName: "App Pre-Deployment", ShortName: "AppPreDeploy"}
-	PhaseAppPostDeployment      = KeptnPhaseType{LongName: "App Post-Deployment", ShortName: "AppPostDeploy"}
-	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Evaluation", ShortName: "AppPreEvaluation"}
-	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Evaluation", ShortName: "AppPostEvaluation"}
+	PhaseAppPreDeployment       = KeptnPhaseType{LongName: "App Pre-Deployment Tasks", ShortName: "AppPreDeployTasks"}
+	PhaseAppPostDeployment      = KeptnPhaseType{LongName: "App Post-Deployment Tasks", ShortName: "AppPostDeployTasks"}
+	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Deployment Evaluations", ShortName: "AppPreDeployEvaluations"}
+	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
 )

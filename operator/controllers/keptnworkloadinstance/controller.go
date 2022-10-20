@@ -175,6 +175,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if !workloadInstance.IsEndTimeSet() {
 		// metrics: decrement active deployment counter
 		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
+		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		workloadInstance.SetEndTime()
 	}
 

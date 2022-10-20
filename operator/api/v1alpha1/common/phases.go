@@ -18,4 +18,5 @@ var (
 	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Evaluation", ShortName: "AppPreEvaluation"}
 	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Evaluation", ShortName: "AppPostEvaluation"}
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
+	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 )

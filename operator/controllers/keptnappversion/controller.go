@@ -147,6 +147,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if !appVersion.IsEndTimeSet() {
 		// metrics: decrement active app counter
 		r.Meters.AppActive.Add(ctx, -1, appVersion.GetActiveMetricsAttributes()...)
+		appVersion.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
 

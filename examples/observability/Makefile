@@ -72,7 +72,20 @@ port-forward-prometheus:
 	@echo ""
 	kubectl -n monitoring port-forward svc/prometheus-k8s 9090
 
+.PHONY: port-forward-grafana
+port-forward-grafana:
+	@echo ""
+	@echo "Open Grafana in your Browser: http://localhost:3000"
+	@echo "CTRL-c to stop port-forward"
+	@echo ""
+	kubectl -n monitoring port-forward svc/grafana 3000
 
+.PHONY: import-grafana-dashboard
+import-grafana-dashboard:
+	@echo ""
+	@echo "Importing Grafana Dashboard"
+	@echo ""
+	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard.json
 
 .PHONY: uninstall
 uninstall:

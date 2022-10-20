@@ -97,8 +97,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
 
 	if !workloadInstance.IsStartTimeSet() {
-		// metrics: increment active deployment counter
-		r.Meters.DeploymentActive.Add(ctx, 1, workloadInstance.GetActiveMetricsAttributes()...)
 		workloadInstance.SetStartTime()
 	}
 
@@ -173,8 +171,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// WorkloadInstance is completed at this place
 	if !workloadInstance.IsEndTimeSet() {
-		// metrics: decrement active deployment counter
-		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
 		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		workloadInstance.SetEndTime()
 	}
@@ -198,6 +194,29 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	r.recordEvent(phase, "Normal", workloadInstance, "Finished", "is finished")
 
 	return ctrl.Result{}, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+		gaugeValue := int64(0)
+		if !workloadInstance.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: workloadInstance.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {

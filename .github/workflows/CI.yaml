@@ -60,22 +60,17 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+            # Nothing to compile in functions-runtime
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-
-      - run: |
-          echo "${{ matrix.config.name }}"
-          echo "${{ matrix.config.folder }}"
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-#          cache: true
-#          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+          cache: true
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Go fmt
         if: matrix.config.name != 'functions-runtime'
@@ -102,8 +97,7 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+            # Nothing to test in functions-runtime
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -112,8 +106,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-#          cache: true
-#          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+          cache: true
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}

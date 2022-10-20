@@ -1,5 +1,44 @@
 # Changelog
 
+## [0.3.0](https://github.com/keptn-sandbox/lifecycle-controller/compare/v0.2.0...v0.3.0) (2022-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **operator:** Modified behavior of KeptnAppVersion and KeptnWorkloadInstance to support pre and post deployment evaluation checks with Prometheus montoring
+* **operator:** now the namespaces have to be annotated/labeled with keptn.sh/lifecycle-controller=enabled when the lifecycle controller should be used
+* **operator:** Implementation of the KeptnApp CRD and Controller. This modifies the behaviour of the KeptnWorkloadInstance and Keptn MutatingWebhook
+
+### Features
+
+* Namespace keptn-lifecycle-controller-system should never call webhook ([#192](https://github.com/keptn-sandbox/lifecycle-controller/issues/192)) ([913a9ff](https://github.com/keptn-sandbox/lifecycle-controller/commit/913a9ffd62f93aa7831b35e29853afff6213a0c9))
+* **operator:** add fallback behavior when no keptn annotations are set ([#171](https://github.com/keptn-sandbox/lifecycle-controller/issues/171)) ([b6cc674](https://github.com/keptn-sandbox/lifecycle-controller/commit/b6cc674adb787615fc79dbbc5b10668c367e4736))
+* **operator:** Add KeptnApplication controller ([#137](https://github.com/keptn-sandbox/lifecycle-controller/issues/137)) ([271f5a8](https://github.com/keptn-sandbox/lifecycle-controller/commit/271f5a830f216c9f827457d8a391c25d56aed2e3))
+* **operator:** Added minimal context information ([#170](https://github.com/keptn-sandbox/lifecycle-controller/issues/170)) ([eebe420](https://github.com/keptn-sandbox/lifecycle-controller/commit/eebe4200aac74a7c2cbc73720d1d9ac6a0c1fc72))
+* **operator:** Allow pre- and post-deployment tasks as labels or annotations ([#181](https://github.com/keptn-sandbox/lifecycle-controller/issues/181)) ([4241fe7](https://github.com/keptn-sandbox/lifecycle-controller/commit/4241fe7cfab91aa6d38309eacf5712436a6e8327))
+* **operator:** Bootstrap evaluation CRD from app ([#184](https://github.com/keptn-sandbox/lifecycle-controller/issues/184)) ([74c3dbc](https://github.com/keptn-sandbox/lifecycle-controller/commit/74c3dbc7b6d78d8ca7eafbac50abb8c3473701eb))
+* **operator:** Bootstrap evaluation CRD from WorkloadInstance ([#188](https://github.com/keptn-sandbox/lifecycle-controller/issues/188)) ([95e206b](https://github.com/keptn-sandbox/lifecycle-controller/commit/95e206b4165b0277f5acbc67fc78a8e28f06741b))
+* **operator:** Bootstrap KeptnEvaluationProvider and KeptnEvaluation Definition CRDs ([#165](https://github.com/keptn-sandbox/lifecycle-controller/issues/165)) ([03d2346](https://github.com/keptn-sandbox/lifecycle-controller/commit/03d234610fd8ef9f21e756450c7f503cb236f302))
+* **operator:** Fix phase naming ([#197](https://github.com/keptn-sandbox/lifecycle-controller/issues/197)) ([3739127](https://github.com/keptn-sandbox/lifecycle-controller/commit/3739127d2794d75c489a6af04acf57b82920ca46))
+* **operator:** Introduce KeptnEvaluation Controller + CRD ([#168](https://github.com/keptn-sandbox/lifecycle-controller/issues/168)) ([1ce044a](https://github.com/keptn-sandbox/lifecycle-controller/commit/1ce044a3470f815597d725d424a5491f828f2c4c))
+* **operator:** Introduce Prometheus evaluation ([#183](https://github.com/keptn-sandbox/lifecycle-controller/issues/183)) ([c2ab773](https://github.com/keptn-sandbox/lifecycle-controller/commit/c2ab7733291928eaea5c38287c63e45d12754ba1))
+* **operator:** namespace should be annotated when the lifecycle controller is used ([#178](https://github.com/keptn-sandbox/lifecycle-controller/issues/178)) ([fa8b875](https://github.com/keptn-sandbox/lifecycle-controller/commit/fa8b8758ebb5a29064f255a66d9066a863bf0944))
+
+
+### Docs
+
+* Add documentation for OTel collector as pre-requisite ([#185](https://github.com/keptn-sandbox/lifecycle-controller/issues/185)) ([bc3900c](https://github.com/keptn-sandbox/lifecycle-controller/commit/bc3900ca64f6c7a0ef22ab94a9665aac17a83372))
+* Add example for ArgoCD ([#179](https://github.com/keptn-sandbox/lifecycle-controller/issues/179)) ([daf622d](https://github.com/keptn-sandbox/lifecycle-controller/commit/daf622d47068f70539eb5819bc81dfe72e1b105c))
+* Add flux example ([#187](https://github.com/keptn-sandbox/lifecycle-controller/issues/187)) ([02cceb3](https://github.com/keptn-sandbox/lifecycle-controller/commit/02cceb37d64c52a12d0779f015cf488b4ad3729f))
+* Improve installation steps ([#154](https://github.com/keptn-sandbox/lifecycle-controller/issues/154)) ([d183e4f](https://github.com/keptn-sandbox/lifecycle-controller/commit/d183e4f6b3102e426b9e29d0648cdf0c4c7cc19e))
+
+
+### Other
+
+* Add Evaluation instructions ([#190](https://github.com/keptn-sandbox/lifecycle-controller/issues/190)) ([6717b89](https://github.com/keptn-sandbox/lifecycle-controller/commit/6717b8931496be4235c3945390be53633ccb9e43))
+* Add example Grafana dashboard to observability example ([#199](https://github.com/keptn-sandbox/lifecycle-controller/issues/199)) ([9c20600](https://github.com/keptn-sandbox/lifecycle-controller/commit/9c20600f8a5dd3149f040cf2253cd4b787cc08d3))
+* Updated Prometheus Network policy for granting access from lifecycle controller namespace ([#191](https://github.com/keptn-sandbox/lifecycle-controller/issues/191)) ([bd77527](https://github.com/keptn-sandbox/lifecycle-controller/commit/bd775276ad1324278c4bc3c82a9c0352d02bcece))
+
 ## [0.2.0](https://github.com/keptn-sandbox/lifecycle-controller/compare/v0.1.0...v0.2.0) (2022-10-12)
 
 

@@ -27,7 +27,7 @@ When *cert-manager* is installed, you can run
 <!---x-release-please-start-version-->
 
 ```
-kubectl apply -f https://github.com/keptn-sandbox/lifecycle-controller/releases/download/v0.2.0/manifest.yaml
+kubectl apply -f https://github.com/keptn-sandbox/lifecycle-controller/releases/download/v0.3.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->

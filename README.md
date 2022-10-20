@@ -134,17 +134,30 @@ Furthermore, there will be a description on what CRD they monitor and a general 
 
 ### Webhook
 
-The mutating webhook works only on resources that have Keptn annotations.
-The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
-The webhook should be as fast as possible and should not create/change any resource.
+Annotating a namespace subjects it to the effects of the mutating webhook:
 
-When the webhook receives a request for a new pod, it will look for the following annotations:
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: podtato-kubectl
+  annotations:
+    keptn.sh/lifecycle-controller: "enabled"  # this lines tells the webhook to handle the namespace
+```
+However, the mutating webhook will modify only resources in the annotated namespace that have Keptn annotations.
+When the webhook receives a request for a new pod, it will look for the workload annotations:
+
+```
+keptn.sh/workload
+```
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler. Webhook then creates a workload and app resource per annotated resource. 
+You can also specify a custom app definition with the annotation:
 
 ```
 keptn.sh/app
-keptn.sh/workload
 ```
-
+In this case the webhook will not generate an app, but it will expect that the user will provide one.
+The webhook should be as fast as possible and should not create/change any resource.
 Additionally, it will compute a version string, using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).
 Next, it will look for an existing instance of a `Workload CRD` for the given workload name:
@@ -161,6 +174,10 @@ the specification of the pre/post deployment checks that should be executed for 
   - `keptn.sh/pre-deployment-tasks: task1,task2`
   - `keptn.sh/post-deployment-tasks: task1,task2`
 
+and for the Evaluations:
+
+  - `keptn.sh/pre-deployment-evaluations: my-evaluation-definition`
+  - `keptn.sh/post-deployment-evaluations: my-eval-definition`
 
 After either one of those actions has been taken, the webhook will set the scheduler of the pod and allow the pod to be scheduled.
 
@@ -174,7 +191,27 @@ For each pod, at the very end of the scheduling cycle, the plugin verifies wheth
 
 ### Keptn App
 
-tbd
+An App contains information about all workloads and checks associated with an application.
+It will use the following structure for the specification of the pre/post deployment and pre/post evaluations checks that should be executed at app level:
+
+```
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnApp
+metadata:
+name: podtato-head
+namespace: podtato-kubectl
+spec:
+version: "1.3"
+workloads:
+- name: podtato-head-left-arm
+version: 0.1.0
+- name: podtato-head-left-leg
+postDeploymentTasks:
+- post-deployment-hello
+preDeploymentEvaluations:    
+- my-prometheus-definition
+```
+While changes in the workload version will affect only workload checks,  a change in the app version will also cause a new execution of app level checks.
 
 ### Keptn Workload
 
@@ -283,11 +320,11 @@ spec:
   source: prometheus
   objectives:
     - name: query-1
-       query: "xxxx"
-       evaluationTarget: <20
+      query: "xxxx"
+      evaluationTarget: <20
     - name: query-2
-       query: "yyyy"
-       evaluationTarget: >4
+      query: "yyyy"
+      evaluationTarget: >4
 ```
 
 

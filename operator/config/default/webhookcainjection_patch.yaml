@@ -23,6 +23,8 @@ webhooks:
             - "kube-node-lease"
             - "cert-manager"
             - "keptn-lifecycle-controller-system"
+            - "observability"
+            - "monitoring"
 #---
 #apiVersion: admissionregistration.k8s.io/v1
 #kind: ValidatingWebhookConfiguration

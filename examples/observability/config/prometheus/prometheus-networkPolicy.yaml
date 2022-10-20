@@ -44,4 +44,3 @@ spec:
       app.kubernetes.io/part-of: kube-prometheus
   policyTypes:
   - Egress
-  - Ingress

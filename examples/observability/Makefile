@@ -3,7 +3,7 @@ LFC_NAMESPACE ?= keptn-lifecycle-controller-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 
 .PHONY: install
-install:
+install:undeploy-podtatohead
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"
@@ -14,11 +14,11 @@ install:
 
 	@echo ""
 	@echo "------------------"
-	@echo "Install Prometheus"
+	@echo "Configure Prometheus"
 	@echo "------------------"
 	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply --server-side -f config/prometheus/setup
-	kubectl apply -f config/prometheus/
+	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
 
 	@echo ""
 	@echo "-------------------------------"
@@ -31,11 +31,7 @@ install:
 	@echo "Wait for Resources to get ready"
 	@echo "-------------------------------"
 	kubectl wait --for=condition=available deployment/jaeger -n "$(LFC_NAMESPACE)" --timeout=120s
-	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/otel-collector -n "$(LFC_NAMESPACE)" --timeout=120s
-	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
 
 	@echo ""
 	@echo "----------------------------------"
@@ -45,6 +41,18 @@ install:
 	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" klc-controller-manager --watch
 	kubectl rollout restart deployment -n "$(LFC_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-controller-system
 	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" keptn-scheduler --watch
+
+
+	@echo ""
+	@echo "------------------"
+	@echo "Install Prometheus"
+	@echo "------------------"
+	kubectl apply -f config/prometheus/
+	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+
 
 	@echo ""
 	@echo "#######################################################"
@@ -91,7 +99,7 @@ uninstall:
 deploy-podtatohead:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
-	kubectl apply -f ../podtatohead-deployment/.
+	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
 	kubectl wait --for=condition=available deployment/podtato-head-entry -n podtato-kubectl --timeout=120s
 	@echo "Watch Workload Deployment Progress: kubectl get keptnworkloadinstances -n podtato-kubectl -w"
 

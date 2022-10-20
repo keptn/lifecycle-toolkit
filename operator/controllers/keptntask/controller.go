@@ -77,11 +77,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	semconv.AddAttributeFromTask(span, *task)
 
-	if !task.IsStartTimeSet() {
-		// metrics: increment active task counter
-		r.Meters.TaskActive.Add(ctx, 1, task.GetActiveMetricsAttributes()...)
-		task.SetStartTime()
-	}
+	task.SetStartTime()
 
 	err := r.Client.Status().Update(ctx, task)
 	if err != nil {
@@ -117,12 +113,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	r.Log.Info("Finished Reconciling KeptnTask")
 
 	// Task is completed at this place
-
-	if !task.IsEndTimeSet() {
-		// metrics: decrement active task counter
-		r.Meters.TaskActive.Add(ctx, -1, task.GetActiveMetricsAttributes()...)
-		task.SetEndTime()
-	}
+	task.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
@@ -174,4 +165,27 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 	}
 
 	return false, nil
+}
+
+func (r *KeptnTaskReconciler) GetActiveTasks(ctx context.Context) ([]common.GaugeValue, error) {
+	tasks := &klcv1alpha1.KeptnTaskList{}
+	err := r.List(ctx, tasks)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, task := range tasks.Items {
+		gaugeValue := int64(0)
+		if !task.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: task.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }

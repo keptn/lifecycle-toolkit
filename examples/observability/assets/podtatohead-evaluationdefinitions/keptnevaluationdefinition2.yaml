@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition2
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: consumed-memory ## this query should pass
+      query: "sum(kube_node_status_capacity{resource='memory'})"
+      evaluationTarget: "<1000000000000"
+

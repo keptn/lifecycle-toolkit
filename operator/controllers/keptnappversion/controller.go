@@ -85,11 +85,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
 	}
 
-	if !appVersion.IsStartTimeSet() {
-		// metrics: increment active app counter
-		r.Meters.AppActive.Add(ctx, 1, appVersion.GetActiveMetricsAttributes()...)
-		appVersion.SetStartTime()
-	}
+	appVersion.SetStartTime()
 
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
@@ -164,7 +160,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if !appVersion.IsEndTimeSet() {
 		// metrics: decrement active app counter
-		r.Meters.AppActive.Add(ctx, -1, appVersion.GetActiveMetricsAttributes()...)
+		appVersion.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		appVersion.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
@@ -245,4 +241,27 @@ func (r *KeptnAppVersionReconciler) getSpan(ctx context.Context, name string) (c
 	ctx, span := r.AppTracer.Start(ctx, name, trace.WithSpanKind(trace.SpanKindConsumer))
 	bindCRDSpan[name] = span
 	return ctx, span
+}
+
+func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common.GaugeValue, error) {
+	appInstances := &klcv1alpha1.KeptnAppVersionList{}
+	err := r.List(ctx, appInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, appInstance := range appInstances.Items {
+		gaugeValue := int64(0)
+		if !appInstance.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: appInstance.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }

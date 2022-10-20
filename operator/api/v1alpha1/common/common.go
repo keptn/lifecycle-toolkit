@@ -113,16 +113,12 @@ const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 type KeptnMeters struct {
 	TaskCount          syncint64.Counter
 	TaskDuration       syncfloat64.Histogram
-	TaskActive         syncint64.UpDownCounter
 	DeploymentCount    syncint64.Counter
 	DeploymentDuration syncfloat64.Histogram
-	DeploymentActive   syncint64.UpDownCounter
 	AppCount           syncint64.Counter
 	AppDuration        syncfloat64.Histogram
-	AppActive          syncint64.UpDownCounter
 	EvaluationCount    syncint64.Counter
 	EvaluationDuration syncfloat64.Histogram
-	EvaluationActive   syncint64.UpDownCounter
 }
 
 const (
@@ -150,4 +146,9 @@ func GenerateTaskName(checkType CheckType, taskName string) string {
 func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
+}
+
+type GaugeValue struct {
+	Value      int64
+	Attributes []attribute.KeyValue
 }

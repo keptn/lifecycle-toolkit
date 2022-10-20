@@ -113,11 +113,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
 
-	if !workloadInstance.IsStartTimeSet() {
-		// metrics: increment active deployment counter
-		r.Meters.DeploymentActive.Add(ctx, 1, workloadInstance.GetActiveMetricsAttributes()...)
-		workloadInstance.SetStartTime()
-	}
+	workloadInstance.SetStartTime()
 
 	//Wait for pre-evaluation checks of App
 	phase := common.PhaseAppPreEvaluation
@@ -187,8 +183,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// WorkloadInstance is completed at this place
 	if !workloadInstance.IsEndTimeSet() {
-		// metrics: decrement active deployment counter
-		r.Meters.DeploymentActive.Add(ctx, -1, workloadInstance.GetActiveMetricsAttributes()...)
 		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		workloadInstance.SetEndTime()
 	}
@@ -215,6 +209,30 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 }
 
 func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
+func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+		gaugeValue := int64(0)
+		if !workloadInstance.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: workloadInstance.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
 	ctx, spanAppTrace := r.getSpan(ctxAppTrace, fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
 	oldPhase := workloadInstance.Status.CurrentPhase

@@ -115,51 +115,51 @@ func main() {
 	exporter := otelprom.New()
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
-	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn deployment"))
+	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn deployment"), instrument.WithUnit(unit.Unit("s")))
+	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	deploymentActive, err := meter.SyncInt64().UpDownCounter("keptn.deployment.active", instrument.WithDescription("a simple counter of active deployments for Keptn deployment"))
+	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn tasks"))
+	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn tasks"), instrument.WithUnit(unit.Unit("s")))
+	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	taskActive, err := meter.SyncInt64().UpDownCounter("keptn.task.active", instrument.WithDescription("a simple counter of active tasks for Keptn tasks"))
+	taskActiveGauge, err := meter.AsyncInt64().Gauge("keptn.task.active", instrument.WithDescription("a simple counter of active Keptn Tasks"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn apps"))
+	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn apps"), instrument.WithUnit(unit.Unit("s")))
+	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	appActive, err := meter.SyncInt64().UpDownCounter("keptn.app.active", instrument.WithDescription("a simple counter of active apps for Keptn apps"))
+	appActiveGauge, err := meter.AsyncInt64().Gauge("keptn.app.active", instrument.WithDescription("a simple counter of active Keptn Apps"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn evaluation for Evaluations"))
+	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn evaluation for Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	evaluationActive, err := meter.SyncInt64().UpDownCounter("keptn.evaluation.active", instrument.WithDescription("a simple counter of active apps for Keptn evaluation for Evaluations"))
+	evaluationActiveGauge, err := meter.AsyncInt64().Gauge("keptn.evaluation.active", instrument.WithDescription("a simple counter of active Keptn Evaluations"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
@@ -167,16 +167,12 @@ func main() {
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
 		TaskDuration:       taskDuration,
-		TaskActive:         taskActive,
 		DeploymentCount:    deploymentCount,
 		DeploymentDuration: deploymentDuration,
-		DeploymentActive:   deploymentActive,
 		AppCount:           appCount,
 		AppDuration:        appDuration,
-		AppActive:          appActive,
 		EvaluationCount:    evaluationCount,
 		EvaluationDuration: evaluationDuration,
-		EvaluationActive:   evaluationActive,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -245,82 +241,141 @@ func main() {
 				Log:      ctrl.Log.WithName("Mutating Webhook"),
 			}})
 	}
-	if err = (&keptntask.KeptnTaskReconciler{
+	taskReconciler := &keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTask Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
 		Meters:   meters,
 		Tracer:   otel.Tracer("keptn/operator/task"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
 	}
-	if err = (&keptntaskdefinition.KeptnTaskDefinitionReconciler{
+
+	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
-	if err = (&keptnapp.KeptnAppReconciler{
+
+	appReconciler := &keptnapp.KeptnAppReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnApp Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
 		Tracer:   otel.Tracer("keptn/operator/app"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&keptnworkload.KeptnWorkloadReconciler{
+
+	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
 		Tracer:   otel.Tracer("keptn/operator/workload"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-	if err = (&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:    mgr.GetClient(),
-		Scheme:    mgr.GetScheme(),
-		Log:       ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder:  mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:    meters,
-		Tracer:    otel.Tracer("keptn/operator/workloadinstance"),
+
+	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:   meters,
+		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
 		AppTracer: otel.Tracer("keptn/app"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
-	if err = (&keptnappversion.KeptnAppVersionReconciler{
-		Client:    mgr.GetClient(),
-		Scheme:    mgr.GetScheme(),
-		Log:       ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder:  mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:    otel.Tracer("keptn/operator/appversion"),
-		Meters:    meters,
+
+	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:   otel.Tracer("keptn/operator/appversion"),
+		Meters:   meters,
 		AppTracer: otel.Tracer("keptn/app"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&keptnevaluation.KeptnEvaluationReconciler{
+
+	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Log:      ctrl.Log.WithName("KeptnEvaluation Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptnevaluation-controller"),
 		Tracer:   otel.Tracer("keptn/operator/evaluation"),
 		Meters:   meters,
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
+
+	err = meter.RegisterCallback(
+		[]instrument.Asynchronous{
+			deploymentActiveGauge,
+			taskActiveGauge,
+			appActiveGauge,
+			evaluationActiveGauge,
+		},
+		func(ctx context.Context) {
+			activeDeployments, err := workloadInstanceReconciler.GetActiveDeployments(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active deployments")
+			}
+			for _, val := range activeDeployments {
+				deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			activeApps, err := appVersionReconciler.GetActiveApps(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active apps")
+			}
+			for _, val := range activeApps {
+				appActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			activeTasks, err := taskReconciler.GetActiveTasks(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active tasks")
+			}
+			for _, val := range activeTasks {
+				taskActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			activeEvaluations, err := evaluationReconciler.GetActiveEvaluations(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range activeEvaluations {
+				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+		})
+	if err != nil {
+		fmt.Println("Failed to register callback")
+		panic(err)
+	}
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

@@ -66,9 +66,9 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
-			Version:          workloadInstance.Spec.Version,
-			Workload:         workloadInstance.Spec.WorkloadName,
 			AppName:          workloadInstance.Spec.AppName,
+			WorkloadVersion:  workloadInstance.Spec.Version,
+			Workload:         workloadInstance.Spec.WorkloadName,
 			TaskDefinition:   taskDefinition,
 			Parameters:       klcv1alpha1.TaskParameters{},
 			SecureParameters: klcv1alpha1.SecureParameters{},

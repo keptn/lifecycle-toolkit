@@ -166,7 +166,7 @@ release-local: release-local.amd64 release-local.arm64
 		for arch in $(ARCHS); do \
 			DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
 		done
-		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RjaELEASE_IMAGE) ;\
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
 
 .PHONY: release-local.amd64
 release-local.amd64: clean

@@ -3,6 +3,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -147,7 +148,7 @@ func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespa
 			Annotations: traceContextCarrier,
 		},
 		Spec: klcv1alpha1.KeptnTaskSpec{
-			Version:          appVersion.Spec.Version,
+			AppVersion:       appVersion.Spec.Version,
 			AppName:          appVersion.Spec.AppName,
 			TaskDefinition:   taskDefinition,
 			Parameters:       klcv1alpha1.TaskParameters{},

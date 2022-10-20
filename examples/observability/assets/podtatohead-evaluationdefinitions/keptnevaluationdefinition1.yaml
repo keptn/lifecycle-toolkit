@@ -6,7 +6,7 @@ metadata:
 spec:
   source: prometheus
   objectives:
-    - name: available-cpus
+    - name: available-cpus ## this query should pass
       query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
-      evaluationTarget: "<1" #string: can only be starting with < or >
+      evaluationTarget: "<1"
 

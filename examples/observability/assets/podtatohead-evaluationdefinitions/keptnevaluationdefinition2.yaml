@@ -6,7 +6,7 @@ metadata:
 spec:
   source: prometheus
   objectives:
-    - name: consumed-memory
+    - name: consumed-memory ## this query should pass
       query: "sum(kube_node_status_capacity{resource='memory'})"
-      evaluationTarget: "<1000000000000" #string: can only be starting with < or >
+      evaluationTarget: "<1000000000000"
 

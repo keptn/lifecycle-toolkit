@@ -51,6 +51,7 @@ type KeptnWorkloadInstanceStatus struct {
 	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
 	StartTime                          metav1.Time        `json:"startTime,omitempty"`
 	EndTime                            metav1.Time        `json:"endTime,omitempty"`
+	CurrentPhase                       string             `json:"currentPhase,omitempty"`
 }
 
 type TaskStatus struct {

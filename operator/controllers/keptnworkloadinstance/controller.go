@@ -132,7 +132,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePre := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		}
-		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
+		return r.handlePhase(ctx, workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
 	}
 
 	//Wait for pre-evaluation checks of Workload
@@ -141,7 +141,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPreDeploymentEvaluationFailed, reconcilePreEval)
+		return r.handlePhase(ctx, workloadInstance, phase, span, workloadInstance.IsPreDeploymentEvaluationFailed, reconcilePreEval)
 	}
 
 	//Wait for deployment of Workload
@@ -150,7 +150,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
-		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsDeploymentFailed, reconcileWorkloadInstance)
+		return r.handlePhase(ctx, workloadInstance, phase, span, workloadInstance.IsDeploymentFailed, reconcileWorkloadInstance)
 	}
 
 	//Wait for post-deployment checks of Workload
@@ -159,7 +159,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
-		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
+		return r.handlePhase(ctx, workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
 	}
 
 	//Wait for post-evaluation checks of Workload
@@ -168,7 +168,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(workloadInstance, phase, span, workloadInstance.IsPostDeploymentEvaluationFailed, reconcilePostEval)
+		return r.handlePhase(ctx, workloadInstance, phase, span, workloadInstance.IsPostDeploymentEvaluationFailed, reconcilePostEval)
 	}
 
 	// WorkloadInstance is completed at this place
@@ -199,9 +199,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) handlePhase(workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
-
+func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
+	oldPhase := workloadInstance.Status.CurrentPhase
+	workloadInstance.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
 		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 		return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
@@ -216,6 +217,11 @@ func (r *KeptnWorkloadInstanceReconciler) handlePhase(workloadInstance *klcv1alp
 		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
 	} else {
 		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
+	}
+	if oldPhase != workloadInstance.Status.CurrentPhase {
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			r.Log.Error(err, "could not update status")
+		}
 	}
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }

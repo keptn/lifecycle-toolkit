@@ -99,7 +99,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePreDep := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, appVersion, common.PreDeploymentCheckType)
 		}
-		return r.handlePhase(appVersion, phase, span, appVersion.IsPreDeploymentFailed, reconcilePreDep)
+		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPreDeploymentFailed, reconcilePreDep)
 	}
 
 	phase = common.PhaseAppPreEvaluation
@@ -107,7 +107,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PreDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(appVersion, phase, span, appVersion.IsPreDeploymentEvaluationFailed, reconcilePreEval)
+		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPreDeploymentEvaluationFailed, reconcilePreEval)
 	}
 
 	phase = common.PhaseAppDeployment
@@ -115,7 +115,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcileAppDep := func() (common.KeptnState, error) {
 			return r.reconcileWorkloads(ctx, appVersion)
 		}
-		return r.handlePhase(appVersion, phase, span, appVersion.AreWorkloadsFailed, reconcileAppDep)
+		return r.handlePhase(ctx, appVersion, phase, span, appVersion.AreWorkloadsFailed, reconcileAppDep)
 
 	}
 
@@ -124,7 +124,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePostDep := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, appVersion, common.PostDeploymentCheckType)
 		}
-		return r.handlePhase(appVersion, phase, span, appVersion.IsPostDeploymentFailed, reconcilePostDep)
+		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPostDeploymentFailed, reconcilePostDep)
 	}
 
 	phase = common.PhaseAppPostEvaluation
@@ -132,7 +132,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PostDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(appVersion, phase, span, appVersion.IsPostDeploymentEvaluationFailed, reconcilePostEval)
+		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPostDeploymentEvaluationFailed, reconcilePostEval)
 	}
 
 	r.recordEvent(phase, "Normal", appVersion, "Finished", "is finished")
@@ -180,9 +180,10 @@ func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eve
 	r.Recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, appVersion.Namespace, appVersion.Name, appVersion.Spec.Version))
 }
 
-func (r *KeptnAppVersionReconciler) handlePhase(appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
-
+func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
+	oldPhase := appVersion.Status.CurrentPhase
+	appVersion.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
 		r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 		return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
@@ -197,6 +198,11 @@ func (r *KeptnAppVersionReconciler) handlePhase(appVersion *klcv1alpha1.KeptnApp
 		r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
 	} else {
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
+	}
+	if oldPhase != appVersion.Status.CurrentPhase {
+		if err := r.Status().Update(ctx, appVersion); err != nil {
+			r.Log.Error(err, "could not update status")
+		}
 	}
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }

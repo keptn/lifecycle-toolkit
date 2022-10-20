@@ -286,23 +286,25 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:   meters,
-		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder:  mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:    meters,
+		Tracer:    otel.Tracer("keptn/operator/workloadinstance"),
+		AppTracer: otel.Tracer("keptn/app"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
 	if err = (&keptnappversion.KeptnAppVersionReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:   otel.Tracer("keptn/operator/appversion"),
-		Meters:   meters,
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder:  mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:    otel.Tracer("keptn/operator/appversion"),
+		Meters:    meters,
+		AppTracer: otel.Tracer("keptn/app"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
@@ -338,7 +340,7 @@ func main() {
 }
 
 func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, error) {
-	tracerProviderOptions := []trace.TracerProviderOption{}
+	tracerProviderOptions := []trace.TracerProviderOption{trace.WithSampler(trace.AlwaysSample())}
 
 	stdOutExp, err := newStdOutExporter()
 	if err != nil {

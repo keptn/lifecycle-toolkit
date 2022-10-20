@@ -30,7 +30,8 @@ import (
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
 	KeptnAppSpec `json:",inline"`
-	AppName      string `json:"appName"`
+	AppName      string            `json:"appName"`
+	TraceId      map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
@@ -51,6 +52,7 @@ type KeptnAppVersionStatus struct {
 	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
 	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
 	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	TraceID                            map[string]string  `json:"traceId,omitempty"`
 
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	EndTime   metav1.Time `json:"endTime,omitempty"`

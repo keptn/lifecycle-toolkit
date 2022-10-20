@@ -26,7 +26,7 @@ import (
 // KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
 type KeptnEvaluationProviderSpec struct {
 	TargetServer string `json:"targetServer"`
-	SecretName   string `json:"secretName"`
+	SecretName   string `json:"secretName,omitempty"`
 }
 
 // KeptnEvaluationProviderStatus defines the observed state of KeptnEvaluationProvider

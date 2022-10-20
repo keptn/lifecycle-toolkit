@@ -7,17 +7,18 @@ spec:
   version: "1.3"
   workloads:
     - name: podtato-head-left-arm
-      version: 0.2.7
+      version: 0.1.0
     - name: podtato-head-left-leg
-      version: 0.2.7
+      version: 0.1.0
     - name: podtato-head-entry
-      version: 0.2.7
+      version: 0.1.0
     - name: podtato-head-right-arm
       version: 0.1.0
     - name: podtato-head-left-arm
-      version: 0.2.7
+      version: 0.1.0
     - name: podtato-head-hat
       version: 0.1.0
   postDeploymentTasks:
     - post-deployment-hello
-
+  preDeploymentEvaluations:     #Comment out this two lines if you do not have a prometheus installation
+    - my-prometheus-definition

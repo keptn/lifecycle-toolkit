@@ -68,12 +68,13 @@ jobs:
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
       matrix:
-        - name: "keptn-lifecycle-controller"
-          folder: "operator/"
-        - name: "scheduler"
-          folder: "scheduler/"
-        - name: "functions-runtime"
-          folder: "functions-runtime/"
+        config:
+          - name: "keptn-lifecycle-controller"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+          - name: "functions-runtime"
+            folder: "functions-runtime/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -83,20 +84,20 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.folder }}go.sum'
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Go fmt
-        if: matrix.name != 'functions-runtime'
+        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ folder }}
         run: go vet ./...
 
       - name: Go fmt
-        if: matrix.name != 'functions-runtime'
+        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ folder }}
         run: go fmt ./...
 
-      - name: Compile ${{ matrix.name }}
-        working-directory: ./${{ matrix.folder }}
+      - name: Compile ${{ matrix.config.name }}
+        working-directory: ./${{ matrix.config.folder }}
         run: make build
 
   test:
@@ -105,12 +106,13 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        - name: "keptn-lifecycle-controller"
-          folder: "operator/"
-        - name: "scheduler"
-          folder: "scheduler/"
-        - name: "functions-runtime"
-          folder: "functions-runtime/"
+        config:
+          - name: "keptn-lifecycle-controller"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+          - name: "functions-runtime"
+            folder: "functions-runtime/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -120,10 +122,10 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.folder }}go.sum'
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
-      - name: Test ${{ matrix.name }}
-        working-directory: ./${{ matrix.folder }}
+      - name: Test ${{ matrix.config.name }}
+        working-directory: ./${{ matrix.config.folder }}
         run: |
           make test
 
@@ -140,12 +142,13 @@ jobs:
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
       matrix:
-        - name: "keptn-lifecycle-controller"
-          folder: "operator/"
-        - name: "scheduler"
-          folder: "scheduler/"
-        - name: "functions-runtime"
-          folder: "functions-runtime/"
+        config:
+          - name: "keptn-lifecycle-controller"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+          - name: "functions-runtime"
+            folder: "functions-runtime/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -165,11 +168,11 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v3
         with:
-          context: ${{ matrix.folder }}
+          context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ghcr.io/keptn-sandbox/${{ matrix.name }}:dev-${{ env.DATETIME }}
+            ghcr.io/keptn-sandbox/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -181,23 +184,23 @@ jobs:
           cache-to: type=gha, scope=${{ github.workflow }}
 
       - name: Install controller-gen
-        if: matrix.name == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-        working-directory: ./${{ matrix.folder }}
+        if: matrix.config.name == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.config.folder }}
         run: go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
       - name: Generate release.yaml
-        if: matrix.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-        working-directory: ./${{ matrix.folder }}
+        if: matrix.config.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.config.folder }}
         env:
           TAG: dev-${{ env.DATETIME }}
         run: |
           rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-          cd config/manager && kustomize edit set image image=ghcr.io/keptn-sandbox/${{ matrix.name }}:$TAG
+          cd config/manager && kustomize edit set image image=ghcr.io/keptn-sandbox/${{ matrix.config.name }}:$TAG
           kustomize build config/default > config/rendered/release.yaml
 
       - name: Upload release.yaml
-        if: matrix.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        if: matrix.config.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.name }}-manifest
-          path: ${{ matrix.folder }}/config/rendered/release.yaml
+          name: ${{ matrix.config.name }}-manifest
+          path: ${{ matrix.config.folder }}/config/rendered/release.yaml

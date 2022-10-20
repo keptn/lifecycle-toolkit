@@ -13,6 +13,7 @@ on:
 env:
   GO_VERSION: "~1.18"
   CONTROLLER_TOOLS_VERSION: "v0.9.2"
+  ENVTEST_K8S_VERSION: "1.24.2"
 
 defaults:
   run:
@@ -56,7 +57,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-controller"
+          - name: "keptn-lifecycle-operator"
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
@@ -93,7 +94,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-controller"
+          - name: "keptn-lifecycle-operator"
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
@@ -109,10 +110,20 @@ jobs:
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
+      - name: Prepare test setup
+        if: matrix.config.name == 'keptn-lifecycle-operator'
+        working-directory: ./${{ matrix.config.folder }}
+        run: |
+          go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
+          go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+          controller-gen rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+          controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
+          KUBEBUILDER_ASSETS=$(setup-envtest use $ENVTEST_K8S_VERSION -p path)
+
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
         run: |
-          make test
+          go test ./... -coverprofile cover.out
 
   build_image:
     name: Build and push Docker Image
@@ -128,7 +139,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-controller"
+          - name: "keptn-lifecycle-operator"
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
@@ -164,7 +175,7 @@ jobs:
             BUILD_TIME=dev-${{ env.BUILD_TIME }}
             CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
-          push: ${{ inputs.should-push-image == 'true' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+          push: ${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
@@ -179,7 +190,7 @@ jobs:
         env:
           TAG: dev-${{ env.DATETIME }}
         run: |
-          rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+          controller-gen rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
           cd config/manager && kustomize edit set image image=ghcr.io/keptn-sandbox/${{ matrix.config.name }}:$TAG
           kustomize build config/default > config/rendered/release.yaml
 

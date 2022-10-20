@@ -44,9 +44,9 @@ type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
-	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"`
-
+	WorkloadOverallStatus              common.KeptnState  `json:"workloadOverallStatus,omitempty"`
+	WorkloadStatus                     []WorkloadStatus   `json:"workloadStatus,omitempty"`
+	CurrentPhase                       string             `json:"currentPhase,omitempty"`
 	PreDeploymentTaskStatus            []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
 	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`

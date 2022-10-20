@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
 	"math/rand"
 
 	"go.opentelemetry.io/otel/attribute"
@@ -112,18 +111,14 @@ const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
 const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
 type KeptnMeters struct {
-	TaskCount             syncint64.Counter
-	TaskDuration          syncfloat64.Histogram
-	TaskActive            asyncint64.Gauge
-	DeploymentCount       syncint64.Counter
-	DeploymentDuration    syncfloat64.Histogram
-	DeploymentActiveGauge asyncint64.Gauge
-	AppCount              syncint64.Counter
-	AppDuration           syncfloat64.Histogram
-	AppActive             asyncint64.Gauge
-	EvaluationCount       syncint64.Counter
-	EvaluationDuration    syncfloat64.Histogram
-	EvaluationActive      asyncint64.Gauge
+	TaskCount          syncint64.Counter
+	TaskDuration       syncfloat64.Histogram
+	DeploymentCount    syncint64.Counter
+	DeploymentDuration syncfloat64.Histogram
+	AppCount           syncint64.Counter
+	AppDuration        syncfloat64.Histogram
+	EvaluationCount    syncint64.Counter
+	EvaluationDuration syncfloat64.Histogram
 }
 
 const (

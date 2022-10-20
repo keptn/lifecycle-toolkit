@@ -165,18 +165,14 @@ func main() {
 	}
 
 	meters := common.KeptnMeters{
-		TaskCount:             taskCount,
-		TaskDuration:          taskDuration,
-		TaskActive:            taskActiveGauge,
-		DeploymentCount:       deploymentCount,
-		DeploymentDuration:    deploymentDuration,
-		DeploymentActiveGauge: deploymentActiveGauge,
-		AppCount:              appCount,
-		AppDuration:           appDuration,
-		AppActive:             appActiveGauge,
-		EvaluationCount:       evaluationCount,
-		EvaluationDuration:    evaluationDuration,
-		EvaluationActive:      evaluationActiveGauge,
+		TaskCount:          taskCount,
+		TaskDuration:       taskDuration,
+		DeploymentCount:    deploymentCount,
+		DeploymentDuration: deploymentDuration,
+		AppCount:           appCount,
+		AppDuration:        appDuration,
+		EvaluationCount:    evaluationCount,
+		EvaluationDuration: evaluationDuration,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it

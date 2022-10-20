@@ -88,12 +88,12 @@ jobs:
 
       - name: Go fmt
         if: matrix.config.name != 'functions-runtime'
-        working-directory: ./${{ folder }}
+        working-directory: ./${{ matrix.config.folder }}
         run: go vet ./...
 
       - name: Go fmt
         if: matrix.config.name != 'functions-runtime'
-        working-directory: ./${{ folder }}
+        working-directory: ./${{ matrix.config.folder }}
         run: go fmt ./...
 
       - name: Compile ${{ matrix.config.name }}

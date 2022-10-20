@@ -29,9 +29,10 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload,omitempty"`
-	Version          string           `json:"version"`
-	AppName          string           `json:"app,omitempty"`
+	Workload         string           `json:"workload"`
+	WorkloadVersion  string           `json:"workloadVersion"`
+	AppName          string           `json:"app"`
+	AppVersion       string           `json:"appVersion"`
 	TaskDefinition   string           `json:"taskDefinition"`
 	Context          TaskContext      `json:"context"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
@@ -70,8 +71,9 @@ type KeptnTaskStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
+// +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
-// +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
+// +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
 // +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.status`
 
@@ -120,8 +122,9 @@ func (i *KeptnTask) IsEndTimeSet() bool {
 func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(i.Spec.AppName),
+		common.AppVersion.String(i.Spec.AppVersion),
 		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 	}
@@ -130,8 +133,9 @@ func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(i.Spec.AppName),
+		common.AppVersion.String(i.Spec.AppVersion),
 		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
 		common.TaskName.String(i.Name),
 		common.TaskType.String(string(i.Spec.Type)),
 		common.TaskStatus.String(string(i.Status.Status)),

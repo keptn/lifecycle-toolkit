@@ -66,12 +66,12 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 
 	if task.Spec.Workload != "" {
 		taskContext.WorkloadName = task.Spec.Workload
-		taskContext.WorkloadVersion = task.Spec.Version
+		taskContext.WorkloadVersion = task.Spec.WorkloadVersion
 		taskContext.ObjectType = "Workload"
 
 	} else {
 		taskContext.ObjectType = "Application"
-		taskContext.AppVersion = task.Spec.Version
+		taskContext.AppVersion = task.Spec.AppVersion
 	}
 	taskContext.AppName = task.Spec.AppName
 
@@ -137,7 +137,7 @@ func createKeptnLabels(task klcv1alpha1.KeptnTask) map[string]string {
 	return map[string]string{
 		common.AppAnnotation:      task.Spec.AppName,
 		common.WorkloadAnnotation: task.Spec.Workload,
-		common.VersionAnnotation:  task.Spec.Version,
+		common.VersionAnnotation:  task.Spec.WorkloadVersion,
 		common.TaskNameAnnotation: task.Name,
 	}
 }

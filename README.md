@@ -145,13 +145,18 @@ metadata:
     keptn.sh/lifecycle-controller: "enabled"  # this lines tells the webhook to handle the namespace
 ```
 However, the mutating webhook will modify only resources in the annotated namespace that have Keptn annotations.
-When the webhook receives a request for a new pod, it will look for the following annotations:
+When the webhook receives a request for a new pod, it will look for the workload annotations:
+
+```
+keptn.sh/workload
+```
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler. Webhook then creates a workload and app resource per annotated resource. 
+You can also specify a custom app definition with the annotation:
 
 ```
 keptn.sh/app
-keptn.sh/workload
 ```
-The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
+In this case the webhook will not generate an app, but it will expect that the user will provide one.
 The webhook should be as fast as possible and should not create/change any resource.
 Additionally, it will compute a version string, using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).

@@ -80,11 +80,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
 	}
 
-	if !appVersion.IsStartTimeSet() {
-		// metrics: increment active app counter
-		r.Meters.AppActive.Add(ctx, 1, appVersion.GetActiveMetricsAttributes()...)
-		appVersion.SetStartTime()
-	}
+	appVersion.SetStartTime()
 
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
@@ -145,8 +141,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	// AppVersion is completed at this place
 
 	if !appVersion.IsEndTimeSet() {
-		// metrics: decrement active app counter
-		r.Meters.AppActive.Add(ctx, -1, appVersion.GetActiveMetricsAttributes()...)
 		appVersion.Status.CurrentPhase = common.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
@@ -206,4 +200,27 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 		}
 	}
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+}
+
+func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common.GaugeValue, error) {
+	appInstances := &klcv1alpha1.KeptnAppVersionList{}
+	err := r.List(ctx, appInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, appInstance := range appInstances.Items {
+		gaugeValue := int64(0)
+		if !appInstance.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: appInstance.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }

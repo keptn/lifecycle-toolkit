@@ -94,11 +94,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	semconv.AddAttributeFromEvaluation(span, *evaluation)
 
-	if !evaluation.IsStartTimeSet() {
-		// metrics: increment active evaluation counter
-		r.Meters.EvaluationActive.Add(ctx, 1, evaluation.GetActiveMetricsAttributes()...)
-		evaluation.SetStartTime()
-	}
+	evaluation.SetStartTime()
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
@@ -182,11 +178,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) error {
 	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
 
-	if !evaluation.IsEndTimeSet() {
-		// metrics: decrement active evaluation counter
-		r.Meters.EvaluationActive.Add(ctx, -1, evaluation.GetActiveMetricsAttributes()...)
-		evaluation.SetEndTime()
-	}
+	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
@@ -328,4 +320,27 @@ func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, 
 
 func (r *KeptnEvaluationReconciler) recordEvent(eventType string, evaluation *klcv1alpha1.KeptnEvaluation, shortReason string, longReason string) {
 	r.Recorder.Event(evaluation, eventType, shortReason, fmt.Sprintf("%s / Namespace: %s, Name: %s, WorkloadVersion: %s ", longReason, evaluation.Namespace, evaluation.Name, evaluation.Spec.WorkloadVersion))
+}
+
+func (r *KeptnEvaluationReconciler) GetActiveEvaluations(ctx context.Context) ([]common.GaugeValue, error) {
+	evaluations := &klcv1alpha1.KeptnEvaluationList{}
+	err := r.List(ctx, evaluations)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, evaluation := range evaluations.Items {
+		gaugeValue := int64(0)
+		if !evaluation.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: evaluation.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }

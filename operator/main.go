@@ -123,7 +123,7 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
-	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Tasks"))
+	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}

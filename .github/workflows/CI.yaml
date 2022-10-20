@@ -123,18 +123,18 @@ jobs:
           echo "KUBEBUILDER_ASSETS=$KUBEBUILDER_ASSETS" >> "$GITHUB_OUTPUT"
 
       - name: Test ${{ matrix.config.name }}
-        if: matrix.config.name == 'keptn-lifecycle-operator'
+#        if: matrix.config.name == 'keptn-lifecycle-operator'
         working-directory: ./${{ matrix.config.folder }}
         env:
           KUBEBUILDER_ASSETS: ${{ steps.prepare_test.outputs.KUBEBUILDER_ASSETS }}
         run: |
           go test ./... -coverprofile cover.out
 
-      - name: Test ${{ matrix.config.name }}
-        if: matrix.config.name == 'scheduler'
-        working-directory: ./${{ matrix.config.folder }}
-        run: |
-          go test ./... -coverprofile cover.out
+#      - name: Test ${{ matrix.config.name }}
+#        if: matrix.config.name == 'scheduler'
+#        working-directory: ./${{ matrix.config.folder }}
+#        run: |
+#          go test ./... -coverprofile cover.out
 
   build_image:
     name: Build and push Docker Image

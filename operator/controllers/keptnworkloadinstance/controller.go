@@ -96,9 +96,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
 
-	if !workloadInstance.IsStartTimeSet() {
-		workloadInstance.SetStartTime()
-	}
+	workloadInstance.SetStartTime()
 
 	//Wait for pre-evaluation checks of App
 	phase := common.PhaseAppPreEvaluation

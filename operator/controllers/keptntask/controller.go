@@ -77,9 +77,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	semconv.AddAttributeFromTask(span, *task)
 
-	if !task.IsStartTimeSet() {
-		task.SetStartTime()
-	}
+	task.SetStartTime()
 
 	err := r.Client.Status().Update(ctx, task)
 	if err != nil {
@@ -115,10 +113,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	r.Log.Info("Finished Reconciling KeptnTask")
 
 	// Task is completed at this place
-
-	if !task.IsEndTimeSet() {
-		task.SetEndTime()
-	}
+	task.SetEndTime()
 
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {

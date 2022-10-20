@@ -94,9 +94,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	semconv.AddAttributeFromEvaluation(span, *evaluation)
 
-	if !evaluation.IsStartTimeSet() {
-		evaluation.SetStartTime()
-	}
+	evaluation.SetStartTime()
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
@@ -180,9 +178,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) error {
 	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
 
-	if !evaluation.IsEndTimeSet() {
-		evaluation.SetEndTime()
-	}
+	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {

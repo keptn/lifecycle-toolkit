@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnEvaluationDefinition
 metadata:
-  name: my-prometheus-definition
+  name: my-prometheus-definition2
   namespace: podtato-kubectl
 spec:
   source: prometheus

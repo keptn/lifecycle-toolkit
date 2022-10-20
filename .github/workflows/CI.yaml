@@ -110,24 +110,10 @@ jobs:
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
-      - name: Prepare test setup
-        id: prepare_test
-        if: matrix.config.name == 'keptn-lifecycle-operator'
-        working-directory: ./${{ matrix.config.folder }}
-        run: |
-          go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
-          go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
-          controller-gen rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-          controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
-          KUBEBUILDER_ASSETS=$(setup-envtest use $ENVTEST_K8S_VERSION -p path)
-          echo "KUBEBUILDER_ASSETS=$KUBEBUILDER_ASSETS" >> "$GITHUB_OUTPUT"
-
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
-        env:
-          KUBEBUILDER_ASSETS: ${{ steps.prepare_test.outputs.KUBEBUILDER_ASSETS }}
         run: |
-          go test ./... -coverprofile cover.out
+          make test
 
   build_image:
     name: Build and push Docker Image

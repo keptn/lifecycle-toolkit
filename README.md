@@ -1,10 +1,10 @@
 # Keptn Lifecycle Controller
 
-![build](https://img.shields.io/github/workflow/status/keptn-sandbox/lifecycle-controller/CI)
-![goversion](https://img.shields.io/github/go-mod/go-version/keptn-sandbox/lifecycle-controller?filename=operator%2Fgo.mod)
-![version](https://img.shields.io/github/v/release/keptn-sandbox/lifecycle-controller)
+![build](https://img.shields.io/github/workflow/status/keptn/lifecycle-controller/CI)
+![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-controller?filename=operator%2Fgo.mod)
+![version](https://img.shields.io/github/v/release/keptn/lifecycle-controller)
 ![status](https://img.shields.io/badge/status-not--for--production-red)
-[![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
+[![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-controller)](https://github.com/keptn/lifecycle-controller/discussions)
 
 The purpose of this repository is to demonstrate and experiment with
 a prototype of a _**Keptn Lifecycle Controller**_.
@@ -27,7 +27,7 @@ When *cert-manager* is installed, you can run
 <!---x-release-please-start-version-->
 
 ```
-kubectl apply -f https://github.com/keptn-sandbox/lifecycle-controller/releases/download/v0.3.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-controller/releases/download/v0.3.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->
@@ -350,8 +350,8 @@ spec:
 The [GitHub CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
 
 ```bash
-gh run list --repo keptn-sandbox/lifecycle-controller # find the id of a run
-gh run download 3152895000 --repo keptn-sandbox/lifecycle-controller # download the artifacts
+gh run list --repo keptn/lifecycle-controller # find the id of a run
+gh run download 3152895000 --repo keptn/lifecycle-controller # download the artifacts
 kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
 kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
@@ -375,8 +375,8 @@ Please find more information in the [LICENSE](LICENSE) file.
 
 ## Thanks to all the people who have contributed 💜
 
-<a href="https://github.com/keptn-sandbox/lifecycle-controller/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=keptn-sandbox/lifecycle-controller" />
+<a href="https://github.com/keptn/lifecycle-controller/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=keptn/lifecycle-controller" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).

@@ -105,3 +105,21 @@ Afterwards, you can view the Prometheus UI in the browser at [localhost:9090](ht
 Also, in the [Graph](http://localhost:9090/graph?g0.expr=&g0.tab=1&g0.stacked=0&g0.show_exemplars=0&g0.range_input=1h) section, you can retrieve metrics reported by the Keptn Lifecycle Controller (all of the available metrics start with the `keptn` prefix):
 
 ![](./assets/metrics.png)
+
+To view the exported metrics in Grafana, we have provided an example dashboard that you can import and view in Grafana. To do so, please first create a port-forward for the `grafana` service in the `monitoring` namespace:
+
+```sh
+make port-forward-grafana
+```
+
+Afterwards, you can import our example dashboard using the following command:
+
+```sh
+make import-grafana-dashboard
+```
+
+*Note:* If this command does not work, or if you do not have `curl` installed, you can alternatively import the Dashboard via the Grafana UI, using the file `./assets/grafana_dashboard_import_ui.json`.
+
+After the dashboard has been set up, you should be able to see it in the [Grafana UI](http://localhost:3000/d/wlo2MpIVk/keptn-lifecycle-controller-metrics) under `Dashboards > General`.
+
+![](./assets/grafana_dashboard.png)

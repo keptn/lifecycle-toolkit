@@ -35,36 +35,15 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       # metadata
-      BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
       GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
       BRANCH: ${{ steps.extract_branch.outputs.BRANCH }}
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
-      BUILD_MATRIX: ${{ steps.check_modified_files.outputs.BUILD_MATRIX }}
-      BUILD_MATRIX_EMPTY: ${{ steps.check_modified_files.outputs.BUILD_MATRIX_EMPTY }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-
-      - name: Get changed files
-        id: changed_files
-        uses: jitterbit/get-changed-files@v1
-        continue-on-error: true
-
-      - name: Prepare for build-everything run
-        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything')) || contains(github.event.pull_request.labels.*.name, format('autorelease{0} pending', ':'))
-        id: build_everything
-        run: echo "BUILD_EVERYTHING=true" >> "$GITHUB_OUTPUT"
-
-      - name: Prepare artifacts with changes
-        id: check_modified_files
-        env:
-          BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
-          GITHUB_REF_PROTECTED: ${{ env.GITHUB_REF_PROTECTED }}
-        run: |
-          ./gh-actions-scripts/prepare_changed_artifacts.sh "${{ steps.changed_files.outputs.all }}"
 
       - name: Extract branch name
         id: extract_branch
@@ -82,65 +61,69 @@ jobs:
   compile:
     name: Compile
     needs: prepare_ci_run
-    if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
     runs-on: ubuntu-22.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        - name: "keptn-lifecycle-controller"
+          folder: "operator/"
+        - name: "scheduler"
+          folder: "scheduler/"
+        - name: "functions-runtime"
+          folder: "functions-runtime/"
     steps:
       - name: Check out code
-        if: matrix.config.should-run == 'true'
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        if: matrix.config.should-run == 'true'
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
+          cache-dependency-path: '${{ matrix.folder }}go.sum'
 
       - name: Go fmt
-        if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
-        working-directory: ./${{ matrix.config.working-dir }}
+        if: matrix.name != 'functions-runtime'
+        working-directory: ./${{ folder }}
         run: go vet ./...
 
       - name: Go fmt
-        if: matrix.config.should-run == 'true' && matrix.config.artifact != 'functions-runtime'
-        working-directory: ./${{ matrix.config.working-dir }}
+        if: matrix.name != 'functions-runtime'
+        working-directory: ./${{ folder }}
         run: go fmt ./...
 
-      - name: Compile ${{ matrix.config.artifact }}
-        if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.working-dir }}
+      - name: Compile ${{ matrix.name }}
+        working-directory: ./${{ matrix.folder }}
         run: make build
 
   test:
     name: Unit Tests
     needs: prepare_ci_run
-    if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
     runs-on: ubuntu-22.04
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        - name: "keptn-lifecycle-controller"
+          folder: "operator/"
+        - name: "scheduler"
+          folder: "scheduler/"
+        - name: "functions-runtime"
+          folder: "functions-runtime/"
     steps:
       - name: Check out code
-        if: matrix.config.should-run == 'true'
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        if: matrix.config.should-run == 'true'
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
+          cache-dependency-path: '${{ matrix.folder }}go.sum'
 
-      - name: Test ${{ matrix.config.artifact }}
-        if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.working-dir }}
+      - name: Test ${{ matrix.name }}
+        working-directory: ./${{ matrix.folder }}
         run: |
           make test
 
@@ -156,7 +139,13 @@ jobs:
       BUILD_TIME: ${{ needs.prepare_ci_run.outputs.BUILD_TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        - name: "keptn-lifecycle-controller"
+          folder: "operator/"
+        - name: "scheduler"
+          folder: "scheduler/"
+        - name: "functions-runtime"
+          folder: "functions-runtime/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -176,11 +165,11 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v3
         with:
-          context: ${{ matrix.config.working-dir }}
+          context: ${{ matrix.folder }}
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:dev-${{ env.DATETIME }}
+            ghcr.io/keptn-sandbox/${{ matrix.name }}:dev-${{ env.DATETIME }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -192,23 +181,23 @@ jobs:
           cache-to: type=gha, scope=${{ github.workflow }}
 
       - name: Install controller-gen
-        if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-        working-directory: ./${{ matrix.config.working-dir }}
+        if: matrix.name == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.folder }}
         run: go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
       - name: Generate release.yaml
-        if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-        working-directory: ./${{ matrix.config.working-dir }}
+        if: matrix.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        working-directory: ./${{ matrix.folder }}
         env:
           TAG: dev-${{ env.DATETIME }}
         run: |
           rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
-          cd config/manager && kustomize edit set image image=ghcr.io/keptn-sandbox/${{ matrix.config.artifact }}:$TAG
+          cd config/manager && kustomize edit set image image=ghcr.io/keptn-sandbox/${{ matrix.name }}:$TAG
           kustomize build config/default > config/rendered/release.yaml
 
       - name: Upload release.yaml
-        if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
+        if: matrix.name != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.config.artifact }}-manifest
-          path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml
+          name: ${{ matrix.name }}-manifest
+          path: ${{ matrix.folder }}/config/rendered/release.yaml

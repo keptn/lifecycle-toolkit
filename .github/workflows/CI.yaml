@@ -118,9 +118,15 @@ jobs:
           go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
           controller-gen rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
           controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
-          KUBEBUILDER_ASSETS=$(setup-envtest use $ENVTEST_K8S_VERSION -p path)
 
       - name: Test ${{ matrix.config.name }}
+        if: matrix.config.name == "keptn-lifecycle-operator"
+        working-directory: ./${{ matrix.config.folder }}
+        run: |
+          KUBEBUILDER_ASSETS=$(setup-envtest use $ENVTEST_K8S_VERSION -p path) go test ./... -coverprofile cover.out
+
+      - name: Test ${{ matrix.config.name }}
+        if: matrix.config.name == "scheduler"
         working-directory: ./${{ matrix.config.folder }}
         run: |
           go test ./... -coverprofile cover.out

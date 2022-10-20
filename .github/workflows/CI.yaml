@@ -83,8 +83,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
-          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+#          cache: true
+#          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Go fmt
         if: matrix.config.name != 'functions-runtime'
@@ -121,8 +121,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
-          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+#          cache: true
+#          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}

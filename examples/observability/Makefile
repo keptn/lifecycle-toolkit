@@ -95,7 +95,7 @@ import-grafana-dashboard:
 	@echo ""
 	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_overview.json
 	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_workloads.json
-
+	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_applications.json
 .PHONY: uninstall
 uninstall:
 	kubectl delete -f config/jaeger.yaml -n "$(LFC_NAMESPACE)" --ignore-not-found=true

@@ -6,14 +6,14 @@
     "canAdmin": true,
     "canStar": true,
     "canDelete": true,
-    "slug": "keptn-workload",
-    "url": "/d/hIXRvXS4k/keptn-workload",
+    "slug": "keptn-applications",
+    "url": "/d/nbiPNgN4z/keptn-applications",
     "expires": "0001-01-01T00:00:00Z",
-    "created": "2022-10-21T12:47:46Z",
-    "updated": "2022-10-21T14:50:02Z",
+    "created": "2022-10-21T14:51:16Z",
+    "updated": "2022-10-21T15:02:55Z",
     "updatedBy": "admin",
     "createdBy": "admin",
-    "version": 8,
+    "version": 5,
     "hasAcl": false,
     "isFolder": false,
     "folderId": 0,
@@ -128,7 +128,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
             "format": "table",
             "legendFormat": "__auto",
             "range": true,
@@ -194,7 +194,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Succeeded\"})",
+            "expr": "count(keptn_app_count{keptn_deployment_app_name=\"$Application\", keptn_deployment_app_status=\"Succeeded\"})",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -258,7 +258,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -327,10 +327,22 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Failed\"})",
+            "expr": "count(keptn_deployment_count{keptn_deployment_app_name=\"$Application\", keptn_deployment_app_status=\"Failed\"})",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
+            "editorMode": "builder",
+            "expr": "keptn_app_count{keptn_deployment_app_name=\"$Application\", keptn_deployment_app_status=\"Failed\"}",
+            "hide": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "B"
           }
         ],
         "title": "Failed",
@@ -392,7 +404,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "max by(keptn_deployment_workload_version) (keptn_deployment_deploymentduration{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "max by(keptn_deployment_app_version) (keptn_app_duration_bucket{keptn_deployment_app_name=\"$Application\"})",
             "interval": "",
             "legendFormat": "{{keptn_workload_version}}",
             "range": true,
@@ -485,7 +497,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
             "format": "time_series",
             "legendFormat": "__auto",
             "range": true,
@@ -552,8 +564,8 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
-            "legendFormat": "{{keptn_deployment_workload_previousversion}} - {{keptn_deployment_workload_version}}",
+            "expr": "avg by(keptn_deployment_app_previousversion, keptn_deployment_app_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
+            "legendFormat": "{{keptn_deployment_app_previousversion}} - {{keptn_deployment_app_version}}",
             "range": true,
             "refId": "A"
           }
@@ -594,7 +606,7 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 7,
+          "h": 6,
           "w": 12,
           "x": 0,
           "y": 21
@@ -617,10 +629,11 @@
               "type": "jaeger",
               "uid": "PC9A941E8F2E49454"
             },
-            "operation": "$Workload/WorkloadDeploy",
+            "operation": "AppDeploy",
             "queryType": "search",
             "refId": "A",
-            "service": "keptn-lifecycle-operator"
+            "service": "keptn-lifecycle-operator",
+            "tags": "keptn.deployment.app.name=$Application"
           }
         ],
         "title": "Traces",
@@ -634,19 +647,23 @@
     "templating": {
       "list": [
         {
-          "current": {},
+          "current": {
+            "selected": true,
+            "text": "podtato-head",
+            "value": "podtato-head"
+          },
           "datasource": {
             "type": "prometheus",
             "uid": "P1809F7CD0C75ACF3"
           },
-          "definition": "label_values(keptn_deployment_workload_name)",
+          "definition": "label_values(keptn_deployment_app_name)",
           "hide": 0,
           "includeAll": false,
           "multi": false,
-          "name": "Workload",
+          "name": "Application",
           "options": [],
           "query": {
-            "query": "label_values(keptn_deployment_workload_name)",
+            "query": "label_values(keptn_deployment_app_name)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
@@ -663,9 +680,9 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Keptn Workload",
-    "uid": "hIXRvXS4k",
-    "version": 8,
+    "title": "Keptn Applications",
+    "uid": "nbiPNgN4z",
+    "version": 5,
     "weekStart": ""
   }
 }

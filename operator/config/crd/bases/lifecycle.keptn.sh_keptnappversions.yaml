@@ -204,6 +204,9 @@ spec:
               startTime:
                 format: date-time
                 type: string
+              status:
+                default: Pending
+                type: string
               workloadOverallStatus:
                 default: Pending
                 type: string

@@ -107,17 +107,17 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 			return ctrl.Result{}, err
 		}
 		r.Recorder.Event(workload, "Normal", "WorkloadInstanceCreated", fmt.Sprintf("Created KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+
+		workload.Status.CurrentVersion = workload.Spec.Version
+		if err := r.Client.Status().Update(ctx, workload); err != nil {
+			r.Log.Error(err, "could not update Current Version of Workload")
+			return ctrl.Result{}, err
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
 		r.Log.Error(err, "could not get Workload Instance")
 		span.SetStatus(codes.Error, err.Error())
-		return ctrl.Result{}, err
-	}
-
-	workload.Status.CurrentVersion = workload.Spec.Version
-	if err := r.Client.Status().Update(ctx, workload); err != nil {
-		r.Log.Error(err, "could not update Current Version of Workload")
 		return ctrl.Result{}, err
 	}
 

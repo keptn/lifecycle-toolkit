@@ -53,6 +53,8 @@ type KeptnWorkloadInstanceStatus struct {
 	StartTime                          metav1.Time        `json:"startTime,omitempty"`
 	EndTime                            metav1.Time        `json:"endTime,omitempty"`
 	CurrentPhase                       string             `json:"currentPhase,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status common.KeptnState `json:"status,omitempty"`
 }
 
 type TaskStatus struct {

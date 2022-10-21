@@ -200,6 +200,9 @@ func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eve
 }
 
 func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
+	oldstatus := appVersion.Status.Status
+	newstatus := oldstatus
+	statusUpdated := false
 	r.Log.Info(phase.LongName + " not finished")
 	ctx, spanAppTrace := r.getSpan(ctxAppTrace, appVersion, phase.ShortName)
 	oldPhase := appVersion.Status.CurrentPhase
@@ -216,24 +219,47 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace
 		return ctrl.Result{Requeue: true}, err
 	}
 	if state.IsSucceeded() {
+		newstatus = common.StateSucceeded
 		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
 		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
 		r.Log.Info("DEBUG: End Span: " + phase.ShortName)
 		spanAppTrace.End()
 		unbindSpan(appVersion, phase.ShortName)
 		r.recordEvent(phase, "Normal", appVersion, "Succeeded", "have succeeded")
+
+	} else if state.IsFailed() {
+		newstatus = common.StateFailed
+		spanAppTrace.AddEvent(phase.LongName + " has failed")
+		spanAppTrace.SetStatus(codes.Error, "Failed")
+		r.Log.Info("DEBUG: End Span: " + phase.ShortName)
+		spanAppTrace.End()
+		unbindSpan(appVersion, phase.ShortName)
+		r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 	} else {
+		newstatus = common.StateProgressing
 		spanAppTrace.AddEvent(phase.LongName + " not finished")
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 	}
 	if oldPhase != appVersion.Status.CurrentPhase {
 		ctx, spanAppTrace = r.getSpan(ctxAppTrace, appVersion, appVersion.Status.CurrentPhase)
 		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
+		statusUpdated = true
+	}
 
+	if oldstatus != newstatus {
+		appVersion.Status.Status = newstatus
+		statusUpdated = true
+	}
+
+	if statusUpdated {
+		if newstatus == common.StateFailed {
+			appVersion.SetEndTime()
+		}
 		if err := r.Status().Update(ctx, appVersion); err != nil {
 			r.Log.Error(err, "could not update status")
 		}
 	}
+
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }
 

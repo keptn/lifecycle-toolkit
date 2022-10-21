@@ -133,6 +133,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for pre-deployment checks of Workload
 	phase = common.PhaseWorkloadPreDeployment
 
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PreDeploymentStatus == common.StatePending {
+		workloadInstance.Status.PreDeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	if appVersion.Status.CurrentPhase == "" {
 		r.unbindSpan(workloadInstance, phase.ShortName)
 		ctx, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
@@ -150,6 +158,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for pre-evaluation checks of Workload
 	phase = common.PhaseWorkloadPreEvaluation
+
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PreDeploymentEvaluationStatus == common.StatePending {
+		workloadInstance.Status.PreDeploymentEvaluationStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
@@ -159,6 +176,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
+
+	//Set state to progressing if not already set
+	if workloadInstance.Status.DeploymentStatus == common.StatePending {
+		workloadInstance.Status.DeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	if !workloadInstance.IsDeploymentSucceeded() {
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
@@ -168,6 +194,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for post-deployment checks of Workload
 	phase = common.PhaseWorkloadPostDeployment
+
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PostDeploymentStatus == common.StatePending {
+		workloadInstance.Status.PostDeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	if !workloadInstance.IsPostDeploymentSucceeded() {
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
@@ -176,7 +211,16 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-evaluation checks of Workload
+
 	phase = common.PhaseWorkloadPostEvaluation
+
+	if workloadInstance.Status.PostDeploymentEvaluationStatus == common.StatePending {
+		workloadInstance.Status.PostDeploymentEvaluationStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
@@ -187,6 +231,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	// WorkloadInstance is completed at this place
 	if !workloadInstance.IsEndTimeSet() {
 		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
+		workloadInstance.Status.Status = common.StateSucceeded
 		workloadInstance.SetEndTime()
 	}
 
@@ -212,8 +257,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 }
 
 func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
-
 	r.Log.Info(phase.LongName + " not finished")
+	overallStateUpdated := false
+	oldstate := workloadInstance.Status.Status
+
 	ctx, spanAppTrace := r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
 	oldPhase := workloadInstance.Status.CurrentPhase
 	workloadInstance.Status.CurrentPhase = phase.ShortName
@@ -229,20 +276,37 @@ func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAp
 		return ctrl.Result{Requeue: true}, err
 	}
 	if state.IsSucceeded() {
+		r.Log.Info("DEBUG: End Span: " + fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
+		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
 		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
 		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
 		spanAppTrace.End()
 		r.unbindSpan(workloadInstance, phase.ShortName)
+	} else if state.IsFailed() {
 		r.Log.Info("DEBUG: End Span: " + fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
-		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
+		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+		workloadInstance.Status.Status = common.StateFailed
+		workloadInstance.SetEndTime()
+		spanAppTrace.AddEvent(phase.LongName + " has failed")
+		spanAppTrace.SetStatus(codes.Error, "Failed")
+		spanAppTrace.End()
+		r.unbindSpan(workloadInstance, phase.ShortName)
+		overallStateUpdated = true
 	} else {
+		if oldstate != common.StateProgressing {
+			workloadInstance.Status.Status = common.StateProgressing
+			overallStateUpdated = true
+		}
 		spanAppTrace.AddEvent(phase.LongName + " not finished")
 		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 	}
 	if oldPhase != workloadInstance.Status.CurrentPhase {
 		ctx, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, workloadInstance.Status.CurrentPhase)
 		semconv.AddAttributeFromWorkloadInstance(spanAppTrace, *workloadInstance)
+		overallStateUpdated = true
+	}
 
+	if overallStateUpdated {
 		if err := r.Status().Update(ctx, workloadInstance); err != nil {
 			r.Log.Error(err, "could not update status")
 		}

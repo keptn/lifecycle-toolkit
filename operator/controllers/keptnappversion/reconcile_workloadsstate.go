@@ -21,12 +21,12 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
 		if err != nil && errors.IsNotFound(err) {
 			r.Recorder.Event(appVersion, "Warning", "WorkloadNotFound", fmt.Sprintf("Could not find KeptnWorkloadInstance / Namespace: %s, Name: %s ", appVersion.Namespace, w.Name))
-			workload.Status.PostDeploymentEvaluationStatus = common.StatePending
+			workload.Status.Status = common.StatePending
 		} else if err != nil {
 			r.Log.Error(err, "Could not get workload")
-			workload.Status.PostDeploymentEvaluationStatus = common.StateUnknown
+			workload.Status.Status = common.StateUnknown
 		}
-		workloadStatus := workload.Status.PostDeploymentEvaluationStatus
+		workloadStatus := workload.Status.Status
 
 		newStatus = append(newStatus, klcv1alpha1.WorkloadStatus{
 			Workload: w,

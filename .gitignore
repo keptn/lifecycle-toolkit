@@ -24,3 +24,4 @@ manifests/
 
 # macOS
 .DS_Store
+/examples/observability/assets/backups/

@@ -29,9 +29,10 @@ import (
 
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
-	KeptnAppSpec `json:",inline"`
-	AppName      string            `json:"appName"`
-	TraceId      map[string]string `json:"traceId,omitempty"`
+	KeptnAppSpec    `json:",inline"`
+	AppName         string            `json:"appName"`
+	TraceId         map[string]string `json:"traceId,omitempty"`
+	PreviousVersion string            `json:"PreviousVersionVersion,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
@@ -52,7 +53,6 @@ type KeptnAppVersionStatus struct {
 	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
 	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
 	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	TraceID                            map[string]string  `json:"traceId,omitempty"`
 
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	EndTime   metav1.Time `json:"endTime,omitempty"`
@@ -69,11 +69,12 @@ type WorkloadStatus struct {
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
-// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
-// +kubebuilder:printcolumn:name="WorkloadOverallStatus",type=string,JSONPath=`.status.workloadOverallStatus`
-// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
-// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
+// +kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.currentPhase`
+// +kubebuilder:printcolumn:name="PreDeploymentStatus",priority=1,type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
+// +kubebuilder:printcolumn:name="WorkloadOverallStatus",priority=1,type=string,JSONPath=`.status.workloadOverallStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentStatus",priority=1,type=string,JSONPath=`.status.postDeploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {
@@ -191,5 +192,13 @@ func (v KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
 		common.AppVersion.String(v.Spec.Version),
 		common.AppNamespace.String(v.Namespace),
 		common.AppStatus.String(string(v.Status.PostDeploymentStatus)),
+	}
+}
+
+func (v KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.AppPreviousVersion.String(v.Spec.PreviousVersion),
 	}
 }

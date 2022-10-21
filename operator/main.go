@@ -164,15 +164,27 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 
+	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
+	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a histogram of the interval between deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
 	meters := common.KeptnMeters{
-		TaskCount:          taskCount,
-		TaskDuration:       taskDuration,
-		DeploymentCount:    deploymentCount,
-		DeploymentDuration: deploymentDuration,
-		AppCount:           appCount,
-		AppDuration:        appDuration,
-		EvaluationCount:    evaluationCount,
-		EvaluationDuration: evaluationDuration,
+		TaskCount:                  taskCount,
+		TaskDuration:               taskDuration,
+		DeploymentCount:            deploymentCount,
+		DeploymentDuration:         deploymentDuration,
+		AppCount:                   appCount,
+		AppDuration:                appDuration,
+		EvaluationCount:            evaluationCount,
+		EvaluationDuration:         evaluationDuration,
+		AppDeploymentInterval:      appDeploymentIntervalGauge,
+		WorkloadDeploymentInterval: workloadDeploymentIntervalGauge,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -290,12 +302,12 @@ func main() {
 	}
 
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:   meters,
-		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder:  mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:    meters,
+		Tracer:    otel.Tracer("keptn/operator/workloadinstance"),
 		AppTracer: otel.Tracer("keptn/app"),
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
@@ -304,12 +316,12 @@ func main() {
 	}
 
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:   otel.Tracer("keptn/operator/appversion"),
-		Meters:   meters,
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder:  mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:    otel.Tracer("keptn/operator/appversion"),
+		Meters:    meters,
 		AppTracer: otel.Tracer("keptn/app"),
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
@@ -337,6 +349,8 @@ func main() {
 			taskActiveGauge,
 			appActiveGauge,
 			evaluationActiveGauge,
+			appDeploymentIntervalGauge,
+			workloadDeploymentIntervalGauge,
 		},
 		func(ctx context.Context) {
 			activeDeployments, err := workloadInstanceReconciler.GetActiveDeployments(ctx)
@@ -369,6 +383,21 @@ func main() {
 			}
 			for _, val := range activeEvaluations {
 				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			appDeploymentInterval, err := appVersionReconciler.GetDeploymentInterval(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range appDeploymentInterval {
+				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+			workloadDeploymentInterval, err := workloadInstanceReconciler.GetDeploymentInterval(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range workloadDeploymentInterval {
+				workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
 		})

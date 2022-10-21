@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
 	"math/rand"
 
 	"go.opentelemetry.io/otel/attribute"
@@ -111,31 +112,35 @@ const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
 const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
 type KeptnMeters struct {
-	TaskCount          syncint64.Counter
-	TaskDuration       syncfloat64.Histogram
-	DeploymentCount    syncint64.Counter
-	DeploymentDuration syncfloat64.Histogram
-	AppCount           syncint64.Counter
-	AppDuration        syncfloat64.Histogram
-	EvaluationCount    syncint64.Counter
-	EvaluationDuration syncfloat64.Histogram
+	TaskCount                  syncint64.Counter
+	TaskDuration               syncfloat64.Histogram
+	DeploymentCount            syncint64.Counter
+	DeploymentDuration         syncfloat64.Histogram
+	AppCount                   syncint64.Counter
+	AppDuration                syncfloat64.Histogram
+	EvaluationCount            syncint64.Counter
+	EvaluationDuration         syncfloat64.Histogram
+	AppDeploymentInterval      asyncfloat64.Gauge
+	WorkloadDeploymentInterval asyncfloat64.Gauge
 }
 
 const (
-	AppName           attribute.Key = attribute.Key("keptn.deployment.app.name")
-	AppVersion        attribute.Key = attribute.Key("keptn.deployment.app.version")
-	AppNamespace      attribute.Key = attribute.Key("keptn.deployment.app.namespace")
-	AppStatus         attribute.Key = attribute.Key("keptn.deployment.app.status")
-	WorkloadName      attribute.Key = attribute.Key("keptn.deployment.workload.name")
-	WorkloadVersion   attribute.Key = attribute.Key("keptn.deployment.workload.version")
-	WorkloadNamespace attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
-	WorkloadStatus    attribute.Key = attribute.Key("keptn.deployment.workload.status")
-	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
-	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
-	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
-	EvaluationStatus  attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
-	EvaluationName    attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
-	EvaluationType    attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
+	AppName                 attribute.Key = attribute.Key("keptn.deployment.app.name")
+	AppVersion              attribute.Key = attribute.Key("keptn.deployment.app.version")
+	AppPreviousVersion      attribute.Key = attribute.Key("keptn.deployment.app.previousversion")
+	AppNamespace            attribute.Key = attribute.Key("keptn.deployment.app.namespace")
+	AppStatus               attribute.Key = attribute.Key("keptn.deployment.app.status")
+	WorkloadName            attribute.Key = attribute.Key("keptn.deployment.workload.name")
+	WorkloadVersion         attribute.Key = attribute.Key("keptn.deployment.workload.version")
+	WorkloadPreviousVersion attribute.Key = attribute.Key("keptn.deployment.workload.previousversion")
+	WorkloadNamespace       attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
+	WorkloadStatus          attribute.Key = attribute.Key("keptn.deployment.workload.status")
+	TaskStatus              attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName                attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType                attribute.Key = attribute.Key("keptn.deployment.task.type")
+	EvaluationStatus        attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
+	EvaluationName          attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
+	EvaluationType          attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
@@ -150,5 +155,10 @@ func GenerateEvaluationName(checkType CheckType, evalName string) string {
 
 type GaugeValue struct {
 	Value      int64
+	Attributes []attribute.KeyValue
+}
+
+type GaugeFloatValue struct {
+	Value      float64
 	Attributes []attribute.KeyValue
 }

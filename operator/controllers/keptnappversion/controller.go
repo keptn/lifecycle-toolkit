@@ -19,6 +19,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/types"
 	"time"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
@@ -94,6 +95,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
 	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
+
 	defer span.End()
 
 	var spanAppTrace trace.Span
@@ -103,7 +105,9 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	phase := common.PhaseAppPreDeployment
 
 	if appVersion.Status.CurrentPhase == "" {
-		ctx, spanAppTrace = r.getSpan(ctxAppTrace, phase.ShortName)
+		unbindSpan(appVersion, phase.ShortName)
+		ctx, spanAppTrace = r.getSpan(ctxAppTrace, appVersion, phase.ShortName)
+
 		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		r.recordEvent(phase, "Normal", appVersion, "Started", "have started")
@@ -197,7 +201,7 @@ func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eve
 
 func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
-	ctx, spanAppTrace := r.getSpan(ctxAppTrace, phase.ShortName)
+	ctx, spanAppTrace := r.getSpan(ctxAppTrace, appVersion, phase.ShortName)
 	oldPhase := appVersion.Status.CurrentPhase
 	appVersion.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
@@ -214,14 +218,16 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace
 	if state.IsSucceeded() {
 		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
 		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
+		r.Log.Info("DEBUG: End Span: " + phase.ShortName)
 		spanAppTrace.End()
+		unbindSpan(appVersion, phase.ShortName)
 		r.recordEvent(phase, "Normal", appVersion, "Succeeded", "have succeeded")
 	} else {
 		spanAppTrace.AddEvent(phase.LongName + " not finished")
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 	}
 	if oldPhase != appVersion.Status.CurrentPhase {
-		ctx, spanAppTrace = r.getSpan(ctxAppTrace, appVersion.Status.CurrentPhase)
+		ctx, spanAppTrace = r.getSpan(ctxAppTrace, appVersion, appVersion.Status.CurrentPhase)
 		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
 
 		if err := r.Status().Update(ctx, appVersion); err != nil {
@@ -231,15 +237,17 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
 }
 
-func (r *KeptnAppVersionReconciler) getSpan(ctx context.Context, name string) (context.Context, trace.Span) {
+func (r *KeptnAppVersionReconciler) getSpan(ctx context.Context, appv *klcv1alpha1.KeptnAppVersion, phase string) (context.Context, trace.Span) {
+	appvName := fmt.Sprintf("%s.%s.%s.%s", appv.Spec.TraceId, appv.Spec.AppName, appv.Spec.Version, phase)
 	if bindCRDSpan == nil {
 		bindCRDSpan = make(map[string]trace.Span)
 	}
-	if span, ok := bindCRDSpan[name]; ok {
+	if span, ok := bindCRDSpan[appvName]; ok {
 		return ctx, span
 	}
-	ctx, span := r.AppTracer.Start(ctx, name, trace.WithSpanKind(trace.SpanKindConsumer))
-	bindCRDSpan[name] = span
+	ctx, span := r.AppTracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
+	r.Log.Info("DEBUG: Created span " + appvName)
+	bindCRDSpan[appvName] = span
 	return ctx, span
 }
 
@@ -264,4 +272,38 @@ func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common
 	}
 
 	return res, nil
+}
+
+func (r *KeptnAppVersionReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	appInstances := &klcv1alpha1.KeptnAppVersionList{}
+	err := r.List(ctx, appInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+
+	for _, appInstance := range appInstances.Items {
+
+		if appInstance.Spec.PreviousVersion != "" {
+			previousAppVersion := &klcv1alpha1.KeptnAppVersion{}
+			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", appInstance.Spec.AppName, appInstance.Spec.PreviousVersion), Namespace: appInstance.Namespace}, previousAppVersion)
+			if err != nil {
+				r.Log.Error(err, "Previous App Version not found")
+			} else {
+				previousInterval := appInstance.Status.StartTime.Time.Sub(previousAppVersion.Status.EndTime.Time)
+				res = append(res, common.GaugeFloatValue{
+					Value:      previousInterval.Seconds(),
+					Attributes: appInstance.GetDurationMetricsAttributes(),
+				})
+			}
+		}
+	}
+
+	return res, nil
+}
+
+func unbindSpan(appv *klcv1alpha1.KeptnAppVersion, phase string) {
+	appvName := fmt.Sprintf("%s.%s.%s.%s", appv.Spec.TraceId["traceparent"], appv.Spec.AppName, appv.Spec.Version, phase)
+	delete(bindCRDSpan, appvName)
 }

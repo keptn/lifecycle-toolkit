@@ -47,12 +47,13 @@ import (
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
-	Scheme    *runtime.Scheme
-	Recorder  record.EventRecorder
-	Log       logr.Logger
-	Meters    common.KeptnMeters
-	Tracer    trace.Tracer
-	AppTracer trace.Tracer
+	Scheme     *runtime.Scheme
+	Recorder   record.EventRecorder
+	Log        logr.Logger
+	Meters     common.KeptnMeters
+	Tracer     trace.Tracer
+	AppTracer  trace.Tracer
+	AppTraceId string
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -111,6 +112,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	var spanAppTrace trace.Span
 
+	r.AppTraceId = appVersion.Spec.TraceId["traceparent"]
 	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
 
 	workloadInstance.SetStartTime()
@@ -132,7 +134,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	phase = common.PhaseWorkloadPreDeployment
 
 	if appVersion.Status.CurrentPhase == "" {
-		ctx, spanAppTrace = r.getSpan(ctxAppTrace, fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
+		r.unbindSpan(workloadInstance, phase.ShortName)
+		ctx, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
 		semconv.AddAttributeFromAppVersion(spanAppTrace, appVersion)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		r.recordEvent(phase, "Normal", workloadInstance, "Started", "have started")
@@ -173,7 +176,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-evaluation checks of Workload
-	phase = common.PhaseAppPostEvaluation
+	phase = common.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
@@ -209,32 +212,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 }
 
 func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
-func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
 
-	res := []common.GaugeValue{}
-
-	for _, workloadInstance := range workloadInstances.Items {
-		gaugeValue := int64(0)
-		if !workloadInstance.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: workloadInstance.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
-	ctx, spanAppTrace := r.getSpan(ctxAppTrace, fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
+	ctx, spanAppTrace := r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
 	oldPhase := workloadInstance.Status.CurrentPhase
 	workloadInstance.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
@@ -252,13 +232,15 @@ func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workl
 		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
 		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
 		spanAppTrace.End()
+		r.unbindSpan(workloadInstance, phase.ShortName)
+		r.Log.Info("DEBUG: End Span: " + fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, phase.ShortName))
 		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
 	} else {
 		spanAppTrace.AddEvent(phase.LongName + " not finished")
 		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 	}
 	if oldPhase != workloadInstance.Status.CurrentPhase {
-		ctx, spanAppTrace = r.getSpan(ctxAppTrace, fmt.Sprintf("%s/%s", workloadInstance.Spec.WorkloadName, workloadInstance.Status.CurrentPhase))
+		ctx, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, workloadInstance.Status.CurrentPhase)
 		semconv.AddAttributeFromWorkloadInstance(spanAppTrace, *workloadInstance)
 
 		if err := r.Status().Update(ctx, workloadInstance); err != nil {
@@ -287,6 +269,29 @@ func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseTyp
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+		gaugeValue := int64(0)
+		if !workloadInstance.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: workloadInstance.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, appName types.NamespacedName) (*klcv1alpha1.KeptnAppVersion, error) {
@@ -338,14 +343,52 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	return true, latestVersion, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getSpan(ctx context.Context, name string) (context.Context, trace.Span) {
+func (r *KeptnWorkloadInstanceReconciler) getSpan(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance, phase string) (context.Context, trace.Span) {
+	wliName := fmt.Sprintf("%s.%s.%s.%s.%s", r.AppTraceId, wli.Spec.AppName, wli.Spec.WorkloadName, wli.Spec.Version, phase)
+	spanName := fmt.Sprintf("%s/%s", wli.Spec.WorkloadName, phase)
+
 	if bindCRDSpan == nil {
 		bindCRDSpan = make(map[string]trace.Span)
 	}
-	if span, ok := bindCRDSpan[name]; ok {
+	if span, ok := bindCRDSpan[wliName]; ok {
 		return ctx, span
 	}
-	ctx, span := r.AppTracer.Start(ctx, name, trace.WithSpanKind(trace.SpanKindConsumer))
-	bindCRDSpan[name] = span
+	r.Log.Info("DEBUG: Start Span: " + wliName)
+	ctx, span := r.AppTracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
+	bindCRDSpan[wliName] = span
 	return ctx, span
+}
+
+func (r *KeptnWorkloadInstanceReconciler) unbindSpan(wli *klcv1alpha1.KeptnWorkloadInstance, phase string) {
+	wliName := fmt.Sprintf("%s.%s.%s.%s.%s", r.AppTraceId, wli.Spec.AppName, wli.Spec.WorkloadName, wli.Spec.Version, phase)
+	delete(bindCRDSpan, wliName)
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+
+		if workloadInstance.Spec.PreviousVersion != "" {
+			previousAppVersion := &klcv1alpha1.KeptnWorkloadInstance{}
+			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousAppVersion)
+			if err != nil {
+				r.Log.Error(err, "Previous Workload Version not found")
+			} else {
+				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousAppVersion.Status.EndTime.Time)
+				res = append(res, common.GaugeFloatValue{
+					Value:      previousInterval.Seconds(),
+					Attributes: workloadInstance.GetIntervalMetricsAttributes(),
+				})
+			}
+		}
+	}
+
+	return res, nil
 }

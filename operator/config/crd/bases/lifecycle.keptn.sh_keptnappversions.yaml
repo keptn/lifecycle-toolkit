@@ -24,20 +24,28 @@ spec:
     - jsonPath: .spec.version
       name: Version
       type: string
+    - jsonPath: .status.currentPhase
+      name: Phase
+      type: string
     - jsonPath: .status.preDeploymentStatus
       name: PreDeploymentStatus
+      priority: 1
       type: string
     - jsonPath: .status.preDeploymentEvaluationStatus
       name: PreDeploymentEvaluationStatus
+      priority: 1
       type: string
     - jsonPath: .status.workloadOverallStatus
       name: WorkloadOverallStatus
+      priority: 1
       type: string
     - jsonPath: .status.postDeploymentStatus
       name: PostDeploymentStatus
+      priority: 1
       type: string
     - jsonPath: .status.postDeploymentEvaluationStatus
       name: PostDeploymentEvaluationStatus
+      priority: 1
       type: string
     name: v1alpha1
     schema:
@@ -59,6 +67,8 @@ spec:
           spec:
             description: KeptnAppVersionSpec defines the desired state of KeptnAppVersion
             properties:
+              PreviousVersionVersion:
+                type: string
               appName:
                 type: string
               postDeploymentEvaluations:
@@ -77,6 +87,10 @@ spec:
                 items:
                   type: string
                 type: array
+              traceId:
+                additionalProperties:
+                  type: string
+                type: object
               version:
                 type: string
               workloads:
@@ -98,6 +112,8 @@ spec:
           status:
             description: KeptnAppVersionStatus defines the observed state of KeptnAppVersion
             properties:
+              currentPhase:
+                type: string
               endTime:
                 format: date-time
                 type: string

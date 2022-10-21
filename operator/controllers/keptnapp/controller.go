@@ -107,6 +107,12 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			return ctrl.Result{}, err
 		}
 		r.Recorder.Event(app, "Normal", "AppVersionCreated", fmt.Sprintf("Created KeptnAppVersion / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+
+		app.Status.CurrentVersion = app.Spec.Version
+		if err := r.Client.Status().Update(ctx, app); err != nil {
+			r.Log.Error(err, "could not update Current Version of App")
+			return ctrl.Result{}, err
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -141,6 +147,11 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 	otel.GetTextMapPropagator().Inject(ctxAppTrace, appTraceContextCarrier)
 
+	previousVersion := ""
+	if app.Spec.Version != app.Status.CurrentVersion {
+		previousVersion = app.Status.CurrentVersion
+	}
+
 	appVersion := &klcv1alpha1.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: traceContextCarrier,
@@ -148,9 +159,10 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 			Namespace:   app.Namespace,
 		},
 		Spec: klcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec: app.Spec,
-			AppName:      app.Name,
-			TraceId:      appTraceContextCarrier,
+			KeptnAppSpec:    app.Spec,
+			AppName:         app.Name,
+			TraceId:         appTraceContextCarrier,
+			PreviousVersion: previousVersion,
 		},
 	}
 	err := controllerutil.SetControllerReference(app, appVersion, r.Scheme)

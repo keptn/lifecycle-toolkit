@@ -74,7 +74,7 @@ spec:
     metadata:
       labels:
         component: podtato-head-hat
-        app.kubernetes.io/version: 0.1.0
+        app.kubernetes.io/version: 0.1.9
       annotations:
         app.kubernetes.io/part-of: podtato-head
         app.kubernetes.io/name: podtato-head-hat

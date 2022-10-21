@@ -91,9 +91,10 @@ port-forward-grafana:
 .PHONY: import-grafana-dashboard
 import-grafana-dashboard:
 	@echo ""
-	@echo "Importing Grafana Dashboard"
+	@echo "Importing Grafana Dashboard and Datasources"
 	@echo ""
-	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard.json
+	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_overview.json
+	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_workloads.json
 
 .PHONY: uninstall
 uninstall:

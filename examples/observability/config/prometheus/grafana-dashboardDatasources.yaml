@@ -21,7 +21,23 @@ stringData:
                 "type": "prometheus",
                 "url": "http://prometheus-k8s.monitoring.svc:9090",
                 "version": 1
+            },
+            {
+                "orgId":1,
+                "name":"Jaeger",
+                "type":"jaeger",
+                "typeName":"Jaeger",
+                "typeLogoUrl":"public/app/plugins/datasource/jaeger/img/jaeger_logo.svg",
+                "access":"proxy",
+                "url":"http://jaeger-query.keptn-lifecycle-controller-system.svc.cluster.local:16686",
+                "user":"",
+                "database":"",
+                "basicAuth":false,
+                "isDefault":false,
+                "jsonData":{"spanBar":{"type":"None"}},
+                "readOnly":false
             }
         ]
-    }
+    },
+
 type: Opaque

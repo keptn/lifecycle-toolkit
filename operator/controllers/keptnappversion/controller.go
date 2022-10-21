@@ -231,6 +231,10 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace
 		newstatus = common.StateFailed
 		spanAppTrace.AddEvent(phase.LongName + " has failed")
 		spanAppTrace.SetStatus(codes.Error, "Failed")
+
+		attrs := appVersion.GetMetricsAttributes()
+		r.Meters.AppCount.Add(ctx, 1, attrs...)
+
 		r.Log.Info("DEBUG: End Span: " + phase.ShortName)
 		spanAppTrace.End()
 		unbindSpan(appVersion, phase.ShortName)
@@ -323,6 +327,28 @@ func (r *KeptnAppVersionReconciler) GetDeploymentInterval(ctx context.Context) (
 					Attributes: appInstance.GetDurationMetricsAttributes(),
 				})
 			}
+		}
+	}
+
+	return res, nil
+}
+
+func (r *KeptnAppVersionReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	appInstances := &klcv1alpha1.KeptnAppVersionList{}
+	err := r.List(ctx, appInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+
+	for _, appInstance := range appInstances.Items {
+		if appInstance.IsEndTimeSet() {
+			duration := appInstance.Status.EndTime.Time.Sub(appInstance.Status.StartTime.Time)
+			res = append(res, common.GaugeFloatValue{
+				Value:      duration.Seconds(),
+				Attributes: appInstance.GetDurationMetricsAttributes(),
+			})
 		}
 	}
 

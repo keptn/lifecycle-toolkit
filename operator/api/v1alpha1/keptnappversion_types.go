@@ -193,7 +193,7 @@ func (v KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
 		common.AppName.String(v.Spec.AppName),
 		common.AppVersion.String(v.Spec.Version),
 		common.AppNamespace.String(v.Namespace),
-		common.AppStatus.String(string(v.Status.PostDeploymentStatus)),
+		common.AppStatus.String(string(v.Status.Status)),
 	}
 }
 

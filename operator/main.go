@@ -174,6 +174,11 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 
+	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
 	meters := common.KeptnMeters{
 		TaskCount:                  taskCount,
 		TaskDuration:               taskDuration,
@@ -185,6 +190,7 @@ func main() {
 		EvaluationDuration:         evaluationDuration,
 		AppDeploymentInterval:      appDeploymentIntervalGauge,
 		WorkloadDeploymentInterval: workloadDeploymentIntervalGauge,
+		WorkloadDeploymentDuration: workloadDeploymentDurationGauge,
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -392,12 +398,21 @@ func main() {
 			for _, val := range appDeploymentInterval {
 				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
+
 			workloadDeploymentInterval, err := workloadInstanceReconciler.GetDeploymentInterval(ctx)
 			if err != nil {
 				setupLog.Error(err, "unable to gather active evaluations")
 			}
 			for _, val := range workloadDeploymentInterval {
 				workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			workloadDeploymentDuration, err := workloadInstanceReconciler.GetDeploymentDuration(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range workloadDeploymentDuration {
+				workloadDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
 		})

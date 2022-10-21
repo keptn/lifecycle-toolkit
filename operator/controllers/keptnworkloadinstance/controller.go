@@ -287,6 +287,10 @@ func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAp
 		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
 		workloadInstance.Status.Status = common.StateFailed
 		workloadInstance.SetEndTime()
+
+		attrs := workloadInstance.GetMetricsAttributes()
+		r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+
 		spanAppTrace.AddEvent(phase.LongName + " has failed")
 		spanAppTrace.SetStatus(codes.Error, "Failed")
 		spanAppTrace.End()
@@ -451,6 +455,28 @@ func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Cont
 					Attributes: workloadInstance.GetIntervalMetricsAttributes(),
 				})
 			}
+		}
+	}
+
+	return res, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+		if workloadInstance.IsEndTimeSet() {
+			duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
+			res = append(res, common.GaugeFloatValue{
+				Value:      duration.Seconds(),
+				Attributes: workloadInstance.GetIntervalMetricsAttributes(),
+			})
 		}
 	}
 

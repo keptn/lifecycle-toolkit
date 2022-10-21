@@ -31,6 +31,7 @@ import (
 type KeptnWorkloadInstanceSpec struct {
 	KeptnWorkloadSpec `json:",inline"`
 	WorkloadName      string `json:"workloadName"`
+	PreviousVersion   string `json:"previousVersion,omitempty"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
@@ -52,6 +53,8 @@ type KeptnWorkloadInstanceStatus struct {
 	StartTime                          metav1.Time        `json:"startTime,omitempty"`
 	EndTime                            metav1.Time        `json:"endTime,omitempty"`
 	CurrentPhase                       string             `json:"currentPhase,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status common.KeptnState `json:"status,omitempty"`
 }
 
 type TaskStatus struct {
@@ -78,11 +81,12 @@ type EvaluationStatus struct {
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
-// +kubebuilder:printcolumn:name="PreDeploymentStatus",type=string,JSONPath=`.status.preDeploymentStatus`
-// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
-// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,JSONPath=`.status.deploymentStatus`
-// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,JSONPath=`.status.postDeploymentStatus`
-// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
+// +kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.currentPhase`
+// +kubebuilder:printcolumn:name="PreDeploymentStatus",priority=1,type=string,JSONPath=`.status.preDeploymentStatus`
+// +kubebuilder:printcolumn:name="PreDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.preDeploymentEvaluationStatus`
+// +kubebuilder:printcolumn:name="DeploymentStatus",type=string,priority=1,JSONPath=`.status.deploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,priority=1,JSONPath=`.status.postDeploymentStatus`
+// +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 type KeptnWorkloadInstance struct {
@@ -225,6 +229,6 @@ func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 		common.WorkloadName.String(i.Spec.WorkloadName),
 		common.WorkloadVersion.String(i.Spec.Version),
 		common.WorkloadNamespace.String(i.Namespace),
-		common.WorkloadStatus.String(string(i.Status.PostDeploymentStatus)),
+		common.WorkloadStatus.String(string(i.Status.Status)),
 	}
 }

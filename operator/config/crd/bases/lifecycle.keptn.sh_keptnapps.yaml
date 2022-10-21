@@ -70,6 +70,9 @@ spec:
             type: object
           status:
             description: KeptnAppStatus defines the observed state of KeptnApp
+            properties:
+              currentVersion:
+                type: string
             type: object
         type: object
     served: true

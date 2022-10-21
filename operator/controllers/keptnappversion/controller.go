@@ -91,6 +91,11 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	semconv.AddAttributeFromAppVersion(span, *appVersion)
 
 	phase := common.PhaseAppPreDeployment
+
+	if appVersion.Status.CurrentPhase == "" {
+		r.recordEvent(phase, "Normal", appVersion, "Started", "have started")
+	}
+
 	if !appVersion.IsPreDeploymentSucceeded() {
 		reconcilePreDep := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, appVersion, common.PreDeploymentCheckType)
@@ -176,6 +181,11 @@ func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eve
 }
 
 func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
+
+	oldStatus := appVersion.Status.Status
+	newStatus := oldStatus
+	statusUpdated := false
+
 	r.Log.Info(phase.LongName + " not finished")
 	oldPhase := appVersion.Status.CurrentPhase
 	appVersion.Status.CurrentPhase = phase.ShortName
@@ -190,11 +200,31 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 		return ctrl.Result{Requeue: true}, err
 	}
 	if state.IsSucceeded() {
+		newStatus = common.StateSucceeded
 		r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
+	} else if state.IsFailed() {
+
+		appVersion.SetEndTime()
+		attrs := appVersion.GetMetricsAttributes()
+		r.Meters.AppCount.Add(ctx, 1, attrs...)
+
+		newStatus = common.StateFailed
+		r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 	} else {
+		newStatus = common.StateProgressing
 		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
 	}
+
+	// check if status changed
 	if oldPhase != appVersion.Status.CurrentPhase {
+		statusUpdated = true
+	}
+	if oldStatus != newStatus {
+		appVersion.Status.Status = newStatus
+		statusUpdated = true
+	}
+
+	if statusUpdated {
 		if err := r.Status().Update(ctx, appVersion); err != nil {
 			r.Log.Error(err, "could not update status")
 		}

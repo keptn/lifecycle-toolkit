@@ -229,11 +229,14 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace
 
 	} else if state.IsFailed() {
 		newstatus = common.StateFailed
-		spanAppTrace.AddEvent(phase.LongName + " has failed")
-		spanAppTrace.SetStatus(codes.Error, "Failed")
+		appVersion.SetEndTime()
 
 		attrs := appVersion.GetMetricsAttributes()
 		r.Meters.AppCount.Add(ctx, 1, attrs...)
+
+		newstatus = common.StateFailed
+		spanAppTrace.AddEvent(phase.LongName + " has failed")
+		spanAppTrace.SetStatus(codes.Error, "Failed")
 
 		r.Log.Info("DEBUG: End Span: " + phase.ShortName)
 		spanAppTrace.End()

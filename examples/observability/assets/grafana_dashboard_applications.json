@@ -9,11 +9,11 @@
     "slug": "keptn-applications",
     "url": "/d/nbiPNgN4z/keptn-applications",
     "expires": "0001-01-01T00:00:00Z",
-    "created": "2022-10-21T14:51:16Z",
-    "updated": "2022-10-21T15:02:55Z",
+    "created": "2022-10-21T15:12:25Z",
+    "updated": "2022-10-21T17:36:10Z",
     "updatedBy": "admin",
     "createdBy": "admin",
-    "version": 5,
+    "version": 4,
     "hasAcl": false,
     "isFolder": false,
     "folderId": 0,
@@ -70,6 +70,59 @@
     "panels": [
       {
         "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 18,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "9.2.1",
+        "title": "Panel Title",
+        "type": "table"
+      },
+      {
+        "datasource": {
           "type": "prometheus",
           "uid": "P1809F7CD0C75ACF3"
         },
@@ -105,14 +158,14 @@
           "h": 8,
           "w": 12,
           "x": 0,
-          "y": 0
+          "y": 8
         },
         "id": 16,
         "options": {
           "orientation": "auto",
           "reduceOptions": {
             "calcs": [
-              "mean"
+              "last"
             ],
             "fields": "",
             "values": false
@@ -128,7 +181,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
+            "expr": "max by(keptn_deployment_workload_previousversion, keptn_deployment_app_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
             "format": "table",
             "legendFormat": "__auto",
             "range": true,
@@ -169,7 +222,7 @@
           "h": 6,
           "w": 3,
           "x": 0,
-          "y": 8
+          "y": 16
         },
         "id": 12,
         "options": {
@@ -235,7 +288,7 @@
           "h": 6,
           "w": 6,
           "x": 3,
-          "y": 8
+          "y": 16
         },
         "id": 4,
         "options": {
@@ -299,7 +352,7 @@
           "h": 6,
           "w": 3,
           "x": 9,
-          "y": 8
+          "y": 16
         },
         "id": 3,
         "options": {
@@ -379,7 +432,7 @@
           "h": 7,
           "w": 3,
           "x": 0,
-          "y": 14
+          "y": 22
         },
         "id": 14,
         "options": {
@@ -475,7 +528,7 @@
           "h": 7,
           "w": 6,
           "x": 3,
-          "y": 14
+          "y": 22
         },
         "id": 6,
         "options": {
@@ -539,7 +592,7 @@
           "h": 7,
           "w": 3,
           "x": 9,
-          "y": 14
+          "y": 22
         },
         "id": 10,
         "options": {
@@ -609,7 +662,7 @@
           "h": 6,
           "w": 12,
           "x": 0,
-          "y": 21
+          "y": 29
         },
         "id": 8,
         "options": {
@@ -629,7 +682,7 @@
               "type": "jaeger",
               "uid": "PC9A941E8F2E49454"
             },
-            "operation": "AppDeploy",
+            "operation": "AppPreDeployTasks",
             "queryType": "search",
             "refId": "A",
             "service": "keptn-lifecycle-operator",
@@ -682,7 +735,7 @@
     "timezone": "",
     "title": "Keptn Applications",
     "uid": "nbiPNgN4z",
-    "version": 5,
+    "version": 4,
     "weekStart": ""
   }
 }

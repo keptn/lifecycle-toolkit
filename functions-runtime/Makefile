@@ -1,6 +1,6 @@
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
+RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
 TAG?=latest
 RELEASE_IMAGE:=functions-runtime:$(TAG)

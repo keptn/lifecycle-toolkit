@@ -33,7 +33,7 @@ You can watch the progress of the deployment using:
 * Get the current status of the workloads
 * See in which phase your workload deployments are at the moment
 
-> `kubectl get keptnapplicationversions -n podtato-kubectl`
+> `kubectl get keptnappversions -n podtato-kubectl`
 * Get the current status of the application
 * See in which phase your application deployment is at the moment
 

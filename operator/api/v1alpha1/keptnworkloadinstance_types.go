@@ -30,8 +30,9 @@ import (
 // KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceSpec struct {
 	KeptnWorkloadSpec `json:",inline"`
-	WorkloadName      string `json:"workloadName"`
-	PreviousVersion   string `json:"previousVersion,omitempty"`
+	WorkloadName      string            `json:"workloadName"`
+	PreviousVersion   string            `json:"previousVersion,omitempty"`
+	TraceId           map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance

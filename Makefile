@@ -5,7 +5,7 @@ TAG := $(TAG)
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
+RELEASE_REGISTRY?=ghcr.io/keptn
 ARCH?=amd64
 
 .PHONY: cleanup-manifests

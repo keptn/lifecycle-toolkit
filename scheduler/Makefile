@@ -23,7 +23,7 @@ LOCAL_CONTROLLER_IMAGE=controller:latest
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=ghcr.io/keptn-sandbox
+RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3#$(shell git describe --tags --match "v*")
 RELEASE_IMAGE:=scheduler:$(TAG)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)

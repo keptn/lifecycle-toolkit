@@ -31,7 +31,7 @@ import (
 type KeptnAppVersionSpec struct {
 	KeptnAppSpec    `json:",inline"`
 	AppName         string `json:"appName"`
-	PreviousVersion string `json:"PreviousVersion,omitempty"`
+	PreviousVersion string `json:"previousVersion,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

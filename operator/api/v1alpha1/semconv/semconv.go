@@ -20,7 +20,7 @@ func AddAttributeFromWorkloadInstance(s trace.Span, w v1alpha1.KeptnWorkloadInst
 
 func AddAttributeFromApp(s trace.Span, a v1alpha1.KeptnApp) {
 	s.SetAttributes(common.AppName.String(a.Name))
-	s.SetAttributes(common.WorkloadVersion.String(a.Spec.Version))
+	s.SetAttributes(common.AppVersion.String(a.Spec.Version))
 }
 
 func AddAttributeFromAppVersion(s trace.Span, a v1alpha1.KeptnAppVersion) {

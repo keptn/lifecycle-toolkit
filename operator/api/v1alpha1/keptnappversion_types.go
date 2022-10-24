@@ -32,6 +32,8 @@ type KeptnAppVersionSpec struct {
 	KeptnAppSpec    `json:",inline"`
 	AppName         string `json:"appName"`
 	PreviousVersion string `json:"previousVersion,omitempty"`
+
+	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

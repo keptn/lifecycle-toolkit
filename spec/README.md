@@ -24,11 +24,15 @@ the [specification][].
 
 ## Terms
 
+**K8s**:
+tbd
+
 **LFC**:
 tbd
 
 **Reconciliation loop**:
 tbd
+
 
 
 [specification]: overview.md

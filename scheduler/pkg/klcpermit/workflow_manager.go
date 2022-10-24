@@ -3,7 +3,7 @@ package klcpermit
 import (
 	"context"
 	"fmt"
-	"github.com/keptn-sandbox/lifecycle-controller/scheduler/pkg/tracing"
+	"github.com/keptn/lifecycle-controller/scheduler/pkg/tracing"
 	"go.opentelemetry.io/otel/codes"
 	"hash/fnv"
 	corev1 "k8s.io/api/core/v1"
@@ -104,7 +104,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	return WorkloadInstanceStatusNotSpecified
 }
 
-//GetCRD returns unstructured to avoid tight coupling with the CRD resource
+// GetCRD returns unstructured to avoid tight coupling with the CRD resource
 func (sMgr *WorkloadManager) GetCRD(ctx context.Context, namespace string, name string) (*unstructured.Unstructured, error) {
 	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/workloadinstance/name
 	return sMgr.dynamicClient.Resource(workloadInstanceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})

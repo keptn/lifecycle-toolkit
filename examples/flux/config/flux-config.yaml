@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  url: https://github.com/keptn-sandbox/lifecycle-controller
+  url: https://github.com/keptn/lifecycle-controller
   ref:
     branch: main
   ignore: |

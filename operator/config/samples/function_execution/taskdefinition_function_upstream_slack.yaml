@@ -5,5 +5,5 @@ metadata:
 spec:
   function:
     httpRef:
-      url: https://raw.githubusercontent.com/keptn-sandbox/lifecycle-controller/main/functions-runtime/samples/ts/slack.ts
+      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/functions-runtime/samples/ts/slack.ts
 

@@ -28,20 +28,20 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnappversion"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnappversion"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkload"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnworkload"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnworkloadinstance"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnapp"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptnevaluation"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntask"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/controllers/keptntaskdefinition"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnevaluation"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptntask"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptntaskdefinition"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -71,9 +71,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	lifecyclev1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/webhooks"
+	"github.com/keptn/lifecycle-controller/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
 

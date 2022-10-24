@@ -2,7 +2,7 @@ domain: keptn.sh
 layout:
 - go.kubebuilder.io/v3
 projectName: keptn-lifecycle-controller
-repo: github.com/keptn-sandbox/lifecycle-controller/operator
+repo: github.com/keptn/lifecycle-controller/operator
 resources:
 - api:
     crdVersion: v1
@@ -11,7 +11,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnTaskDefinition
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -20,7 +20,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnTask
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -29,7 +29,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnApp
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -38,7 +38,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnWorkload
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -47,7 +47,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnWorkloadInstance
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -56,7 +56,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnAppVersion
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -65,7 +65,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnEvaluationDefinition
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -73,7 +73,7 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnEvaluationProvider
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -82,6 +82,6 @@ resources:
   domain: keptn.sh
   group: lifecycle
   kind: KeptnEvaluation
-  path: github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1
+  path: github.com/keptn/lifecycle-controller/operator/api/v1alpha1
   version: v1alpha1
 version: "3"

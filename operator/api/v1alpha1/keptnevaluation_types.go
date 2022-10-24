@@ -19,7 +19,7 @@ package v1alpha1
 import (
 	"time"
 
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

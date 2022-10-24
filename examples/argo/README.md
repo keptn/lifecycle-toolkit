@@ -11,7 +11,7 @@ In this example, we will show you how to install our sample application *podtato
 * Watch the progress on your ArgoUI: `http://localhost:8080`
 
 ## Prerequisites:
-This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn-sandbox/lifecycle-service). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argoproj.github.io/argo-cd/getting_started/).
+This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-service). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argoproj.github.io/argo-cd/getting_started/).
 
 ### Install ArgoCD
 If you don't have an already existing installation of ArgoCD, you can install it using the following commands:
@@ -37,7 +37,7 @@ Then you can access the UI using http://localhost:8080.
 ## Installing the Demo Application
 To install the demo application, you can use the following command:
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/keptn-sandbox/lifecycle-service/main/examples/argo/config/app.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-service/main/examples/argo/config/app.yaml
 ```
 
 You will see that the application will be deployed using ArgoCD. You can watch the progress on the ArgoCD UI and should see the following:

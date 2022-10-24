@@ -18,8 +18,8 @@ package keptnapp
 
 import (
 	"context"
-	"go.opentelemetry.io/otel/oteltest"
-
+	otelsdk "go.opentelemetry.io/otel/sdk/trace"
+	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
@@ -42,11 +42,13 @@ import (
 // http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
 
 var (
-	cfg       *rest.Config
-	k8sClient client.Client
-	testEnv   *envtest.Environment
-	ctx       context.Context
-	cancel    context.CancelFunc
+	cfg          *rest.Config
+	k8sClient    client.Client
+	testEnv      *envtest.Environment
+	ctx          context.Context
+	cancel       context.CancelFunc
+	spanRecorder *sdktest.SpanRecorder //clean me every test
+	keptnApp     *KeptnAppReconciler
 )
 
 func TestAPIs(t *testing.T) {
@@ -59,7 +61,7 @@ var _ = BeforeSuite(func() {
 	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{
-		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
+		CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
 		ErrorIfCRDPathMissing: true,
 	}
 
@@ -102,17 +104,20 @@ var _ = BeforeSuite(func() {
 		Scheme: scheme.Scheme,
 	})
 	Expect(err).ToNot(HaveOccurred())
+	spanRecorder = sdktest.NewSpanRecorder()
+	tr := otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 	//setup controllers here
-	err = (&KeptnAppReconciler{
+	keptnApp = &KeptnAppReconciler{
 		Client:   k8sManager.GetClient(),
 		Scheme:   k8sManager.GetScheme(),
 		Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
 		Log:      GinkgoLogr,
-		Tracer:   oteltest.DefaultTracer(),
-	}).SetupWithManager(k8sManager)
-	Expect(err).ToNot(HaveOccurred())
+		Tracer:   tr.Tracer("test-app-tracer"),
+	}
 
+	err = keptnApp.SetupWithManager(k8sManager)
+	Expect(err).ToNot(HaveOccurred())
 	go func() {
 		defer GinkgoRecover()
 		err = k8sManager.Start(ctx)

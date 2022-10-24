@@ -19,8 +19,9 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	"golang.org/x/mod/semver"
 	"time"
+
+	"golang.org/x/mod/semver"
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
@@ -424,4 +425,52 @@ func (r *KeptnWorkloadInstanceReconciler) unbindSpan(wli *klcv1alpha1.KeptnWorkl
 
 func (r *KeptnWorkloadInstanceReconciler) getSpanName(wli *klcv1alpha1.KeptnWorkloadInstance, phase string) string {
 	return fmt.Sprintf("%s.%s.%s.%s.%s", wli.Spec.TraceId, wli.Spec.AppName, wli.Spec.WorkloadName, wli.Spec.Version, phase)
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+	for _, workloadInstance := range workloadInstances.Items {
+		if workloadInstance.Spec.PreviousVersion != "" {
+			previousAppVersion := &klcv1alpha1.KeptnWorkloadInstance{}
+			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousAppVersion)
+			if err != nil {
+				r.Log.Error(err, "Previous Workload Version not found")
+			} else if workloadInstance.IsEndTimeSet() {
+				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousAppVersion.Status.EndTime.Time)
+				res = append(res, common.GaugeFloatValue{
+					Value:      previousInterval.Seconds(),
+					Attributes: workloadInstance.GetIntervalMetricsAttributes(),
+				})
+			}
+		}
+	}
+	return res, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
+	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
+	err := r.List(ctx, workloadInstances)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+	}
+
+	res := []common.GaugeFloatValue{}
+
+	for _, workloadInstance := range workloadInstances.Items {
+		if workloadInstance.IsEndTimeSet() {
+			duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
+			res = append(res, common.GaugeFloatValue{
+				Value:      duration.Seconds(),
+				Attributes: workloadInstance.GetIntervalMetricsAttributes(),
+			})
+		}
+	}
+
+	return res, nil
 }

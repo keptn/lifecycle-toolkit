@@ -316,7 +316,8 @@ func (r *KeptnAppVersionReconciler) GetDeploymentInterval(ctx context.Context) (
 
 		if appInstance.Spec.PreviousVersion != "" {
 			previousAppVersion := &klcv1alpha1.KeptnAppVersion{}
-			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", appInstance.Spec.AppName, appInstance.Spec.PreviousVersion), Namespace: appInstance.Namespace}, previousAppVersion)
+			appName := fmt.Sprintf("%s-%s", appInstance.Spec.AppName, appInstance.Spec.PreviousVersion)
+			err := r.Get(ctx, types.NamespacedName{Name: appName, Namespace: appInstance.Namespace}, previousAppVersion)
 			if err != nil {
 				r.Log.Error(err, "Previous App Version not found")
 			} else {

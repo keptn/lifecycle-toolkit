@@ -233,3 +233,12 @@ func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 		common.WorkloadStatus.String(string(i.Status.Status)),
 	}
 }
+
+func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Spec.WorkloadName),
+		common.WorkloadVersion.String(i.Spec.Version),
+		common.WorkloadPreviousVersion.String(i.Spec.PreviousVersion),
+	}
+}

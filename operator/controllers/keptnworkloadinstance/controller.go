@@ -19,6 +19,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"golang.org/x/mod/semver"
 	"time"
 
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
@@ -101,15 +102,15 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for pre-evaluation checks of App
 	phase := common.PhaseAppPreEvaluation
 
-	appVersion, err := r.getAppVersion(ctx, types.NamespacedName{Namespace: req.Namespace, Name: workloadInstance.Spec.AppName})
-	if errors.IsNotFound(err) {
-		r.recordEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found")
-		r.Log.Error(err, "Related App Version not found")
-		return reconcile.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
-	} else if err != nil {
+	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
 		r.recordEvent(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved")
-		r.Log.Error(err, "Could not retrieve App Version")
-		return reconcile.Result{}, fmt.Errorf("could not fetch AppVersion: %+v", err)
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not fetch AppVersion for KeptnWorkloadInstance: %+v", err)
+	} else if !found {
+		span.SetStatus(codes.Error, err.Error())
+		r.recordEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found")
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not find AppVersion for KeptnWorkloadInstance")
 	}
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
@@ -275,4 +276,34 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, app
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
 	err = r.Get(ctx, GetAppVersionName(appName.Namespace, appName.Name, app.Spec.Version), appVersion)
 	return appVersion, err
+}
+
+func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
+	apps := &klcv1alpha1.KeptnAppVersionList{}
+	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
+		return false, klcv1alpha1.KeptnAppVersion{}, err
+	}
+	latestVersion := klcv1alpha1.KeptnAppVersion{}
+	for _, app := range apps.Items {
+		if app.Spec.AppName == wli.Spec.AppName {
+			for _, appWorkload := range app.Spec.Workloads {
+				workloadName := fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name)
+				if appWorkload.Version == wli.Spec.Version && workloadName == wli.Spec.WorkloadName {
+					if latestVersion.Spec.Version == "" {
+						latestVersion = app
+					} else {
+						if semver.Compare(latestVersion.Spec.Version, app.Spec.Version) < 0 {
+							latestVersion = app
+						}
+					}
+				}
+			}
+		}
+	}
+
+	r.Log.Info("Selected Version " + latestVersion.Spec.Version + " for KeptnApp " + wli.Spec.AppName)
+	if latestVersion.Spec.Version == "" {
+		return false, klcv1alpha1.KeptnAppVersion{}, nil
+	}
+	return true, latestVersion, nil
 }

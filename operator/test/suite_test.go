@@ -14,15 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package keptnapp
+package test
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
+	"github.com/onsi/gomega/gexec"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
+	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -40,7 +43,6 @@ import (
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
 // http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
-
 var (
 	cfg          *rest.Config
 	k8sClient    client.Client
@@ -48,7 +50,6 @@ var (
 	ctx          context.Context
 	cancel       context.CancelFunc
 	spanRecorder *sdktest.SpanRecorder //clean me every test
-	keptnApp     *KeptnAppReconciler
 )
 
 func TestAPIs(t *testing.T) {
@@ -61,7 +62,7 @@ var _ = BeforeSuite(func() {
 	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{
-		CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
+		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
 		ErrorIfCRDPathMissing: true,
 	}
 
@@ -108,26 +109,26 @@ var _ = BeforeSuite(func() {
 	tr := otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 	//setup controllers here
-	keptnApp = &KeptnAppReconciler{
+	err = (&keptnapp.KeptnAppReconciler{
 		Client:   k8sManager.GetClient(),
 		Scheme:   k8sManager.GetScheme(),
 		Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
 		Log:      GinkgoLogr,
 		Tracer:   tr.Tracer("test-app-tracer"),
-	}
+	}).SetupWithManager(k8sManager)
 
-	err = keptnApp.SetupWithManager(k8sManager)
 	Expect(err).ToNot(HaveOccurred())
 	go func() {
 		defer GinkgoRecover()
 		err = k8sManager.Start(ctx)
 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
+		gexec.KillAndWait(4 * time.Second)
+
+		// Teardown the test environment once controller is fnished.
+		// Otherwise, from Kubernetes 1.21+, teardown timeouts waiting on
+		// kube-apiserver to return
+		err := testEnv.Stop()
+		Expect(err).ToNot(HaveOccurred())
 	}()
 
-})
-
-var _ = AfterSuite(func() {
-	By("tearing down the test environment")
-	err := testEnv.Stop()
-	Expect(err).NotTo(HaveOccurred())
 })

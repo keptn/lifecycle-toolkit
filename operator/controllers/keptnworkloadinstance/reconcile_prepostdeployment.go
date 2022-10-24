@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"

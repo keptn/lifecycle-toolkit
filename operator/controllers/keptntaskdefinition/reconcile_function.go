@@ -3,7 +3,7 @@ package keptntaskdefinition
 import (
 	"context"
 	"fmt"
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

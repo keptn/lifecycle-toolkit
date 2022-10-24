@@ -28,7 +28,7 @@ RUN make build.$ARCH HASH=${GIT_HASH} TAG=${RELEASE_VERSION}
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM gcr.io/distroless/base-debian11:nonroot
 
-LABEL org.opencontainers.image.source="https://github.com/keptn-sandbox/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Operator" \
     org.opencontainers.image.vendor="Keptn" \

@@ -36,8 +36,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/semconv"
+	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

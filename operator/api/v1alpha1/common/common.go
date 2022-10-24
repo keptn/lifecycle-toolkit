@@ -152,3 +152,8 @@ type GaugeValue struct {
 	Value      int64
 	Attributes []attribute.KeyValue
 }
+
+type GaugeFloatValue struct {
+	Value      float64
+	Attributes []attribute.KeyValue
+}

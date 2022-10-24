@@ -163,6 +163,20 @@ func main() {
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}
+	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
+	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a histogram of the interval between deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+
+	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
 
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
@@ -335,6 +349,9 @@ func main() {
 			taskActiveGauge,
 			appActiveGauge,
 			evaluationActiveGauge,
+			appDeploymentIntervalGauge,
+			workloadDeploymentIntervalGauge,
+			workloadDeploymentDurationGauge,
 		},
 		func(ctx context.Context) {
 			activeDeployments, err := workloadInstanceReconciler.GetActiveDeployments(ctx)
@@ -367,6 +384,30 @@ func main() {
 			}
 			for _, val := range activeEvaluations {
 				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			appDeploymentInterval, err := appVersionReconciler.GetDeploymentInterval(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range appDeploymentInterval {
+				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			workloadDeploymentInterval, err := workloadInstanceReconciler.GetDeploymentInterval(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range workloadDeploymentInterval {
+				workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+			}
+
+			workloadDeploymentDuration, err := workloadInstanceReconciler.GetDeploymentDuration(ctx)
+			if err != nil {
+				setupLog.Error(err, "unable to gather active evaluations")
+			}
+			for _, val := range workloadDeploymentDuration {
+				workloadDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
 		})

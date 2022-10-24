@@ -1,2 +1,3 @@
 # Don't include tooling
 /node_modules
+package-lock.json

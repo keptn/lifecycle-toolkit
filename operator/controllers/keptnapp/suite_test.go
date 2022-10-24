@@ -19,6 +19,7 @@ package keptnapp
 import (
 	"context"
 	"go.opentelemetry.io/otel/oteltest"
+
 	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
@@ -38,7 +39,7 @@ import (
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
-// http://onsi.github.io/ginkgo/ to learn more about Ginkgo.
+// http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
 
 var (
 	cfg       *rest.Config
@@ -118,7 +119,7 @@ var _ = BeforeSuite(func() {
 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
 	}()
 
-}, 60)
+})
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")

@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller (KLC)
+# Keptn Lifecycle Controller
 
 ![build](https://img.shields.io/github/workflow/status/keptn-sandbox/lifecycle-controller/CI)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn-sandbox/lifecycle-controller?filename=operator%2Fgo.mod)
@@ -7,7 +7,7 @@
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn-sandbox/lifecycle-controller)](https://github.com/keptn-sandbox/lifecycle-controller/discussions)
 
 The purpose of this repository is to demonstrate and experiment with
-a prototype of a _**Keptn Lifecycle Controller (KLC)**_.
+a prototype of a _**Keptn Lifecycle Controller**_.
 The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
 It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 

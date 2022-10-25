@@ -38,9 +38,9 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := fake.NewMockTracer(func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
-	})
+	}}
 
 	//add keptn lfc scheme to k8sdefault
 	setupScheme(t)
@@ -113,17 +113,6 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 			want:    ctrl.Result{},
 			wantErr: nil,
 		},
-		{
-			name: "test existing appVersion nothing done",
-			req: ctrl.Request{
-				NamespacedName: types.NamespacedName{
-					Namespace: "default",
-					Name:      "myfinishedapp",
-				},
-			},
-			want:    ctrl.Result{},
-			wantErr: nil,
-		},
 	}
 
 	//setting up fakeclient CRD data
@@ -159,9 +148,9 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string) {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := fake.NewMockTracer(func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
-	})
+	}}
 
 	fakeClient, err := fake.NewClient()
 	if err != nil {

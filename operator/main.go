@@ -168,7 +168,7 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 
-	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration between deployments"))
+	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
 	}

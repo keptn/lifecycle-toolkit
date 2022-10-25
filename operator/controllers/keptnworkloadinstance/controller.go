@@ -437,12 +437,12 @@ func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Cont
 	res := []common.GaugeFloatValue{}
 	for _, workloadInstance := range workloadInstances.Items {
 		if workloadInstance.Spec.PreviousVersion != "" {
-			previousAppVersion := &klcv1alpha1.KeptnWorkloadInstance{}
-			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousAppVersion)
+			previousWorkloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
+			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousWorkloadInstance)
 			if err != nil {
-				r.Log.Error(err, "Previous Workload Version not found")
+				r.Log.Error(err, "Previous WorkloadInstance not found")
 			} else if workloadInstance.IsEndTimeSet() {
-				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousAppVersion.Status.EndTime.Time)
+				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousWorkloadInstance.Status.EndTime.Time)
 				res = append(res, common.GaugeFloatValue{
 					Value:      previousInterval.Seconds(),
 					Attributes: workloadInstance.GetIntervalMetricsAttributes(),

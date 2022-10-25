@@ -32,6 +32,7 @@ jobs:
             style
             test
           scopes: |
+            deps
             scheduler
             operator
             functions-runtime

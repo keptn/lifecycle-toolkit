@@ -125,6 +125,18 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for pre-deployment checks of Workload
 	phase = common.PhaseWorkloadPreDeployment
+
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PreDeploymentStatus == common.StatePending {
+		workloadInstance.Status.PreDeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+	if appVersion.Status.CurrentPhase == "" {
+		r.recordEvent(phase, "Normal", workloadInstance, "Started", "have started")
+	}
+
 	if !workloadInstance.IsPreDeploymentSucceeded() {
 		reconcilePre := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
@@ -134,6 +146,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for pre-evaluation checks of Workload
 	phase = common.PhaseAppPreEvaluation
+
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PreDeploymentEvaluationStatus == common.StatePending {
+		workloadInstance.Status.PreDeploymentEvaluationStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
@@ -143,6 +163,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
+	//Set state to progressing if not already set
+	if workloadInstance.Status.DeploymentStatus == common.StatePending {
+		workloadInstance.Status.DeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	if !workloadInstance.IsDeploymentSucceeded() {
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
@@ -152,6 +179,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for post-deployment checks of Workload
 	phase = common.PhaseWorkloadPostDeployment
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PostDeploymentStatus == common.StatePending {
+		workloadInstance.Status.PostDeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	if !workloadInstance.IsPostDeploymentSucceeded() {
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
@@ -161,6 +195,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for post-evaluation checks of Workload
 	phase = common.PhaseAppPostEvaluation
+	//Set state to progressing if not already set
+	if workloadInstance.Status.PostDeploymentStatus == common.StatePending {
+		workloadInstance.Status.PostDeploymentStatus = common.StateProgressing
+		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
@@ -171,6 +212,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	// WorkloadInstance is completed at this place
 	if !workloadInstance.IsEndTimeSet() {
 		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
+		workloadInstance.Status.Status = common.StateSucceeded
 		workloadInstance.SetEndTime()
 	}
 
@@ -220,6 +262,8 @@ func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Conte
 
 func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 	r.Log.Info(phase.LongName + " not finished")
+	overallStateUpdated := false
+	oldstate := workloadInstance.Status.Status
 	oldPhase := workloadInstance.Status.CurrentPhase
 	workloadInstance.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
@@ -234,10 +278,27 @@ func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, workl
 	}
 	if state.IsSucceeded() {
 		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
+	} else if state.IsFailed() {
+		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
+		workloadInstance.Status.Status = common.StateFailed
+		workloadInstance.SetEndTime()
+
+		attrs := workloadInstance.GetMetricsAttributes()
+		r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+
+		overallStateUpdated = true
 	} else {
+		if oldstate != common.StateProgressing {
+			workloadInstance.Status.Status = common.StateProgressing
+			overallStateUpdated = true
+		}
 		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
 	}
 	if oldPhase != workloadInstance.Status.CurrentPhase {
+		overallStateUpdated = true
+	}
+
+	if overallStateUpdated {
 		if err := r.Status().Update(ctx, workloadInstance); err != nil {
 			r.Log.Error(err, "could not update status")
 		}

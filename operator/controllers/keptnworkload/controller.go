@@ -107,6 +107,11 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 			return ctrl.Result{}, err
 		}
 		r.Recorder.Event(workload, "Normal", "WorkloadInstanceCreated", fmt.Sprintf("Created KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+		workload.Status.CurrentVersion = workload.Spec.Version
+		if err := r.Client.Status().Update(ctx, workload); err != nil {
+			r.Log.Error(err, "could not update Current Version of Workload")
+			return ctrl.Result{}, err
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -136,6 +141,11 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
+	previousVersion := ""
+	if workload.Spec.Version != workload.Status.CurrentVersion {
+		previousVersion = workload.Status.CurrentVersion
+	}
+
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: traceContextCarrier,
@@ -145,6 +155,7 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
 			KeptnWorkloadSpec: workload.Spec,
 			WorkloadName:      workload.Name,
+			PreviousVersion:   previousVersion,
 		},
 	}
 	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)

@@ -37,6 +37,7 @@ type KeptnAppSpec struct {
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
+	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
 type KeptnWorkloadRef struct {

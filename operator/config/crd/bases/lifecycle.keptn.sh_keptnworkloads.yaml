@@ -83,6 +83,9 @@ spec:
             type: object
           status:
             description: KeptnWorkloadStatus defines the observed state of KeptnWorkload
+            properties:
+              currentVersion:
+                type: string
             type: object
         type: object
     served: true

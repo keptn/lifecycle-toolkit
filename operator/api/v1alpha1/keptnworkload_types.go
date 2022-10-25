@@ -39,6 +39,7 @@ type KeptnWorkloadSpec struct {
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload
 type KeptnWorkloadStatus struct {
+	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
 //+kubebuilder:object:root=true

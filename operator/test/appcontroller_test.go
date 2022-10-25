@@ -9,61 +9,104 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-// integration test it uses real api
-var _ = Describe("Keptn APP controller", func() {
-	It("should reconcile", func() {
-		appname := "app-name"
-		appversion := "1.0.0"
-		app := &klcv1alpha1.KeptnApp{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      appname,
-				Namespace: "default",
-			},
-			Spec: klcv1alpha1.KeptnAppSpec{
-				Version:                   appversion,
-				PreDeploymentTasks:        []string{},
-				PostDeploymentTasks:       []string{},
-				PreDeploymentEvaluations:  []string{},
-				PostDeploymentEvaluations: []string{},
-				Workloads: []klcv1alpha1.KeptnWorkloadRef{
-					{
-						Name:    "app-wname",
-						Version: "2.0",
-					},
+// clean example of E2E test --
+// App controller creates AppVersion when a new App CRD is added
+// span for creation and reconcile are correct
+var _ = Describe("KeptnAppController", func() {
+	var (
+		name      string
+		namespace string
+		version   string
+	)
+	BeforeEach(func() {
+		name = "test-app"
+		namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
+		version = "1.0.0"
+	})
+	Describe("Creation of AppVersion from a new App", func() {
+		var (
+			instance *klcv1alpha1.KeptnApp
+		)
+		Context("with one App", func() {
+			BeforeEach(func() {
+				instance = createInstanceInCluster(name, namespace, version, instance)
+			})
+			AfterEach(func() {
+				// Remember to clean up the cluster after each test
+				deleteAppInCluster(instance)
+			})
+			It("should update the status of the CR", func() {
+				appVersion := assertResourceUpdated(instance)
+				deleteAppVersionInCluster(appVersion)
+			})
+		})
+	})
+	AfterEach(ResetSpanRecords) //you must clean up spans each time
+})
+
+func deleteAppVersionInCluster(version *klcv1alpha1.KeptnAppVersion) {
+	By("Cleaning Up Keptn AppVersion CRD")
+	Expect(k8sClient.Delete(ctx, version)).Should(Succeed())
+}
+
+func deleteAppInCluster(instance *klcv1alpha1.KeptnApp) {
+	By("Cleaning Up KeptnApp CRD ")
+	Expect(k8sClient.Delete(ctx, instance)).Should(Succeed())
+
+}
+
+func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
+
+	appVersion := &klcv1alpha1.KeptnAppVersion{}
+	appvName := types.NamespacedName{
+		Namespace: instance.Namespace,
+		Name:      instance.Name + "-" + instance.Spec.Version,
+	}
+	By("Retrieving Created app version")
+	Eventually(func() error {
+		return k8sClient.Get(ctx, appvName, appVersion)
+	}).Should(Succeed())
+
+	By("Comparing expected app version")
+	Expect(appVersion.Spec.AppName).To(Equal(instance.Name))
+	Expect(appVersion.Spec.Version).To(Equal(instance.Spec.Version))
+	Expect(appVersion.Spec.Workloads).To(Equal(instance.Spec.Workloads))
+
+	return appVersion
+}
+
+func assertAppSpan(instance *klcv1alpha1.KeptnApp) {
+	By("Comparing spans")
+	spans := spanRecorder.Ended()
+	Expect(len(spans)).To(Equal(2)) //this works only if we do not run tests in parallel
+
+	Expect(spans[0].Name()).To(Equal("create_app_version"))
+	Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
+	Expect(spans[0].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+
+	Expect(spans[1].Name()).To(Equal("reconcile_app"))
+	Expect(spans[1].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
+	Expect(spans[1].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+}
+
+func createInstanceInCluster(name string, namespace string, version string, instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp {
+	instance = &klcv1alpha1.KeptnApp{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha1.KeptnAppSpec{
+			Version: version,
+			Workloads: []klcv1alpha1.KeptnWorkloadRef{
+				{
+					Name:    "app-wname",
+					Version: "2.0",
 				},
 			},
-		}
-		By("Invoking Reconciling for Create")
+		},
+	}
+	By("Invoking Reconciling for Create")
 
-		Expect(k8sClient.Create(ctx, app)).Should(Succeed())
-
-		appVersion := &klcv1alpha1.KeptnAppVersion{}
-		appvName := types.NamespacedName{
-			Namespace: "default",
-			Name:      appname + "-" + appversion,
-		}
-		By("Retrieving Created app version")
-		Eventually(func() error {
-			return k8sClient.Get(ctx, appvName, appVersion)
-		}).Should(Succeed())
-
-		By("Comparing expected app version")
-		Expect(appVersion.Spec.AppName).To(Equal(appname))
-		Expect(appVersion.Spec.Version).To(Equal(appversion))
-		Expect(appVersion.Spec.Workloads[0]).To(Equal(klcv1alpha1.KeptnWorkloadRef{Name: "app-wname", Version: "2.0"}))
-
-		By("Comparing spans")
-		spans := spanRecorder.Ended()
-		Expect(len(spans)).To(Equal(2))
-
-		Expect(spans[0].Name()).To(Equal("create_app_version"))
-		Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(appname)))
-		Expect(spans[0].Attributes()).To(ContainElement(common.AppVersion.String(appversion)))
-
-		Expect(spans[1].Name()).To(Equal("reconcile_app"))
-		Expect(spans[1].Attributes()).To(ContainElement(common.AppName.String(appname)))
-		Expect(spans[1].Attributes()).To(ContainElement(common.AppVersion.String(appversion)))
-
-		GinkgoWriter.Printf("The attributes are %v", spans[1].Attributes())
-	})
-})
+	Expect(k8sClient.Create(ctx, instance)).Should(Succeed())
+	return instance
+}

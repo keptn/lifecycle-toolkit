@@ -49,7 +49,8 @@ var (
 	testEnv      *envtest.Environment
 	ctx          context.Context
 	cancel       context.CancelFunc
-	spanRecorder *sdktest.SpanRecorder //clean me every test
+	spanRecorder *sdktest.SpanRecorder
+	tp           otelsdk.TracerProvider
 )
 
 func TestAPIs(t *testing.T) {
@@ -132,3 +133,9 @@ var _ = BeforeSuite(func() {
 	}()
 
 })
+
+func ResetSpanRecords() {
+	tp.UnregisterSpanProcessor(spanRecorder)
+	spanRecorder = sdktest.NewSpanRecorder()
+	tp.RegisterSpanProcessor(spanRecorder)
+}

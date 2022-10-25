@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
@@ -204,4 +205,32 @@ func (v KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
 		common.AppVersion.String(v.Spec.Version),
 		common.AppPreviousVersion.String(v.Spec.PreviousVersion),
 	}
+}
+
+func (v KeptnAppVersion) GetState() common.KeptnState {
+	return v.Status.Status
+}
+
+func (v *KeptnAppVersion) SetState(state common.KeptnState) {
+	v.Status.Status = state
+}
+
+func (v KeptnAppVersion) GetCurrentPhase() string {
+	return v.Status.CurrentPhase
+}
+
+func (v *KeptnAppVersion) SetCurrentPhase(phase string) {
+	v.Status.CurrentPhase = phase
+}
+
+func (v *KeptnAppVersion) Complete() {
+	v.SetEndTime()
+}
+
+func (v KeptnAppVersion) GetVersion() string {
+	return v.Spec.Version
+}
+
+func (v KeptnAppVersion) GetSpanName(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
 }

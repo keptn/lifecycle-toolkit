@@ -7,6 +7,7 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -126,7 +127,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			r.recordEvent(phase, "Normal", workloadInstance, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status))
+			controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), workloadInstance.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed

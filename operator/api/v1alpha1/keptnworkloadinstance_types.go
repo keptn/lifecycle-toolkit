@@ -242,3 +242,27 @@ func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyVal
 		common.WorkloadPreviousVersion.String(i.Spec.PreviousVersion),
 	}
 }
+
+func (i KeptnWorkloadInstance) GetState() common.KeptnState {
+	return i.Status.Status
+}
+
+func (i *KeptnWorkloadInstance) SetState(state common.KeptnState) {
+	i.Status.Status = state
+}
+
+func (i KeptnWorkloadInstance) GetCurrentPhase() string {
+	return i.Status.CurrentPhase
+}
+
+func (i *KeptnWorkloadInstance) SetCurrentPhase(phase string) {
+	i.Status.CurrentPhase = phase
+}
+
+func (i *KeptnWorkloadInstance) Complete() {
+	i.SetEndTime()
+}
+
+func (i KeptnWorkloadInstance) GetVersion() string {
+	return i.Spec.Version
+}

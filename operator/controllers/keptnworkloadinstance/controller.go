@@ -40,6 +40,7 @@ import (
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -101,17 +102,26 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	workloadInstance.SetStartTime()
 
+	defer func(span trace.Span, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) {
+		r.Log.Info("Increasing app count")
+		if workloadInstance.IsEndTimeSet() {
+			attrs := workloadInstance.GetMetricsAttributes()
+			r.Meters.AppCount.Add(ctx, 1, attrs...)
+		}
+		span.End()
+	}(span, workloadInstance)
+
 	//Wait for pre-evaluation checks of App
 	phase := common.PhaseAppPreEvaluation
 
 	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.recordEvent(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not fetch AppVersion for KeptnWorkloadInstance: %+v", err)
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
-		r.recordEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not find AppVersion for KeptnWorkloadInstance")
 	}
 
@@ -121,16 +131,23 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
-			r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed")
+			controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
 			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
 		}
-		r.recordEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished")
+		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 	}
 
 	//Wait for pre-deployment checks of Workload
 	phase = common.PhaseWorkloadPreDeployment
 	saveState := false
+
+	phaseHandler := controllercommon.PhaseHandler{
+		Client:   r.Client,
+		Recorder: r.Recorder,
+		Log:      r.Log,
+	}
+
 	//Set state to progressing if not already set
 	if workloadInstance.Status.PreDeploymentStatus == common.StatePending {
 		workloadInstance.Status.PreDeploymentStatus = common.StateProgressing
@@ -152,14 +169,17 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		ctxAppTrace, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
 		semconv.AddAttributeFromAppVersion(spanAppTrace, appVersion)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		r.recordEvent(phase, "Normal", workloadInstance, "Started", "have started")
+		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}
 
 	if !workloadInstance.IsPreDeploymentSucceeded() {
 		reconcilePre := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		}
-		return r.handlePhase(ctx, ctxAppTrace, workloadInstance, phase, span, workloadInstance.IsPreDeploymentFailed, reconcilePre)
+		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
+		if !result.Continue {
+			return result.Result, err
+		}
 	}
 
 	//Wait for pre-evaluation checks of Workload
@@ -176,7 +196,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(ctx, ctxAppTrace, workloadInstance, phase, span, workloadInstance.IsPreDeploymentEvaluationFailed, reconcilePreEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
+		if !result.Continue {
+			return result.Result, err
+		}
 	}
 
 	//Wait for deployment of Workload
@@ -192,7 +215,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
-		return r.handlePhase(ctx, ctxAppTrace, workloadInstance, phase, span, workloadInstance.IsDeploymentFailed, reconcileWorkloadInstance)
+		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
+		if !result.Continue {
+			return result.Result, err
+		}
 	}
 
 	//Wait for post-deployment checks of Workload
@@ -208,7 +234,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
-		return r.handlePhase(ctx, ctxAppTrace, workloadInstance, phase, span, workloadInstance.IsPostDeploymentFailed, reconcilePostDeployment)
+		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
+		if !result.Continue {
+			return result.Result, err
+		}
 	}
 
 	//Wait for post-evaluation checks of Workload
@@ -224,7 +253,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(ctx, ctxAppTrace, workloadInstance, phase, span, workloadInstance.IsPostDeploymentEvaluationFailed, reconcilePostEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
+		if !result.Continue {
+			return result.Result, err
+		}
 	}
 
 	// WorkloadInstance is completed at this place
@@ -242,15 +274,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	attrs := workloadInstance.GetMetricsAttributes()
 
-	r.Log.Info("Increasing deployment count")
-	// metrics: increment deployment counter
-	r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
-
 	// metrics: add deployment duration
 	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
-	r.recordEvent(phase, "Normal", workloadInstance, "Finished", "is finished")
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 
 	return ctrl.Result{}, nil
 }
@@ -278,68 +306,6 @@ func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Conte
 	return res, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
-	r.Log.Info(phase.LongName + " not finished")
-	overallStateUpdated := false
-	oldstate := workloadInstance.Status.Status
-	oldPhase := workloadInstance.Status.CurrentPhase
-	workloadInstance.Status.CurrentPhase = phase.ShortName
-
-	ctxAppTrace, spanAppTrace := r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
-
-	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
-		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
-		return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
-	}
-	state, err := reconcilePhase()
-	if err != nil {
-		spanAppTrace.AddEvent(phase.LongName + " could not get reconciled")
-		r.recordEvent(phase, "Warning", workloadInstance, "ReconcileErrored", "could not get reconciled")
-		span.SetStatus(codes.Error, err.Error())
-		return ctrl.Result{Requeue: true}, err
-	}
-	if state.IsSucceeded() {
-		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
-		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
-		spanAppTrace.End()
-		r.unbindSpan(workloadInstance, phase.ShortName)
-		r.recordEvent(phase, "Normal", workloadInstance, "Succeeded", "has succeeded")
-	} else if state.IsFailed() {
-		r.recordEvent(phase, "Warning", workloadInstance, "Failed", "has failed")
-		workloadInstance.Status.Status = common.StateFailed
-		workloadInstance.SetEndTime()
-
-		attrs := workloadInstance.GetMetricsAttributes()
-		r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
-
-		spanAppTrace.AddEvent(phase.LongName + " has failed")
-		spanAppTrace.SetStatus(codes.Error, "Failed")
-		spanAppTrace.End()
-		r.unbindSpan(workloadInstance, phase.ShortName)
-
-		overallStateUpdated = true
-	} else {
-		if oldstate != common.StateProgressing {
-			workloadInstance.Status.Status = common.StateProgressing
-			overallStateUpdated = true
-		}
-		spanAppTrace.AddEvent(phase.LongName + " not finished")
-		r.recordEvent(phase, "Warning", workloadInstance, "NotFinished", "has not finished")
-	}
-	if oldPhase != workloadInstance.Status.CurrentPhase {
-		ctxAppTrace, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, workloadInstance.Status.CurrentPhase)
-		semconv.AddAttributeFromWorkloadInstance(spanAppTrace, *workloadInstance)
-		overallStateUpdated = true
-	}
-
-	if overallStateUpdated {
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			r.Log.Error(err, "could not update status")
-		}
-	}
-	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
-}
-
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
@@ -351,10 +317,6 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
 	uid := uuid.New().String()
 	return uid[:10]
-}
-
-func (r *KeptnWorkloadInstanceReconciler) recordEvent(phase common.KeptnPhaseType, eventType string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, shortReason string, longReason string) {
-	r.Recorder.Event(workloadInstance, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, workloadInstance.Namespace, workloadInstance.Name, workloadInstance.Spec.Version))
 }
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {

@@ -32,7 +32,7 @@ Keptn Lifecycle Controller:
 
 ### References
 
-- TODO: Overview slidedeck
+- [Overview slidedeck](https://docs.google.com/presentation/d/1satTEbjIoCZXLyx40i-IdV3hWd8ctnMz/edit?usp=sharing&ouid=104704987056219028407&rtpof=true&sd=true)
 - [Keptn Lifecycle Controller v0.1.0 Demo - October 2022](https://www.youtube.com/watch?v=mQtUrlyPi44&list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ&index=2) - 
   First demo and walkthrough by Thomas Schuetz
 - [YouTube Playlist](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ) - 

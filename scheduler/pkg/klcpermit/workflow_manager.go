@@ -79,7 +79,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	ctx, span := sMgr.getSpan(ctx, crd, pod)
 
 	//check CRD status
-	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentStatus")
+	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")
 	klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
 		span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))

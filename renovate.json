@@ -4,8 +4,7 @@
     "config:base",
     ":gitSignOff",
     "schedule:nonOfficeHours",
-    ":semanticCommitTypeAll(build)",
-    ":semanticCommitScope(deps)",
+    ":semanticCommitTypeAll(deps)",
     "group:monorepos",
     ":automergePatch"
   ],

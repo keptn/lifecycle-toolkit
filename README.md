@@ -30,13 +30,6 @@ Keptn Lifecycle Controller:
   Scripts could shared 
 - Later: allows handling of Kubernetes events, e.g. Deployments once implemented by the [Keptn App Lifecycle working group](https://github.com/keptn/wg-app-lifecycle) or CloudEvents
 
-### Implementation
-
-Keptn Lifecycle Controller has an operator architecture, managed in a GitOps way.
-
-TODO: Add Diagram
-<!-- https://docs.google.com/presentation/d/1satTEbjIoCZXLyx40i-IdV3hWd8ctnMz/edit#slide=id.g161f27e139b_0_0 -->
-
 ### References
 
 - TODO: Overview slidedeck

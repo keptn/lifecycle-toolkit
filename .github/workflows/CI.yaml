@@ -53,7 +53,7 @@ jobs:
         env:
           NON_FORKED_AND_NON_ROBOT_RUN: ${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
         run:
-          echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT
+          echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   compile:
     name: Compile

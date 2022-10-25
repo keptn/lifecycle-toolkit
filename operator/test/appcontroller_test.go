@@ -23,9 +23,12 @@ var _ = Describe("KeptnAppController", func() {
 		namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
 		version = "1.0.0"
 	})
+	AfterEach(ResetSpanRecords) //you must clean up spans each time
+
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
-			instance *klcv1alpha1.KeptnApp
+			instance   *klcv1alpha1.KeptnApp
+			appVersion *klcv1alpha1.KeptnAppVersion
 		)
 		Context("with one App", func() {
 			BeforeEach(func() {
@@ -34,14 +37,14 @@ var _ = Describe("KeptnAppController", func() {
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
 				deleteAppInCluster(instance)
+				deleteAppVersionInCluster(appVersion)
 			})
 			It("should update the status of the CR", func() {
-				appVersion := assertResourceUpdated(instance)
-				deleteAppVersionInCluster(appVersion)
+				appVersion = assertResourceUpdated(instance)
 			})
 		})
 	})
-	AfterEach(ResetSpanRecords) //you must clean up spans each time
+
 })
 
 func deleteAppVersionInCluster(version *klcv1alpha1.KeptnAppVersion) {

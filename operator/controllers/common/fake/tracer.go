@@ -43,6 +43,11 @@ type ITracerMock struct {
 	lockStart *sync.RWMutex
 }
 
+func NewMockTracer(startFunc func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span)) ITracerMock {
+	lockStart := sync.RWMutex{}
+	return ITracerMock{StartFunc: startFunc, lockStart: &lockStart}
+}
+
 // Start calls StartFunc.
 func (mock ITracerMock) Start(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 	if mock.StartFunc == nil {

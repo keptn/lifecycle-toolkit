@@ -10,7 +10,6 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
 	"testing"
 )
 
@@ -35,11 +34,9 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := fake.ITracerMock{
-		StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-			return ctx, trace.SpanFromContext(ctx)
-		},
-	}
+	tr := fake.NewMockTracer(func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	})
 
 	//add keptn lfc scheme to k8sdefault
 	setupScheme(t)

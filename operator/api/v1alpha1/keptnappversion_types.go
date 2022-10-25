@@ -197,3 +197,11 @@ func (v KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
 		common.AppStatus.String(string(v.Status.Status)),
 	}
 }
+
+func (v KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.AppPreviousVersion.String(v.Spec.PreviousVersion),
+	}
+}

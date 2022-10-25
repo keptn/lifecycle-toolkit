@@ -122,20 +122,22 @@ type KeptnMeters struct {
 }
 
 const (
-	AppName           attribute.Key = attribute.Key("keptn.deployment.app.name")
-	AppVersion        attribute.Key = attribute.Key("keptn.deployment.app.version")
-	AppNamespace      attribute.Key = attribute.Key("keptn.deployment.app.namespace")
-	AppStatus         attribute.Key = attribute.Key("keptn.deployment.app.status")
-	WorkloadName      attribute.Key = attribute.Key("keptn.deployment.workload.name")
-	WorkloadVersion   attribute.Key = attribute.Key("keptn.deployment.workload.version")
-	WorkloadNamespace attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
-	WorkloadStatus    attribute.Key = attribute.Key("keptn.deployment.workload.status")
-	TaskStatus        attribute.Key = attribute.Key("keptn.deployment.task.status")
-	TaskName          attribute.Key = attribute.Key("keptn.deployment.task.name")
-	TaskType          attribute.Key = attribute.Key("keptn.deployment.task.type")
-	EvaluationStatus  attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
-	EvaluationName    attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
-	EvaluationType    attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
+	AppName                 attribute.Key = attribute.Key("keptn.deployment.app.name")
+	AppVersion              attribute.Key = attribute.Key("keptn.deployment.app.version")
+	AppNamespace            attribute.Key = attribute.Key("keptn.deployment.app.namespace")
+	AppStatus               attribute.Key = attribute.Key("keptn.deployment.app.status")
+	AppPreviousVersion      attribute.Key = attribute.Key("keptn.deployment.app.previousversion")
+	WorkloadName            attribute.Key = attribute.Key("keptn.deployment.workload.name")
+	WorkloadVersion         attribute.Key = attribute.Key("keptn.deployment.workload.version")
+	WorkloadPreviousVersion attribute.Key = attribute.Key("keptn.deployment.workload.previousversion")
+	WorkloadNamespace       attribute.Key = attribute.Key("keptn.deployment.workload.namespace")
+	WorkloadStatus          attribute.Key = attribute.Key("keptn.deployment.workload.status")
+	TaskStatus              attribute.Key = attribute.Key("keptn.deployment.task.status")
+	TaskName                attribute.Key = attribute.Key("keptn.deployment.task.name")
+	TaskType                attribute.Key = attribute.Key("keptn.deployment.task.type")
+	EvaluationStatus        attribute.Key = attribute.Key("keptn.deployment.evaluation.status")
+	EvaluationName          attribute.Key = attribute.Key("keptn.deployment.evaluation.name")
+	EvaluationType          attribute.Key = attribute.Key("keptn.deployment.evaluation.type")
 )
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
@@ -150,5 +152,10 @@ func GenerateEvaluationName(checkType CheckType, evalName string) string {
 
 type GaugeValue struct {
 	Value      int64
+	Attributes []attribute.KeyValue
+}
+
+type GaugeFloatValue struct {
+	Value      float64
 	Attributes []attribute.KeyValue
 }

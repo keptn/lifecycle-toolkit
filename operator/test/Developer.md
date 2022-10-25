@@ -1,9 +1,15 @@
 # Integration tests
 This test suite can run test verifying multiple Controllers
 
-### Running on your cluster
-1. 
+### Running on envtest cluster
 
+cd to operator folder, run 
+```make test```
+Make test is the one-stop shop for downloading the binaries, setting up the test environment, and running the tests.
+
+If you would like to run the generated bin for apiserver etcd etc. from your IDE copy them to the default path "/usr/local/kubebuilder/bin"
+This way the default test setup will pick them up without specifying any ENVVAR.
+For more info on kubebuilder envtest or to set up a real cluster behind the test have a look [here](https://book.kubebuilder.io/reference/envtest.html)
 
 ## Contributing
 
@@ -21,42 +27,42 @@ After that the k8s API from kubebuilder will handle its CRD
 
 Each Ginkgo test should be structured following the [spec bestpractices](https://onsi.github.io/ginkgo/#writing-specs)
 
-As a minimum example a test could be
-
+As a minimum example a test could be:
+```
 var _ = Describe("KeptnAppController", func() {
-var (
-name      string
-namespace string
-version   string
-)
-BeforeEach(func() { // list var here
-name = "test-app"
-namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
-version = "1.0.0"
-})
-AfterEach(ResetSpanRecords) //you must clean up spans each time
-
-	Describe("Creation of AppVersion from a new App", func() {
-		var (
-			instance *klcv1alpha1.KeptnApp
-		)
-		Context("with one App", func() {
-			BeforeEach(func() {
-				instance = createInstanceInCluster(name, namespace, version, instance)
-			})
-			AfterEach(func() {
-				deleteAppInCluster(instance)
-			})
-			It("should update the status of the CR", func() {
-				assertResourceUpdated(instance)	
-			})
-		})
-	})
+    var ( //setup needed var
+    name      string
+    )
+    BeforeEach(func() { // init them
+    name = "test-app"
+    })
+    AfterEach(ResetSpanRecords) //you must clean up spans each time 
+    
+        Describe("Creation of AppVersion from a new App", func() {
+            var (
+                instance   *klcv1alpha1.KeptnApp // declare CRD
+            )
+            Context("with one App", func() {
+                BeforeEach(func() {  
+                //create it using the client eg. Expect(k8sClient.Create(ctx, instance)).Should(Succeed())
+                    instance = createInstanceInCluster(name, namespace, version, instance)
+                })
+                AfterEach(func() {
+                    // Remember to clean up the cluster after each test
+                    deleteAppInCluster(instance)
+                })
+                It("should update the status of the CR", func() {
+                    assertResourceUpdated(instance)
+                })
+            })
+        })
 
 })
+```
 
 
+## Contributing Best Practice
 
-### How it works
-
-
+1. Keep in mind to clean up after each test
+2. Namespaces do not get cleaned up by kubebuilder testenv so be careful on that
+3. Make sure not to mik up gomega patter with other assertion packages

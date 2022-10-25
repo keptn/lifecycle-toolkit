@@ -44,11 +44,12 @@ import (
 // KeptnAppVersionReconciler reconciles a KeptnAppVersion object
 type KeptnAppVersionReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Log      logr.Logger
-	Recorder record.EventRecorder
-	Tracer   trace.Tracer
-	Meters   common.KeptnMeters
+	Scheme      *runtime.Scheme
+	Log         logr.Logger
+	Recorder    record.EventRecorder
+	Tracer      trace.Tracer
+	Meters      common.KeptnMeters
+	bindCRDSpan map[string]trace.Span
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -85,6 +86,9 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
+	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
+	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
 	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
@@ -93,6 +97,12 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	phase := common.PhaseAppPreDeployment
 
 	if appVersion.Status.CurrentPhase == "" {
+		r.unbindSpan(appVersion, phase.ShortName)
+		var spanAppTrace trace.Span
+		ctxAppTrace, spanAppTrace = r.getSpan(ctxAppTrace, appVersion, phase.ShortName)
+
+		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
+		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		r.recordEvent(phase, "Normal", appVersion, "Started", "have started")
 	}
 
@@ -100,7 +110,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePreDep := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, appVersion, common.PreDeploymentCheckType)
 		}
-		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPreDeploymentFailed, reconcilePreDep)
+		return r.handlePhase(ctx, ctxAppTrace, appVersion, phase, span, appVersion.IsPreDeploymentFailed, reconcilePreDep)
 	}
 
 	phase = common.PhaseAppPreEvaluation
@@ -108,7 +118,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PreDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPreDeploymentEvaluationFailed, reconcilePreEval)
+		return r.handlePhase(ctx, ctxAppTrace, appVersion, phase, span, appVersion.IsPreDeploymentEvaluationFailed, reconcilePreEval)
 	}
 
 	phase = common.PhaseAppDeployment
@@ -116,7 +126,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcileAppDep := func() (common.KeptnState, error) {
 			return r.reconcileWorkloads(ctx, appVersion)
 		}
-		return r.handlePhase(ctx, appVersion, phase, span, appVersion.AreWorkloadsFailed, reconcileAppDep)
+		return r.handlePhase(ctx, ctxAppTrace, appVersion, phase, span, appVersion.AreWorkloadsFailed, reconcileAppDep)
 
 	}
 
@@ -125,7 +135,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePostDep := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, appVersion, common.PostDeploymentCheckType)
 		}
-		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPostDeploymentFailed, reconcilePostDep)
+		return r.handlePhase(ctx, ctxAppTrace, appVersion, phase, span, appVersion.IsPostDeploymentFailed, reconcilePostDep)
 	}
 
 	phase = common.PhaseAppPostEvaluation
@@ -133,7 +143,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PostDeploymentEvaluationCheckType)
 		}
-		return r.handlePhase(ctx, appVersion, phase, span, appVersion.IsPostDeploymentEvaluationFailed, reconcilePostEval)
+		return r.handlePhase(ctx, ctxAppTrace, appVersion, phase, span, appVersion.IsPostDeploymentEvaluationFailed, reconcilePostEval)
 	}
 
 	r.recordEvent(phase, "Normal", appVersion, "Finished", "is finished")
@@ -180,13 +190,15 @@ func (r *KeptnAppVersionReconciler) recordEvent(phase common.KeptnPhaseType, eve
 	r.Recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, appVersion.Namespace, appVersion.Name, appVersion.Spec.Version))
 }
 
-func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
+func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, ctxAppTrace context.Context, appVersion *klcv1alpha1.KeptnAppVersion, phase common.KeptnPhaseType, span trace.Span, phaseFailed func() bool, reconcilePhase func() (common.KeptnState, error)) (ctrl.Result, error) {
 
 	oldStatus := appVersion.Status.Status
 	newStatus := oldStatus
 	statusUpdated := false
 
 	r.Log.Info(phase.LongName + " not finished")
+	ctxAppTrace, spanAppTrace := r.getSpan(ctxAppTrace, appVersion, phase.ShortName)
+
 	oldPhase := appVersion.Status.CurrentPhase
 	appVersion.Status.CurrentPhase = phase.ShortName
 	if phaseFailed() { //TODO eventually we should decide whether a task returns FAILED, currently we never have this status set
@@ -195,12 +207,17 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 	}
 	state, err := reconcilePhase()
 	if err != nil {
+		spanAppTrace.AddEvent(phase.LongName + " could not get reconciled")
 		r.recordEvent(phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 	if state.IsSucceeded() {
 		newStatus = common.StateSucceeded
+		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
+		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
+		spanAppTrace.End()
+		r.unbindSpan(appVersion, phase.ShortName)
 		r.recordEvent(phase, "Normal", appVersion, "Succeeded", "has succeeded")
 	} else if state.IsFailed() {
 
@@ -209,6 +226,12 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 		r.Meters.AppCount.Add(ctx, 1, attrs...)
 
 		newStatus = common.StateFailed
+
+		spanAppTrace.AddEvent(phase.LongName + " has failed")
+		spanAppTrace.SetStatus(codes.Error, "Failed")
+		spanAppTrace.End()
+		r.unbindSpan(appVersion, phase.ShortName)
+
 		r.recordEvent(phase, "Warning", appVersion, "Failed", "has failed")
 	} else {
 		newStatus = common.StateProgressing
@@ -217,6 +240,8 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 
 	// check if status changed
 	if oldPhase != appVersion.Status.CurrentPhase {
+		ctx, spanAppTrace = r.getSpan(ctxAppTrace, appVersion, appVersion.Status.CurrentPhase)
+		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
 		statusUpdated = true
 	}
 	if oldStatus != newStatus {
@@ -230,6 +255,28 @@ func (r *KeptnAppVersionReconciler) handlePhase(ctx context.Context, appVersion 
 		}
 	}
 	return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, nil
+}
+
+func (r *KeptnAppVersionReconciler) getSpanName(appv *klcv1alpha1.KeptnAppVersion, phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", appv.Spec.TraceId, appv.Spec.AppName, appv.Spec.Version, phase)
+}
+
+func (r *KeptnAppVersionReconciler) getSpan(ctx context.Context, appv *klcv1alpha1.KeptnAppVersion, phase string) (context.Context, trace.Span) {
+	appvName := r.getSpanName(appv, phase)
+	if r.bindCRDSpan == nil {
+		r.bindCRDSpan = make(map[string]trace.Span)
+	}
+	if span, ok := r.bindCRDSpan[appvName]; ok {
+		return ctx, span
+	}
+	ctx, span := r.Tracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
+	r.Log.Info("DEBUG: Created span " + appvName)
+	r.bindCRDSpan[appvName] = span
+	return ctx, span
+}
+
+func (r *KeptnAppVersionReconciler) unbindSpan(appv *klcv1alpha1.KeptnAppVersion, phase string) {
+	delete(r.bindCRDSpan, r.getSpanName(appv, phase))
 }
 
 func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common.GaugeValue, error) {

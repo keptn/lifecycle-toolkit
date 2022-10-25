@@ -135,12 +135,18 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
+	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, "appversion_deployment", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	defer spanAppTrace.End()
+
 	semconv.AddAttributeFromApp(span, *app)
+	semconv.AddAttributeFromApp(spanAppTrace, *app)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+	appTraceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctxAppTrace, appTraceContextCarrier)
 
 	previousVersion := ""
 	if app.Spec.Version != app.Status.CurrentVersion {
@@ -157,6 +163,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 			KeptnAppSpec:    app.Spec,
 			AppName:         app.Name,
 			PreviousVersion: previousVersion,
+			TraceId:         appTraceContextCarrier,
 		},
 	}
 	err := controllerutil.SetControllerReference(app, appVersion, r.Scheme)

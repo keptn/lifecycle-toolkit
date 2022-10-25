@@ -72,7 +72,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ghcr.io/keptn-sandbox/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
+            ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}

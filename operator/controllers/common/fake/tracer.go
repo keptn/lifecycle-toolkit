@@ -9,18 +9,18 @@ import (
 	"sync"
 )
 
-// ITracerMock is a mock implementation of keptnapp.ITracer.
+// ITracerMock is a mock implementation of common.ITracer.
 //
 // 	func TestSomethingThatUsesITracer(t *testing.T) {
 //
-// 		// make and configure a mocked keptnapp.ITracer
+// 		// make and configure a mocked common.ITracer
 // 		mockedITracer := &ITracerMock{
 // 			StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 // 				panic("mock out the Start method")
 // 			},
 // 		}
 //
-// 		// use mockedITracer in code that requires keptnapp.ITracer
+// 		// use mockedITracer in code that requires common.ITracer
 // 		// and then make assertions.
 //
 // 	}
@@ -40,7 +40,7 @@ type ITracerMock struct {
 			Opts []trace.SpanStartOption
 		}
 	}
-	lockStart sync.RWMutex
+	lockStart *sync.RWMutex
 }
 
 // Start calls StartFunc.

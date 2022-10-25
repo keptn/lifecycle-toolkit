@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-// clean example of E2E test --
+// clean example of E2E test/ integration test --
 // App controller creates AppVersion when a new App CRD is added
 // span for creation and reconcile are correct
 var _ = Describe("KeptnAppController", func() {
@@ -18,7 +18,7 @@ var _ = Describe("KeptnAppController", func() {
 		namespace string
 		version   string
 	)
-	BeforeEach(func() {
+	BeforeEach(func() { // list var here
 		name = "test-app"
 		namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
 		version = "1.0.0"

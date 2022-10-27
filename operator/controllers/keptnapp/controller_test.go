@@ -31,25 +31,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 		},
 		Status: lifecyclev1alpha1.KeptnAppStatus{},
 	}
-	//setup logger
-	opts := zap.Options{
-		Development: true,
-	}
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-
-	//fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
-	//add keptn lfc scheme to k8sdefault
-	setupScheme(t)
-
-	r := &KeptnAppReconciler{
-		Log:    ctrl.Log.WithName("test-appController"),
-		Tracer: tr,
-		Scheme: scheme.Scheme,
-	}
+	r, _, _ := setupReconciler(t)
 
 	appVersion, err := r.createAppVersion(context.TODO(), app)
 	if err != nil {
@@ -61,23 +43,15 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 }
 
-func setupScheme(t *testing.T) {
-	err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		t.Fatalf("Could not set scheme %s", err.Error())
-	}
-}
-
 func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 
-	r, eventChannel := setupReconciler(t)
+	r, eventChannel, tracer := setupReconciler(t)
 
 	tests := []struct {
 		name    string
 		req     ctrl.Request
-		want    ctrl.Result
 		wantErr error
-		event   string
+		event   string //check correct events are generated
 	}{
 		{
 			name: "test simple create appVersion",
@@ -87,7 +61,6 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 					Name:      "myapp",
 				},
 			},
-			want:    ctrl.Result{},
 			wantErr: nil,
 			event:   `Normal AppVersionCreated Created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0`,
 		},
@@ -99,7 +72,6 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 					Name:      "mynotthereapp",
 				},
 			},
-			want:    ctrl.Result{},
 			wantErr: nil,
 		},
 		{
@@ -110,7 +82,6 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 					Name:      "myfinishedapp",
 				},
 			},
-			want:    ctrl.Result{},
 			wantErr: nil,
 		},
 	}
@@ -124,23 +95,31 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			got, err := r.Reconcile(context.TODO(), tt.req)
+			_, err := r.Reconcile(context.TODO(), tt.req)
 			if !reflect.DeepEqual(err, tt.wantErr) {
 				t.Errorf("Reconcile() error = %v, wantErr %v", err, tt.wantErr)
 				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
 			}
 			if tt.event != "" {
 				event := <-eventChannel
 				assert.Matches(t, event, tt.event)
 			}
+
 		})
+
 	}
+
+	// check correct traces
+	assert.Equal(t, len(tracer.StartCalls()), 3)
+	// case 1 reconcile and create app ver
+	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
+	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
+	//case 2 creates no span because notfound
+	//case 3 reconcile finished crd
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "reconcile_app")
 }
 
-func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string) {
+func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -165,7 +144,7 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string) {
 		Log:      ctrl.Log.WithName("test-appController"),
 		Tracer:   tr,
 	}
-	return r, recorder.Events
+	return r, recorder.Events, tr
 }
 
 func addApp(r *KeptnAppReconciler, name string) error {

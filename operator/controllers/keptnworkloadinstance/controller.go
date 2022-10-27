@@ -142,8 +142,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for pre-deployment checks of Workload
 	phase = common.PhaseWorkloadPreDeployment
-	saveState := false
-
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -151,21 +149,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		SpanHandler: r.SpanHandler,
 	}
 
-	//Set state to progressing if not already set
-	if workloadInstance.Status.PreDeploymentStatus == common.StatePending {
-		workloadInstance.Status.PreDeploymentStatus = common.StateProgressing
-		saveState = true
-	}
 	// set the App trace id if not already set
 	if len(workloadInstance.Spec.TraceId) < 1 {
 		workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
-		saveState = true
-	}
-	if saveState {
 		if err := r.Update(ctx, workloadInstance); err != nil {
 			return ctrl.Result{}, err
 		}
 	}
+
 	if workloadInstance.Status.CurrentPhase == "" {
 		if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
 			r.Log.Error(err, "cannot unbind span")
@@ -192,14 +183,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for pre-evaluation checks of Workload
 	phase = common.PhaseAppPreEvaluation
-
-	//Set state to progressing if not already set
-	if workloadInstance.Status.PreDeploymentEvaluationStatus == common.StatePending {
-		workloadInstance.Status.PreDeploymentEvaluationStatus = common.StateProgressing
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
-	}
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
@@ -212,13 +195,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
-	//Set state to progressing if not already set
-	if workloadInstance.Status.DeploymentStatus == common.StatePending {
-		workloadInstance.Status.DeploymentStatus = common.StateProgressing
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
-	}
 	if !workloadInstance.IsDeploymentSucceeded() {
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
@@ -231,13 +207,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for post-deployment checks of Workload
 	phase = common.PhaseWorkloadPostDeployment
-	//Set state to progressing if not already set
-	if workloadInstance.Status.PostDeploymentStatus == common.StatePending {
-		workloadInstance.Status.PostDeploymentStatus = common.StateProgressing
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
-	}
 	if !workloadInstance.IsPostDeploymentSucceeded() {
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
@@ -250,13 +219,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	//Wait for post-evaluation checks of Workload
 	phase = common.PhaseAppPostEvaluation
-	//Set state to progressing if not already set
-	if workloadInstance.Status.PostDeploymentStatus == common.StatePending {
-		workloadInstance.Status.PostDeploymentStatus = common.StateProgressing
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
-	}
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)

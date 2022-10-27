@@ -147,7 +147,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if common.GetOverallState(statusSummary) == common.StateSucceeded {
 			evaluation.Status.OverallStatus = common.StateSucceeded
 		} else {
-			evaluation.Status.OverallStatus = common.StatePending
+			evaluation.Status.OverallStatus = common.StateProgressing
 		}
 
 	}

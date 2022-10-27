@@ -54,6 +54,10 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
 
+	if state.IsPending() {
+		state = common.StateProgressing
+	}
+
 	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
 		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {

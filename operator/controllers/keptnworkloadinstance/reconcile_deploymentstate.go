@@ -2,6 +2,7 @@ package keptnworkloadinstance
 
 import (
 	"context"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	appsv1 "k8s.io/api/apps/v1"

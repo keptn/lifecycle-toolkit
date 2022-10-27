@@ -49,10 +49,11 @@ import (
 type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
-	Log      logr.Logger
-	Recorder record.EventRecorder
-	Tracer   trace.Tracer
-	Meters   common.KeptnMeters
+	Log         logr.Logger
+	Recorder    record.EventRecorder
+	Tracer      trace.Tracer
+	Meters      common.KeptnMeters
+	SpanHandler controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -108,15 +109,18 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	phase := common.PhaseAppPreDeployment
 
 	phaseHandler := controllercommon.PhaseHandler{
-		Client:   r.Client,
-		Recorder: r.Recorder,
-		Log:      r.Log,
+		Client:      r.Client,
+		Recorder:    r.Recorder,
+		Log:         r.Log,
+		SpanHandler: r.SpanHandler,
 	}
 
 	if appVersion.Status.CurrentPhase == "" {
-		phaseHandler.UnbindSpan(appVersion, phase.ShortName)
+		if err := r.SpanHandler.UnbindSpan(appVersion, phase.ShortName); err != nil {
+			r.Log.Error(err, "cannot unbind span")
+		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace = phaseHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
+		ctxAppTrace, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
 
 		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))

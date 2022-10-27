@@ -54,7 +54,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Log         logr.Logger
 	Meters      common.KeptnMeters
 	Tracer      trace.Tracer
-	bindCRDSpan map[string]trace.Span
+	SpanHandler controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -143,9 +143,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	saveState := false
 
 	phaseHandler := controllercommon.PhaseHandler{
-		Client:   r.Client,
-		Recorder: r.Recorder,
-		Log:      r.Log,
+		Client:      r.Client,
+		Recorder:    r.Recorder,
+		Log:         r.Log,
+		SpanHandler: r.SpanHandler,
 	}
 
 	//Set state to progressing if not already set
@@ -164,9 +165,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 	if appVersion.Status.CurrentPhase == "" {
-		r.unbindSpan(workloadInstance, phase.ShortName)
+		if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
+			r.Log.Error(err, "cannot unbind span")
+		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace = r.getSpan(ctxAppTrace, workloadInstance, phase.ShortName)
+		ctxAppTrace, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, phase.ShortName)
 		semconv.AddAttributeFromAppVersion(spanAppTrace, appVersion)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
@@ -363,30 +366,6 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha1.KeptnAppVersion{}, nil
 	}
 	return true, latestVersion, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) getSpan(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance, phase string) (context.Context, trace.Span) {
-	wliName := r.getSpanName(wli, phase)
-	spanName := fmt.Sprintf("%s/%s", wli.Spec.WorkloadName, phase)
-
-	if r.bindCRDSpan == nil {
-		r.bindCRDSpan = make(map[string]trace.Span)
-	}
-	if span, ok := r.bindCRDSpan[wliName]; ok {
-		return ctx, span
-	}
-	r.Log.Info("DEBUG: Start Span: " + wliName)
-	ctx, span := r.Tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
-	r.bindCRDSpan[wliName] = span
-	return ctx, span
-}
-
-func (r *KeptnWorkloadInstanceReconciler) unbindSpan(wli *klcv1alpha1.KeptnWorkloadInstance, phase string) {
-	delete(r.bindCRDSpan, r.getSpanName(wli, phase))
-}
-
-func (r *KeptnWorkloadInstanceReconciler) getSpanName(wli *klcv1alpha1.KeptnWorkloadInstance, phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s.%s", wli.Spec.TraceId, wli.Spec.AppName, wli.Spec.WorkloadName, wli.Spec.Version, phase)
 }
 
 func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {

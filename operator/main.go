@@ -50,6 +50,8 @@ import (
 	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
+
 	"os"
 
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -251,6 +253,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	spanHandler := controllercommon.SpanHandler{}
+
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{
 			Handler: &webhooks.PodMutatingWebhook{
@@ -309,12 +313,13 @@ func main() {
 	}
 
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:   meters,
-		Tracer:   otel.Tracer("keptn/operator/workloadinstance"),
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder:    mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:      meters,
+		Tracer:      otel.Tracer("keptn/operator/workloadinstance"),
+		SpanHandler: spanHandler,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
@@ -322,12 +327,13 @@ func main() {
 	}
 
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:   otel.Tracer("keptn/operator/appversion"),
-		Meters:   meters,
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder:    mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:      otel.Tracer("keptn/operator/appversion"),
+		Meters:      meters,
+		SpanHandler: spanHandler,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

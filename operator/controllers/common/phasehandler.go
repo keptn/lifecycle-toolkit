@@ -18,7 +18,7 @@ type PhaseHandler struct {
 	client.Client
 	Recorder    record.EventRecorder
 	Log         logr.Logger
-	bindCRDSpan map[string]trace.Span
+	SpanHandler SpanHandler
 }
 
 type PhaseResult struct {
@@ -26,12 +26,12 @@ type PhaseResult struct {
 	ctrl.Result
 }
 
-func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eventType string, appVersion client.Object, shortReason string, longReason string, version string) {
-	recorder.Event(appVersion, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, appVersion.GetNamespace(), appVersion.GetName(), version))
+func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
+	recorder.Event(reconcileObject, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version))
 }
 
-func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Context, tracer trace.Tracer, appVersion client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func() (common.KeptnState, error)) (*PhaseResult, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appVersion)
+func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func() (common.KeptnState, error)) (*PhaseResult, error) {
+	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, err
 	}
@@ -40,25 +40,25 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	piWrapper.SetCurrentPhase(phase.ShortName)
 
 	r.Log.Info(phase.LongName + " not finished")
-	ctxAppTrace, spanAppTrace := r.GetSpan(ctxAppTrace, tracer, appVersion, phase.ShortName)
+	ctxAppTrace, spanAppTrace := r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, phase.ShortName)
 
 	state, err := reconcilePhase()
 	if err != nil {
 		spanAppTrace.AddEvent(phase.LongName + " could not get reconciled")
-		RecordEvent(r.Recorder, phase, "Warning", appVersion, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
+		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
 		span.SetStatus(codes.Error, err.Error())
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, err
 	}
 
-	defer func(oldStatus common.KeptnState, oldPhase string, appVersion client.Object) {
-		piWrapper, _ := NewPhaseItemWrapperFromClientObject(appVersion)
+	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
+		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {
-			ctx, spanAppTrace = r.GetSpan(ctxAppTrace, tracer, appVersion, piWrapper.GetCurrentPhase())
-			if err := r.Status().Update(ctx, appVersion); err != nil {
+			ctx, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
+			if err := r.Status().Update(ctx, reconcileObject); err != nil {
 				r.Log.Error(err, "could not update status")
 			}
 		}
-	}(oldStatus, oldPhase, appVersion)
+	}(oldStatus, oldPhase, reconcileObject)
 
 	if state.IsCompleted() {
 		if state.IsFailed() {
@@ -67,8 +67,10 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 			spanAppTrace.AddEvent(phase.LongName + " has failed")
 			spanAppTrace.SetStatus(codes.Error, "Failed")
 			spanAppTrace.End()
-			r.UnbindSpan(appVersion, phase.ShortName)
-			RecordEvent(r.Recorder, phase, "Warning", appVersion, "Failed", "has failed", piWrapper.GetVersion())
+			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
+				r.Log.Error(err, "cannot unbind span")
+			}
+			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
 			return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 		}
 
@@ -76,40 +78,16 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
 		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
 		spanAppTrace.End()
-		r.UnbindSpan(appVersion, phase.ShortName)
-		RecordEvent(r.Recorder, phase, "Normal", appVersion, "Succeeded", "has succeeded", piWrapper.GetVersion())
+		if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
+			r.Log.Error(err, "cannot unbind span")
+		}
+		RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
 
 		return &PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
 	}
 
 	piWrapper.SetState(common.StateProgressing)
-	RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFinished", "has not finished", piWrapper.GetVersion())
+	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}}, nil
-}
-
-func (r PhaseHandler) GetSpan(ctx context.Context, tracer trace.Tracer, appv client.Object, phase string) (context.Context, trace.Span) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appv)
-	if err != nil {
-		return nil, nil
-	}
-	appvName := piWrapper.GetSpanName(phase)
-	if r.bindCRDSpan == nil {
-		r.bindCRDSpan = make(map[string]trace.Span)
-	}
-	if span, ok := r.bindCRDSpan[appvName]; ok {
-		return ctx, span
-	}
-	ctx, span := tracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
-	r.Log.Info("DEBUG: Created span " + appvName)
-	r.bindCRDSpan[appvName] = span
-	return ctx, span
-}
-
-func (r PhaseHandler) UnbindSpan(appv client.Object, phase string) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appv)
-	if err != nil {
-		return
-	}
-	delete(r.bindCRDSpan, piWrapper.GetSpanName(phase))
 }

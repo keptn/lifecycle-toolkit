@@ -1,4 +1,4 @@
-# Hello, Keptn!
+# "Hello, Keptn!" with the Keptn Function
 
 ## Goal
 This example shows how to define an inline function and pass over parameters to its execution.

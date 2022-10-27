@@ -8,8 +8,8 @@
 
 The purpose of this repository is to demonstrate and experiment with
 a prototype of a _**Keptn Lifecycle Controller**_.
-The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
-It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
+The goal is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
+This project is developed under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
 ## Keptn Lifecycle Controller in a nutshell
 
@@ -24,11 +24,11 @@ Keptn Lifecycle Controller:
 - Provides a standardized way to ensure that applications are running perfectly:
   Pre-Deployment, Post-Deployment, and Application Health Checks.
 - Supports connecting Event Hooks to other stages of the application lifecycle.
-- Allows running Pre- and Post-Deployment Tasks and Analysis without Pipelines.
+- Allows running Pre- and Post-Deployment Tasks and Evaluations without Pipelines.
   External pipeline engines can be connected for more complex automation and synchronous operations.
-- Includes a Typescript based [functions runtime](./functions-runtime) for micro-scripting of event handlers.
+- Includes a Typescript (Deno) based [functions runtime](./functions-runtime) for micro-scripting of event handlers.
   Scripts could shared 
-- Later: allows handling of Kubernetes events, e.g. Deployments once implemented by the [Keptn App Lifecycle working group](https://github.com/keptn/wg-app-lifecycle) or CloudEvents
+- Later: allows handling of Kubernetes events, e.g. on Deployment-Level once implemented
 
 ### References
 

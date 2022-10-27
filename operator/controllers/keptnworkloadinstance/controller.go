@@ -110,7 +110,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		r.recordEvent(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved")
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not fetch AppVersion for KeptnWorkloadInstance: %+v", err)
 	} else if !found {
-		span.SetStatus(codes.Error, err.Error())
+		span.SetStatus(codes.Error, "app could not be found")
 		r.recordEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found")
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not find AppVersion for KeptnWorkloadInstance")
 	}

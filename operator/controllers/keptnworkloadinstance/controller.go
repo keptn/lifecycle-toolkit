@@ -83,7 +83,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
 	err := r.Get(ctx, req.NamespacedName, workloadInstance)
 	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	if err != nil {
@@ -103,8 +103,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	workloadInstance.SetStartTime()
 
 	defer func(span trace.Span, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) {
-		r.Log.Info("Increasing app count")
 		if workloadInstance.IsEndTimeSet() {
+			r.Log.Info("Increasing deployment count")
 			attrs := workloadInstance.GetMetricsAttributes()
 			r.Meters.AppCount.Add(ctx, 1, attrs...)
 		}
@@ -138,6 +138,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 	}
 
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
+
 	//Wait for pre-deployment checks of Workload
 	phase = common.PhaseWorkloadPreDeployment
 	saveState := false
@@ -160,11 +162,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		saveState = true
 	}
 	if saveState {
-		if err := r.Status().Update(ctx, workloadInstance); err != nil {
+		if err := r.Update(ctx, workloadInstance); err != nil {
 			return ctrl.Result{}, err
 		}
 	}
-	if appVersion.Status.CurrentPhase == "" {
+	if workloadInstance.Status.CurrentPhase == "" {
 		if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
 			r.Log.Error(err, "cannot unbind span")
 		}
@@ -173,7 +175,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		if err != nil {
 			r.Log.Error(err, "could not get span")
 		}
-		semconv.AddAttributeFromAppVersion(spanAppTrace, appVersion)
+		semconv.AddAttributeFromWorkloadInstance(spanAppTrace, *workloadInstance)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}

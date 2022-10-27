@@ -31,9 +31,10 @@ func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eve
 }
 
 func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func() (common.KeptnState, error)) (*PhaseResult, error) {
+	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
-		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, err
+		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
@@ -50,7 +51,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 		spanAppTrace.AddEvent(phase.LongName + " could not get reconciled")
 		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
 		span.SetStatus(codes.Error, err.Error())
-		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, err
+		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
 
 	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
@@ -89,11 +90,11 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 		}
 		RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
 
-		return &PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
+		return &PhaseResult{Continue: true, Result: requeueResult}, nil
 	}
 
 	piWrapper.SetState(common.StateProgressing)
 	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
-	return &PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}}, nil
+	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }

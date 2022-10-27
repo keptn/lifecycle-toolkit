@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
@@ -265,4 +266,8 @@ func (i *KeptnWorkloadInstance) Complete() {
 
 func (i KeptnWorkloadInstance) GetVersion() string {
 	return i.Spec.Version
+}
+
+func (v KeptnWorkloadInstance) GetSpanName(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
 }

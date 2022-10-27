@@ -77,7 +77,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
 	err := r.Get(ctx, req.NamespacedName, appVersion)
 	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	if err != nil {
@@ -96,8 +96,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
 
 	defer func(span trace.Span, appVersion *klcv1alpha1.KeptnAppVersion) {
-		r.Log.Info("Increasing app count")
 		if appVersion.IsEndTimeSet() {
+			r.Log.Info("Increasing app count")
 			attrs := appVersion.GetMetricsAttributes()
 			r.Meters.AppCount.Add(ctx, 1, attrs...)
 		}

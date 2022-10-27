@@ -105,6 +105,10 @@ spec:
                 - kind
                 - uid
                 type: object
+              traceId:
+                additionalProperties:
+                  type: string
+                type: object
               version:
                 type: string
               workloadName:

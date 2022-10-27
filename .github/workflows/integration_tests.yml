@@ -21,17 +21,11 @@ defaults:
 jobs:
   integration-test:
     name: "Tests"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
         include:
-          - CLOUD_PROVIDER: "minishift-on-GHA"
-            PLATFORM: "openshift"
-            PLATFORM_VERSION: "3.11"
-            KEPTN_SERVICE_TYPE: "ClusterIP"
-            COLLECT_RESOURCE_LIMITS: "true"
-            USE_RESOURCE_SERVICE_DIRECTORY: "false"
           - CLOUD_PROVIDER: "k3s-on-GHA"
             PLATFORM_VERSION: "v1.22.8+k3s1" # see https://github.com/rancher/k3s/releases
             KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
@@ -170,18 +164,6 @@ jobs:
           path: ./dist    
 
       # setup cloud provider kubernetes instance
-      - name: Install and start Minishift
-        timeout-minutes: 15
-        if: env.CLOUD_PROVIDER == 'minishift-on-GHA'
-        run: |
-          test/utils/download_and_install_oc_cli.sh
-          test/utils/download_and_install_minishift.sh
-          test/utils/minishift_create_cluster.sh
-
-      - name: Interact with the cluster
-        if: env.CLOUD_PROVIDER == 'minishift-on-GHA'
-        run: oc cluster status
-
       - name: Install and start K3s
         if: env.CLOUD_PROVIDER == 'k3s-on-GHA'
         env:
@@ -207,5 +189,8 @@ jobs:
         run: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
 
       - name: Install keptn-lifecycle-controller
-        run: kubectl apply -f ./dist/*
+        run: | 
+          sleep 10
+          kubectl apply -f ./dist/keptn-lifecycle-operator-manifest
+          kubectl apply -f ./dist/scheduler-manifest
           

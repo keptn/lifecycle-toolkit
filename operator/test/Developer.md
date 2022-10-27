@@ -61,8 +61,11 @@ var _ = Describe("KeptnAppController", func() {
 ```
 
 
-## Contributing Best Practice
+## Contributing Tips
 
 1. Keep in mind to clean up after each test
 2. Namespaces do not get cleaned up by kubebuilder testenv so be careful on that
-3. Make sure not to mik up gomega patter with other assertion packages
+3. Make sure not to mix up gomega patter with other assertion packages
+4. EnvTest is a lightweight control plane only meant for testing purposes. This means it does not contain inbuilt Kubernetes controllers like deployment controllers, ReplicaSet controllers, etc. You cannot assert/verify for pods being created or not for created deployment. 
+5. You should generally try to use Gomega’s Eventually to make asynchronous assertions, especially in the case of Get and Update calls to API Server.
+6. Use ginkgo --until-it-fails to identify flaky tests.

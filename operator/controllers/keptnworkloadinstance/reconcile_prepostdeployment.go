@@ -60,6 +60,12 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	phase := common.KeptnPhaseType{
+		ShortName: "KeptnTaskCreate",
+		LongName:  "Keptn Task Create",
+	}
+
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        common.GenerateTaskName(checkType, taskDefinition),
@@ -83,10 +89,10 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	err = r.Client.Create(ctx, newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.Recorder.Event(workloadInstance, "Warning", "KeptnTaskNotCreated", fmt.Sprintf("Could not create KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "CreateFailed", "could not create KeptnTask", workloadInstance.GetVersion())
 		return "", err
 	}
-	r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Created", "created", workloadInstance.GetVersion())
 
 	return newTask.Name, nil
 }
@@ -170,7 +176,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
 	if common.GetOverallState(summary) != common.StateSucceeded {
-		r.Recorder.Event(workloadInstance, "Warning", "TasksNotFinished", fmt.Sprintf("Tasks have not finished / Namespace: %s, Name: %s, Summary: %v ", workloadInstance.Namespace, workloadInstance.Name, summary))
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "NotFinished", "tasks have not finished", workloadInstance.GetVersion())
 	}
 	return newStatus, summary, nil
 }

@@ -18,6 +18,7 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
 	"github.com/onsi/gomega/gexec"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
@@ -125,7 +126,7 @@ var _ = BeforeSuite(func() {
 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
 		gexec.KillAndWait(4 * time.Second)
 
-		// Teardown the test environment once controller is fnished.
+		// Teardown the test environment once controller is finished.
 		// Otherwise, from Kubernetes 1.21+, teardown timeouts waiting on
 		// kube-apiserver to return
 		err := testEnv.Stop()
@@ -134,7 +135,10 @@ var _ = BeforeSuite(func() {
 
 })
 
+var _ = AfterSuite(ResetSpanRecords)
+
 func ResetSpanRecords() {
+	GinkgoLogr.Info("Removing ", fmt.Sprint(len(spanRecorder.Ended())), " spans")
 	tp.UnregisterSpanProcessor(spanRecorder)
 	spanRecorder = sdktest.NewSpanRecorder()
 	tp.RegisterSpanProcessor(spanRecorder)

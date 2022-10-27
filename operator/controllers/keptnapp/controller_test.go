@@ -110,13 +110,14 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 	}
 
 	// check correct traces
-	assert.Equal(t, len(tracer.StartCalls()), 3)
+	assert.Equal(t, len(tracer.StartCalls()), 4)
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "appversion_deployment")
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
-	assert.Equal(t, tracer.StartCalls()[2].SpanName, "reconcile_app")
+	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")
 }
 
 func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {

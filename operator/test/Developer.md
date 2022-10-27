@@ -60,6 +60,10 @@ var _ = Describe("KeptnAppController", func() {
 })
 ```
 
+## Load Tests 
+
+You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test with ```make performance-test```
+
 
 ## Contributing Tips
 

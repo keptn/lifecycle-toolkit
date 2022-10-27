@@ -5,6 +5,7 @@ import (
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"go.opentelemetry.io/otel/sdk/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -23,14 +24,12 @@ var _ = Describe("KeptnAppController", func() {
 		namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
 		version = "1.0.0"
 	})
-	AfterEach(ResetSpanRecords) //you must clean up spans each time
-
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
 			instance   *klcv1alpha1.KeptnApp
 			appVersion *klcv1alpha1.KeptnAppVersion
 		)
-		Context("with one App", func() {
+		Context("with a new App CRD", func() {
 			BeforeEach(func() {
 				instance = createInstanceInCluster(name, namespace, version, instance)
 			})
@@ -39,9 +38,14 @@ var _ = Describe("KeptnAppController", func() {
 				deleteAppInCluster(instance)
 				deleteAppVersionInCluster(appVersion)
 			})
-			It("should update the status of the CR", func() {
+			It("should update the status of the CR ", func() {
 				appVersion = assertResourceUpdated(instance)
 			})
+			It("should update the spans", func() {
+				assertAppSpan(instance)
+				//ResetSpanRecords() // clean up span every time you read them
+			})
+
 		})
 	})
 
@@ -80,16 +84,24 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 
 func assertAppSpan(instance *klcv1alpha1.KeptnApp) {
 	By("Comparing spans")
-	spans := spanRecorder.Ended()
-	Expect(len(spans)).To(Equal(2)) //this works only if we do not run tests in parallel
+	var spans []trace.ReadOnlySpan
+	Eventually(func() int {
+		spans = spanRecorder.Ended()
+		return len(spans)
+	}).Should(Equal(3))
 
-	Expect(spans[0].Name()).To(Equal("create_app_version"))
+	Expect(spans[0].Name()).To(Equal("appversion_deployment"))
 	Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
 
-	Expect(spans[1].Name()).To(Equal("reconcile_app"))
+	Expect(spans[1].Name()).To(Equal("create_app_version"))
 	Expect(spans[1].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
 	Expect(spans[1].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+
+	Expect(spans[2].Name()).To(Equal("reconcile_app"))
+	Expect(spans[2].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
+	Expect(spans[2].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+
 }
 
 func createInstanceInCluster(name string, namespace string, version string, instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp {

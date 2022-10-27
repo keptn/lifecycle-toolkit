@@ -11,25 +11,25 @@ type SpanHandler struct {
 	bindCRDSpan map[string]trace.Span
 }
 
-func (r SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, appv client.Object, phase string) (context.Context, trace.Span) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appv)
+func (r SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
-		return nil, nil
+		return nil, nil, err
 	}
 	appvName := piWrapper.GetSpanName(phase)
 	if r.bindCRDSpan == nil {
 		r.bindCRDSpan = make(map[string]trace.Span)
 	}
 	if span, ok := r.bindCRDSpan[appvName]; ok {
-		return ctx, span
+		return ctx, span, nil
 	}
 	ctx, span := tracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
 	r.bindCRDSpan[appvName] = span
-	return ctx, span
+	return ctx, span, nil
 }
 
-func (r SpanHandler) UnbindSpan(appv client.Object, phase string) error {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appv)
+func (r SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {
+	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return err
 	}

@@ -120,7 +120,10 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.Log.Error(err, "cannot unbind span")
 		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
+		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
+		if err != nil {
+			r.Log.Error(err, "could not get span")
+		}
 
 		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))

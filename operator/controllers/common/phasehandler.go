@@ -40,7 +40,10 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	piWrapper.SetCurrentPhase(phase.ShortName)
 
 	r.Log.Info(phase.LongName + " not finished")
-	ctxAppTrace, spanAppTrace := r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, phase.ShortName)
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, phase.ShortName)
+	if err != nil {
+		r.Log.Error(err, "could not get span")
+	}
 
 	state, err := reconcilePhase()
 	if err != nil {
@@ -53,7 +56,10 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
 		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {
-			ctx, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
+			ctx, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
+			if err != nil {
+				r.Log.Error(err, "could not get span")
+			}
 			if err := r.Status().Update(ctx, reconcileObject); err != nil {
 				r.Log.Error(err, "could not update status")
 			}

@@ -169,7 +169,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.Log.Error(err, "cannot unbind span")
 		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, phase.ShortName)
+		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, phase.ShortName)
+		if err != nil {
+			r.Log.Error(err, "could not get span")
+		}
 		semconv.AddAttributeFromAppVersion(spanAppTrace, appVersion)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())

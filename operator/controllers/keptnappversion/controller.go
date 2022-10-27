@@ -77,7 +77,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
 	err := r.Get(ctx, req.NamespacedName, appVersion)
 	if errors.IsNotFound(err) {
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return reconcile.Result{}, nil
 	}
 
 	if err != nil {

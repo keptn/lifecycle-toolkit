@@ -34,7 +34,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
-		return &PhaseResult{Continue: false, Result: requeueResult}, err
+		return &PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, err
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()

@@ -83,7 +83,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnEvaluation")
-		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+		return ctrl.Result{}, nil
 	}
 
 	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
@@ -114,7 +114,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
-				return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
+				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}
 			r.Log.Error(err, "Failed to retrieve a resource")
 			return ctrl.Result{}, nil

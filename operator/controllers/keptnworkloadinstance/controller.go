@@ -83,7 +83,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
 	err := r.Get(ctx, req.NamespacedName, workloadInstance)
 	if errors.IsNotFound(err) {
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return reconcile.Result{}, nil
 	}
 
 	if err != nil {

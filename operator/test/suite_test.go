@@ -29,12 +29,14 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"os"
 	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"strings"
 	"testing"
 	"time"
 	//+kubebuilder:scaffold:imports
@@ -142,3 +144,17 @@ func resetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanReco
 	spanRecorder = sdktest.NewSpanRecorder()
 	tp.RegisterSpanProcessor(spanRecorder)
 }
+
+var _ = ReportAfterSuite("custom report", func(report Report) {
+	f, err := os.Create("report.custom")
+	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
+	for _, specReport := range report.SpecReports {
+		path := strings.Split(specReport.FileName(), "/")
+		testFile := path[len(path)-1]
+		if specReport.ContainerHierarchyTexts != nil {
+			testFile = specReport.ContainerHierarchyTexts[0]
+		}
+		fmt.Fprintf(f, "%s %s | %s\n", testFile, specReport.LeafNodeText, specReport.State)
+	}
+	f.Close()
+})

@@ -13,15 +13,16 @@ For more info on kubebuilder envtest or to set up a real cluster behind the test
 
 ## Contributing
 
-Each new controller should be added to the suite_test similarly as follows:
+In each test you can add one or more new controllers to the suite_test similarly as follows:
 
-	```err = (&keptnapp.KeptnAppReconciler{
-		Client:   k8sManager.GetClient(),
-		Scheme:   k8sManager.GetScheme(),
-		Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
-		Log:      GinkgoLogr,
-		Tracer:   tr.Tracer("test-app-tracer"),
-	}).SetupWithManager(k8sManager)```
+	```controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
+			Client:   k8sManager.GetClient(),
+			Scheme:   k8sManager.GetScheme(),
+			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:      GinkgoLogr,
+			Tracer:   tracer.Tracer("test-app-tracer"),
+		}}
+		setupManager(controllers)```
 	
 After that the k8s API from kubebuilder will handle its CRD 
 
@@ -69,13 +70,12 @@ You can append ```[Feature:Performance]``` to any spec you would like to execute
 
 1. Keep in mind to clean up after each test
 2. Namespaces do not get cleaned up by kubebuilder testenv so be careful on that
-3. Make sure not to mix up gomega patter with other assertion packages
-4. EnvTest is a lightweight control plane only meant for testing purposes. This means it does not contain inbuilt Kubernetes controllers like deployment controllers, ReplicaSet controllers, etc. You cannot assert/verify for pods being created or not for created deployment. 
-5. You should generally try to use Gomega’s Eventually to make asynchronous assertions, especially in the case of Get and Update calls to API Server.
-6. Use ginkgo --until-it-fails to identify flaky tests.
-7. Avoid general utility packages. Packages called "util" are suspect. Instead, derive a name that describes your desired function. For example, the utility functions dealing with waiting for operations are in the wait package and include functionality like Poll. The full name is wait.Poll.
-8. All filenames should be lowercase. 
-9. Go source files and directories use underscores, not dashes.
-10. Package directories should generally avoid using separators as much as possible. When package names are multiple words, they usually should be in nested subdirectories. 
-11. Document directories and filenames should use dashes rather than underscores. 
-12. Examples should also illustrate best practices for configuration and using the [system](https://kubernetes.io/docs/concepts/configuration/overview/).
+3. EnvTest is a lightweight control plane only meant for testing purposes. This means it does not contain inbuilt Kubernetes controllers like deployment controllers, ReplicaSet controllers, etc. You cannot assert/verify for pods being created or not for created deployment. 
+4. You should generally try to use Gomega’s Eventually to make asynchronous assertions, especially in the case of Get and Update calls to API Server.
+5. Use ginkgo --until-it-fails to identify flaky tests.
+6. Avoid general utility packages. Packages called "util" are suspect. Instead, derive a name that describes your desired function. For example, the utility functions dealing with waiting for operations are in the wait package and include functionality like Poll. The full name is wait.Poll.
+7. All filenames should be lowercase. 
+8. Go source files and directories use underscores, not dashes.
+9. Package directories should generally avoid using separators as much as possible. When package names are multiple words, they usually should be in nested subdirectories. 
+10. Document directories and filenames should use dashes rather than underscores. 
+11. Examples should also illustrate best practices for configuration and using the [system](https://kubernetes.io/docs/concepts/configuration/overview/).

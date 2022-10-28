@@ -19,39 +19,38 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	keptncontroller "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
-	"path/filepath"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"testing"
-	"time"
-
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
-
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"path/filepath"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	"testing"
+	"time"
 	//+kubebuilder:scaffold:imports
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
 // http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
 var (
-	cfg          *rest.Config
-	k8sClient    client.Client
-	testEnv      *envtest.Environment
-	ctx          context.Context
-	cancel       context.CancelFunc
-	spanRecorder *sdktest.SpanRecorder
-	tp           otelsdk.TracerProvider
+	cfg        *rest.Config
+	k8sClient  client.Client
+	testEnv    *envtest.Environment
+	ctx        context.Context
+	cancel     context.CancelFunc
+	k8sManager ctrl.Manager
+	//spanRecorder *sdktest.SpanRecorder
+	//tp           otelsdk.TracerProvider
 )
 
 func TestAPIs(t *testing.T) {
@@ -103,23 +102,11 @@ var _ = BeforeSuite(func() {
 		available when talking directly to the API server.
 	*/
 
-	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
+	k8sManager, err = ctrl.NewManager(cfg, ctrl.Options{
 		Scheme: scheme.Scheme,
 	})
 	Expect(err).ToNot(HaveOccurred())
-	spanRecorder = sdktest.NewSpanRecorder()
-	tr := otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
-	//setup controllers here
-	err = (&keptnapp.KeptnAppReconciler{
-		Client:   k8sManager.GetClient(),
-		Scheme:   k8sManager.GetScheme(),
-		Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
-		Log:      GinkgoLogr,
-		Tracer:   tr.Tracer("test-app-tracer"),
-	}).SetupWithManager(k8sManager)
-
-	Expect(err).ToNot(HaveOccurred())
 	go func() {
 		defer GinkgoRecover()
 		err = k8sManager.Start(ctx)
@@ -135,9 +122,21 @@ var _ = BeforeSuite(func() {
 
 })
 
-var _ = AfterSuite(ResetSpanRecords)
+func ignoreAlreadyExists(err error) error {
+	if apierrors.IsAlreadyExists(err) {
+		return nil
+	}
+	return err
+}
 
-func ResetSpanRecords() {
+func setupManager(rec []keptncontroller.Controller) {
+	for _, r := range rec {
+		r.SetupWithManager(k8sManager)
+	}
+
+}
+
+func resetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanRecorder) {
 	GinkgoLogr.Info("Removing ", fmt.Sprint(len(spanRecorder.Ended())), " spans")
 	tp.UnregisterSpanProcessor(spanRecorder)
 	spanRecorder = sdktest.NewSpanRecorder()

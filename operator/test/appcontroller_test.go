@@ -3,9 +3,12 @@ package test
 import (
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	keptncontroller "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"go.opentelemetry.io/otel/sdk/trace"
+	otelsdk "go.opentelemetry.io/otel/sdk/trace"
+	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -13,15 +16,56 @@ import (
 // clean example of E2E test/ integration test --
 // App controller creates AppVersion when a new App CRD is added
 // span for creation and reconcile are correct
-var _ = Describe("KeptnAppController", func() {
+// container must be ordered to have the before all setup
+// this way the container spec check is not randomized, so we can make
+// assertions on spans number and traces
+var _ = Describe("KeptnAppController", Ordered, func() {
 	var (
-		name      string
-		namespace string
-		version   string
+		name         string
+		namespace    string
+		version      string
+		spanRecorder *sdktest.SpanRecorder
+		tracer       *otelsdk.TracerProvider
 	)
-	BeforeEach(func() { // list var here
+
+	BeforeAll(func() {
+		//setup once
+		By("Waiting for Manager")
+		Eventually(func() bool {
+			return k8sManager != nil
+		}).Should(Equal(true))
+
+		By("Creating the Controller")
+
+		spanRecorder = sdktest.NewSpanRecorder()
+		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
+
+		////setup controllers here
+		controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
+			Client:   k8sManager.GetClient(),
+			Scheme:   k8sManager.GetScheme(),
+			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:      GinkgoLogr,
+			Tracer:   tracer.Tracer("test-app-tracer"),
+		}}
+		setupManager(controllers) // we can register multiple time the same controller
+		// so that they have a different span/trace
+
+		//for a fake controller you can also use
+		//controller, err := controller.New("app-controller", cm, controller.Options{
+		//	Reconciler: reconcile.Func(
+		//		func(_ context.Context, request reconcile.Request) (reconcile.Result, error) {
+		//			reconciled <- request
+		//			return reconcile.Result{}, nil
+		//		}),
+		//})
+		//Expect(err).NotTo(HaveOccurred())
+	})
+
+	BeforeEach(func() { // list var here they will be copied for every spec
 		name = "test-app"
-		namespace = "default" // namespaces are not deleted in the api so be careful when creating new ones
+		namespace = "default" // namespaces are not deleted in the api so be careful
+		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
 	})
 	Describe("Creation of AppVersion from a new App", func() {
@@ -30,25 +74,27 @@ var _ = Describe("KeptnAppController", func() {
 			appVersion *klcv1alpha1.KeptnAppVersion
 		)
 		Context("with a new App CRD", func() {
+
 			BeforeEach(func() {
 				instance = createInstanceInCluster(name, namespace, version, instance)
 			})
-			AfterEach(func() {
-				// Remember to clean up the cluster after each test
-				deleteAppInCluster(instance)
-				deleteAppVersionInCluster(appVersion)
-			})
+
 			It("should update the status of the CR ", func() {
 				appVersion = assertResourceUpdated(instance)
 			})
 			It("should update the spans", func() {
-				assertAppSpan(instance)
-				//ResetSpanRecords() // clean up span every time you read them
+				assertAppSpan(instance, spanRecorder)
 			})
 
 		})
+		AfterEach(func() {
+			// Remember to clean up the cluster after each test
+			deleteAppInCluster(instance)
+			deleteAppVersionInCluster(appVersion)
+			// Reset span recorder after each spec
+			resetSpanRecords(tracer, spanRecorder)
+		})
 	})
-
 })
 
 func deleteAppVersionInCluster(version *klcv1alpha1.KeptnAppVersion) {
@@ -82,9 +128,9 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 	return appVersion
 }
 
-func assertAppSpan(instance *klcv1alpha1.KeptnApp) {
+func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRecorder) {
 	By("Comparing spans")
-	var spans []trace.ReadOnlySpan
+	var spans []otelsdk.ReadOnlySpan
 	Eventually(func() int {
 		spans = spanRecorder.Ended()
 		return len(spans)

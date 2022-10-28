@@ -11,24 +11,26 @@ If you would like to run the generated bin for apiserver etcd etc. from your IDE
 This way the default test setup will pick them up without specifying any ENVVAR.
 For more info on kubebuilder envtest or to set up a real cluster behind the test have a look [here](https://book.kubebuilder.io/reference/envtest.html)
 
+After run a ```report.custom``` file will be generated with the results of each test:
+
+
 ## Contributing
 
 In each test you can add one or more new controllers to the suite_test similarly as follows:
 
-	```controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
+    controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
 			Client:   k8sManager.GetClient(),
 			Scheme:   k8sManager.GetScheme(),
 			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
 			Log:      GinkgoLogr,
 			Tracer:   tracer.Tracer("test-app-tracer"),
 		}}
-		setupManager(controllers)```
+		setupManager(controllers)
 	
-After that the k8s API from kubebuilder will handle its CRD 
-
+After that the k8s API from kubebuilder will handle its CRD
 Each Ginkgo test should be structured following the [spec bestpractices](https://onsi.github.io/ginkgo/#writing-specs)
 
-As a minimum example a test could be:
+As a minimum example, a test could be:
 ```
 var _ = Describe("KeptnAppController", func() {
     var ( //setup needed var
@@ -63,8 +65,8 @@ var _ = Describe("KeptnAppController", func() {
 
 ## Load Tests 
 
-You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test with ```make performance-test```
-
+You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test with ```make performance-test``` the file 
+"load_test.go" contains examples of such tests, including a simple reporter. The report "MetricForLoadTestSuite" is generated for every run of the load test.
 
 ## Contributing Tips
 

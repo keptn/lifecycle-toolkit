@@ -18,8 +18,8 @@ import (
 )
 
 type Metric struct {
-	creationTime            []time.Time `json:"creationtimes"`
-	succededAppVersionCount int         `json:"AppVersionCreated"`
+	creationTime            []time.Time
+	succededAppVersionCount int
 }
 
 const LOAD = 100
@@ -112,7 +112,7 @@ func generateMetricReport(metric Metric) {
 	filePath := path.Join(dir, "MetricsForLoadTestSuite_"+time.Now().Format(time.RFC3339)+".json")
 	report := []byte(fmt.Sprintf("Overall AppVersions created %d/%d \n Creation times: %+v ", metric.succededAppVersionCount, LOAD, metric.creationTime))
 	if err := ioutil.WriteFile(filePath, report, 0644); err != nil {
-		fmt.Errorf("error writing to %q: %v", filePath, err)
+		GinkgoLogr.Error(err, "error writing to ", filePath)
 	}
 
 }

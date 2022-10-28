@@ -70,8 +70,8 @@ You can append ```[Feature:Performance]``` to any spec you would like to execute
 
 ## Contributing Tips
 
-1. Keep in mind to clean up after each test
-2. Namespaces do not get cleaned up by kubebuilder testenv so be careful on that
+1. Keep in mind to clean up after each test since the environment is shared. E.g. if you plan assertions on events or spans, make sure your specs are either ordered or assigned to their own controller
+2. Namespaces do not get cleaned up by EnvTest, so do not make assertion based on the idea that the namespace has been deleted, and make sure to use `ignoreAlreadyExists(err error)` when creating a new one
 3. EnvTest is a lightweight control plane only meant for testing purposes. This means it does not contain inbuilt Kubernetes controllers like deployment controllers, ReplicaSet controllers, etc. You cannot assert/verify for pods being created or not for created deployment. 
 4. You should generally try to use Gomega’s Eventually to make asynchronous assertions, especially in the case of Get and Update calls to API Server.
 5. Use ginkgo --until-it-fails to identify flaky tests.

@@ -98,6 +98,10 @@ type KeptnAppVersionList struct {
 	Items           []KeptnAppVersion `json:"items"`
 }
 
+func (v KeptnAppVersionList) GetItems() []KeptnAppVersion {
+	return v.Items
+}
+
 func init() {
 	SchemeBuilder.Register(&KeptnAppVersion{}, &KeptnAppVersionList{})
 }
@@ -213,6 +217,14 @@ func (v KeptnAppVersion) GetState() common.KeptnState {
 
 func (v *KeptnAppVersion) SetState(state common.KeptnState) {
 	v.Status.Status = state
+}
+
+func (i KeptnAppVersion) GetStartTime() time.Time {
+	return i.Status.StartTime.Time
+}
+
+func (i KeptnAppVersion) GetEndTime() time.Time {
+	return i.Status.EndTime.Time
 }
 
 func (v KeptnAppVersion) GetCurrentPhase() string {

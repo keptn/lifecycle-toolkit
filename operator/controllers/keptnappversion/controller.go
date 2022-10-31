@@ -271,25 +271,3 @@ func (r *KeptnAppVersionReconciler) GetDeploymentInterval(ctx context.Context) (
 
 	return res, nil
 }
-
-func (r *KeptnAppVersionReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	appInstances := &klcv1alpha1.KeptnAppVersionList{}
-	err := r.List(ctx, appInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-
-	for _, appInstance := range appInstances.Items {
-		if appInstance.IsEndTimeSet() {
-			duration := appInstance.Status.EndTime.Time.Sub(appInstance.Status.StartTime.Time)
-			res = append(res, common.GaugeFloatValue{
-				Value:      duration.Seconds(),
-				Attributes: appInstance.GetDurationMetricsAttributes(),
-			})
-		}
-	}
-
-	return res, nil
-}

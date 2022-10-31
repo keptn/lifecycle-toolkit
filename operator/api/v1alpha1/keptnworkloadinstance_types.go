@@ -252,6 +252,18 @@ func (i KeptnWorkloadInstance) GetState() common.KeptnState {
 	return i.Status.Status
 }
 
+func (v KeptnWorkloadInstance) GetPreviousVersion() string {
+	return v.Spec.PreviousVersion
+}
+
+func (v KeptnWorkloadInstance) GetParentName() string {
+	return v.Spec.AppName
+}
+
+func (v KeptnWorkloadInstance) GetNamespace() string {
+	return v.Namespace
+}
+
 func (i KeptnWorkloadInstance) GetStartTime() time.Time {
 	return i.Status.StartTime.Time
 }

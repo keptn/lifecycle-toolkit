@@ -330,29 +330,3 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	}
 	return true, latestVersion, nil
 }
-
-func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-	for _, workloadInstance := range workloadInstances.Items {
-		if workloadInstance.Spec.PreviousVersion != "" {
-			previousWorkloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
-			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousWorkloadInstance)
-			if err != nil {
-				r.Log.Error(err, "Previous WorkloadInstance not found")
-			} else if workloadInstance.IsEndTimeSet() {
-				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousWorkloadInstance.Status.EndTime.Time)
-				res = append(res, common.GaugeFloatValue{
-					Value:      previousInterval.Seconds(),
-					Attributes: workloadInstance.GetDurationMetricsAttributes(),
-				})
-			}
-		}
-	}
-	return res, nil
-}

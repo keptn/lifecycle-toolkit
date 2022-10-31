@@ -12,198 +12,188 @@ on:
       - '[0-9]+.[1-9][0-9]*.x'
 env:
   GO_VERSION: "~1.18"
+  CONTROLLER_TOOLS_VERSION: "v0.9.2"
+  ENVTEST_K8S_VERSION: "1.24.2"
+  SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 
-  FUNCTIONS_RUNTIME_SVC_ARTIFACT_PREFIX: "FUNCTIONS_RUNTIME_SVC"
-  FUNCTIONS_RUNTIME_SVC_ARTIFACT: "functions-runtime"
-  FUNCTIONS_RUNTIME_SVC_FOLDER: "functions-runtime/"
-  SHOULD_RUN_FUNCTIONS_RUNTIME_SVC: "false"
-  
-  LFC_SCHEDULER_SVC_ARTIFACT_PREFIX: "LFC_SCHEDULER_SVC"
-  LFC_SCHEDULER_SVC_ARTIFACT: "scheduler"
-  LFC_SCHEDULER_SVC_FOLDER: "scheduler/"
-
-  OPERATOR_SVC_ARTIFACT_PREFIX: "OPERATOR_SVC"
-  OPERATOR_SVC_ARTIFACT: "keptn-lifecycle-operator"
-  OPERATOR_SVC_FOLDER: "operator/"
 defaults:
   run:
     shell: bash
+
 jobs:
   prepare_ci_run:
     name: Prepare CI Run
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
-      # metadata
-      BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
       GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
       BRANCH: ${{ steps.extract_branch.outputs.BRANCH }}
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
-      DATE: ${{ steps.get_datetime.outputs.DATE }}
-      TIME: ${{ steps.get_datetime.outputs.TIME }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
-      BUILD_MATRIX: ${{ steps.check_modified_files.outputs.BUILD_MATRIX }}
-      BUILD_MATRIX_EMPTY: ${{ steps.check_modified_files.outputs.BUILD_MATRIX_EMPTY }}
+      BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
+      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Get changed files
-        id: changed_files
-        uses: jitterbit/get-changed-files@v1
-        continue-on-error: true
-
-      - name: Prepare for build-everything run
-        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (contains(github.event.pull_request.labels.*.name, 'CI:trigger-build-everything')) || contains(github.event.pull_request.labels.*.name, format('autorelease{0} pending', ':'))
-        id: build_everything
-        run: |
-          BUILD_EVERYTHING=true
-          echo "##[set-output name=BUILD_EVERYTHING;]$(echo ${BUILD_EVERYTHING})"
-
-      - name: Prepare artifacts with changes
-        id: check_modified_files
-        env:
-          BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
-          GITHUB_REF_PROTECTED: ${{ env.GITHUB_REF_PROTECTED }}
-        run: |
-          ./gh-actions-scripts/prepare_changed_artifacts.sh "${{ steps.changed_files.outputs.all }}"
-
       - name: Extract branch name
         id: extract_branch
-        # see https://github.com/keptn/gh-action-extract-branch-name for details
         uses: keptn/gh-action-extract-branch-name@main
 
       - name: Get current date and time
         id: get_datetime
         run: |
-          echo "::set-output name=DATE::$(date +'%Y%m%d')"
-          echo "::set-output name=TIME::$(date +'%H%M')"
-          echo "::set-output name=DATETIME::$(date +'%Y%m%d')$(date +'%H%M')"
+          DATETIME=$(date +'%Y%m%d%H%M')
+          BUILD_TIME=$(date -u "+%F_%T")
+          echo "DATETIME=$DATETIME" >> "$GITHUB_OUTPUT"
+          echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
+
+      - name: Get workflow run type
+        id: get_run_type
+        env:
+          NON_FORKED_AND_NON_ROBOT_RUN: ${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+        run:
+          echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   compile:
     name: Compile
     needs: prepare_ci_run
-    if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+            # Nothing to compile in functions-runtime
     steps:
       - name: Check out code
-        if: matrix.config.should-run == 'true'
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        if: matrix.config.should-run == 'true'
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
-      - name: Compile ${{ matrix.config.artifact }}
-        if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.working-dir }}
-        run: |
-          make build
+      - name: Go vet
+        if: matrix.config.name != 'functions-runtime'
+        working-directory: ./${{ matrix.config.folder }}
+        run: go vet ./...
+
+      - name: Go fmt
+        if: matrix.config.name != 'functions-runtime'
+        working-directory: ./${{ matrix.config.folder }}
+        run: go fmt ./...
+
+      - name: Compile ${{ matrix.config.name }}
+        working-directory: ./${{ matrix.config.folder }}
+        run: make build
 
   test:
     name: Unit Tests
     needs: prepare_ci_run
-    if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+            # Nothing to test in functions-runtime
     steps:
       - name: Check out code
-        if: matrix.config.should-run == 'true'
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        if: matrix.config.should-run == 'true'
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: '${{ matrix.config.working-dir }}go.sum'
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
-      - name: Test ${{ matrix.config.artifact }}
-        if: matrix.config.should-run == 'true'
-        working-directory: ./${{ matrix.config.working-dir }}
+      - name: Test ${{ matrix.config.name }}
+        working-directory: ./${{ matrix.config.folder }}
         run: |
           make test
 
   build_image:
     name: Build and push Docker Image
-    needs: [prepare_ci_run, compile, test]
-    runs-on: ubuntu-20.04
+    needs: [ prepare_ci_run, compile, test ]
+    runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+      BUILD_TIME: ${{ needs.prepare_ci_run.outputs.BUILD_TIME }}
       GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
-      matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+          - name: "functions-runtime"
+            folder: "functions-runtime/"
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v2
-      with:
-          install: true
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: "ghcr.io"
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        if: needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        uses: docker/login-action@v2
+        with:
+          registry: "ghcr.io"
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Cache Docker layers
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        # Key is named differently to avoid collision
-        key: ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-multi-buildx-${{ matrix.config.artifact }}
+      - name: Build Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.config.folder }}
+          platforms: linux/amd64,linux/arm64
+          target: production
+          tags: |
+            ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
+          build-args: |
+            GIT_HASH=${{ env.GIT_SHA }}
+            RELEASE_VERSION=dev-${{ env.DATETIME }}
+            BUILD_TIME=${{ env.BUILD_TIME }}
+            CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
+            SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
 
-    - name: Build Docker Images
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: |
-        make release-image
+      - name: Install controller-gen
+        if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        working-directory: ./${{ matrix.config.folder }}
+        run: make controller-gen
 
-    - name: Push Docker Images
-      if: ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: |
-        make push-release-images
+      - name: Generate release.yaml
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        working-directory: ./${{ matrix.config.folder }}
+        env:
+          TAG: dev-${{ env.DATETIME }}
+        run: make release-manifests
 
-    - name: Install controller-gen
-      if: matrix.config.artifact == 'keptn-lifecycle-operator' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      run: make controller-gen
-
-    - name: Generate release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      working-directory: ./${{ matrix.config.working-dir }}
-      env:
-        TAG: dev-${{ env.DATETIME }}
-      run: make release-manifests
-
-    - name: Upload release.yaml
-      if: matrix.config.artifact != 'functions-runtime' && ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository )
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.config.artifact }}-manifest
-        path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml
+      - name: Upload release.yaml
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.config.name }}-manifest
+          path: ${{ matrix.config.folder }}/config/rendered/release.yaml

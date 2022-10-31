@@ -20,7 +20,7 @@ spec:
         - command:
             - /bin/kube-scheduler
             - --config=/etc/kubernetes/scheduler-config.yaml
-          image: klfc-scheduler:latest
+          image: image:latest
           env:
             - name: OTEL_COLLECTOR_URL
               value: otel-collector:4317

@@ -166,6 +166,7 @@ jobs:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
           target: production
+          outputs: type=docker,dest=/tmp/image.tar
           tags: |
             ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
           build-args: |
@@ -179,17 +180,10 @@ jobs:
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
-      - name: Build Docker Image Local
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ matrix.config.folder }}
-          outputs: type=docker,dest=${{ github.workspace }}/${{ matrix.config.name }}.tar
-          tags: ${{ matrix.config.name }}:test
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          input: /github/workspace/${{ matrix.config.name }}.tar
+          input: /tmp/image.tar
           format: "template"
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"

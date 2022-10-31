@@ -252,29 +252,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeValue{}
-
-	for _, workloadInstance := range workloadInstances.Items {
-		gaugeValue := int64(0)
-		if !workloadInstance.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: workloadInstance.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}
-
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).

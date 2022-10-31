@@ -19,6 +19,7 @@ type PhaseItem interface {
 	GetMetricsAttributes() []attribute.KeyValue
 	GetSpanAttributes() []attribute.KeyValue
 	GetSpanKey(phase string) string
+	GetActiveMetricsAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
@@ -108,6 +109,10 @@ func (pw PhaseItemWrapper) GetParentName() string {
 
 func (pw PhaseItemWrapper) GetNamespace() string {
 	return pw.Obj.GetNamespace()
+}
+
+func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
+	return pw.Obj.GetActiveMetricsAttributes()
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

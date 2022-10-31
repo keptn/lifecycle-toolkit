@@ -216,26 +216,3 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&klcv1alpha1.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
-
-func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common.GaugeValue, error) {
-	appInstances := &klcv1alpha1.KeptnAppVersionList{}
-	err := r.List(ctx, appInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
-	}
-
-	res := []common.GaugeValue{}
-
-	for _, appInstance := range appInstances.Items {
-		gaugeValue := int64(0)
-		if !appInstance.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: appInstance.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}

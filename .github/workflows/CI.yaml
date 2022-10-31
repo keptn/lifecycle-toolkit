@@ -55,47 +55,6 @@ jobs:
         run:
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
-  compile:
-    name: Compile
-    needs: prepare_ci_run
-    runs-on: ubuntu-22.04
-    env:
-      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
-      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
-    strategy:
-      matrix:
-        config:
-          - name: "keptn-lifecycle-operator"
-            folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
-            # Nothing to compile in functions-runtime
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
-
-      - name: Go vet
-        if: matrix.config.name != 'functions-runtime'
-        working-directory: ./${{ matrix.config.folder }}
-        run: go vet ./...
-
-      - name: Go fmt
-        if: matrix.config.name != 'functions-runtime'
-        working-directory: ./${{ matrix.config.folder }}
-        run: go fmt ./...
-
-      - name: Compile ${{ matrix.config.name }}
-        working-directory: ./${{ matrix.config.folder }}
-        run: make build
-
   test:
     name: Unit Tests
     needs: prepare_ci_run
@@ -119,6 +78,18 @@ jobs:
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
+      - name: Go vet
+        working-directory: ./${{ matrix.config.folder }}
+        run: go vet ./...
+
+      - name: Go fmt
+        working-directory: ./${{ matrix.config.folder }}
+        run: go fmt ./...
+
+      - name: Compile ${{ matrix.config.name }}
+        working-directory: ./${{ matrix.config.folder }}
+        run: make build
+
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
         run: |
@@ -126,7 +97,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [ prepare_ci_run, compile, test ]
+    needs: [ prepare_ci_run, test ]
     runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry

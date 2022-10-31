@@ -168,7 +168,6 @@ jobs:
           registry: "ghcr.io"
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        when: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
 
       - name: Build Docker Image
         uses: docker/build-push-action@v3

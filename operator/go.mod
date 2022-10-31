@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/go-logr/logr v1.2.3
-	github.com/google/uuid v1.1.5
+	github.com/google/uuid v1.3.0
 	github.com/imdario/mergo v0.3.13
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo v1.16.5

@@ -168,6 +168,7 @@ jobs:
           target: production
           tags: |
             ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
+          outputs: type=docker,dest=${{ github.workspace }}/${{ matrix.config.name }}.tar
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -178,13 +179,6 @@ jobs:
           push: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
-
-      - name: Build Docker Image Local
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          outputs: type=docker,dest=${{ github.workspace }}/${{ matrix.config.name }}.tar
-          tags: ${{ matrix.config.name }}:test
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

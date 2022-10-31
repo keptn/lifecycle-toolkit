@@ -3,6 +3,7 @@ package common
 import (
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
@@ -29,4 +30,8 @@ func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.Eva
 		Status:                   apicommon.StatePending,
 		EvaluationName:           "",
 	}
+}
+
+func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
+	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
 }

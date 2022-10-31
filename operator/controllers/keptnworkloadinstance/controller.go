@@ -30,7 +30,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/go-logr/logr"
-	"github.com/google/uuid"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
@@ -284,15 +283,6 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 		Complete(r)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) generateSuffix() string {
-	uid := uuid.New().String()
-	return uid[:10]
-}
-
-func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
-	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
-}
-
 func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, appName types.NamespacedName) (*klcv1alpha1.KeptnAppVersion, error) {
 	app := &klcv1alpha1.KeptnApp{}
 	err := r.Get(ctx, appName, app)
@@ -301,7 +291,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, app
 	}
 
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
-	err = r.Get(ctx, GetAppVersionName(appName.Namespace, appName.Name, app.Spec.Version), appVersion)
+	err = r.Get(ctx, controllercommon.GetAppVersionName(appName.Namespace, appName.Name, app.Spec.Version), appVersion)
 	return appVersion, err
 }
 

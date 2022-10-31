@@ -168,6 +168,7 @@ jobs:
           target: production
           tags: |
             ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
+            ${{ matrix.config.name }}:test
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -179,15 +180,10 @@ jobs:
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
-      - name: Save Docker Image for Scanning
-        run: |
-          docker pull --platform linux/amd64 ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
-          docker save -o /tmp/${{ matrix.config.name }}.tar ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          input: /tmp/${{ matrix.config.name }}.tar
+          image-ref: '${{ matrix.config.name }}:test'
           format: "template"
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"

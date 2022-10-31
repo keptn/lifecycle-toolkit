@@ -205,7 +205,7 @@ jobs:
           docker buildx imagetools create \
             --tag ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
             localhost:5000/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
-        when: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
+        if: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
 
       - name: Install controller-gen
         if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'

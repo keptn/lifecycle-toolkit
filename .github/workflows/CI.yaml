@@ -179,6 +179,20 @@ jobs:
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}'
+          format: "template"
+          template: "@/contrib/sarif.tpl"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: "trivy-results.sarif"
+
       - name: Install controller-gen
         if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: ./${{ matrix.config.folder }}

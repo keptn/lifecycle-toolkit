@@ -70,7 +70,7 @@ func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileO
 	return res, nil
 }
 
-func GetActiveDeployments(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]common.GaugeValue, error) {
+func GetActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]common.GaugeValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return nil, fmt.Errorf("could not retrieve instances: %w", err)

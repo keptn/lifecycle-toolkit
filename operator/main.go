@@ -366,7 +366,7 @@ func main() {
 			workloadDeploymentDurationGauge,
 		},
 		func(ctx context.Context) {
-			activeDeployments, err := workloadInstanceReconciler.GetActiveDeployments(ctx)
+			activeDeployments, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active deployments")
 			}
@@ -374,7 +374,7 @@ func main() {
 				deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			activeApps, err := appVersionReconciler.GetActiveApps(ctx)
+			activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active apps")
 			}

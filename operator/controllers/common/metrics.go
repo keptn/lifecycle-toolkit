@@ -69,3 +69,29 @@ func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileO
 	}
 	return res, nil
 }
+
+func GetActiveDeployments(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]common.GaugeValue, error) {
+	err := client.List(ctx, reconcileObjectList)
+	if err != nil {
+		return nil, fmt.Errorf("could not retrieve instances: %w", err)
+	}
+
+	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
+	if err != nil {
+		return nil, err
+	}
+
+	res := []common.GaugeValue{}
+	for _, reconcileObject := range piWrapper.GetItems() {
+		gaugeValue := int64(0)
+		if !reconcileObject.IsEndTimeSet() {
+			gaugeValue = int64(1)
+		}
+		res = append(res, common.GaugeValue{
+			Value:      gaugeValue,
+			Attributes: reconcileObject.GetActiveMetricsAttributes(),
+		})
+	}
+
+	return res, nil
+}

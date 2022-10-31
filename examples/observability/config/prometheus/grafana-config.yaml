@@ -12,4 +12,7 @@ stringData:
   grafana.ini: |
     [date_formats]
     default_timezone = UTC
+    
+    [feature_toggles]
+    traceToMetrics = true
 type: Opaque

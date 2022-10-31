@@ -38,6 +38,10 @@
           "section": "Build"
         },
         {
+          "type": "deps",
+          "section": "Dependency Updates"
+        },
+        {
           "type": "ci",
           "hidden": true,
           "section": "CI"

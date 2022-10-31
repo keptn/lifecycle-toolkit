@@ -27,20 +27,28 @@ spec:
     - jsonPath: .spec.version
       name: WorkloadVersion
       type: string
+    - jsonPath: .status.currentPhase
+      name: Phase
+      type: string
     - jsonPath: .status.preDeploymentStatus
       name: PreDeploymentStatus
+      priority: 1
       type: string
     - jsonPath: .status.preDeploymentEvaluationStatus
       name: PreDeploymentEvaluationStatus
+      priority: 1
       type: string
     - jsonPath: .status.deploymentStatus
       name: DeploymentStatus
+      priority: 1
       type: string
     - jsonPath: .status.postDeploymentStatus
       name: PostDeploymentStatus
+      priority: 1
       type: string
     - jsonPath: .status.postDeploymentEvaluationStatus
       name: PostDeploymentEvaluationStatus
+      priority: 1
       type: string
     name: v1alpha1
     schema:
@@ -81,6 +89,8 @@ spec:
                 items:
                   type: string
                 type: array
+              previousVersion:
+                type: string
               resourceReference:
                 properties:
                   kind:
@@ -94,6 +104,10 @@ spec:
                 required:
                 - kind
                 - uid
+                type: object
+              traceId:
+                additionalProperties:
+                  type: string
                 type: object
               version:
                 type: string
@@ -109,6 +123,8 @@ spec:
             description: KeptnWorkloadInstanceStatus defines the observed state of
               KeptnWorkloadInstance
             properties:
+              currentPhase:
+                type: string
               deploymentStatus:
                 default: Pending
                 type: string
@@ -201,6 +217,9 @@ spec:
                 type: array
               startTime:
                 format: date-time
+                type: string
+              status:
+                default: Pending
                 type: string
             type: object
         type: object

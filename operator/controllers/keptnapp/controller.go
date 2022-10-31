@@ -107,6 +107,12 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			return ctrl.Result{}, err
 		}
 		r.Recorder.Event(app, "Normal", "AppVersionCreated", fmt.Sprintf("Created KeptnAppVersion / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+
+		app.Status.CurrentVersion = app.Spec.Version
+		if err := r.Client.Status().Update(ctx, app); err != nil {
+			r.Log.Error(err, "could not update Current Version of App")
+			return ctrl.Result{}, err
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -129,12 +135,23 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
+	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, "appversion_deployment", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	defer spanAppTrace.End()
+
 	semconv.AddAttributeFromApp(span, *app)
+	semconv.AddAttributeFromApp(spanAppTrace, *app)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+	appTraceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctxAppTrace, appTraceContextCarrier)
+
+	previousVersion := ""
+	if app.Spec.Version != app.Status.CurrentVersion {
+		previousVersion = app.Status.CurrentVersion
+	}
 
 	appVersion := &klcv1alpha1.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
@@ -143,8 +160,10 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 			Namespace:   app.Namespace,
 		},
 		Spec: klcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec: app.Spec,
-			AppName:      app.Name,
+			KeptnAppSpec:    app.Spec,
+			AppName:         app.Name,
+			PreviousVersion: previousVersion,
+			TraceId:         appTraceContextCarrier,
 		},
 	}
 	err := controllerutil.SetControllerReference(app, appVersion, r.Scheme)

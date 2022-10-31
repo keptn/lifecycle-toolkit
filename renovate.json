@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":gitSignOff",
+    "schedule:nonOfficeHours",
+    ":semanticCommitTypeAll(deps)",
+    "group:monorepos",
+    ":automergePatch"
+  ],
+  "addLabels": ["dependencies"],
+  "cloneSubmodules": true,
+  "prConcurrentLimit": 15,
+  "stabilityDays": 3,
+  "timezone": "Europe/Vienna",
+  "postUpdateOptions": [
+    "gomodTidy",
+    "gomodMassage"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "addLabels": ["go"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"]
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "addLabels": ["docker"]
+    }
+  ]
+}

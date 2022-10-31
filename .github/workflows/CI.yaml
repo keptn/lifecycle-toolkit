@@ -192,7 +192,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ matrix.config.name }}:test'
+          image-ref: 'localhost:5000/${{ matrix.config.name }}:dev-${{ env.DATETIME }}'
           format: "template"
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"

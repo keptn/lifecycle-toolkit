@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -71,12 +72,12 @@ func (r *KeptnAppVersionReconciler) reconcileTasks(ctx context.Context, checkTyp
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := controllercommon.GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			r.recordEvent(phase, "Normal", appVersion, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status))
+			controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), appVersion.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed
@@ -119,7 +120,7 @@ func (r *KeptnAppVersionReconciler) reconcileTasks(ctx context.Context, checkTyp
 		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
 	if common.GetOverallState(summary) != common.StateSucceeded {
-		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFinished", "has not finished", appVersion.GetVersion())
 	}
 	return newStatus, summary, nil
 }
@@ -163,23 +164,10 @@ func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespa
 	err = r.Client.Create(ctx, newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.recordEvent(phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask", appVersion.GetVersion())
 		return "", err
 	}
-	r.recordEvent(phase, "Normal", appVersion, "Created", "created")
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", appVersion.GetVersion())
 
 	return newTask.Name, nil
-}
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
 }

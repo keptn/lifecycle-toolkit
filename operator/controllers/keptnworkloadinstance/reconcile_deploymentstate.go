@@ -2,6 +2,7 @@ package keptnworkloadinstance
 
 import (
 	"context"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	appsv1 "k8s.io/api/apps/v1"
@@ -13,51 +14,52 @@ import (
 
 func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (common.KeptnState, error) {
 	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
-
 		isPodRunning, err := r.isPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 		if err != nil {
 			return common.StateUnknown, err
 		}
 		if isPodRunning {
 			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
+		} else {
+			workloadInstance.Status.DeploymentStatus = common.StateProgressing
+		}
+	} else {
+		isReplicaRunning, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+		if err != nil {
+			return common.StateUnknown, err
+		}
+		if isReplicaRunning {
+			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
+		} else {
+			workloadInstance.Status.DeploymentStatus = common.StateProgressing
 		}
 	}
 
-	isReplicaRunning, count, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
-	if err != nil {
-		return common.StateUnknown, err
-	}
-	if isReplicaRunning {
-		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
-	} else if count > 0 {
-		workloadInstance.Status.DeploymentStatus = common.StateProgressing
-	}
-
-	err = r.Client.Status().Update(ctx, workloadInstance)
+	err := r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		return common.StateUnknown, err
 	}
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, int32, error) {
+func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 	replica := &appsv1.ReplicaSetList{}
 	if err := r.Client.List(ctx, replica, client.InNamespace(namespace)); err != nil {
-		return false, 0, err
+		return false, err
 	}
 	for _, re := range replica.Items {
 		if re.UID == resource.UID {
 			replicas, err := r.getDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
 			if err != nil {
-				return false, re.Status.ReadyReplicas, err
+				return false, err
 			}
 			if re.Status.ReadyReplicas == replicas {
-				return true, re.Status.ReadyReplicas, nil
+				return true, nil
 			}
-			return false, re.Status.ReadyReplicas, nil
+			return false, nil
 		}
 	}
-	return false, 0, nil
+	return false, nil
 
 }
 

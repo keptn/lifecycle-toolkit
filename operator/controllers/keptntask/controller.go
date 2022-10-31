@@ -79,11 +79,17 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	task.SetStartTime()
 
-	err := r.Client.Status().Update(ctx, task)
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		return ctrl.Result{Requeue: true}, err
+	if task.Status.Status.IsPending() {
+		task.Status.Status = common.StateProgressing
 	}
+
+	defer func(task *klcv1alpha1.KeptnTask) {
+		err := r.Client.Status().Update(ctx, task)
+		if err != nil {
+			r.Log.Error(err, "could not update status")
+		}
+
+	}(task)
 
 	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
 	if err != nil {
@@ -114,12 +120,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Task is completed at this place
 	task.SetEndTime()
-
-	err = r.Client.Status().Update(ctx, task)
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		return ctrl.Result{Requeue: true}, err
-	}
 
 	attrs := task.GetMetricsAttributes()
 

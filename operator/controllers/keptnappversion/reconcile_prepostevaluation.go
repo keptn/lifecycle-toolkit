@@ -8,6 +8,7 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -71,12 +72,12 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 			}
 		}
 
-		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
+		evaluationStatus := controllercommon.GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha1.KeptnEvaluation{}
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
-			r.recordEvent(phase, "Normal", appVersion, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status))
+			controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), appVersion.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -119,7 +120,7 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
 	if common.GetOverallState(summary) != common.StateSucceeded {
-		r.recordEvent(phase, "Warning", appVersion, "NotFinished", "has not finished")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFinished", "has not finished", appVersion.GetVersion())
 	}
 	return newStatus, summary, nil
 }
@@ -164,23 +165,10 @@ func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, n
 	err = r.Client.Create(ctx, newEvaluation)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnEvaluation")
-		r.recordEvent(phase, "Warning", appVersion, "CreateFailed", "could not create KeptnEvaluation")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "CreateFailed", "could not create KeptnEvaluation", appVersion.GetVersion())
 		return "", err
 	}
-	r.recordEvent(phase, "Normal", appVersion, "Created", "created")
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", appVersion.GetVersion())
 
 	return newEvaluation.Name, nil
-}
-
-func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.EvaluationStatus) klcv1alpha1.EvaluationStatus {
-	for _, status := range instanceStatus {
-		if status.EvaluationDefinitionName == evaluationName {
-			return status
-		}
-	}
-	return klcv1alpha1.EvaluationStatus{
-		EvaluationDefinitionName: evaluationName,
-		Status:                   common.StatePending,
-		EvaluationName:           "",
-	}
 }

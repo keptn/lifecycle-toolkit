@@ -51,6 +51,10 @@ func (k KeptnState) IsFailed() bool {
 	return k == StateFailed
 }
 
+func (k KeptnState) IsPending() bool {
+	return k == StatePending
+}
+
 type StatusSummary struct {
 	Total       int
 	progressing int

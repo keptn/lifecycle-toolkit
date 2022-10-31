@@ -7,6 +7,7 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -40,15 +41,6 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 	return overallState, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, taskName string, namespace string) (*klcv1alpha1.KeptnTask, error) {
-	task := &klcv1alpha1.KeptnTask{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: namespace}, task)
-	if err != nil {
-		return task, err
-	}
-	return task, nil
-}
-
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
 	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
@@ -59,6 +51,12 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	phase := common.KeptnPhaseType{
+		ShortName: "KeptnTaskCreate",
+		LongName:  "Keptn Task Create",
+	}
+
 	newTask := &klcv1alpha1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        common.GenerateTaskName(checkType, taskDefinition),
@@ -82,10 +80,10 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, n
 	err = r.Client.Create(ctx, newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.Recorder.Event(workloadInstance, "Warning", "KeptnTaskNotCreated", fmt.Sprintf("Could not create KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "CreateFailed", "could not create KeptnTask", workloadInstance.GetVersion())
 		return "", err
 	}
-	r.Recorder.Event(workloadInstance, "Normal", "KeptnTaskCreated", fmt.Sprintf("Created KeptnTask / Namespace: %s, Name: %s ", newTask.Namespace, newTask.Name))
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Created", "created", workloadInstance.GetVersion())
 
 	return newTask.Name, nil
 }
@@ -121,12 +119,12 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := controllercommon.GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			r.recordEvent(phase, "Normal", workloadInstance, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status))
+			controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), workloadInstance.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed
@@ -169,20 +167,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 		summary = common.UpdateStatusSummary(ns.Status, summary)
 	}
 	if common.GetOverallState(summary) != common.StateSucceeded {
-		r.Recorder.Event(workloadInstance, "Warning", "TasksNotFinished", fmt.Sprintf("Tasks have not finished / Namespace: %s, Name: %s, Summary: %v ", workloadInstance.Namespace, workloadInstance.Name, summary))
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "NotFinished", "tasks have not finished", workloadInstance.GetVersion())
 	}
 	return newStatus, summary, nil
-}
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
 }

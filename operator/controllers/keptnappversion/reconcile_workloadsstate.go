@@ -2,10 +2,10 @@ package keptnappversion
 
 import (
 	"context"
-	"fmt"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -15,12 +15,17 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	var summary common.StatusSummary
 	summary.Total = len(appVersion.Spec.Workloads)
 
+	phase := common.KeptnPhaseType{
+		ShortName: "ReconcileWorkload",
+		LongName:  "Reconcile Workloads",
+	}
+
 	var newStatus []klcv1alpha1.WorkloadStatus
 	for _, w := range appVersion.Spec.Workloads {
 		r.Log.Info("Reconciling workload " + w.Name)
 		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
 		if err != nil && errors.IsNotFound(err) {
-			r.Recorder.Event(appVersion, "Warning", "WorkloadNotFound", fmt.Sprintf("Could not find KeptnWorkloadInstance / Namespace: %s, Name: %s ", appVersion.Namespace, w.Name))
+			controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
 			workload.Status.Status = common.StatePending
 		} else if err != nil {
 			r.Log.Error(err, "Could not get workload")

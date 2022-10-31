@@ -11,7 +11,7 @@ require (
 	github.com/onsi/gomega v1.18.1
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prometheus/common v0.37.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.opentelemetry.io/otel v1.11.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.10.0
 	go.opentelemetry.io/otel/exporters/prometheus v0.32.3

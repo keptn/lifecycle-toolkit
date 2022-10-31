@@ -179,10 +179,17 @@ jobs:
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
+      - name: Build Docker Image Local
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          outputs: type=docker,dest=${{ github.workspace }}/${{ matrix.config.name }}.tar
+          tags: ${{ matrix.config.name }}:test
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/keptn/${{ matrix.config.name }}:dev-${{ env.DATETIME }}'
+          input: /github/workspace/${{ matrix.config.name }}.tar
           format: "template"
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"

@@ -41,15 +41,6 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 	return overallState, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getKeptnTask(ctx context.Context, taskName string, namespace string) (*klcv1alpha1.KeptnTask, error) {
-	task := &klcv1alpha1.KeptnTask{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: namespace}, task)
-	if err != nil {
-		return task, err
-	}
-	return task, nil
-}
-
 func (r *KeptnWorkloadInstanceReconciler) createKeptnTask(ctx context.Context, namespace string, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, taskDefinition string, checkType common.CheckType) (string, error) {
 	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
@@ -128,7 +119,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := controllercommon.GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
@@ -179,17 +170,4 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileTasks(ctx context.Context, ch
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "NotFinished", "tasks have not finished", workloadInstance.GetVersion())
 	}
 	return newStatus, summary, nil
-}
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
 }

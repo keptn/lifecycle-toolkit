@@ -72,7 +72,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileEvaluations(ctx context.Conte
 			}
 		}
 
-		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
+		evaluationStatus := controllercommon.GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha1.KeptnEvaluation{}
 		evaluationExists := false
 
@@ -171,17 +171,4 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnEvaluation(ctx context.Cont
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Created", "created", workloadInstance.GetVersion())
 
 	return newEvaluation.Name, nil
-}
-
-func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.EvaluationStatus) klcv1alpha1.EvaluationStatus {
-	for _, status := range instanceStatus {
-		if status.EvaluationDefinitionName == evaluationName {
-			return status
-		}
-	}
-	return klcv1alpha1.EvaluationStatus{
-		EvaluationDefinitionName: evaluationName,
-		Status:                   common.StatePending,
-		EvaluationName:           "",
-	}
 }

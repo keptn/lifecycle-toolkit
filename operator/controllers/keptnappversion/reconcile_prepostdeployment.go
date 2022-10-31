@@ -72,7 +72,7 @@ func (r *KeptnAppVersionReconciler) reconcileTasks(ctx context.Context, checkTyp
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := controllercommon.GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha1.KeptnTask{}
 		taskExists := false
 
@@ -170,17 +170,4 @@ func (r *KeptnAppVersionReconciler) createKeptnTask(ctx context.Context, namespa
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", appVersion.GetVersion())
 
 	return newTask.Name, nil
-}
-
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
-	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
-			return status
-		}
-	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
-	}
 }

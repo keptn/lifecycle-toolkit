@@ -72,7 +72,7 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 			}
 		}
 
-		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
+		evaluationStatus := controllercommon.GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha1.KeptnEvaluation{}
 		evaluationExists := false
 
@@ -171,17 +171,4 @@ func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, n
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", appVersion.GetVersion())
 
 	return newEvaluation.Name, nil
-}
-
-func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.EvaluationStatus) klcv1alpha1.EvaluationStatus {
-	for _, status := range instanceStatus {
-		if status.EvaluationDefinitionName == evaluationName {
-			return status
-		}
-	}
-	return klcv1alpha1.EvaluationStatus{
-		EvaluationDefinitionName: evaluationName,
-		Status:                   common.StatePending,
-		EvaluationName:           "",
-	}
 }

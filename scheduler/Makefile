@@ -75,7 +75,7 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: test
-test: fmt vet ## Run tests.
+test: ## Run tests.
 	go test ./... -coverprofile cover.out
 
 .PHONY: kustomize

@@ -23,6 +23,9 @@ type PhaseItem interface {
 	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetEndTime() time.Time
 	GetStartTime() time.Time
+	GetPreviousVersion() string
+	GetParentName() string
+	GetNamespace() string
 }
 
 type PhaseItemWrapper struct {
@@ -83,6 +86,18 @@ func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 
 func (pw PhaseItemWrapper) IsEndTimeSet() bool {
 	return pw.Obj.IsEndTimeSet()
+}
+
+func (pw PhaseItemWrapper) GetPreviousVersion() string {
+	return pw.Obj.GetPreviousVersion()
+}
+
+func (pw PhaseItemWrapper) GetParentName() string {
+	return pw.Obj.GetParentName()
+}
+
+func (pw PhaseItemWrapper) GetNamespace() string {
+	return pw.Obj.GetNamespace()
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

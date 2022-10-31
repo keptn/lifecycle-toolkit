@@ -398,7 +398,7 @@ func main() {
 				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			appDeploymentInterval, err := appVersionReconciler.GetDeploymentInterval(ctx)
+			appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppList{}, &lifecyclev1alpha1.KeptnApp{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather app deployment intervals")
 			}
@@ -414,7 +414,7 @@ func main() {
 				appDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			workloadDeploymentInterval, err := workloadInstanceReconciler.GetDeploymentInterval(ctx)
+			workloadDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{}, &lifecyclev1alpha1.KeptnWorkloadInstance{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather workload deployment intervals")
 			}

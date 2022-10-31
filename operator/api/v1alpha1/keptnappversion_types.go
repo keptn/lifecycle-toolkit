@@ -215,6 +215,18 @@ func (v KeptnAppVersion) GetState() common.KeptnState {
 	return v.Status.Status
 }
 
+func (v KeptnAppVersion) GetPreviousVersion() string {
+	return v.Spec.PreviousVersion
+}
+
+func (v KeptnAppVersion) GetParentName() string {
+	return v.Spec.AppName
+}
+
+func (v KeptnAppVersion) GetNamespace() string {
+	return v.Namespace
+}
+
 func (v *KeptnAppVersion) SetState(state common.KeptnState) {
 	v.Status.Status = state
 }

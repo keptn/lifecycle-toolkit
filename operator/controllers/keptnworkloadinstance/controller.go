@@ -343,32 +343,10 @@ func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Cont
 				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousWorkloadInstance.Status.EndTime.Time)
 				res = append(res, common.GaugeFloatValue{
 					Value:      previousInterval.Seconds(),
-					Attributes: workloadInstance.GetIntervalMetricsAttributes(),
+					Attributes: workloadInstance.GetDurationMetricsAttributes(),
 				})
 			}
 		}
 	}
-	return res, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-
-	for _, workloadInstance := range workloadInstances.Items {
-		if workloadInstance.IsEndTimeSet() {
-			duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
-			res = append(res, common.GaugeFloatValue{
-				Value:      duration.Seconds(),
-				Attributes: workloadInstance.GetIntervalMetricsAttributes(),
-			})
-		}
-	}
-
 	return res, nil
 }

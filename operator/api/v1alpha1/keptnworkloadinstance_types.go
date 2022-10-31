@@ -112,6 +112,10 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
+func (v KeptnWorkloadInstanceList) GetItems() []KeptnWorkloadInstance {
+	return v.Items
+}
+
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
@@ -235,7 +239,7 @@ func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	}
 }
 
-func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyValue {
+func (i KeptnWorkloadInstance) GetDurationMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(i.Spec.AppName),
 		common.WorkloadName.String(i.Spec.WorkloadName),
@@ -246,6 +250,14 @@ func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyVal
 
 func (i KeptnWorkloadInstance) GetState() common.KeptnState {
 	return i.Status.Status
+}
+
+func (i KeptnWorkloadInstance) GetStartTime() time.Time {
+	return i.Status.StartTime.Time
+}
+
+func (i KeptnWorkloadInstance) GetEndTime() time.Time {
+	return i.Status.EndTime.Time
 }
 
 func (i *KeptnWorkloadInstance) SetState(state common.KeptnState) {

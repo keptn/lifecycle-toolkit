@@ -234,3 +234,12 @@ func (v KeptnAppVersion) GetVersion() string {
 func (v KeptnAppVersion) GetSpanName(phase string) string {
 	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
 }
+
+func (v KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.WorkloadVersion.String(v.Spec.PreviousVersion),
+		common.WorkloadVersion.String(v.Namespace),
+	}
+}

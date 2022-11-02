@@ -9,6 +9,6 @@ configMapGenerator:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: image
+- name: controller
   newName: ghcr.io/keptn/keptn-lifecycle-operator
   newTag: "202210171665999134"

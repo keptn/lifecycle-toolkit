@@ -53,7 +53,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Log         logr.Logger
 	Meters      common.KeptnMeters
 	Tracer      trace.Tracer
-	SpanHandler controllercommon.SpanHandler
+	SpanHandler *controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete

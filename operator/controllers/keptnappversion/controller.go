@@ -53,7 +53,7 @@ type KeptnAppVersionReconciler struct {
 	Recorder    record.EventRecorder
 	Tracer      trace.Tracer
 	Meters      common.KeptnMeters
-	SpanHandler controllercommon.SpanHandler
+	SpanHandler *controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete

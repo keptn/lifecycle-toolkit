@@ -255,7 +255,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	spanHandler := controllercommon.SpanHandler{}
+	spanHandler := &controllercommon.SpanHandler{}
 
 	if !disableWebhook {
 		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{

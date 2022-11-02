@@ -16,6 +16,7 @@ type PhaseItem interface {
 	SetCurrentPhase(string)
 	GetVersion() string
 	GetMetricsAttributes() []attribute.KeyValue
+	GetSpanAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 }
@@ -62,4 +63,8 @@ func (pw PhaseItemWrapper) GetVersion() string {
 
 func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 	return pw.Obj.GetSpanName(phase)
+}
+
+func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
+	return pw.Obj.GetSpanAttributes()
 }

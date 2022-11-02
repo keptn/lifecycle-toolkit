@@ -63,10 +63,6 @@ jobs:
     name: Compile
     needs: prepare_ci_run
     runs-on: ubuntu-22.04
-    env:
-      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
-      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
       matrix:
         config:
@@ -87,12 +83,10 @@ jobs:
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Go vet
-        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         run: go vet ./...
 
       - name: Go fmt
-        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         run: go fmt ./...
 

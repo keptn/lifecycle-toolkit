@@ -50,9 +50,9 @@ jobs:
 
       - name: Get workflow run type
         id: get_run_type
-        env:
-          NON_FORKED_AND_NON_ROBOT_RUN: ${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
         run:
+          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+          echo "$NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   compile:

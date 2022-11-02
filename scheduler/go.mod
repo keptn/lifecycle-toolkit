@@ -14,7 +14,7 @@ require (
 	k8s.io/apimachinery v0.24.7
 	k8s.io/client-go v0.24.7
 	k8s.io/component-base v0.24.7
-	k8s.io/klog/v2 v2.60.1
+	k8s.io/klog/v2 v2.80.1
 	k8s.io/kubernetes v1.24.7
 )
 

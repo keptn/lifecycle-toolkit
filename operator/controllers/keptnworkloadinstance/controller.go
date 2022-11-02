@@ -22,8 +22,6 @@ import (
 	"reflect"
 	"time"
 
-	"golang.org/x/mod/semver"
-
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"

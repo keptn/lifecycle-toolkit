@@ -303,17 +303,12 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	}
 	latestVersion := klcv1alpha1.KeptnAppVersion{}
 	for _, app := range apps.Items {
-		r.Log.Info("DEBUG: " + app.Spec.AppName + "==" + wli.Spec.AppName)
 		if app.Spec.AppName == wli.Spec.AppName {
-			r.Log.Info("DEBUG: FOUND - " + wli.Spec.AppName)
 
 			for _, appWorkload := range app.Spec.Workloads {
-				r.Log.Info("DEBUG: " + appWorkload.Version + "==" + wli.Spec.Version + " && " + fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) + "==" + wli.Spec.WorkloadName)
 				if !reflect.DeepEqual(latestVersion, app) {
 					latestVersion = app
 				} else if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
-					r.Log.Info("DEBUG: FOUND - " + fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name))
-					r.Log.Info("DEBUG: Version - " + app.Spec.Version)
 					oldVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {
 						r.Log.Error(err, "could not parse version")
@@ -323,7 +318,6 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 						r.Log.Error(err, "could not parse version")
 					}
 					if oldVersion.LessThan(newVersion) {
-						r.Log.Info("DEBUG: Set latest version " + oldVersion.String() + "<" + newVersion.String() + " - " + app.Spec.Version)
 						latestVersion = app
 					}
 				}
@@ -331,7 +325,6 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		}
 	}
 
-	r.Log.Info("DEBUG: Selected Version - " + latestVersion.Spec.Version)
 	if latestVersion.Spec.Version == "" {
 		return false, klcv1alpha1.KeptnAppVersion{}, nil
 	}

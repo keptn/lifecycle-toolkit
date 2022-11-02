@@ -85,7 +85,6 @@ $(KUSTOMIZE): $(LOCALBIN)
 
 .PHONY: release-manifests
 release-manifests: kustomize
-	echo $RELEASE_REGISTRY
 	cd manifests/install && $(KUSTOMIZE) edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
 

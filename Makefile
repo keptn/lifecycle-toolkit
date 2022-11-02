@@ -12,11 +12,6 @@ ARCH?=amd64
 cleanup-manifests:
 	rm -rf manifests
 
-.PHONY: echo_registry
-echo_registry:
-	$(MAKE) -C scheduler echo_registry RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-
-
 .PHONY: build-deploy-operator
 build-deploy-operator: deploy-cert-manager
 	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)

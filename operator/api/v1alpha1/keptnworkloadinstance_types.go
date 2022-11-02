@@ -22,6 +22,8 @@ import (
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -314,4 +316,29 @@ func (i KeptnWorkloadInstance) GetVersion() string {
 
 func (v KeptnWorkloadInstance) GetSpanName(phase string) string {
 	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
+}
+
+func (v KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
+	return KeptnTask{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        common.GenerateTaskName(checkType, taskDefinition),
+			Namespace:   v.Namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: KeptnTaskSpec{
+			AppName:          v.GetAppName(),
+			WorkloadVersion:  v.GetParentName(),
+			Workload:         v.GetVersion(),
+			TaskDefinition:   taskDefinition,
+			Parameters:       TaskParameters{},
+			SecureParameters: SecureParameters{},
+			Type:             checkType,
+		},
+	}
+}
+
+func (v KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(common.AppName.String(v.GetAppName()))
+	span.SetAttributes(common.WorkloadName.String(v.GetParentName()))
+	span.SetAttributes(common.WorkloadVersion.String(v.GetVersion()))
 }

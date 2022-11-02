@@ -38,7 +38,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -85,7 +84,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	ctx, span := r.Tracer.Start(ctx, "reconcile_app", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromApp(span, *app)
+	app.SetSpanAttributes(span)
 
 	r.Log.Info("Reconciling Keptn App", "app", app.Name)
 
@@ -139,8 +138,8 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, "appversion_deployment", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer spanAppTrace.End()
 
-	semconv.AddAttributeFromApp(span, *app)
-	semconv.AddAttributeFromApp(spanAppTrace, *app)
+	app.SetSpanAttributes(span)
+	app.SetSpanAttributes(spanAppTrace)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key

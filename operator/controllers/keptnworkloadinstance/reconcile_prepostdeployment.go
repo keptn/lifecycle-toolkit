@@ -2,6 +2,7 @@ package keptnworkloadinstance
 
 import (
 	"context"
+	"fmt"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
@@ -17,10 +18,17 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 		Tracer:      r.Tracer,
 		Scheme:      r.Scheme,
 	}
-	newStatus, state, err := taskHandler.ReconcileTasks(ctx, checkType, workloadInstance, false)
+
+	taskCreateAttributes := controllercommon.TaskCreateAttributes{
+		SpanName:  fmt.Sprintf(common.CreateWorkloadTaskSpanName, checkType),
+		CheckType: checkType,
+	}
+
+	newStatus, state, err := taskHandler.ReconcileTasks(ctx, workloadInstance, taskCreateAttributes)
 	if err != nil {
 		return common.StateUnknown, err
 	}
+
 	overallState := common.GetOverallState(state)
 
 	switch checkType {

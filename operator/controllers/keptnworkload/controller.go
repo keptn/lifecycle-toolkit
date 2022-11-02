@@ -19,7 +19,7 @@ package keptnworkload
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -84,7 +84,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	ctx, span := r.Tracer.Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkload(span, *workload)
+	workload.SetSpanAttributes(span)
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
@@ -134,7 +134,7 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkload(span, *workload)
+	workload.SetSpanAttributes(span)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key

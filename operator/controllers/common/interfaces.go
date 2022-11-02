@@ -5,8 +5,11 @@ import (
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -17,7 +20,6 @@ type PhaseItem interface {
 	GetCurrentPhase() string
 	SetCurrentPhase(string)
 	GetVersion() string
-	GetMetricsAttributes() []attribute.KeyValue
 	GetActiveMetricsAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
@@ -33,6 +35,8 @@ type PhaseItem interface {
 	GetPostDeploymentTasks() []string
 	GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus
 	GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus
+	GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
+	SetSpanAttributes(span trace.Span)
 }
 
 type PhaseItemWrapper struct {
@@ -61,10 +65,6 @@ func (pw PhaseItemWrapper) GetCurrentPhase() string {
 
 func (pw *PhaseItemWrapper) SetCurrentPhase(phase string) {
 	pw.Obj.SetCurrentPhase(phase)
-}
-
-func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetMetricsAttributes()
 }
 
 func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
@@ -129,6 +129,14 @@ func (pw PhaseItemWrapper) GetAppName() string {
 
 func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return pw.Obj.GetActiveMetricsAttributes()
+}
+
+func (pw PhaseItemWrapper) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
+	return pw.Obj.GenerateTask(traceContextCarrier, taskDefinition, checkType)
+}
+
+func (pw PhaseItemWrapper) SetSpanAttributes(span trace.Span) {
+	pw.Obj.SetSpanAttributes(span)
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

@@ -7,7 +7,6 @@ import (
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -130,7 +129,7 @@ func (r *KeptnWorkloadInstanceReconciler) createKeptnEvaluation(ctx context.Cont
 	ctx, span := r.Tracer.Start(ctx, "create_workload_evaluation", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
+	workloadInstance.SetSpanAttributes(span)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key

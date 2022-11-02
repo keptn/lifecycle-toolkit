@@ -2,6 +2,7 @@ package keptnappversion
 
 import (
 	"context"
+	"fmt"
 
 	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
 
@@ -18,7 +19,13 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Conte
 		Tracer:      r.Tracer,
 		Scheme:      r.Scheme,
 	}
-	newStatus, state, err := taskHandler.ReconcileTasks(ctx, checkType, appVersion, true)
+
+	taskCreateAttributes := controllercommon.TaskCreateAttributes{
+		SpanName:  fmt.Sprintf(common.CreateAppTaskSpanName, checkType),
+		CheckType: checkType,
+	}
+
+	newStatus, state, err := taskHandler.ReconcileTasks(ctx, appVersion, taskCreateAttributes)
 	if err != nil {
 		return common.StateUnknown, err
 	}

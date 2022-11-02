@@ -18,7 +18,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type TaskHandler struct {
@@ -30,9 +29,13 @@ type TaskHandler struct {
 	Scheme      *runtime.Scheme
 }
 
-type CreateTaskFunc func(ctx context.Context, namespace string, appVersion client.Object, taskDefinition string, checkType common.CheckType) (string, error)
+type TaskCreateAttributes struct {
+	SpanName       string
+	TaskDefinition string
+	CheckType      common.CheckType
+}
 
-func (r TaskHandler) ReconcileTasks(ctx context.Context, checkType apicommon.CheckType, reconcileObject client.Object, app bool) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
+func (r TaskHandler) ReconcileTasks(ctx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -46,7 +49,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, checkType apicommon.Che
 	var tasks []string
 	var statuses []klcv1alpha1.TaskStatus
 
-	switch checkType {
+	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
 		tasks = piWrapper.GetPreDeploymentTasks()
 		statuses = piWrapper.GetPreDeploymentTaskStatus()
@@ -94,17 +97,10 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, checkType apicommon.Che
 
 		// Create new Task if it does not exist
 		if !taskExists {
-			var taskName string
-			if app {
-				taskName, err = r.CreateKeptnTaskFromApp(ctx, piWrapper.GetNamespace(), reconcileObject, taskDefinitionName, checkType)
-				if err != nil {
-					return nil, summary, err
-				}
-			} else {
-				taskName, err = r.CreateKeptnTaskFromWorkload(ctx, piWrapper.GetNamespace(), reconcileObject, taskDefinitionName, checkType)
-				if err != nil {
-					return nil, summary, err
-				}
+			taskCreateAttributes.TaskDefinition = taskDefinitionName
+			taskName, err := r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+			if err != nil {
+				return nil, summary, err
 			}
 			taskStatus.TaskName = taskName
 			taskStatus.SetStartTime()
@@ -128,19 +124,16 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, checkType apicommon.Che
 	return newStatus, summary, nil
 }
 
-func (r TaskHandler) CreateKeptnTaskFromApp(ctx context.Context, namespace string, appVersion client.Object, taskDefinition string, checkType common.CheckType) (string, error) {
+func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, appVersion client.Object, taskCreateAttributes TaskCreateAttributes) (string, error) {
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(appVersion)
 	if err != nil {
 		return "", err
 	}
 
-	ctx, span := r.Tracer.Start(ctx, "create_app_task", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.Tracer.Start(ctx, taskCreateAttributes.SpanName, trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	//semconv.AddAttributeFromAppVersion(span, piWrapper)
-	span.SetAttributes(common.AppName.String(piWrapper.GetParentName()))
-	span.SetAttributes(common.AppVersion.String(piWrapper.GetVersion()))
-	span.SetAttributes(common.WorkloadVersion.String(piWrapper.GetVersion()))
+	piWrapper.SetSpanAttributes(span)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
@@ -152,87 +145,18 @@ func (r TaskHandler) CreateKeptnTaskFromApp(ctx context.Context, namespace strin
 		LongName:  "Keptn Task Create",
 	}
 
-	newTask := &klcv1alpha1.KeptnTask{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        apicommon.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   namespace,
-			Annotations: traceContextCarrier,
-		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
-			AppVersion:       piWrapper.GetVersion(),
-			AppName:          piWrapper.GetParentName(),
-			TaskDefinition:   taskDefinition,
-			Parameters:       klcv1alpha1.TaskParameters{},
-			SecureParameters: klcv1alpha1.SecureParameters{},
-			Type:             checkType,
-		},
-	}
-	err = controllerutil.SetControllerReference(appVersion, newTask, r.Scheme)
+	newTask := piWrapper.GenerateTask(traceContextCarrier, taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
+	err = controllerutil.SetControllerReference(appVersion, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
 	}
-	err = r.Client.Create(ctx, newTask)
+	err = r.Client.Create(ctx, &newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
 		RecordEvent(r.Recorder, phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
 	RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", piWrapper.GetVersion())
-
-	return newTask.Name, nil
-}
-
-func (r TaskHandler) CreateKeptnTaskFromWorkload(ctx context.Context, namespace string, workloadInstance client.Object, taskDefinition string, checkType common.CheckType) (string, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(workloadInstance)
-	if err != nil {
-		return "", err
-	}
-
-	ctx, span := r.Tracer.Start(ctx, fmt.Sprintf("create_%s_deployment_task", checkType), trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	//semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
-	span.SetAttributes(common.AppName.String(piWrapper.GetAppName()))
-	span.SetAttributes(common.WorkloadName.String(piWrapper.GetParentName()))
-	span.SetAttributes(common.WorkloadVersion.String(piWrapper.GetVersion()))
-
-	// create TraceContext
-	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
-
-	phase := common.KeptnPhaseType{
-		ShortName: "KeptnTaskCreate",
-		LongName:  "Keptn Task Create",
-	}
-
-	newTask := &klcv1alpha1.KeptnTask{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   namespace,
-			Annotations: traceContextCarrier,
-		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
-			AppName:          piWrapper.GetAppName(),
-			WorkloadVersion:  piWrapper.GetParentName(),
-			Workload:         piWrapper.GetVersion(),
-			TaskDefinition:   taskDefinition,
-			Parameters:       klcv1alpha1.TaskParameters{},
-			SecureParameters: klcv1alpha1.SecureParameters{},
-			Type:             checkType,
-		},
-	}
-	err = controllerutil.SetControllerReference(workloadInstance, newTask, r.Scheme)
-	if err != nil {
-		r.Log.Error(err, "could not set controller reference:")
-	}
-	err = r.Client.Create(ctx, newTask)
-	if err != nil {
-		r.Log.Error(err, "could not create KeptnTask")
-		RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
-		return "", err
-	}
-	RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Created", "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
 }

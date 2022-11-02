@@ -21,6 +21,7 @@ import (
 
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -140,4 +141,13 @@ func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 		common.TaskType.String(string(i.Spec.Type)),
 		common.TaskStatus.String(string(i.Status.Status)),
 	}
+}
+
+func (t KeptnTask) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(common.AppName.String(t.Spec.AppName))
+	span.SetAttributes(common.AppVersion.String(t.Spec.AppVersion))
+	span.SetAttributes(common.WorkloadName.String(t.Spec.Workload))
+	span.SetAttributes(common.WorkloadVersion.String(t.Spec.WorkloadVersion))
+	span.SetAttributes(common.TaskName.String(t.Name))
+	span.SetAttributes(common.TaskType.String(string(t.Spec.Type)))
 }

@@ -19,6 +19,8 @@ package v1alpha1
 import (
 	"strings"
 
+	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -76,4 +78,9 @@ func init() {
 
 func (w KeptnWorkload) GetWorkloadInstanceName() string {
 	return strings.ToLower(w.Name + "-" + w.Spec.Version)
+}
+
+func (v KeptnWorkload) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(common.AppName.String(v.Name))
+	span.SetAttributes(common.WorkloadVersion.String(v.Spec.Version))
 }

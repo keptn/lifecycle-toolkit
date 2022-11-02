@@ -24,7 +24,6 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -75,7 +74,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromTask(span, *task)
+	task.SetSpanAttributes(span)
 
 	task.SetStartTime()
 

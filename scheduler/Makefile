@@ -23,7 +23,6 @@ LOCAL_IMAGE=kube-scheduler:latest
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn
-RELEASE_VERSION?=$(shell date +%Y%m%d%s) #$(shell git describe --tags --match "v*")
 RELEASE_IMAGE:=scheduler:$(TAG)
 
 # VERSION is the scheduler's version
@@ -31,7 +30,8 @@ RELEASE_IMAGE:=scheduler:$(TAG)
 # The SCHEDULER_COMPATIBLE_K8S_VERSION variable can have one of two formats:
 # v20201009-v0.18.800-46-g939c1c0 - automated build for a commit(not a tag) and also a local build
 # v20200521-v0.18.800             - automated build for a tag
-SCHEDULER_COMPATIBLE_K8S_VERSION?=v0.24.3
+RELEASE_VERSION?=$(shell date +%Y%m%d%s)-v0.24.3
+SCHEDULER_COMPATIBLE_K8S_VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 BUILD_TIME=$(shell date -u "+%F_%T")
 
@@ -85,7 +85,8 @@ $(KUSTOMIZE): $(LOCALBIN)
 
 .PHONY: release-manifests
 release-manifests: kustomize
-	cd manifests/install && $(KUSTOMIZE) edit set image klfc-scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	echo $RELEASE_REGISTRY
+	cd manifests/install && $(KUSTOMIZE) edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
 
 .PHONY: local-image
@@ -125,7 +126,7 @@ release-local.amd64: clean
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
-		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 . \
 		--platform linux/amd64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
@@ -136,7 +137,7 @@ release-local.arm64: clean
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
-		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 . \
 		--platform linux/arm64
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
@@ -148,3 +149,7 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+.PHONY: echo_registry
+echo_registry:
+	echo $(RELEASE_REGISTRY)

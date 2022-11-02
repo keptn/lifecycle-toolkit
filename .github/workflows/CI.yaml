@@ -157,7 +157,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Login to GitHub Container Registry
-        if: needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         uses: docker/login-action@v2
         with:
           registry: "ghcr.io"
@@ -179,24 +179,24 @@ jobs:
             CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
             SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
-          push: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
+          push: ${{ needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: ./${{ matrix.config.folder }}
         env:
           TAG: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml
-        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest

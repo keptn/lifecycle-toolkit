@@ -11,16 +11,15 @@ import (
 
 func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, checkType common.CheckType) (common.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
-		Client:      r.Client,
-		Recorder:    r.Recorder,
-		Log:         r.Log,
-		SpanHandler: r.SpanHandler,
-		Tracer:      r.Tracer,
-		Scheme:      r.Scheme,
+		Client:   r.Client,
+		Recorder: r.Recorder,
+		Log:      r.Log,
+		Tracer:   r.Tracer,
+		Scheme:   r.Scheme,
 	}
 
 	evaluationCreateAttributes := controllercommon.EvaluationCreateAttributes{
-		SpanName:  fmt.Sprintf(common.CreateAppTaskSpanName, checkType),
+		SpanName:  fmt.Sprintf(common.CreateAppEvalSpanName, checkType),
 		CheckType: checkType,
 	}
 

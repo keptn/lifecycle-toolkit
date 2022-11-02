@@ -11,12 +11,11 @@ import (
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType common.CheckType) (common.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
-		Client:      r.Client,
-		Recorder:    r.Recorder,
-		Log:         r.Log,
-		SpanHandler: r.SpanHandler,
-		Tracer:      r.Tracer,
-		Scheme:      r.Scheme,
+		Client:   r.Client,
+		Recorder: r.Recorder,
+		Log:      r.Log,
+		Tracer:   r.Tracer,
+		Scheme:   r.Scheme,
 	}
 
 	taskCreateAttributes := controllercommon.TaskCreateAttributes{

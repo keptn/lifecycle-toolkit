@@ -22,11 +22,10 @@ import (
 
 type TaskHandler struct {
 	client.Client
-	Recorder    record.EventRecorder
-	Log         logr.Logger
-	SpanHandler SpanHandler
-	Tracer      trace.Tracer
-	Scheme      *runtime.Scheme
+	Recorder record.EventRecorder
+	Log      logr.Logger
+	Tracer   trace.Tracer
+	Scheme   *runtime.Scheme
 }
 
 type TaskCreateAttributes struct {

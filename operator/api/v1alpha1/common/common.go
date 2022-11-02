@@ -23,6 +23,8 @@ const TaskNameAnnotation = "keptn.sh/task-name"
 const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-controller"
 const CreateAppTaskSpanName = "create_%s_app_task"
 const CreateWorkloadTaskSpanName = "create_%s_deployment_task"
+const CreateAppEvalSpanName = "create_%s_app_evaluation"
+const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
 
 const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25

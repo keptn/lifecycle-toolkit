@@ -1,4 +1,4 @@
-# Use lifecycle-controller together with flux
+# Use Lifecycle Controller together with Flux
 
 This tutorial shows how to use the lifecycle-controller together with [Flux](https://fluxcd.io/).
 

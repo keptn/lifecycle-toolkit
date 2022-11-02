@@ -1,5 +1,10 @@
 # Keptn Lifecycle Controller - Function Runtime
 
+>
+> **_NOTE:_**  This section is under development: overview and User Guide references
+> 
+
+
 ## Build
 ```
 docker build -t keptnsandbox/klc-runtime:${VERSION} .

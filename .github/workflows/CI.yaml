@@ -30,7 +30,7 @@ jobs:
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
-      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.NON_FORKED_AND_NON_ROBOT_RUN }}
+      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
       - name: Check out code

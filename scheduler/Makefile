@@ -149,7 +149,3 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-
-.PHONY: echo_registry
-echo_registry:
-	echo $(RELEASE_REGISTRY)

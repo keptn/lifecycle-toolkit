@@ -2,7 +2,7 @@ package common
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"testing"

@@ -1,6 +1,6 @@
-# Use lifecycle-controller together with flux
+# Use lifecycle-toolkit together with flux
 
-This tutorial shows how to use the lifecycle-controller together with [Flux](https://fluxcd.io/).
+This tutorial shows how to use the lifecycle-toolkit together with [Flux](https://fluxcd.io/).
 
 ## TL;DR
 * Set up a Personal Access Token according to: https://fluxcd.io/flux/installation/#github-and-github-enterprise

@@ -124,7 +124,7 @@ items:
       app.kubernetes.io/part-of: kube-prometheus
       app.kubernetes.io/version: 2.39.1
     name: prometheus-k8s
-    namespace: keptn-lifecycle-controller-system
+    namespace: keptn-lifecycle-toolkit-system
   rules:
   - apiGroups:
     - ""

@@ -35,7 +35,7 @@ RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && 
 
 FROM gcr.io/distroless/base-debian11:debug-nonroot as debug
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Operator" \
     org.opencontainers.image.vendor="Keptn" \
@@ -48,7 +48,7 @@ ENTRYPOINT ["/manager"]
 
 FROM gcr.io/distroless/base-debian11:nonroot as production
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Operator" \
     org.opencontainers.image.vendor="Keptn" \

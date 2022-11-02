@@ -2,11 +2,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
-  name: lifecycle-controller
+  name: lifecycle-toolkit
   namespace: default
 spec:
   interval: 5m
-  url: https://github.com/keptn/lifecycle-controller
+  url: https://github.com/keptn/lifecycle-toolkit
   ref:
     branch: main
   ignore: |
@@ -27,4 +27,4 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: lifecycle-controller
+    name: lifecycle-toolkit

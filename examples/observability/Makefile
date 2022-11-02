@@ -1,5 +1,5 @@
 JAEGER_VERSION ?= v1.38.0
-LFC_NAMESPACE ?= keptn-lifecycle-controller-system
+TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 
 .PHONY: install
@@ -10,7 +10,7 @@ install:undeploy-podtatohead
 	kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/$(JAEGER_VERSION)/jaeger-operator.yaml -n observability
 	kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=300s
-	kubectl apply -f config/jaeger.yaml -n "$(LFC_NAMESPACE)"
+	kubectl apply -f config/jaeger.yaml -n "$(TOOLKIT_NAMESPACE)"
 
 	@echo ""
 	@echo "------------------"
@@ -24,23 +24,23 @@ install:undeploy-podtatohead
 	@echo "-------------------------------"
 	@echo "Install OpenTelemetry Collector"
 	@echo "-------------------------------"
-	kubectl apply -f config/otel-collector.yaml -n "$(LFC_NAMESPACE)"
+	kubectl apply -f config/otel-collector.yaml -n "$(TOOLKIT_NAMESPACE)"
 
 	@echo ""
 	@echo "-------------------------------"
 	@echo "Wait for Resources to get ready"
 	@echo "-------------------------------"
-	kubectl wait --for=condition=available deployment/jaeger -n "$(LFC_NAMESPACE)" --timeout=120s
-	kubectl wait --for=condition=available deployment/otel-collector -n "$(LFC_NAMESPACE)" --timeout=120s
+	kubectl wait --for=condition=available deployment/jaeger -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
+	kubectl wait --for=condition=available deployment/otel-collector -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
 
 	@echo ""
 	@echo "----------------------------------"
 	@echo "Restart Keptn Lifecycle Controller"
 	@echo "----------------------------------"
-	kubectl rollout restart deployment -n "$(LFC_NAMESPACE)" klc-controller-manager
-	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" klc-controller-manager --watch
-	kubectl rollout restart deployment -n "$(LFC_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-controller-system
-	kubectl rollout status deployment -n "$(LFC_NAMESPACE)" keptn-scheduler --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-toolkit-system
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler --watch
 
 
 	@echo ""
@@ -69,7 +69,7 @@ port-forward-jaeger:
 	@echo "CTRL-c to stop port-forward"
 
 	@echo ""
-	kubectl port-forward -n "$(LFC_NAMESPACE)" svc/jaeger-query 16686
+	kubectl port-forward -n "$(TOOLKIT_NAMESPACE)" svc/jaeger-query 16686
 
 
 .PHONY: port-forward-prometheus
@@ -113,7 +113,7 @@ uninstall:
 .PHONY: deploy-podtatohead
 deploy-podtatohead:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
-	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
+	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-toolkit=enabled --overwrite
 	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1.yaml
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition2.yaml
@@ -123,7 +123,7 @@ deploy-podtatohead:
 .PHONY: deploy-podtatohead-failed-post
 deploy-podtatohead-failed-post:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
-	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
+	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-toolkit=enabled --overwrite
 	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition1.yaml
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition3.yaml
@@ -133,7 +133,7 @@ deploy-podtatohead-failed-post:
 .PHONY: deploy-podtatohead-failed-pre
 deploy-podtatohead-failed-pre:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
-	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-controller=enabled --overwrite
+	kubectl annotate namespace "$(PODTATO_NAMESPACE)" keptn.sh/lifecycle-toolkit=enabled --overwrite
 	kubectl apply -f ./assets/podtatohead-deployment-evaluation/.
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition3.yaml
 	kubectl apply -f ./assets/podtatohead-evaluationdefinitions/keptnevaluationdefinition4.yaml

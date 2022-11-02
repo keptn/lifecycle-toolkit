@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-controller/operator
+module github.com/keptn/lifecycle-toolkit/operator
 
 go 1.18
 
@@ -20,6 +20,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.11.1
 	go.opentelemetry.io/otel/sdk/metric v0.33.0
 	go.opentelemetry.io/otel/trace v1.11.1
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4
 	google.golang.org/grpc v1.50.1
 	k8s.io/api v0.25.0
 	k8s.io/apimachinery v0.25.0

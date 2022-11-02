@@ -4,7 +4,7 @@ metadata:
   labels:
     component: scheduler
   name: keptn-scheduler
-  namespace: keptn-lifecycle-controller-system
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   selector:
     matchLabels:

@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"

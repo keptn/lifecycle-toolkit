@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/thschue/lifecycle-controller 
+    repoURL: https://github.com/keptn/lifecycle-toolkit
     targetRevision: main
     path: examples/podtatohead-deployment
   destination: 

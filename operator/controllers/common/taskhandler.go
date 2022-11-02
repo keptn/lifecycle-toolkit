@@ -124,8 +124,8 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, reconcileObject client.
 	return newStatus, summary, nil
 }
 
-func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, appVersion client.Object, taskCreateAttributes TaskCreateAttributes) (string, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(appVersion)
+func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) (string, error) {
+	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
 	}
@@ -146,17 +146,17 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, appV
 	}
 
 	newTask := piWrapper.GenerateTask(traceContextCarrier, taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
-	err = controllerutil.SetControllerReference(appVersion, &newTask, r.Scheme)
+	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
 	}
 	err = r.Client.Create(ctx, &newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		RecordEvent(r.Recorder, phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
+		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
-	RecordEvent(r.Recorder, phase, "Normal", appVersion, "Created", "created", piWrapper.GetVersion())
+	RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
 }

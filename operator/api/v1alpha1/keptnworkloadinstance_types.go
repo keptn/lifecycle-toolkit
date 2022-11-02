@@ -270,6 +270,22 @@ func (v KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []TaskStatus {
 	return v.Status.PostDeploymentTaskStatus
 }
 
+func (v KeptnWorkloadInstance) GetPreDeploymentEvaluations() []string {
+	return v.Spec.PreDeploymentEvaluations
+}
+
+func (v KeptnWorkloadInstance) GetPostDeploymentEvaluations() []string {
+	return v.Spec.PostDeploymentEvaluations
+}
+
+func (v KeptnWorkloadInstance) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return v.Status.PreDeploymentEvaluationTaskStatus
+}
+
+func (v KeptnWorkloadInstance) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return v.Status.PostDeploymentEvaluationTaskStatus
+}
+
 func (v KeptnWorkloadInstance) GetAppName() string {
 	return v.Spec.AppName
 }
@@ -341,4 +357,23 @@ func (v KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(common.AppName.String(v.GetAppName()))
 	span.SetAttributes(common.WorkloadName.String(v.GetParentName()))
 	span.SetAttributes(common.WorkloadVersion.String(v.GetVersion()))
+}
+
+func (v KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+	return KeptnEvaluation{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
+			Namespace:   v.Namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: KeptnEvaluationSpec{
+			AppVersion:           v.Spec.Version,
+			AppName:              v.Spec.AppName,
+			EvaluationDefinition: evaluationDefinition,
+			Type:                 checkType,
+			RetryInterval: metav1.Duration{
+				Duration: 5 * time.Second,
+			},
+		},
+	}
 }

@@ -21,10 +21,10 @@ type PhaseItem interface {
 	SetCurrentPhase(string)
 	GetVersion() string
 	GetActiveMetricsAttributes() []attribute.KeyValue
+	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
-	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetEndTime() time.Time
 	GetStartTime() time.Time
 	GetPreviousVersion() string
@@ -35,7 +35,12 @@ type PhaseItem interface {
 	GetPostDeploymentTasks() []string
 	GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus
 	GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus
+	GetPreDeploymentEvaluations() []string
+	GetPostDeploymentEvaluations() []string
+	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
+	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
 	GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
+	GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation
 	SetSpanAttributes(span trace.Span)
 }
 
@@ -123,6 +128,22 @@ func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatu
 	return pw.Obj.GetPostDeploymentTaskStatus()
 }
 
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluations() []string {
+	return pw.Obj.GetPreDeploymentEvaluations()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluations() []string {
+	return pw.Obj.GetPostDeploymentEvaluations()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus {
+	return pw.Obj.GetPreDeploymentEvaluationTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus {
+	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
+}
+
 func (pw PhaseItemWrapper) GetAppName() string {
 	return pw.Obj.GetAppName()
 }
@@ -133,6 +154,10 @@ func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 
 func (pw PhaseItemWrapper) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
 	return pw.Obj.GenerateTask(traceContextCarrier, taskDefinition, checkType)
+}
+
+func (pw PhaseItemWrapper) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation {
+	return pw.Obj.GenerateEvaluation(traceContextCarrier, evaluationDefinition, checkType)
 }
 
 func (pw PhaseItemWrapper) SetSpanAttributes(span trace.Span) {

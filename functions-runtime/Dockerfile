@@ -1,6 +1,6 @@
 FROM denoland/deno:1.27.0 as production
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Functions Runtime" \
     org.opencontainers.image.vendor="Keptn" \

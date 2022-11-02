@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: podtato-kubectl
   annotations:
-    keptn.sh/lifecycle-controller: "enabled"
+    keptn.sh/lifecycle-toolkit: "enabled"
 ---
 apiVersion: apps/v1
 kind: Deployment

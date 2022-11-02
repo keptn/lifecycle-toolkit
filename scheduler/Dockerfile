@@ -40,7 +40,7 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
 
 FROM gcr.io/distroless/base-debian11:debug-nonroot as debug
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Scheduler" \
     org.opencontainers.image.vendor="Keptn" \
@@ -53,7 +53,7 @@ CMD ["kube-scheduler"]
 
 FROM gcr.io/distroless/base-debian11:nonroot as production
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-controller" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Scheduler" \
     org.opencontainers.image.vendor="Keptn" \

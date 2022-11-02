@@ -1,4 +1,4 @@
-LFC_NAMESPACE ?= keptn-lifecycle-controller-system
+LFC_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 ARGO_NAMESPACE ?= argocd
 ARGO_VERSION ?= 2.4.14

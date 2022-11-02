@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/instance: keptnappversion-editor-role
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: keptn-lifecycle-controller
-    app.kubernetes.io/part-of: keptn-lifecycle-controller
+    app.kubernetes.io/created-by: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     app.kubernetes.io/managed-by: kustomize
   name: keptnappversion-editor-role
 rules:

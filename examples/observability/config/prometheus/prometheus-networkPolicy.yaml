@@ -32,7 +32,7 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: keptn-lifecycle-controller-system
+          kubernetes.io/metadata.name: keptn-lifecycle-toolkit-system
     ports:
       - port: 9090
         protocol: TCP

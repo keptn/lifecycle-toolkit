@@ -22,7 +22,9 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/semconv"
+	"golang.org/x/mod/semver"
+
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -37,9 +39,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"

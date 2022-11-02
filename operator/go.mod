@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-controller/operator
+module github.com/keptn/lifecycle-toolkit/operator
 
 go 1.18
 

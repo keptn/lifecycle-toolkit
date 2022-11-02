@@ -22,7 +22,7 @@ webhooks:
             - "kube-public"
             - "kube-node-lease"
             - "cert-manager"
-            - "keptn-lifecycle-controller-system"
+            - "keptn-lifecycle-toolkit-system"
             - "observability"
             - "monitoring"
 #---

@@ -1,4 +1,4 @@
-namespace: keptn-lifecycle-controller-system
+namespace: keptn-lifecycle-toolkit-system
 resources:
 - base/deployment.yaml
 - base/rbac.yaml

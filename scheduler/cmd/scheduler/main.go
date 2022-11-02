@@ -30,7 +30,7 @@ import (
 	"google.golang.org/grpc"
 	"k8s.io/klog/v2"
 
-	"github.com/keptn/lifecycle-controller/scheduler/pkg/klcpermit"
+	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit"
 	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/component-base/cli"
 	"k8s.io/kubernetes/cmd/kube-scheduler/app"

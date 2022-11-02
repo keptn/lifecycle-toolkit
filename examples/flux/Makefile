@@ -1,5 +1,5 @@
 JAEGER_VERSION ?= v1.38.0
-LFC_NAMESPACE ?= keptn-lifecycle-controller-system
+LFC_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 REPO_PATH ?= flux-demo
 REPO_CLUSTER_PATH ?= clusters/demo-cluster

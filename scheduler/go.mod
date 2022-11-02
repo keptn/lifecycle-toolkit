@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-controller/scheduler
+module github.com/keptn/lifecycle-toolkit/scheduler
 
 go 1.18
 
@@ -112,7 +112,7 @@ require (
 )
 
 replace (
-	github.com/keptn/lifecycle-controller/scheduler/pkg/klcpermit => /pkg/klcpermit
+	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
 	k8s.io/api => k8s.io/api v0.24.7
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.24.7
 	k8s.io/apimachinery => k8s.io/apimachinery v0.24.7

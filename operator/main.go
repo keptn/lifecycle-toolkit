@@ -28,19 +28,19 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnappversion"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnappversion"
 
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnworkload"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkload"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnevaluation"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptntask"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptntaskdefinition"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnevaluation"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntask"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntaskdefinition"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -49,7 +49,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 
-	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"os"
 
@@ -72,9 +72,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 
-	"github.com/keptn/lifecycle-controller/operator/webhooks"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
 	//+kubebuilder:scaffold:imports
 )
 

@@ -252,6 +252,26 @@ func (i KeptnWorkloadInstance) GetState() common.KeptnState {
 	return i.Status.Status
 }
 
+func (v KeptnWorkloadInstance) GetPreDeploymentTasks() []string {
+	return v.Spec.PreDeploymentTasks
+}
+
+func (v KeptnWorkloadInstance) GetPostDeploymentTasks() []string {
+	return v.Spec.PostDeploymentTasks
+}
+
+func (v KeptnWorkloadInstance) GetPreDeploymentTaskStatus() []TaskStatus {
+	return v.Status.PreDeploymentTaskStatus
+}
+
+func (v KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []TaskStatus {
+	return v.Status.PostDeploymentTaskStatus
+}
+
+func (v KeptnWorkloadInstance) GetAppName() string {
+	return v.Spec.AppName
+}
+
 func (v KeptnWorkloadInstance) GetPreviousVersion() string {
 	return v.Spec.PreviousVersion
 }

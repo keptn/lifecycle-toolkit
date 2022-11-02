@@ -4,15 +4,16 @@ import (
 	"errors"
 	"time"
 
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 //go:generate moq -pkg common_mock --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
 type PhaseItem interface {
-	GetState() common.KeptnState
-	SetState(common.KeptnState)
+	GetState() apicommon.KeptnState
+	SetState(apicommon.KeptnState)
 	GetCurrentPhase() string
 	SetCurrentPhase(string)
 	GetVersion() string
@@ -27,6 +28,11 @@ type PhaseItem interface {
 	GetPreviousVersion() string
 	GetParentName() string
 	GetNamespace() string
+	GetAppName() string
+	GetPreDeploymentTasks() []string
+	GetPostDeploymentTasks() []string
+	GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus
+	GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus
 }
 
 type PhaseItemWrapper struct {
@@ -41,11 +47,11 @@ func NewPhaseItemWrapperFromClientObject(object client.Object) (*PhaseItemWrappe
 	return &PhaseItemWrapper{Obj: pi}, nil
 }
 
-func (pw PhaseItemWrapper) GetState() common.KeptnState {
+func (pw PhaseItemWrapper) GetState() apicommon.KeptnState {
 	return pw.Obj.GetState()
 }
 
-func (pw *PhaseItemWrapper) SetState(state common.KeptnState) {
+func (pw *PhaseItemWrapper) SetState(state apicommon.KeptnState) {
 	pw.Obj.SetState(state)
 }
 
@@ -99,6 +105,26 @@ func (pw PhaseItemWrapper) GetParentName() string {
 
 func (pw PhaseItemWrapper) GetNamespace() string {
 	return pw.Obj.GetNamespace()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentTasks() []string {
+	return pw.Obj.GetPreDeploymentTasks()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentTasks() []string {
+	return pw.Obj.GetPostDeploymentTasks()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus {
+	return pw.Obj.GetPreDeploymentTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus {
+	return pw.Obj.GetPostDeploymentTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetAppName() string {
+	return pw.Obj.GetAppName()
 }
 
 func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {

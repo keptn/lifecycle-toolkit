@@ -215,6 +215,26 @@ func (v KeptnAppVersion) GetState() common.KeptnState {
 	return v.Status.Status
 }
 
+func (v KeptnAppVersion) GetPreDeploymentTasks() []string {
+	return v.Spec.PreDeploymentTasks
+}
+
+func (v KeptnAppVersion) GetPostDeploymentTasks() []string {
+	return v.Spec.PostDeploymentTasks
+}
+
+func (v KeptnAppVersion) GetPreDeploymentTaskStatus() []TaskStatus {
+	return v.Status.PreDeploymentTaskStatus
+}
+
+func (v KeptnAppVersion) GetPostDeploymentTaskStatus() []TaskStatus {
+	return v.Status.PostDeploymentTaskStatus
+}
+
+func (v KeptnAppVersion) GetAppName() string {
+	return v.Name
+}
+
 func (v KeptnAppVersion) GetPreviousVersion() string {
 	return v.Spec.PreviousVersion
 }

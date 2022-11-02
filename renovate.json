@@ -5,6 +5,7 @@
     ":gitSignOff",
     "schedule:nonOfficeHours",
     ":semanticCommitTypeAll(deps)",
+    ":semanticCommitScope()",
     "group:monorepos",
     ":automergePatch"
   ],

@@ -2,14 +2,14 @@ name: CI
 on:
   # always execute docker build when something is pushed to main or a maintenance branch
   push:
-    branches:
-      - 'main'
-      - '[0-9]+.[1-9][0-9]*.x'
+  #  branches:
+    #  - 'main'                        DISABLED FOR TESTING!
+    #  - '[0-9]+.[1-9][0-9]*.x'        DISABLED FOR TESTING!
   # in addition, execute for pull requests to those branches
   pull_request:
-    branches:
-      - 'main'
-      - '[0-9]+.[1-9][0-9]*.x'
+  #  branches:
+    #  - 'main'                        DISABLED FOR TESTING!
+    #  - '[0-9]+.[1-9][0-9]*.x'        DISABLED FOR TESTING!
 env:
   GO_VERSION: "~1.18"
 
@@ -31,7 +31,7 @@ defaults:
 jobs:
   prepare_ci_run:
     name: Prepare CI Run
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       # metadata
       BUILD_EVERYTHING: ${{ steps.build_everything.outputs.BUILD_EVERYTHING }}
@@ -84,7 +84,7 @@ jobs:
     name: Compile
     needs: prepare_ci_run
     if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATE }}${{ needs.prepare_ci_run.outputs.TIME }}
@@ -114,7 +114,7 @@ jobs:
     name: Unit Tests
     needs: prepare_ci_run
     if: needs.prepare_ci_run.outputs.BUILD_MATRIX_EMPTY == 'false'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix: ${{ fromJson(needs.prepare_ci_run.outputs.BUILD_MATRIX) }}
     steps:
@@ -139,7 +139,7 @@ jobs:
   build_image:
     name: Build and push Docker Image
     needs: [prepare_ci_run, compile, test]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry
     env:
@@ -207,3 +207,9 @@ jobs:
       with:
         name: ${{ matrix.config.artifact }}-manifest
         path: ${{ matrix.config.working-dir }}/config/rendered/release.yaml
+
+  component_and_performance_tests:
+    name: Component and Performance Tests
+    needs: [build_image]
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit

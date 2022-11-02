@@ -1,0 +1,45 @@
+name: Tests
+on:
+  workflow_call:
+env:
+  GO_VERSION: "~1.18"
+defaults:
+  run:
+    shell: bash
+jobs:
+  component_tests:
+    name: Component Tests
+    runs-on: ubuntu-22.04
+    steps:
+    - name: TODO
+      run: echo "TODO"
+
+  performance_tests:
+    name: Performance Tests
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Download manifests
+      uses: actions/download-artifact@v3
+      with:
+        path: ~/download/artifacts
+
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.3.0
+
+    - name: Install cert-manager
+      run: |
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+        kubectl wait --for=condition=ready -n cert-manager --all pods
+
+    - name: Install keptn-lifecycle-controller
+      run: |
+        kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest
+        kubectl apply -f ~/download/artifacts/scheduler-manifest
+        kubectl wait --for=condition=ready -n keptn-lifecycle-controller-system --all pods
+
+    - name: Execute Performance Tests
+      working-directory: operator
+      run: make performance-test

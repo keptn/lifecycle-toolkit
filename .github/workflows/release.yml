@@ -50,6 +50,9 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write
+    env:
+      IMAGE_TAG: ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -67,6 +70,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Cosign
+        uses: sigstore/cosign-installer@v2.8.1
+
       - name: Build Docker Image
         uses: docker/build-push-action@v3
         with:
@@ -74,7 +80,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
+            ${{ env.IMAGE_TAG }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -85,6 +91,11 @@ jobs:
           push: true
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
+
+      - name: Sign container images
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: cosign sign ${{ env.IMAGE_TAG }}
 
   release-manifests:
     if: needs.release-please.outputs.releases_created == 'true'

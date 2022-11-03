@@ -79,7 +79,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated, err := a.isPodAnnotated(pod)
-	parentIsAnnotated, err := a.isParentAnnotated(ctx, &req, pod)
+
+	if err == nil && !podIsAnnotated {
+		isParentAnnotated, err := a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+	}
+
 	if err != nil {
 		span.SetStatus(codes.Error, "Invalid annotations")
 		return admission.Errored(http.StatusBadRequest, err)
@@ -150,7 +154,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 	return false, nil
 }
 
-func (a *PodMutatingWebhook) isParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
 	owner := a.getReplicaSetOfPod(pod)
 	if owner.UID == pod.UID {
 		return false, nil
@@ -212,9 +216,12 @@ func (a *PodMutatingWebhook) isParentAnnotated(ctx context.Context, req *admissi
 		}
 	}
 
+	var workload, version string
+	var gotWorkloadAnnotation, gotVersionAnnotation bool
+
 	if dp.UID == rsOwner.UID {
-		workload, gotWorkloadAnnotation := getLabelOrAnnotationFromDeployment(&dp, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-		version, gotVersionAnnotation := getLabelOrAnnotationFromDeployment(&dp, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+		workload, gotWorkloadAnnotation = getLabelOrAnnotationFromDeployment(&dp, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+		version, gotVersionAnnotation = getLabelOrAnnotationFromDeployment(&dp, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 
 		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 			return false, common.ErrTooLongAnnotations
@@ -226,15 +233,61 @@ func (a *PodMutatingWebhook) isParentAnnotated(ctx context.Context, req *admissi
 					pod.Annotations = make(map[string]string)
 				}
 				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
+			} else {
+				pod.Annotations[common.VersionAnnotation] = dp.Annotations[common.VersionAnnotation]
 			}
+
+			pod.Annotations[common.WorkloadAnnotation] = dp.Annotations[common.WorkloadAnnotation]
 			return true, nil
 		}
+		return false, nil
 	} else if sts.UID == rsOwner.UID {
-		// TODO
+		workload, gotWorkloadAnnotation = getLabelOrAnnotationFromStatefulSet(&sts, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+		version, gotVersionAnnotation = getLabelOrAnnotationFromStatefulSet(&sts, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+
+		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+			return false, common.ErrTooLongAnnotations
+		}
+
+		if gotWorkloadAnnotation {
+			if !gotVersionAnnotation {
+				if len(pod.Annotations) == 0 {
+					pod.Annotations = make(map[string]string)
+				}
+				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
+			} else {
+				pod.Annotations[common.VersionAnnotation] = sts.Annotations[common.VersionAnnotation]
+			}
+
+			pod.Annotations[common.WorkloadAnnotation] = sts.Annotations[common.WorkloadAnnotation]
+			return true, nil
+		}
+		return false, nil
 	} else if ds.UID == rsOwner.UID {
-		// TODO
+		workload, gotWorkloadAnnotation = getLabelOrAnnotationFromDaemonSet(&ds, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+		version, gotVersionAnnotation = getLabelOrAnnotationFromDaemonSet(&ds, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+
+		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+			return false, common.ErrTooLongAnnotations
+		}
+
+		if gotWorkloadAnnotation {
+			if !gotVersionAnnotation {
+				if len(pod.Annotations) == 0 {
+					pod.Annotations = make(map[string]string)
+				}
+				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
+			} else {
+				pod.Annotations[common.VersionAnnotation] = ds.Annotations[common.VersionAnnotation]
+			}
+
+			pod.Annotations[common.WorkloadAnnotation] = ds.Annotations[common.WorkloadAnnotation]
+			return true, nil
+		}
+		return false, nil
+	} else {
+		return false, nil
 	}
-	return false, nil
 }
 
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
@@ -548,6 +601,52 @@ func getLabelOrAnnotationFromDeployment(dp *appsv1.Deployment, primaryAnnotation
 
 	if dp.Labels[secondaryAnnotation] != "" {
 		return dp.Labels[secondaryAnnotation], true
+	}
+	return "", false
+}
+
+func getLabelOrAnnotationFromStatefulSet(sts *appsv1.StatefulSet, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+	if sts.Annotations[primaryAnnotation] != "" {
+		return sts.Annotations[primaryAnnotation], true
+	}
+
+	if sts.Labels[primaryAnnotation] != "" {
+		return sts.Labels[primaryAnnotation], true
+	}
+
+	if secondaryAnnotation == "" {
+		return "", false
+	}
+
+	if sts.Annotations[secondaryAnnotation] != "" {
+		return sts.Annotations[secondaryAnnotation], true
+	}
+
+	if sts.Labels[secondaryAnnotation] != "" {
+		return sts.Labels[secondaryAnnotation], true
+	}
+	return "", false
+}
+
+func getLabelOrAnnotationFromDaemonSet(ds *appsv1.DaemonSet, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+	if ds.Annotations[primaryAnnotation] != "" {
+		return ds.Annotations[primaryAnnotation], true
+	}
+
+	if ds.Labels[primaryAnnotation] != "" {
+		return ds.Labels[primaryAnnotation], true
+	}
+
+	if secondaryAnnotation == "" {
+		return "", false
+	}
+
+	if ds.Annotations[secondaryAnnotation] != "" {
+		return ds.Annotations[secondaryAnnotation], true
+	}
+
+	if ds.Labels[secondaryAnnotation] != "" {
+		return ds.Labels[secondaryAnnotation], true
 	}
 	return "", false
 }

@@ -83,17 +83,11 @@ var _ = BeforeSuite(func() {
 	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
 
-	//if os.Getenv("TEST_USE_EXISTING_CLUSTER") == "true" {
 	t := true
 	testEnv = &envtest.Environment{
 		UseExistingCluster: &t,
 	}
-	//} else {
-	//	testEnv = &envtest.Environment{
-	//		CRDDirectoryPaths:     []string{filepath.Join("..", "..", "operator", "config", "crd", "bases")},
-	//		ErrorIfCRDPathMissing: true,
-	//	}
-	//}
+
 	apiServerArgs := testEnv.ControlPlane.GetAPIServer().Configure()
 	//apiServerArgs.Append("disable-admission-plugins", "TaintNodesByCondition", "Priority")
 	apiServerArgs.Append("runtime-config", "api/all=true")

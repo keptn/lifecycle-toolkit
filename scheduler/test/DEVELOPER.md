@@ -1,9 +1,16 @@
-# Component tests
-This test suite can run test verifying the scheduler
+# E2E tests
+This test suite can run test verifying the scheduler, this rely on a real cluster with installed scheduler
 
-### Running on envtest cluster
+### Running on kind cluster
 
-cd to scheduler folder, run 
+```
+kind create cluster
+cd lifecycle-toolkit
+make build-deploy-scheduler RELEASE_REGISTRY=yourregistry
+
+```
+
+wait for everything to be up and running, then cd to scheduler folder and run 
 ```make test```
 Make test is the one-stop shop for downloading the binaries, setting up the test environment, and running the tests.
 
@@ -17,11 +24,6 @@ After run a ```report.custom``` file will be generated with the results of each 
 ## Contributing
 
 
-
-## Load Tests 
-
-You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test with ```make performance-test``` the file 
-"load_test.go" contains examples of such tests, including a simple reporter. The report "MetricForLoadTestSuite" is generated for every run of the load test.
 
 ## Contributing Tips
 

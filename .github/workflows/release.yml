@@ -50,6 +50,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write
     env:
       IMAGE_TAG: ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
     steps:

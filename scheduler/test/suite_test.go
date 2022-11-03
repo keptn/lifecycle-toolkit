@@ -19,7 +19,6 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit"
 	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/fake/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -32,9 +31,7 @@ import (
 	kscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/events"
-	"k8s.io/component-base/cli"
 	"k8s.io/kube-scheduler/config/v1beta3"
-	"k8s.io/kubernetes/cmd/kube-scheduler/app"
 	"k8s.io/kubernetes/pkg/scheduler"
 	schedapi "k8s.io/kubernetes/pkg/scheduler/apis/config"
 	"k8s.io/kubernetes/pkg/scheduler/apis/config/scheme"
@@ -86,17 +83,17 @@ var _ = BeforeSuite(func() {
 	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
 
-	if os.Getenv("TEST_USE_EXISTING_CLUSTER") == "true" {
-		t := true
-		testEnv = &envtest.Environment{
-			UseExistingCluster: &t,
-		}
-	} else {
-		testEnv = &envtest.Environment{
-			CRDDirectoryPaths:     []string{filepath.Join("..", "..", "operator", "config", "crd", "bases")},
-			ErrorIfCRDPathMissing: true,
-		}
+	//if os.Getenv("TEST_USE_EXISTING_CLUSTER") == "true" {
+	t := true
+	testEnv = &envtest.Environment{
+		UseExistingCluster: &t,
 	}
+	//} else {
+	//	testEnv = &envtest.Environment{
+	//		CRDDirectoryPaths:     []string{filepath.Join("..", "..", "operator", "config", "crd", "bases")},
+	//		ErrorIfCRDPathMissing: true,
+	//	}
+	//}
 	apiServerArgs := testEnv.ControlPlane.GetAPIServer().Configure()
 	//apiServerArgs.Append("disable-admission-plugins", "TaintNodesByCondition", "Priority")
 	apiServerArgs.Append("runtime-config", "api/all=true")
@@ -144,11 +141,6 @@ var _ = BeforeSuite(func() {
 	//fmt.Println("plugins", conf.Profiles[0].Plugins)
 	go func() {
 		defer GinkgoRecover()
-		command := app.NewSchedulerCommand(
-			app.WithPlugin(klcpermit.PluginName, klcpermit.New),
-		)
-
-		cli.Run(command)
 		<-ctx.Done()
 		//testCtx.Scheduler.Run(ctx) // in case you want to test
 

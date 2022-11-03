@@ -6,12 +6,10 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apiv1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/klog/v2"
-	"k8s.io/kubernetes/pkg/scheduler/framework"
 	st "k8s.io/kubernetes/pkg/scheduler/testing"
 	imageutils "k8s.io/kubernetes/test/utils/image"
 	"time"
@@ -46,8 +44,6 @@ var _ = Describe("KeptnScheduler", Ordered, func() {
 		Obj(), pause)
 	pod.Annotations = annotations
 
-	var node *apiv1.Node
-
 	// Create Deployment
 	Describe("Creation of a new Deployment annotated for keptn-scheduler", func() {
 
@@ -58,18 +54,18 @@ var _ = Describe("KeptnScheduler", Ordered, func() {
 				Expect(err).NotTo(HaveOccurred(), "could not add deployment")
 
 				//example of creating a node
-				nodeName := "fake-node"
-				node = st.MakeNode().Name("fake-node").Label("node", nodeName).Obj()
-				node.Status.Allocatable = apiv1.ResourceList{
-					apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
-					apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
-				}
-				node.Status.Capacity = apiv1.ResourceList{
-					apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
-					apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
-				}
-				node, err = testCtx.ClientSet.CoreV1().Nodes().Create(testCtx.Ctx, node, metav1.CreateOptions{})
-				Expect(err).NotTo(HaveOccurred(), "Could not add node")
+				//nodeName := "fake-node"
+				//node = st.MakeNode().Name("fake-node").Label("node", nodeName).Obj()
+				//node.Status.Allocatable = apiv1.ResourceList{
+				//	apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
+				//	apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
+				//}
+				//node.Status.Capacity = apiv1.ResourceList{
+				//	apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
+				//	apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
+				//}
+				//node, err = testCtx.ClientSet.CoreV1().Nodes().Create(testCtx.Ctx, node, metav1.CreateOptions{})
+				//Expect(err).NotTo(HaveOccurred(), "Could not add node")
 
 			})
 			It(" should stay pending until workload instance is done", func() {
@@ -81,15 +77,6 @@ var _ = Describe("KeptnScheduler", Ordered, func() {
 				}).Should(Succeed())
 
 				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
-
-				testCtx.Scheduler.Cache.AddNode(node)
-				testCtx.Scheduler.Cache.AddPod(pod)
-
-				//fw.AddNominatedPod(framework.NewPodInfo(pod), &framework.NominatingInfo{NominatedNodeName: node.Name, NominatingMode: framework.ModeOverride})
-				scheduleResult, err := testCtx.Scheduler.SchedulePod(ctx, fw, framework.NewCycleState(), pod)
-				fmt.Println(scheduleResult)
-				Expect(err).To(BeNil())
-
 				workload := initWorkloadInstance()
 
 				Expect(err).To(BeNil())

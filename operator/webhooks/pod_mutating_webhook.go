@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	appsv1 "k8s.io/api/apps/v1"
 	"net/http"
 	"reflect"
 	"strings"
@@ -77,12 +78,13 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	isAnnotated, err := a.isKeptnAnnotated(pod)
+	podIsAnnotated, err := a.isPodAnnotated(pod)
+	parentIsAnnotated, err := a.isParentAnnotated(ctx, &req, pod)
 	if err != nil {
 		span.SetStatus(codes.Error, "Invalid annotations")
 		return admission.Errored(http.StatusBadRequest, err)
 	}
-	if isAnnotated {
+	if podIsAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
@@ -128,7 +130,7 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	return nil
 }
 
-func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 	workload, gotWorkloadAnnotation := getLabelOrAnnotation(pod, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
 	version, gotVersionAnnotation := getLabelOrAnnotation(pod, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 
@@ -144,6 +146,93 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
 		}
 		return true, nil
+	}
+	return false, nil
+}
+
+func (a *PodMutatingWebhook) isParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+	owner := a.getReplicaSetOfPod(pod)
+	if owner.UID == pod.UID {
+		return false, nil
+	}
+
+	rsl := &appsv1.ReplicaSetList{}
+	if err := a.Client.List(ctx, rsl, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
+
+	rs := appsv1.ReplicaSet{}
+	if len(rsl.Items) != 0 {
+		for _, rs = range rsl.Items {
+			if rs.UID == owner.UID {
+				break
+			}
+		}
+	}
+
+	rsOwner := a.getOwnerOfReplicaSet(&rs)
+	dpList := &appsv1.DeploymentList{}
+	stsList := &appsv1.StatefulSetList{}
+	dsList := &appsv1.DaemonSetList{}
+
+	if err := a.Client.List(ctx, dpList, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
+	if err := a.Client.List(ctx, stsList, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
+	if err := a.Client.List(ctx, dsList, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
+
+	dp := appsv1.Deployment{}
+	if len(dpList.Items) != 0 {
+		for _, dp = range dpList.Items {
+			if dp.UID == rsOwner.UID {
+				break
+			}
+		}
+	}
+
+	sts := appsv1.StatefulSet{}
+	if len(stsList.Items) != 0 {
+		for _, sts = range stsList.Items {
+			if sts.UID == rsOwner.UID {
+				break
+			}
+		}
+	}
+
+	ds := appsv1.DaemonSet{}
+	if len(dsList.Items) != 0 {
+		for _, ds = range dsList.Items {
+			if ds.UID == rsOwner.UID {
+				break
+			}
+		}
+	}
+
+	if dp.UID == rsOwner.UID {
+		workload, gotWorkloadAnnotation := getLabelOrAnnotationFromDeployment(&dp, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+		version, gotVersionAnnotation := getLabelOrAnnotationFromDeployment(&dp, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+
+		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+			return false, common.ErrTooLongAnnotations
+		}
+
+		if gotWorkloadAnnotation {
+			if !gotVersionAnnotation {
+				if len(pod.Annotations) == 0 {
+					pod.Annotations = make(map[string]string)
+				}
+				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
+			}
+			return true, nil
+		}
+	} else if sts.UID == rsOwner.UID {
+		// TODO
+	} else if ds.UID == rsOwner.UID {
+		// TODO
 	}
 	return false, nil
 }
@@ -334,7 +423,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         a.getResourceReference(pod),
+			ResourceReference:         a.getReplicaSetOfPod(pod),
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
@@ -385,7 +474,7 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {
+func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) klcv1alpha1.ResourceReference {
 	reference := klcv1alpha1.ResourceReference{
 		UID:  pod.UID,
 		Kind: pod.Kind,
@@ -393,6 +482,22 @@ func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.R
 	if len(pod.OwnerReferences) != 0 {
 		for _, o := range pod.OwnerReferences {
 			if o.Kind == "ReplicaSet" {
+				reference.UID = o.UID
+				reference.Kind = o.Kind
+			}
+		}
+	}
+	return reference
+}
+
+func (a *PodMutatingWebhook) getOwnerOfReplicaSet(rs *appsv1.ReplicaSet) klcv1alpha1.ResourceReference {
+	reference := klcv1alpha1.ResourceReference{
+		UID:  rs.UID,
+		Kind: rs.Kind,
+	}
+	if len(rs.OwnerReferences) != 0 {
+		for _, o := range rs.OwnerReferences {
+			if o.Kind == "Deployment" || o.Kind == "StatefulSet" || o.Kind == "DaemonSet" {
 				reference.UID = o.UID
 				reference.Kind = o.Kind
 			}
@@ -420,6 +525,29 @@ func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAn
 
 	if pod.Labels[secondaryAnnotation] != "" {
 		return pod.Labels[secondaryAnnotation], true
+	}
+	return "", false
+}
+
+func getLabelOrAnnotationFromDeployment(dp *appsv1.Deployment, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+	if dp.Annotations[primaryAnnotation] != "" {
+		return dp.Annotations[primaryAnnotation], true
+	}
+
+	if dp.Labels[primaryAnnotation] != "" {
+		return dp.Labels[primaryAnnotation], true
+	}
+
+	if secondaryAnnotation == "" {
+		return "", false
+	}
+
+	if dp.Annotations[secondaryAnnotation] != "" {
+		return dp.Annotations[secondaryAnnotation], true
+	}
+
+	if dp.Labels[secondaryAnnotation] != "" {
+		return dp.Labels[secondaryAnnotation], true
 	}
 	return "", false
 }

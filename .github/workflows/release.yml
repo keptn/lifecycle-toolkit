@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-controller"
+          - name: "keptn-lifecycle-toolkit"
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"

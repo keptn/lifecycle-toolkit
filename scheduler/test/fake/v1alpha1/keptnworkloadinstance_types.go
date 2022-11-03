@@ -19,7 +19,7 @@ package v1alpha1
 import (
 	"time"
 
-	"github.com/keptn/lifecycle-controller/scheduler/test/fake/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/scheduler/test/fake/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

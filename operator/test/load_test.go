@@ -2,9 +2,9 @@ package test
 
 import (
 	"fmt"
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	keptncontroller "github.com/keptn/lifecycle-controller/operator/controllers/common"
-	"github.com/keptn/lifecycle-controller/operator/controllers/keptnapp"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"

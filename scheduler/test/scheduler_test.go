@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	testv1alpha1 "github.com/keptn/lifecycle-controller/scheduler/test/fake/v1alpha1"
+	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/fake/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apiv1 "k8s.io/api/core/v1"

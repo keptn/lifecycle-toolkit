@@ -19,6 +19,7 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 

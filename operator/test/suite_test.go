@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 	"fmt"
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	keptncontroller "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
@@ -63,11 +63,18 @@ var _ = BeforeSuite(func() {
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
 	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
-	testEnv = &envtest.Environment{
-		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
-		ErrorIfCRDPathMissing: true,
-	}
 
+	if os.Getenv("TEST_USE_EXISTING_CLUSTER") == "true" {
+		t := true
+		testEnv = &envtest.Environment{
+			UseExistingCluster: &t,
+		}
+	} else {
+		testEnv = &envtest.Environment{
+			CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
+			ErrorIfCRDPathMissing: true,
+		}
+	}
 	var err error
 	// cfg is defined in this file globally.
 	cfg, err = testEnv.Start()

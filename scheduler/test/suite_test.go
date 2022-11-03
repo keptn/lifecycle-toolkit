@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-controller/scheduler/pkg/klcpermit"
-	testv1alpha1 "github.com/keptn/lifecycle-controller/scheduler/test/fake/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit"
+	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/fake/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

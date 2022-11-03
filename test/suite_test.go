@@ -19,7 +19,7 @@ package test
 import (
 	"context"
 	"fmt"
-	klfc "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	klfc "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"

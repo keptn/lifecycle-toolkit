@@ -2,9 +2,9 @@ package keptnapp
 
 import (
 	"context"
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-controller/operator/controllers/common/fake"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

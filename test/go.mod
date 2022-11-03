@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-controller/test
+module github.com/keptn/lifecycle-toolkit/test
 
 go 1.18
 
@@ -17,7 +17,7 @@ require (
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
-require github.com/keptn/lifecycle-controller/operator v0.0.0-20221031094853-1a0dd929930e
+require github.com/keptn/lifecycle-toolkit/operator v0.0.0-20221031094853-1a0dd929930e
 
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect

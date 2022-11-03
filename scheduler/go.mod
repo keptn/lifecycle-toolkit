@@ -6,7 +6,6 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo/v2 v2.4.0
 	github.com/onsi/gomega v1.22.1
-	github.com/spf13/pflag v1.0.5
 	go.opentelemetry.io/otel v0.20.0
 	go.opentelemetry.io/otel/exporters/otlp v0.20.0
 	go.opentelemetry.io/otel/exporters/stdout v0.20.0
@@ -18,6 +17,7 @@ require (
 	k8s.io/client-go v0.24.7
 	k8s.io/component-base v0.24.7
 	k8s.io/klog/v2 v2.80.1
+	k8s.io/kube-scheduler v0.0.0
 	k8s.io/kubernetes v1.24.7
 	sigs.k8s.io/controller-runtime v0.12.3
 )
@@ -70,6 +70,7 @@ require (
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/spf13/cobra v1.4.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.1 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.1 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.1 // indirect
@@ -105,7 +106,6 @@ require (
 	k8s.io/component-helpers v0.24.7 // indirect
 	k8s.io/csi-translation-lib v0.24.7 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
-	k8s.io/kube-scheduler v0.0.0 // indirect
 	k8s.io/mount-utils v0.24.7 // indirect
 	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.33 // indirect

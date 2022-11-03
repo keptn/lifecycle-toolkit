@@ -1,7 +1,7 @@
 package fake
 
 import (
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"

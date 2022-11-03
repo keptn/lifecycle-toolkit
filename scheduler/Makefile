@@ -48,6 +48,8 @@ KUSTOMIZE_VERSION ?= v4.2.0
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
+CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
+ENVTEST ?= $(LOCALBIN)/setup-envtest
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 
 .PHONY: all
@@ -75,7 +77,11 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: test
-test: ## Run tests.
+test: manifests fmt vet envtest ## Run tests.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+.PHONY: realtest
+realtest: manifests fmt vet envtest ## Run tests.
 	go test ./... -coverprofile cover.out
 
 .PHONY: kustomize
@@ -87,6 +93,10 @@ $(KUSTOMIZE): $(LOCALBIN)
 release-manifests: kustomize
 	cd manifests/install && $(KUSTOMIZE) edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
+
+envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
+$(ENVTEST): $(LOCALBIN)
+	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
 .PHONY: local-image
 local-image: clean

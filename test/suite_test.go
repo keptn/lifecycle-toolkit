@@ -20,6 +20,8 @@ import (
 	"context"
 	"fmt"
 	klfc "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

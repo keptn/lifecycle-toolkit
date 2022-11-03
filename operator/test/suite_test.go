@@ -52,8 +52,6 @@ var (
 	ctx        context.Context
 	cancel     context.CancelFunc
 	k8sManager ctrl.Manager
-	//spanRecorder *sdktest.SpanRecorder
-	//tp           otelsdk.TracerProvider
 )
 
 func TestAPIs(t *testing.T) {

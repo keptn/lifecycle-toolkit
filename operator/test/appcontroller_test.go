@@ -13,7 +13,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-// clean example of E2E test/ integration test --
+// clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
 // App controller creates AppVersion when a new App CRD is added
 // span for creation and reconcile are correct
 // container must be ordered to have the before all setup

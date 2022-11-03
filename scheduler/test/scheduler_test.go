@@ -2,60 +2,159 @@ package test
 
 import (
 	"fmt"
+	testv1alpha1 "github.com/keptn/lifecycle-controller/scheduler/test/fake/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	appsv1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/klog/v2"
+	"k8s.io/kubernetes/pkg/scheduler/framework"
+	st "k8s.io/kubernetes/pkg/scheduler/testing"
+	imageutils "k8s.io/kubernetes/test/utils/image"
+	"time"
 )
 
+const WorkloadAnnotation = "keptn.sh/workload"
+const VersionAnnotation = "keptn.sh/version"
+const AppAnnotation = "keptn.sh/app"
+const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
+const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
+const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
+
 // clean example of E2E test/ integration test --
-// App controller creates AppVersion when a new App CRD is added
-// span for creation and reconcile are correct
-// container must be ordered to have the before all setup
-// this way the container spec check is not randomized, so we can make
-// assertions on spans number and traces
+
 var _ = Describe("KeptnScheduler", Ordered, func() {
 
-	replicas := int32(2)
-	deployment := &appsv1.Deployment{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "demo-deployment",
-		},
-		Spec: appsv1.DeploymentSpec{
-			Replicas: &replicas,
-			Selector: &metav1.LabelSelector{
-				MatchLabels: map[string]string{
-					"app": "demo",
-				},
-			},
-			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app": "demo",
-					},
-				},
-				Spec: apiv1.PodSpec{
-					Containers: []apiv1.Container{
-						{
-							Name:  "web",
-							Image: "nginx:1.12",
-							Ports: []apiv1.ContainerPort{
-								{
-									Name:          "http",
-									Protocol:      apiv1.ProtocolTCP,
-									ContainerPort: 80,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+	//create a test Pod
+
+	annotations := map[string]string{
+		WorkloadAnnotation: "myworkload",
+		VersionAnnotation:  "1.0.0",
+		AppAnnotation:      "myapp",
 	}
 
-	// Create Deployment
-	fmt.Println("Creating deployment...")
-	Expect(k8sClient.Create(ctx, deployment)).Should(Succeed())
+	pause := imageutils.GetPauseImageName()
 
+	pod := WithContainer(st.MakePod().
+		Namespace("default").
+		Name("mypod").
+		Req(map[apiv1.ResourceName]string{apiv1.ResourceMemory: "50"}).
+		ZeroTerminationGracePeriod().
+		Obj(), pause)
+	pod.Annotations = annotations
+
+	var node *apiv1.Node
+
+	// Create Deployment
+	Describe("Creation of a new Deployment annotated for keptn-scheduler", func() {
+
+		Context("a new Deployment", func() {
+
+			BeforeEach(func() {
+				err := k8sClient.Create(ctx, pod)
+				Expect(err).NotTo(HaveOccurred(), "could not add deployment")
+
+				//example of creating a node
+				nodeName := "fake-node"
+				node = st.MakeNode().Name("fake-node").Label("node", nodeName).Obj()
+				node.Status.Allocatable = apiv1.ResourceList{
+					apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
+					apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
+				}
+				node.Status.Capacity = apiv1.ResourceList{
+					apiv1.ResourcePods:   *resource.NewQuantity(32, resource.DecimalSI),
+					apiv1.ResourceMemory: *resource.NewQuantity(300, resource.DecimalSI),
+				}
+				node, err = testCtx.ClientSet.CoreV1().Nodes().Create(testCtx.Ctx, node, metav1.CreateOptions{})
+				Expect(err).NotTo(HaveOccurred(), "Could not add node")
+
+			})
+			It(" should stay pending until workload instance is done", func() {
+				newPod := &apiv1.Pod{}
+				var err error
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: pod.Name}, newPod)
+					return err
+				}).Should(Succeed())
+
+				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
+
+				testCtx.Scheduler.Cache.AddNode(node)
+				testCtx.Scheduler.Cache.AddPod(pod)
+
+				//fw.AddNominatedPod(framework.NewPodInfo(pod), &framework.NominatingInfo{NominatedNodeName: node.Name, NominatingMode: framework.ModeOverride})
+				scheduleResult, err := testCtx.Scheduler.SchedulePod(ctx, fw, framework.NewCycleState(), pod)
+				fmt.Println(scheduleResult)
+				Expect(err).To(BeNil())
+
+				workload := initWorkloadInstance()
+
+				Expect(err).To(BeNil())
+				err = k8sClient.Create(ctx, workload)
+				Expect(err).To(BeNil())
+
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: "myapp-myworkload-1.0.0"}, workload)
+					return err
+				}).Should(Succeed())
+				workload.Status.PreDeploymentEvaluationStatus = "Succeeded"
+				err = k8sClient.Status().Update(ctx, workload)
+
+				Expect(err).To(BeNil())
+				newPod = &apiv1.Pod{}
+				err = wait.Poll(1*time.Second, 120*time.Second, func() (bool, error) {
+
+					if !deploymentRunning(pod.Namespace, pod.Name) {
+						return false, nil
+					}
+					return true, nil
+				})
+
+				Expect(err).NotTo(HaveOccurred())
+
+			})
+		})
+	})
 })
+
+func initWorkloadInstance() *testv1alpha1.KeptnWorkloadInstance {
+
+	var fakeInstance = testv1alpha1.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "KeptnWorkloadInstance",
+			APIVersion: "lifecycle.keptn.sh/v1alpha1",
+		},
+		ObjectMeta: metav1.ObjectMeta{Name: "myapp-myworkload-1.0.0", Namespace: "default"},
+		Status:     testv1alpha1.KeptnWorkloadInstanceStatus{PreDeploymentEvaluationStatus: "Succeeded"},
+	}
+
+	//	fmt.Println("known", target, ok)
+	return &fakeInstance
+}
+
+func deploymentRunning(namespace, name string) bool {
+	pod := apiv1.Pod{}
+	err := k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, &pod)
+	if err != nil {
+		// This could be a connection error so we want to retry.
+		GinkgoLogr.Error(err, "Failed to get", "pod", klog.KRef(namespace, name))
+		return false
+	}
+	fmt.Println(fmt.Sprintf("depl %+v", pod.Status.Phase))
+
+	for _, c := range pod.Status.Conditions {
+		if c.Type == "PodScheduled" {
+			return c.Status == "True"
+		}
+	}
+	return false
+}
+
+func WithContainer(pod *apiv1.Pod, image string) *apiv1.Pod {
+	pod.Spec.Containers[0].Name = "web"
+	pod.Spec.Containers[0].Image = "nginx:1.12"
+	return pod
+}

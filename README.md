@@ -1,6 +1,7 @@
 # Keptn Lifecycle Toolkit
 
 ![build](https://img.shields.io/github/workflow/status/keptn/lifecycle-toolkit/CI)
+![Codecov](https://img.shields.io/codecov/c/github/keptn/lifecycle-toolkit?token=KPGfrBb2sA)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=operator%2Fgo.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 ![status](https://img.shields.io/badge/status-not--for--production-red)

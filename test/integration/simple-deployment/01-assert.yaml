@@ -1,0 +1,5 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+  namespace: test

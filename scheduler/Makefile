@@ -81,8 +81,10 @@ e2e-test: manifests fmt vet envtest ## Run tests.
 	go test ./test/E2E -v -coverprofile cover.out
 
 .PHONY: test
-test: manifests fmt vet## Run tests.
-	go test ./... -v -coverprofile cover.out --ginkgo.skip-file="E2E"
+test: manifests fmt vet envtest## Run tests.
+	go test ./pkg/... -coverprofile cover.out
+	go test ./cmd/scheduler -coverprofile cover.out
+	go test ./test/... -v -ginkgo.skip-file="E2E" -test.v
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.

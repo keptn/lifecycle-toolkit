@@ -7,7 +7,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 	"k8s.io/kubernetes/pkg/scheduler/framework"
 )
@@ -76,7 +75,7 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 
 // New initializes a new plugin and returns it.
 func New(_ runtime.Object, h framework.Handle) (framework.Plugin, error) {
-	client, err := newClient()
+	client, err := newClient(h)
 	if err != nil {
 		return nil, err
 	}
@@ -87,11 +86,8 @@ func New(_ runtime.Object, h framework.Handle) (framework.Plugin, error) {
 	}, nil
 }
 
-func newClient() (dynamic.Interface, error) {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		return nil, err
-	}
+func newClient(handle framework.Handle) (dynamic.Interface, error) {
+	config := handle.KubeConfig()
 
 	dynClient, err := dynamic.NewForConfig(config)
 	if err != nil {

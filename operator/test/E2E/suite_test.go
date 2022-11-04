@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package test
+package E2E
 
 import (
 	"context"
@@ -22,13 +22,10 @@ import (
 	klfc "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"os"
-	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -46,9 +43,6 @@ var (
 	testEnv   *envtest.Environment
 	ctx       context.Context
 	cancel    context.CancelFunc
-	//k8sManager ctrl.Manager
-	//spanRecorder *sdktest.SpanRecorder
-	//tp           otelsdk.TracerProvider
 )
 
 func TestAPIs(t *testing.T) {
@@ -59,10 +53,11 @@ func TestAPIs(t *testing.T) {
 var _ = BeforeSuite(func() {
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
 	ctx, cancel = context.WithCancel(context.TODO())
-	By("bootstrapping test environment")
+	By("bootstrapping integration test environment")
+
+	t := true
 	testEnv = &envtest.Environment{
-		CRDDirectoryPaths:     []string{filepath.Join("..", "scheduler", "config", "rbac"), filepath.Join("..", "operator", "config", "crd", "bases")},
-		ErrorIfCRDPathMissing: true,
+		UseExistingCluster: &t,
 	}
 
 	var err error
@@ -84,13 +79,6 @@ func ignoreAlreadyExists(err error) error {
 		return nil
 	}
 	return err
-}
-
-func resetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanRecorder) {
-	GinkgoLogr.Info("Removing ", fmt.Sprint(len(spanRecorder.Ended())), " spans")
-	tp.UnregisterSpanProcessor(spanRecorder)
-	spanRecorder = sdktest.NewSpanRecorder()
-	tp.RegisterSpanProcessor(spanRecorder)
 }
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

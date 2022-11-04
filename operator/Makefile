@@ -78,7 +78,9 @@ vet: ## Run go vet against code.
 .PHONY: test
 test: manifests envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/... -v  -timeout 30m -coverprofile cover.out -ginkgo.skip-file="E2E" -test.v
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -v  coverprofile cover.out
+	go test ./api/... -v  coverprofile cover.out
+	go test ./controllers/... -v  coverprofile cover.out
+	go test ./webhooks/... -v  coverprofile cover.out
 
 .PHONY: performance-test
 performance-test: manifests generate fmt vet envtest ## Run tests.

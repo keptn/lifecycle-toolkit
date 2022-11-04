@@ -69,6 +69,7 @@ var _ = BeforeSuite(func() {
 			UseExistingCluster: &t,
 		}
 	} else {
+		GinkgoLogr.Info("Setting up fake test env")
 		testEnv = &envtest.Environment{
 			CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
 			ErrorIfCRDPathMissing: true,

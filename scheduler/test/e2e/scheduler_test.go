@@ -1,7 +1,7 @@
 package e2e
 
 import (
-	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/E2E/fake/v1alpha1"
+	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apiv1 "k8s.io/api/core/v1"

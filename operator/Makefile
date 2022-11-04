@@ -181,7 +181,7 @@ release-local: release-local.amd64 release-local.arm64
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
@@ -194,7 +194,7 @@ release-local.amd64: clean
 
 .PHONY: release-local.arm64
 release-local.arm64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \

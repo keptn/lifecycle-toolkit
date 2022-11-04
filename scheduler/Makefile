@@ -132,7 +132,7 @@ release-local: release-local.amd64 release-local.arm64
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
@@ -145,11 +145,12 @@ release-local.amd64: clean
 
 .PHONY: release-local.arm64
 release-local.arm64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg BUILDPLATFORM="linux/arm64" \
 		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
 		--platform linux/arm64 \
 		--target debug \

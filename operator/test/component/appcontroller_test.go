@@ -168,6 +168,6 @@ func createInstanceInCluster(name string, namespace string, version string, inst
 	}
 	By("Invoking Reconciling for Create")
 
-	Expect(k8sClient.Create(ctx, instance)).Should(Succeed())
+	Expect(ignoreAlreadyExists(k8sClient.Create(ctx, instance))).Should(Succeed())
 	return instance
 }

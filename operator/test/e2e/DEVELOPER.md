@@ -6,11 +6,12 @@ This test suite can run test verifying the operator
 ```
 kind create cluster
 cd lifecycle-toolkit
-make build-deploy-scheduler RELEASE_REGISTRY=yourregistry
+make build-deploy-operator RELEASE_REGISTRY=yourregistry
 
 ```
 
-wait for everything to be up and running, then cd to scheduler folder and run
+wait for everything to be up and running, then cd to operator folder and run
+
 ```make e2e-test```
 Make test is the one-stop shop for downloading the binaries, setting up the test environment, and running the tests.
 

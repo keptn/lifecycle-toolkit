@@ -9,15 +9,16 @@ require (
 	github.com/onsi/gomega v1.23.0
 	go.opentelemetry.io/otel v1.11.1 // indirect
 	go.opentelemetry.io/otel/metric v0.33.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.11.1
-	go.opentelemetry.io/otel/trace v1.11.1 // indirect
-	k8s.io/api v0.25.0 // indirect
+	k8s.io/api v0.25.0
 	k8s.io/apimachinery v0.25.0
 	k8s.io/client-go v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.0
 )
 
-require github.com/keptn/lifecycle-toolkit/operator v0.0.0-20221103103859-a8f58a461b08
+require (
+	github.com/keptn/lifecycle-toolkit/operator v0.0.0-20221103103859-a8f58a461b08
+	k8s.io/apiserver v0.25.0
+)
 
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
@@ -25,7 +26,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
-	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-logr/zapr v1.2.3 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect

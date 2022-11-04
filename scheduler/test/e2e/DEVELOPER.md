@@ -18,7 +18,7 @@ If you would like to run the generated bin for apiserver etcd etc. from your IDE
 This way the default test setup will pick them up without specifying any ENVVAR.
 For more info on kubebuilder envtest or to set up a real cluster behind the test have a look [here](https://book.kubebuilder.io/reference/envtest.html)
 
-After run a ```report.custom``` file will be generated with the results of each test
+After run a ```report.E2E-scheduler``` file will be generated with the results of each test
 
 
 ## Contributing

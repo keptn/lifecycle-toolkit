@@ -1,4 +1,4 @@
-package test
+package component
 
 import (
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"

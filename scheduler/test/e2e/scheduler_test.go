@@ -1,4 +1,4 @@
-package E2E
+package e2e
 
 import (
 	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/E2E/fake/v1alpha1"

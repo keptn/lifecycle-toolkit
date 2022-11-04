@@ -76,12 +76,17 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: test
-test: manifests envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+test:  envtest ## Run tests.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/... -v  -timeout 30m -coverprofile cover.out -ginkgo.skip-file="E2E" -test.v
+	go test ./... -v  coverprofile cover.out
 
 .PHONY: performance-test
 performance-test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test -v -timeout 30m --ginkgo.focus="Feature:Performance"
+
+.PHONY: e2e-test
+e2e-test: manifests fmt vet envtest ## Run tests.
+	go test ./test/e2e -v -coverprofile cover.out
 
 ##@ Build
 .PHONY: build

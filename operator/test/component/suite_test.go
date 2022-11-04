@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package test
+package component
 
 import (
 	"context"
@@ -53,7 +53,7 @@ var (
 	k8sManager ctrl.Manager
 )
 
-func TestAPIs(t *testing.T) {
+func TestOperatorComponents(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Controller Suite")
 }
@@ -70,7 +70,7 @@ var _ = BeforeSuite(func() {
 		}
 	} else {
 		testEnv = &envtest.Environment{
-			CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
+			CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
 			ErrorIfCRDPathMissing: true,
 		}
 	}
@@ -151,7 +151,7 @@ func resetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanReco
 }
 
 var _ = ReportAfterSuite("custom report", func(report Report) {
-	f, err := os.Create("report.custom")
+	f, err := os.Create("report.component-operator")
 	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
 	for _, specReport := range report.SpecReports {
 		path := strings.Split(specReport.FileName(), "/")

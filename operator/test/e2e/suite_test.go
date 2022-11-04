@@ -14,22 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package E2E
+package e2e
 
 import (
 	"context"
 	"fmt"
-	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/E2E/fake/v1alpha1"
+	klfc "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	kscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -40,44 +41,40 @@ import (
 // http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
 var (
 	cfg       *rest.Config
+	k8sClient client.Client
 	testEnv   *envtest.Environment
 	ctx       context.Context
 	cancel    context.CancelFunc
-	k8sClient client.Client
 	wg        *sync.WaitGroup
 )
 
-func TestAPIs(t *testing.T) {
+func TestE2EOperator(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Scheduler Suite")
+	RunSpecs(t, "Controller Suite")
 }
 
 var _ = BeforeSuite(func() {
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
 	ctx, cancel = context.WithCancel(context.TODO())
-	By("bootstrapping test environment")
+	By("bootstrapping e2e test environment")
 
 	t := true
 	testEnv = &envtest.Environment{
 		UseExistingCluster: &t,
 	}
 
-	apiServerArgs := testEnv.ControlPlane.GetAPIServer().Configure()
-	//apiServerArgs.Append("disable-admission-plugins", "TaintNodesByCondition", "Priority")
-	apiServerArgs.Append("runtime-config", "api/all=true")
-
 	var err error
 	// cfg is defined in this file globally.
 	cfg, err = testEnv.Start()
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
-
-	//+kubebuilder:scaffold:scheme
-	err = testv1alpha1.AddToScheme(kscheme.Scheme)
+	err = klfc.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
-	k8sClient, err = client.New(cfg, client.Options{Scheme: kscheme.Scheme})
+
+	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
+
 	wg = &sync.WaitGroup{}
 
 	go func() {
@@ -99,16 +96,15 @@ func ignoreAlreadyExists(err error) error {
 }
 
 var _ = ReportAfterSuite("custom report", func(report Report) {
-	f, err := os.Create("report.custom")
+	f, err := os.Create("report.E2E-operator")
 	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
-	fmt.Fprintf(f, "%s \n", time.Now().UTC())
-
 	for _, specReport := range report.SpecReports {
-		if specReport.FullText() != "" {
-			fmt.Fprintf(f, "%s, ", specReport.ContainerHierarchyTexts[1])
-			fmt.Fprintf(f, "%s%s | %s\n", specReport.ContainerHierarchyTexts[2], specReport.LeafNodeText, specReport.State)
-
+		path := strings.Split(specReport.FileName(), "/")
+		testFile := path[len(path)-1]
+		if specReport.ContainerHierarchyTexts != nil {
+			testFile = specReport.ContainerHierarchyTexts[0]
 		}
+		fmt.Fprintf(f, "%s %s | %s\n", testFile, specReport.LeafNodeText, specReport.State)
 	}
 	f.Close()
 })

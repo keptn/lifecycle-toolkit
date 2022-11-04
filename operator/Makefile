@@ -86,7 +86,7 @@ performance-test: manifests generate fmt vet envtest ## Run tests.
 
 .PHONY: e2e-test
 e2e-test: manifests fmt vet envtest ## Run tests.
-	go test ./test/e2e -v -coverprofile cover.out
+	go test ./test/e2e -v -coverprofile cover.out --ginkgo.focus="E2E"
 
 ##@ Build
 .PHONY: build

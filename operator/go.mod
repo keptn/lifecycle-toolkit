@@ -27,7 +27,10 @@ require (
 	sigs.k8s.io/controller-runtime v0.13.0
 )
 
-require github.com/magiconair/properties v1.8.1
+require (
+	github.com/magiconair/properties v1.8.1
+	k8s.io/apiserver v0.25.0
+)
 
 require (
 	cloud.google.com/go v0.97.0 // indirect

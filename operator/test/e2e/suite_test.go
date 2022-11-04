@@ -30,7 +30,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -98,13 +97,14 @@ func ignoreAlreadyExists(err error) error {
 var _ = ReportAfterSuite("custom report", func(report Report) {
 	f, err := os.Create("report.E2E-operator")
 	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
+	fmt.Fprintf(f, "%s \n", time.Now().UTC())
+
 	for _, specReport := range report.SpecReports {
-		path := strings.Split(specReport.FileName(), "/")
-		testFile := path[len(path)-1]
-		if specReport.ContainerHierarchyTexts != nil {
-			testFile = specReport.ContainerHierarchyTexts[0]
+		if specReport.FullText() != "" {
+			fmt.Fprintf(f, "%s, ", specReport.ContainerHierarchyTexts[1])
+			fmt.Fprintf(f, "%s%s | %s\n", specReport.ContainerHierarchyTexts[2], specReport.LeafNodeText, specReport.State)
+
 		}
-		fmt.Fprintf(f, "%s %s | %s\n", testFile, specReport.LeafNodeText, specReport.State)
 	}
 	f.Close()
 })

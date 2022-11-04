@@ -11,7 +11,7 @@ make build-deploy-scheduler RELEASE_REGISTRY=yourregistry
 ```
 
 wait for everything to be up and running, then cd to scheduler folder and run 
-```make test```
+```make e2e-test```
 Make test is the one-stop shop for downloading the binaries, setting up the test environment, and running the tests.
 
 If you would like to run the generated bin for apiserver etcd etc. from your IDE copy them to the default path "/usr/local/kubebuilder/bin"

@@ -13,6 +13,12 @@ For more info on kubebuilder envtest or to set up a real cluster behind the test
 
 After run a ```report.component-operator``` file will be generated with the results of each test:
 
+```
+suite_test.go  | passed
+[Feature:Performance] Load KeptnAppController should create the app version CR | passed
+KeptnAppController should update the status of the CR  | passed
+KeptnAppController should update the spans | failed
+```
 
 ## Contributing
 
@@ -67,6 +73,7 @@ var _ = Describe("KeptnAppController", func() {
 
 You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test with ```make performance-test``` the file 
 "load_test.go" contains examples of such tests, including a simple reporter. The report "MetricForLoadTestSuite" is generated for every run of the load test.
+
 
 ## Contributing Tips
 

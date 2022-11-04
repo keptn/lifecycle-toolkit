@@ -62,7 +62,7 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 
 		Context("a new Pod", func() {
 
-			It(" should stay pending if no workload instance is available", func() {
+			It(" should stay pending", func() {
 
 				newPod = &apiv1.Pod{}
 				Eventually(func() error {

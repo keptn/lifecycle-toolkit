@@ -23,20 +23,14 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/client-go/dynamic/dynamicinformer"
-	"k8s.io/client-go/informers"
-	clientset1 "k8s.io/client-go/kubernetes"
 	kscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	"k8s.io/kubernetes/pkg/scheduler"
-	"k8s.io/kubernetes/pkg/scheduler/framework"
 	"os"
-	"path/filepath"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sync"
 	"testing"
 	"time"
 	//+kubebuilder:scaffold:imports
@@ -45,26 +39,13 @@ import (
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
 // http://onsi.github.io/ginkgo/v2 to learn more about Ginkgo.
 var (
-	schedulingConfigFile = filepath.Join("..", "manifests", "permit", "scheduler-config.yaml")
-	cfg                  *rest.Config
-	testEnv              *envtest.Environment
-	ctx                  context.Context
-	cancel               context.CancelFunc
-	k8sManager           ctrl.Manager
-	k8sClient            client.Client
-	testCtx              *testContext
-	fw                   framework.Framework
+	cfg       *rest.Config
+	testEnv   *envtest.Environment
+	ctx       context.Context
+	cancel    context.CancelFunc
+	k8sClient client.Client
+	wg        *sync.WaitGroup
 )
-
-type testContext struct {
-	ClientSet          clientset1.Interface
-	KubeConfig         *rest.Config
-	InformerFactory    informers.SharedInformerFactory
-	DynInformerFactory dynamicinformer.DynamicSharedInformerFactory
-	Scheduler          *scheduler.Scheduler
-	Ctx                context.Context
-	CancelFn           context.CancelFunc
-}
 
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -97,11 +78,13 @@ var _ = BeforeSuite(func() {
 	k8sClient, err = client.New(cfg, client.Options{Scheme: kscheme.Scheme})
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
+	wg = &sync.WaitGroup{}
 
 	go func() {
 		defer GinkgoRecover()
-		<-ctx.Done()
-		fmt.Println("FINISHED")
+		time.Sleep(3 * time.Second) //wait for test to start
+		wg.Wait()
+		fmt.Println("SUITE FINISHED")
 		err := testEnv.Stop()
 		Expect(err).ToNot(HaveOccurred())
 	}()

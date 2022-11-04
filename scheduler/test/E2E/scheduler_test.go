@@ -23,6 +23,12 @@ const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 // clean example of E2E test/ integration test --
 
 var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
+	BeforeAll(func() {
+		wg.Add(1) //this tells the suite that all test have finished
+	})
+	AfterAll(func() {
+		wg.Done() //this tells the suite that all test have finished
+	})
 	Describe("If annotated for keptn-scheduler", func() {
 		annotations := map[string]string{
 			WorkloadAnnotation: "myworkload",

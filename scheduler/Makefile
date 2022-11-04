@@ -76,13 +76,13 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-.PHONY: test
-test: manifests fmt vet envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+.PHONY: e2e-test
+e2e-test: manifests fmt vet envtest ## Run tests.
+	go test ./test/E2E -v -coverprofile cover.out
 
-.PHONY: realtest
-realtest: manifests fmt vet envtest ## Run tests.
-	go test ./... -coverprofile cover.out
+.PHONY: test
+test: manifests fmt vet## Run tests.
+	go test ./... -v -coverprofile cover.out --ginkgo.skip-file="E2E"
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.

@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/keptn/lifecycle-toolkit/scheduler/test/E2E/fake/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha1/common"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

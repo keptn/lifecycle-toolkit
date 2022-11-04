@@ -67,6 +67,7 @@ var _ = BeforeSuite(func() {
 	cfg, err = testEnv.Start()
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
+	//+kubebuilder:scaffold:scheme
 	err = klfc.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 

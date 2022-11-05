@@ -80,7 +80,7 @@ jobs:
 
       - name: Build and deploy lifecycle toolkit
         working-directory: .
-        run: make -j2 build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.actor }} RELEASE_TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
+        run: make -j2 build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
 
       - name: Download KUTTL
         run: |

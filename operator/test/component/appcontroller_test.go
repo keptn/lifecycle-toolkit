@@ -85,15 +85,16 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 			It("should update the spans", func() {
 				assertAppSpan(instance, spanRecorder)
 			})
+			AfterEach(func() {
+				// Remember to clean up the cluster after each test
+				deleteAppInCluster(instance)
+				deleteAppVersionInCluster(appVersion)
+				// Reset span recorder after each spec
+				resetSpanRecords(tracer, spanRecorder)
+			})
 
 		})
-		AfterEach(func() {
-			// Remember to clean up the cluster after each test
-			deleteAppInCluster(instance)
-			deleteAppVersionInCluster(appVersion)
-			// Reset span recorder after each spec
-			resetSpanRecords(tracer, spanRecorder)
-		})
+
 	})
 })
 

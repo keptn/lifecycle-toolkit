@@ -21,6 +21,7 @@ import (
 	"fmt"
 	klfc "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
+	"github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -103,8 +104,15 @@ var _ = ReportAfterSuite("custom report", func(report Report) {
 	for _, specReport := range report.SpecReports {
 		if specReport.FullText() != "" {
 			fmt.Fprintf(f, "%s, ", specReport.ContainerHierarchyTexts[1])
-			fmt.Fprintf(f, "%s%s | %s\n", specReport.ContainerHierarchyTexts[2], specReport.LeafNodeText, specReport.State)
-
+			fmt.Fprintf(f, "%s%s ", specReport.ContainerHierarchyTexts[2], specReport.LeafNodeText)
+			switch specReport.State {
+			case types.SpecStatePassed:
+				fmt.Fprintf(f, "%s\n", "✓")
+			case types.SpecStateFailed:
+				fmt.Fprintf(f, "%s\n", "✕")
+			default:
+				fmt.Fprintf(f, "%s\n", specReport.State)
+			}
 		}
 	}
 	f.Close()

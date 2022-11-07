@@ -22,6 +22,7 @@ import (
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	. "github.com/onsi/ginkgo/v2"
+	"github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
@@ -159,7 +160,15 @@ var _ = ReportAfterSuite("custom report", func(report Report) {
 		if specReport.ContainerHierarchyTexts != nil {
 			testFile = specReport.ContainerHierarchyTexts[0]
 		}
-		fmt.Fprintf(f, "%s %s | %s\n", testFile, specReport.LeafNodeText, specReport.State)
+		fmt.Fprintf(f, "%s %s ", testFile, specReport.LeafNodeText)
+		switch specReport.State {
+		case types.SpecStatePassed:
+			fmt.Fprintf(f, "%s\n", "✓")
+		case types.SpecStateFailed:
+			fmt.Fprintf(f, "%s\n", "✕")
+		default:
+			fmt.Fprintf(f, "%s\n", specReport.State)
+		}
 	}
 	f.Close()
 })

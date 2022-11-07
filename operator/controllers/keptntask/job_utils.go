@@ -132,19 +132,3 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 	}
 	return job, nil
 }
-
-func createKeptnLabels(task klcv1alpha1.KeptnTask) map[string]string {
-	if task.Spec.Workload != "" {
-		return map[string]string{
-			common.AppAnnotation:      task.Spec.AppName,
-			common.WorkloadAnnotation: task.Spec.Workload,
-			common.VersionAnnotation:  task.Spec.WorkloadVersion,
-			common.TaskNameAnnotation: task.Name,
-		}
-	}
-	return map[string]string{
-		common.AppAnnotation:      task.Spec.AppName,
-		common.VersionAnnotation:  task.Spec.AppVersion,
-		common.TaskNameAnnotation: task.Name,
-	}
-}

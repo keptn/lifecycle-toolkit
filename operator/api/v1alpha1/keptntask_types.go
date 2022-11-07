@@ -151,3 +151,19 @@ func (t KeptnTask) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(common.TaskName.String(t.Name))
 	span.SetAttributes(common.TaskType.String(string(t.Spec.Type)))
 }
+
+func (t KeptnTask) CreateKeptnLabels() map[string]string {
+	if t.Spec.Workload != "" {
+		return map[string]string{
+			common.AppAnnotation:      t.Spec.AppName,
+			common.WorkloadAnnotation: t.Spec.Workload,
+			common.VersionAnnotation:  t.Spec.WorkloadVersion,
+			common.TaskNameAnnotation: t.Name,
+		}
+	}
+	return map[string]string{
+		common.AppAnnotation:      t.Spec.AppName,
+		common.VersionAnnotation:  t.Spec.AppVersion,
+		common.TaskNameAnnotation: t.Name,
+	}
+}

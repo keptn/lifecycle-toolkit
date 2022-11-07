@@ -149,7 +149,7 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}
-	for k, v := range createKeptnLabels(task) {
+	for k, v := range task.CreateKeptnLabels() {
 		jobLabels[k] = v
 	}
 

@@ -19,7 +19,7 @@ package keptnapp
 import (
 	"context"
 	"fmt"
-
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
@@ -43,12 +43,13 @@ import (
 )
 
 // KeptnAppReconciler reconciles a KeptnApp object
+
 type KeptnAppReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
-	Tracer   trace.Tracer
+	Tracer   common.ITracer
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete

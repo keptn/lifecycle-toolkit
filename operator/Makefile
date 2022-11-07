@@ -77,7 +77,20 @@ vet: ## Run go vet against code.
 
 .PHONY: test
 test: manifests envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/... -v  -timeout 30m -ginkgo.skip-file="e2e"
+	go test ./api/... -v
+	go test ./controllers/... -v  -coverprofile cover-pkg.out
+	go test ./webhooks/... -v  -coverprofile cover-main.out
+	cat cover-main.out cover-pkg.out > cover.out
+	rm cover-pkg.out cover-main.out
+
+.PHONY: performance-test
+performance-test: manifests generate fmt vet envtest ## Run tests.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test -v -timeout 30m --ginkgo.focus="Feature:Performance"
+
+.PHONY: e2e-test
+e2e-test: manifests fmt vet envtest ## Run tests.
+	go test ./test/e2e -v -coverprofile cover.out --ginkgo.focus="E2E"
 
 ##@ Build
 .PHONY: build
@@ -170,7 +183,7 @@ release-local: release-local.amd64 release-local.arm64
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
@@ -183,7 +196,7 @@ release-local.amd64: clean
 
 .PHONY: release-local.arm64
 release-local.arm64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \

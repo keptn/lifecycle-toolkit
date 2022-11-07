@@ -84,7 +84,7 @@ e2e-test: manifests fmt vet envtest ## Run tests.
 test: manifests fmt vet envtest## Run tests.
 	go test ./pkg/... -coverprofile cover-pkg.out
 	go test ./cmd/scheduler -coverprofile cover-main.out
-	go test ./test/... -v -ginkgo.skip-file="e2e" -test.v
+	go test ./test/... -v -ginkgo.skip-file="e2e"
 	cat cover-main.out cover-pkg.out > cover.out
 
 

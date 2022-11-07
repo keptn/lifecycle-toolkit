@@ -1,5 +1,5 @@
 # E2E tests
-This test suite can run test verifying the scheduler, this rely on a real cluster with installed scheduler
+This test suite can run tests to verify the scheduler. The tests rely on a real cluster with an already installed keptn-scheduler
 
 ### Running on kind cluster
 

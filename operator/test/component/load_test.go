@@ -18,8 +18,8 @@ import (
 )
 
 type Metric struct {
-	creationTime            []time.Time
-	succededAppVersionCount int
+	creationTime             []time.Time
+	succeededAppVersionCount int
 }
 
 const LOAD = 100
@@ -97,7 +97,7 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 	It("should create the app version CR", func() {
 		for _, app := range apps {
 			appVersions = append(appVersions, assertResourceUpdated(app))
-			metrics.succededAppVersionCount++
+			metrics.succeededAppVersionCount++
 		}
 	})
 })
@@ -110,7 +110,7 @@ func generateMetricReport(metric Metric) {
 	fmt.Println(dir)
 
 	filePath := path.Join(dir, "MetricsForLoadTestSuite_"+time.Now().Format(time.RFC3339)+".json")
-	report := []byte(fmt.Sprintf("Overall AppVersions created %d/%d \n Creation times: %+v ", metric.succededAppVersionCount, LOAD, metric.creationTime))
+	report := []byte(fmt.Sprintf("Overall AppVersions created %d/%d \n Creation times: %+v ", metric.succeededAppVersionCount, LOAD, metric.creationTime))
 	if err := ioutil.WriteFile(filePath, report, 0644); err != nil {
 		GinkgoLogr.Error(err, "error writing to ", filePath)
 	}

@@ -21,8 +21,6 @@ import (
 	"fmt"
 	"time"
 
-	"k8s.io/apimachinery/pkg/types"
-
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"go.opentelemetry.io/otel/codes"

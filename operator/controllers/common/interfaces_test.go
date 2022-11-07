@@ -1,10 +1,11 @@
 package common
 
 import (
+	"testing"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestPhaseItemWrapper_GetState(t *testing.T) {

@@ -18,13 +18,14 @@ package keptntaskdefinition
 
 import (
 	"context"
+	"reflect"
+	"time"
+
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
-	"reflect"
-	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"

@@ -109,7 +109,7 @@ func generateMetricReport(metric Metric) {
 	}
 	fmt.Println(dir)
 
-	filePath := path.Join(dir, "MetricsForLoadTestSuite_"+time.Now().Format(time.RFC3339)+".json")
+	filePath := path.Join(dir, "load-report."+time.Now().Format(time.RFC3339)+".json")
 	report := []byte(fmt.Sprintf("Overall AppVersions created %d/%d \n Creation times: %+v ", metric.succeededAppVersionCount, LOAD, metric.creationTime))
 	if err := ioutil.WriteFile(filePath, report, 0644); err != nil {
 		GinkgoLogr.Error(err, "error writing to ", filePath)

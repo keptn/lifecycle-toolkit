@@ -16,7 +16,7 @@ testbin/*
 
 # Reports from suite tests
 report.*
-
+load-report.*
 # Kubernetes Generated files - skip generated files, except for vendored files
 
 !vendor/**/zz_generated.*

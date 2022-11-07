@@ -80,7 +80,7 @@ jobs:
 
       - name: Build and deploy lifecycle toolkit
         working-directory: .
-        run: make build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.repository_owner }} TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
+        run: make build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.actor }} TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
 
       - name: Run E2E Tests Scheduler #TODO maybe separate scheduler and operator in 2 pipelines
         working-directory: ./scheduler

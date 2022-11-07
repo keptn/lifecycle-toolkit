@@ -53,7 +53,7 @@ jobs:
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
-  run-e2e-test:
+  run-integration-test:
     name: Run Integration Tests
     runs-on: ubuntu-22.04
     needs: prepare_ci_run

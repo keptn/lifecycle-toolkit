@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )

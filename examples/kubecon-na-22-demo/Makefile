@@ -5,6 +5,9 @@ PODTATO_NAMESPACE ?= podtato-kubectl
 .PHONY: install
 install:
 	make -C ../observability install
+
+.PHONY: import-grafana-dashboard
+import-grafana-dashboard:
 	make -C ../observability import-grafana-dashboard
 
 .PHONY: port-forward-jaeger

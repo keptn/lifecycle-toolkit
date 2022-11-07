@@ -20,4 +20,4 @@ images:
   newTag: "202211021667386780"
 - name: scheduler
   newName: docker.io/thschue/scheduler
-  newTag: "202211021667389634"
+  newTag: "202211071667824605"

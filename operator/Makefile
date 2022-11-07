@@ -90,7 +90,6 @@ component-test: manifests generate fmt vet envtest ## Run tests.
 .PHONY: performance-test
 performance-test: manifests generate fmt vet envtest ## Run tests.
     TEST_USE_EXISTING_CLUSTER=true go test ./test -v -timeout 30m --ginkgo.focus="Feature:Performance"
-##	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test -v -timeout 30m --ginkgo.focus="Feature:Performance"
 
 .PHONY: e2e-test
 e2e-test: manifests fmt vet envtest ## Run tests.

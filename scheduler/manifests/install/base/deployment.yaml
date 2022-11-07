@@ -4,7 +4,7 @@ metadata:
   labels:
     component: scheduler
   name: keptn-scheduler
-  namespace: keptn-lifecycle-controller-system
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   selector:
     matchLabels:
@@ -20,7 +20,7 @@ spec:
         - command:
             - /bin/kube-scheduler
             - --config=/etc/kubernetes/scheduler-config.yaml
-          image: image:latest
+          image: scheduler:latest
           env:
             - name: OTEL_COLLECTOR_URL
               value: otel-collector:4317

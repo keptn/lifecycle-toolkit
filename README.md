@@ -1,25 +1,24 @@
-# Keptn Lifecycle Controller
+# Keptn Lifecycle Toolkit
 
-![build](https://img.shields.io/github/workflow/status/keptn/lifecycle-controller/CI)
-![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-controller?filename=operator%2Fgo.mod)
-![version](https://img.shields.io/github/v/release/keptn/lifecycle-controller)
+![build](https://img.shields.io/github/workflow/status/keptn/lifecycle-toolkit/CI)
+![Codecov](https://img.shields.io/codecov/c/github/keptn/lifecycle-toolkit?token=KPGfrBb2sA)
+![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=operator%2Fgo.mod)
+![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 ![status](https://img.shields.io/badge/status-not--for--production-red)
-[![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-controller)](https://github.com/keptn/lifecycle-controller/discussions)
+[![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 
-The purpose of this repository is to demonstrate and experiment with
-a prototype of a _**Keptn Lifecycle Controller**_.
-The goal of this prototype is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
-It is an experimental project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
+The goal of this toolkit is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
+It is an incubating project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
 ## Deploy the latest release
 
 **Known Limitations**
-* Kubernetes >=1.24 is needed to deploy the Lifecycle Controller
-* The Lifecycle Controller is currently not compatible with [vcluster](https://github.com/loft-sh/vcluster)
+* Kubernetes >=1.24 is needed to deploy the Lifecycle Toolkit
+* The Lifecycle Toolkit is currently not compatible with [vcluster](https://github.com/loft-sh/vcluster)
 
 **Installation**
 
-The lifecycle controller includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
 is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
 
 When *cert-manager* is installed, you can run
@@ -27,20 +26,20 @@ When *cert-manager* is installed, you can run
 <!---x-release-please-start-version-->
 
 ```
-kubectl apply -f https://github.com/keptn/lifecycle-controller/releases/download/v0.3.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.3.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->
 
-to install the latest release of the lifecycle controller.
+to install the latest release of the Lifecycle Toolkit.
 
-The lifecycle controller uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
+The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data. To install it, follow their [installation instructions](https://opentelemetry.io/docs/collector/getting-started/).
 We also provide some more information about this in our [observability example](./examples/observability/).
 
 ## Goals
 
-The Keptn Lifecycle Controller aims to support Cloud Native teams with:
+The Keptn Lifecycle Toolkit aims to support Cloud Native teams with:
 
 - Pre-requisite evaluation before deploying workloads and applications
 - Finding out when an application (not workload) is ready and working
@@ -50,12 +49,12 @@ The Keptn Lifecycle Controller aims to support Cloud Native teams with:
 
 ![](./assets/operator-maturity.jpg)
 
-The Keptn Lifecycle Controller could be seen as a general purpose and declarative [Level 3 operator](https://operatorframework.io/operator-capabilities/) for your Application.
-For this reason, the Keptn Lifecycle Controller is agnostic to deployment tools that are used and works with any GitOps solution.
+The Keptn Lifecycle Toolkit could be seen as a general purpose and declarative [Level 3 operator](https://operatorframework.io/operator-capabilities/) for your Application.
+For this reason, the Keptn Lifecycle Toolkit is agnostic to deployment tools that are used and works with any GitOps solution.
 
 ## How to use
 
-The Keptn Lifecycle Controller monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations/labels.
+The Keptn Lifecycle Toolkit monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations/labels.
 For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
 
 ```yaml
@@ -72,7 +71,7 @@ app.kubernetes.io/name: myAwesomeWorkload
 app.kubernetes.io/version: myAwesomeWorkloadVersion
 ```
 
-In general, the Keptn Annotations/Labels take precedence over the Kubernetes recommended labels. If there is no version annotation/label and there is only one container in the pod, the Lifecycle Controller will take the image tag as version (if it is not "latest").
+In general, the Keptn Annotations/Labels take precedence over the Kubernetes recommended labels. If there is no version annotation/label and there is only one container in the pod, the Lifecycle Toolkit will take the image tag as version (if it is not "latest").
 
 In case you want to run pre- and post-deployment checks, further annotations are necessary:
 
@@ -109,7 +108,7 @@ The deployment for a Workload will stay in a `Pending` state until the respectiv
 ## Architecture
 
 
-The Keptn Lifecycle Controller is composed of the following components:
+The Keptn Lifecycle Toolkit is composed of the following components:
 
 - Keptn Lifecycle Operator
 - Keptn Scheduler
@@ -123,13 +122,13 @@ The Event Controller watches for events and triggers a Kubernetes Job to fullfil
 After the Pre-Deployment has finished, the Keptn Scheduler schedules the Pod to be deployed.
 The KeptnApp and KeptnWorkload Controllers watch for the workload resources to finish and then generate a Post-Deployment Event.
 After the Post-Deployment checks, SLOs can be validated using an interface for retrieving SLI data from a provider, e.g, [Prometheus](https://prometheus.io/).
-Finally, Keptn Lifecycle Controller exposes Metrics and Traces of the whole Deployment cycle with [OpenTelemetry](https://opentelemetry.io/).
+Finally, Keptn Lifecycle Toolkit exposes Metrics and Traces of the whole Deployment cycle with [OpenTelemetry](https://opentelemetry.io/).
 
 ![](./assets/architecture.png)
 
 ## How it works
 
-The following sections will provide insights on each component of the Keptn Lifecycle controller in terms of their purpose, responsibility, and communication with other components.
+The following sections will provide insights on each component of the Keptn Lifecycle Toolkit in terms of their purpose, responsibility, and communication with other components.
 Furthermore, there will be a description on what CRD they monitor and a general overview of their fields.
 
 ### Webhook
@@ -142,7 +141,7 @@ kind: Namespace
 metadata:
   name: podtato-kubectl
   annotations:
-    keptn.sh/lifecycle-controller: "enabled"  # this lines tells the webhook to handle the namespace
+    keptn.sh/lifecycle-toolkit: "enabled"  # this lines tells the webhook to handle the namespace
 ```
 However, the mutating webhook will modify only resources in the annotated namespace that have Keptn annotations.
 When the webhook receives a request for a new pod, it will look for the workload annotations:
@@ -228,7 +227,7 @@ its desired state (e.g. all pods of a deployment are up and running), it will be
 
 ### Keptn Task Definition
 
-A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Controller
+A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
 Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
@@ -292,7 +291,7 @@ spec:
 ```
 
 As you might have noticed, Task Definitions also have the possibility to use input parameters.
-The Lifecycle Controller passes the values defined inside the `map` field as a JSON object.
+The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON object.
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
@@ -306,7 +305,7 @@ The execution is done spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
 
 ### Keptn Evaluation Definition
-A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Controller
+A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
 
 A Keptn evaluation definition looks like the following:
@@ -350,8 +349,8 @@ spec:
 The [GitHub CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
 
 ```bash
-gh run list --repo keptn/lifecycle-controller # find the id of a run
-gh run download 3152895000 --repo keptn/lifecycle-controller # download the artifacts
+gh run list --repo keptn/lifecycle-toolkit # find the id of a run
+gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
 kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
 kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
@@ -375,8 +374,8 @@ Please find more information in the [LICENSE](LICENSE) file.
 
 ## Thanks to all the people who have contributed 💜
 
-<a href="https://github.com/keptn/lifecycle-controller/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=keptn/lifecycle-controller" />
+<a href="https://github.com/keptn/lifecycle-toolkit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=keptn/lifecycle-toolkit" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).

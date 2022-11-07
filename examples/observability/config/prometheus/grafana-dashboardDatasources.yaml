@@ -29,7 +29,7 @@ stringData:
                 "typeName":"Jaeger",
                 "typeLogoUrl":"public/app/plugins/datasource/jaeger/img/jaeger_logo.svg",
                 "access":"proxy",
-                "url":"http://jaeger-query.keptn-lifecycle-controller-system.svc.cluster.local:16686",
+                "url":"http://jaeger-query.keptn-lifecycle-toolkit-system.svc.cluster.local:16686",
                 "user":"",
                 "database":"",
                 "basicAuth":false,

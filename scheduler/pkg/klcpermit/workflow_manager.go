@@ -3,7 +3,7 @@ package klcpermit
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-controller/scheduler/pkg/tracing"
+	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/tracing"
 	"go.opentelemetry.io/otel/codes"
 	"hash/fnv"
 	corev1 "k8s.io/api/core/v1"

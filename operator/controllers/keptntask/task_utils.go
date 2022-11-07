@@ -2,7 +2,7 @@ package keptntask
 
 import (
 	"context"
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/types"
 )
 

@@ -19,9 +19,8 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
-
-	"golang.org/x/mod/semver"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -29,6 +28,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/go-logr/logr"
+	version "github.com/hashicorp/go-version"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
@@ -36,9 +36,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -52,7 +52,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Log         logr.Logger
 	Meters      common.KeptnMeters
 	Tracer      trace.Tracer
-	SpanHandler controllercommon.SpanHandler
+	SpanHandler *controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -130,7 +130,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
 			controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
-			return ctrl.Result{Requeue: true, RequeueAfter: 60 * time.Second}, nil
+			return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 		}
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
@@ -273,28 +273,34 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, app
 
 func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
 	apps := &klcv1alpha1.KeptnAppVersionList{}
+
 	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
 		return false, klcv1alpha1.KeptnAppVersion{}, err
 	}
 	latestVersion := klcv1alpha1.KeptnAppVersion{}
 	for _, app := range apps.Items {
 		if app.Spec.AppName == wli.Spec.AppName {
+
 			for _, appWorkload := range app.Spec.Workloads {
-				workloadName := fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name)
-				if appWorkload.Version == wli.Spec.Version && workloadName == wli.Spec.WorkloadName {
-					if latestVersion.Spec.Version == "" {
+				if !reflect.DeepEqual(latestVersion, app) {
+					latestVersion = app
+				} else if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
+					oldVersion, err := version.NewVersion(app.Spec.Version)
+					if err != nil {
+						r.Log.Error(err, "could not parse version")
+					}
+					newVersion, err := version.NewVersion(latestVersion.Spec.Version)
+					if err != nil {
+						r.Log.Error(err, "could not parse version")
+					}
+					if oldVersion.LessThan(newVersion) {
 						latestVersion = app
-					} else {
-						if semver.Compare(latestVersion.Spec.Version, app.Spec.Version) < 0 {
-							latestVersion = app
-						}
 					}
 				}
 			}
 		}
 	}
 
-	r.Log.Info("Selected Version " + latestVersion.Spec.Version + " for KeptnApp " + wli.Spec.AppName)
 	if latestVersion.Spec.Version == "" {
 		return false, klcv1alpha1.KeptnAppVersion{}, nil
 	}

@@ -30,7 +30,7 @@ jobs:
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
-      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.NON_FORKED_AND_NON_ROBOT_RUN }}
+      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
       - name: Check out code
@@ -50,19 +50,19 @@ jobs:
 
       - name: Get workflow run type
         id: get_run_type
-        env:
-          NON_FORKED_AND_NON_ROBOT_RUN: ${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
-        run:
+        run: |
+          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+          echo "github.actor != 'renovate[bot]' = ${{ github.actor != 'renovate[bot]' }}"
+          echo "github.actor != 'dependabot[bot]' = ${{ github.actor != 'dependabot[bot]' }}"
+          echo "github.event_name == 'push' = ${{ github.event_name == 'push' }}"
+          echo "github.event.pull_request.head.repo.full_name == github.repository = ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+          echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   compile:
     name: Compile
     needs: prepare_ci_run
     runs-on: ubuntu-22.04
-    env:
-      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
-      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
       matrix:
         config:
@@ -83,12 +83,10 @@ jobs:
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: Go vet
-        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         run: go vet ./...
 
       - name: Go fmt
-        if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         run: go fmt ./...
 
@@ -124,6 +122,11 @@ jobs:
         run: |
           make test
 
+      - name: Report code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          flags: ${{ matrix.config.name }}
+
   build_image:
     name: Build and push Docker Image
     needs: [ prepare_ci_run, compile, test ]
@@ -153,7 +156,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Login to GitHub Container Registry
-        if: needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         uses: docker/login-action@v2
         with:
           registry: "ghcr.io"
@@ -175,24 +178,24 @@ jobs:
             CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
             SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
-          push: ${{ needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
+          push: ${{ needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true' }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name == 'keptn-lifecycle-operator' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: ./${{ matrix.config.folder }}
         env:
           TAG: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml
-        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+        if: matrix.config.name != 'functions-runtime' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest

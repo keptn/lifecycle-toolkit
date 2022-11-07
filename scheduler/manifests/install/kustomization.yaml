@@ -1,4 +1,4 @@
-namespace: keptn-lifecycle-controller-system
+namespace: keptn-lifecycle-toolkit-system
 resources:
 - base/deployment.yaml
 - base/rbac.yaml
@@ -16,5 +16,8 @@ images:
   newName: ghcr.io/keptn/scheduler
   newTag: "202210171665987043"
 - name: klfc-scheduler
-  newName: docker.io/odubajdt/scheduler
-  newTag: main-refactor
+  newName: docker.io/thschue/scheduler
+  newTag: "202211021667386780"
+- name: scheduler
+  newName: docker.io/thschue/scheduler
+  newTag: "202211021667389634"

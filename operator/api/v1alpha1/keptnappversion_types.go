@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -337,5 +337,14 @@ func (v KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapC
 				Duration: 5 * time.Second,
 			},
 		},
+	}
+}
+
+func (v KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(v.Spec.AppName),
+		common.AppVersion.String(v.Spec.Version),
+		common.WorkloadVersion.String(v.Spec.PreviousVersion),
+		common.WorkloadVersion.String(v.Namespace),
 	}
 }

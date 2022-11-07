@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/client-go/tools/record"
@@ -18,7 +18,7 @@ type PhaseHandler struct {
 	client.Client
 	Recorder    record.EventRecorder
 	Log         logr.Logger
-	SpanHandler SpanHandler
+	SpanHandler *SpanHandler
 }
 
 type PhaseResult struct {

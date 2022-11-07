@@ -14,18 +14,18 @@ cleanup-manifests:
 
 .PHONY: build-deploy-operator
 build-deploy-operator: deploy-cert-manager
-	$(MAKE) -C operator release-local.$(ARCH) TAG=$(TAG)
-	$(MAKE) -C operator push-local TAG=$(TAG)
-	$(MAKE) -C operator release-manifests TAG=$(TAG) ARCH=$(ARCH)
+	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 
 	kubectl apply -f operator/config/rendered/release.yaml
 
 .PHONY: build-deploy-scheduler
 build-deploy-scheduler:
-	$(MAKE) -C scheduler release-local.$(ARCH) TAG=$(TAG)
-	$(MAKE) -C scheduler push-local TAG=$(TAG)
-	$(MAKE) -C scheduler release-manifests TAG=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-controller-system --dry-run=client -o yaml | kubectl apply -f -
+	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C scheduler push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
 
 .PHONY: deploy-cert-manager

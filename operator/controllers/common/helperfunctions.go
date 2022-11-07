@@ -1,8 +1,8 @@
 package common
 
 import (
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"k8s.io/apimachinery/pkg/types"
 )
 

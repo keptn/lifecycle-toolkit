@@ -21,7 +21,9 @@ import (
 	"fmt"
 	"time"
 
-	controllercommon "github.com/keptn/lifecycle-controller/operator/controllers/common"
+	"k8s.io/apimachinery/pkg/types"
+
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -29,14 +31,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -50,7 +52,7 @@ type KeptnAppVersionReconciler struct {
 	Recorder    record.EventRecorder
 	Tracer      trace.Tracer
 	Meters      common.KeptnMeters
-	SpanHandler controllercommon.SpanHandler
+	SpanHandler *controllercommon.SpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete

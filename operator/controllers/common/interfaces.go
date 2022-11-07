@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-controller/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
-	apicommon "github.com/keptn/lifecycle-controller/operator/api/v1alpha1/common"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -22,6 +22,8 @@ type PhaseItem interface {
 	GetVersion() string
 	GetActiveMetricsAttributes() []attribute.KeyValue
 	GetDurationMetricsAttributes() []attribute.KeyValue
+	GetMetricsAttributes() []attribute.KeyValue
+	GetSpanAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
@@ -182,4 +184,8 @@ type ListItemWrapper struct {
 
 func (pw ListItemWrapper) GetItems() []PhaseItem {
 	return pw.Obj.GetItems()
+}
+
+func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
+	return pw.Obj.GetSpanAttributes()
 }

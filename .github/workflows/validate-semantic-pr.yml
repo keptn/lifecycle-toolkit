@@ -31,8 +31,8 @@ jobs:
             revert
             style
             test
-          scopes: |
             deps
+          scopes: |
             scheduler
             operator
             functions-runtime

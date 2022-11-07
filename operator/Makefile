@@ -76,12 +76,12 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: test
-test: manifests generate fmt vet envtest ## Run tests.
+test: manifests envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 ##@ Build
 .PHONY: build
-build: generate fmt vet ## Build manager binary.
+build: generate ## Build manager binary.
 	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: run
@@ -175,8 +175,10 @@ release-local.amd64: clean
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
 		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
-		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 .
-		--platform linux/amd64
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 \
+		--platform linux/amd64 \
+		--target debug \
+		.
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: release-local.arm64
@@ -186,8 +188,10 @@ release-local.arm64: clean
 		--build-arg RELEASE_VERSION="$(TAG)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
 		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
-		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 .\
-		--platform linux/arm64
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
+		--platform linux/arm64 \
+		--target debug \
+		.
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: push-local

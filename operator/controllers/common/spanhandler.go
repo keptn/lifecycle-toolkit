@@ -18,7 +18,7 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	if err != nil {
 		return nil, nil, err
 	}
-	appvName := piWrapper.GetSpanName(phase)
+	appvName := piWrapper.GetSpanKey(phase)
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 	if r.bindCRDSpan == nil {
@@ -27,7 +27,8 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	if span, ok := r.bindCRDSpan[appvName]; ok {
 		return ctx, span, nil
 	}
-	ctx, span := tracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
+	spanName := piWrapper.GetSpanName(phase)
+	ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
 	attributes := piWrapper.GetSpanAttributes()
 	for _, attribute := range attributes {
 		span.SetAttributes(attribute)

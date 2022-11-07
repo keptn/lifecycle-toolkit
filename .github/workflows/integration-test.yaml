@@ -1,4 +1,4 @@
-name: E2E-Test
+name: Integration-Test
 on:
   pull_request:
     branches:
@@ -54,7 +54,7 @@ jobs:
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   run-e2e-test:
-    name: Run E2E Tests
+    name: Run Integration Tests
     runs-on: ubuntu-22.04
     needs: prepare_ci_run
 
@@ -88,6 +88,6 @@ jobs:
           chmod +x kubectl-kuttl
           mv kubectl-kuttl /usr/local/bin
 
-      - name: Run E2E Tests
+      - name: Run Integration Tests
         working-directory: .
         run: make integration-test

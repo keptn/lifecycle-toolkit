@@ -7,6 +7,10 @@ import (
 )
 
 func Test_getCRDName(t *testing.T) {
+	Obj := metav1.ObjectMeta{}
+	t.Log(len(Obj.Annotations))
+	t.Log(Obj.Annotations)
+	t.Log(make(map[string]string))
 
 	tests := []struct {
 		name string

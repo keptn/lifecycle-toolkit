@@ -1,7 +1,7 @@
 package fake
 
 import (
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -14,5 +14,5 @@ func NewClient(objs ...client.Object) (client.Client, error) {
 }
 
 func setupScheme() error {
-	return lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+	return lfcv1alpha1.AddToScheme(scheme.Scheme)
 }

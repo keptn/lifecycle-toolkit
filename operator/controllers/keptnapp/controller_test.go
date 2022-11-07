@@ -2,7 +2,7 @@ package keptnapp
 
 import (
 	"context"
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
@@ -20,16 +20,16 @@ import (
 //EXample Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
-	app := &lifecyclev1alpha1.KeptnApp{
+	app := &lfcv1alpha1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-app",
 			Namespace: "default",
 		},
-		Spec: lifecyclev1alpha1.KeptnAppSpec{
+		Spec: lfcv1alpha1.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lifecyclev1alpha1.KeptnAppStatus{},
+		Status: lfcv1alpha1.KeptnAppStatus{},
 	}
 	r, _, _ := setupReconciler(t)
 
@@ -149,30 +149,30 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITra
 }
 
 func addApp(r *KeptnAppReconciler, name string) error {
-	app := &lifecyclev1alpha1.KeptnApp{
+	app := &lfcv1alpha1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: "default",
 		},
-		Spec: lifecyclev1alpha1.KeptnAppSpec{
+		Spec: lfcv1alpha1.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lifecyclev1alpha1.KeptnAppStatus{},
+		Status: lfcv1alpha1.KeptnAppStatus{},
 	}
 	return r.Client.Create(context.TODO(), app)
 
 }
 
 func addAppVersion(r *KeptnAppReconciler, name string, status keptncommon.KeptnState) error {
-	app := &lifecyclev1alpha1.KeptnAppVersion{
+	app := &lfcv1alpha1.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: "default",
 		},
-		Spec: lifecyclev1alpha1.KeptnAppVersionSpec{},
-		Status: lifecyclev1alpha1.KeptnAppVersionStatus{
+		Spec: lfcv1alpha1.KeptnAppVersionSpec{},
+		Status: lfcv1alpha1.KeptnAppVersionStatus{
 			Status: status,
 		},
 	}

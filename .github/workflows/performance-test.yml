@@ -1,4 +1,4 @@
-name: Tests
+name: Performance Tests
 on:
   workflow_call:
 env:
@@ -7,24 +7,6 @@ defaults:
   run:
     shell: bash
 jobs:
-  component_tests:
-    name: Component Tests
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Check out code
-      uses: actions/checkout@v3
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v3
-      with:
-        go-version: ${{ env.GO_VERSION }}
-        cache: true
-        cache-dependency-path: 'operator/go.sum'
-
-    - name: Execute Component Tests
-      working-directory: operator
-      run: go test ./test/component -v -timeout 30m 
-
   performance_tests:
     name: Performance Tests
     runs-on: ubuntu-22.04

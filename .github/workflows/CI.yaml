@@ -207,17 +207,17 @@ jobs:
     uses: ./.github/workflows/component-test.yml
     secrets: inherit
 
-#  integration_tests:
-#    name: Integration Tests
-#    needs: [build_image]
-#    uses: ./.github/workflows/integration-test.yml
-#    secrets: inherit
+  integration_tests:
+    name: Integration Tests
+    needs: [build_image]
+    uses: ./.github/workflows/integration-test.yml
+    secrets: inherit
 
-#  e2e_tests:
-#    name: End to End Tests
-#    needs: [build_image]
-#    uses: ./.github/workflows/e2e-test.yml
-#    secrets: inherit
+  e2e_tests:
+    name: End to End Tests
+    needs: [build_image]
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
 
   performance_tests:
     name: Performance Tests

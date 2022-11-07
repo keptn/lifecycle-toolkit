@@ -1,0 +1,10 @@
+bases:
+  - ../base
+
+resources:
+  - app-pre-deploy.yaml
+  - app-pre-deploy-eval.yaml
+
+patchesStrategicMerge:
+  - app.yaml
+  - manifest.yaml

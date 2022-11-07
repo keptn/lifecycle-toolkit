@@ -1,0 +1,7 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationProvider
+metadata:
+  name: prometheus
+  namespace: podtato-kubectl
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

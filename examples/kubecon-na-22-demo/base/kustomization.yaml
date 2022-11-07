@@ -1,0 +1,6 @@
+resources:
+  - app.yaml
+  - manifest.yaml
+  - app-post-deploy.yaml
+  - slack-secret.yaml
+  - provider.yaml

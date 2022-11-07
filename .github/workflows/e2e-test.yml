@@ -15,6 +15,13 @@ jobs:
   run-e2e-test:
     name: Run E2E Tests
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -48,10 +55,6 @@ jobs:
           kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
           kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
 
-      - name: Run E2E Tests Scheduler #TODO maybe separate scheduler and operator in 2 pipelines
-        working-directory: ./scheduler
-        run: make e2e-test
-
-      - name: Run E2E Tests Operator
-        working-directory: ./operator
+      - name: Run E2E Tests ${{ matrix.config.name }}
+        working-directory: ${{ matrix.config.folder }}
         run: make e2e-test

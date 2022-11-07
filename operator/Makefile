@@ -84,6 +84,10 @@ test: manifests envtest ## Run tests.
 	cat cover-main.out cover-pkg.out > cover.out
 	rm cover-pkg.out cover-main.out
 
+.PHONY: component-test
+component-test: manifests generate fmt vet envtest ## Run tests.
+    KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/... -v  -timeout 30m 
+
 .PHONY: performance-test
 performance-test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test -v -timeout 30m --ginkgo.focus="Feature:Performance"

@@ -23,4 +23,4 @@ jobs:
 
     - name: Execute Component Tests
       working-directory: operator
-      run: go test ./test/component -v -timeout 30m 
+      run: make component-test

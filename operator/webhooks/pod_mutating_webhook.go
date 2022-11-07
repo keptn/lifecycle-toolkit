@@ -234,10 +234,6 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	}
 
 	if gotWorkloadAnnotation {
-		if len(targetPod.Annotations) == 0 {
-			targetPod.Annotations = make(map[string]string)
-		}
-
 		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
 
 		if !gotVersionAnnotation {

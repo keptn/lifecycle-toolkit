@@ -23,7 +23,7 @@ jobs:
 
     - name: Execute Component Tests
       working-directory: operator
-      run: go test ./test -v -timeout 30m 
+      run: go test ./test/component -v -timeout 30m 
 
   performance_tests:
     name: Performance Tests

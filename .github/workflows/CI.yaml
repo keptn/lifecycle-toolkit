@@ -59,22 +59,22 @@ jobs:
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
-  compile:
-    name: Compile
-    needs: prepare_ci_run
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        config:
-          - name: "keptn-lifecycle-operator"
-            folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
-            # Nothing to compile in functions-runtime
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
+#  compile:
+#    name: Compile
+#    needs: prepare_ci_run
+#    runs-on: ubuntu-22.04
+#    strategy:
+#      matrix:
+#        config:
+#          - name: "keptn-lifecycle-operator"
+#            folder: "operator/"
+#          - name: "scheduler"
+#            folder: "scheduler/"
+#            # Nothing to compile in functions-runtime
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v3
+#
 #      - name: Set up Go 1.x
 #        uses: actions/setup-go@v3
 #        with:
@@ -94,22 +94,22 @@ jobs:
 #        working-directory: ./${{ matrix.config.folder }}
 #        run: make build
 
-  test:
-    name: Unit Tests
-    needs: prepare_ci_run
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        config:
-          - name: "keptn-lifecycle-operator"
-            folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
-            # Nothing to test in functions-runtime
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
+#  test:
+#    name: Unit Tests
+#    needs: prepare_ci_run
+#    runs-on: ubuntu-22.04
+#    strategy:
+#      matrix:
+#        config:
+#          - name: "keptn-lifecycle-operator"
+#            folder: "operator/"
+#          - name: "scheduler"
+#            folder: "scheduler/"
+#            # Nothing to test in functions-runtime
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v3
+#
 #      - name: Set up Go 1.x
 #        uses: actions/setup-go@v3
 #        with:
@@ -129,7 +129,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [ prepare_ci_run, compile, test ]
+    needs: [ prepare_ci_run ] #needs: [ prepare_ci_run, compile, test ]
     runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry

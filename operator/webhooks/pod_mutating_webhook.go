@@ -232,29 +232,48 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
-	var workloadName, version string
-	var gotWorkloadAnnotation, gotVersionAnnotation bool
+	var workloadName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
+	var gotWorkloadName, gotVersion, gotPreDeploymentChecks, gotPostDeploymentChecks, gotPreEvaluationChecks, gotPostEvaluationChecks bool
 
-	workloadName, gotWorkloadAnnotation = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	version, gotVersionAnnotation = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	version, gotVersion = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	preDeploymentChecks, gotPreDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
+	postDeploymentChecks, gotPreDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
+	preEvaluationChecks, gotPreEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
+	postEvaluationChecks, gotPostEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
 
 	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, common.ErrTooLongAnnotations
 	}
 
-	if gotWorkloadAnnotation {
-		if len(targetPod.Annotations) == 0 {
-			targetPod.Annotations = make(map[string]string)
-		}
+	if len(targetPod.Annotations) == 0 {
+		targetPod.Annotations = make(map[string]string)
+	}
 
+	if gotWorkloadName {
 		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
 
-		if !gotVersionAnnotation {
+		if !gotVersion {
 			targetPod.Annotations[common.VersionAnnotation] = a.calculateVersion(targetPod)
 		} else {
 			targetPod.Annotations[common.VersionAnnotation] = sourceResource.Annotations[common.VersionAnnotation]
 		}
-		a.Log.Info("Copied stuff from DP")
+
+		if gotPreDeploymentChecks {
+			targetPod.Annotations[common.PreDeploymentTaskAnnotation] = preDeploymentChecks
+		}
+
+		if gotPostDeploymentChecks {
+			targetPod.Annotations[common.PostDeploymentTaskAnnotation] = postDeploymentChecks
+		}
+
+		if gotPreEvaluationChecks {
+			targetPod.Annotations[common.PreDeploymentEvaluationAnnotation] = preEvaluationChecks
+		}
+		
+		if gotPostEvaluationChecks {
+			targetPod.Annotations[common.PostDeploymentEvaluationAnnotation] = postEvaluationChecks
+		}
 		return true, nil
 	}
 	return false, nil

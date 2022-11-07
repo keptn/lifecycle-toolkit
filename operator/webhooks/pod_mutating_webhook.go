@@ -211,78 +211,42 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 	}
 
-	var workload, version string
-	var gotWorkloadAnnotation, gotVersionAnnotation bool
-
 	if dp.UID == rsOwner.UID {
-		workload, gotWorkloadAnnotation = getLabelOrAnnotation(&dp.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-		version, gotVersionAnnotation = getLabelOrAnnotation(&dp.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-
-		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
-			return false, common.ErrTooLongAnnotations
-		}
-
-		if gotWorkloadAnnotation {
-			if !gotVersionAnnotation {
-				if len(pod.Annotations) == 0 {
-					pod.Annotations = make(map[string]string)
-				}
-				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
-			} else {
-				pod.Annotations[common.VersionAnnotation] = dp.Annotations[common.VersionAnnotation]
-			}
-
-			pod.Annotations[common.WorkloadAnnotation] = dp.Annotations[common.WorkloadAnnotation]
-			return true, nil
-		}
-		return false, nil
+		return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
 	} else if sts.UID == rsOwner.UID {
-		workload, gotWorkloadAnnotation = getLabelOrAnnotation(&sts.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-		version, gotVersionAnnotation = getLabelOrAnnotation(&sts.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-
-		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
-			return false, common.ErrTooLongAnnotations
-		}
-
-		if gotWorkloadAnnotation {
-			if !gotVersionAnnotation {
-				if len(pod.Annotations) == 0 {
-					pod.Annotations = make(map[string]string)
-				}
-				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
-			} else {
-				pod.Annotations[common.VersionAnnotation] = sts.Annotations[common.VersionAnnotation]
-			}
-
-			pod.Annotations[common.WorkloadAnnotation] = sts.Annotations[common.WorkloadAnnotation]
-			return true, nil
-		}
-		return false, nil
+		return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
 	} else if ds.UID == rsOwner.UID {
-		workload, gotWorkloadAnnotation = getLabelOrAnnotation(&ds.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-		version, gotVersionAnnotation = getLabelOrAnnotation(&ds.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-
-		if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
-			return false, common.ErrTooLongAnnotations
-		}
-
-		if gotWorkloadAnnotation {
-			if !gotVersionAnnotation {
-				if len(pod.Annotations) == 0 {
-					pod.Annotations = make(map[string]string)
-				}
-				pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
-			} else {
-				pod.Annotations[common.VersionAnnotation] = ds.Annotations[common.VersionAnnotation]
-			}
-
-			pod.Annotations[common.WorkloadAnnotation] = ds.Annotations[common.WorkloadAnnotation]
-			return true, nil
-		}
-		return false, nil
+		return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
 	} else {
 		return false, nil
 	}
+}
+
+func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
+	var workload, version string
+	var gotWorkloadAnnotation, gotVersionAnnotation bool
+
+	workload, gotWorkloadAnnotation = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	version, gotVersionAnnotation = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+
+	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+		return false, common.ErrTooLongAnnotations
+	}
+
+	if gotWorkloadAnnotation {
+		if !gotVersionAnnotation {
+			if len(targetPod.Annotations) == 0 {
+				targetPod.Annotations = make(map[string]string)
+			}
+			targetPod.Annotations[common.VersionAnnotation] = a.calculateVersion(targetPod)
+		} else {
+			targetPod.Annotations[common.VersionAnnotation] = sourceResource.Annotations[common.VersionAnnotation]
+		}
+
+		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
+		return true, nil
+	}
+	return false, nil
 }
 
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {

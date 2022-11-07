@@ -5,7 +5,7 @@ This demonstration is based on the [Observability Example](../observability) and
 ![img.png](assets/big-picture.png)
 
 ## Prepare Secret for Slack Notification
-> kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":"<hook>","text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run > base/slack-secret.yaml
+> kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":"HOOK","text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run > base/slack-secret.yaml
 
 ## Deploy the Observability Part
 > make install

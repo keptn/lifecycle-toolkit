@@ -2,7 +2,7 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestSuite
 crdDir: ./operator/config/crd/bases
 commands:
-    - command: kubectl apply -f ./test/integration/.build/install.yaml --wait
+    - command: kubectl apply -f ./test/.build/install.yaml --wait
 testDirs:
   - ./test/integration/
 timeout: 150

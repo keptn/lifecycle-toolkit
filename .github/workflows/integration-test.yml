@@ -15,7 +15,6 @@ jobs:
   run-integration-test:
     name: Run Integration Tests
     runs-on: ubuntu-22.04
-    needs: prepare_ci_run
     steps:
       - name: Check out code
         uses: actions/checkout@v3

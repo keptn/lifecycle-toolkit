@@ -84,3 +84,18 @@ func (v KeptnWorkload) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(common.AppName.String(v.Name))
 	span.SetAttributes(common.WorkloadVersion.String(v.Spec.Version))
 }
+
+func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {
+	return KeptnWorkloadInstance{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: traceContextCarrier,
+			Name:        v.GetWorkloadInstanceName(),
+			Namespace:   v.Namespace,
+		},
+		Spec: KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: v.Spec,
+			WorkloadName:      v.Name,
+			PreviousVersion:   previousVersion,
+		},
+	}
+}

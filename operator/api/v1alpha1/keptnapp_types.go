@@ -80,3 +80,18 @@ func (v KeptnApp) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(common.AppName.String(v.Name))
 	span.SetAttributes(common.WorkloadVersion.String(v.Spec.Version))
 }
+
+func (v KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {
+	return KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: traceContextCarrier,
+			Name:        v.GetAppVersionName(),
+			Namespace:   v.Namespace,
+		},
+		Spec: KeptnAppVersionSpec{
+			KeptnAppSpec:    v.Spec,
+			AppName:         v.Name,
+			PreviousVersion: previousVersion,
+		},
+	}
+}

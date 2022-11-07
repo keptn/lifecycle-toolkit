@@ -29,7 +29,6 @@ import (
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -146,22 +145,11 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		previousVersion = workload.Status.CurrentVersion
 	}
 
-	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        workload.GetWorkloadInstanceName(),
-			Namespace:   workload.Namespace,
-		},
-		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: workload.Spec,
-			WorkloadName:      workload.Name,
-			PreviousVersion:   previousVersion,
-		},
-	}
-	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)
+	workloadInstance := workload.GenerateWorkloadInstance(previousVersion, traceContextCarrier)
+	err := controllerutil.SetControllerReference(workload, &workloadInstance, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
 	}
 
-	return workloadInstance, err
+	return &workloadInstance, err
 }

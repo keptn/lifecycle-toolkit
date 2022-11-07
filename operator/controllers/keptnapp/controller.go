@@ -38,7 +38,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KeptnAppReconciler reconciles a KeptnApp object
@@ -153,23 +152,12 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 		previousVersion = app.Status.CurrentVersion
 	}
 
-	appVersion := &klcv1alpha1.KeptnAppVersion{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        app.GetAppVersionName(),
-			Namespace:   app.Namespace,
-		},
-		Spec: klcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec:    app.Spec,
-			AppName:         app.Name,
-			PreviousVersion: previousVersion,
-			TraceId:         appTraceContextCarrier,
-		},
-	}
-	err := controllerutil.SetControllerReference(app, appVersion, r.Scheme)
+	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
+	appVersion.Spec.TraceId = appTraceContextCarrier
+	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for AppVersion: "+appVersion.Name)
 	}
 
-	return appVersion, err
+	return &appVersion, err
 }

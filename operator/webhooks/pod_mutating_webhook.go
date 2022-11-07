@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	kltv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
@@ -81,7 +81,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	podIsAnnotated, err := a.isPodAnnotated(pod)
 
 	if err == nil && !podIsAnnotated {
-		_, _ = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		_, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if err != nil {
@@ -299,7 +299,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	logger.Info("Searching for workload")
 
-	workload := &klcv1alpha1.KeptnWorkload{}
+	workload := &kltv1alpha1.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating workload", "workload", workload.Name)
@@ -353,7 +353,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 
 	logger.Info("Searching for app")
 
-	app := &klcv1alpha1.KeptnApp{}
+	app := &kltv1alpha1.KeptnApp{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating app", "app", app.Name)
@@ -396,7 +396,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	return nil
 }
 
-func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
+func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *kltv1alpha1.KeptnWorkload {
 	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 
@@ -426,13 +426,13 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	return &klcv1alpha1.KeptnWorkload{
+	return &kltv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        a.getWorkloadName(pod),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha1.KeptnWorkloadSpec{
+		Spec: kltv1alpha1.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
 			ResourceReference:         a.getReplicaSetOfPod(pod),
@@ -444,7 +444,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 }
 
-func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
+func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *kltv1alpha1.KeptnApp {
 	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 	appName := a.getAppName(pod)
 
@@ -453,19 +453,19 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	return &klcv1alpha1.KeptnApp{
+	return &kltv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha1.KeptnAppSpec{
+		Spec: kltv1alpha1.KeptnAppSpec{
 			Version:                   version,
 			PreDeploymentTasks:        []string{},
 			PostDeploymentTasks:       []string{},
 			PreDeploymentEvaluations:  []string{},
 			PostDeploymentEvaluations: []string{},
-			Workloads: []klcv1alpha1.KeptnWorkloadRef{
+			Workloads: []kltv1alpha1.KeptnWorkloadRef{
 				{
 					Name:    appName,
 					Version: version,
@@ -486,8 +486,8 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) klcv1alpha1.ResourceReference {
-	reference := klcv1alpha1.ResourceReference{
+func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) kltv1alpha1.ResourceReference {
+	reference := kltv1alpha1.ResourceReference{
 		UID:  pod.UID,
 		Kind: pod.Kind,
 	}
@@ -502,8 +502,8 @@ func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) klcv1alpha1.Res
 	return reference
 }
 
-func (a *PodMutatingWebhook) getOwnerOfReplicaSet(rs *appsv1.ReplicaSet) klcv1alpha1.ResourceReference {
-	reference := klcv1alpha1.ResourceReference{
+func (a *PodMutatingWebhook) getOwnerOfReplicaSet(rs *appsv1.ReplicaSet) kltv1alpha1.ResourceReference {
+	reference := kltv1alpha1.ResourceReference{
 		UID:  rs.UID,
 		Kind: rs.Kind,
 	}
@@ -539,4 +539,8 @@ func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string,
 		return resource.Labels[secondaryAnnotation], true
 	}
 	return "", false
+}
+
+func getResourceByUID[resourceType *appsv1.Deployment | *appsv1.StatefulSet | *appsv1.DaemonSet](resource resourceType, UID string) (resourceType, error) {
+
 }

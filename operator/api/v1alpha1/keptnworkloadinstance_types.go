@@ -269,7 +269,7 @@ func (i KeptnWorkloadInstance) GetVersion() string {
 }
 
 func (i KeptnWorkloadInstance) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId, i.Spec.AppName, i.Spec.Version, phase)
+	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId, i.Spec.WorkloadName, i.Spec.Version, phase)
 }
 
 func (i KeptnWorkloadInstance) GetSpanName(phase string) string {

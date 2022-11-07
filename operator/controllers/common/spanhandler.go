@@ -44,6 +44,6 @@ func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) er
 	}
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	delete(r.bindCRDSpan, piWrapper.GetSpanName(phase))
+	delete(r.bindCRDSpan, piWrapper.GetSpanKey(phase))
 	return nil
 }

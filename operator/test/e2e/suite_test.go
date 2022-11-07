@@ -19,7 +19,7 @@ package e2e
 import (
 	"context"
 	"fmt"
-	klfc "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
@@ -69,7 +69,7 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
 	//+kubebuilder:scaffold:scheme
-	err = klfc.AddToScheme(scheme.Scheme)
+	err = klcv1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})

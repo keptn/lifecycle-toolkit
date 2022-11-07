@@ -191,29 +191,23 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 	}
 
 	dp := appsv1.Deployment{}
-	if len(dpList.Items) != 0 {
-		for _, dp = range dpList.Items {
-			if dp.UID == rsOwner.UID {
-				break
-			}
+	for _, dp = range dpList.Items {
+		if dp.UID == rsOwner.UID {
+			break
 		}
 	}
 
 	sts := appsv1.StatefulSet{}
-	if len(stsList.Items) != 0 {
-		for _, sts = range stsList.Items {
-			if sts.UID == rsOwner.UID {
-				break
-			}
+	for _, sts = range stsList.Items {
+		if sts.UID == rsOwner.UID {
+			break
 		}
 	}
 
 	ds := appsv1.DaemonSet{}
-	if len(dsList.Items) != 0 {
-		for _, ds = range dsList.Items {
-			if ds.UID == rsOwner.UID {
-				break
-			}
+	for _, ds = range dsList.Items {
+		if ds.UID == rsOwner.UID {
+			break
 		}
 	}
 

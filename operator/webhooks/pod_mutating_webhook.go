@@ -32,6 +32,7 @@ import (
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
 //+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
+//+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets,verbs=get;list;watch
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -79,8 +80,10 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated, err := a.isPodAnnotated(pod)
+	logger.Info("Checked if pod is annotated.")
 
 	if err == nil && !podIsAnnotated {
+		logger.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
@@ -158,6 +161,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
 	owner := a.getReplicaSetOfPod(pod)
 	if owner.UID == pod.UID {
+		a.Log.Info("owner UID  equals pod UID")
 		return false, nil
 	}
 
@@ -174,6 +178,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 			}
 		}
 	}
+	a.Log.Info("Done looking for RS")
 
 	rsOwner := a.getOwnerOfReplicaSet(&rs)
 	dpList := &appsv1.DeploymentList{}
@@ -210,12 +215,16 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 			break
 		}
 	}
+	a.Log.Info("Done looking for Parents of RS")
 
 	if dp.UID == rsOwner.UID {
+		a.Log.Info("Copying from DP")
 		return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
 	} else if sts.UID == rsOwner.UID {
+		a.Log.Info("Copying from STS")
 		return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
 	} else if ds.UID == rsOwner.UID {
+		a.Log.Info("Copying from DS")
 		return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
 	} else {
 		return false, nil
@@ -234,6 +243,10 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	}
 
 	if gotWorkloadAnnotation {
+		if len(targetPod.Annotations) == 0 {
+			targetPod.Annotations = make(map[string]string)
+		}
+
 		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
 
 		if !gotVersionAnnotation {
@@ -241,6 +254,7 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 		} else {
 			targetPod.Annotations[common.VersionAnnotation] = sourceResource.Annotations[common.VersionAnnotation]
 		}
+		a.Log.Info("Copied stuff from DP")
 		return true, nil
 	}
 	return false, nil

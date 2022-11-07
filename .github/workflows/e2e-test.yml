@@ -15,8 +15,6 @@ jobs:
   run-e2e-test:
     name: Run E2E Tests
     runs-on: ubuntu-22.04
-    needs: prepare_ci_run
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3

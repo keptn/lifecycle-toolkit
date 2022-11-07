@@ -81,7 +81,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	podIsAnnotated, err := a.isPodAnnotated(pod)
 
 	if err == nil && !podIsAnnotated {
-		_, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if err != nil {
@@ -223,27 +223,28 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
-	var workload, version string
+	var workloadName, version string
 	var gotWorkloadAnnotation, gotVersionAnnotation bool
 
-	workload, gotWorkloadAnnotation = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	workloadName, gotWorkloadAnnotation = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
 	version, gotVersionAnnotation = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 
-	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, common.ErrTooLongAnnotations
 	}
 
 	if gotWorkloadAnnotation {
+		if len(targetPod.Annotations) == 0 {
+			targetPod.Annotations = make(map[string]string)
+		}
+
+		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
+
 		if !gotVersionAnnotation {
-			if len(targetPod.Annotations) == 0 {
-				targetPod.Annotations = make(map[string]string)
-			}
 			targetPod.Annotations[common.VersionAnnotation] = a.calculateVersion(targetPod)
 		} else {
 			targetPod.Annotations[common.VersionAnnotation] = sourceResource.Annotations[common.VersionAnnotation]
 		}
-
-		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
 		return true, nil
 	}
 	return false, nil
@@ -539,8 +540,4 @@ func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string,
 		return resource.Labels[secondaryAnnotation], true
 	}
 	return "", false
-}
-
-func getResourceByUID[resourceType *appsv1.Deployment | *appsv1.StatefulSet | *appsv1.DaemonSet](resource resourceType, UID string) (resourceType, error) {
-
 }

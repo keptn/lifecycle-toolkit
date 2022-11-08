@@ -23,7 +23,7 @@ jobs:
     - name: Execute Performance Tests
       working-directory: operator
       run: |
-        make manifest
+        make manifests
         make generate
         make envtest
         go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"

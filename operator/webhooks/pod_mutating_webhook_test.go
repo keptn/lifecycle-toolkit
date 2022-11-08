@@ -3,6 +3,7 @@ package webhooks
 import (
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -190,7 +191,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							"keptn.sh/app": "SOME-APP-NAME",
+							common.AppAnnotation: "SOME-APP-NAME",
 						},
 					},
 				},
@@ -203,7 +204,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							"keptn.sh/app": "SOME-APP-NAME",
+							common.AppAnnotation: "SOME-APP-NAME",
 						},
 					},
 				},
@@ -216,10 +217,10 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							"keptn.sh/app": "SOME-APP-NAME-ANNOTATION",
+							common.AppAnnotation: "SOME-APP-NAME-ANNOTATION",
 						},
 						Labels: map[string]string{
-							"keptn.sh/app": "SOME-APP-NAME-LABEL",
+							common.AppAnnotation: "SOME-APP-NAME-LABEL",
 						},
 					},
 				},
@@ -266,8 +267,8 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							"keptn.sh/app":      "SOME-APP-NAME",
-							"keptn.sh/workload": "SOME-WORKLOAD-NAME",
+							common.AppAnnotation:      "SOME-APP-NAME",
+							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
 				},
@@ -280,8 +281,8 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							"keptn.sh/app":      "SOME-APP-NAME",
-							"keptn.sh/workload": "SOME-WORKLOAD-NAME",
+							common.AppAnnotation:      "SOME-APP-NAME",
+							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
 				},
@@ -294,12 +295,12 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							"keptn.sh/app":      "SOME-APP-NAME-ANNOTATION",
-							"keptn.sh/workload": "SOME-WORKLOAD-NAME-ANNOTATION",
+							common.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
+							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
 						},
 						Labels: map[string]string{
-							"keptn.sh/app":      "SOME-APP-NAME-LABEL",
-							"keptn.sh/workload": "SOME-WORKLOAD-NAME-LABEL",
+							common.AppAnnotation:      "SOME-APP-NAME-LABEL",
+							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
 						},
 					},
 				},
@@ -318,6 +319,116 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 			}
 			if got := a.getWorkloadName(tt.args.pod); got != tt.want {
 				t.Errorf("getWorkloadName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_getLabelOrAnnotation(t *testing.T) {
+	type args struct {
+		resource            *metav1.ObjectMeta
+		primaryAnnotation   string
+		secondaryAnnotation string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  string
+		want1 bool
+	}{
+		{
+			name: "Test if primary annotation is returned from annotations",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.AppAnnotation: "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+			},
+			want:  "some-app-name",
+			want1: true,
+		},
+		{
+			name: "Test if secondary annotation is returned from annotations",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.K8sRecommendedAppAnnotations: "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+			},
+			want:  "some-app-name",
+			want1: true,
+		},
+		{
+			name: "Test if primary annotation is returned from labels",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Labels: map[string]string{
+						common.AppAnnotation: "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+			},
+			want:  "some-app-name",
+			want1: true,
+		},
+		{
+			name: "Test if secondary annotation is returned from labels",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Labels: map[string]string{
+						common.K8sRecommendedAppAnnotations: "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+			},
+			want:  "some-app-name",
+			want1: true,
+		},
+		{
+			name: "Test that empty string is returned when no annotations or labels are found",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Annotations: map[string]string{
+						"some-other-annotation": "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+			},
+			want:  "",
+			want1: false,
+		},
+		{
+			name: "Test that empty string is returned when primary annotation cannot be found and secondary annotation is empty",
+			args: args{
+				resource: &metav1.ObjectMeta{
+					Annotations: map[string]string{
+						"some-other-annotation": "some-app-name",
+					},
+				},
+				primaryAnnotation:   common.AppAnnotation,
+				secondaryAnnotation: "",
+			},
+			want:  "",
+			want1: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := getLabelOrAnnotation(tt.args.resource, tt.args.primaryAnnotation, tt.args.secondaryAnnotation)
+			if got != tt.want {
+				t.Errorf("getLabelOrAnnotation() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("getLabelOrAnnotation() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}

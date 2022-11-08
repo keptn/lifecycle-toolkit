@@ -433,3 +433,100 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 		})
 	}
 }
+
+func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
+	type fields struct {
+		Client   client.Client
+		Tracer   trace.Tracer
+		decoder  *admission.Decoder
+		Recorder record.EventRecorder
+		Log      logr.Logger
+	}
+	type args struct {
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name: "Test error when workload name is too long",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							common.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
+							common.WorkloadAnnotation: "workload-name-that-is-too-loooooooooooooooooooooooooooooooooooooooooooooooooong",
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name: "Test return true when pod has workload annotation",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							common.WorkloadAnnotation: "some-workload-name",
+						},
+					},
+				},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "Test return true and initialize annotations when labels are set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: map[string]string{
+							common.WorkloadAnnotation: "some-workload-name",
+						},
+					},
+				},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "Test return false when annotations and labels are not set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: map[string]string{
+							"some-other-label": "some-value",
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodMutatingWebhook{
+				Client:   tt.fields.Client,
+				Tracer:   tt.fields.Tracer,
+				decoder:  tt.fields.decoder,
+				Recorder: tt.fields.Recorder,
+				Log:      tt.fields.Log,
+			}
+			got, err := a.isPodAnnotated(tt.args.pod)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("isPodAnnotated() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("isPodAnnotated() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

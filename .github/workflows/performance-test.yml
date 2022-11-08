@@ -3,6 +3,7 @@ on:
   workflow_call:
 env:
   GO_VERSION: "~1.18"
+  CERT_MANAGER_VERSION: "v1.10.0"
 defaults:
   run:
     shell: bash
@@ -31,7 +32,7 @@ jobs:
 
     - name: Install cert-manager
       run: |
-        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${{ env.CERT_MANAGER_VERSION }}/cert-manager.yaml
         kubectl rollout status deployment cert-manager-cainjector -n cert-manager -w
         kubectl rollout status deployment cert-manager-webhook -n cert-manager -w
         kubectl rollout status deployment cert-manager -n cert-manager -w

@@ -23,8 +23,4 @@ jobs:
     - name: Execute Performance Tests
       working-directory: operator
       run: |
-        make manifests
-        make generate
-        make envtest
-        TEST_USE_EXISTING_CLUSTER=true
-        go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
+        make performance-test

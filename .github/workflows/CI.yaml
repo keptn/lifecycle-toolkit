@@ -173,15 +173,18 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: build_image
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     uses: ./.github/workflows/integration-test.yml
 
   e2e_tests:
     name: End to End Tests
-    needs: build_image
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     uses: ./.github/workflows/e2e-test.yml
 
   performance_tests:
     name: Performance Tests
-    needs: build_image
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     uses: ./.github/workflows/performance-test.yml

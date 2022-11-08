@@ -15,6 +15,9 @@ jobs:
     name: Run Integration Tests
     runs-on: ubuntu-22.04
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:

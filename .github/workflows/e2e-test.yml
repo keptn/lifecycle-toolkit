@@ -20,37 +20,10 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v3
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
         with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-          cache-dependency-path: '**/go.sum'
-
-      - name: Download manifests
-        uses: actions/download-artifact@v3
-        with:
-          path: ~/download/artifacts
-
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.3.0
-  
-      - name: Install cert-manager
-        run: |
-          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${{ env.CERT_MANAGER_VERSION }}/cert-manager.yaml
-          kubectl rollout status deployment cert-manager-cainjector -n cert-manager -w
-          kubectl rollout status deployment cert-manager-webhook -n cert-manager -w
-          kubectl rollout status deployment cert-manager -n cert-manager -w
-    
-      - name: Install lifecycle-toolkit
-        run: |
-          kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest
-          kubectl apply -f ~/download/artifacts/scheduler-manifest
-          kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
-          kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
+          cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
 
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}

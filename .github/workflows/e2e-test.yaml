@@ -77,14 +77,7 @@ jobs:
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.3.0
 
-
-      - name: Build and deploy lifecycle toolkit (fork)
-        if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'false'
-        working-directory: .
-        run: make build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.repository }} TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
-
       - name: Build and deploy lifecycle toolkit
-        if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         working-directory: .
         run: make build-deploy-dev-environment RELEASE_REGISTRY=ghcr.io/${{ github.actor }} TAG=e2e-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}-${{ needs.prepare_ci_run.outputs.DATETIME }}
 

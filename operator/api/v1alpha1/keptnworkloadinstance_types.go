@@ -23,6 +23,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -112,8 +113,12 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
-func (v KeptnWorkloadInstanceList) GetItems() []KeptnWorkloadInstance {
-	return v.Items
+func (v KeptnWorkloadInstanceList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range v.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {

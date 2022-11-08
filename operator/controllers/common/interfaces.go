@@ -124,13 +124,13 @@ func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItem
 }
 
 type ListItem interface {
-	GetItems() []PhaseItem
+	GetItems() []client.Object
 }
 
 type ListItemWrapper struct {
 	Obj ListItem
 }
 
-func (pw ListItemWrapper) GetItems() []PhaseItem {
+func (pw ListItemWrapper) GetItems() []client.Object {
 	return pw.Obj.GetItems()
 }

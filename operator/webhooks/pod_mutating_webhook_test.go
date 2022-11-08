@@ -4,6 +4,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -446,11 +447,12 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 		pod *corev1.Pod
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    bool
-		wantErr bool
+		name      string
+		fields    fields
+		args      args
+		want      bool
+		wantErr   bool
+		wantedPod *corev1.Pod
 	}{
 		{
 			name: "Test error when workload name is too long",
@@ -485,6 +487,13 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 			name: "Test return true and initialize annotations when labels are set",
 			args: args{
 				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Image: "some-image:v1",
+							},
+						},
+					},
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
 							common.WorkloadAnnotation: "some-workload-name",
@@ -494,6 +503,23 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 			},
 			want:    true,
 			wantErr: false,
+			wantedPod: &corev1.Pod{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Image: "some-image:v1",
+						},
+					},
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						common.WorkloadAnnotation: "some-workload-name",
+					},
+					Annotations: map[string]string{
+						common.VersionAnnotation: "v1",
+					},
+				},
+			},
 		},
 		{
 			name: "Test return false when annotations and labels are not set",
@@ -526,6 +552,9 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("isPodAnnotated() got = %v, want %v", got, tt.want)
+			}
+			if tt.wantedPod != nil {
+				require.Equal(t, tt.wantedPod, tt.args.pod)
 			}
 		})
 	}

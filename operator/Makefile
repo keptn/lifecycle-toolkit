@@ -89,7 +89,8 @@ component-test: manifests generate envtest ## Run tests.
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.
-    TEST_USE_EXISTING_CLUSTER=true go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
+    TEST_USE_EXISTING_CLUSTER=true 
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
 
 .PHONY: e2e-test
 e2e-test: manifests generate envtest ## Run tests.

@@ -41,6 +41,8 @@ type PodMutatingWebhook struct {
 	Log      logr.Logger
 }
 
+var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
+
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
 
@@ -131,7 +133,7 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
 	version, gotVersionAnnotation := getLabelOrAnnotation(pod, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 
 	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
-		return false, common.ErrTooLongAnnotations
+		return false, ErrTooLongAnnotations
 	}
 
 	if gotWorkloadAnnotation {
@@ -151,7 +153,7 @@ func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, erro
 
 	if gotAppAnnotation {
 		if len(app) > common.MaxAppNameLength {
-			return false, common.ErrTooLongAnnotations
+			return false, ErrTooLongAnnotations
 		}
 		return true, nil
 	}

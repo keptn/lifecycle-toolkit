@@ -48,6 +48,8 @@ KUSTOMIZE_VERSION ?= v4.2.0
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
+CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
+ENVTEST ?= $(LOCALBIN)/setup-envtest
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 
 .PHONY: all
@@ -74,9 +76,18 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
+.PHONY: e2e-test
+e2e-test: manifests fmt vet envtest ## Run tests.
+	go test ./test/e2e -v -coverprofile cover.out
+
 .PHONY: test
-test: ## Run tests.
-	go test ./... -coverprofile cover.out
+test: manifests fmt vet envtest## Run tests.
+	go test ./pkg/... -coverprofile cover-pkg.out
+	go test ./cmd/scheduler -coverprofile cover-main.out
+	go test ./test/... -v -ginkgo.skip-file="e2e"
+	cat cover-main.out cover-pkg.out > cover.out
+	rm cover-pkg.out cover-main.out
+
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
@@ -87,6 +98,10 @@ $(KUSTOMIZE): $(LOCALBIN)
 release-manifests: kustomize
 	cd manifests/install && $(KUSTOMIZE) edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
+
+envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
+$(ENVTEST): $(LOCALBIN)
+	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
 .PHONY: local-image
 local-image: clean
@@ -120,7 +135,7 @@ release-local: release-local.amd64 release-local.arm64
 
 .PHONY: release-local.amd64
 release-local.amd64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
@@ -133,11 +148,12 @@ release-local.amd64: clean
 
 .PHONY: release-local.arm64
 release-local.arm64: clean
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		--build-arg GIT_HASH="$(HASH)" \
 		--build-arg RELEASE_VERSION="$(RELEASE_VERSION)" \
 		--build-arg SCHEDULER_COMPATIBLE_K8S_VERSION="$(SCHEDULER_COMPATIBLE_K8S_VERSION)" \
 		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg BUILDPLATFORM="linux/arm64" \
 		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
 		--platform linux/arm64 \
 		--target debug \

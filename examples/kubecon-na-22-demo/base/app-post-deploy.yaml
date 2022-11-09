@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: post-deployment-notification
+  namespace: podtato-kubectl
+spec:
+  function:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/functions-runtime/samples/ts/slack.ts
+    secureParameters:
+      secret: slack-secret

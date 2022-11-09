@@ -25,6 +25,7 @@ import (
 	"net/http"
 	"strconv"
 
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -97,7 +98,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
-		err := fmt.Errorf("retryCount for evaluation exceeded")
+		err := controllercommon.ErrRetryCountExceeded
 		span.SetStatus(codes.Error, err.Error())
 		evaluation.Status.OverallStatus = common.StateFailed
 		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
@@ -290,7 +291,7 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, query *klcv1alpha1.EvaluationStatusItem) (bool, error) {
 
 	if len(query.Value) == 0 || len(objective.EvaluationTarget) == 0 {
-		return false, fmt.Errorf("no values")
+		return false, controllercommon.ErrNoValues
 	}
 
 	eval := objective.EvaluationTarget[1:]
@@ -313,7 +314,7 @@ func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, 
 	case "<":
 		return resultValue < compareValue, nil
 	default:
-		return false, fmt.Errorf("invalid operator")
+		return false, controllercommon.ErrInvalidOperator
 	}
 }
 
@@ -325,7 +326,7 @@ func (r *KeptnEvaluationReconciler) GetActiveEvaluations(ctx context.Context) ([
 	evaluations := &klcv1alpha1.KeptnEvaluationList{}
 	err := r.List(ctx, evaluations)
 	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+		return nil, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	res := []common.GaugeValue{}

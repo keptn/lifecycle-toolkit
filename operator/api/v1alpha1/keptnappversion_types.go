@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"time"
 
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
@@ -100,8 +102,12 @@ type KeptnAppVersionList struct {
 	Items           []KeptnAppVersion `json:"items"`
 }
 
-func (v KeptnAppVersionList) GetItems() []KeptnAppVersion {
-	return v.Items
+func (v KeptnAppVersionList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range v.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func init() {
@@ -293,7 +299,7 @@ func (v KeptnAppVersion) GetVersion() string {
 	return v.Spec.Version
 }
 
-func (v KeptnAppVersion) GetSpanName(phase string) string {
+func (v KeptnAppVersion) GetSpanKey(phase string) string {
 	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
 }
 
@@ -338,6 +344,10 @@ func (v KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapC
 			},
 		},
 	}
+}
+
+func (v KeptnAppVersion) GetSpanName(phase string) string {
+	return phase
 }
 
 func (v KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {

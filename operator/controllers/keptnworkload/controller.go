@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -35,6 +36,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -74,7 +76,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return reconcile.Result{}, nil
 	}
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch Workload: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadMsg, err)
 	}
 
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)

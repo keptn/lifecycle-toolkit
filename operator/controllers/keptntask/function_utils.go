@@ -8,6 +8,7 @@ import (
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -54,14 +55,14 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 	if len(params.Parameters) > 0 {
 		jsonParams, err := json.Marshal(params.Parameters)
 		if err != nil {
-			return job, fmt.Errorf("could not marshal parameters")
+			return job, controllercommon.ErrCannotMarshalParams
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
-		return job, fmt.Errorf("could not marshal parameters")
+		return job, controllercommon.ErrCannotMarshalParams
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
@@ -132,7 +133,7 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 	} else {
 		// If not, check if it has an HTTP reference. If this is also not the case and the object has no parent, something is wrong
 		if definition.Spec.Function.HttpReference.Url == "" && !hasParent {
-			return params, false, fmt.Errorf("No ConfigMap specified or HTTP source specified in TaskDefinition) / Namespace: %s, Name: %s ", definition.Namespace, definition.Name)
+			return params, false, fmt.Errorf(controllercommon.ErrNoConfigMapMsg, definition.Namespace, definition.Name)
 		}
 		params.URL = definition.Spec.Function.HttpReference.Url
 	}

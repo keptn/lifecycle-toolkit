@@ -30,7 +30,7 @@ jobs:
         id: release
         with:
           command: manifest
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
           default-branch: main
 
   build-release:
@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-controller"
+          - name: "keptn-lifecycle-operator"
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"

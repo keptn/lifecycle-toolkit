@@ -25,6 +25,7 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -114,16 +115,20 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
-func (v KeptnWorkloadInstanceList) GetItems() []KeptnWorkloadInstance {
-	return v.Items
+func (v KeptnWorkloadInstanceList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range v.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsCompleted()
+func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
+	return i.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
 func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
@@ -134,20 +139,20 @@ func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
 	return i.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
+	return i.Status.PreDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsFailed()
+func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
+	return i.Status.PreDeploymentEvaluationStatus.IsFailed()
 }
 
 func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsCompleted()
+func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
+	return i.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
 func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
@@ -158,12 +163,12 @@ func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
 	return i.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
+	return i.Status.PostDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsFailed()
+func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
+	return i.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
 func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
@@ -330,8 +335,12 @@ func (i KeptnWorkloadInstance) GetVersion() string {
 	return i.Spec.Version
 }
 
-func (v KeptnWorkloadInstance) GetSpanName(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
+func (i KeptnWorkloadInstance) GetSpanKey(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId, i.Spec.WorkloadName, i.Spec.Version, phase)
+}
+
+func (i KeptnWorkloadInstance) GetSpanName(phase string) string {
+	return fmt.Sprintf("%s/%s", i.Spec.WorkloadName, phase)
 }
 
 func (v KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {

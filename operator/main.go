@@ -376,7 +376,7 @@ func main() {
 				deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppList{})
+			activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active apps")
 			}
@@ -400,7 +400,7 @@ func main() {
 				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppList{}, &lifecyclev1alpha1.KeptnApp{})
+			appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{}, &lifecyclev1alpha1.KeptnAppVersion{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather app deployment intervals")
 			}
@@ -408,7 +408,7 @@ func main() {
 				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			appDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppList{})
+			appDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather app deployment durations")
 			}

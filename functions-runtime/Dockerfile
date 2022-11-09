@@ -1,4 +1,4 @@
-FROM denoland/deno:1.27.1 as production
+FROM denoland/deno:1.27.2 as production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

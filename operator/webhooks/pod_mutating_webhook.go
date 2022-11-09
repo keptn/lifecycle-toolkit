@@ -236,13 +236,14 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
-	var workloadName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
-	var gotWorkloadName, gotVersion, gotPreDeploymentChecks, gotPostDeploymentChecks, gotPreEvaluationChecks, gotPostEvaluationChecks bool
+	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
+	var gotWorkloadName, gotAppName, gotVersion, gotPreDeploymentChecks, gotPostDeploymentChecks, gotPreEvaluationChecks, gotPostEvaluationChecks bool
 
 	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	appName, gotAppName = getLabelOrAnnotation(sourceResource, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 	version, gotVersion = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 	preDeploymentChecks, gotPreDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
-	postDeploymentChecks, gotPreDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
+	postDeploymentChecks, gotPostDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
 	preEvaluationChecks, gotPreEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, gotPostEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
 
@@ -255,12 +256,16 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	}
 
 	if gotWorkloadName {
-		targetPod.Annotations[common.WorkloadAnnotation] = sourceResource.Annotations[common.WorkloadAnnotation]
+		targetPod.Annotations[common.WorkloadAnnotation] = workloadName
 
 		if !gotVersion {
 			targetPod.Annotations[common.VersionAnnotation] = a.calculateVersion(targetPod)
 		} else {
-			targetPod.Annotations[common.VersionAnnotation] = sourceResource.Annotations[common.VersionAnnotation]
+			targetPod.Annotations[common.VersionAnnotation] = version
+		}
+
+		if gotAppName {
+			targetPod.Annotations[common.AppAnnotation] = appName
 		}
 
 		if gotPreDeploymentChecks {

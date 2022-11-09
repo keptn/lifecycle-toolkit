@@ -14,7 +14,7 @@ kind: Kustomization
 images:
 - name: image
   newName: ghcr.io/keptn/scheduler
-  newTag: "202210171665987043"
+  newTag: "202211041667586936"
 - name: klfc-scheduler
   newName: docker.io/thschue/scheduler
   newTag: "202211021667386780"

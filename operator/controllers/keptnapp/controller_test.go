@@ -17,7 +17,7 @@ import (
 	"testing"
 )
 
-//EXample Unit test on help function
+// Example Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 	app := &lfcv1alpha1.KeptnApp{
@@ -135,7 +135,6 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITra
 	fakeClient, err := fake.NewClient()
 	if err != nil {
 		t.Errorf("Reconcile() error when setting up fake client %v", err)
-
 	}
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{

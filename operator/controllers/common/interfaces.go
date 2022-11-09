@@ -12,7 +12,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate moq -pkg common_mock --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
+//go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
 type PhaseItem interface {
 	GetState() apicommon.KeptnState
 	SetState(apicommon.KeptnState)
@@ -186,6 +186,7 @@ func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItem
 	return &ListItemWrapper{Obj: pi}, nil
 }
 
+//go:generate moq -pkg fake --skip-ensure -out ./fake/listitem_mock.go . ListItem
 type ListItem interface {
 	GetItems() []client.Object
 }

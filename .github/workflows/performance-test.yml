@@ -4,6 +4,7 @@ on:
 env:
   GO_VERSION: "~1.18"
   CERT_MANAGER_VERSION: "v1.10.0"
+  USE_EXISTING_CLUSTER: "true"
 defaults:
   run:
     shell: bash
@@ -23,4 +24,7 @@ jobs:
     - name: Execute Performance Tests
       working-directory: operator
       run: |
-        make performance-test
+        make manifests
+        make generate
+        make envtest
+        go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"

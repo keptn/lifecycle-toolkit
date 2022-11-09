@@ -1041,3 +1041,105 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 		})
 	}
 }
+
+func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
+	type fields struct {
+		Client   client.Client
+		Tracer   trace.Tracer
+		decoder  *admission.Decoder
+		Recorder record.EventRecorder
+		Log      logr.Logger
+	}
+	type args struct {
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name      string
+		fields    fields
+		args      args
+		want      bool
+		wantErr   bool
+		wantedPod *corev1.Pod
+	}{
+		{
+			name: "Test return true when app annotation is present",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							common.AppAnnotation: "some-app-name",
+						},
+					},
+				},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "Test return false when app annotation is not present",
+			args: args{
+				pod: &corev1.Pod{},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "Test return error when app annotation is too long",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							common.AppAnnotation: "some-app-annotation-that-is-very-looooooooooooooooooooong",
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name: "Test that app name is copied when only workload name is present",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							common.WorkloadAnnotation: "some-workload-name",
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+			wantedPod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.AppAnnotation:      "some-workload-name",
+						common.WorkloadAnnotation: "some-workload-name",
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodMutatingWebhook{
+				Client:   tt.fields.Client,
+				Tracer:   tt.fields.Tracer,
+				decoder:  tt.fields.decoder,
+				Recorder: tt.fields.Recorder,
+				Log:      tt.fields.Log,
+			}
+			got, err := a.isAppAnnotationPresent(tt.args.pod)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("isAppAnnotationPresent() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("isAppAnnotationPresent() got = %v, want %v", got, tt.want)
+			}
+			if tt.wantedPod != nil {
+				require.Equal(t, tt.wantedPod, tt.args.pod)
+			}
+		})
+	}
+}

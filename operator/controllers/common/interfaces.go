@@ -174,6 +174,10 @@ func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 	return pw.Obj.GetSpanAttributes()
 }
 
+func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
+	return pw.Obj.GetMetricsAttributes()
+}
+
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
 	pi, ok := object.(ListItem)
 	if !ok {

@@ -145,6 +145,9 @@ func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
 	evaluationStatusItem := EvaluationStatusItem{
 		Status: common.StatePending,
 	}
+	if e.Status.EvaluationStatus == nil {
+		e.Status.EvaluationStatus = make(map[string]EvaluationStatusItem)
+	}
 	e.Status.EvaluationStatus[objective.Name] = evaluationStatusItem
 
 }

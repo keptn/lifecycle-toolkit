@@ -10,9 +10,10 @@ rules:
   resources:
   - daemonsets
   - deployments
+  - replicasets
   - statefulsets
   verbs:
-  - list
+  - get
 - apiGroups:
   - apps
   resources:

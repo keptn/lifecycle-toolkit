@@ -172,7 +172,7 @@ func (r *KeptnTaskReconciler) GetActiveTasks(ctx context.Context) ([]common.Gaug
 	tasks := &klcv1alpha1.KeptnTaskList{}
 	err := r.List(ctx, tasks)
 	if err != nil {
-		return nil, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadInstancesMsg, err)
+		return nil, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	res := []common.GaugeValue{}

@@ -87,7 +87,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if err != nil {
 		r.Log.Error(err, "Workload Instance not found")
-		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadInstancesMsg, err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	//setup otel

@@ -77,7 +77,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return reconcile.Result{}, nil
 	}
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadMsg, err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadMsg, err)
 	}
 
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)

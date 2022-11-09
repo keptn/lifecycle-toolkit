@@ -327,7 +327,7 @@ func (r *KeptnEvaluationReconciler) GetActiveEvaluations(ctx context.Context) ([
 	evaluations := &klcv1alpha1.KeptnEvaluationList{}
 	err := r.List(ctx, evaluations)
 	if err != nil {
-		return nil, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadInstancesMsg, err)
+		return nil, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	res := []common.GaugeValue{}

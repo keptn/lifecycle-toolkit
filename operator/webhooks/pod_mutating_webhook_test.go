@@ -809,7 +809,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Test that error is return when we get a pod with replicaset without owner",
+			name: "Test that method returns without doing anything when we get a pod with replicaset without owner",
 			fields: fields{
 				Log:    testr.New(t),
 				Client: fakeClient,
@@ -834,7 +834,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				},
 			},
 			want:    false,
-			wantErr: true,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {

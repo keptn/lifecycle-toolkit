@@ -182,7 +182,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 	rsOwner := a.getOwnerOfReplicaSet(&rs)
 
 	if rsOwner.UID == "" {
-		return false, common.ErrReplicaSetNotFound
+		return false, nil
 	}
 
 	dpList := &appsv1.DeploymentList{}

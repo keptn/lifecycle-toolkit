@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"time"
 
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -96,6 +98,14 @@ type KeptnAppVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnAppVersion `json:"items"`
+}
+
+func (v KeptnAppVersionList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range v.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func init() {
@@ -211,8 +221,28 @@ func (v KeptnAppVersion) GetState() common.KeptnState {
 	return v.Status.Status
 }
 
+func (v KeptnAppVersion) GetPreviousVersion() string {
+	return v.Spec.PreviousVersion
+}
+
+func (v KeptnAppVersion) GetParentName() string {
+	return v.Spec.AppName
+}
+
+func (v KeptnAppVersion) GetNamespace() string {
+	return v.Namespace
+}
+
 func (v *KeptnAppVersion) SetState(state common.KeptnState) {
 	v.Status.Status = state
+}
+
+func (i KeptnAppVersion) GetStartTime() time.Time {
+	return i.Status.StartTime.Time
+}
+
+func (i KeptnAppVersion) GetEndTime() time.Time {
+	return i.Status.EndTime.Time
 }
 
 func (v KeptnAppVersion) GetCurrentPhase() string {

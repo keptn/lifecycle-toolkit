@@ -19,6 +19,7 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
@@ -77,7 +78,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return reconcile.Result{}, nil
 	}
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("could not fetch App: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(common.ErrCannotFetchAppMsg, err)
 	}
 
 	traceContextCarrier := propagation.MapCarrier(app.Annotations)

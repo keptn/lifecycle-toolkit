@@ -23,6 +23,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -110,6 +111,14 @@ type KeptnWorkloadInstanceList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
+}
+
+func (v KeptnWorkloadInstanceList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range v.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
@@ -235,7 +244,7 @@ func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	}
 }
 
-func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyValue {
+func (i KeptnWorkloadInstance) GetDurationMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(i.Spec.AppName),
 		common.WorkloadName.String(i.Spec.WorkloadName),
@@ -246,6 +255,26 @@ func (i KeptnWorkloadInstance) GetIntervalMetricsAttributes() []attribute.KeyVal
 
 func (i KeptnWorkloadInstance) GetState() common.KeptnState {
 	return i.Status.Status
+}
+
+func (v KeptnWorkloadInstance) GetPreviousVersion() string {
+	return v.Spec.PreviousVersion
+}
+
+func (v KeptnWorkloadInstance) GetParentName() string {
+	return v.Spec.AppName
+}
+
+func (v KeptnWorkloadInstance) GetNamespace() string {
+	return v.Namespace
+}
+
+func (i KeptnWorkloadInstance) GetStartTime() time.Time {
+	return i.Status.StartTime.Time
+}
+
+func (i KeptnWorkloadInstance) GetEndTime() time.Time {
+	return i.Status.EndTime.Time
 }
 
 func (i *KeptnWorkloadInstance) SetState(state common.KeptnState) {

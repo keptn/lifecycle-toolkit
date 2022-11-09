@@ -37,8 +37,6 @@ const (
 	StatePending     KeptnState = "Pending"
 )
 
-var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
-
 func (k KeptnState) IsCompleted() bool {
 	return k == StateSucceeded || k == StateFailed
 }

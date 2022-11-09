@@ -368,7 +368,7 @@ func main() {
 			workloadDeploymentDurationGauge,
 		},
 		func(ctx context.Context) {
-			activeDeployments, err := workloadInstanceReconciler.GetActiveDeployments(ctx)
+			activeDeployments, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active deployments")
 			}
@@ -376,7 +376,7 @@ func main() {
 				deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			activeApps, err := appVersionReconciler.GetActiveApps(ctx)
+			activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active apps")
 			}
@@ -400,7 +400,7 @@ func main() {
 				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			appDeploymentInterval, err := appVersionReconciler.GetDeploymentInterval(ctx)
+			appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{}, &lifecyclev1alpha1.KeptnAppVersion{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather app deployment intervals")
 			}
@@ -408,7 +408,7 @@ func main() {
 				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			appDeploymentDuration, err := appVersionReconciler.GetDeploymentDuration(ctx)
+			appDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather app deployment durations")
 			}
@@ -416,7 +416,7 @@ func main() {
 				appDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			workloadDeploymentInterval, err := workloadInstanceReconciler.GetDeploymentInterval(ctx)
+			workloadDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{}, &lifecyclev1alpha1.KeptnWorkloadInstance{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather workload deployment intervals")
 			}
@@ -424,7 +424,7 @@ func main() {
 				workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			workloadDeploymentDuration, err := workloadInstanceReconciler.GetDeploymentDuration(ctx)
+			workloadDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather workload deployment durations")
 			}

@@ -87,7 +87,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if err != nil {
 		r.Log.Error(err, "Workload Instance not found")
-		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	//setup otel
@@ -117,11 +117,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not fetch AppVersion for KeptnWorkloadInstance: %+v", err)
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not find AppVersion for KeptnWorkloadInstance")
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
 	}
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
@@ -252,29 +252,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) GetActiveDeployments(ctx context.Context) ([]common.GaugeValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeValue{}
-
-	for _, workloadInstance := range workloadInstances.Items {
-		gaugeValue := int64(0)
-		if !workloadInstance.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: workloadInstance.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}
-
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
@@ -329,52 +306,4 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha1.KeptnAppVersion{}, nil
 	}
 	return true, latestVersion, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-	for _, workloadInstance := range workloadInstances.Items {
-		if workloadInstance.Spec.PreviousVersion != "" {
-			previousWorkloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
-			err := r.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", workloadInstance.Spec.WorkloadName, workloadInstance.Spec.PreviousVersion), Namespace: workloadInstance.Namespace}, previousWorkloadInstance)
-			if err != nil {
-				r.Log.Error(err, "Previous WorkloadInstance not found")
-			} else if workloadInstance.IsEndTimeSet() {
-				previousInterval := workloadInstance.Status.StartTime.Time.Sub(previousWorkloadInstance.Status.EndTime.Time)
-				res = append(res, common.GaugeFloatValue{
-					Value:      previousInterval.Seconds(),
-					Attributes: workloadInstance.GetIntervalMetricsAttributes(),
-				})
-			}
-		}
-	}
-	return res, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	workloadInstances := &klcv1alpha1.KeptnWorkloadInstanceList{}
-	err := r.List(ctx, workloadInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-
-	for _, workloadInstance := range workloadInstances.Items {
-		if workloadInstance.IsEndTimeSet() {
-			duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
-			res = append(res, common.GaugeFloatValue{
-				Value:      duration.Seconds(),
-				Attributes: workloadInstance.GetIntervalMetricsAttributes(),
-			})
-		}
-	}
-
-	return res, nil
 }

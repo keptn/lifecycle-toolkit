@@ -21,8 +21,6 @@ import (
 	"fmt"
 	"time"
 
-	"k8s.io/apimachinery/pkg/types"
-
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
@@ -82,7 +80,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if err != nil {
 		r.Log.Error(err, "App Version not found")
-		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionMsg, err)
 	}
 
 	appVersion.SetStartTime()
@@ -217,79 +215,4 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha1.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnAppVersionReconciler) GetActiveApps(ctx context.Context) ([]common.GaugeValue, error) {
-	appInstances := &klcv1alpha1.KeptnAppVersionList{}
-	err := r.List(ctx, appInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
-	}
-
-	res := []common.GaugeValue{}
-
-	for _, appInstance := range appInstances.Items {
-		gaugeValue := int64(0)
-		if !appInstance.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: appInstance.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}
-
-func (r *KeptnAppVersionReconciler) GetDeploymentInterval(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	appInstances := &klcv1alpha1.KeptnAppVersionList{}
-	err := r.List(ctx, appInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-
-	for _, appInstance := range appInstances.Items {
-
-		if appInstance.Spec.PreviousVersion != "" {
-			previousAppVersion := &klcv1alpha1.KeptnAppVersion{}
-			appName := fmt.Sprintf("%s-%s", appInstance.Spec.AppName, appInstance.Spec.PreviousVersion)
-			err := r.Get(ctx, types.NamespacedName{Name: appName, Namespace: appInstance.Namespace}, previousAppVersion)
-			if err != nil {
-				r.Log.Error(err, "Previous App Version not found")
-			} else {
-				previousInterval := appInstance.Status.StartTime.Time.Sub(previousAppVersion.Status.EndTime.Time)
-				res = append(res, common.GaugeFloatValue{
-					Value:      previousInterval.Seconds(),
-					Attributes: appInstance.GetDurationMetricsAttributes(),
-				})
-			}
-		}
-	}
-
-	return res, nil
-}
-
-func (r *KeptnAppVersionReconciler) GetDeploymentDuration(ctx context.Context) ([]common.GaugeFloatValue, error) {
-	appInstances := &klcv1alpha1.KeptnAppVersionList{}
-	err := r.List(ctx, appInstances)
-	if err != nil {
-		return nil, fmt.Errorf("could not retrieve app versions: %w", err)
-	}
-
-	res := []common.GaugeFloatValue{}
-
-	for _, appInstance := range appInstances.Items {
-		if appInstance.IsEndTimeSet() {
-			duration := appInstance.Status.EndTime.Time.Sub(appInstance.Status.StartTime.Time)
-			res = append(res, common.GaugeFloatValue{
-				Value:      duration.Seconds(),
-				Attributes: appInstance.GetDurationMetricsAttributes(),
-			})
-		}
-	}
-
-	return res, nil
 }

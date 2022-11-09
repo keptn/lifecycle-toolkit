@@ -354,5 +354,6 @@ func (v KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(v.Spec.AppName),
 		common.AppVersion.String(v.Spec.Version),
+		common.AppNamespace.String(v.Namespace),
 	}
 }

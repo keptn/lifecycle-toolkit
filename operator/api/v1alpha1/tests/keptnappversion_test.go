@@ -204,5 +204,6 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("appname"),
 		common.AppVersion.String("version"),
+		common.AppNamespace.String("namespace"),
 	}, app.GetSpanAttributes())
 }

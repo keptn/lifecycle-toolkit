@@ -300,7 +300,7 @@ func (v KeptnWorkloadInstance) GetPreviousVersion() string {
 }
 
 func (v KeptnWorkloadInstance) GetParentName() string {
-	return v.Spec.AppName
+	return v.Spec.WorkloadName
 }
 
 func (v KeptnWorkloadInstance) GetNamespace() string {
@@ -336,7 +336,7 @@ func (i KeptnWorkloadInstance) GetVersion() string {
 }
 
 func (i KeptnWorkloadInstance) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId, i.Spec.WorkloadName, i.Spec.Version, phase)
+	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId["traceparent"], i.Spec.WorkloadName, i.Spec.Version, phase)
 }
 
 func (i KeptnWorkloadInstance) GetSpanName(phase string) string {
@@ -376,8 +376,9 @@ func (v KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagatio
 			Annotations: traceContextCarrier,
 		},
 		Spec: KeptnEvaluationSpec{
-			AppVersion:           v.Spec.Version,
-			AppName:              v.Spec.AppName,
+			AppName:              v.GetAppName(),
+			WorkloadVersion:      v.GetParentName(),
+			Workload:             v.GetVersion(),
 			EvaluationDefinition: evaluationDefinition,
 			Type:                 checkType,
 			RetryInterval: metav1.Duration{

@@ -2,7 +2,7 @@ name: Performance Tests
 on:
   workflow_call:
 env:
-  GO_VERSION: "~1.18"
+  GO_VERSION: "~1.19"
   CERT_MANAGER_VERSION: "v1.10.0"
   USE_EXISTING_CLUSTER: "true"
 defaults:

@@ -151,7 +151,6 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 				pod.Annotations = make(map[string]string)
 			}
 			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
-			pod.GetAnnotations()
 		}
 		return true, nil
 	}
@@ -161,7 +160,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
 	owner := a.getReplicaSetOfPod(pod)
 	if owner.UID == pod.UID {
-		a.Log.Info("owner UID  equals pod UID")
+		a.Log.Info("owner UID equals pod UID")
 		return false, nil
 	}
 
@@ -181,6 +180,11 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 	a.Log.Info("Done looking for RS")
 
 	rsOwner := a.getOwnerOfReplicaSet(&rs)
+
+	if rsOwner.UID == "" {
+		return false, common.ErrReplicaSetNotFound
+	}
+
 	dpList := &appsv1.DeploymentList{}
 	stsList := &appsv1.StatefulSetList{}
 	dsList := &appsv1.DaemonSetList{}

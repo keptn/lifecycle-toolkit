@@ -1,14 +1,19 @@
 package webhooks
 
 import (
+	"context"
 	"github.com/go-logr/logr"
+	"github.com/go-logr/logr/testr"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -71,8 +76,8 @@ func TestPodMutatingWebhook_getOwnerOfReplicaSet(t *testing.T) {
 				},
 			},
 			want: v1alpha1.ResourceReference{
-				Kind: "ReplicaSet",
-				UID:  "replicaset-UID-abc123",
+				Kind: "",
+				UID:  "",
 			},
 		},
 	}
@@ -555,6 +560,299 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 			}
 			if tt.wantedPod != nil {
 				require.Equal(t, tt.wantedPod, tt.args.pod)
+			}
+		})
+	}
+}
+
+func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
+	testNamespace := "test-namespace"
+	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
+	rsUidWithStsOwner := types.UID("this-is-the-replicaset-with-sts-owner")
+	rsUidWithDsOwner := types.UID("this-is-the-replicaset-with-ds-owner")
+	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
+
+	fakeClient, err := fake.NewClient()
+
+	if err != nil {
+		t.Errorf("Error when setting up fake client %v", err)
+	}
+
+	rsWithDpOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset1",
+			UID:       rsUidWithDpOwner,
+			Namespace: testNamespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					Kind: "Deployment",
+					Name: "this-is-the-deployment",
+					UID:  "this-is-the-deployment-uid",
+				},
+			},
+		},
+	}
+	rsWithStsOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset2",
+			UID:       rsUidWithStsOwner,
+			Namespace: testNamespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					Kind: "Deployment",
+					Name: "this-is-the-deployment",
+					UID:  "this-is-the-stateful-set-uid",
+				},
+			},
+		},
+	}
+	rsWithDsOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset3",
+			UID:       rsUidWithDsOwner,
+			Namespace: testNamespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					Kind: "Deployment",
+					Name: "this-is-the-deployment",
+					UID:  "this-is-the-daemonset-uid",
+				},
+			},
+		},
+	}
+	testRsWithNoOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset4",
+			UID:       rsUidWithNoOwner,
+			Namespace: testNamespace,
+		},
+	}
+	testDp := &appsv1.Deployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "Deployment",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-deployment",
+			UID:       "this-is-the-deployment-uid",
+			Namespace: testNamespace,
+		},
+	}
+	testSts := &appsv1.StatefulSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "StatefulSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-stateful-set",
+			UID:       "this-is-the-stateful-set-uid",
+			Namespace: testNamespace,
+		},
+	}
+	testDs := &appsv1.DaemonSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "DaemonSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-daemonset",
+			UID:       "this-is-the-daemonset-uid",
+			Namespace: testNamespace,
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), rsWithDpOwner)
+	err = fakeClient.Create(context.TODO(), rsWithStsOwner)
+	err = fakeClient.Create(context.TODO(), rsWithDsOwner)
+	err = fakeClient.Create(context.TODO(), testRsWithNoOwner)
+	err = fakeClient.Create(context.TODO(), testDp)
+	err = fakeClient.Create(context.TODO(), testSts)
+	err = fakeClient.Create(context.TODO(), testDs)
+
+	if err != nil {
+		t.Errorf("Error when creating objects in fake client %v", err)
+	}
+
+	type fields struct {
+		Client   client.Client
+		Tracer   trace.Tracer
+		decoder  *admission.Decoder
+		Recorder record.EventRecorder
+		Log      logr.Logger
+	}
+	type args struct {
+		ctx context.Context
+		req *admission.Request
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name: "Test that nothing happens if owner UID is pod UID",
+			fields: fields{
+				Log: testr.New(t),
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: nil,
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "some-uid",
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								UID:  "some-uid",
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "Test fetching of replicaset owner of pod and deployment owner of replicaset",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "this-is-the-pod-uid",
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								UID:  rsUidWithDpOwner,
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "Test fetching of replicaset owner of pod and statefulset owner of replicaset",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "this-is-the-pod-uid",
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								UID:  rsUidWithStsOwner,
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "Test fetching of replicaset owner of pod and daemonset owner of replicaset",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "this-is-the-pod-uid",
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								UID:  rsUidWithDsOwner,
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "Test that error is return when we get a pod with replicaset without owner",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "this-is-the-pod-uid",
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								UID:  rsUidWithNoOwner,
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodMutatingWebhook{
+				Client:   tt.fields.Client,
+				Tracer:   tt.fields.Tracer,
+				decoder:  tt.fields.decoder,
+				Recorder: tt.fields.Recorder,
+				Log:      tt.fields.Log,
+			}
+			got, err := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("copyAnnotationsIfParentAnnotated() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -537,10 +537,8 @@ func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) kltv1alpha1.Res
 }
 
 func (a *PodMutatingWebhook) getOwnerOfReplicaSet(rs *appsv1.ReplicaSet) kltv1alpha1.ResourceReference {
-	reference := kltv1alpha1.ResourceReference{
-		UID:  rs.UID,
-		Kind: rs.Kind,
-	}
+	reference := kltv1alpha1.ResourceReference{}
+
 	if len(rs.OwnerReferences) != 0 {
 		for _, o := range rs.OwnerReferences {
 			if o.Kind == "Deployment" || o.Kind == "StatefulSet" || o.Kind == "DaemonSet" {

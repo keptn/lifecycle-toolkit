@@ -32,7 +32,7 @@ import (
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
 //+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
-//+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets,verbs=list
+//+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets,verbs=list;get
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -165,67 +165,38 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 
 	switch podOwner.Kind {
 	case "ReplicaSet":
-		rsl := &appsv1.ReplicaSetList{}
-		if err := a.Client.List(ctx, rsl, client.InNamespace(req.Namespace)); err != nil {
+		rs := &appsv1.ReplicaSet{}
+		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
 			return false, nil
 		}
-
-		rs := appsv1.ReplicaSet{}
-		if len(rsl.Items) != 0 {
-			for _, rs = range rsl.Items {
-				if rs.UID == podOwner.UID {
-					break
-				}
-			}
-		}
-		a.Log.Info("Done looking for RS")
+		a.Log.Info("Done fetching RS")
 
 		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
 		if rsOwner.UID == "" {
 			return false, nil
 		}
-		dpl := &appsv1.DeploymentList{}
-		if err := a.Client.List(ctx, dpl, client.InNamespace(req.Namespace)); err != nil {
+
+		dp := &appsv1.Deployment{}
+		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: rsOwner.Name}, dp); err != nil {
 			return false, nil
 		}
-		dp := appsv1.Deployment{}
-		if len(dpl.Items) != 0 {
-			for _, dp = range dpl.Items {
-				if dp.UID == podOwner.UID {
-					return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
-				}
-			}
-		}
+
+		return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
 	case "StatefulSet":
-		stsl := &appsv1.StatefulSetList{}
-		if err := a.Client.List(ctx, stsl, client.InNamespace(req.Namespace)); err != nil {
+		sts := &appsv1.StatefulSet{}
+		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, sts); err != nil {
 			return false, nil
 		}
-		sts := appsv1.StatefulSet{}
-		if len(stsl.Items) != 0 {
-			for _, sts = range stsl.Items {
-				if sts.UID == podOwner.UID {
-					return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
-				}
-			}
-		}
+		return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
 	case "Daemonset":
-		dsl := &appsv1.DaemonSetList{}
-		if err := a.Client.List(ctx, dsl, client.InNamespace(req.Namespace)); err != nil {
+		ds := &appsv1.DaemonSet{}
+		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, ds); err != nil {
 			return false, nil
 		}
-		ds := appsv1.DaemonSet{}
-		if len(dsl.Items) != 0 {
-			for _, ds = range dsl.Items {
-				if ds.UID == podOwner.UID {
-					return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
-				}
-			}
-		}
+		return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
 	default:
 		return false, nil
 	}
-	return false, nil
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
@@ -458,6 +429,8 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
+	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
+
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        a.getWorkloadName(pod),
@@ -467,7 +440,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         a.getOwnerReference(&pod.ObjectMeta),
+			ResourceReference:         klcv1alpha1.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind},
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
@@ -518,13 +491,14 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) klcv1alpha1.ResourceReference {
-	reference := klcv1alpha1.ResourceReference{}
+func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
 			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
+				reference.Name = owner.Name
 			}
 		}
 	}

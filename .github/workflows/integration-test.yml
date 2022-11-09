@@ -5,7 +5,6 @@ env:
   GO_VERSION: "~1.18"
   CERT_MANAGER_VERSION: "v1.10.0"
   KUTTL_VERSION: "0.13.0"
-
 defaults:
   run:
     shell: bash
@@ -17,7 +16,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        
+
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:

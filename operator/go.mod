@@ -28,7 +28,7 @@ require (
 )
 
 require (
-	github.com/magiconair/properties v1.8.1
+	github.com/magiconair/properties v1.8.6
 	k8s.io/apiserver v0.25.0
 )
 

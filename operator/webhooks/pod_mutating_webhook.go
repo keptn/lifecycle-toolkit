@@ -158,64 +158,72 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
-	owner := a.getReplicaSetOfPod(pod)
-	if owner.UID == pod.UID {
-		a.Log.Info("owner UID equals pod UID")
+	podOwner := a.getOwnerReference(&pod.ObjectMeta)
+	if podOwner.UID == "" {
 		return false, nil
 	}
 
-	rsl := &appsv1.ReplicaSetList{}
-	if err := a.Client.List(ctx, rsl, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
+	switch podOwner.Kind {
+	case "ReplicaSet":
+		rsl := &appsv1.ReplicaSetList{}
+		if err := a.Client.List(ctx, rsl, client.InNamespace(req.Namespace)); err != nil {
+			return false, nil
+		}
 
-	rs := appsv1.ReplicaSet{}
-	if len(rsl.Items) != 0 {
-		for _, rs = range rsl.Items {
-			if rs.UID == owner.UID {
-				break
+		rs := appsv1.ReplicaSet{}
+		if len(rsl.Items) != 0 {
+			for _, rs = range rsl.Items {
+				if rs.UID == podOwner.UID {
+					break
+				}
 			}
 		}
-	}
-	a.Log.Info("Done looking for RS")
+		a.Log.Info("Done looking for RS")
 
-	rsOwner := a.getOwnerOfReplicaSet(&rs)
-
-	if rsOwner.UID == "" {
-		return false, nil
-	}
-
-	dpList := &appsv1.DeploymentList{}
-	if err := a.Client.List(ctx, dpList, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
-	dp := appsv1.Deployment{}
-	for _, dp = range dpList.Items {
-		if dp.UID == rsOwner.UID {
-			return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
+		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
+		if rsOwner.UID == "" {
+			return false, nil
 		}
-	}
-
-	stsList := &appsv1.StatefulSetList{}
-	if err := a.Client.List(ctx, stsList, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
-	sts := appsv1.StatefulSet{}
-	for _, sts = range stsList.Items {
-		if sts.UID == rsOwner.UID {
-			return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
+		dpl := &appsv1.DeploymentList{}
+		if err := a.Client.List(ctx, dpl, client.InNamespace(req.Namespace)); err != nil {
+			return false, nil
 		}
-	}
-
-	dsList := &appsv1.DaemonSetList{}
-	if err := a.Client.List(ctx, dsList, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
-	ds := appsv1.DaemonSet{}
-	for _, ds = range dsList.Items {
-		if ds.UID == rsOwner.UID {
-			return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
+		dp := appsv1.Deployment{}
+		if len(dpl.Items) != 0 {
+			for _, dp = range dpl.Items {
+				if dp.UID == podOwner.UID {
+					return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
+				}
+			}
 		}
+	case "StatefulSet":
+		stsl := &appsv1.StatefulSetList{}
+		if err := a.Client.List(ctx, stsl, client.InNamespace(req.Namespace)); err != nil {
+			return false, nil
+		}
+		sts := appsv1.StatefulSet{}
+		if len(stsl.Items) != 0 {
+			for _, sts = range stsl.Items {
+				if sts.UID == podOwner.UID {
+					return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
+				}
+			}
+		}
+	case "Daemonset":
+		dsl := &appsv1.DaemonSetList{}
+		if err := a.Client.List(ctx, dsl, client.InNamespace(req.Namespace)); err != nil {
+			return false, nil
+		}
+		ds := appsv1.DaemonSet{}
+		if len(dsl.Items) != 0 {
+			for _, ds = range dsl.Items {
+				if ds.UID == podOwner.UID {
+					return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
+				}
+			}
+		}
+	default:
+		return false, nil
 	}
 	return false, nil
 }
@@ -459,7 +467,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         a.getReplicaSetOfPod(pod),
+			ResourceReference:         a.getOwnerReference(&pod.ObjectMeta),
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
@@ -510,30 +518,13 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getReplicaSetOfPod(pod *corev1.Pod) kltv1alpha1.ResourceReference {
-	reference := kltv1alpha1.ResourceReference{
-		UID:  pod.UID,
-		Kind: pod.Kind,
-	}
-	if len(pod.OwnerReferences) != 0 {
-		for _, o := range pod.OwnerReferences {
-			if o.Kind == "ReplicaSet" {
-				reference.UID = o.UID
-				reference.Kind = o.Kind
-			}
-		}
-	}
-	return reference
-}
-
-func (a *PodMutatingWebhook) getOwnerOfReplicaSet(rs *appsv1.ReplicaSet) kltv1alpha1.ResourceReference {
-	reference := kltv1alpha1.ResourceReference{}
-
-	if len(rs.OwnerReferences) != 0 {
-		for _, o := range rs.OwnerReferences {
-			if o.Kind == "Deployment" || o.Kind == "StatefulSet" || o.Kind == "DaemonSet" {
-				reference.UID = o.UID
-				reference.Kind = o.Kind
+func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) klcv1alpha1.ResourceReference {
+	reference := klcv1alpha1.ResourceReference{}
+	if len(resource.OwnerReferences) != 0 {
+		for _, owner := range resource.OwnerReferences {
+			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" {
+				reference.UID = owner.UID
+				reference.Kind = owner.Kind
 			}
 		}
 	}

@@ -248,7 +248,7 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	postEvaluationChecks, gotPostEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
 
 	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
-		return false, common.ErrTooLongAnnotations
+		return false, ErrTooLongAnnotations
 	}
 
 	if len(targetPod.Annotations) == 0 {

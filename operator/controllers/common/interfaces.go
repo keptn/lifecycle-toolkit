@@ -1,7 +1,6 @@
 package common
 
 import (
-	"errors"
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
@@ -25,11 +24,9 @@ type PhaseItem interface {
 	GetMetricsAttributes() []attribute.KeyValue
 	GetSpanAttributes() []attribute.KeyValue
 	GetSpanKey(phase string) string
-	GetActiveMetricsAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
-	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetEndTime() time.Time
 	GetStartTime() time.Time
 	GetPreviousVersion() string
@@ -75,18 +72,6 @@ func (pw PhaseItemWrapper) GetCurrentPhase() string {
 
 func (pw *PhaseItemWrapper) SetCurrentPhase(phase string) {
 	pw.Obj.SetCurrentPhase(phase)
-}
-
-func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetDurationMetricsAttributes()
-}
-
-func (pw PhaseItemWrapper) GetEndTime() time.Time {
-	return pw.Obj.GetEndTime()
-}
-
-func (pw PhaseItemWrapper) GetStartTime() time.Time {
-	return pw.Obj.GetStartTime()
 }
 
 func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
@@ -185,48 +170,8 @@ func (pw PhaseItemWrapper) SetSpanAttributes(span trace.Span) {
 	pw.Obj.SetSpanAttributes(span)
 }
 
-func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
-	pi, ok := object.(ListItem)
-	if !ok {
-		return nil, errors.New("provided object does not implement ListItem interface")
-	}
-	return &ListItemWrapper{Obj: pi}, nil
-}
-
-type ListItem interface {
-	GetItems() []PhaseItem
-}
-
-type ListItemWrapper struct {
-	Obj ListItem
-}
-
-func (pw ListItemWrapper) GetItems() []PhaseItem {
-	return pw.Obj.GetItems()
-}
-
 func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 	return pw.Obj.GetSpanAttributes()
-}
-
-func (pw PhaseItemWrapper) IsEndTimeSet() bool {
-	return pw.Obj.IsEndTimeSet()
-}
-
-func (pw PhaseItemWrapper) GetPreviousVersion() string {
-	return pw.Obj.GetPreviousVersion()
-}
-
-func (pw PhaseItemWrapper) GetParentName() string {
-	return pw.Obj.GetParentName()
-}
-
-func (pw PhaseItemWrapper) GetNamespace() string {
-	return pw.Obj.GetNamespace()
-}
-
-func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetActiveMetricsAttributes()
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

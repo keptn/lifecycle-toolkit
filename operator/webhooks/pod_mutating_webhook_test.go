@@ -857,3 +857,187 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		})
 	}
 }
+
+func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
+	type fields struct {
+		Client   client.Client
+		Tracer   trace.Tracer
+		decoder  *admission.Decoder
+		Recorder record.EventRecorder
+		Log      logr.Logger
+	}
+	type args struct {
+		sourceResource *metav1.ObjectMeta
+		targetPod      *corev1.Pod
+	}
+	tests := []struct {
+		name      string
+		fields    fields
+		args      args
+		want      bool
+		wantErr   bool
+		wantedPod *corev1.Pod
+	}{
+		{
+			name: "Test that annotations get copied from source to target",
+			args: args{
+				sourceResource: &metav1.ObjectMeta{
+					Name: "testSourceObject",
+					Annotations: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.VersionAnnotation:                  "v1.0.0",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+				targetPod: &corev1.Pod{
+					TypeMeta:   metav1.TypeMeta{},
+					ObjectMeta: metav1.ObjectMeta{},
+					Spec:       corev1.PodSpec{},
+					Status:     corev1.PodStatus{},
+				},
+			},
+			want:    true,
+			wantErr: false,
+			wantedPod: &corev1.Pod{
+				TypeMeta: metav1.TypeMeta{},
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.VersionAnnotation:                  "v1.0.0",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+			},
+		},
+		{
+			name: "Test that source labels get copied to target annotations",
+			args: args{
+				sourceResource: &metav1.ObjectMeta{
+					Name: "testSourceObject",
+					Labels: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.VersionAnnotation:                  "v1.0.0",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+				targetPod: &corev1.Pod{},
+			},
+			want:    true,
+			wantErr: false,
+			wantedPod: &corev1.Pod{
+				TypeMeta: metav1.TypeMeta{},
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.VersionAnnotation:                  "v1.0.0",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+			},
+		},
+		{
+			name: "Test that version label is generated correctly and rest is copied",
+			args: args{
+				sourceResource: &metav1.ObjectMeta{
+					Name: "testSourceObject",
+					Labels: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+				targetPod: &corev1.Pod{
+					TypeMeta:   metav1.TypeMeta{},
+					ObjectMeta: metav1.ObjectMeta{},
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Image: "some-image:v1.0.0",
+							},
+						},
+					},
+					Status: corev1.PodStatus{},
+				},
+			},
+			want:    true,
+			wantErr: false,
+			wantedPod: &corev1.Pod{
+				TypeMeta: metav1.TypeMeta{},
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						common.WorkloadAnnotation:                 "some-workload-name",
+						common.AppAnnotation:                      "some-app-name",
+						common.VersionAnnotation:                  "v1.0.0",
+						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+					},
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Image: "some-image:v1.0.0",
+						},
+					},
+				},
+				Status: corev1.PodStatus{},
+			},
+		},
+		{
+			name: "Test that error is return with too long workload name",
+			args: args{
+				sourceResource: &metav1.ObjectMeta{
+					Name: "testSourceObject",
+					Labels: map[string]string{
+						common.WorkloadAnnotation: "some-workload-name-that-is-very-looooooooooooooooooooooong",
+					},
+				},
+				targetPod: &corev1.Pod{},
+			},
+			want:    false,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodMutatingWebhook{
+				Client:   tt.fields.Client,
+				Tracer:   tt.fields.Tracer,
+				decoder:  tt.fields.decoder,
+				Recorder: tt.fields.Recorder,
+				Log:      tt.fields.Log,
+			}
+			got, err := a.copyResourceLabelsIfPresent(tt.args.sourceResource, tt.args.targetPod)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("copyResourceLabelsIfPresent() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("copyResourceLabelsIfPresent() got = %v, want %v", got, tt.want)
+			}
+			if tt.wantedPod != nil {
+				require.Equal(t, tt.wantedPod, tt.args.targetPod)
+			}
+		})
+	}
+}

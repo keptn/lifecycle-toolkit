@@ -119,7 +119,7 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 	By("Retrieving Created app version")
 	Eventually(func() error {
 		return k8sClient.Get(ctx, appvName, appVersion)
-	}).Should(Succeed())
+	}, "20s").Should(Succeed())
 
 	By("Comparing expected app version")
 	Expect(appVersion.Spec.AppName).To(Equal(instance.Name))

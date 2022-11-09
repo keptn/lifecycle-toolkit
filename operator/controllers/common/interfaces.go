@@ -1,7 +1,6 @@
 package common
 
 import (
-	"errors"
 	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -38,7 +37,7 @@ type PhaseItemWrapper struct {
 func NewPhaseItemWrapperFromClientObject(object client.Object) (*PhaseItemWrapper, error) {
 	pi, ok := object.(PhaseItem)
 	if !ok {
-		return nil, errors.New("provided object does not implement PhaseItem interface")
+		return nil, common.ErrCannotWrapToPhaseItem
 	}
 	return &PhaseItemWrapper{Obj: pi}, nil
 }
@@ -118,7 +117,7 @@ func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
 	pi, ok := object.(ListItem)
 	if !ok {
-		return nil, errors.New("provided object does not implement ListItem interface")
+		return nil, common.ErrCannotWrapToListItem
 	}
 	return &ListItemWrapper{Obj: pi}, nil
 }

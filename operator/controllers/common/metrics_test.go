@@ -2,7 +2,6 @@ package common
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -24,23 +23,13 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 		list          client.ObjectList
 		err           error
 		result        []apicommon.GaugeFloatValue
-		addScheme     bool
 	}{
-		{
-			name:          "failed to retrieve k8s ObjectList",
-			list:          &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{},
-			err:           fmt.Errorf("could not retrieve instances"),
-			result:        nil,
-			addScheme:     false,
-		},
 		{
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           fmt.Errorf("provided object does not implement ListItem interface"),
+			err:           common.ErrCannotWrapToListItem,
 			result:        nil,
-			addScheme:     true,
 		},
 		{
 			name: "no endtime set",
@@ -52,9 +41,8 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 					},
 				},
 			},
-			err:       nil,
-			result:    []apicommon.GaugeFloatValue{},
-			addScheme: true,
+			err:    nil,
+			result: []apicommon.GaugeFloatValue{},
 		},
 		{
 			name: "endtime set",
@@ -87,24 +75,15 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 					},
 				},
 			},
-			addScheme: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.addScheme {
-				lifecyclev1alpha1.AddToScheme(scheme.Scheme)
-			}
+			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentDuration(context.TODO(), client, tt.list)
-			if err != nil && tt.err != nil {
-				require.Contains(t, err.Error(), tt.err.Error())
-			} else if err == nil && tt.err != nil {
-				t.Errorf("expected %v, got nil", tt.err)
-			} else if err != nil && tt.err == nil {
-				t.Errorf("expected nil, got %v", err)
-			}
+			require.ErrorIs(t, err, tt.err)
 			require.Equal(t, tt.result, res)
 		})
 
@@ -123,7 +102,7 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           fmt.Errorf("provided object does not implement ListItem interface"),
+			err:           common.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -200,13 +179,7 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetActiveInstances(context.TODO(), client, tt.list)
-			if err != nil && tt.err != nil {
-				require.Contains(t, err.Error(), tt.err.Error())
-			} else if err == nil && tt.err != nil {
-				t.Errorf("expected %v, got nil", tt.err)
-			} else if err != nil && tt.err == nil {
-				t.Errorf("expected nil, got %v", err)
-			}
+			require.ErrorIs(t, err, tt.err)
 			require.Equal(t, tt.result, res)
 		})
 
@@ -228,7 +201,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
 			clientObject:  &lifecyclev1alpha1.KeptnApp{},
-			err:           fmt.Errorf("provided object does not implement ListItem interface"),
+			err:           common.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -304,7 +277,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    fmt.Errorf("provided object does not implement PhaseItem interface"),
+			err:    common.ErrCannotWrapToPhaseItem,
 			result: nil,
 		},
 		{
@@ -413,13 +386,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentInterval(context.TODO(), client, tt.list, tt.previous)
-			if err != nil && tt.err != nil {
-				require.Contains(t, err.Error(), tt.err.Error())
-			} else if err == nil && tt.err != nil {
-				t.Errorf("expected %v, got nil", tt.err)
-			} else if err != nil && tt.err == nil {
-				t.Errorf("expected nil, got %v", err)
-			}
+			require.ErrorIs(t, err, tt.err)
 			require.Equal(t, tt.result, res)
 		})
 

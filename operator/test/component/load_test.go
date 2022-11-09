@@ -81,10 +81,9 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 		generateMetricReport(metrics)
 	})
 	AfterEach(func() {
-		for i, app := range apps {
+		for _, app := range apps {
 			// Remember to clean up the cluster after each test
 			deleteAppInCluster(app)
-			deleteAppVersionInCluster(appVersions[i])
 			resetSpanRecords(tracer, spanRecorder)
 		}
 	})

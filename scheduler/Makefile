@@ -77,7 +77,7 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: e2e-test
-e2e-test: manifests fmt vet envtest ## Run tests.
+e2e-test: manifests envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out
 
 .PHONY: test

@@ -1,0 +1,33 @@
+name: E2E-Test
+on:
+  workflow_call:
+env:
+  GO_VERSION: "~1.18"
+  CERT_MANAGER_VERSION: "v1.10.0"
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-e2e-test:
+    name: Run E2E Tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
+
+      - name: Run E2E Tests ${{ matrix.config.name }}
+        working-directory: ${{ matrix.config.folder }}
+        run: make e2e-test

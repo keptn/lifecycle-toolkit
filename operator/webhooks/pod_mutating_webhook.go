@@ -186,53 +186,38 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 	}
 
 	dpList := &appsv1.DeploymentList{}
-	stsList := &appsv1.StatefulSetList{}
-	dsList := &appsv1.DaemonSetList{}
-
 	if err := a.Client.List(ctx, dpList, client.InNamespace(req.Namespace)); err != nil {
 		return false, nil
 	}
-	if err := a.Client.List(ctx, stsList, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
-	if err := a.Client.List(ctx, dsList, client.InNamespace(req.Namespace)); err != nil {
-		return false, nil
-	}
-
 	dp := appsv1.Deployment{}
 	for _, dp = range dpList.Items {
 		if dp.UID == rsOwner.UID {
-			break
+			return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
 		}
 	}
 
+	stsList := &appsv1.StatefulSetList{}
+	if err := a.Client.List(ctx, stsList, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
 	sts := appsv1.StatefulSet{}
 	for _, sts = range stsList.Items {
 		if sts.UID == rsOwner.UID {
-			break
+			return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
 		}
 	}
 
+	dsList := &appsv1.DaemonSetList{}
+	if err := a.Client.List(ctx, dsList, client.InNamespace(req.Namespace)); err != nil {
+		return false, nil
+	}
 	ds := appsv1.DaemonSet{}
 	for _, ds = range dsList.Items {
 		if ds.UID == rsOwner.UID {
-			break
+			return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
 		}
 	}
-	a.Log.Info("Done looking for Parents of RS")
-
-	if dp.UID == rsOwner.UID {
-		a.Log.Info("Copying from DP")
-		return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
-	} else if sts.UID == rsOwner.UID {
-		a.Log.Info("Copying from STS")
-		return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
-	} else if ds.UID == rsOwner.UID {
-		a.Log.Info("Copying from DS")
-		return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
-	} else {
-		return false, nil
-	}
+	return false, nil
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {

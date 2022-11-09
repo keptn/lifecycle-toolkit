@@ -56,5 +56,31 @@
         "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?\\??= ?(?<currentValue>.+?)?\\s"
       ]
     }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^Makefile$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION?=(?<currentValue>.*?)$\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "fileMatch": ["^Makefile$"],
+      "matchStrings": ["^CERT_MANAGER_VERSION?=(?<currentValue>.*?)$"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cert-manager"
+    },
+    {
+      "fileMatch": ["^Makefile$"],
+      "matchStrings": ["^KUSTOMIZE_VERSION?=(?<currentValue>.*?)$"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kustomize"
+    },
+    {
+      "fileMatch": ["^Makefile$"],
+      "matchStrings": ["go install (?<depName>sigs\\.k8s\\.io\\/controller-runtime\\/tools\\/setup-envtest)@(?<currentValue>.*)"],
+      "datasourceTemplate": "go"
+    }
   ]
 }

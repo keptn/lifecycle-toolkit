@@ -89,7 +89,7 @@ component-test: manifests generate envtest ## Run tests.
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.
-    USE_EXISTING_CLUSTER=true go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
+    go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
 
 .PHONY: e2e-test
 e2e-test: manifests generate envtest ## Run tests.

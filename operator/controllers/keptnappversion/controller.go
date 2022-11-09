@@ -80,7 +80,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if err != nil {
 		r.Log.Error(err, "App Version not found")
-		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnappVersion: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionMsg, err)
 	}
 
 	appVersion.SetStartTime()

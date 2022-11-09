@@ -13,7 +13,7 @@ import (
 func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]apicommon.GaugeFloatValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf("could not retrieve instances: %w", err)
+		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
@@ -40,7 +40,7 @@ func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileO
 func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object) ([]apicommon.GaugeFloatValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf("could not retrieve instances: %w", err)
+		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
@@ -75,7 +75,7 @@ func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileO
 func GetActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]common.GaugeValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf("could not retrieve instances: %w", err)
+		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)

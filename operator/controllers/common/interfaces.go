@@ -37,7 +37,7 @@ type PhaseItemWrapper struct {
 func NewPhaseItemWrapperFromClientObject(object client.Object) (*PhaseItemWrapper, error) {
 	pi, ok := object.(PhaseItem)
 	if !ok {
-		return nil, common.ErrCannotWrapToPhaseItem
+		return nil, ErrCannotWrapToPhaseItem
 	}
 	return &PhaseItemWrapper{Obj: pi}, nil
 }
@@ -117,7 +117,7 @@ func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
 	pi, ok := object.(ListItem)
 	if !ok {
-		return nil, common.ErrCannotWrapToListItem
+		return nil, ErrCannotWrapToListItem
 	}
 	return &ListItemWrapper{Obj: pi}, nil
 }

@@ -87,7 +87,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if err != nil {
 		r.Log.Error(err, "Workload Instance not found")
-		return reconcile.Result{}, fmt.Errorf("could not fetch KeptnWorkloadInstance: %+v", err)
+		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadInstancesMsg, err)
 	}
 
 	//setup otel
@@ -117,11 +117,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not fetch AppVersion for KeptnWorkloadInstance: %+v", err)
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstance + err.Error())
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("could not find AppVersion for KeptnWorkloadInstance")
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstance)
 	}
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)

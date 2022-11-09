@@ -25,6 +25,7 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -153,7 +154,7 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 	}
 
 	if len(jobLabels) == 0 {
-		return false, fmt.Errorf("no labels found for task: %s", task.Name)
+		return false, fmt.Errorf(controllercommon.ErrNoLabelsFoundTask, task.Name)
 	}
 
 	if err := r.Client.List(ctx, jobList, client.InNamespace(namespace), jobLabels); err != nil {
@@ -171,7 +172,7 @@ func (r *KeptnTaskReconciler) GetActiveTasks(ctx context.Context) ([]common.Gaug
 	tasks := &klcv1alpha1.KeptnTaskList{}
 	err := r.List(ctx, tasks)
 	if err != nil {
-		return nil, fmt.Errorf("could not retrieve workload instances: %w", err)
+		return nil, fmt.Errorf(controllercommon.ErrCannotRetrievieWorkloadInstancesMsg, err)
 	}
 
 	res := []common.GaugeValue{}

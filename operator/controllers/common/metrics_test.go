@@ -28,7 +28,7 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           common.ErrCannotWrapToListItem,
+			err:           ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -102,7 +102,7 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           common.ErrCannotWrapToListItem,
+			err:           ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -201,7 +201,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
 			clientObject:  &lifecyclev1alpha1.KeptnApp{},
-			err:           common.ErrCannotWrapToListItem,
+			err:           ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -277,7 +277,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    common.ErrCannotWrapToPhaseItem,
+			err:    ErrCannotWrapToPhaseItem,
 			result: nil,
 		},
 		{

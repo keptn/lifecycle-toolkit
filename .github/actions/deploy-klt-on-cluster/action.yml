@@ -7,7 +7,6 @@ inputs:
    k3d-version:
      required: true
      description: "Version of k3d that should be used"
-     default: "v5.4.6"
 runs:
   using: "composite"
   steps:
@@ -27,6 +26,7 @@ runs:
     uses: AbsaOSS/k3d-action@v2
     with:
       cluster-name: test-cluster
+      k3d-version: ${{ inputs.k3d-version }}
       args: >-
         --agents 1
         --no-lb

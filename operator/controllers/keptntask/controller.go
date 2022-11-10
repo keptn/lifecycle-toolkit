@@ -103,7 +103,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		err = r.createJob(ctx, req, task)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true}, err
+			r.Log.Error(err, "could not create Job")
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}

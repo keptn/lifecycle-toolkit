@@ -487,9 +487,11 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
 	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
-	rsUidWithStsOwner := types.UID("this-is-the-replicaset-with-sts-owner")
-	rsUidWithDsOwner := types.UID("this-is-the-replicaset-with-ds-owner")
 	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
+	testStsUid := types.UID("this-is-the-stateful-set-uid")
+	tstStsName := "test-stateful-set"
+	testDsUid := types.UID("this-is-the-daemon-set-uid")
+	testDsName := "test-daemon-set"
 
 	fakeClient, err := fake.NewClient()
 
@@ -514,41 +516,8 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			},
 		},
 	}
-	rsWithStsOwner := &appsv1.ReplicaSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "ReplicaSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-replicaset2",
-			UID:       rsUidWithStsOwner,
-			Namespace: testNamespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					Kind: "Deployment",
-					Name: "this-is-the-deployment",
-					UID:  "this-is-the-stateful-set-uid",
-				},
-			},
-		},
-	}
-	rsWithDsOwner := &appsv1.ReplicaSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "ReplicaSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-replicaset3",
-			UID:       rsUidWithDsOwner,
-			Namespace: testNamespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					Kind: "Deployment",
-					Name: "this-is-the-deployment",
-					UID:  "this-is-the-daemonset-uid",
-				},
-			},
-		},
-	}
-	testRsWithNoOwner := &appsv1.ReplicaSet{
+	// TODO: fix tests where an RS has a STS or DS as owner. they should not have a RS in between
+	rsWithNoOwner := &appsv1.ReplicaSet{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "ReplicaSet",
 		},
@@ -573,8 +542,8 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			Kind: "StatefulSet",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-stateful-set",
-			UID:       "this-is-the-stateful-set-uid",
+			Name:      tstStsName,
+			UID:       testStsUid,
 			Namespace: testNamespace,
 		},
 	}
@@ -583,16 +552,14 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			Kind: "DaemonSet",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-daemonset",
-			UID:       "this-is-the-daemonset-uid",
+			Name:      testDsName,
+			UID:       testDsUid,
 			Namespace: testNamespace,
 		},
 	}
 
 	err = fakeClient.Create(context.TODO(), rsWithDpOwner)
-	err = fakeClient.Create(context.TODO(), rsWithStsOwner)
-	err = fakeClient.Create(context.TODO(), rsWithDsOwner)
-	err = fakeClient.Create(context.TODO(), testRsWithNoOwner)
+	err = fakeClient.Create(context.TODO(), rsWithNoOwner)
 	err = fakeClient.Create(context.TODO(), testDp)
 	err = fakeClient.Create(context.TODO(), testSts)
 	err = fakeClient.Create(context.TODO(), testDs)
@@ -636,12 +603,6 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						UID: "some-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								UID:  "some-uid",
-								Kind: "ReplicaSet",
-							},
-						},
 					},
 				},
 			},
@@ -666,6 +627,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 						UID: "this-is-the-pod-uid",
 						OwnerReferences: []metav1.OwnerReference{
 							{
+								Name: rsWithDpOwner.Name,
 								UID:  rsUidWithDpOwner,
 								Kind: "ReplicaSet",
 							},
@@ -677,7 +639,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Test fetching of replicaset owner of pod and statefulset owner of replicaset",
+			name: "Test fetching of statefulset owner of pod",
 			fields: fields{
 				Log:    testr.New(t),
 				Client: fakeClient,
@@ -694,8 +656,9 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 						UID: "this-is-the-pod-uid",
 						OwnerReferences: []metav1.OwnerReference{
 							{
-								UID:  rsUidWithStsOwner,
-								Kind: "ReplicaSet",
+								Name: testSts.Name,
+								UID:  testSts.UID,
+								Kind: testSts.Kind,
 							},
 						},
 					},
@@ -705,7 +668,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Test fetching of replicaset owner of pod and daemonset owner of replicaset",
+			name: "Test fetching of daemonset owner of pod",
 			fields: fields{
 				Log:    testr.New(t),
 				Client: fakeClient,
@@ -722,8 +685,9 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 						UID: "this-is-the-pod-uid",
 						OwnerReferences: []metav1.OwnerReference{
 							{
-								UID:  rsUidWithDsOwner,
-								Kind: "ReplicaSet",
+								Name: testDs.Name,
+								UID:  testDs.UID,
+								Kind: testDs.Kind,
 							},
 						},
 					},
@@ -750,6 +714,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 						UID: "this-is-the-pod-uid",
 						OwnerReferences: []metav1.OwnerReference{
 							{
+								Name: rsWithNoOwner.Name,
 								UID:  rsUidWithNoOwner,
 								Kind: "ReplicaSet",
 							},

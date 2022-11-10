@@ -1,6 +1,7 @@
 JAEGER_VERSION ?= v1.38.0
 LFC_NAMESPACE ?= keptn-lifecycle-controller-system
 PODTATO_NAMESPACE ?= podtato-kubectl
+GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
 install:
@@ -16,7 +17,7 @@ port-forward-jaeger:
 
 .PHONY: port-forward-grafana
 port-forward-grafana:
-	make -C ../observability port-forward-grafana
+	make -C ../observability port-forward-grafana GRAFANA_PORT_FORWARD=$(GRAFANA_PORT_FORWARD)
 
 .PHONY: deploy-version-1
 deploy-version-1:

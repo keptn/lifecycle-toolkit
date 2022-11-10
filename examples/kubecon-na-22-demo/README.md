@@ -5,13 +5,16 @@ This demonstration is based on the [Observability Example](../observability) and
 ![img.png](assets/big-picture.png)
 
 ## Prepare Secret for Slack Notification
-> kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":"HOOK","text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run > base/slack-secret.yaml
+> kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":"HOOK","text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml
 
 ## Deploy the Observability Part
 > make install
 
 ## Port-Forward Grafana
-> make port-forward-grafana
+> make port-forward-grafana GRAFANA_PORT_FORWARD=3000
+
+If you wanto to port-forward to a different port, please execute:
+> make port-forward-grafana GRAFANA_PORT_FORWARD=<port>
 
 ## Import Grafana Dashboard
 > make import-grafana-dashboard

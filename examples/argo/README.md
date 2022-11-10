@@ -4,11 +4,12 @@ In this example, we will show you how to install our sample application *podtato
 
 # TL;DR
 * You can install ArgoCD using: `make install`
+* Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
-* Then you can port-forward the ArgoUI using: `make argo-port-forward`
+* Then you can port-forward the ArgoUI using: `make port-forward-argocd`
   * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
-* Watch the progress on your ArgoUI: `http://localhost:8080`
+* Watch the progress on your ArgoUI: `http://localhost:8080`. Use the `admin` user and the password from `make argo-get-password`.
 
 ## Prerequisites:
 This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-toolkit). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argo-cd.readthedocs.io/en/stable/getting_started/).

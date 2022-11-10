@@ -19,7 +19,6 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -274,18 +273,22 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, app
 func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
 	apps := &klcv1alpha1.KeptnAppVersionList{}
 
+	// TODO add label selector for looking up by name?
 	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
 		return false, klcv1alpha1.KeptnAppVersion{}, err
 	}
 	latestVersion := klcv1alpha1.KeptnAppVersion{}
+	oldVersion, err := version.NewVersion("0.0.0")
+	if err != nil {
+		return false, latestVersion, err
+	}
+	workloadFound := false
 	for _, app := range apps.Items {
 		if app.Spec.AppName == wli.Spec.AppName {
-
 			for _, appWorkload := range app.Spec.Workloads {
-				if !reflect.DeepEqual(latestVersion, app) {
-					latestVersion = app
-				} else if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
-					oldVersion, err := version.NewVersion(app.Spec.Version)
+				if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
+					workloadFound = true
+					oldVersion, err = version.NewVersion(app.Spec.Version)
 					if err != nil {
 						r.Log.Error(err, "could not parse version")
 					}
@@ -301,7 +304,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		}
 	}
 
-	if latestVersion.Spec.Version == "" {
+	if latestVersion.Spec.Version == "" || !workloadFound {
 		return false, klcv1alpha1.KeptnAppVersion{}, nil
 	}
 	return true, latestVersion, nil

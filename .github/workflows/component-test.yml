@@ -2,7 +2,7 @@ name: Component Tests
 on:
   workflow_call:
 env:
-  GO_VERSION: "~1.18"
+  GO_VERSION: "~1.19"
 defaults:
   run:
     shell: bash

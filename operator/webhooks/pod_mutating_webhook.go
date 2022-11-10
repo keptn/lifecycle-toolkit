@@ -182,7 +182,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
-	case "Daemonset":
+	case "DaemonSet":
 		ds := &appsv1.DaemonSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
 	default:

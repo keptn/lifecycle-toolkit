@@ -80,10 +80,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	task.SetStartTime()
 
-	if task.Status.Status.IsPending() {
-		task.Status.Status = common.StateProgressing
-	}
-
 	defer func(task *klcv1alpha1.KeptnTask) {
 		err := r.Client.Status().Update(ctx, task)
 		if err != nil {
@@ -104,6 +100,8 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
 			r.Log.Error(err, "could not create Job")
+		} else {
+			task.Status.Status = common.StateProgressing
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}

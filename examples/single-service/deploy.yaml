@@ -1,4 +1,11 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: podtato-kubectl
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,6 +13,7 @@ metadata:
   labels:
     app: test
   name: test
+  namespace: single-service
 spec:
   replicas: 1
   selector:

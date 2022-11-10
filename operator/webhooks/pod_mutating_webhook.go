@@ -82,15 +82,16 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	podIsAnnotated, err := a.isPodAnnotated(pod)
 	logger.Info("Checked if pod is annotated.")
 
+	if err != nil {
+		span.SetStatus(codes.Error, "Invalid annotations")
+		return admission.Errored(http.StatusBadRequest, err)
+	}
+
 	if err == nil && !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
-	if err != nil {
-		span.SetStatus(codes.Error, "Invalid annotations")
-		return admission.Errored(http.StatusBadRequest, err)
-	}
 	if podIsAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"

@@ -177,26 +177,27 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 
 		dp := &appsv1.Deployment{}
-		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: rsOwner.Name}, dp); err != nil {
-			return false, nil
-		}
-
-		return a.copyResourceLabelsIfPresent(&dp.ObjectMeta, pod)
+		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
-		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, sts); err != nil {
-			return false, nil
-		}
-		return a.copyResourceLabelsIfPresent(&sts.ObjectMeta, pod)
+		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
 	case "Daemonset":
 		ds := &appsv1.DaemonSet{}
-		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, ds); err != nil {
-			return false, nil
-		}
-		return a.copyResourceLabelsIfPresent(&ds.ObjectMeta, pod)
+		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
 	default:
 		return false, nil
 	}
+}
+
+func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) (bool, error) {
+	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
+		return false, nil
+	}
+	objectContainerMetaData := metav1.ObjectMeta{
+		Labels:      objectContainer.GetLabels(),
+		Annotations: objectContainer.GetAnnotations(),
+	}
+	return a.copyResourceLabelsIfPresent(&objectContainerMetaData, pod)
 }
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {

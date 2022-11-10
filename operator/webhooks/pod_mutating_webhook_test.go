@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -21,7 +20,7 @@ import (
 	"testing"
 )
 
-func TestPodMutatingWebhook_getOwnerOfReplicaSet(t *testing.T) {
+func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
@@ -30,131 +29,51 @@ func TestPodMutatingWebhook_getOwnerOfReplicaSet(t *testing.T) {
 		Log      logr.Logger
 	}
 	type args struct {
-		rs *appsv1.ReplicaSet
+		resource *metav1.ObjectMeta
 	}
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
-		want   v1alpha1.ResourceReference
+		want   metav1.OwnerReference
 	}{
 		{
 			name: "Test simple return when UID and Kind is set",
 			args: args{
-				rs: &appsv1.ReplicaSet{
-					ObjectMeta: metav1.ObjectMeta{
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Kind: "Deployment",
-								UID:  "someUID-123456",
-							},
+				resource: &metav1.ObjectMeta{
+					UID: "the-pod-uid",
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							Kind: "ReplicaSet",
+							UID:  "the-replicaset-uid",
+							Name: "some-name",
 						},
 					},
 				},
 			},
-			want: v1alpha1.ResourceReference{
-				UID:  "someUID-123456",
-				Kind: "Deployment",
-			},
-		},
-		{
-			name: "Test return is input argument if owner is not found",
-			args: args{
-				rs: &appsv1.ReplicaSet{
-					TypeMeta: metav1.TypeMeta{
-						Kind: "ReplicaSet",
-					},
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "replicaset-UID-abc123",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Kind: "SomeNonExistentType",
-								UID:  "someUID-123456",
-							},
-						},
-					},
-				},
-			},
-			want: v1alpha1.ResourceReference{
-				Kind: "",
-				UID:  "",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
-			}
-			if got := a.getOwnerOfReplicaSet(tt.args.rs); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getOwnerOfReplicaSet() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_getReplicaSetOfPod(t *testing.T) {
-	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
-	}
-	type args struct {
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   v1alpha1.ResourceReference
-	}{
-		{
-			name: "Test simple return when UID and Kind is set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Kind: "ReplicaSet",
-								UID:  "the-replicaset-uid",
-							},
-						},
-					},
-				},
-			},
-			want: v1alpha1.ResourceReference{
+			want: metav1.OwnerReference{
 				UID:  "the-replicaset-uid",
 				Kind: "ReplicaSet",
+				Name: "some-name",
 			},
 		},
 		{
 			name: "Test return is input argument if owner is not found",
 			args: args{
-				pod: &corev1.Pod{
-					TypeMeta: metav1.TypeMeta{
-						Kind: "Pod",
-					},
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Kind: "SomeNonExistentType",
-								UID:  "the-replicaset-uid",
-							},
+				resource: &metav1.ObjectMeta{
+					UID: "the-pod-uid",
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							Kind: "SomeNonExistentType",
+							UID:  "the-replicaset-uid",
 						},
 					},
 				},
 			},
-			want: v1alpha1.ResourceReference{
-				UID:  "the-pod-uid",
-				Kind: "Pod",
+			want: metav1.OwnerReference{
+				UID:  "",
+				Kind: "",
+				Name: "",
 			},
 		},
 	}
@@ -167,8 +86,8 @@ func TestPodMutatingWebhook_getReplicaSetOfPod(t *testing.T) {
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
-			if got := a.getReplicaSetOfPod(tt.args.pod); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getReplicaSetOfPod() = %v, want %v", got, tt.want)
+			if got := a.getOwnerReference(tt.args.resource); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getOwnerReference() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -704,11 +623,16 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		{
 			name: "Test that nothing happens if owner UID is pod UID",
 			fields: fields{
-				Log: testr.New(t),
+				Log:    testr.New(t),
+				Client: fakeClient,
 			},
 			args: args{
 				ctx: context.TODO(),
-				req: nil,
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						UID: "some-uid",

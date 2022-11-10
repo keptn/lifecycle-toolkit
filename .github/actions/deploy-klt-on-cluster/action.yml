@@ -39,7 +39,7 @@ runs:
       for image in $(ls | grep image.tar);
       do
         echo "Importing image: $image"
-        k3d image import $image/$image -c test-cluster
+        k3d image import $image/$image -c test-cluster --verbose
       done
   
   - name: Install cert-manager

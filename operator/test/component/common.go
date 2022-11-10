@@ -1,0 +1,33 @@
+package component
+
+import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/metric/unit"
+	"go.opentelemetry.io/otel/sdk/metric"
+)
+
+func initKeptnMeters() common.KeptnMeters {
+	provider := metric.NewMeterProvider()
+	meter := provider.Meter("keptn/task")
+	deploymentCount, _ := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
+	deploymentDuration, _ := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
+	taskCount, _ := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
+	taskDuration, _ := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
+	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
+	appDuration, _ := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
+	evaluationCount, _ := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
+	evaluationDuration, _ := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
+
+	meters := common.KeptnMeters{
+		TaskCount:          taskCount,
+		TaskDuration:       taskDuration,
+		DeploymentCount:    deploymentCount,
+		DeploymentDuration: deploymentDuration,
+		AppCount:           appCount,
+		AppDuration:        appDuration,
+		EvaluationCount:    evaluationCount,
+		EvaluationDuration: evaluationDuration,
+	}
+	return meters
+}

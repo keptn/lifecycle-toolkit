@@ -288,16 +288,14 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 			for _, appWorkload := range app.Spec.Workloads {
 				if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
 					workloadFound = true
-					oldVersion, err = version.NewVersion(app.Spec.Version)
+					newVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {
 						r.Log.Error(err, "could not parse version")
+						return false, latestVersion, err
 					}
-					newVersion, err := version.NewVersion(latestVersion.Spec.Version)
-					if err != nil {
-						r.Log.Error(err, "could not parse version")
-					}
-					if oldVersion.LessThan(newVersion) {
+					if newVersion.GreaterThan(oldVersion) {
 						latestVersion = app
+						oldVersion = newVersion
 					}
 				}
 			}

@@ -19,7 +19,11 @@ It is an incubating project, under the umbrella of the [Keptn Application Lifecy
 **Installation**
 
 The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
-is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, follow their [installation instructions](https://cert-manager.io/docs/installation/).
+is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, execute the following command:
+
+```console
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+```
 
 When *cert-manager* is installed, you can run
 

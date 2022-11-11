@@ -108,7 +108,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))
 					g.Expect(wi.Status.CurrentPhase).To(BeEmpty())
-				}, "10s").Should(Succeed())
+				}, "3s").Should(Succeed())
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test

@@ -11,7 +11,7 @@ on:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
 env:
-  GO_VERSION: "~1.18"
+  GO_VERSION: "~1.19"
   CONTROLLER_TOOLS_VERSION: "v0.9.2"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
@@ -59,41 +59,6 @@ jobs:
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
-  compile:
-    name: Compile
-    needs: prepare_ci_run
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        config:
-          - name: "keptn-lifecycle-operator"
-            folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
-            # Nothing to compile in functions-runtime
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
-
-      - name: Go vet
-        working-directory: ./${{ matrix.config.folder }}
-        run: go vet ./...
-
-      - name: Go fmt
-        working-directory: ./${{ matrix.config.folder }}
-        run: go fmt ./...
-
-      - name: Compile ${{ matrix.config.name }}
-        working-directory: ./${{ matrix.config.folder }}
-        run: make build
-
   test:
     name: Unit Tests
     needs: prepare_ci_run
@@ -119,8 +84,7 @@ jobs:
 
       - name: Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
-        run: |
-          make test
+        run: make test
 
       - name: Report code coverage
         uses: codecov/codecov-action@v3
@@ -129,7 +93,7 @@ jobs:
 
   build_image:
     name: Build and push Docker Image
-    needs: [ prepare_ci_run, compile, test ]
+    needs: prepare_ci_run
     runs-on: ubuntu-22.04
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -200,3 +164,26 @@ jobs:
         with:
           name: ${{ matrix.config.name }}-manifest
           path: ${{ matrix.config.folder }}/config/rendered/release.yaml
+
+  component_tests:
+    name: Component Tests
+    needs: prepare_ci_run
+    uses: ./.github/workflows/component-test.yml
+
+  integration_tests:
+    name: Integration Tests
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+    uses: ./.github/workflows/integration-test.yml
+
+  e2e_tests:
+    name: End to End Tests
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+    uses: ./.github/workflows/e2e-test.yml
+
+  performance_tests:
+    name: Performance Tests
+    needs: [ prepare_ci_run, build_image ]
+    if: needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+    uses: ./.github/workflows/performance-test.yml

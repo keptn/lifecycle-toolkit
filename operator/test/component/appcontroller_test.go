@@ -70,8 +70,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
-			instance   *klcv1alpha1.KeptnApp
-			appVersion *klcv1alpha1.KeptnAppVersion
+			instance *klcv1alpha1.KeptnApp
 		)
 		Context("with a new App CRD", func() {
 
@@ -80,7 +79,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 			})
 
 			It("should update the status of the CR ", func() {
-				appVersion = assertResourceUpdated(instance)
+				assertResourceUpdated(instance)
 			})
 			It("should update the spans", func() {
 				assertAppSpan(instance, spanRecorder)
@@ -88,7 +87,6 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
 				deleteAppInCluster(instance)
-				deleteAppVersionInCluster(appVersion)
 				// Reset span recorder after each spec
 				resetSpanRecords(tracer, spanRecorder)
 			})
@@ -98,15 +96,9 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 })
 
-func deleteAppVersionInCluster(version *klcv1alpha1.KeptnAppVersion) {
-	By("Cleaning Up Keptn AppVersion CRD")
-	Expect(k8sClient.Delete(ctx, version)).Should(Succeed())
-}
-
 func deleteAppInCluster(instance *klcv1alpha1.KeptnApp) {
 	By("Cleaning Up KeptnApp CRD ")
-	Expect(k8sClient.Delete(ctx, instance)).Should(Succeed())
-
+	k8sClient.Delete(ctx, instance)
 }
 
 func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
@@ -119,7 +111,7 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 	By("Retrieving Created app version")
 	Eventually(func() error {
 		return k8sClient.Get(ctx, appvName, appVersion)
-	}).Should(Succeed())
+	}, "20s").Should(Succeed())
 
 	By("Comparing expected app version")
 	Expect(appVersion.Spec.AppName).To(Equal(instance.Name))

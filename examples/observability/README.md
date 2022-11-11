@@ -18,7 +18,7 @@ For setting up both Jaeger and Prometheus, please refer to their docs:
 - [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator) 
 - [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md)
 
-If you don't have an already existing installation of Jaeger or Prometheus, you can run these commands to
+If you don't have an already existing installation of Jaeger [manifest](https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml) or Prometheus, you can run these commands to
 have a basic installation up and running.
 
 ```shell

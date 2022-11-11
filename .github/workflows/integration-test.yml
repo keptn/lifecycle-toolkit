@@ -1,0 +1,34 @@
+name: Integration-Test
+on:
+  workflow_call:
+env:
+  GO_VERSION: "~1.19"
+  CERT_MANAGER_VERSION: "v1.10.0"
+  KUTTL_VERSION: "0.13.0"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-integration-test:
+    name: Run Integration Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
+
+      - name: Download KUTTL
+        run: |
+          curl -fL https://github.com/kudobuilder/kuttl/releases/download/v${{ env.KUTTL_VERSION }}/kubectl-kuttl_${{ env.KUTTL_VERSION }}_linux_x86_64 -o kubectl-kuttl
+          chmod +x kubectl-kuttl
+          mv kubectl-kuttl /usr/local/bin
+
+      - name: Run Integration Tests
+        working-directory: .
+        run: make integration-test

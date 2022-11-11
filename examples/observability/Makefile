@@ -6,6 +6,14 @@ GRAFANA_PORT_FORWARD ?= 3000
 .PHONY: install
 install:undeploy-podtatohead
 	@echo "-----------------------------------"
+	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
+	@echo "-----------------------------------"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+	kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=300s
+	kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.4.0/manifest.yaml
+	kubectl wait --for=condition=available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=300s
+
+	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"
 	kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -

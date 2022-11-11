@@ -3,7 +3,7 @@
 In this example, we will show you how to install our sample application *podtatohead* using the Keptn Lifecycle Controller and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 
 # TL;DR
-* You can install ArgoCD using: `make install`
+* You can install ArgoCD and Keptn-lifecycle-toolkit using: `make install`
 * Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`
@@ -12,7 +12,7 @@ In this example, we will show you how to install our sample application *podtato
 * Watch the progress on your ArgoUI: `http://localhost:8080`. Use the `admin` user and the password from `make argo-get-password`.
 
 ## Prerequisites:
-This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-toolkit). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argo-cd.readthedocs.io/en/stable/getting_started/).
+This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-toolkit). The installation instructions can be found [here](https://github.com/keptn/lifecycle-toolkit#deploy-the-latest-release). Furthermore, you have to install ArgoCD, as in the following their [installation instructions](https://argo-cd.readthedocs.io/en/stable/getting_started/).
 
 ### Install ArgoCD
 If you don't have an already existing installation of ArgoCD, you can [install](https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.14/manifests/install.yaml) it using the following commands:

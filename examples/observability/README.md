@@ -10,8 +10,8 @@ The application deployed uses an example of pre-Deployment Evaluation based on p
 * Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action)
 
 ## Prerequisites:
-
-This tutorial assumes that you have both Jaeger and the Prometheus Operator installed in your Cluster. 
+This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-toolkit). The installation instructions can be found [here](https://github.com/keptn/lifecycle-toolkit#deploy-the-latest-release).
+As well, you have both Jaeger and the Prometheus Operator installed in your Cluster. 
 Also, please ensure that the Prometheus Operator has the required permissions to watch resources of the `keptn-lifecycle-toolkit-system` namespace (see https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/ as a reference).
 For setting up both Jaeger and Prometheus, please refer to their docs:
 

@@ -11,7 +11,7 @@ https://api.slack.com/messaging/webhooks
 Afterwards create a secret with the created webhook
 > kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":<YOUR_HOOK>,"text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml
 
-## Deploy the Observability Part
+## Deploy the Observability Part and Keptn-lifecycle-toolkit
 > make install
 
 ## Port-Forward Grafana

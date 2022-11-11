@@ -5,7 +5,7 @@ The Collector will then be used to forward the gathered data to [Jaeger](https:/
 The application deployed uses an example of pre-Deployment Evaluation based on prometheus metrics.
 
 # TL;DR
-* You can install the whole demo using: `make install`
+* You can install the whole demo including Keptn-lifecycle-toolkit using: `make install`
 * Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
 * Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action)
 

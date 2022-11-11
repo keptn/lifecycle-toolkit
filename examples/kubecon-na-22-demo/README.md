@@ -15,7 +15,7 @@ Afterwards create a secret with the created webhook
 > make install
 
 ## Port-Forward Grafana
-> make port-forward-grafana GRAFANA_PORT_FORWARD=3000
+> make port-forward-grafana
 
 If you wanto to port-forward to a different port, please execute:
 > make port-forward-grafana GRAFANA_PORT_FORWARD=<port>

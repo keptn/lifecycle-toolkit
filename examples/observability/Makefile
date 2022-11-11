@@ -1,9 +1,18 @@
 JAEGER_VERSION ?= v1.38.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
+GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
 install:undeploy-podtatohead
+	@echo "-----------------------------------"
+	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
+	@echo "-----------------------------------"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+	kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=300s
+	kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.4.0/manifest.yaml #x-release-please-version
+	kubectl wait --for=condition=available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=300s
+
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"
@@ -83,19 +92,19 @@ port-forward-prometheus:
 .PHONY: port-forward-grafana
 port-forward-grafana:
 	@echo ""
-	@echo "Open Grafana in your Browser: http://localhost:3000"
+	@echo "Open Grafana in your Browser: http://localhost:$(GRAFANA_PORT_FORWARD)"
 	@echo "CTRL-c to stop port-forward"
 	@echo ""
-	kubectl -n monitoring port-forward svc/grafana 3000
+	kubectl -n monitoring port-forward svc/grafana $(GRAFANA_PORT_FORWARD):3000
 
 .PHONY: import-grafana-dashboard
 import-grafana-dashboard:
 	@echo ""
 	@echo "Importing Grafana Dashboard and Datasources"
 	@echo ""
-	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_overview.json
-	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_workloads.json
-	curl -X POST --insecure http://admin:admin@localhost:3000/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_applications.json
+	curl -X POST --insecure http://admin:admin@localhost:$(GRAFANA_PORT_FORWARD)/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_overview.json
+	curl -X POST --insecure http://admin:admin@localhost:$(GRAFANA_PORT_FORWARD)/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_workloads.json
+	curl -X POST --insecure http://admin:admin@localhost:$(GRAFANA_PORT_FORWARD)/api/dashboards/import -H "Content-Type: application/json" -d @./assets/grafana_dashboard_applications.json
 
 .PHONY: uninstall
 uninstall:

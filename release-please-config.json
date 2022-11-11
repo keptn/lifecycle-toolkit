@@ -10,7 +10,9 @@
       "draft": false,
       "extra-files": [
         "README.md",
-        "operator/config/manager/manager.yaml"
+        "operator/config/manager/manager.yaml",
+        "examples/argo/Makefile",
+        "examples/observability/Makefile"
       ],
       "changelog-sections": [
         {

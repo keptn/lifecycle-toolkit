@@ -5,8 +5,16 @@ metadata:
 spec:
   taskDefinition: hello-keptn-inline
   workload: my-workload
-  version: "1.0"
-  application: my-app
+  appVersion: "1.0"
+  app: my-app
+  workloadVersion: "1.0"
+  context:
+    appName: my-app
+    appVersion: "1.0"
+    objectType: "task"
+    taskType: "pre"
+    workloadName: "my-workload"
+    workloadVersion: "1.0"
   parameters:
     map:
       name: "Keptn Developer 1"

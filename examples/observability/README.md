@@ -5,13 +5,13 @@ The Collector will then be used to forward the gathered data to [Jaeger](https:/
 The application deployed uses an example of pre-Deployment Evaluation based on prometheus metrics.
 
 # TL;DR
-* You can install the whole demo using: `make install`
+* You can install the whole demo including Keptn-lifecycle-toolkit using: `make install`
 * Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`
 * Afterward, see it in action as defined here: [OpenTelemetry in Action](#seeing-the-opentelemetry-collector-in-action)
 
 ## Prerequisites:
-
-This tutorial assumes that you have both Jaeger and the Prometheus Operator installed in your Cluster. 
+This tutorial assumes, that you already installed the Keptn Lifecycle Controller (see https://github.com/keptn/lifecycle-toolkit). The installation instructions can be found [here](https://github.com/keptn/lifecycle-toolkit#deploy-the-latest-release).
+As well, you have both Jaeger and the Prometheus Operator installed in your Cluster. 
 Also, please ensure that the Prometheus Operator has the required permissions to watch resources of the `keptn-lifecycle-toolkit-system` namespace (see https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/ as a reference).
 For setting up both Jaeger and Prometheus, please refer to their docs:
 

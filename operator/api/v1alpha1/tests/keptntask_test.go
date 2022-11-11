@@ -69,4 +69,13 @@ func TestKeptnTask(t *testing.T) {
 		"keptn.sh/version":   "workloadversion",
 	}, task.CreateKeptnLabels())
 
+	require.Equal(t, []attribute.KeyValue{
+		common.AppName.String("app"),
+		common.AppVersion.String("appversion"),
+		common.WorkloadName.String("workload"),
+		common.WorkloadVersion.String("workloadversion"),
+		common.TaskName.String("task"),
+		common.TaskType.String(string(common.PostDeploymentCheckType)),
+	}, task.GetSpanAttributes())
+
 }

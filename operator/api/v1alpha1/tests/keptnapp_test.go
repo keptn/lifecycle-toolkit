@@ -4,7 +4,9 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -37,4 +39,9 @@ func TestKeptnApp(t *testing.T) {
 			PreviousVersion: "prev",
 		},
 	}, appVersion)
+
+	require.Equal(t, []attribute.KeyValue{
+		common.AppName.String("app"),
+		common.WorkloadVersion.String("version"),
+	}, app.GetSpanAttributes())
 }

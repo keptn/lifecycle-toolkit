@@ -144,12 +144,10 @@ func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 }
 
 func (t KeptnTask) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(common.AppName.String(t.Spec.AppName))
-	span.SetAttributes(common.AppVersion.String(t.Spec.AppVersion))
-	span.SetAttributes(common.WorkloadName.String(t.Spec.Workload))
-	span.SetAttributes(common.WorkloadVersion.String(t.Spec.WorkloadVersion))
-	span.SetAttributes(common.TaskName.String(t.Name))
-	span.SetAttributes(common.TaskType.String(string(t.Spec.Type)))
+	attributes := t.GetSpanAttributes()
+	for _, attribute := range attributes {
+		span.SetAttributes(attribute)
+	}
 }
 
 func (t KeptnTask) CreateKeptnLabels() map[string]string {
@@ -165,5 +163,16 @@ func (t KeptnTask) CreateKeptnLabels() map[string]string {
 		common.AppAnnotation:      t.Spec.AppName,
 		common.VersionAnnotation:  t.Spec.AppVersion,
 		common.TaskNameAnnotation: t.Name,
+	}
+}
+
+func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(t.Spec.AppName),
+		common.AppVersion.String(t.Spec.AppVersion),
+		common.WorkloadName.String(t.Spec.Workload),
+		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.TaskName.String(t.Name),
+		common.TaskType.String(string(t.Spec.Type)),
 	}
 }

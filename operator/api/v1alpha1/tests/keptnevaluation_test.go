@@ -58,4 +58,13 @@ func TestKeptnEvaluation(t *testing.T) {
 		Status: common.StatePending,
 	}, evaluation.Status.EvaluationStatus["objName"])
 
+	require.Equal(t, []attribute.KeyValue{
+		common.AppName.String("app"),
+		common.AppVersion.String("appversion"),
+		common.WorkloadName.String(""),
+		common.WorkloadVersion.String(""),
+		common.EvaluationName.String("evaluation"),
+		common.EvaluationType.String(string(common.PostDeploymentCheckType)),
+	}, evaluation.GetSpanAttributes())
+
 }

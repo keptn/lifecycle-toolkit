@@ -322,9 +322,10 @@ func (v KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier
 }
 
 func (v KeptnAppVersion) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(common.AppName.String(v.GetParentName()))
-	span.SetAttributes(common.AppVersion.String(v.GetVersion()))
-	span.SetAttributes(common.WorkloadVersion.String(v.GetVersion()))
+	attributes := v.GetSpanAttributes()
+	for _, attribute := range attributes {
+		span.SetAttributes(attribute)
+	}
 }
 
 func (v KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {

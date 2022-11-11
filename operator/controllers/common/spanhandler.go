@@ -29,10 +29,7 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	}
 	spanName := piWrapper.GetSpanName(phase)
 	ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
-	attributes := piWrapper.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	piWrapper.SetSpanAttributes(span)
 	r.bindCRDSpan[appvName] = span
 	return ctx, span, nil
 }

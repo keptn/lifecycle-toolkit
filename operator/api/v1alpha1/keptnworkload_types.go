@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -81,8 +82,10 @@ func (w KeptnWorkload) GetWorkloadInstanceName() string {
 }
 
 func (v KeptnWorkload) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(common.AppName.String(v.Name))
-	span.SetAttributes(common.WorkloadVersion.String(v.Spec.Version))
+	attributes := v.GetSpanAttributes()
+	for _, attribute := range attributes {
+		span.SetAttributes(attribute)
+	}
 }
 
 func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {
@@ -97,5 +100,12 @@ func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceCon
 			WorkloadName:      v.Name,
 			PreviousVersion:   previousVersion,
 		},
+	}
+}
+
+func (i KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(i.Name),
+		common.WorkloadVersion.String(i.Spec.Version),
 	}
 }

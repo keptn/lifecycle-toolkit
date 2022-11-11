@@ -153,10 +153,19 @@ func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
 }
 
 func (t KeptnEvaluation) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(common.AppName.String(t.Spec.AppName))
-	span.SetAttributes(common.AppVersion.String(t.Spec.AppVersion))
-	span.SetAttributes(common.WorkloadName.String(t.Spec.Workload))
-	span.SetAttributes(common.WorkloadVersion.String(t.Spec.WorkloadVersion))
-	span.SetAttributes(common.EvaluationName.String(t.Name))
-	span.SetAttributes(common.EvaluationType.String(string(t.Spec.Type)))
+	attributes := t.GetSpanAttributes()
+	for _, attribute := range attributes {
+		span.SetAttributes(attribute)
+	}
+}
+
+func (t KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(t.Spec.AppName),
+		common.AppVersion.String(t.Spec.AppVersion),
+		common.WorkloadName.String(t.Spec.Workload),
+		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.EvaluationName.String(t.Name),
+		common.EvaluationType.String(string(t.Spec.Type)),
+	}
 }

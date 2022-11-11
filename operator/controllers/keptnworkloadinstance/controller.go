@@ -277,11 +277,24 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
 		return false, klcv1alpha1.KeptnAppVersion{}, err
 	}
-	latestVersion := klcv1alpha1.KeptnAppVersion{}
-	oldVersion, err := version.NewVersion("0.0.0")
+
+	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
+		r.Log.Error(err, "could not look  up KeptnAppVersion for WorkloadInstance")
 		return false, latestVersion, err
 	}
+
+	if latestVersion.Spec.Version == "" || !workloadFound {
+		return false, klcv1alpha1.KeptnAppVersion{}, nil
+	}
+	return true, latestVersion, nil
+}
+
+func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
+	latestVersion := klcv1alpha1.KeptnAppVersion{}
+	// ignore the potential error since this can not return an error with 0.0.0
+	oldVersion, _ := version.NewVersion("0.0.0")
+
 	workloadFound := false
 	for _, app := range apps.Items {
 		if app.Spec.AppName == wli.Spec.AppName {
@@ -290,8 +303,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 					workloadFound = true
 					newVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {
-						r.Log.Error(err, "could not parse version")
-						return false, latestVersion, err
+						return false, klcv1alpha1.KeptnAppVersion{}, err
 					}
 					if newVersion.GreaterThan(oldVersion) {
 						latestVersion = app
@@ -301,9 +313,5 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 			}
 		}
 	}
-
-	if latestVersion.Spec.Version == "" || !workloadFound {
-		return false, klcv1alpha1.KeptnAppVersion{}, nil
-	}
-	return true, latestVersion, nil
+	return workloadFound, latestVersion, nil
 }

@@ -89,7 +89,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					},
 					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
 						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{},
-						WorkloadName:      "app-wname-" + wiName,
+						WorkloadName:      "wi-test-app-wname-" + wiName,
 						TraceId:           map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
@@ -97,7 +97,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err := k8sClient.Create(context.TODO(), wi)
 				Expect(err).To(BeNil())
 
-				By("Ensuring WorkloadInstance ends up in a failed state")
+				By("Ensuring WorkloadInstance does not progress to next phase")
 				wiNameObj := types.NamespacedName{
 					Namespace: wi.Namespace,
 					Name:      wi.Name,
@@ -134,7 +134,7 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 				Version: version,
 				Workloads: []klcv1alpha1.KeptnWorkloadRef{
 					{
-						Name:    "app-wname",
+						Name:    "wi-test-app-wname",
 						Version: "2.0",
 					},
 				},

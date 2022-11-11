@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: podtato-kubectl
+  name: single-service
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
 ---

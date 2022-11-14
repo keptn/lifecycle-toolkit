@@ -68,6 +68,7 @@ type KeptnWorkloadList struct {
 type ResourceReference struct {
 	UID  types.UID `json:"uid"`
 	Kind string    `json:"kind"`
+	Name string    `json:"name"`
 }
 
 func init() {

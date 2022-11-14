@@ -146,7 +146,12 @@ func initWorkloadInstance() *testv1alpha1.KeptnWorkloadInstance {
 			APIVersion: "lifecycle.keptn.sh/v1alpha1",
 		},
 		ObjectMeta: metav1.ObjectMeta{Name: "myapp-myworkload-1.0.0", Namespace: "default"},
-		Status:     testv1alpha1.KeptnWorkloadInstanceStatus{PreDeploymentEvaluationStatus: "Succeeded"},
+		Spec: testv1alpha1.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: testv1alpha1.KeptnWorkloadSpec{
+				ResourceReference: testv1alpha1.ResourceReference{Name: "myfakeres"},
+			},
+		},
+		Status: testv1alpha1.KeptnWorkloadInstanceStatus{},
 	}
 
 	return &fakeInstance

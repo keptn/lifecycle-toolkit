@@ -2,7 +2,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnWorkload
 metadata:
   name: work-work
-  namespace: test-annotation
 
 ---
 

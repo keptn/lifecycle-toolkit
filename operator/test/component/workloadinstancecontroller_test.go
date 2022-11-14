@@ -2,7 +2,6 @@ package component
 
 import (
 	"context"
-	"fmt"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -165,10 +164,10 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, appVersion)
 				Expect(err).To(BeNil())
 
-				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Name}, appVersion)
+				By("Bringing the StatefulSet into its ready state")
+				statefulSet.Status.ReadyReplicas = 1
+				err = k8sClient.Status().Update(ctx, statefulSet)
 				Expect(err).To(BeNil())
-				// TODO remove this log
-				fmt.Println("app version status:" + appVersion.Status.PreDeploymentEvaluationStatus)
 
 				By("Looking up the StatefulSet to retrieve its UID")
 				err = k8sClient.Get(ctx, types.NamespacedName{

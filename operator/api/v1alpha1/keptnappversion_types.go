@@ -355,3 +355,7 @@ func (a KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
 		common.AppNamespace.String(a.Namespace),
 	}
 }
+
+func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
+	return fmt.Sprintf("%s-%s", v.Spec.AppName, workloadName)
+}

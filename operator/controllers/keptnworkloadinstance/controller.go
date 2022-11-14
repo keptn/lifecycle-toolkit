@@ -19,7 +19,6 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -274,35 +273,45 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, app
 func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
 	apps := &klcv1alpha1.KeptnAppVersionList{}
 
+	// TODO add label selector for looking up by name?
 	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
 		return false, klcv1alpha1.KeptnAppVersion{}, err
 	}
+
+	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
+	if err != nil {
+		r.Log.Error(err, "could not look  up KeptnAppVersion for WorkloadInstance")
+		return false, latestVersion, err
+	}
+
+	if latestVersion.Spec.Version == "" || !workloadFound {
+		return false, klcv1alpha1.KeptnAppVersion{}, nil
+	}
+	return true, latestVersion, nil
+}
+
+func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {
 	latestVersion := klcv1alpha1.KeptnAppVersion{}
+	// ignore the potential error since this can not return an error with 0.0.0
+	oldVersion, _ := version.NewVersion("0.0.0")
+
+	workloadFound := false
 	for _, app := range apps.Items {
 		if app.Spec.AppName == wli.Spec.AppName {
-
 			for _, appWorkload := range app.Spec.Workloads {
-				if !reflect.DeepEqual(latestVersion, app) {
-					latestVersion = app
-				} else if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
-					oldVersion, err := version.NewVersion(app.Spec.Version)
+				if appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName {
+					workloadFound = true
+					newVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {
-						r.Log.Error(err, "could not parse version")
+						return false, klcv1alpha1.KeptnAppVersion{}, err
 					}
-					newVersion, err := version.NewVersion(latestVersion.Spec.Version)
-					if err != nil {
-						r.Log.Error(err, "could not parse version")
-					}
-					if oldVersion.LessThan(newVersion) {
+					if newVersion.GreaterThan(oldVersion) {
 						latestVersion = app
+						oldVersion = newVersion
 					}
 				}
 			}
 		}
 	}
-
-	if latestVersion.Spec.Version == "" {
-		return false, klcv1alpha1.KeptnAppVersion{}, nil
-	}
-	return true, latestVersion, nil
+	return workloadFound, latestVersion, nil
 }

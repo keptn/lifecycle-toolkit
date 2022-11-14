@@ -18,6 +18,11 @@ import (
 
 func getPodTemplateSpec() corev1.PodTemplateSpec {
 	return corev1.PodTemplateSpec{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				"app": "nginx",
+			},
+		},
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
 				{
@@ -137,6 +142,11 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					},
 					Spec: appsv1.StatefulSetSpec{
 						Replicas: &repl,
+						Selector: &metav1.LabelSelector{
+							MatchLabels: map[string]string{
+								"app": "nginx",
+							},
+						},
 						Template: getPodTemplateSpec(),
 					},
 				}

@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: statefultest
+  name: statefultest
+  namespace: test-annotation
+status:
+  availableReplicas: 1
+  readyReplicas: 1

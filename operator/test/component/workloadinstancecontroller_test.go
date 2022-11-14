@@ -162,7 +162,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
 				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
-				err = k8sClient.Update(ctx, appVersion)
+				err = k8sClient.Status().Update(ctx, appVersion)
 				Expect(err).To(BeNil())
 
 				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Name}, appVersion)

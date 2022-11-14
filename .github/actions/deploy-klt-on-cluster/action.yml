@@ -53,6 +53,7 @@ runs:
   - name: Install lifecycle-toolkit
     shell: bash
     run: |
+      sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test
       kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest-test
       kubectl apply -f ~/download/artifacts/scheduler-manifest-test
       sleep 5

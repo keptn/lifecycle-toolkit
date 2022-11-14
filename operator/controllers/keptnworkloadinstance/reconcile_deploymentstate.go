@@ -2,6 +2,8 @@ package keptnworkloadinstance
 
 import (
 	"context"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	appsv1 "k8s.io/api/apps/v1"
@@ -11,60 +13,44 @@ import (
 )
 
 func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (common.KeptnState, error) {
-	if workloadInstance.Spec.ResourceReference.Kind == "Pod" {
-		isPodRunning, err := r.isPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
-		if err != nil {
-			return common.StateUnknown, err
-		}
-		if isPodRunning {
-			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
-		} else {
-			workloadInstance.Status.DeploymentStatus = common.StateProgressing
-		}
-	} else {
-		isReplicaRunning, err := r.isReferencedWorkloadRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
-		if err != nil {
-			return common.StateUnknown, err
-		}
-		if isReplicaRunning {
-			workloadInstance.Status.DeploymentStatus = common.StateSucceeded
-		} else {
-			workloadInstance.Status.DeploymentStatus = common.StateProgressing
-		}
+	var isRunning bool
+	var err error
+
+	switch workloadInstance.Spec.ResourceReference.Kind {
+	case "Pod":
+		isRunning, err = r.isPodRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	case "ReplicaSet":
+		isRunning, err = r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	case "StatefulSet":
+		isRunning, err = r.isStatefulSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	default:
+		isRunning, err = false, controllercommon.ErrUnsupportedWorkloadInstanceResourceReference
 	}
 
-	err := r.Client.Status().Update(ctx, workloadInstance)
+	if err != nil {
+		return common.StateUnknown, err
+	}
+	if isRunning {
+		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
+	} else {
+		workloadInstance.Status.DeploymentStatus = common.StateProgressing
+	}
+
+	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		return common.StateUnknown, err
 	}
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isReferencedWorkloadRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 
-	var replicas *int32
-	var desiredReplicas int32
-	switch resource.Kind {
-	case "ReplicaSet":
-		rep := appsv1.ReplicaSet{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
-		if err != nil {
-			return false, err
-		}
-		replicas = rep.Spec.Replicas
-		desiredReplicas = rep.Status.AvailableReplicas
-	case "StatefulSet":
-		sts := appsv1.StatefulSet{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
-		if err != nil {
-			return false, err
-		}
-		replicas = sts.Spec.Replicas
-		desiredReplicas = sts.Status.AvailableReplicas
+func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+	rep := appsv1.ReplicaSet{}
+	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
+	if err != nil {
+		return false, err
 	}
-
-	return *replicas == desiredReplicas, nil
-
+	return *rep.Spec.Replicas == rep.Status.AvailableReplicas, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
@@ -81,4 +67,13 @@ func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, reso
 		}
 	}
 	return false, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+	sts := appsv1.StatefulSet{}
+	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
+	if err != nil {
+		return false, err
+	}
+	return *sts.Spec.Replicas == sts.Status.AvailableReplicas, nil
 }

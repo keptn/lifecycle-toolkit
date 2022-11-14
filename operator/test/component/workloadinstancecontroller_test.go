@@ -63,12 +63,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []keptncontroller.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
-			Log:      GinkgoLogr,
-			Meters:   initKeptnMeters(),
-			Tracer:   tracer.Tracer("test-app-tracer"),
+			Client:      k8sManager.GetClient(),
+			Scheme:      k8sManager.GetScheme(),
+			Recorder:    k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:         GinkgoLogr,
+			Meters:      initKeptnMeters(),
+			SpanHandler: &keptncontroller.SpanHandler{},
+			Tracer:      tracer.Tracer("test-app-tracer"),
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 		// so that they have a different span/trace
@@ -175,13 +176,18 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
 							ResourceReference: klcv1alpha1.ResourceReference{
 								UID:  statefulSet.UID,
-								Kind: statefulSet.Kind,
+								Kind: "StatefulSet",
 							},
+							Version: "2.0",
+							AppName: appVersion.GetAppName(),
 						},
-						WorkloadName: "wi-test-app-wname",
+						WorkloadName: "test-app-wname",
 						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
+
+				err = k8sClient.Create(context.TODO(), wi)
+				Expect(err).To(BeNil())
 
 				wiNameObj := types.NamespacedName{
 					Namespace: wi.Namespace,
@@ -192,7 +198,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
-				}, "10s")
+				}, "20s").Should(Succeed())
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
@@ -214,11 +220,12 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha1.KeptnAppVersionSpec{
+			AppName: name,
 			KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
 				Version: version,
 				Workloads: []klcv1alpha1.KeptnWorkloadRef{
 					{
-						Name:    "wi-test-app-wname",
+						Name:    "wname",
 						Version: "2.0",
 					},
 				},

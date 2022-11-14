@@ -7,3 +7,10 @@ metadata:
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
 
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-annotation
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled"

@@ -231,6 +231,9 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 				},
 			},
 		},
+		Status: klcv1alpha1.KeptnAppVersionStatus{
+			PreDeploymentEvaluationStatus: common.StateSucceeded,
+		},
 	}
 	By("Invoking Reconciling for Create")
 

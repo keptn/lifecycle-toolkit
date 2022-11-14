@@ -39,10 +39,11 @@ const (
 	StateFailed      KeptnState = "Failed"
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
+	StateCancelled   KeptnState = "Cancelled"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed
+	return k == StateSucceeded || k == StateFailed || k == StateCancelled
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -51,6 +52,10 @@ func (k KeptnState) IsSucceeded() bool {
 
 func (k KeptnState) IsFailed() bool {
 	return k == StateFailed
+}
+
+func (k KeptnState) IsCancelled() bool {
+	return k == StateCancelled
 }
 
 func (k KeptnState) IsPending() bool {
@@ -64,12 +69,15 @@ type StatusSummary struct {
 	succeeded   int
 	pending     int
 	unknown     int
+	cancelled   int
 }
 
 func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary {
 	switch status {
 	case StateFailed:
 		summary.failed++
+	case StateCancelled:
+		summary.cancelled++
 	case StateSucceeded:
 		summary.succeeded++
 	case StateProgressing:
@@ -87,7 +95,7 @@ func (s StatusSummary) GetTotalCount() int {
 }
 
 func GetOverallState(s StatusSummary) KeptnState {
-	if s.failed > 0 {
+	if s.failed > 0 || s.cancelled > 0 {
 		return StateFailed
 	}
 	if s.progressing > 0 {

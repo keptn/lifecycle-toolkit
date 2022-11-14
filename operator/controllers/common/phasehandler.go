@@ -38,6 +38,9 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
+	if oldStatus.IsCancelled() {
+		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}
 	piWrapper.SetCurrentPhase(phase.ShortName)
 
 	r.Log.Info(phase.LongName + " not finished")
@@ -82,6 +85,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 				r.Log.Error(err, "cannot unbind span")
 			}
 			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
+			piWrapper.CancelRemainingPhases(phase)
 			return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 		}
 

@@ -44,6 +44,7 @@ type PhaseItem interface {
 	GetSpanKey(phase string) string
 	GetSpanName(phase string) string
 	SetSpanAttributes(span trace.Span)
+	CancelRemainingPhases(phase common.KeptnPhaseType)
 }
 
 type PhaseItemWrapper struct {
@@ -176,6 +177,10 @@ func (pw PhaseItemWrapper) GetSpanKey(phase string) string {
 
 func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 	return pw.Obj.GetSpanName(phase)
+}
+
+func (pw PhaseItemWrapper) CancelRemainingPhases(phase common.KeptnPhaseType) {
+	pw.Obj.CancelRemainingPhases(phase)
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

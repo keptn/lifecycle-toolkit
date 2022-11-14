@@ -394,3 +394,20 @@ func (w KeptnWorkloadInstance) GetSpanName(phase string) string {
 func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(w.GetSpanAttributes()...)
 }
+
+func (w *KeptnWorkloadInstance) CancelRemainingPhases(phase common.KeptnPhaseType) {
+	// no need to cancel anything when post-eval tasks fail
+	if phase == common.PhaseWorkloadPostEvaluation {
+		return
+	}
+	//cancel everything if app pre-eval tasks have failed
+	if phase == common.PhaseAppPreEvaluation {
+		w.Status.PreDeploymentStatus = common.StateCancelled
+		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+	}
+	//cancel deployment and post-deployment tasks if workload pre-eval tasks have failed
+	w.Status.DeploymentStatus = common.StateCancelled
+	w.Status.PostDeploymentStatus = common.StateCancelled
+	w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	w.Status.Status = common.StateFailed
+}

@@ -180,7 +180,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for pre-evaluation checks of Workload
-	phase = common.PhaseAppPreEvaluation
+	phase = common.PhaseWorkloadPreEvaluation
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
@@ -216,7 +216,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-evaluation checks of Workload
-	phase = common.PhaseAppPostEvaluation
+	phase = common.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)

@@ -22,7 +22,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -97,7 +96,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkloadInstance(span, *workloadInstance)
+	workloadInstance.SetSpanAttributes(span)
 
 	workloadInstance.SetStartTime()
 
@@ -165,7 +164,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		if err != nil {
 			r.Log.Error(err, "could not get span")
 		}
-		semconv.AddAttributeFromWorkloadInstance(spanAppTrace, *workloadInstance)
+		workloadInstance.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}
@@ -181,7 +180,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for pre-evaluation checks of Workload
-	phase = common.PhaseAppPreEvaluation
+	phase = common.PhaseWorkloadPreEvaluation
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
@@ -217,7 +216,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-evaluation checks of Workload
-	phase = common.PhaseAppPostEvaluation
+	phase = common.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)

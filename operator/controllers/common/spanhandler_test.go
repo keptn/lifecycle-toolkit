@@ -2,11 +2,12 @@ package common
 
 import (
 	"context"
+	"testing"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"testing"
 )
 
 func TestSpanHandler_GetAndUnbindSpan_WorkloadInstance(t *testing.T) {

@@ -19,6 +19,9 @@ package v1alpha1
 import (
 	"strings"
 
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -70,6 +73,32 @@ func init() {
 	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
 }
 
-func (w KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(w.Name + "-" + w.Spec.Version)
+func (a KeptnApp) GetAppVersionName() string {
+	return strings.ToLower(a.Name + "-" + a.Spec.Version)
+}
+
+func (a KeptnApp) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(a.GetSpanAttributes()...)
+}
+
+func (a KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {
+	return KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: traceContextCarrier,
+			Name:        a.GetAppVersionName(),
+			Namespace:   a.Namespace,
+		},
+		Spec: KeptnAppVersionSpec{
+			KeptnAppSpec:    a.Spec,
+			AppName:         a.Name,
+			PreviousVersion: previousVersion,
+		},
+	}
+}
+
+func (a KeptnApp) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(a.Name),
+		common.AppVersion.String(a.Spec.Version),
+	}
 }

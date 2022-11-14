@@ -39,8 +39,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KeptnAppReconciler reconciles a KeptnApp object
@@ -87,7 +85,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	ctx, span := r.Tracer.Start(ctx, "reconcile_app", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromApp(span, *app)
+	app.SetSpanAttributes(span)
 
 	r.Log.Info("Reconciling Keptn App", "app", app.Name)
 
@@ -141,8 +139,8 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, "appversion_deployment", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer spanAppTrace.End()
 
-	semconv.AddAttributeFromApp(span, *app)
-	semconv.AddAttributeFromApp(spanAppTrace, *app)
+	app.SetSpanAttributes(span)
+	app.SetSpanAttributes(spanAppTrace)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
@@ -156,23 +154,12 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 		previousVersion = app.Status.CurrentVersion
 	}
 
-	appVersion := &klcv1alpha1.KeptnAppVersion{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        app.GetAppVersionName(),
-			Namespace:   app.Namespace,
-		},
-		Spec: klcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec:    app.Spec,
-			AppName:         app.Name,
-			PreviousVersion: previousVersion,
-			TraceId:         appTraceContextCarrier,
-		},
-	}
-	err := controllerutil.SetControllerReference(app, appVersion, r.Scheme)
+	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
+	appVersion.Spec.TraceId = appTraceContextCarrier
+	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for AppVersion: "+appVersion.Name)
 	}
 
-	return appVersion, err
+	return &appVersion, err
 }

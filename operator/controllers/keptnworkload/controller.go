@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -30,7 +29,6 @@ import (
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -86,7 +84,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	ctx, span := r.Tracer.Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkload(span, *workload)
+	workload.SetSpanAttributes(span)
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
@@ -136,7 +134,7 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	semconv.AddAttributeFromWorkload(span, *workload)
+	workload.SetSpanAttributes(span)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
@@ -148,22 +146,11 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		previousVersion = workload.Status.CurrentVersion
 	}
 
-	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        workload.GetWorkloadInstanceName(),
-			Namespace:   workload.Namespace,
-		},
-		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: workload.Spec,
-			WorkloadName:      workload.Name,
-			PreviousVersion:   previousVersion,
-		},
-	}
-	err := controllerutil.SetControllerReference(workload, workloadInstance, r.Scheme)
+	workloadInstance := workload.GenerateWorkloadInstance(previousVersion, traceContextCarrier)
+	err := controllerutil.SetControllerReference(workload, &workloadInstance, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
 	}
 
-	return workloadInstance, err
+	return &workloadInstance, err
 }

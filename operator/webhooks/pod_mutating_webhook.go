@@ -194,7 +194,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	newWorkload := a.generateWorkload(ctx, pod, namespace)
 
-	semconv.AddAttributeFromWorkload(span, *newWorkload)
+	newWorkload.SetSpanAttributes(span)
 
 	logger.Info("Searching for workload")
 
@@ -248,7 +248,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 
 	newApp := a.generateApp(ctx, pod, namespace)
 
-	semconv.AddAttributeFromApp(span, *newApp)
+	newApp.SetSpanAttributes(span)
 
 	logger.Info("Searching for app")
 

@@ -23,7 +23,6 @@ import (
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -102,7 +101,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		span.End()
 	}(span, appVersion)
 
-	semconv.AddAttributeFromAppVersion(span, *appVersion)
+	appVersion.SetSpanAttributes(span)
 
 	phase := common.PhaseAppPreDeployment
 
@@ -123,7 +122,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.Log.Error(err, "could not get span")
 		}
 
-		semconv.AddAttributeFromAppVersion(spanAppTrace, *appVersion)
+		appVersion.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Started", "have started", appVersion.GetVersion())
 	}

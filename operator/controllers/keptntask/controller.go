@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -76,7 +76,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromTask(span, *task)
+	task.SetSpanAttributes(span)
 
 	task.SetStartTime()
 
@@ -147,7 +147,7 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}
-	for k, v := range createKeptnLabels(task) {
+	for k, v := range task.CreateKeptnLabels() {
 		jobLabels[k] = v
 	}
 

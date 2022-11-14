@@ -45,7 +45,6 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 )
 
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
@@ -93,7 +92,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	ctx, span := r.Tracer.Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
-	semconv.AddAttributeFromEvaluation(span, *evaluation)
+	evaluation.SetSpanAttributes(span)
 
 	evaluation.SetStartTime()
 

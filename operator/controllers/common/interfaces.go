@@ -3,31 +3,47 @@ package common
 import (
 	"time"
 
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate moq -pkg common_mock --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
+//go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
 type PhaseItem interface {
-	GetState() common.KeptnState
-	SetState(common.KeptnState)
+	GetState() apicommon.KeptnState
+	SetState(apicommon.KeptnState)
 	GetCurrentPhase() string
 	SetCurrentPhase(string)
 	GetVersion() string
+	GetActiveMetricsAttributes() []attribute.KeyValue
+	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetMetricsAttributes() []attribute.KeyValue
 	GetSpanAttributes() []attribute.KeyValue
 	GetSpanKey(phase string) string
-	GetActiveMetricsAttributes() []attribute.KeyValue
 	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
-	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetEndTime() time.Time
 	GetStartTime() time.Time
 	GetPreviousVersion() string
 	GetParentName() string
 	GetNamespace() string
+	GetAppName() string
+	GetPreDeploymentTasks() []string
+	GetPostDeploymentTasks() []string
+	GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus
+	GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus
+	GetPreDeploymentEvaluations() []string
+	GetPostDeploymentEvaluations() []string
+	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
+	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
+	GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
+	GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation
+	SetSpanAttributes(span trace.Span)
 }
 
 type PhaseItemWrapper struct {
@@ -42,11 +58,11 @@ func NewPhaseItemWrapperFromClientObject(object client.Object) (*PhaseItemWrappe
 	return &PhaseItemWrapper{Obj: pi}, nil
 }
 
-func (pw PhaseItemWrapper) GetState() common.KeptnState {
+func (pw PhaseItemWrapper) GetState() apicommon.KeptnState {
 	return pw.Obj.GetState()
 }
 
-func (pw *PhaseItemWrapper) SetState(state common.KeptnState) {
+func (pw *PhaseItemWrapper) SetState(state apicommon.KeptnState) {
 	pw.Obj.SetState(state)
 }
 
@@ -56,10 +72,6 @@ func (pw PhaseItemWrapper) GetCurrentPhase() string {
 
 func (pw *PhaseItemWrapper) SetCurrentPhase(phase string) {
 	pw.Obj.SetCurrentPhase(phase)
-}
-
-func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetMetricsAttributes()
 }
 
 func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
@@ -90,10 +102,6 @@ func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 	return pw.Obj.GetSpanName(phase)
 }
 
-func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
-	return pw.Obj.GetSpanAttributes()
-}
-
 func (pw PhaseItemWrapper) IsEndTimeSet() bool {
 	return pw.Obj.IsEndTimeSet()
 }
@@ -110,8 +118,64 @@ func (pw PhaseItemWrapper) GetNamespace() string {
 	return pw.Obj.GetNamespace()
 }
 
+func (pw PhaseItemWrapper) GetPreDeploymentTasks() []string {
+	return pw.Obj.GetPreDeploymentTasks()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentTasks() []string {
+	return pw.Obj.GetPostDeploymentTasks()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []klcv1alpha1.TaskStatus {
+	return pw.Obj.GetPreDeploymentTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1alpha1.TaskStatus {
+	return pw.Obj.GetPostDeploymentTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluations() []string {
+	return pw.Obj.GetPreDeploymentEvaluations()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluations() []string {
+	return pw.Obj.GetPostDeploymentEvaluations()
+}
+
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus {
+	return pw.Obj.GetPreDeploymentEvaluationTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus {
+	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
+}
+
+func (pw PhaseItemWrapper) GetAppName() string {
+	return pw.Obj.GetAppName()
+}
+
 func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return pw.Obj.GetActiveMetricsAttributes()
+}
+
+func (pw PhaseItemWrapper) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
+	return pw.Obj.GenerateTask(traceContextCarrier, taskDefinition, checkType)
+}
+
+func (pw PhaseItemWrapper) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation {
+	return pw.Obj.GenerateEvaluation(traceContextCarrier, evaluationDefinition, checkType)
+}
+
+func (pw PhaseItemWrapper) SetSpanAttributes(span trace.Span) {
+	pw.Obj.SetSpanAttributes(span)
+}
+
+func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
+	return pw.Obj.GetSpanAttributes()
+}
+
+func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
+	return pw.Obj.GetMetricsAttributes()
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
@@ -122,6 +186,7 @@ func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItem
 	return &ListItemWrapper{Obj: pi}, nil
 }
 
+//go:generate moq -pkg fake --skip-ensure -out ./fake/listitem_mock.go . ListItem
 type ListItem interface {
 	GetItems() []client.Object
 }

@@ -24,6 +24,8 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -100,9 +102,9 @@ type KeptnAppVersionList struct {
 	Items           []KeptnAppVersion `json:"items"`
 }
 
-func (v KeptnAppVersionList) GetItems() []client.Object {
+func (a KeptnAppVersionList) GetItems() []client.Object {
 	var b []client.Object
-	for _, i := range v.Items {
+	for _, i := range a.Items {
 		b = append(b, &i)
 	}
 	return b
@@ -112,168 +114,244 @@ func init() {
 	SchemeBuilder.Register(&KeptnAppVersion{}, &KeptnAppVersionList{})
 }
 
-func (v KeptnAppVersion) IsPreDeploymentCompleted() bool {
-	return v.Status.PreDeploymentStatus.IsCompleted()
+func (a KeptnAppVersion) IsPreDeploymentCompleted() bool {
+	return a.Status.PreDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnAppVersion) IsPreDeploymentEvaluationCompleted() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsCompleted()
+func (a KeptnAppVersion) IsPreDeploymentEvaluationCompleted() bool {
+	return a.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (v KeptnAppVersion) IsPreDeploymentSucceeded() bool {
-	return v.Status.PreDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentSucceeded() bool {
+	return a.Status.PreDeploymentStatus.IsSucceeded()
 }
 
-func (v KeptnAppVersion) IsPreDeploymentFailed() bool {
-	return v.Status.PreDeploymentStatus.IsFailed()
+func (a KeptnAppVersion) IsPreDeploymentFailed() bool {
+	return a.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (v KeptnAppVersion) IsPreDeploymentEvaluationSucceeded() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded() bool {
+	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnAppVersion) IsPreDeploymentEvaluationFailed() bool {
-	return v.Status.PreDeploymentEvaluationStatus.IsFailed()
+func (a KeptnAppVersion) IsPreDeploymentEvaluationFailed() bool {
+	return a.Status.PreDeploymentEvaluationStatus.IsFailed()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentCompleted() bool {
-	return v.Status.PostDeploymentStatus.IsCompleted()
+func (a KeptnAppVersion) IsPostDeploymentCompleted() bool {
+	return a.Status.PostDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentEvaluationCompleted() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsCompleted()
+func (a KeptnAppVersion) IsPostDeploymentEvaluationCompleted() bool {
+	return a.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentFailed() bool {
-	return v.Status.PostDeploymentStatus.IsFailed()
+func (a KeptnAppVersion) IsPostDeploymentFailed() bool {
+	return a.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentEvaluationSucceeded() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded() bool {
+	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
-	return v.Status.PostDeploymentEvaluationStatus.IsFailed()
+func (a KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
+	return a.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
-func (v KeptnAppVersion) IsPostDeploymentSucceeded() bool {
-	return v.Status.PostDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPostDeploymentSucceeded() bool {
+	return a.Status.PostDeploymentStatus.IsSucceeded()
 }
 
-func (v KeptnAppVersion) AreWorkloadsCompleted() bool {
-	return v.Status.WorkloadOverallStatus.IsCompleted()
+func (a KeptnAppVersion) AreWorkloadsCompleted() bool {
+	return a.Status.WorkloadOverallStatus.IsCompleted()
 }
 
-func (v KeptnAppVersion) AreWorkloadsSucceeded() bool {
-	return v.Status.WorkloadOverallStatus.IsSucceeded()
+func (a KeptnAppVersion) AreWorkloadsSucceeded() bool {
+	return a.Status.WorkloadOverallStatus.IsSucceeded()
 }
 
-func (v KeptnAppVersion) AreWorkloadsFailed() bool {
-	return v.Status.WorkloadOverallStatus.IsFailed()
+func (a KeptnAppVersion) AreWorkloadsFailed() bool {
+	return a.Status.WorkloadOverallStatus.IsFailed()
 }
 
-func (v *KeptnAppVersion) SetStartTime() {
-	if v.Status.StartTime.IsZero() {
-		v.Status.StartTime = metav1.NewTime(time.Now().UTC())
+func (a *KeptnAppVersion) SetStartTime() {
+	if a.Status.StartTime.IsZero() {
+		a.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (v *KeptnAppVersion) SetEndTime() {
-	if v.Status.EndTime.IsZero() {
-		v.Status.EndTime = metav1.NewTime(time.Now().UTC())
+func (a *KeptnAppVersion) SetEndTime() {
+	if a.Status.EndTime.IsZero() {
+		a.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (v *KeptnAppVersion) IsStartTimeSet() bool {
-	return !v.Status.StartTime.IsZero()
+func (a *KeptnAppVersion) IsStartTimeSet() bool {
+	return !a.Status.StartTime.IsZero()
 }
 
-func (v *KeptnAppVersion) IsEndTimeSet() bool {
-	return !v.Status.EndTime.IsZero()
+func (a *KeptnAppVersion) IsEndTimeSet() bool {
+	return !a.Status.EndTime.IsZero()
 }
 
-func (v KeptnAppVersion) GetActiveMetricsAttributes() []attribute.KeyValue {
+func (a KeptnAppVersion) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(v.Spec.AppName),
-		common.AppVersion.String(v.Spec.Version),
-		common.AppNamespace.String(v.Namespace),
+		common.AppName.String(a.Spec.AppName),
+		common.AppVersion.String(a.Spec.Version),
+		common.AppNamespace.String(a.Namespace),
 	}
 }
 
-func (v KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
+func (a KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(v.Spec.AppName),
-		common.AppVersion.String(v.Spec.Version),
-		common.AppNamespace.String(v.Namespace),
-		common.AppStatus.String(string(v.Status.Status)),
+		common.AppName.String(a.Spec.AppName),
+		common.AppVersion.String(a.Spec.Version),
+		common.AppNamespace.String(a.Namespace),
+		common.AppStatus.String(string(a.Status.Status)),
 	}
 }
 
-func (v KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
+func (a KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(v.Spec.AppName),
-		common.AppVersion.String(v.Spec.Version),
-		common.AppPreviousVersion.String(v.Spec.PreviousVersion),
+		common.AppName.String(a.Spec.AppName),
+		common.AppVersion.String(a.Spec.Version),
+		common.AppPreviousVersion.String(a.Spec.PreviousVersion),
 	}
 }
 
-func (v KeptnAppVersion) GetState() common.KeptnState {
-	return v.Status.Status
+func (a KeptnAppVersion) GetState() common.KeptnState {
+	return a.Status.Status
 }
 
-func (v KeptnAppVersion) GetPreviousVersion() string {
-	return v.Spec.PreviousVersion
+func (a KeptnAppVersion) GetPreDeploymentTasks() []string {
+	return a.Spec.PreDeploymentTasks
 }
 
-func (v KeptnAppVersion) GetParentName() string {
-	return v.Spec.AppName
+func (a KeptnAppVersion) GetPostDeploymentTasks() []string {
+	return a.Spec.PostDeploymentTasks
 }
 
-func (v KeptnAppVersion) GetNamespace() string {
-	return v.Namespace
+func (a KeptnAppVersion) GetPreDeploymentTaskStatus() []TaskStatus {
+	return a.Status.PreDeploymentTaskStatus
 }
 
-func (v *KeptnAppVersion) SetState(state common.KeptnState) {
-	v.Status.Status = state
+func (a KeptnAppVersion) GetPostDeploymentTaskStatus() []TaskStatus {
+	return a.Status.PostDeploymentTaskStatus
 }
 
-func (i KeptnAppVersion) GetStartTime() time.Time {
-	return i.Status.StartTime.Time
+func (a KeptnAppVersion) GetPreDeploymentEvaluations() []string {
+	return a.Spec.PreDeploymentEvaluations
 }
 
-func (i KeptnAppVersion) GetEndTime() time.Time {
-	return i.Status.EndTime.Time
+func (a KeptnAppVersion) GetPostDeploymentEvaluations() []string {
+	return a.Spec.PostDeploymentEvaluations
 }
 
-func (v KeptnAppVersion) GetCurrentPhase() string {
-	return v.Status.CurrentPhase
+func (a KeptnAppVersion) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return a.Status.PreDeploymentEvaluationTaskStatus
 }
 
-func (v *KeptnAppVersion) SetCurrentPhase(phase string) {
-	v.Status.CurrentPhase = phase
+func (a KeptnAppVersion) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return a.Status.PostDeploymentEvaluationTaskStatus
 }
 
-func (v *KeptnAppVersion) Complete() {
-	v.SetEndTime()
+func (a KeptnAppVersion) GetAppName() string {
+	return a.Spec.AppName
 }
 
-func (v KeptnAppVersion) GetVersion() string {
-	return v.Spec.Version
+func (a KeptnAppVersion) GetPreviousVersion() string {
+	return a.Spec.PreviousVersion
 }
 
-func (v KeptnAppVersion) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", v.Spec.TraceId, v.Spec.AppName, v.Spec.Version, phase)
+func (a KeptnAppVersion) GetParentName() string {
+	return a.Spec.AppName
 }
 
-func (v KeptnAppVersion) GetSpanName(phase string) string {
+func (a KeptnAppVersion) GetNamespace() string {
+	return a.Namespace
+}
+
+func (a *KeptnAppVersion) SetState(state common.KeptnState) {
+	a.Status.Status = state
+}
+
+func (a KeptnAppVersion) GetStartTime() time.Time {
+	return a.Status.StartTime.Time
+}
+
+func (a KeptnAppVersion) GetEndTime() time.Time {
+	return a.Status.EndTime.Time
+}
+
+func (a KeptnAppVersion) GetCurrentPhase() string {
+	return a.Status.CurrentPhase
+}
+
+func (a *KeptnAppVersion) SetCurrentPhase(phase string) {
+	a.Status.CurrentPhase = phase
+}
+
+func (a *KeptnAppVersion) Complete() {
+	a.SetEndTime()
+}
+
+func (a KeptnAppVersion) GetVersion() string {
+	return a.Spec.Version
+}
+
+func (a KeptnAppVersion) GetSpanKey(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", a.Spec.TraceId["traceparent"], a.Spec.AppName, a.Spec.Version, phase)
+}
+
+func (a KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
+	return KeptnTask{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        common.GenerateTaskName(checkType, taskDefinition),
+			Namespace:   a.Namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: KeptnTaskSpec{
+			AppVersion:       a.GetVersion(),
+			AppName:          a.GetParentName(),
+			TaskDefinition:   taskDefinition,
+			Parameters:       TaskParameters{},
+			SecureParameters: SecureParameters{},
+			Type:             checkType,
+		},
+	}
+}
+
+func (a KeptnAppVersion) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(a.GetSpanAttributes()...)
+}
+
+func (a KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+	return KeptnEvaluation{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
+			Namespace:   a.Namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: KeptnEvaluationSpec{
+			AppVersion:           a.Spec.Version,
+			AppName:              a.Spec.AppName,
+			EvaluationDefinition: evaluationDefinition,
+			Type:                 checkType,
+			RetryInterval: metav1.Duration{
+				Duration: 5 * time.Second,
+			},
+		},
+	}
+}
+
+func (a KeptnAppVersion) GetSpanName(phase string) string {
 	return phase
 }
 
-func (v KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
+func (a KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(v.Spec.AppName),
-		common.AppVersion.String(v.Spec.Version),
-		common.WorkloadVersion.String(v.Spec.PreviousVersion),
-		common.WorkloadVersion.String(v.Namespace),
+		common.AppName.String(a.Spec.AppName),
+		common.AppVersion.String(a.Spec.Version),
+		common.AppNamespace.String(a.Namespace),
 	}
 }

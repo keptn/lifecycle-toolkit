@@ -1,4 +1,16 @@
+---
 
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Pre-Deployment Task has been executed");
+
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

@@ -363,10 +363,7 @@ func (v KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapC
 }
 
 func (v KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
-	attributes := v.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	span.SetAttributes(v.GetSpanAttributes()...)
 }
 
 func (v KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {

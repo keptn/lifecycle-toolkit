@@ -78,10 +78,7 @@ func (w KeptnApp) GetAppVersionName() string {
 }
 
 func (v KeptnApp) SetSpanAttributes(span trace.Span) {
-	attributes := v.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	span.SetAttributes(v.GetSpanAttributes()...)
 }
 
 func (v KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {

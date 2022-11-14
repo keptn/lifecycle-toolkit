@@ -153,10 +153,7 @@ func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
 }
 
 func (t KeptnEvaluation) SetSpanAttributes(span trace.Span) {
-	attributes := t.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	span.SetAttributes(t.GetSpanAttributes()...)
 }
 
 func (t KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {

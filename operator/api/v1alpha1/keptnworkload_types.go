@@ -82,10 +82,7 @@ func (w KeptnWorkload) GetWorkloadInstanceName() string {
 }
 
 func (v KeptnWorkload) SetSpanAttributes(span trace.Span) {
-	attributes := v.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	span.SetAttributes(v.GetSpanAttributes()...)
 }
 
 func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {

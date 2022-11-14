@@ -144,10 +144,7 @@ func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 }
 
 func (t KeptnTask) SetSpanAttributes(span trace.Span) {
-	attributes := t.GetSpanAttributes()
-	for _, attribute := range attributes {
-		span.SetAttributes(attribute)
-	}
+	span.SetAttributes(t.GetSpanAttributes()...)
 }
 
 func (t KeptnTask) CreateKeptnLabels() map[string]string {

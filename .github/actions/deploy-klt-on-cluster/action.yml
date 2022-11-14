@@ -22,7 +22,7 @@ runs:
     with:
       path: ~/download/artifacts
 
-  - name: "Create single k3d Cluster with imported Registry"
+  - name: "Create single k3d Cluster"
     uses: AbsaOSS/k3d-action@v2
     with:
       cluster-name: test-cluster
@@ -35,12 +35,13 @@ runs:
   - name: Import images in k3d
     shell: bash
     run: |
-      cd ~/download/artifacts
-      for image in $(ls | grep image.tar);
-      do
-        echo "Importing image: $image"
-        k3d image import $image/$image -c test-cluster --verbose
-      done
+      k3d image import ~/download/artifacts/keptn-lifecycle-operator-image.tar/keptn-lifecycle-operator-image.tar ~/download/artifacts/scheduler-image.tar/scheduler-image.tar
+      #cd ~/download/artifacts
+      #for image in $(ls | grep image.tar);
+      #do
+      #  echo "Importing image: $image"
+      #  k3d image import $image/$image -c test-cluster --verbose
+      #done
   
   - name: Install cert-manager
     shell: bash

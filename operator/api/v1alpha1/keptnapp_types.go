@@ -73,32 +73,32 @@ func init() {
 	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
 }
 
-func (w KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(w.Name + "-" + w.Spec.Version)
+func (a KeptnApp) GetAppVersionName() string {
+	return strings.ToLower(a.Name + "-" + a.Spec.Version)
 }
 
-func (v KeptnApp) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(v.GetSpanAttributes()...)
+func (a KeptnApp) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(a.GetSpanAttributes()...)
 }
 
-func (v KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {
+func (a KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {
 	return KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: traceContextCarrier,
-			Name:        v.GetAppVersionName(),
-			Namespace:   v.Namespace,
+			Name:        a.GetAppVersionName(),
+			Namespace:   a.Namespace,
 		},
 		Spec: KeptnAppVersionSpec{
-			KeptnAppSpec:    v.Spec,
-			AppName:         v.Name,
+			KeptnAppSpec:    a.Spec,
+			AppName:         a.Name,
 			PreviousVersion: previousVersion,
 		},
 	}
 }
 
-func (v KeptnApp) GetSpanAttributes() []attribute.KeyValue {
+func (a KeptnApp) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(v.Name),
-		common.AppVersion.String(v.Spec.Version),
+		common.AppName.String(a.Name),
+		common.AppVersion.String(a.Spec.Version),
 	}
 }

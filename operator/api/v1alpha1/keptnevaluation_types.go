@@ -97,46 +97,46 @@ func init() {
 	SchemeBuilder.Register(&KeptnEvaluation{}, &KeptnEvaluationList{})
 }
 
-func (i *KeptnEvaluation) SetStartTime() {
-	if i.Status.StartTime.IsZero() {
-		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
+func (e *KeptnEvaluation) SetStartTime() {
+	if e.Status.StartTime.IsZero() {
+		e.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnEvaluation) SetEndTime() {
-	if i.Status.EndTime.IsZero() {
-		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+func (e *KeptnEvaluation) SetEndTime() {
+	if e.Status.EndTime.IsZero() {
+		e.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnEvaluation) IsStartTimeSet() bool {
-	return !i.Status.StartTime.IsZero()
+func (e *KeptnEvaluation) IsStartTimeSet() bool {
+	return !e.Status.StartTime.IsZero()
 }
 
-func (i *KeptnEvaluation) IsEndTimeSet() bool {
-	return !i.Status.EndTime.IsZero()
+func (e *KeptnEvaluation) IsEndTimeSet() bool {
+	return !e.Status.EndTime.IsZero()
 }
 
-func (i KeptnEvaluation) GetActiveMetricsAttributes() []attribute.KeyValue {
+func (e KeptnEvaluation) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.AppVersion.String(i.Spec.AppVersion),
-		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
-		common.EvaluationName.String(i.Name),
-		common.EvaluationType.String(string(i.Spec.Type)),
+		common.AppName.String(e.Spec.AppName),
+		common.AppVersion.String(e.Spec.AppVersion),
+		common.WorkloadName.String(e.Spec.Workload),
+		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
+		common.EvaluationName.String(e.Name),
+		common.EvaluationType.String(string(e.Spec.Type)),
 	}
 }
 
-func (i KeptnEvaluation) GetMetricsAttributes() []attribute.KeyValue {
+func (e KeptnEvaluation) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.AppVersion.String(i.Spec.AppVersion),
-		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
-		common.EvaluationName.String(i.Name),
-		common.EvaluationType.String(string(i.Spec.Type)),
-		common.EvaluationStatus.String(string(i.Status.OverallStatus)),
+		common.AppName.String(e.Spec.AppName),
+		common.AppVersion.String(e.Spec.AppVersion),
+		common.WorkloadName.String(e.Spec.Workload),
+		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
+		common.EvaluationName.String(e.Name),
+		common.EvaluationType.String(string(e.Spec.Type)),
+		common.EvaluationStatus.String(string(e.Status.OverallStatus)),
 	}
 }
 
@@ -152,17 +152,17 @@ func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
 
 }
 
-func (t KeptnEvaluation) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(t.GetSpanAttributes()...)
+func (e KeptnEvaluation) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(e.GetSpanAttributes()...)
 }
 
-func (t KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
+func (e KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
-		common.EvaluationName.String(t.Name),
-		common.EvaluationType.String(string(t.Spec.Type)),
+		common.AppName.String(e.Spec.AppName),
+		common.AppVersion.String(e.Spec.AppVersion),
+		common.WorkloadName.String(e.Spec.Workload),
+		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
+		common.EvaluationName.String(e.Name),
+		common.EvaluationType.String(string(e.Spec.Type)),
 	}
 }

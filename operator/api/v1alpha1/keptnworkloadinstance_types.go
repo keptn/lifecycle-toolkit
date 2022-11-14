@@ -115,245 +115,245 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
 }
 
-func (v KeptnWorkloadInstanceList) GetItems() []client.Object {
+func (w KeptnWorkloadInstanceList) GetItems() []client.Object {
 	var b []client.Object
-	for _, i := range v.Items {
+	for _, i := range w.Items {
 		b = append(b, &i)
 	}
 	return b
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
-	return i.Status.PreDeploymentStatus.IsCompleted()
+func (w KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
+	return w.Status.PreDeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
-	return i.Status.PreDeploymentEvaluationStatus.IsCompleted()
+func (w KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
+	return w.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
-	return i.Status.PreDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
+	return w.Status.PreDeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
-	return i.Status.PreDeploymentStatus.IsFailed()
+func (w KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
+	return w.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
-	return i.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
+	return w.Status.PreDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
-	return i.Status.PreDeploymentEvaluationStatus.IsFailed()
+func (w KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
+	return w.Status.PreDeploymentEvaluationStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
-	return i.Status.PostDeploymentStatus.IsCompleted()
+func (w KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
+	return w.Status.PostDeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
-	return i.Status.PostDeploymentEvaluationStatus.IsCompleted()
+func (w KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
+	return w.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
-	return i.Status.PostDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
+	return w.Status.PostDeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
-	return i.Status.PostDeploymentStatus.IsFailed()
+func (w KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
+	return w.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
-	return i.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
+	return w.Status.PostDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
-	return i.Status.PostDeploymentEvaluationStatus.IsFailed()
+func (w KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
+	return w.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
-	return i.Status.DeploymentStatus.IsCompleted()
+func (w KeptnWorkloadInstance) IsDeploymentCompleted() bool {
+	return w.Status.DeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentSucceeded() bool {
-	return i.Status.DeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadInstance) IsDeploymentSucceeded() bool {
+	return w.Status.DeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentFailed() bool {
-	return i.Status.DeploymentStatus.IsFailed()
+func (w KeptnWorkloadInstance) IsDeploymentFailed() bool {
+	return w.Status.DeploymentStatus.IsFailed()
 }
 
-func (i *KeptnWorkloadInstance) SetStartTime() {
-	if i.Status.StartTime.IsZero() {
-		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
+func (w *KeptnWorkloadInstance) SetStartTime() {
+	if w.Status.StartTime.IsZero() {
+		w.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnWorkloadInstance) SetEndTime() {
-	if i.Status.EndTime.IsZero() {
-		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+func (w *KeptnWorkloadInstance) SetEndTime() {
+	if w.Status.EndTime.IsZero() {
+		w.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnWorkloadInstance) IsStartTimeSet() bool {
-	return !i.Status.StartTime.IsZero()
+func (w *KeptnWorkloadInstance) IsStartTimeSet() bool {
+	return !w.Status.StartTime.IsZero()
 }
 
-func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
-	return !i.Status.EndTime.IsZero()
+func (w *KeptnWorkloadInstance) IsEndTimeSet() bool {
+	return !w.Status.EndTime.IsZero()
 }
 
-func (i *TaskStatus) SetStartTime() {
-	if i.StartTime.IsZero() {
-		i.StartTime = metav1.NewTime(time.Now().UTC())
+func (t *TaskStatus) SetStartTime() {
+	if t.StartTime.IsZero() {
+		t.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *TaskStatus) SetEndTime() {
-	if i.EndTime.IsZero() {
-		i.EndTime = metav1.NewTime(time.Now().UTC())
+func (t *TaskStatus) SetEndTime() {
+	if t.EndTime.IsZero() {
+		t.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *EvaluationStatus) SetStartTime() {
-	if i.StartTime.IsZero() {
-		i.StartTime = metav1.NewTime(time.Now().UTC())
+func (e *EvaluationStatus) SetStartTime() {
+	if e.StartTime.IsZero() {
+		e.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *EvaluationStatus) SetEndTime() {
-	if i.EndTime.IsZero() {
-		i.EndTime = metav1.NewTime(time.Now().UTC())
+func (e *EvaluationStatus) SetEndTime() {
+	if e.EndTime.IsZero() {
+		e.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
+func (w KeptnWorkloadInstance) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.WorkloadName.String(i.Spec.WorkloadName),
-		common.WorkloadVersion.String(i.Spec.Version),
-		common.WorkloadNamespace.String(i.Namespace),
+		common.AppName.String(w.Spec.AppName),
+		common.WorkloadName.String(w.Spec.WorkloadName),
+		common.WorkloadVersion.String(w.Spec.Version),
+		common.WorkloadNamespace.String(w.Namespace),
 	}
 }
 
-func (i KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
+func (w KeptnWorkloadInstance) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.WorkloadName.String(i.Spec.WorkloadName),
-		common.WorkloadVersion.String(i.Spec.Version),
-		common.WorkloadNamespace.String(i.Namespace),
-		common.WorkloadStatus.String(string(i.Status.Status)),
+		common.AppName.String(w.Spec.AppName),
+		common.WorkloadName.String(w.Spec.WorkloadName),
+		common.WorkloadVersion.String(w.Spec.Version),
+		common.WorkloadNamespace.String(w.Namespace),
+		common.WorkloadStatus.String(string(w.Status.Status)),
 	}
 }
 
-func (i KeptnWorkloadInstance) GetDurationMetricsAttributes() []attribute.KeyValue {
+func (w KeptnWorkloadInstance) GetDurationMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.WorkloadName.String(i.Spec.WorkloadName),
-		common.WorkloadVersion.String(i.Spec.Version),
-		common.WorkloadPreviousVersion.String(i.Spec.PreviousVersion),
+		common.AppName.String(w.Spec.AppName),
+		common.WorkloadName.String(w.Spec.WorkloadName),
+		common.WorkloadVersion.String(w.Spec.Version),
+		common.WorkloadPreviousVersion.String(w.Spec.PreviousVersion),
 	}
 }
 
-func (i KeptnWorkloadInstance) GetState() common.KeptnState {
-	return i.Status.Status
+func (w KeptnWorkloadInstance) GetState() common.KeptnState {
+	return w.Status.Status
 }
 
-func (v KeptnWorkloadInstance) GetPreDeploymentTasks() []string {
-	return v.Spec.PreDeploymentTasks
+func (w KeptnWorkloadInstance) GetPreDeploymentTasks() []string {
+	return w.Spec.PreDeploymentTasks
 }
 
-func (v KeptnWorkloadInstance) GetPostDeploymentTasks() []string {
-	return v.Spec.PostDeploymentTasks
+func (w KeptnWorkloadInstance) GetPostDeploymentTasks() []string {
+	return w.Spec.PostDeploymentTasks
 }
 
-func (v KeptnWorkloadInstance) GetPreDeploymentTaskStatus() []TaskStatus {
-	return v.Status.PreDeploymentTaskStatus
+func (w KeptnWorkloadInstance) GetPreDeploymentTaskStatus() []TaskStatus {
+	return w.Status.PreDeploymentTaskStatus
 }
 
-func (v KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []TaskStatus {
-	return v.Status.PostDeploymentTaskStatus
+func (w KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []TaskStatus {
+	return w.Status.PostDeploymentTaskStatus
 }
 
-func (v KeptnWorkloadInstance) GetPreDeploymentEvaluations() []string {
-	return v.Spec.PreDeploymentEvaluations
+func (w KeptnWorkloadInstance) GetPreDeploymentEvaluations() []string {
+	return w.Spec.PreDeploymentEvaluations
 }
 
-func (v KeptnWorkloadInstance) GetPostDeploymentEvaluations() []string {
-	return v.Spec.PostDeploymentEvaluations
+func (w KeptnWorkloadInstance) GetPostDeploymentEvaluations() []string {
+	return w.Spec.PostDeploymentEvaluations
 }
 
-func (v KeptnWorkloadInstance) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
-	return v.Status.PreDeploymentEvaluationTaskStatus
+func (w KeptnWorkloadInstance) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return w.Status.PreDeploymentEvaluationTaskStatus
 }
 
-func (v KeptnWorkloadInstance) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
-	return v.Status.PostDeploymentEvaluationTaskStatus
+func (w KeptnWorkloadInstance) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
+	return w.Status.PostDeploymentEvaluationTaskStatus
 }
 
-func (v KeptnWorkloadInstance) GetAppName() string {
-	return v.Spec.AppName
+func (w KeptnWorkloadInstance) GetAppName() string {
+	return w.Spec.AppName
 }
 
-func (v KeptnWorkloadInstance) GetPreviousVersion() string {
-	return v.Spec.PreviousVersion
+func (w KeptnWorkloadInstance) GetPreviousVersion() string {
+	return w.Spec.PreviousVersion
 }
 
-func (v KeptnWorkloadInstance) GetParentName() string {
-	return v.Spec.WorkloadName
+func (w KeptnWorkloadInstance) GetParentName() string {
+	return w.Spec.WorkloadName
 }
 
-func (v KeptnWorkloadInstance) GetNamespace() string {
-	return v.Namespace
+func (w KeptnWorkloadInstance) GetNamespace() string {
+	return w.Namespace
 }
 
-func (i KeptnWorkloadInstance) GetStartTime() time.Time {
-	return i.Status.StartTime.Time
+func (w KeptnWorkloadInstance) GetStartTime() time.Time {
+	return w.Status.StartTime.Time
 }
 
-func (i KeptnWorkloadInstance) GetEndTime() time.Time {
-	return i.Status.EndTime.Time
+func (w KeptnWorkloadInstance) GetEndTime() time.Time {
+	return w.Status.EndTime.Time
 }
 
-func (i *KeptnWorkloadInstance) SetState(state common.KeptnState) {
-	i.Status.Status = state
+func (w *KeptnWorkloadInstance) SetState(state common.KeptnState) {
+	w.Status.Status = state
 }
 
-func (i KeptnWorkloadInstance) GetCurrentPhase() string {
-	return i.Status.CurrentPhase
+func (w KeptnWorkloadInstance) GetCurrentPhase() string {
+	return w.Status.CurrentPhase
 }
 
-func (i *KeptnWorkloadInstance) SetCurrentPhase(phase string) {
-	i.Status.CurrentPhase = phase
+func (w *KeptnWorkloadInstance) SetCurrentPhase(phase string) {
+	w.Status.CurrentPhase = phase
 }
 
-func (i *KeptnWorkloadInstance) Complete() {
-	i.SetEndTime()
+func (w *KeptnWorkloadInstance) Complete() {
+	w.SetEndTime()
 }
 
-func (i KeptnWorkloadInstance) GetVersion() string {
-	return i.Spec.Version
+func (w KeptnWorkloadInstance) GetVersion() string {
+	return w.Spec.Version
 }
 
-func (i KeptnWorkloadInstance) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", i.Spec.TraceId["traceparent"], i.Spec.WorkloadName, i.Spec.Version, phase)
+func (w KeptnWorkloadInstance) GetSpanKey(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", w.Spec.TraceId["traceparent"], w.Spec.WorkloadName, w.Spec.Version, phase)
 }
 
-func (i KeptnWorkloadInstance) GetSpanName(phase string) string {
-	return fmt.Sprintf("%s/%s", i.Spec.WorkloadName, phase)
+func (w KeptnWorkloadInstance) GetSpanName(phase string) string {
+	return fmt.Sprintf("%s/%s", w.Spec.WorkloadName, phase)
 }
 
-func (v KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
+func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        common.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   v.Namespace,
+			Namespace:   w.Namespace,
 			Annotations: traceContextCarrier,
 		},
 		Spec: KeptnTaskSpec{
-			AppName:          v.GetAppName(),
-			WorkloadVersion:  v.GetParentName(),
-			Workload:         v.GetVersion(),
+			AppName:          w.GetAppName(),
+			WorkloadVersion:  w.GetParentName(),
+			Workload:         w.GetVersion(),
 			TaskDefinition:   taskDefinition,
 			Parameters:       TaskParameters{},
 			SecureParameters: SecureParameters{},
@@ -362,21 +362,21 @@ func (v KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapC
 	}
 }
 
-func (v KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(v.GetSpanAttributes()...)
+func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(w.GetSpanAttributes()...)
 }
 
-func (v KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+func (w KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
 	return KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
-			Namespace:   v.Namespace,
+			Namespace:   w.Namespace,
 			Annotations: traceContextCarrier,
 		},
 		Spec: KeptnEvaluationSpec{
-			AppName:              v.GetAppName(),
-			WorkloadVersion:      v.GetParentName(),
-			Workload:             v.GetVersion(),
+			AppName:              w.GetAppName(),
+			WorkloadVersion:      w.GetParentName(),
+			Workload:             w.GetVersion(),
 			EvaluationDefinition: evaluationDefinition,
 			Type:                 checkType,
 			RetryInterval: metav1.Duration{
@@ -386,11 +386,11 @@ func (v KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagatio
 	}
 }
 
-func (i KeptnWorkloadInstance) GetSpanAttributes() []attribute.KeyValue {
+func (w KeptnWorkloadInstance) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.WorkloadName.String(i.Spec.WorkloadName),
-		common.WorkloadVersion.String(i.Spec.Version),
-		common.WorkloadNamespace.String(i.Namespace),
+		common.AppName.String(w.Spec.AppName),
+		common.WorkloadName.String(w.Spec.WorkloadName),
+		common.WorkloadVersion.String(w.Spec.Version),
+		common.WorkloadNamespace.String(w.Namespace),
 	}
 }

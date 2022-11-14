@@ -81,20 +81,20 @@ func (w KeptnWorkload) GetWorkloadInstanceName() string {
 	return strings.ToLower(w.Name + "-" + w.Spec.Version)
 }
 
-func (v KeptnWorkload) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(v.GetSpanAttributes()...)
+func (w KeptnWorkload) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(w.GetSpanAttributes()...)
 }
 
-func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {
+func (w KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {
 	return KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: traceContextCarrier,
-			Name:        v.GetWorkloadInstanceName(),
-			Namespace:   v.Namespace,
+			Name:        w.GetWorkloadInstanceName(),
+			Namespace:   w.Namespace,
 		},
 		Spec: KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: v.Spec,
-			WorkloadName:      v.Name,
+			KeptnWorkloadSpec: w.Spec,
+			WorkloadName:      w.Name,
 			PreviousVersion:   previousVersion,
 		},
 	}

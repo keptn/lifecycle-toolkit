@@ -100,46 +100,46 @@ func init() {
 	SchemeBuilder.Register(&KeptnTask{}, &KeptnTaskList{})
 }
 
-func (i *KeptnTask) SetStartTime() {
-	if i.Status.StartTime.IsZero() {
-		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
+func (t *KeptnTask) SetStartTime() {
+	if t.Status.StartTime.IsZero() {
+		t.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnTask) SetEndTime() {
-	if i.Status.EndTime.IsZero() {
-		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
+func (t *KeptnTask) SetEndTime() {
+	if t.Status.EndTime.IsZero() {
+		t.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnTask) IsStartTimeSet() bool {
-	return !i.Status.StartTime.IsZero()
+func (t *KeptnTask) IsStartTimeSet() bool {
+	return !t.Status.StartTime.IsZero()
 }
 
-func (i *KeptnTask) IsEndTimeSet() bool {
-	return !i.Status.EndTime.IsZero()
+func (t *KeptnTask) IsEndTimeSet() bool {
+	return !t.Status.EndTime.IsZero()
 }
 
-func (i KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
+func (t KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.AppVersion.String(i.Spec.AppVersion),
-		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
-		common.TaskName.String(i.Name),
-		common.TaskType.String(string(i.Spec.Type)),
+		common.AppName.String(t.Spec.AppName),
+		common.AppVersion.String(t.Spec.AppVersion),
+		common.WorkloadName.String(t.Spec.Workload),
+		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.TaskName.String(t.Name),
+		common.TaskType.String(string(t.Spec.Type)),
 	}
 }
 
-func (i KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
+func (t KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.AppVersion.String(i.Spec.AppVersion),
-		common.WorkloadName.String(i.Spec.Workload),
-		common.WorkloadVersion.String(i.Spec.WorkloadVersion),
-		common.TaskName.String(i.Name),
-		common.TaskType.String(string(i.Spec.Type)),
-		common.TaskStatus.String(string(i.Status.Status)),
+		common.AppName.String(t.Spec.AppName),
+		common.AppVersion.String(t.Spec.AppVersion),
+		common.WorkloadName.String(t.Spec.Workload),
+		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.TaskName.String(t.Name),
+		common.TaskType.String(string(t.Spec.Type)),
+		common.TaskStatus.String(string(t.Status.Status)),
 	}
 }
 

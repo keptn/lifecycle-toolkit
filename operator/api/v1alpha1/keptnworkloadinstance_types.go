@@ -352,8 +352,8 @@ func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapC
 		},
 		Spec: KeptnTaskSpec{
 			AppName:          w.GetAppName(),
-			WorkloadVersion:  w.GetParentName(),
-			Workload:         w.GetVersion(),
+			WorkloadVersion:  w.GetVersion(),
+			Workload:         w.GetParentName(),
 			TaskDefinition:   taskDefinition,
 			Parameters:       TaskParameters{},
 			SecureParameters: SecureParameters{},
@@ -375,8 +375,8 @@ func (w KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagatio
 		},
 		Spec: KeptnEvaluationSpec{
 			AppName:              w.GetAppName(),
-			WorkloadVersion:      w.GetParentName(),
-			Workload:             w.GetVersion(),
+			WorkloadVersion:      w.GetVersion(),
+			Workload:             w.GetParentName(),
 			EvaluationDefinition: evaluationDefinition,
 			Type:                 checkType,
 			RetryInterval: metav1.Duration{

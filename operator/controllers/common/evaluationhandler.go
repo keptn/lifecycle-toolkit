@@ -52,8 +52,8 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, reconcileOb
 		evaluations = piWrapper.GetPreDeploymentEvaluations()
 		statuses = piWrapper.GetPreDeploymentEvaluationTaskStatus()
 	case apicommon.PostDeploymentEvaluationCheckType:
-		evaluations = piWrapper.GetPreDeploymentEvaluations()
-		statuses = piWrapper.GetPreDeploymentEvaluationTaskStatus()
+		evaluations = piWrapper.GetPostDeploymentEvaluations()
+		statuses = piWrapper.GetPostDeploymentEvaluationTaskStatus()
 	}
 
 	var summary apicommon.StatusSummary

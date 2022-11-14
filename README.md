@@ -59,7 +59,7 @@ For this reason, the Keptn Lifecycle Toolkit is agnostic to deployment tools tha
 ## How to use
 
 The Keptn Lifecycle Toolkit monitors manifests that have been applied against the Kubernetes API and reacts if it finds a workload with special annotations/labels.
-For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following two annotations:
+For this, you should annotate your [Workload](https://kubernetes.io/docs/concepts/workloads/) with (at least) the following annotations:
 
 ```yaml
 keptn.sh/app: myAwesomeAppName

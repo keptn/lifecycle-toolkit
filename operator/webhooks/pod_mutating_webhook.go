@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	appsv1 "k8s.io/api/apps/v1"
 	"net/http"
 	"reflect"
 	"strings"
@@ -30,7 +31,8 @@ import (
 )
 
 // +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
-//+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
+//+kubebuilder:rbac:groups=core,resources=namespaces,verbs=get
+//+kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets;replicasets,verbs=get
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
@@ -77,12 +79,20 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	isAnnotated, err := a.isKeptnAnnotated(pod)
+	podIsAnnotated, err := a.isPodAnnotated(pod)
+	logger.Info("Checked if pod is annotated.")
+
 	if err != nil {
 		span.SetStatus(codes.Error, "Invalid annotations")
 		return admission.Errored(http.StatusBadRequest, err)
 	}
-	if isAnnotated {
+
+	if !podIsAnnotated {
+		logger.Info("Pod is not annotated, check for parent annotations...")
+		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+	}
+
+	if podIsAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
@@ -128,9 +138,9 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	return nil
 }
 
-func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
-	workload, gotWorkloadAnnotation := getLabelOrAnnotation(pod, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	version, gotVersionAnnotation := getLabelOrAnnotation(pod, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
+	workload, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	version, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 
 	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, ErrTooLongAnnotations
@@ -148,8 +158,91 @@ func (a *PodMutatingWebhook) isKeptnAnnotated(pod *corev1.Pod) (bool, error) {
 	return false, nil
 }
 
+func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+	podOwner := a.getOwnerReference(&pod.ObjectMeta)
+	if podOwner.UID == "" {
+		return false, nil
+	}
+
+	switch podOwner.Kind {
+	case "ReplicaSet":
+		rs := &appsv1.ReplicaSet{}
+		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
+			return false, nil
+		}
+		a.Log.Info("Done fetching RS")
+
+		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
+		if rsOwner.UID == "" {
+			return false, nil
+		}
+
+		dp := &appsv1.Deployment{}
+		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
+	case "StatefulSet":
+		sts := &appsv1.StatefulSet{}
+		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
+	case "DaemonSet":
+		ds := &appsv1.DaemonSet{}
+		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
+	default:
+		return false, nil
+	}
+}
+
+func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) (bool, error) {
+	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
+		return false, nil
+	}
+	objectContainerMetaData := metav1.ObjectMeta{
+		Labels:      objectContainer.GetLabels(),
+		Annotations: objectContainer.GetAnnotations(),
+	}
+	return a.copyResourceLabelsIfPresent(&objectContainerMetaData, pod)
+}
+
+func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
+	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
+	var gotWorkloadName, gotVersion bool
+
+	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	appName, _ = getLabelOrAnnotation(sourceResource, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	version, gotVersion = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	preDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
+	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
+	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
+	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
+
+	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+		return false, ErrTooLongAnnotations
+	}
+
+	if len(targetPod.Annotations) == 0 {
+		targetPod.Annotations = make(map[string]string)
+	}
+
+	if gotWorkloadName {
+		setMapKey(targetPod.Annotations, common.WorkloadAnnotation, workloadName)
+
+		if !gotVersion {
+			setMapKey(targetPod.Annotations, common.VersionAnnotation, a.calculateVersion(targetPod))
+		} else {
+			setMapKey(targetPod.Annotations, common.VersionAnnotation, version)
+		}
+
+		setMapKey(targetPod.Annotations, common.AppAnnotation, appName)
+		setMapKey(targetPod.Annotations, common.PreDeploymentTaskAnnotation, preDeploymentChecks)
+		setMapKey(targetPod.Annotations, common.PostDeploymentTaskAnnotation, postDeploymentChecks)
+		setMapKey(targetPod.Annotations, common.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
+		setMapKey(targetPod.Annotations, common.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
+
+		return true, nil
+	}
+	return false, nil
+}
+
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := getLabelOrAnnotation(pod, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	app, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
 		if len(app) > common.MaxAppNameLength {
@@ -161,7 +254,7 @@ func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, erro
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string)
 	}
-	pod.Annotations[common.AppAnnotation], _ = getLabelOrAnnotation(pod, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	pod.Annotations[common.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
 	return false, nil
 }
 
@@ -296,27 +389,27 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 }
 
 func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
-	version, _ := getLabelOrAnnotation(pod, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-	applicationName, _ := getLabelOrAnnotation(pod, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
 	var preDeploymentEvaluation []string
 	var postDeploymentEvaluation []string
 
-	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentTaskAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PreDeploymentTaskAnnotation, ""); found {
 		preDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentTaskAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PostDeploymentTaskAnnotation, ""); found {
 		postDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(pod, common.PreDeploymentEvaluationAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PreDeploymentEvaluationAnnotation, ""); found {
 		preDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(pod, common.PostDeploymentEvaluationAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PostDeploymentEvaluationAnnotation, ""); found {
 		postDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
@@ -324,6 +417,8 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
 
 	return &klcv1alpha1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
@@ -334,7 +429,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 		Spec: klcv1alpha1.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         a.getResourceReference(pod),
+			ResourceReference:         klcv1alpha1.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind},
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
@@ -344,7 +439,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 }
 
 func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
-	version, _ := getLabelOrAnnotation(pod, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
 	appName := a.getAppName(pod)
 
 	// create TraceContext
@@ -375,51 +470,58 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 }
 
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
-	workloadName, _ := getLabelOrAnnotation(pod, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	applicationName, _ := getLabelOrAnnotation(pod, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName + "-" + workloadName)
 }
 
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
-	applicationName, _ := getLabelOrAnnotation(pod, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getResourceReference(pod *corev1.Pod) klcv1alpha1.ResourceReference {
-	reference := klcv1alpha1.ResourceReference{
-		UID:  pod.UID,
-		Kind: pod.Kind,
-	}
-	if len(pod.OwnerReferences) != 0 {
-		for _, o := range pod.OwnerReferences {
-			if o.Kind == "ReplicaSet" {
-				reference.UID = o.UID
-				reference.Kind = o.Kind
+func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+	reference := metav1.OwnerReference{}
+	if len(resource.OwnerReferences) != 0 {
+		for _, owner := range resource.OwnerReferences {
+			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" {
+				reference.UID = owner.UID
+				reference.Kind = owner.Kind
+				reference.Name = owner.Name
 			}
 		}
 	}
 	return reference
 }
 
-func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
-	if pod.Annotations[primaryAnnotation] != "" {
-		return pod.Annotations[primaryAnnotation], true
+func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+	if resource.Annotations[primaryAnnotation] != "" {
+		return resource.Annotations[primaryAnnotation], true
 	}
 
-	if pod.Labels[primaryAnnotation] != "" {
-		return pod.Labels[primaryAnnotation], true
+	if resource.Labels[primaryAnnotation] != "" {
+		return resource.Labels[primaryAnnotation], true
 	}
 
 	if secondaryAnnotation == "" {
 		return "", false
 	}
 
-	if pod.Annotations[secondaryAnnotation] != "" {
-		return pod.Annotations[secondaryAnnotation], true
+	if resource.Annotations[secondaryAnnotation] != "" {
+		return resource.Annotations[secondaryAnnotation], true
 	}
 
-	if pod.Labels[secondaryAnnotation] != "" {
-		return pod.Labels[secondaryAnnotation], true
+	if resource.Labels[secondaryAnnotation] != "" {
+		return resource.Labels[secondaryAnnotation], true
 	}
 	return "", false
+}
+
+func setMapKey(myMap map[string]string, key, value string) {
+	if myMap == nil {
+		return
+	}
+	if value != "" {
+		myMap[key] = value
+	}
 }

@@ -8,6 +8,15 @@ rules:
 - apiGroups:
   - apps
   resources:
+  - daemonsets
+  - deployments
+  - replicasets
+  - statefulsets
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
   - deployments
   - replicasets
   - statefulsets
@@ -56,8 +65,6 @@ rules:
   - namespaces
   verbs:
   - get
-  - list
-  - watch
 - apiGroups:
   - ""
   resources:

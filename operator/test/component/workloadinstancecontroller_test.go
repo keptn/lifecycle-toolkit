@@ -166,6 +166,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 				By("Bringing the StatefulSet into its ready state")
 				statefulSet.Status.ReadyReplicas = 1
+				statefulSet.Status.Replicas = 1
 				err = k8sClient.Status().Update(ctx, statefulSet)
 				Expect(err).To(BeNil())
 

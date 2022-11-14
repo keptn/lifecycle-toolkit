@@ -5,4 +5,4 @@ metadata:
     app: test
   name: test
 status:
-  readyReplicas: 1
+  readyReplicas: 2

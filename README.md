@@ -10,6 +10,12 @@
 The goal of this toolkit is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the concept of application health checks.
 It is an incubating project, under the umbrella of the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
+## Watch the KubeCon 2022 Detroit Demo
+
+Click to watch it on YouTube:
+
+[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+
 ## Deploy the latest release
 
 **Known Limitations**

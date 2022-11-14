@@ -36,13 +36,11 @@ runs:
     shell: bash
     run: |
       cd ~/download/artifacts
-      k3d image import scheduler-image.tar/scheduler-image.tar -c test-cluster
-      k3d image import keptn-lifecycle-operator-image.tar/keptn-lifecycle-operator-image.tar -c test-cluster
-      #for image in $(ls | grep image.tar);
-      #do
-      #  echo "Importing image: $image"
-      #  k3d image import $image/$image -c test-cluster
-      #done
+      for image in $(ls | grep image.tar);
+      do
+        echo "Importing image: $image"
+        k3d image import $image/$image -c test-cluster
+      done
   
   - name: Install cert-manager
     shell: bash
@@ -58,6 +56,7 @@ runs:
       kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest-test
       kubectl apply -f ~/download/artifacts/scheduler-manifest-test
       sleep 5
+      docker exec k3d-test-cluster-server-0 sh -c "ctr image list -q | grep localhost"
       kubectl describe pod --selector control-plane=controller-manager -n keptn-lifecycle-toolkit-system
       kubectl describe pod --selector component=scheduler -n keptn-lifecycle-toolkit-system
       kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w

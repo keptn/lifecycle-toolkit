@@ -299,7 +299,7 @@ func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1
 	for _, app := range apps.Items {
 		if app.Spec.AppName == wli.Spec.AppName {
 			for _, appWorkload := range app.Spec.Workloads {
-				if appWorkload.Version == wli.Spec.Version && fmt.Sprintf("%s-%s", app.Spec.AppName, appWorkload.Name) == wli.Spec.WorkloadName {
+				if appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName {
 					workloadFound = true
 					newVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {

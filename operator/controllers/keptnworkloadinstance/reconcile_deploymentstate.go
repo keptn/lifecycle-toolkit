@@ -23,6 +23,8 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 		isRunning, err = r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	case "StatefulSet":
 		isRunning, err = r.isStatefulSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+	case "DaemonSet":
+		isRunning, err = r.isDaemonSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	default:
 		isRunning, err = false, controllercommon.ErrUnsupportedWorkloadInstanceResourceReference
 	}
@@ -51,6 +53,19 @@ func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Contex
 		return false, err
 	}
 	return *rep.Spec.Replicas == rep.Status.AvailableReplicas, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+	daemonSets := &appsv1.DaemonSetList{}
+	if err := r.Client.List(ctx, daemonSets, client.InNamespace(namespace)); err != nil {
+		return false, err
+	}
+	for _, daemonSet := range daemonSets.Items {
+		if daemonSet.UID == resource.UID {
+			return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
+		}
+	}
+	return false, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {

@@ -3,15 +3,31 @@ package component
 import (
 	"context"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
+
+func getPodTemplateSpec() corev1.PodTemplateSpec {
+	return corev1.PodTemplateSpec{
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "nginx",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+}
 
 // clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
 // App controller creates AppVersion when a new App CRD is added
@@ -109,6 +125,64 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi).To(Not(BeNil()))
 					g.Expect(wi.Status.CurrentPhase).To(BeEmpty())
 				}, "3s").Should(Succeed())
+			})
+
+			It("should detect that the referenced StatefulSet is progressing", func() {
+				By("Deploying a StatefulSet to reference")
+				repl := int32(1)
+				statefulSet := &appsv1.StatefulSet{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-statefulset",
+						Namespace: namespace,
+					},
+					Spec: appsv1.StatefulSetSpec{
+						Replicas: &repl,
+						Template: getPodTemplateSpec(),
+					},
+				}
+
+				defer func() {
+					_ = k8sClient.Delete(ctx, statefulSet)
+				}()
+
+				err := k8sClient.Create(ctx, statefulSet)
+				Expect(err).To(BeNil())
+
+				By("Looking up the StatefulSet to retrieve its UID")
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      statefulSet.Name,
+				}, statefulSet)
+				Expect(err).To(BeNil())
+
+				By("Creating a WorkloadInstance that references the StatefulSet")
+				wi = &klcv1alpha1.KeptnWorkloadInstance{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      name,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha1.ResourceReference{
+								UID:  statefulSet.UID,
+								Kind: statefulSet.Kind,
+							},
+						},
+						WorkloadName: "wi-test-app-wname",
+						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
+					},
+				}
+
+				wiNameObj := types.NamespacedName{
+					Namespace: wi.Namespace,
+					Name:      wi.Name,
+				}
+				Eventually(func(g Gomega) {
+					wi := &klcv1alpha1.KeptnWorkloadInstance{}
+					err := k8sClient.Get(ctx, wiNameObj, wi)
+					g.Expect(err).To(BeNil())
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+				}, "10s")
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test

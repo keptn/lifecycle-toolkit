@@ -207,3 +207,39 @@ func TestKeptnAppVersion(t *testing.T) {
 		common.AppNamespace.String("namespace"),
 	}, app.GetSpanAttributes())
 }
+
+func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
+	type fields struct {
+		Spec v1alpha1.KeptnAppVersionSpec
+	}
+	type args struct {
+		workloadName string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "",
+			fields: fields{
+				Spec: v1alpha1.KeptnAppVersionSpec{AppName: "my-app"},
+			},
+			args: args{
+				workloadName: "my-workload",
+			},
+			want: "my-app-my-workload",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := v1alpha1.KeptnAppVersion{
+				Spec: tt.fields.Spec,
+			}
+			if got := v.GetWorkloadNameOfApp(tt.args.workloadName); got != tt.want {
+				t.Errorf("GetWorkloadNameOfApp() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

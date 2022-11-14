@@ -185,8 +185,8 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	task := workload.GenerateTask(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnTaskSpec{
 		AppName:          workload.GetAppName(),
-		WorkloadVersion:  workload.GetParentName(),
-		Workload:         workload.GetVersion(),
+		WorkloadVersion:  workload.GetVersion(),
+		Workload:         workload.GetParentName(),
 		TaskDefinition:   "taskdef",
 		Parameters:       v1alpha1.TaskParameters{},
 		SecureParameters: v1alpha1.SecureParameters{},
@@ -196,8 +196,8 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	evaluation := workload.GenerateEvaluation(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnEvaluationSpec{
 		AppName:              workload.GetAppName(),
-		WorkloadVersion:      workload.GetParentName(),
-		Workload:             workload.GetVersion(),
+		WorkloadVersion:      workload.GetVersion(),
+		Workload:             workload.GetParentName(),
 		EvaluationDefinition: "taskdef",
 		Type:                 common.PostDeploymentCheckType,
 		RetryInterval: metav1.Duration{

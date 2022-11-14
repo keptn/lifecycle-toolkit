@@ -18,17 +18,11 @@ type PhaseItem interface {
 	SetState(apicommon.KeptnState)
 	GetCurrentPhase() string
 	SetCurrentPhase(string)
-	GetVersion() string
-	GetActiveMetricsAttributes() []attribute.KeyValue
-	GetDurationMetricsAttributes() []attribute.KeyValue
-	GetMetricsAttributes() []attribute.KeyValue
-	GetSpanAttributes() []attribute.KeyValue
-	GetSpanKey(phase string) string
-	GetSpanName(phase string) string
 	Complete()
 	IsEndTimeSet() bool
 	GetEndTime() time.Time
 	GetStartTime() time.Time
+	GetVersion() string
 	GetPreviousVersion() string
 	GetParentName() string
 	GetNamespace() string
@@ -43,6 +37,12 @@ type PhaseItem interface {
 	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
 	GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
 	GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation
+	GetActiveMetricsAttributes() []attribute.KeyValue
+	GetDurationMetricsAttributes() []attribute.KeyValue
+	GetMetricsAttributes() []attribute.KeyValue
+	GetSpanAttributes() []attribute.KeyValue
+	GetSpanKey(phase string) string
+	GetSpanName(phase string) string
 	SetSpanAttributes(span trace.Span)
 }
 
@@ -74,10 +74,6 @@ func (pw *PhaseItemWrapper) SetCurrentPhase(phase string) {
 	pw.Obj.SetCurrentPhase(phase)
 }
 
-func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetDurationMetricsAttributes()
-}
-
 func (pw PhaseItemWrapper) GetEndTime() time.Time {
 	return pw.Obj.GetEndTime()
 }
@@ -86,24 +82,16 @@ func (pw PhaseItemWrapper) GetStartTime() time.Time {
 	return pw.Obj.GetStartTime()
 }
 
+func (pw PhaseItemWrapper) IsEndTimeSet() bool {
+	return pw.Obj.IsEndTimeSet()
+}
+
 func (pw *PhaseItemWrapper) Complete() {
 	pw.Obj.Complete()
 }
 
 func (pw PhaseItemWrapper) GetVersion() string {
 	return pw.Obj.GetVersion()
-}
-
-func (pw PhaseItemWrapper) GetSpanKey(phase string) string {
-	return pw.Obj.GetSpanKey(phase)
-}
-
-func (pw PhaseItemWrapper) GetSpanName(phase string) string {
-	return pw.Obj.GetSpanName(phase)
-}
-
-func (pw PhaseItemWrapper) IsEndTimeSet() bool {
-	return pw.Obj.IsEndTimeSet()
 }
 
 func (pw PhaseItemWrapper) GetPreviousVersion() string {
@@ -116,6 +104,10 @@ func (pw PhaseItemWrapper) GetParentName() string {
 
 func (pw PhaseItemWrapper) GetNamespace() string {
 	return pw.Obj.GetNamespace()
+}
+
+func (pw PhaseItemWrapper) GetAppName() string {
+	return pw.Obj.GetAppName()
 }
 
 func (pw PhaseItemWrapper) GetPreDeploymentTasks() []string {
@@ -150,12 +142,16 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetAppName() string {
-	return pw.Obj.GetAppName()
-}
-
 func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return pw.Obj.GetActiveMetricsAttributes()
+}
+
+func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
+	return pw.Obj.GetMetricsAttributes()
+}
+
+func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
+	return pw.Obj.GetDurationMetricsAttributes()
 }
 
 func (pw PhaseItemWrapper) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
@@ -174,8 +170,12 @@ func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 	return pw.Obj.GetSpanAttributes()
 }
 
-func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetMetricsAttributes()
+func (pw PhaseItemWrapper) GetSpanKey(phase string) string {
+	return pw.Obj.GetSpanKey(phase)
+}
+
+func (pw PhaseItemWrapper) GetSpanName(phase string) string {
+	return pw.Obj.GetSpanName(phase)
 }
 
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {

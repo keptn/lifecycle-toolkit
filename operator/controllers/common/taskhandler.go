@@ -53,8 +53,8 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, reconcileObject client.
 		tasks = piWrapper.GetPreDeploymentTasks()
 		statuses = piWrapper.GetPreDeploymentTaskStatus()
 	case apicommon.PostDeploymentCheckType:
-		tasks = piWrapper.GetPreDeploymentTasks()
-		statuses = piWrapper.GetPreDeploymentTaskStatus()
+		tasks = piWrapper.GetPostDeploymentTasks()
+		statuses = piWrapper.GetPostDeploymentTaskStatus()
 	}
 
 	var summary apicommon.StatusSummary

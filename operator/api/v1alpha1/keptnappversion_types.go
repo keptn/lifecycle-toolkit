@@ -186,12 +186,24 @@ func (a *KeptnAppVersion) SetEndTime() {
 	}
 }
 
+func (a KeptnAppVersion) GetStartTime() time.Time {
+	return a.Status.StartTime.Time
+}
+
+func (a KeptnAppVersion) GetEndTime() time.Time {
+	return a.Status.EndTime.Time
+}
+
 func (a *KeptnAppVersion) IsStartTimeSet() bool {
 	return !a.Status.StartTime.IsZero()
 }
 
 func (a *KeptnAppVersion) IsEndTimeSet() bool {
 	return !a.Status.EndTime.IsZero()
+}
+
+func (a *KeptnAppVersion) Complete() {
+	a.SetEndTime()
 }
 
 func (a KeptnAppVersion) GetActiveMetricsAttributes() []attribute.KeyValue {
@@ -275,14 +287,6 @@ func (a *KeptnAppVersion) SetState(state common.KeptnState) {
 	a.Status.Status = state
 }
 
-func (a KeptnAppVersion) GetStartTime() time.Time {
-	return a.Status.StartTime.Time
-}
-
-func (a KeptnAppVersion) GetEndTime() time.Time {
-	return a.Status.EndTime.Time
-}
-
 func (a KeptnAppVersion) GetCurrentPhase() string {
 	return a.Status.CurrentPhase
 }
@@ -291,16 +295,8 @@ func (a *KeptnAppVersion) SetCurrentPhase(phase string) {
 	a.Status.CurrentPhase = phase
 }
 
-func (a *KeptnAppVersion) Complete() {
-	a.SetEndTime()
-}
-
 func (a KeptnAppVersion) GetVersion() string {
 	return a.Spec.Version
-}
-
-func (a KeptnAppVersion) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", a.Spec.TraceId["traceparent"], a.Spec.AppName, a.Spec.Version, phase)
 }
 
 func (a KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
@@ -319,10 +315,6 @@ func (a KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier
 			Type:             checkType,
 		},
 	}
-}
-
-func (a KeptnAppVersion) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(a.GetSpanAttributes()...)
 }
 
 func (a KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
@@ -354,6 +346,14 @@ func (a KeptnAppVersion) GetSpanAttributes() []attribute.KeyValue {
 		common.AppVersion.String(a.Spec.Version),
 		common.AppNamespace.String(a.Namespace),
 	}
+}
+
+func (a KeptnAppVersion) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(a.GetSpanAttributes()...)
+}
+
+func (a KeptnAppVersion) GetSpanKey(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", a.Spec.TraceId["traceparent"], a.Spec.AppName, a.Spec.Version, phase)
 }
 
 func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {

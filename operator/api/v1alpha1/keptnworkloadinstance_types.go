@@ -203,6 +203,18 @@ func (w *KeptnWorkloadInstance) IsEndTimeSet() bool {
 	return !w.Status.EndTime.IsZero()
 }
 
+func (w KeptnWorkloadInstance) GetStartTime() time.Time {
+	return w.Status.StartTime.Time
+}
+
+func (w KeptnWorkloadInstance) GetEndTime() time.Time {
+	return w.Status.EndTime.Time
+}
+
+func (w *KeptnWorkloadInstance) Complete() {
+	w.SetEndTime()
+}
+
 func (t *TaskStatus) SetStartTime() {
 	if t.StartTime.IsZero() {
 		t.StartTime = metav1.NewTime(time.Now().UTC())
@@ -307,14 +319,6 @@ func (w KeptnWorkloadInstance) GetNamespace() string {
 	return w.Namespace
 }
 
-func (w KeptnWorkloadInstance) GetStartTime() time.Time {
-	return w.Status.StartTime.Time
-}
-
-func (w KeptnWorkloadInstance) GetEndTime() time.Time {
-	return w.Status.EndTime.Time
-}
-
 func (w *KeptnWorkloadInstance) SetState(state common.KeptnState) {
 	w.Status.Status = state
 }
@@ -327,20 +331,8 @@ func (w *KeptnWorkloadInstance) SetCurrentPhase(phase string) {
 	w.Status.CurrentPhase = phase
 }
 
-func (w *KeptnWorkloadInstance) Complete() {
-	w.SetEndTime()
-}
-
 func (w KeptnWorkloadInstance) GetVersion() string {
 	return w.Spec.Version
-}
-
-func (w KeptnWorkloadInstance) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", w.Spec.TraceId["traceparent"], w.Spec.WorkloadName, w.Spec.Version, phase)
-}
-
-func (w KeptnWorkloadInstance) GetSpanName(phase string) string {
-	return fmt.Sprintf("%s/%s", w.Spec.WorkloadName, phase)
 }
 
 func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
@@ -360,10 +352,6 @@ func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapC
 			Type:             checkType,
 		},
 	}
-}
-
-func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(w.GetSpanAttributes()...)
 }
 
 func (w KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
@@ -393,4 +381,16 @@ func (w KeptnWorkloadInstance) GetSpanAttributes() []attribute.KeyValue {
 		common.WorkloadVersion.String(w.Spec.Version),
 		common.WorkloadNamespace.String(w.Namespace),
 	}
+}
+
+func (w KeptnWorkloadInstance) GetSpanKey(phase string) string {
+	return fmt.Sprintf("%s.%s.%s.%s", w.Spec.TraceId["traceparent"], w.Spec.WorkloadName, w.Spec.Version, phase)
+}
+
+func (w KeptnWorkloadInstance) GetSpanName(phase string) string {
+	return fmt.Sprintf("%s/%s", w.Spec.WorkloadName, phase)
+}
+
+func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(w.GetSpanAttributes()...)
 }

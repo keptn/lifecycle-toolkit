@@ -130,6 +130,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		if appPreEvalStatus.IsFailed() {
 			//cancell everything, as app pre-eval tasks have failed
 			workloadInstance.CancelRemainingPhases(phase)
+			workloadInstance.Complete()
 			err = r.Client.Status().Update(ctx, workloadInstance)
 			if err != nil {
 				span.SetStatus(codes.Error, err.Error())

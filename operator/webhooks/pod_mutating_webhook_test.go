@@ -493,12 +493,6 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	testDsUid := types.UID("this-is-the-daemon-set-uid")
 	testDsName := "test-daemon-set"
 
-	fakeClient, err := fake.NewClient()
-
-	if err != nil {
-		t.Errorf("Error when setting up fake client %v", err)
-	}
-
 	rsWithDpOwner := &appsv1.ReplicaSet{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "ReplicaSet",
@@ -558,11 +552,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		},
 	}
 
-	err = fakeClient.Create(context.TODO(), rsWithDpOwner)
-	err = fakeClient.Create(context.TODO(), rsWithNoOwner)
-	err = fakeClient.Create(context.TODO(), testDp)
-	err = fakeClient.Create(context.TODO(), testSts)
-	err = fakeClient.Create(context.TODO(), testDs)
+	fakeClient, err := fake.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	if err != nil {
 		t.Errorf("Error when creating objects in fake client %v", err)

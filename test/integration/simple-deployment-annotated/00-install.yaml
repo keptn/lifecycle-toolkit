@@ -5,7 +5,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
-  namespace: test-annotation
 spec:
   function:
     inline:
@@ -20,7 +19,6 @@ metadata:
   labels:
     app: test
   name: test
-  namespace: test-annotation
   annotations:
     keptn.sh/workload: waiter
     keptn.sh/version: "0.4"

@@ -4,6 +4,5 @@ metadata:
   labels:
     app: test
   name: test
-  namespace: test-annotation
 status:
   readyReplicas: 1

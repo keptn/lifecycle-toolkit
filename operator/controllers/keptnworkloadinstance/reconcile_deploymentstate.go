@@ -2,12 +2,10 @@ package keptnworkloadinstance
 
 import (
 	"context"
-
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -24,7 +22,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 			workloadInstance.Status.DeploymentStatus = common.StateProgressing
 		}
 	} else {
-		isReplicaRunning, err := r.isReplicaSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+		isReplicaRunning, err := r.isOwnerRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 		if err != nil {
 			return common.StateUnknown, err
 		}
@@ -42,24 +40,32 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
-	replica := &appsv1.ReplicaSetList{}
-	if err := r.Client.List(ctx, replica, client.InNamespace(namespace)); err != nil {
-		return false, err
-	}
-	for _, re := range replica.Items {
-		if re.UID == resource.UID {
-			replicas, err := r.getDesiredReplicas(ctx, re.OwnerReferences[0], namespace)
-			if err != nil {
-				return false, err
-			}
-			if re.Status.ReadyReplicas == replicas {
-				return true, nil
-			}
-			return false, nil
+func (r *KeptnWorkloadInstanceReconciler) isOwnerRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+
+	var replicas *int32
+	var desiredReplicas int32
+	switch resource.Kind {
+	case "ReplicaSet":
+		dep := appsv1.ReplicaSet{}
+		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &dep)
+		if err != nil {
+			return false, err
 		}
+		replicas = dep.Spec.Replicas
+		desiredReplicas = dep.Status.AvailableReplicas
+		//r.Log.Info(fmt.Sprintf("%d %d ", replicas, desiredReplicas))
+	case "StatefulSet":
+		sts := appsv1.StatefulSet{}
+		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
+		if err != nil {
+			return false, err
+		}
+		replicas = sts.Spec.Replicas
+		desiredReplicas = sts.Status.AvailableReplicas
+		//r.Log.Info(fmt.Sprintf("%d %d ", replicas, desiredReplicas))
 	}
-	return false, nil
+
+	return *replicas == desiredReplicas, nil
 
 }
 
@@ -77,27 +83,4 @@ func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, reso
 		}
 	}
 	return false, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) getDesiredReplicas(ctx context.Context, reference v1.OwnerReference, namespace string) (int32, error) {
-	var replicas *int32
-	switch reference.Kind {
-	case "Deployment":
-		dep := appsv1.Deployment{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: reference.Name, Namespace: namespace}, &dep)
-		if err != nil {
-			return 0, err
-		}
-		replicas = dep.Spec.Replicas
-	case "StatefulSet":
-		sts := appsv1.StatefulSet{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: reference.Name, Namespace: namespace}, &sts)
-		if err != nil {
-			return 0, err
-		}
-		replicas = sts.Spec.Replicas
-	}
-
-	return *replicas, nil
-
 }

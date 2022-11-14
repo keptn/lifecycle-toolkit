@@ -159,6 +159,11 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err := k8sClient.Create(ctx, statefulSet)
 				Expect(err).To(BeNil())
 
+				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
+				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				err = k8sClient.Update(ctx, appVersion)
+				Expect(err).To(BeNil())
+
 				By("Looking up the StatefulSet to retrieve its UID")
 				err = k8sClient.Get(ctx, types.NamespacedName{
 					Namespace: namespace,
@@ -230,9 +235,6 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 					},
 				},
 			},
-		},
-		Status: klcv1alpha1.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: common.StateSucceeded,
 		},
 	}
 	By("Invoking Reconciling for Create")

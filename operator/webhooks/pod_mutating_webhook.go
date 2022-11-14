@@ -87,7 +87,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
-	if err == nil && !podIsAnnotated {
+	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
@@ -203,15 +203,15 @@ func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context,
 
 func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
-	var gotWorkloadName, gotAppName, gotVersion, gotPreDeploymentChecks, gotPostDeploymentChecks, gotPreEvaluationChecks, gotPostEvaluationChecks bool
+	var gotWorkloadName, gotVersion bool
 
 	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	appName, gotAppName = getLabelOrAnnotation(sourceResource, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	appName, _ = getLabelOrAnnotation(sourceResource, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
 	version, gotVersion = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-	preDeploymentChecks, gotPreDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
-	postDeploymentChecks, gotPostDeploymentChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
-	preEvaluationChecks, gotPreEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
-	postEvaluationChecks, gotPostEvaluationChecks = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
+	preDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
+	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
+	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
+	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
 
 	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
 		return false, ErrTooLongAnnotations
@@ -222,33 +222,20 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	}
 
 	if gotWorkloadName {
-		targetPod.Annotations[common.WorkloadAnnotation] = workloadName
+		setMapKey(targetPod.Annotations, common.WorkloadAnnotation, workloadName)
 
 		if !gotVersion {
-			targetPod.Annotations[common.VersionAnnotation] = a.calculateVersion(targetPod)
+			setMapKey(targetPod.Annotations, common.VersionAnnotation, a.calculateVersion(targetPod))
 		} else {
-			targetPod.Annotations[common.VersionAnnotation] = version
+			setMapKey(targetPod.Annotations, common.VersionAnnotation, version)
 		}
 
-		if gotAppName {
-			targetPod.Annotations[common.AppAnnotation] = appName
-		}
+		setMapKey(targetPod.Annotations, common.AppAnnotation, appName)
+		setMapKey(targetPod.Annotations, common.PreDeploymentTaskAnnotation, preDeploymentChecks)
+		setMapKey(targetPod.Annotations, common.PostDeploymentTaskAnnotation, postDeploymentChecks)
+		setMapKey(targetPod.Annotations, common.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
+		setMapKey(targetPod.Annotations, common.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
 
-		if gotPreDeploymentChecks {
-			targetPod.Annotations[common.PreDeploymentTaskAnnotation] = preDeploymentChecks
-		}
-
-		if gotPostDeploymentChecks {
-			targetPod.Annotations[common.PostDeploymentTaskAnnotation] = postDeploymentChecks
-		}
-
-		if gotPreEvaluationChecks {
-			targetPod.Annotations[common.PreDeploymentEvaluationAnnotation] = preEvaluationChecks
-		}
-
-		if gotPostEvaluationChecks {
-			targetPod.Annotations[common.PostDeploymentEvaluationAnnotation] = postEvaluationChecks
-		}
 		return true, nil
 	}
 	return false, nil
@@ -528,4 +515,13 @@ func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string,
 		return resource.Labels[secondaryAnnotation], true
 	}
 	return "", false
+}
+
+func setMapKey(myMap map[string]string, key, value string) {
+	if myMap == nil {
+		return
+	}
+	if value != "" {
+		myMap[key] = value
+	}
 }

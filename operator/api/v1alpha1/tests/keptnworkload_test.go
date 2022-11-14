@@ -18,6 +18,7 @@ func TestKeptnWorkload(t *testing.T) {
 		},
 		Spec: v1alpha1.KeptnWorkloadSpec{
 			Version: "version",
+			AppName: "app",
 		},
 	}
 
@@ -34,6 +35,7 @@ func TestKeptnWorkload(t *testing.T) {
 		Spec: v1alpha1.KeptnWorkloadInstanceSpec{
 			KeptnWorkloadSpec: v1alpha1.KeptnWorkloadSpec{
 				Version: "version",
+				AppName: "app",
 			},
 			WorkloadName:    "workload",
 			PreviousVersion: "prev",
@@ -41,7 +43,8 @@ func TestKeptnWorkload(t *testing.T) {
 	}, workloadInstance)
 
 	require.Equal(t, []attribute.KeyValue{
-		common.AppName.String("workload"),
+		common.AppName.String("app"),
+		common.WorkloadName.String("workload"),
 		common.WorkloadVersion.String("version"),
 	}, workload.GetSpanAttributes())
 }

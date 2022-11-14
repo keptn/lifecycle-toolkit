@@ -105,7 +105,8 @@ func (v KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceCon
 
 func (i KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Name),
+		common.AppName.String(i.Spec.AppName),
+		common.WorkloadName.String(i.Name),
 		common.WorkloadVersion.String(i.Spec.Version),
 	}
 }

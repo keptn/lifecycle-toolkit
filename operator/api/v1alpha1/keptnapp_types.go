@@ -102,6 +102,6 @@ func (v KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier
 func (v KeptnApp) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(v.Name),
-		common.WorkloadVersion.String(v.Spec.Version),
+		common.AppVersion.String(v.Spec.Version),
 	}
 }

@@ -42,6 +42,6 @@ func TestKeptnApp(t *testing.T) {
 
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("app"),
-		common.WorkloadVersion.String("version"),
+		common.AppVersion.String("version"),
 	}, app.GetSpanAttributes())
 }

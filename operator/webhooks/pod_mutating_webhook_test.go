@@ -1032,3 +1032,80 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 		})
 	}
 }
+
+func Test_setMapKey(t *testing.T) {
+	type args struct {
+		myMap map[string]string
+		key   string
+		value string
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string]string
+	}{
+		{
+			name: "nil map",
+			args: args{
+				myMap: nil,
+				key:   "foo",
+				value: "bar",
+			},
+			want: nil,
+		},
+		{
+			name: "set map key",
+			args: args{
+				myMap: map[string]string{},
+				key:   "foo",
+				value: "bar",
+			},
+			want: map[string]string{
+				"foo": "bar",
+			},
+		},
+		{
+			name: "add map key",
+			args: args{
+				myMap: map[string]string{
+					"bar": "foo",
+				},
+				key:   "foo",
+				value: "bar",
+			},
+			want: map[string]string{
+				"bar": "foo",
+				"foo": "bar",
+			},
+		},
+		{
+			name: "overwrite map key",
+			args: args{
+				myMap: map[string]string{
+					"foo": "bar",
+				},
+				key:   "foo",
+				value: "foo",
+			},
+			want: map[string]string{
+				"foo": "foo",
+			},
+		},
+		{
+			name: "do not set empty value",
+			args: args{
+				myMap: map[string]string{},
+				key:   "foo",
+				value: "",
+			},
+			want: map[string]string{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			setMapKey(tt.args.myMap, tt.args.key, tt.args.value)
+
+			require.EqualValues(t, tt.want, tt.args.myMap)
+		})
+	}
+}

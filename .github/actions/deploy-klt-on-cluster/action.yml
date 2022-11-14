@@ -35,13 +35,12 @@ runs:
   - name: Import images in k3d
     shell: bash
     run: |
-      k3d image import ~/download/artifacts/keptn-lifecycle-operator-image.tar/keptn-lifecycle-operator-image.tar ~/download/artifacts/scheduler-image.tar/scheduler-image.tar -c test-cluster --verbose
-      #cd ~/download/artifacts
-      #for image in $(ls | grep image.tar);
-      #do
-      #  echo "Importing image: $image"
-      #  k3d image import $image/$image -c test-cluster --verbose
-      #done
+      cd ~/download/artifacts
+      for image in $(ls | grep image.tar);
+      do
+        echo "Importing image: $image"
+        k3d image import $image/$image -c test-cluster -t
+      done
   
   - name: Install cert-manager
     shell: bash

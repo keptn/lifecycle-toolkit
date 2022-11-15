@@ -128,13 +128,13 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
-			//cancell everything, as app pre-eval tasks have failed
+			//cancel everything, as app pre-eval tasks have failed
 			if err := r.cancelWorkloadInstanceActions(ctx, workloadInstance, phase); err != nil {
 				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true}, err
 			}
 			controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
-			return ctrl.Result{}, nil
+			return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 		}
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil

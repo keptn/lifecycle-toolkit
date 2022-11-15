@@ -1,8 +1,7 @@
-apiVersion: apps/v1
-kind: DaemonSet
+apiVersion: v1
+kind: Pod
 metadata:
   labels:
     app: daemonset
-  name: daemonset
 status:
-  numberAvailable: 1
+  phase: Running

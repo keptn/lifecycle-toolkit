@@ -8,6 +8,7 @@ var ErrRetryCountExceeded = fmt.Errorf("retryCount for evaluation exceeded")
 var ErrNoValues = fmt.Errorf("no values")
 var ErrInvalidOperator = fmt.Errorf("invalid operator")
 var ErrCannotMarshalParams = fmt.Errorf("could not marshal parameters")
+var ErrUnsupportedWorkloadInstanceResourceReference = fmt.Errorf("unsupported Resource Reference")
 
 var ErrCannotRetrieveInstancesMsg = "could not retrieve instances: %w"
 var ErrCannotFetchAppMsg = "could not retrieve KeptnApp: %w"

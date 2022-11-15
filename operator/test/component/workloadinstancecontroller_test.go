@@ -3,15 +3,36 @@ package component
 import (
 	"context"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
+
+func getPodTemplateSpec() corev1.PodTemplateSpec {
+	return corev1.PodTemplateSpec{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				"app": "nginx",
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "nginx",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+}
 
 // clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
 // App controller creates AppVersion when a new App CRD is added
@@ -42,12 +63,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []keptncontroller.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
-			Log:      GinkgoLogr,
-			Meters:   initKeptnMeters(),
-			Tracer:   tracer.Tracer("test-app-tracer"),
+			Client:      k8sManager.GetClient(),
+			Scheme:      k8sManager.GetScheme(),
+			Recorder:    k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:         GinkgoLogr,
+			Meters:      initKeptnMeters(),
+			SpanHandler: &keptncontroller.SpanHandler{},
+			Tracer:      tracer.Tracer("test-app-tracer"),
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 		// so that they have a different span/trace
@@ -110,6 +132,164 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.CurrentPhase).To(BeEmpty())
 				}, "3s").Should(Succeed())
 			})
+
+			It("should detect that the referenced StatefulSet is progressing", func() {
+				By("Deploying a StatefulSet to reference")
+				repl := int32(1)
+				statefulSet := &appsv1.StatefulSet{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-statefulset",
+						Namespace: namespace,
+					},
+					Spec: appsv1.StatefulSetSpec{
+						Replicas: &repl,
+						Selector: &metav1.LabelSelector{
+							MatchLabels: map[string]string{
+								"app": "nginx",
+							},
+						},
+						Template: getPodTemplateSpec(),
+					},
+				}
+
+				defer func() {
+					_ = k8sClient.Delete(ctx, statefulSet)
+				}()
+
+				err := k8sClient.Create(ctx, statefulSet)
+				Expect(err).To(BeNil())
+
+				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
+				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				err = k8sClient.Status().Update(ctx, appVersion)
+				Expect(err).To(BeNil())
+
+				By("Bringing the StatefulSet into its ready state")
+				statefulSet.Status.AvailableReplicas = 1
+				statefulSet.Status.ReadyReplicas = 1
+				statefulSet.Status.Replicas = 1
+				err = k8sClient.Status().Update(ctx, statefulSet)
+				Expect(err).To(BeNil())
+
+				By("Looking up the StatefulSet to retrieve its UID")
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      statefulSet.Name,
+				}, statefulSet)
+				Expect(err).To(BeNil())
+
+				By("Creating a WorkloadInstance that references the StatefulSet")
+				wi = &klcv1alpha1.KeptnWorkloadInstance{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      name,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha1.ResourceReference{
+								UID:  statefulSet.UID,
+								Kind: "StatefulSet",
+								Name: "my-statefulset",
+							},
+							Version: "2.0",
+							AppName: appVersion.GetAppName(),
+						},
+						WorkloadName: "test-app-wname",
+						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), wi)
+				Expect(err).To(BeNil())
+
+				wiNameObj := types.NamespacedName{
+					Namespace: wi.Namespace,
+					Name:      wi.Name,
+				}
+				Eventually(func(g Gomega) {
+					wi := &klcv1alpha1.KeptnWorkloadInstance{}
+					err := k8sClient.Get(ctx, wiNameObj, wi)
+					g.Expect(err).To(BeNil())
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+				}, "20s").Should(Succeed())
+			})
+			It("should detect that the referenced DaemonSet is progressing", func() {
+				By("Deploying a DaemonSet to reference")
+				daemonSet := &appsv1.DaemonSet{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-daemonset",
+						Namespace: namespace,
+					},
+					Spec: appsv1.DaemonSetSpec{
+						Selector: &metav1.LabelSelector{
+							MatchLabels: map[string]string{
+								"app": "nginx",
+							},
+						},
+						Template: getPodTemplateSpec(),
+					},
+				}
+
+				defer func() {
+					_ = k8sClient.Delete(ctx, daemonSet)
+				}()
+
+				err := k8sClient.Create(ctx, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
+				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				err = k8sClient.Status().Update(ctx, appVersion)
+				Expect(err).To(BeNil())
+
+				By("Bringing the DaemonSet into its ready state")
+				daemonSet.Status.DesiredNumberScheduled = 1
+				daemonSet.Status.NumberReady = 1
+				err = k8sClient.Status().Update(ctx, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Looking up the DaemonSet to retrieve its UID")
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      daemonSet.Name,
+				}, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Creating a WorkloadInstance that references the DaemonSet")
+				wi = &klcv1alpha1.KeptnWorkloadInstance{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      name,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha1.ResourceReference{
+								UID:  daemonSet.UID,
+								Kind: "DaemonSet",
+								Name: "my-daemonset",
+							},
+							Version: "2.0",
+							AppName: appVersion.GetAppName(),
+						},
+						WorkloadName: "test-app-wname",
+						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), wi)
+				Expect(err).To(BeNil())
+
+				wiNameObj := types.NamespacedName{
+					Namespace: wi.Namespace,
+					Name:      wi.Name,
+				}
+				Eventually(func(g Gomega) {
+					wi := &klcv1alpha1.KeptnWorkloadInstance{}
+					err := k8sClient.Get(ctx, wiNameObj, wi)
+					g.Expect(err).To(BeNil())
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+				}, "20s").Should(Succeed())
+			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
 				k8sClient.Delete(ctx, appVersion)
@@ -130,11 +310,12 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha1.KeptnAppVersionSpec{
+			AppName: name,
 			KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
 				Version: version,
 				Workloads: []klcv1alpha1.KeptnWorkloadRef{
 					{
-						Name:    "wi-test-app-wname",
+						Name:    "wname",
 						Version: "2.0",
 					},
 				},

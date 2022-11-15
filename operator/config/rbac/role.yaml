@@ -14,14 +14,6 @@ rules:
   - statefulsets
   verbs:
   - get
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - replicasets
-  - statefulsets
-  verbs:
-  - get
   - list
   - watch
 - apiGroups:

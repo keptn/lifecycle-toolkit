@@ -129,8 +129,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
 			//cancell everything, as app pre-eval tasks have failed
-			r.cancelWorkloadInstanceActions(ctx, workloadInstance, phase)
-			if err != nil {
+			if err := r.cancelWorkloadInstanceActions(ctx, workloadInstance, phase); err != nil {
 				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true}, err
 			}

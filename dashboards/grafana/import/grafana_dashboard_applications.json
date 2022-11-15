@@ -1,43 +1,4 @@
 {
-  "meta": {
-    "type": "db",
-    "canSave": true,
-    "canEdit": true,
-    "canAdmin": true,
-    "canStar": true,
-    "canDelete": true,
-    "slug": "keptn-workload",
-    "url": "/d/hIXRvXS4k/keptn-workload",
-    "expires": "0001-01-01T00:00:00Z",
-    "created": "2022-10-27T12:35:52Z",
-    "updated": "2022-10-27T12:46:05Z",
-    "updatedBy": "admin",
-    "createdBy": "admin",
-    "version": 2,
-    "hasAcl": false,
-    "isFolder": false,
-    "folderId": 0,
-    "folderUid": "",
-    "folderTitle": "General",
-    "folderUrl": "",
-    "provisioned": false,
-    "provisionedExternalId": "",
-    "annotationsPermissions": {
-      "dashboard": {
-        "canAdd": true,
-        "canEdit": true,
-        "canDelete": true
-      },
-      "organization": {
-        "canAdd": true,
-        "canEdit": true,
-        "canDelete": true
-      }
-    },
-    "publicDashboardAccessToken": "",
-    "publicDashboardUid": "",
-    "publicDashboardEnabled": false
-  },
   "dashboard": {
     "annotations": {
       "list": [
@@ -79,6 +40,7 @@
               "mode": "thresholds"
             },
             "mappings": [],
+            "noValue": "0",
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -97,11 +59,11 @@
         },
         "gridPos": {
           "h": 6,
-          "w": 3,
+          "w": 2,
           "x": 0,
           "y": 0
         },
-        "id": 12,
+        "id": 19,
         "options": {
           "colorMode": "value",
           "graphMode": "area",
@@ -109,10 +71,13 @@
           "orientation": "auto",
           "reduceOptions": {
             "calcs": [
-              "lastNotNull"
+              "sum"
             ],
             "fields": "",
             "values": false
+          },
+          "text": {
+            "valueSize": 80
           },
           "textMode": "auto"
         },
@@ -124,14 +89,256 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Succeeded\"})",
+            "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Succeeded\", keptn_deployment_app_name=\"$Application\"}",
+            "format": "table",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
           }
         ],
         "title": "Succeeded",
+        "transformations": [
+          {
+            "id": "groupBy",
+            "options": {
+              "fields": {
+                "Value": {
+                  "aggregations": [
+                    "max"
+                  ],
+                  "operation": "aggregate"
+                },
+                "keptn_deployment_app_version": {
+                  "aggregations": [],
+                  "operation": "groupby"
+                }
+              }
+            }
+          }
+        ],
         "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 70
+                },
+                {
+                  "color": "red",
+                  "value": 85
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 2,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "pluginVersion": "9.2.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
+            "editorMode": "builder",
+            "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Active Deployments",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 2,
+          "x": 10,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "sum"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {
+            "valueSize": 80
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.2.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
+            "editorMode": "builder",
+            "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Failed\", keptn_deployment_app_name=\"$Application\"}",
+            "format": "table",
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Failed",
+        "transformations": [
+          {
+            "id": "groupBy",
+            "options": {
+              "fields": {
+                "Value": {
+                  "aggregations": [
+                    "max"
+                  ],
+                  "operation": "aggregate"
+                },
+                "keptn_deployment_app_version": {
+                  "aggregations": [
+                    "count"
+                  ],
+                  "operation": "groupby"
+                }
+              }
+            }
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 86400
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 2,
+          "x": 0,
+          "y": 6
+        },
+        "id": 10,
+        "options": {
+          "displayMode": "gradient",
+          "minVizHeight": 10,
+          "minVizWidth": 0,
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showUnfilled": true
+        },
+        "pluginVersion": "9.2.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
+            "editorMode": "builder",
+            "expr": "avg by(keptn_deployment_app_previousversion, keptn_deployment_app_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
+            "format": "time_series",
+            "legendFormat": "{{keptn_deployment_app_previousversion}} - {{keptn_deployment_app_version}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Time between Deployments",
+        "type": "bargauge"
       },
       {
         "datasource": {
@@ -168,16 +375,16 @@
         },
         "gridPos": {
           "h": 6,
-          "w": 10,
-          "x": 3,
-          "y": 0
+          "w": 8,
+          "x": 2,
+          "y": 6
         },
         "id": 16,
         "options": {
           "orientation": "auto",
           "reduceOptions": {
             "calcs": [
-              "mean"
+              "last"
             ],
             "fields": "",
             "values": false
@@ -193,7 +400,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "avg by(keptn_deployment_workload_previousversion) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
             "format": "table",
             "legendFormat": "__auto",
             "range": true,
@@ -214,7 +421,6 @@
               "mode": "thresholds"
             },
             "mappings": [],
-            "noValue": "0",
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -233,77 +439,8 @@
         },
         "gridPos": {
           "h": 6,
-          "w": 3,
-          "x": 13,
-          "y": 0
-        },
-        "id": 3,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "text": {
-            "valueSize": 100
-          },
-          "textMode": "auto"
-        },
-        "pluginVersion": "9.2.1",
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
-            },
-            "editorMode": "builder",
-            "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Failed\"})",
-            "legendFormat": "__auto",
-            "range": true,
-            "refId": "A"
-          }
-        ],
-        "title": "Failed",
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "s"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 6,
-          "w": 5,
-          "x": 0,
+          "w": 2,
+          "x": 10,
           "y": 6
         },
         "id": 14,
@@ -329,8 +466,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "max by(keptn_deployment_workload_version) (keptn_deployment_deploymentduration{keptn_deployment_workload_name=\"$Workload\"})",
-            "format": "table",
+            "expr": "max by(keptn_deployment_app_version) (keptn_app_deploymentduration{keptn_deployment_app_name=\"$Application\"})",
             "interval": "",
             "legendFormat": "{{keptn_workload_version}}",
             "range": true,
@@ -347,72 +483,38 @@
         },
         "fieldConfig": {
           "defaults": {
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "orange",
-                  "value": 5
-                },
-                {
-                  "color": "red",
-                  "value": 10
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 6,
-          "w": 6,
-          "x": 5,
-          "y": 6
-        },
-        "id": 4,
-        "options": {
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true
-        },
-        "pluginVersion": "9.2.1",
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
-            },
-            "editorMode": "builder",
-            "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
-            "legendFormat": "__auto",
-            "range": true,
-            "refId": "A"
-          }
-        ],
-        "title": "Active Deployments",
-        "type": "gauge"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "fieldConfig": {
-          "defaults": {
             "color": {
-              "mode": "thresholds"
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "bars",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 3,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
             },
             "mappings": [],
             "thresholds": {
@@ -427,33 +529,29 @@
                   "value": 80
                 }
               ]
-            },
-            "unit": "s"
+            }
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 6,
-          "w": 5,
-          "x": 11,
-          "y": 6
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 12
         },
-        "id": 10,
+        "id": 6,
         "options": {
-          "displayMode": "gradient",
-          "minVizHeight": 10,
-          "minVizWidth": 0,
-          "orientation": "horizontal",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
           },
-          "showUnfilled": true
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
         },
-        "pluginVersion": "9.2.1",
         "targets": [
           {
             "datasource": {
@@ -461,15 +559,16 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
+            "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
             "format": "table",
-            "legendFormat": "{{keptn_deployment_workload_previousversion}} - {{keptn_deployment_workload_version}}",
+            "interval": "1",
+            "legendFormat": "__auto",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "Time between Deployments",
-        "type": "bargauge"
+        "title": "Deployments Active",
+        "type": "timeseries"
       },
       {
         "datasource": {
@@ -504,10 +603,10 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 6,
-          "w": 11,
+          "h": 7,
+          "w": 9,
           "x": 0,
-          "y": 12
+          "y": 20
         },
         "id": 8,
         "options": {
@@ -527,11 +626,11 @@
               "type": "jaeger",
               "uid": "PC9A941E8F2E49454"
             },
-            "operation": "$Workload/WorkloadPreDeployTasks",
+            "operation": "AppPreDeployTasks",
             "queryType": "search",
             "refId": "A",
             "service": "keptn-lifecycle-operator",
-            "tags": ""
+            "tags": "keptn.deployment.app.name=$Application"
           }
         ],
         "title": "Traces",
@@ -545,37 +644,12 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "mode": "thresholds"
             },
             "custom": {
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "auto",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
             },
             "mappings": [],
             "thresholds": {
@@ -592,27 +666,39 @@
               ]
             }
           },
-          "overrides": []
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "keptn_deployment_workload_version (lastNotNull)"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                }
+              ]
+            }
+          ]
         },
         "gridPos": {
-          "h": 6,
-          "w": 5,
-          "x": 11,
-          "y": 12
+          "h": 7,
+          "w": 3,
+          "x": 9,
+          "y": 20
         },
-        "id": 6,
+        "id": 21,
         "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
           },
-          "tooltip": {
-            "mode": "single",
-            "sort": "none"
-          }
+          "showHeader": false
         },
+        "pluginVersion": "9.2.1",
         "targets": [
           {
             "datasource": {
@@ -620,15 +706,47 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
-            "format": "time_series",
+            "expr": "keptn_deployment_deploymentduration{keptn_deployment_app_name=\"$Application\"}",
+            "format": "table",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "Deployments Active",
-        "type": "timeseries"
+        "title": "Active Workloads",
+        "transformations": [
+          {
+            "id": "groupBy",
+            "options": {
+              "fields": {
+                "Value": {
+                  "aggregations": []
+                },
+                "keptn_deployment_workload_name": {
+                  "aggregations": [],
+                  "operation": "groupby"
+                },
+                "keptn_deployment_workload_version": {
+                  "aggregations": [],
+                  "operation": "aggregate"
+                }
+              }
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "keptn_deployment_workload_version"
+                }
+              ]
+            }
+          }
+        ],
+        "type": "table"
       }
     ],
     "refresh": "5s",
@@ -638,19 +756,23 @@
     "templating": {
       "list": [
         {
-          "current": {},
+          "current": {
+            "selected": false,
+            "text": "podtato-head",
+            "value": "podtato-head"
+          },
           "datasource": {
             "type": "prometheus",
             "uid": "P1809F7CD0C75ACF3"
           },
-          "definition": "label_values(keptn_deployment_workload_name)",
+          "definition": "label_values(keptn_deployment_app_name)",
           "hide": 0,
           "includeAll": false,
           "multi": false,
-          "name": "Workload",
+          "name": "Application",
           "options": [],
           "query": {
-            "query": "label_values(keptn_deployment_workload_name)",
+            "query": "label_values(keptn_deployment_app_name)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
@@ -658,18 +780,29 @@
           "skipUrlSync": false,
           "sort": 0,
           "type": "query"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "filters": [],
+          "hide": 0,
+          "name": "Filters",
+          "skipUrlSync": false,
+          "type": "adhoc"
         }
       ]
     },
     "time": {
-      "from": "now-5m",
+      "from": "now-24h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Keptn Workload",
-    "uid": "hIXRvXS4k",
-    "version": 2,
+    "title": "Keptn Applications",
+    "uid": null,
+    "version": 1,
     "weekStart": ""
   }
 }

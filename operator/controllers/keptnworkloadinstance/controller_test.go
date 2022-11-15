@@ -3,6 +3,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	testrequire "github.com/stretchr/testify/require"
 	appsv1 "k8s.io/api/apps/v1"
@@ -13,45 +14,165 @@ import (
 	"testing"
 )
 
-func TestKeptnWorkloadInstanceReconciler_isReferencedWorkloadRunning(t *testing.T) {
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t *testing.T) {
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
-	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(replicasetFail).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	testrequire.Nil(t, err)
+
+	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
 
 	r := &KeptnWorkloadInstanceReconciler{
-		Client: fake.NewClientBuilder().WithObjects(replicasetFail, statefulsetFail).Build(),
+		Client: fakeClient,
 	}
-	isOwnerRunning, err := r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	if isOwnerRunning {
-		t.Errorf("Should fail!")
-	}
+	testrequire.Equal(t, common.StateProgressing, keptnState)
+}
 
-	isOwnerRunning, err = r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha1.KeptnWorkloadInstance {
+	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-wli",
+			Namespace: "default",
+		},
+		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+				ResourceReference: klcv1alpha1.ResourceReference{
+					UID:  objectMeta.UID,
+					Name: objectMeta.Name,
+					Kind: refKind,
+				},
+			},
+		},
+	}
+	return workloadInstance
+}
+
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
+
+	rep := int32(1)
+	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(statefulsetFail).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
-	if isOwnerRunning {
-		t.Errorf("Should fail!")
+
+	workloadInstance := makeWorkloadInstanceWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fakeClient,
 	}
 
-	replicasetPass := makeReplicaSet("myrep", "default", &rep, 1)
-	statefulsetPass := makeStatefulSet("mystat", "default", &rep, 1)
-
-	r2 := &KeptnWorkloadInstanceReconciler{
-		Client: fake.NewClientBuilder().WithObjects(replicasetPass, statefulsetPass).Build(),
-	}
-	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	if !isOwnerRunning {
-		t.Errorf("Should find a replica owner!")
-	}
+	testrequire.Equal(t, common.StateProgressing, keptnState)
+}
 
-	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
+
+	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(daemonSetFail).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
-	if !isOwnerRunning {
-		t.Errorf("Should find a stateful set owner!")
+
+	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fakeClient,
 	}
 
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	testrequire.Nil(t, err)
+	testrequire.Equal(t, common.StateProgressing, keptnState)
+}
+
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
+
+	rep := int32(1)
+	replicaSet := makeReplicaSet("myrep", "default", &rep, 1)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(replicaSet).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	testrequire.Nil(t, err)
+
+	workloadInstance := makeWorkloadInstanceWithRef(replicaSet.ObjectMeta, "ReplicaSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fakeClient,
+	}
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	testrequire.Nil(t, err)
+	testrequire.Equal(t, common.StateSucceeded, keptnState)
+}
+
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
+
+	rep := int32(1)
+	statefulSet := makeStatefulSet("mystat", "default", &rep, 1)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(statefulSet).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	testrequire.Nil(t, err)
+
+	workloadInstance := makeWorkloadInstanceWithRef(statefulSet.ObjectMeta, "StatefulSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fakeClient,
+	}
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	testrequire.Nil(t, err)
+	testrequire.Equal(t, common.StateSucceeded, keptnState)
+}
+
+func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
+
+	daemonSet := makeDaemonSet("mystat", "default", 1, 1)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(daemonSet).Build()
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	testrequire.Nil(t, err)
+
+	workloadInstance := makeWorkloadInstanceWithRef(daemonSet.ObjectMeta, "DaemonSet")
+
+	err = fakeClient.Create(context.TODO(), workloadInstance)
+	require.Nil(t, err)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fakeClient,
+	}
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	testrequire.Nil(t, err)
+	testrequire.Equal(t, common.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
@@ -130,6 +251,26 @@ func makeStatefulSet(name string, namespace string, wanted *int32, available int
 		},
 		Status: appsv1.StatefulSetStatus{
 			AvailableReplicas: available,
+		},
+	}
+
+}
+
+func makeDaemonSet(name string, namespace string, wanted int32, available int32) *appsv1.DaemonSet {
+
+	return &appsv1.DaemonSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "StatefulSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			UID:       types.UID(name),
+		},
+		Spec: appsv1.DaemonSetSpec{},
+		Status: appsv1.DaemonSetStatus{
+			DesiredNumberScheduled: wanted,
+			NumberReady:            available,
 		},
 	}
 

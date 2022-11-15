@@ -45,7 +45,6 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-
 func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 	rep := appsv1.ReplicaSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
@@ -56,16 +55,12 @@ func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Contex
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
-	daemonSets := &appsv1.DaemonSetList{}
-	if err := r.Client.List(ctx, daemonSets, client.InNamespace(namespace)); err != nil {
+	daemonSet := &appsv1.DaemonSet{}
+	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, daemonSet)
+	if err != nil {
 		return false, err
 	}
-	for _, daemonSet := range daemonSets.Items {
-		if daemonSet.UID == resource.UID {
-			return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
-		}
-	}
-	return false, nil
+	return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {

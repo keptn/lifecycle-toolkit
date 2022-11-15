@@ -22,7 +22,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 			workloadInstance.Status.DeploymentStatus = common.StateProgressing
 		}
 	} else {
-		isReplicaRunning, err := r.isOwnerRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
+		isReplicaRunning, err := r.isReferencedWorkloadRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 		if err != nil {
 			return common.StateUnknown, err
 		}
@@ -40,20 +40,19 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isOwnerRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isReferencedWorkloadRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
 
 	var replicas *int32
 	var desiredReplicas int32
 	switch resource.Kind {
 	case "ReplicaSet":
-		dep := appsv1.ReplicaSet{}
-		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &dep)
+		rep := appsv1.ReplicaSet{}
+		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
 		if err != nil {
 			return false, err
 		}
-		replicas = dep.Spec.Replicas
-		desiredReplicas = dep.Status.AvailableReplicas
-		//r.Log.Info(fmt.Sprintf("%d %d ", replicas, desiredReplicas))
+		replicas = rep.Spec.Replicas
+		desiredReplicas = rep.Status.AvailableReplicas
 	case "StatefulSet":
 		sts := appsv1.StatefulSet{}
 		err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
@@ -62,7 +61,6 @@ func (r *KeptnWorkloadInstanceReconciler) isOwnerRunning(ctx context.Context, re
 		}
 		replicas = sts.Spec.Replicas
 		desiredReplicas = sts.Status.AvailableReplicas
-		//r.Log.Info(fmt.Sprintf("%d %d ", replicas, desiredReplicas))
 	}
 
 	return *replicas == desiredReplicas, nil

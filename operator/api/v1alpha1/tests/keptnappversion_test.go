@@ -243,3 +243,73 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 		})
 	}
 }
+
+func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
+	app := v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
+			PreDeploymentStatus:            common.StatePending,
+			PreDeploymentEvaluationStatus:  common.StatePending,
+			PostDeploymentStatus:           common.StatePending,
+			PostDeploymentEvaluationStatus: common.StatePending,
+			WorkloadOverallStatus:          common.StatePending,
+			Status:                         common.StatePending,
+		},
+	}
+
+	tests := []struct {
+		app   v1alpha1.KeptnAppVersion
+		phase common.KeptnPhaseType
+		want  v1alpha1.KeptnAppVersion
+	}{
+		{
+			app:   app,
+			phase: common.PhaseAppPostEvaluation,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StatePending,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseAppPreEvaluation,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StateCancelled,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseWorkloadDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			tt.app.CancelRemainingPhases(tt.phase)
+			require.Equal(t, tt.want, tt.app)
+		})
+	}
+
+}

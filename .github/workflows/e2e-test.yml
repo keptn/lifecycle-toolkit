@@ -4,6 +4,7 @@ on:
 env:
   GO_VERSION: "~1.19"
   CERT_MANAGER_VERSION: "v1.10.0"
+  K3D_VERSION: "v5.4.6"
 defaults:
   run:
     shell: bash
@@ -27,6 +28,7 @@ jobs:
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
           cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
+          k3d-version: ${{ env.K3D_VERSION }}
 
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}

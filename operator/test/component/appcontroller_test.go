@@ -63,7 +63,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "test-app"
+		name = "test-appcontroller"
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
@@ -72,11 +72,12 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 		var (
 			instance *klcv1alpha1.KeptnApp
 		)
-		Context("with a new App CRD", func() {
 
-			BeforeEach(func() {
-				instance = createInstanceInCluster(name, namespace, version, instance)
-			})
+		BeforeEach(func() {
+			instance = createInstanceInCluster(name, namespace, version, instance)
+		})
+
+		Context("with a new App CRD", func() {
 
 			It("should update the status of the CR ", func() {
 				assertResourceUpdated(instance)
@@ -84,13 +85,13 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 			It("should update the spans", func() {
 				assertAppSpan(instance, spanRecorder)
 			})
-			AfterEach(func() {
-				// Remember to clean up the cluster after each test
-				deleteAppInCluster(instance)
-				// Reset span recorder after each spec
-				resetSpanRecords(tracer, spanRecorder)
-			})
 
+		})
+		AfterEach(func() {
+			// Remember to clean up the cluster after each test
+			deleteAppInCluster(instance)
+			// Reset span recorder after each spec
+			resetSpanRecords(tracer, spanRecorder)
 		})
 
 	})
@@ -124,10 +125,10 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRecorder) {
 	By("Comparing spans")
 	var spans []otelsdk.ReadOnlySpan
-	Eventually(func() int {
+	Eventually(func() bool {
 		spans = spanRecorder.Ended()
-		return len(spans)
-	}).Should(Equal(3))
+		return len(spans) >= 3
+	}).Should(BeTrue())
 
 	Expect(spans[0].Name()).To(Equal("appversion_deployment"))
 	Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
@@ -140,7 +141,6 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 	Expect(spans[2].Name()).To(Equal("reconcile_app"))
 	Expect(spans[2].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
 	Expect(spans[2].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
-
 }
 
 func createInstanceInCluster(name string, namespace string, version string, instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp {

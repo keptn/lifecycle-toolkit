@@ -211,6 +211,82 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
+			It("should detect that the referenced DaemonSet is progressing", func() {
+				By("Deploying a DaemonSet to reference")
+				daemonSet := &appsv1.DaemonSet{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-statefulset",
+						Namespace: namespace,
+					},
+					Spec: appsv1.DaemonSetSpec{
+						Selector: &metav1.LabelSelector{
+							MatchLabels: map[string]string{
+								"app": "nginx",
+							},
+						},
+						Template: getPodTemplateSpec(),
+					},
+				}
+
+				defer func() {
+					_ = k8sClient.Delete(ctx, daemonSet)
+				}()
+
+				err := k8sClient.Create(ctx, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
+				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				err = k8sClient.Status().Update(ctx, appVersion)
+				Expect(err).To(BeNil())
+
+				By("Bringing the DaemonSet into its ready state")
+				daemonSet.Status.DesiredNumberScheduled = 1
+				daemonSet.Status.NumberReady = 1
+				err = k8sClient.Status().Update(ctx, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Looking up the DaemonSet to retrieve its UID")
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      daemonSet.Name,
+				}, daemonSet)
+				Expect(err).To(BeNil())
+
+				By("Creating a WorkloadInstance that references the DaemonSet")
+				wi = &klcv1alpha1.KeptnWorkloadInstance{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      name,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha1.ResourceReference{
+								UID:  daemonSet.UID,
+								Kind: "DaemonSet",
+							},
+							Version: "2.0",
+							AppName: appVersion.GetAppName(),
+						},
+						WorkloadName: "test-app-wname",
+						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), wi)
+				Expect(err).To(BeNil())
+
+				wiNameObj := types.NamespacedName{
+					Namespace: wi.Namespace,
+					Name:      wi.Name,
+				}
+				Eventually(func(g Gomega) {
+					wi := &klcv1alpha1.KeptnWorkloadInstance{}
+					err := k8sClient.Get(ctx, wiNameObj, wi)
+					g.Expect(err).To(BeNil())
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+				}, "20s").Should(Succeed())
+			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
 				k8sClient.Delete(ctx, appVersion)

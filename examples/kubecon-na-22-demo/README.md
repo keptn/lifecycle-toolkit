@@ -20,9 +20,6 @@ Afterwards create a secret with the created webhook
 If you want to port-forward to a different port, please execute:
 > make port-forward-grafana GRAFANA_PORT_FORWARD=<port>
 
-## Import Grafana Dashboard
-> make import-grafana-dashboard
-
 ## Deploy Version 1 of the PodTatoHead
 > make deploy-version-1
 

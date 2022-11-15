@@ -445,7 +445,7 @@
           },
           "showUnfilled": true
         },
-        "pluginVersion": "9.1.7",
+        "pluginVersion": "9.2.1",
         "targets": [
           {
             "datasource": {
@@ -540,7 +540,7 @@
           },
           "showUnfilled": true
         },
-        "pluginVersion": "9.1.7",
+        "pluginVersion": "9.2.1",
         "targets": [
           {
             "datasource": {
@@ -724,8 +724,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -786,8 +785,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -880,9 +878,9 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Keptn Lifecycle Controller Metrics",
-    "uid": "wlo2MpIVk",
-    "version": 13,
+    "title": "Keptn Lifecycle Toolkit Metrics",
+    "uid": null,
+    "version": 1,
     "weekStart": ""
   }
 }

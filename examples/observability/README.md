@@ -106,20 +106,12 @@ Also, in the [Graph](http://localhost:9090/graph?g0.expr=&g0.tab=1&g0.stacked=0&
 
 ![](./assets/metrics.png)
 
-To view the exported metrics in Grafana, we have provided an example dashboard that you can import and view in Grafana. To do so, please first create a port-forward for the `grafana` service in the `monitoring` namespace:
+To view the exported metrics in Grafana, we have provided dashboards which have been automatically installed with this example. To display them, please first create a port-forward for the `grafana` service in the `monitoring` namespace:
 
 ```sh
 make port-forward-grafana
 ```
 
-Afterwards, you can import our example dashboard using the following command:
-
-```sh
-make import-grafana-dashboard
-```
-
-*Note:* If this command does not work, or if you do not have `curl` installed, you can alternatively import the Dashboard via the Grafana UI, using the file `./assets/grafana_dashboard_import_ui.json`.
-
-After the dashboard has been set up, you should be able to see it in the [Grafana UI](http://localhost:3000/d/wlo2MpIVk/keptn-lifecycle-toolkit-metrics) under `Dashboards > General`.
+Now, you should be able to see it in the [Grafana UI](http://localhost:3000/d/wlo2MpIVk/keptn-lifecycle-toolkit-metrics) under `Dashboards > General`.
 
 ![](./assets/grafana_dashboard.png)

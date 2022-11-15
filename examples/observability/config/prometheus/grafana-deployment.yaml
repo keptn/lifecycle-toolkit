@@ -140,6 +140,15 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/workload-total
           name: grafana-dashboard-workload-total
           readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/keptn-applications
+          name: grafana-dashboard-keptn-applications
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/keptn-workloads
+          name: grafana-dashboard-keptn-workloads
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/keptn-overview
+          name: grafana-dashboard-keptn-overview
+          readOnly: false
         - mountPath: /etc/grafana
           name: grafana-config
           readOnly: false
@@ -237,6 +246,15 @@ spec:
       - configMap:
           name: grafana-dashboard-workload-total
         name: grafana-dashboard-workload-total
+      - configMap:
+          name: grafana-dashboard-keptn-workloads
+        name: grafana-dashboard-keptn-workloads
+      - configMap:
+          name: grafana-dashboard-keptn-applications
+        name: grafana-dashboard-keptn-applications
+      - configMap:
+          name: grafana-dashboard-keptn-overview
+        name: grafana-dashboard-keptn-overview
       - name: grafana-config
         secret:
           secretName: grafana-config

@@ -91,7 +91,7 @@ func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary
 }
 
 func (s StatusSummary) GetTotalCount() int {
-	return s.failed + s.succeeded + s.progressing + s.pending + s.unknown
+	return s.failed + s.succeeded + s.progressing + s.pending + s.unknown + s.cancelled
 }
 
 func GetOverallState(s StatusSummary) KeptnState {

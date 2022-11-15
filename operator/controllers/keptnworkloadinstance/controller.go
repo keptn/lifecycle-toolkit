@@ -325,6 +325,5 @@ func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1
 func (r *KeptnWorkloadInstanceReconciler) cancelWorkloadInstanceActions(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType) error {
 	workloadInstance.CancelRemainingPhases(phase)
 	workloadInstance.Complete()
-	err := r.Client.Status().Update(ctx, workloadInstance)
-	return err
+	return r.Client.Status().Update(ctx, workloadInstance)
 }

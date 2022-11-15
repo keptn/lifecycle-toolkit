@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo/v2 v2.4.0
-	github.com/onsi/gomega v1.22.1
+	github.com/onsi/gomega v1.24.1
 	go.opentelemetry.io/otel v0.20.0
 	go.opentelemetry.io/otel/exporters/otlp v0.20.0
 	go.opentelemetry.io/otel/exporters/stdout v0.20.0

@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: DaemonlSet
+kind: DaemonSet
 metadata:
   labels:
     app: daemonset

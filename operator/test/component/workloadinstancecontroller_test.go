@@ -188,6 +188,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 							ResourceReference: klcv1alpha1.ResourceReference{
 								UID:  statefulSet.UID,
 								Kind: "StatefulSet",
+								Name: "my-statefulset",
 							},
 							Version: "2.0",
 							AppName: appVersion.GetAppName(),
@@ -215,7 +216,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				By("Deploying a DaemonSet to reference")
 				daemonSet := &appsv1.DaemonSet{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-statefulset",
+						Name:      "my-daemonset",
 						Namespace: namespace,
 					},
 					Spec: appsv1.DaemonSetSpec{
@@ -264,6 +265,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 							ResourceReference: klcv1alpha1.ResourceReference{
 								UID:  daemonSet.UID,
 								Kind: "DaemonSet",
+								Name: "my-daemonset",
 							},
 							Version: "2.0",
 							AppName: appVersion.GetAppName(),

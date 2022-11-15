@@ -117,7 +117,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			r.Log.Error(err, "cannot unbind span")
 		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
+		// ignoring ctx to don't use this as parent span
+		_, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
 		if err != nil {
 			r.Log.Error(err, "could not get span")
 		}

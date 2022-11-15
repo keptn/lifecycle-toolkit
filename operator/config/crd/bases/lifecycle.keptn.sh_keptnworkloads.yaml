@@ -64,6 +64,8 @@ spec:
                 properties:
                   kind:
                     type: string
+                  name:
+                    type: string
                   uid:
                     description: UID is a type that holds unique ID values, including
                       UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
@@ -72,6 +74,7 @@ spec:
                     type: string
                 required:
                 - kind
+                - name
                 - uid
                 type: object
               version:

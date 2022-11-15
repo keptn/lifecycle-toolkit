@@ -5,12 +5,54 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/stretchr/testify/require"
 	testrequire "github.com/stretchr/testify/require"
+	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"testing"
 )
+
+func TestKeptnWorkloadInstanceReconciler_isReferencedWorkloadRunning(t *testing.T) {
+
+	rep := int32(1)
+	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
+	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
+
+	r := &KeptnWorkloadInstanceReconciler{
+		Client: fake.NewClientBuilder().WithObjects(replicasetFail, statefulsetFail).Build(),
+	}
+	isOwnerRunning, err := r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+	testrequire.Nil(t, err)
+	if isOwnerRunning {
+		t.Errorf("Should fail!")
+	}
+
+	isOwnerRunning, err = r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+	testrequire.Nil(t, err)
+	if isOwnerRunning {
+		t.Errorf("Should fail!")
+	}
+
+	replicasetPass := makeReplicaSet("myrep", "default", &rep, 1)
+	statefulsetPass := makeStatefulSet("mystat", "default", &rep, 1)
+
+	r2 := &KeptnWorkloadInstanceReconciler{
+		Client: fake.NewClientBuilder().WithObjects(replicasetPass, statefulsetPass).Build(),
+	}
+	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+	testrequire.Nil(t, err)
+	if !isOwnerRunning {
+		t.Errorf("Should find a replica owner!")
+	}
+
+	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+	testrequire.Nil(t, err)
+	if !isOwnerRunning {
+		t.Errorf("Should find a stateful set owner!")
+	}
+
+}
 
 func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	p1 := makeNominatedPod("pod1", "node1", v1.PodRunning)
@@ -20,7 +62,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithLists(podList).Build(),
 	}
-	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
+	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "pod1"}, "node1")
 	testrequire.Nil(t, err)
 	if !isPodRunning {
 		t.Errorf("Wrong!")
@@ -29,7 +71,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r2 := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithLists(podList2).Build(),
 	}
-	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: types.UID("pod1")}, "node1")
+	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "pod1"}, "node1")
 	testrequire.Nil(t, err)
 	if isPodRunning {
 		t.Errorf("Wrong!")
@@ -49,6 +91,48 @@ func makeNominatedPod(podName string, nodeName string, phase v1.PodPhase) v1.Pod
 			NominatedNodeName: nodeName,
 		},
 	}
+}
+
+func makeReplicaSet(name string, namespace string, wanted *int32, available int32) *appsv1.ReplicaSet {
+
+	return &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			UID:       types.UID(name),
+		},
+		Spec: appsv1.ReplicaSetSpec{
+			Replicas: wanted,
+		},
+		Status: appsv1.ReplicaSetStatus{
+			AvailableReplicas: available,
+		},
+	}
+
+}
+
+func makeStatefulSet(name string, namespace string, wanted *int32, available int32) *appsv1.StatefulSet {
+
+	return &appsv1.StatefulSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "StatefulSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			UID:       types.UID(name),
+		},
+		Spec: appsv1.StatefulSetSpec{
+			Replicas: wanted,
+		},
+		Status: appsv1.StatefulSetStatus{
+			AvailableReplicas: available,
+		},
+	}
+
 }
 
 func Test_getLatestAppVersion(t *testing.T) {

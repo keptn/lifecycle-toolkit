@@ -4,6 +4,5 @@ metadata:
   labels:
     app: test
   name: test
-  namespace: test
 status:
   readyReplicas: 1

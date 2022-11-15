@@ -2,7 +2,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnWorkload
 metadata:
   name: waiter-waiter
-  namespace: test
 
 ---
 
@@ -10,7 +9,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnWorkloadInstance
 metadata:
   name: waiter-waiter-0.4
-  namespace: test
 status:
   currentPhase: Completed
   deploymentStatus: Succeeded

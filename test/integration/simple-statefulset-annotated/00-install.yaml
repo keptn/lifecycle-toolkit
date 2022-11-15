@@ -1,4 +1,3 @@
-
 ---
 
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -12,28 +11,28 @@ spec:
         console.log("Pre-Deployment Task has been executed");
 
 ---
-
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
-    app: test
-  name: test
+    app: statefultest
+  name: statefultest
   annotations:
-    keptn.sh/workload: waiter
+    keptn.sh/workload: work
     keptn.sh/version: "0.4"
     keptn.sh/pre-deployment-tasks: pre-deployment-hello
-    keptn.sh/post-deployment-tasks: pre-deployment-hello
 spec:
+  serviceName: statefultest
   replicas: 2
   selector:
     matchLabels:
-      app: test
-  strategy: {}
+      app: statefultest
   template:
     metadata:
       labels:
-        app: test
+        app: statefultest
+      annotations:
+        rollme: what
     spec:
       containers:
         - image: busybox

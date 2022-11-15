@@ -18,7 +18,7 @@ spec:
       labels:
         app: daemonset
       annotations:
-        rollme: what
+        rollme: eSoWV
     spec:
       containers:
         - image: busybox

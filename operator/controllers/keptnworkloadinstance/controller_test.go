@@ -13,7 +13,7 @@ import (
 	"testing"
 )
 
-func TestKeptnWorkloadInstanceReconciler_isOwnerRunning(t *testing.T) {
+func TestKeptnWorkloadInstanceReconciler_isReferencedWorkloadRunning(t *testing.T) {
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
@@ -22,13 +22,13 @@ func TestKeptnWorkloadInstanceReconciler_isOwnerRunning(t *testing.T) {
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithObjects(replicasetFail, statefulsetFail).Build(),
 	}
-	isOwnerRunning, err := r.isOwnerRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+	isOwnerRunning, err := r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
 	testrequire.Nil(t, err)
 	if isOwnerRunning {
 		t.Errorf("Should fail!")
 	}
 
-	isOwnerRunning, err = r.isOwnerRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+	isOwnerRunning, err = r.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
 	testrequire.Nil(t, err)
 	if isOwnerRunning {
 		t.Errorf("Should fail!")
@@ -40,13 +40,13 @@ func TestKeptnWorkloadInstanceReconciler_isOwnerRunning(t *testing.T) {
 	r2 := &KeptnWorkloadInstanceReconciler{
 		Client: fake.NewClientBuilder().WithObjects(replicasetPass, statefulsetPass).Build(),
 	}
-	isOwnerRunning, err = r2.isOwnerRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
+	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "myrep", Name: "myrep", Kind: "ReplicaSet"}, "default")
 	testrequire.Nil(t, err)
 	if !isOwnerRunning {
 		t.Errorf("Should find a replica owner!")
 	}
 
-	isOwnerRunning, err = r2.isOwnerRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
+	isOwnerRunning, err = r2.isReferencedWorkloadRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "mystat", Name: "mystat", Kind: "StatefulSet"}, "default")
 	testrequire.Nil(t, err)
 	if !isOwnerRunning {
 		t.Errorf("Should find a stateful set owner!")

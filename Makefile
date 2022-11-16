@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
-CERT_MANAGER_VERSION ?= v1.8.0
-TAG ?= "$(shell date +%Y%m%d%s)"
-TAG := $(TAG)
+CERT_MANAGER_VERSION?=v1.8.0
+TAG?="$(shell date +%Y%m%d%s)"
+TAG:=$(TAG)
 
 # RELEASE_REGISTRY is the container registry to push
 # into.

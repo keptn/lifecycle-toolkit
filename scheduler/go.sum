@@ -747,8 +747,8 @@ k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 h1:MQ8BAZPZlWk3S9K4a9NCkI
 k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1/go.mod h1:C/N6wCaBHeBHkHUesQOQy2/MZqGgMAFPqGsGQLdbZBU=
 k8s.io/kube-scheduler v0.25.4 h1:/AVGKBw8akKDdlYeJ8ki87Fkje517Kq7hxpdsqyOXOM=
 k8s.io/kube-scheduler v0.25.4/go.mod h1:o3NLBkBhJMI7QjERmWwi/uLE0+YijV1xxWmDmWeZTvE=
-k8s.io/kubernetes v1.25.3 h1:Ljx/Ew9+dt7rN9ob3V+N/aoDy7nDSbmr35IbYGRTyqE=
-k8s.io/kubernetes v1.25.3/go.mod h1:lvEY+3iJhh+sGIK1LorGkI56rW0eLGsfalnp68wQwYU=
+k8s.io/kubernetes v1.25.4 h1:M1+MR8IxE64zHhSSDn30twChLaOI+p0Kt77pvyQMKwU=
+k8s.io/kubernetes v1.25.4/go.mod h1:lvEY+3iJhh+sGIK1LorGkI56rW0eLGsfalnp68wQwYU=
 k8s.io/mount-utils v0.25.4 h1:+j1GBo6rH6sM1GvOI4jcu1IpjA5WssuwW7UEkQevaTU=
 k8s.io/mount-utils v0.25.4/go.mod h1:odpFnGwJfFjN3SRnjfGS0902ubcj/W6hDOrNDmSSINo=
 k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed h1:jAne/RjBTyawwAy0utX5eqigAwz/lQhTmy+Hr/Cpue4=

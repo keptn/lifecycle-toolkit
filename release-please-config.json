@@ -6,7 +6,7 @@
       "prerelease": false,
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true,
-      "pull-request-title-pattern": "chore: release ${branch}",
+      "pull-request-title-pattern": "chore: release${component} ${version}",
       "draft": false,
       "extra-files": [
         "README.md",

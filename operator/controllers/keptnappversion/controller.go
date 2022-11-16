@@ -21,6 +21,9 @@ import (
 	"fmt"
 	"time"
 
+	
+
+
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"go.opentelemetry.io/otel/codes"
@@ -47,9 +50,9 @@ type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
 	Log         logr.Logger
-	Recorder    record.EventRecorder
-	Tracer      trace.Tracer
-	Meters      common.KeptnMeters
+	   Recorder    record.EventRecorder
+	 Tracer      trace.Tracer
+	  Meters      common.KeptnMeters
 	SpanHandler *controllercommon.SpanHandler
 }
 
@@ -67,7 +70,7 @@ type KeptnAppVersionReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
-func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (    r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	r.Log.Info("Searching for Keptn App Version")
 

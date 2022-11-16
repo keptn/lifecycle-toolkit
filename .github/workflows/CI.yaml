@@ -58,9 +58,23 @@ jobs:
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
+  format:
+    name: Go format check
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Format check
+        run: |
+          if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; 
+          then 
+            exit 1; 
+          fi
+
   test:
     name: Unit Tests
-    needs: prepare_ci_run
+    needs: [ prepare_ci_run, format ]
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -92,7 +106,7 @@ jobs:
 
   build_image:
     name: Build Docker Image
-    needs: prepare_ci_run
+    needs: [ prepare_ci_run, format ]
     runs-on: ubuntu-22.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
@@ -164,7 +178,7 @@ jobs:
 
   component_tests:
     name: Component Tests
-    needs: prepare_ci_run
+    needs: [ prepare_ci_run, format ]
     uses: ./.github/workflows/component-test.yml
 
   integration_tests:

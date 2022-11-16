@@ -2,6 +2,8 @@ package component
 
 import (
 	"context"
+	"time"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -289,6 +291,101 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
 				}, "20s").Should(Succeed())
+			})
+			It("should be cancelled when pre-eval checks failed", func() {
+				evaluation := &klcv1alpha1.KeptnEvaluation{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "pre-eval-eval-def",
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnEvaluationSpec{
+						EvaluationDefinition: "eval-def",
+						Workload:             "test-app-wname",
+						WorkloadVersion:      "2.0",
+						Type:                 common.PreDeploymentEvaluationCheckType,
+						Retries:              10,
+					},
+				}
+
+				defer func() {
+					_ = k8sClient.Delete(ctx, evaluation)
+				}()
+
+				By("Creating Evaluation")
+				err := k8sClient.Create(context.TODO(), evaluation)
+				Expect(err).To(BeNil())
+
+				evaluation.Status = klcv1alpha1.KeptnEvaluationStatus{
+					OverallStatus: common.StateFailed,
+					RetryCount:    10,
+					EvaluationStatus: map[string]klcv1alpha1.EvaluationStatusItem{
+						"something": {
+							Status: common.StateFailed,
+							Value:  "10",
+						},
+					},
+					StartTime: metav1.Time{Time: time.Now().UTC()},
+					EndTime:   metav1.Time{Time: time.Now().UTC().Add(5 * time.Second)},
+				}
+
+				err = k8sClient.Status().Update(ctx, evaluation)
+				Expect(err).To(BeNil())
+
+				wi = &klcv1alpha1.KeptnWorkloadInstance{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "test-app-wname-2.0",
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+							Version:                  "2.0",
+							AppName:                  appVersion.GetAppName(),
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
+						WorkloadName: "test-app-wname",
+					},
+				}
+				By("Creating WorkloadInstance")
+				err = k8sClient.Create(context.TODO(), wi)
+				Expect(err).To(BeNil())
+
+				wi.Status = klcv1alpha1.KeptnWorkloadInstanceStatus{
+					PreDeploymentStatus:            common.StateSucceeded,
+					PreDeploymentEvaluationStatus:  common.StateProgressing,
+					DeploymentStatus:               common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
+					CurrentPhase:                   common.PhaseWorkloadPreEvaluation.ShortName,
+					Status:                         common.StateProgressing,
+					PreDeploymentEvaluationTaskStatus: []klcv1alpha1.EvaluationStatus{
+						{
+							EvaluationName:           "pre-eval-eval-def",
+							Status:                   common.StateProgressing,
+							EvaluationDefinitionName: "eval-def",
+						},
+					},
+				}
+
+				err = k8sClient.Status().Update(ctx, wi)
+				Expect(err).To(BeNil())
+
+				By("Ensuring all phases after pre-eval checks are cancelled")
+				wiNameObj := types.NamespacedName{
+					Namespace: wi.Namespace,
+					Name:      wi.Name,
+				}
+				Eventually(func(g Gomega) {
+					wi := &klcv1alpha1.KeptnWorkloadInstance{}
+					err := k8sClient.Get(ctx, wiNameObj, wi)
+					g.Expect(err).To(BeNil())
+					g.Expect(wi).To(Not(BeNil()))
+					g.Expect(wi.Status.PreDeploymentStatus).To(BeEquivalentTo(common.StateSucceeded))
+					g.Expect(wi.Status.PreDeploymentEvaluationStatus).To(BeEquivalentTo(common.StateFailed))
+					g.Expect(wi.Status.DeploymentStatus).To(BeEquivalentTo(common.StateCancelled))
+					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(common.StateCancelled))
+					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(common.StateCancelled))
+					g.Expect(wi.Status.Status).To(BeEquivalentTo(common.StateFailed))
+				}, "10s").Should(Succeed())
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test

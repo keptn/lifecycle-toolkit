@@ -3,7 +3,6 @@
   "extends": [
     "config:base",
     ":gitSignOff",
-    "schedule:nonOfficeHours",
     ":semanticCommitTypeAll(deps)",
     ":semanticCommitScope()",
     "group:monorepos",
@@ -17,6 +16,10 @@
   "postUpdateOptions": [
     "gomodTidy",
     "gomodMassage"
+  ],
+  "ignorePaths": [
+    "**/test/**",
+    "**/tests/**"
   ],
   "packageRules": [
     {
@@ -34,26 +37,26 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["^Makefile$"],
+      "fileMatch": ["(^|\\/)Makefile$"],
       "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION?=(?<currentValue>.*?)$\\s"
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION ?\\?= ?(?<currentValue>.*?)$\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     },
     {
-      "fileMatch": ["^Makefile$"],
-      "matchStrings": ["^CERT_MANAGER_VERSION?=(?<currentValue>.*?)$"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "cert-manager"
+      "fileMatch": ["(^|\\/)Makefile$"],
+      "matchStrings": ["^KUSTOMIZE_VERSION ?\\?= ?(?<currentValue>.*?)$"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "github.com/kubernetes-sigs/kustomize"
     },
     {
-      "fileMatch": ["^Makefile$"],
-      "matchStrings": ["^KUSTOMIZE_VERSION?=(?<currentValue>.*?)$"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "kustomize"
+      "fileMatch": ["(^|\\/)Makefile$"],
+      "matchStrings": ["^JAEGER_VERSION ?\\??= ?(?<currentValue>.*?)$"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "jaegertracing/jaeger"
     },
     {
-      "fileMatch": ["^Makefile$"],
+      "fileMatch": ["(^|\\/)Makefile$"],
       "matchStrings": ["go install (?<depName>sigs\\.k8s\\.io\\/controller-runtime\\/tools\\/setup-envtest)@(?<currentValue>.*)"],
       "datasourceTemplate": "go"
     }

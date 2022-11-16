@@ -3,6 +3,7 @@ package keptntask
 import (
 	"context"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -44,18 +45,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 		Scheme:   fakeClient.Scheme(),
 	}
 
-	task := &klcv1alpha1.KeptnTask{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-task",
-			Namespace: namespace,
-		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
-			Workload:       "my-workload",
-			AppName:        "my-app",
-			AppVersion:     "0.1.0",
-			TaskDefinition: taskDefinitionName,
-		},
-	}
+	task := makeTask("my-task", namespace, taskDefinitionName)
 
 	err = fakeClient.Create(context.TODO(), task)
 	require.Nil(t, err)
@@ -85,6 +75,87 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
+}
+
+func TestKeptnTaskReconciler_updateJob(t *testing.T) {
+	namespace := "default"
+	taskDefinitionName := "my-task-definition"
+
+	job := makeJob("my.job", namespace)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
+
+	fakeRecorder := &record.FakeRecorder{}
+
+	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	require.Nil(t, err)
+
+	job.Status.Failed = 1
+
+	err = fakeClient.Status().Update(context.TODO(), job)
+	require.Nil(t, err)
+
+	r := &KeptnTaskReconciler{
+		Client:   fakeClient,
+		Recorder: fakeRecorder,
+		Log:      ctrl.Log.WithName("task-controller"),
+		Scheme:   fakeClient.Scheme(),
+	}
+
+	task := makeTask("my-task", namespace, taskDefinitionName)
+
+	err = fakeClient.Create(context.TODO(), task)
+	require.Nil(t, err)
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: namespace,
+		},
+	}
+
+	task.Status.JobName = job.Name
+
+	err = r.updateJob(context.TODO(), req, task)
+	require.Nil(t, err)
+
+	require.Equal(t, common.StateFailed, task.Status.Status)
+
+	// now, set the job to succeeded
+	job.Status.Succeeded = 1
+	job.Status.Failed = 0
+
+	err = fakeClient.Status().Update(context.TODO(), job)
+	require.Nil(t, err)
+
+	err = r.updateJob(context.TODO(), req, task)
+	require.Nil(t, err)
+
+	require.Equal(t, common.StateSucceeded, task.Status.Status)
+}
+
+func makeJob(name, namespace string) *batchv1.Job {
+	return &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+		},
+		Spec: batchv1.JobSpec{},
+	}
+}
+
+func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha1.KeptnTask {
+	return &klcv1alpha1.KeptnTask{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha1.KeptnTaskSpec{
+			Workload:       "my-workload",
+			AppName:        "my-app",
+			AppVersion:     "0.1.0",
+			TaskDefinition: taskDefinitionName,
+		},
+	}
 }
 
 func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *klcv1alpha1.KeptnTaskDefinition {

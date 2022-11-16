@@ -75,6 +75,8 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
 }
 
 func TestKeptnTaskReconciler_updateJob(t *testing.T) {
@@ -169,6 +171,8 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 				ConfigMapReference: klcv1alpha1.ConfigMapReference{
 					Name: configMapName,
 				},
+				Parameters:       klcv1alpha1.TaskParameters{Inline: map[string]string{"foo": "bar"}},
+				SecureParameters: klcv1alpha1.SecureParameters{Secret: "my-secret"},
 			},
 		},
 	}

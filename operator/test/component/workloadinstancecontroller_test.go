@@ -385,7 +385,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(common.StateCancelled))
 					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(common.StateCancelled))
 					g.Expect(wi.Status.Status).To(BeEquivalentTo(common.StateFailed))
-				}, "10s").Should(Succeed())
+				}, "30s").Should(Succeed())
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test

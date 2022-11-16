@@ -422,5 +422,7 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 	By("Invoking Reconciling for Create")
 
 	Expect(ignoreAlreadyExists(k8sClient.Create(ctx, instance))).Should(Succeed())
+	instance.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+	_ = k8sClient.Status().Update(ctx, instance)
 	return instance
 }

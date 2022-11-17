@@ -128,11 +128,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
-			//cancel everything, as app pre-eval tasks have failed
-			if err := r.cancelWorkloadInstanceActions(ctx, workloadInstance, phase); err != nil {
-				span.SetStatus(codes.Error, err.Error())
-				return ctrl.Result{Requeue: true}, err
-			}
 			controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
 			return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
 		}
@@ -319,10 +314,4 @@ func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1
 		}
 	}
 	return workloadFound, latestVersion, nil
-}
-
-func (r *KeptnWorkloadInstanceReconciler) cancelWorkloadInstanceActions(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, phase common.KeptnPhaseType) error {
-	workloadInstance.CancelRemainingPhases(phase)
-	workloadInstance.Complete()
-	return r.Client.Status().Update(ctx, workloadInstance)
 }

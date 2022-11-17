@@ -38,6 +38,15 @@
     {
       "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>.*)$"
+    },
+    {
+      "matchPackageNames": [
+        "docker.io/thschue/keptn-lifecycle-operator",
+        "docker.io/thschue/scheduler",
+        "docker.io/annadreal/keptn-lifecycle-operator",
+        "docker.io/annadreal/kube-scheduler"
+      ],
+      "enabled": false
     }
   ],
   "regexManagers": [

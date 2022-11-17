@@ -68,3 +68,23 @@ func TestKeptnEvaluation(t *testing.T) {
 	}, evaluation.GetSpanAttributes())
 
 }
+
+func TestKeptnEvaluationList(t *testing.T) {
+	list := v1alpha1.KeptnEvaluationList{
+		Items: []v1alpha1.KeptnEvaluation{
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj1",
+				},
+			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj2",
+				},
+			},
+		},
+	}
+
+	got := list.GetItems()
+	require.Len(t, got, 2)
+}

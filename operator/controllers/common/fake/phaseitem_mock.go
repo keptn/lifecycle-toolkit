@@ -31,23 +31,14 @@ import (
 // 			GenerateTaskFunc: func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnTask {
 // 				panic("mock out the GenerateTask method")
 // 			},
-// 			GetActiveMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetActiveMetricsAttributes method")
-// 			},
 // 			GetAppNameFunc: func() string {
 // 				panic("mock out the GetAppName method")
 // 			},
 // 			GetCurrentPhaseFunc: func() string {
 // 				panic("mock out the GetCurrentPhase method")
 // 			},
-// 			GetDurationMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetDurationMetricsAttributes method")
-// 			},
 // 			GetEndTimeFunc: func() time.Time {
 // 				panic("mock out the GetEndTime method")
-// 			},
-// 			GetMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetMetricsAttributes method")
 // 			},
 // 			GetNamespaceFunc: func() string {
 // 				panic("mock out the GetNamespace method")
@@ -131,23 +122,14 @@ type PhaseItemMock struct {
 	// GenerateTaskFunc mocks the GenerateTask method.
 	GenerateTaskFunc func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnTask
 
-	// GetActiveMetricsAttributesFunc mocks the GetActiveMetricsAttributes method.
-	GetActiveMetricsAttributesFunc func() []attribute.KeyValue
-
 	// GetAppNameFunc mocks the GetAppName method.
 	GetAppNameFunc func() string
 
 	// GetCurrentPhaseFunc mocks the GetCurrentPhase method.
 	GetCurrentPhaseFunc func() string
 
-	// GetDurationMetricsAttributesFunc mocks the GetDurationMetricsAttributes method.
-	GetDurationMetricsAttributesFunc func() []attribute.KeyValue
-
 	// GetEndTimeFunc mocks the GetEndTime method.
 	GetEndTimeFunc func() time.Time
-
-	// GetMetricsAttributesFunc mocks the GetMetricsAttributes method.
-	GetMetricsAttributesFunc func() []attribute.KeyValue
 
 	// GetNamespaceFunc mocks the GetNamespace method.
 	GetNamespaceFunc func() string
@@ -240,23 +222,14 @@ type PhaseItemMock struct {
 			// CheckType is the checkType argument value.
 			CheckType apicommon.CheckType
 		}
-		// GetActiveMetricsAttributes holds details about calls to the GetActiveMetricsAttributes method.
-		GetActiveMetricsAttributes []struct {
-		}
 		// GetAppName holds details about calls to the GetAppName method.
 		GetAppName []struct {
 		}
 		// GetCurrentPhase holds details about calls to the GetCurrentPhase method.
 		GetCurrentPhase []struct {
 		}
-		// GetDurationMetricsAttributes holds details about calls to the GetDurationMetricsAttributes method.
-		GetDurationMetricsAttributes []struct {
-		}
 		// GetEndTime holds details about calls to the GetEndTime method.
 		GetEndTime []struct {
-		}
-		// GetMetricsAttributes holds details about calls to the GetMetricsAttributes method.
-		GetMetricsAttributes []struct {
 		}
 		// GetNamespace holds details about calls to the GetNamespace method.
 		GetNamespace []struct {
@@ -336,12 +309,9 @@ type PhaseItemMock struct {
 	lockComplete                              sync.RWMutex
 	lockGenerateEvaluation                    sync.RWMutex
 	lockGenerateTask                          sync.RWMutex
-	lockGetActiveMetricsAttributes            sync.RWMutex
 	lockGetAppName                            sync.RWMutex
 	lockGetCurrentPhase                       sync.RWMutex
-	lockGetDurationMetricsAttributes          sync.RWMutex
 	lockGetEndTime                            sync.RWMutex
-	lockGetMetricsAttributes                  sync.RWMutex
 	lockGetNamespace                          sync.RWMutex
 	lockGetParentName                         sync.RWMutex
 	lockGetPostDeploymentEvaluationTaskStatus sync.RWMutex
@@ -500,32 +470,6 @@ func (mock *PhaseItemMock) GenerateTaskCalls() []struct {
 	return calls
 }
 
-// GetActiveMetricsAttributes calls GetActiveMetricsAttributesFunc.
-func (mock *PhaseItemMock) GetActiveMetricsAttributes() []attribute.KeyValue {
-	if mock.GetActiveMetricsAttributesFunc == nil {
-		panic("PhaseItemMock.GetActiveMetricsAttributesFunc: method is nil but PhaseItem.GetActiveMetricsAttributes was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockGetActiveMetricsAttributes.Lock()
-	mock.calls.GetActiveMetricsAttributes = append(mock.calls.GetActiveMetricsAttributes, callInfo)
-	mock.lockGetActiveMetricsAttributes.Unlock()
-	return mock.GetActiveMetricsAttributesFunc()
-}
-
-// GetActiveMetricsAttributesCalls gets all the calls that were made to GetActiveMetricsAttributes.
-// Check the length with:
-//     len(mockedPhaseItem.GetActiveMetricsAttributesCalls())
-func (mock *PhaseItemMock) GetActiveMetricsAttributesCalls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockGetActiveMetricsAttributes.RLock()
-	calls = mock.calls.GetActiveMetricsAttributes
-	mock.lockGetActiveMetricsAttributes.RUnlock()
-	return calls
-}
-
 // GetAppName calls GetAppNameFunc.
 func (mock *PhaseItemMock) GetAppName() string {
 	if mock.GetAppNameFunc == nil {
@@ -578,32 +522,6 @@ func (mock *PhaseItemMock) GetCurrentPhaseCalls() []struct {
 	return calls
 }
 
-// GetDurationMetricsAttributes calls GetDurationMetricsAttributesFunc.
-func (mock *PhaseItemMock) GetDurationMetricsAttributes() []attribute.KeyValue {
-	if mock.GetDurationMetricsAttributesFunc == nil {
-		panic("PhaseItemMock.GetDurationMetricsAttributesFunc: method is nil but PhaseItem.GetDurationMetricsAttributes was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockGetDurationMetricsAttributes.Lock()
-	mock.calls.GetDurationMetricsAttributes = append(mock.calls.GetDurationMetricsAttributes, callInfo)
-	mock.lockGetDurationMetricsAttributes.Unlock()
-	return mock.GetDurationMetricsAttributesFunc()
-}
-
-// GetDurationMetricsAttributesCalls gets all the calls that were made to GetDurationMetricsAttributes.
-// Check the length with:
-//     len(mockedPhaseItem.GetDurationMetricsAttributesCalls())
-func (mock *PhaseItemMock) GetDurationMetricsAttributesCalls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockGetDurationMetricsAttributes.RLock()
-	calls = mock.calls.GetDurationMetricsAttributes
-	mock.lockGetDurationMetricsAttributes.RUnlock()
-	return calls
-}
-
 // GetEndTime calls GetEndTimeFunc.
 func (mock *PhaseItemMock) GetEndTime() time.Time {
 	if mock.GetEndTimeFunc == nil {
@@ -627,32 +545,6 @@ func (mock *PhaseItemMock) GetEndTimeCalls() []struct {
 	mock.lockGetEndTime.RLock()
 	calls = mock.calls.GetEndTime
 	mock.lockGetEndTime.RUnlock()
-	return calls
-}
-
-// GetMetricsAttributes calls GetMetricsAttributesFunc.
-func (mock *PhaseItemMock) GetMetricsAttributes() []attribute.KeyValue {
-	if mock.GetMetricsAttributesFunc == nil {
-		panic("PhaseItemMock.GetMetricsAttributesFunc: method is nil but PhaseItem.GetMetricsAttributes was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockGetMetricsAttributes.Lock()
-	mock.calls.GetMetricsAttributes = append(mock.calls.GetMetricsAttributes, callInfo)
-	mock.lockGetMetricsAttributes.Unlock()
-	return mock.GetMetricsAttributesFunc()
-}
-
-// GetMetricsAttributesCalls gets all the calls that were made to GetMetricsAttributes.
-// Check the length with:
-//     len(mockedPhaseItem.GetMetricsAttributesCalls())
-func (mock *PhaseItemMock) GetMetricsAttributesCalls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockGetMetricsAttributes.RLock()
-	calls = mock.calls.GetMetricsAttributes
-	mock.lockGetMetricsAttributes.RUnlock()
 	return calls
 }
 

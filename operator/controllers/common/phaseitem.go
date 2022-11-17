@@ -13,6 +13,7 @@ import (
 )
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
+// represents workloadInstance, appVersion
 type PhaseItem interface {
 	GetState() apicommon.KeptnState
 	SetState(apicommon.KeptnState)
@@ -37,9 +38,6 @@ type PhaseItem interface {
 	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
 	GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
 	GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation
-	GetActiveMetricsAttributes() []attribute.KeyValue
-	GetDurationMetricsAttributes() []attribute.KeyValue
-	GetMetricsAttributes() []attribute.KeyValue
 	GetSpanAttributes() []attribute.KeyValue
 	GetSpanKey(phase string) string
 	GetSpanName(phase string) string
@@ -143,18 +141,6 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetActiveMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetActiveMetricsAttributes()
-}
-
-func (pw PhaseItemWrapper) GetMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetMetricsAttributes()
-}
-
-func (pw PhaseItemWrapper) GetDurationMetricsAttributes() []attribute.KeyValue {
-	return pw.Obj.GetDurationMetricsAttributes()
-}
-
 func (pw PhaseItemWrapper) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
 	return pw.Obj.GenerateTask(traceContextCarrier, taskDefinition, checkType)
 }
@@ -181,25 +167,4 @@ func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 
 func (pw PhaseItemWrapper) CancelRemainingPhases(phase common.KeptnPhaseType) {
 	pw.Obj.CancelRemainingPhases(phase)
-}
-
-func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
-	pi, ok := object.(ListItem)
-	if !ok {
-		return nil, ErrCannotWrapToListItem
-	}
-	return &ListItemWrapper{Obj: pi}, nil
-}
-
-//go:generate moq -pkg fake --skip-ensure -out ./fake/listitem_mock.go . ListItem
-type ListItem interface {
-	GetItems() []client.Object
-}
-
-type ListItemWrapper struct {
-	Obj ListItem
-}
-
-func (pw ListItemWrapper) GetItems() []client.Object {
-	return pw.Obj.GetItems()
 }

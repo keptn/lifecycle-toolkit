@@ -311,5 +311,24 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 			require.Equal(t, tt.want, tt.app)
 		})
 	}
+}
 
+func TestKeptnAppVersionList(t *testing.T) {
+	list := v1alpha1.KeptnAppVersionList{
+		Items: []v1alpha1.KeptnAppVersion{
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj1",
+				},
+			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj2",
+				},
+			},
+		},
+	}
+
+	got := list.GetItems()
+	require.Len(t, got, 2)
 }

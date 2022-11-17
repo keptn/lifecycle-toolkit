@@ -24,7 +24,7 @@ func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileO
 	res := []apicommon.GaugeFloatValue{}
 
 	for _, ro := range piWrapper.GetItems() {
-		reconcileObject, _ := NewPhaseItemWrapperFromClientObject(ro)
+		reconcileObject, _ := NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.IsEndTimeSet() {
 			duration := reconcileObject.GetEndTime().Sub(reconcileObject.GetStartTime())
 			res = append(res, apicommon.GaugeFloatValue{
@@ -50,13 +50,13 @@ func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileO
 
 	res := []common.GaugeFloatValue{}
 	for _, ro := range piWrapper.GetItems() {
-		reconcileObject, _ := NewPhaseItemWrapperFromClientObject(ro)
+		reconcileObject, _ := NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.GetPreviousVersion() != "" {
 			err := client.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", reconcileObject.GetParentName(), reconcileObject.GetPreviousVersion()), Namespace: reconcileObject.GetNamespace()}, previousObject)
 			if err != nil {
 				return nil, nil
 			}
-			piWrapper2, err := NewPhaseItemWrapperFromClientObject(previousObject)
+			piWrapper2, err := NewMetricsObjectWrapperFromClientObject(previousObject)
 			if err != nil {
 				return nil, err
 			}
@@ -85,14 +85,14 @@ func GetActiveInstances(ctx context.Context, client client.Client, reconcileObje
 
 	res := []common.GaugeValue{}
 	for _, ro := range piWrapper.GetItems() {
-		reconcileObject, _ := NewPhaseItemWrapperFromClientObject(ro)
+		activeMetricsObject, _ := NewActiveMetricsObjectWrapperFromClientObject(ro)
 		gaugeValue := int64(0)
-		if !reconcileObject.IsEndTimeSet() {
+		if !activeMetricsObject.IsEndTimeSet() {
 			gaugeValue = int64(1)
 		}
 		res = append(res, common.GaugeValue{
 			Value:      gaugeValue,
-			Attributes: reconcileObject.GetActiveMetricsAttributes(),
+			Attributes: activeMetricsObject.GetActiveMetricsAttributes(),
 		})
 	}
 

@@ -4,6 +4,8 @@ import "fmt"
 
 var ErrCannotWrapToPhaseItem = fmt.Errorf("provided object does not implement PhaseItem interface")
 var ErrCannotWrapToListItem = fmt.Errorf("provided object does not implement ListItem interface")
+var ErrCannotWrapToMetricsObject = fmt.Errorf("provided object does not implement MetricsObject interface")
+var ErrCannotWrapToActiveMetricsObject = fmt.Errorf("provided object does not implement ActiveMetricsObject interface")
 var ErrRetryCountExceeded = fmt.Errorf("retryCount for evaluation exceeded")
 var ErrNoValues = fmt.Errorf("no values")
 var ErrInvalidOperator = fmt.Errorf("invalid operator")

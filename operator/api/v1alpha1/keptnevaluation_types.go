@@ -23,6 +23,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -95,6 +96,14 @@ type KeptnEvaluationList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnEvaluation{}, &KeptnEvaluationList{})
+}
+
+func (e KeptnEvaluationList) GetItems() []client.Object {
+	var b []client.Object
+	for _, i := range e.Items {
+		b = append(b, &i)
+	}
+	return b
 }
 
 func (e *KeptnEvaluation) SetStartTime() {

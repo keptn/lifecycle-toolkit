@@ -384,7 +384,7 @@ func main() {
 				appActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			activeTasks, err := taskReconciler.GetActiveTasks(ctx)
+			activeTasks, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnTaskList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active tasks")
 			}
@@ -392,7 +392,7 @@ func main() {
 				taskActiveGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
 
-			activeEvaluations, err := evaluationReconciler.GetActiveEvaluations(ctx)
+			activeEvaluations, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnEvaluationList{})
 			if err != nil {
 				setupLog.Error(err, "unable to gather active evaluations")
 			}

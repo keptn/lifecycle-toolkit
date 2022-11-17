@@ -2,7 +2,7 @@ package keptnapp
 
 import (
 	"context"
-	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
@@ -20,16 +20,16 @@ import (
 // Example Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
-	app := &lfcv1alpha1.KeptnApp{
+	app := &klcv1alpha1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-app",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha1.KeptnAppSpec{
+		Spec: klcv1alpha1.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1alpha1.KeptnAppStatus{},
+		Status: klcv1alpha1.KeptnAppStatus{},
 	}
 	r, _, _ := setupReconciler(t)
 
@@ -88,9 +88,9 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	addApp(r, "myapp")
-	addApp(r, "myfinishedapp")
-	addAppVersion(r, "myfinishedapp-1.0.0", keptncommon.StateSucceeded)
+	fake.AddApp(r.Client, "myapp")
+	fake.AddApp(r.Client, "myfinishedapp")
+	fake.AddAppVersion(r.Client, "myfinishedapp-1.0.0", klcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -145,36 +145,4 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITra
 		Tracer:   tr,
 	}
 	return r, recorder.Events, tr
-}
-
-func addApp(r *KeptnAppReconciler, name string) error {
-	app := &lfcv1alpha1.KeptnApp{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: "default",
-		},
-		Spec: lfcv1alpha1.KeptnAppSpec{
-			Version: "1.0.0",
-		},
-		Status: lfcv1alpha1.KeptnAppStatus{},
-	}
-	return r.Client.Create(context.TODO(), app)
-
-}
-
-func addAppVersion(r *KeptnAppReconciler, name string, status keptncommon.KeptnState) error {
-	app := &lfcv1alpha1.KeptnAppVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: "default",
-		},
-		Spec: lfcv1alpha1.KeptnAppVersionSpec{},
-		Status: lfcv1alpha1.KeptnAppVersionStatus{
-			Status: status,
-		},
-	}
-	return r.Client.Create(context.TODO(), app)
-
 }

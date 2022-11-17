@@ -8,6 +8,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+//go:generate moq -pkg fake -skip-ensure -out ./fake/spanhandler_mock.go . ISpanHandler
+type ISpanHandler interface {
+	GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
+	UnbindSpan(reconcileObject client.Object, phase string) error
+}
+
 type SpanHandler struct {
 	bindCRDSpan map[string]trace.Span
 	mtx         sync.Mutex

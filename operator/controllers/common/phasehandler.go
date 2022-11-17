@@ -18,7 +18,7 @@ type PhaseHandler struct {
 	client.Client
 	Recorder    record.EventRecorder
 	Log         logr.Logger
-	SpanHandler *SpanHandler
+	SpanHandler ISpanHandler
 }
 
 type PhaseResult struct {

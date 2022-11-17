@@ -48,9 +48,9 @@ type KeptnAppVersionReconciler struct {
 	client.Client
 	Log         logr.Logger
 	Recorder    record.EventRecorder
-	Tracer      trace.Tracer
+	Tracer      controllercommon.ITracer
 	Meters      common.KeptnMeters
-	SpanHandler *controllercommon.SpanHandler
+	SpanHandler controllercommon.ISpanHandler
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -82,26 +82,9 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionMsg, err)
 	}
 
-	appVersion.SetStartTime()
+	ctx, ctxAppTrace, span, endSpan := setupSpansContexts(ctx, appVersion, r)
 
-	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
-	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-
-	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
-
-	defer func(span trace.Span, appVersion *klcv1alpha1.KeptnAppVersion) {
-		if appVersion.IsEndTimeSet() {
-			r.Log.Info("Increasing app count")
-			attrs := appVersion.GetMetricsAttributes()
-			r.Meters.AppCount.Add(ctx, 1, attrs...)
-		}
-		span.End()
-	}(span, appVersion)
-
-	appVersion.SetSpanAttributes(span)
+	defer endSpan()
 
 	phase := common.PhaseAppPreDeployment
 
@@ -208,6 +191,30 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	r.Meters.AppDuration.Record(ctx, duration.Seconds(), attrs...)
 
 	return ctrl.Result{}, nil
+}
+
+func setupSpansContexts(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, r *KeptnAppVersionReconciler) (context.Context, context.Context, trace.Span, func()) {
+	appVersion.SetStartTime()
+
+	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
+	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
+
+	endFunc := func() {
+		if appVersion.IsEndTimeSet() {
+			r.Log.Info("Increasing app count")
+			attrs := appVersion.GetMetricsAttributes()
+			r.Meters.AppCount.Add(ctx, 1, attrs...)
+		}
+		span.End()
+	}
+
+	appVersion.SetSpanAttributes(span)
+	return ctx, ctxAppTrace, span, endFunc
 }
 
 // SetupWithManager sets up the controller with the Manager.

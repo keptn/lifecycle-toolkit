@@ -1,4 +1,7 @@
+# renovate: datasource=github-tags depName=jaegertracing/jaeger
 JAEGER_VERSION ?= v1.38.0
+# renovate: datasource=github-tags depName=cert-manager/cert-manager
+CERT_MANAGER_VERSION ?= v1.10.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -8,7 +11,7 @@ install:undeploy-podtatohead
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
 	kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=300s
 	kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.4.0/manifest.yaml #x-release-please-version
 	kubectl wait --for=condition=available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=300s

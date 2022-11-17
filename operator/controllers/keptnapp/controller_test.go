@@ -43,7 +43,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 }
 
-func TestKeptnAppReconciler_Reconcile(t *testing.T) {
+func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, tracer := setupReconciler(t)
 

@@ -7,6 +7,8 @@ import (
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
+	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -20,7 +22,7 @@ import (
 )
 
 // this test checks if the chain of reconcile events is correct
-func TestKeptnApVersionReconciler_Reconcile(t *testing.T) {
+func TestKeptnApVersionReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, tracer, _ := setupReconciler(t)
 
@@ -160,12 +162,12 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 		Log:         ctrl.Log.WithName("test-appVersionController"),
 		Tracer:      tr,
 		SpanHandler: spanRecorder,
-		Meters:      keptncommon.InitKeptnMeters(),
+		Meters:      InitAppMeters(),
 	}
 	return r, recorder.Events, tr, spanRecorder
 }
 
-func Test_setupSpansContexts(t *testing.T) {
+func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 
 	r, _, _, _ := setupReconciler(t)
 	type args struct {
@@ -200,4 +202,17 @@ func Test_setupSpansContexts(t *testing.T) {
 
 		})
 	}
+}
+
+func InitAppMeters() keptncommon.KeptnMeters {
+	provider := metric.NewMeterProvider()
+	meter := provider.Meter("keptn/task")
+	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
+	appDuration, _ := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit("s"))
+
+	meters := keptncommon.KeptnMeters{
+		AppCount:    appCount,
+		AppDuration: appDuration,
+	}
+	return meters
 }

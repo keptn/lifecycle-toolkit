@@ -30,7 +30,7 @@ func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eve
 	recorder.Event(reconcileObject, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version))
 }
 
-func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func() (common.KeptnState, error)) (*PhaseResult, error) {
+func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func() (common.KeptnState, error)) (*PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
@@ -38,17 +38,20 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
+	if oldStatus.IsCancelled() {
+		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}
 	piWrapper.SetCurrentPhase(phase.ShortName)
 
 	r.Log.Info(phase.LongName + " not finished")
-	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, phase.ShortName)
+	ctxTrace, spanTrace, err := r.SpanHandler.GetSpan(ctxTrace, tracer, reconcileObject, phase.ShortName)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
 
 	state, err := reconcilePhase()
 	if err != nil {
-		spanAppTrace.AddEvent(phase.LongName + " could not get reconciled")
+		spanTrace.AddEvent(phase.LongName + " could not get reconciled")
 		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
 		span.SetStatus(codes.Error, err.Error())
 		return &PhaseResult{Continue: false, Result: requeueResult}, err
@@ -61,7 +64,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
 		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {
-			ctx, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
+			ctx, spanTrace, err = r.SpanHandler.GetSpan(ctxTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
 			if err != nil {
 				r.Log.Error(err, "could not get span")
 			}
@@ -75,20 +78,21 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxAppTrace context.Conte
 		if state.IsFailed() {
 			piWrapper.Complete()
 			piWrapper.SetState(common.StateFailed)
-			spanAppTrace.AddEvent(phase.LongName + " has failed")
-			spanAppTrace.SetStatus(codes.Error, "Failed")
-			spanAppTrace.End()
+			spanTrace.AddEvent(phase.LongName + " has failed")
+			spanTrace.SetStatus(codes.Error, "Failed")
+			spanTrace.End()
 			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
 				r.Log.Error(err, "cannot unbind span")
 			}
 			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
+			piWrapper.CancelRemainingPhases(phase)
 			return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 		}
 
 		piWrapper.SetState(common.StateSucceeded)
-		spanAppTrace.AddEvent(phase.LongName + " has succeeded")
-		spanAppTrace.SetStatus(codes.Ok, "Succeeded")
-		spanAppTrace.End()
+		spanTrace.AddEvent(phase.LongName + " has succeeded")
+		spanTrace.SetStatus(codes.Ok, "Succeeded")
+		spanTrace.End()
 		if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
 			r.Log.Error(err, "cannot unbind span")
 		}

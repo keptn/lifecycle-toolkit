@@ -145,7 +145,8 @@ func TestPhaseItem(t *testing.T) {
 		GenerateEvaluationFunc: func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
 			return v1alpha1.KeptnEvaluation{}
 		},
-		SetSpanAttributesFunc: func(span trace.Span) {},
+		SetSpanAttributesFunc:     func(span trace.Span) {},
+		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {},
 	}
 
 	wrapper := PhaseItemWrapper{Obj: &phaseItemMock}
@@ -239,5 +240,8 @@ func TestPhaseItem(t *testing.T) {
 
 	wrapper.SetSpanAttributes(nil)
 	require.Len(t, phaseItemMock.SetSpanAttributesCalls(), 1)
+
+	wrapper.CancelRemainingPhases(common.PhaseAppDeployment)
+	require.Len(t, phaseItemMock.CancelRemainingPhasesCalls(), 1)
 
 }

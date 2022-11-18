@@ -359,3 +359,19 @@ func (a KeptnAppVersion) GetSpanKey(phase string) string {
 func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
 	return fmt.Sprintf("%s-%s", v.Spec.AppName, workloadName)
 }
+
+func (a *KeptnAppVersion) CancelRemainingPhases(phase common.KeptnPhaseType) {
+	// no need to cancel anything when post-eval tasks fail
+	if phase == common.PhaseAppPostEvaluation {
+		return
+	}
+	// cancel workload deployment and post-deployment tasks if app pre-eval failed
+	if phase == common.PhaseAppPreEvaluation {
+		a.Status.WorkloadOverallStatus = common.StateCancelled
+	}
+	// cancel post-deployment tasks if workload deployment failed
+	a.Status.PostDeploymentStatus = common.StateCancelled
+	a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	a.Status.Status = common.StateFailed
+
+}

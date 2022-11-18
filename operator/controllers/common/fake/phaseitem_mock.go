@@ -19,6 +19,9 @@ import (
 //
 // 		// make and configure a mocked common.PhaseItem
 // 		mockedPhaseItem := &PhaseItemMock{
+// 			CancelRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType)  {
+// 				panic("mock out the CancelRemainingPhases method")
+// 			},
 // 			CompleteFunc: func()  {
 // 				panic("mock out the Complete method")
 // 			},
@@ -116,6 +119,9 @@ import (
 //
 // 	}
 type PhaseItemMock struct {
+	// CancelRemainingPhasesFunc mocks the CancelRemainingPhases method.
+	CancelRemainingPhasesFunc func(phase apicommon.KeptnPhaseType)
+
 	// CompleteFunc mocks the Complete method.
 	CompleteFunc func()
 
@@ -208,6 +214,11 @@ type PhaseItemMock struct {
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// CancelRemainingPhases holds details about calls to the CancelRemainingPhases method.
+		CancelRemainingPhases []struct {
+			// Phase is the phase argument value.
+			Phase apicommon.KeptnPhaseType
+		}
 		// Complete holds details about calls to the Complete method.
 		Complete []struct {
 		}
@@ -321,6 +332,7 @@ type PhaseItemMock struct {
 			KeptnState apicommon.KeptnState
 		}
 	}
+	lockCancelRemainingPhases                 sync.RWMutex
 	lockComplete                              sync.RWMutex
 	lockGenerateEvaluation                    sync.RWMutex
 	lockGenerateTask                          sync.RWMutex
@@ -351,6 +363,37 @@ type PhaseItemMock struct {
 	lockSetCurrentPhase                       sync.RWMutex
 	lockSetSpanAttributes                     sync.RWMutex
 	lockSetState                              sync.RWMutex
+}
+
+// CancelRemainingPhases calls CancelRemainingPhasesFunc.
+func (mock *PhaseItemMock) CancelRemainingPhases(phase apicommon.KeptnPhaseType) {
+	if mock.CancelRemainingPhasesFunc == nil {
+		panic("PhaseItemMock.CancelRemainingPhasesFunc: method is nil but PhaseItem.CancelRemainingPhases was just called")
+	}
+	callInfo := struct {
+		Phase apicommon.KeptnPhaseType
+	}{
+		Phase: phase,
+	}
+	mock.lockCancelRemainingPhases.Lock()
+	mock.calls.CancelRemainingPhases = append(mock.calls.CancelRemainingPhases, callInfo)
+	mock.lockCancelRemainingPhases.Unlock()
+	mock.CancelRemainingPhasesFunc(phase)
+}
+
+// CancelRemainingPhasesCalls gets all the calls that were made to CancelRemainingPhases.
+// Check the length with:
+//     len(mockedPhaseItem.CancelRemainingPhasesCalls())
+func (mock *PhaseItemMock) CancelRemainingPhasesCalls() []struct {
+	Phase apicommon.KeptnPhaseType
+} {
+	var calls []struct {
+		Phase apicommon.KeptnPhaseType
+	}
+	mock.lockCancelRemainingPhases.RLock()
+	calls = mock.calls.CancelRemainingPhases
+	mock.lockCancelRemainingPhases.RUnlock()
+	return calls
 }
 
 // Complete calls CompleteFunc.

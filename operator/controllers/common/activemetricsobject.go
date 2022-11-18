@@ -6,7 +6,7 @@ import (
 )
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/activemetricsobject_mock.go . ActiveMetricsObject
-// represents task, evaluation, workloadInstance, appVersion
+//represents an object whose active metrics are stored
 type ActiveMetricsObject interface {
 	GetActiveMetricsAttributes() []attribute.KeyValue
 	IsEndTimeSet() bool

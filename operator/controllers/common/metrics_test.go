@@ -277,7 +277,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    ErrCannotWrapToPhaseItem,
+			err:    ErrCannotWrapToMetricsObject,
 			result: nil,
 		},
 		{

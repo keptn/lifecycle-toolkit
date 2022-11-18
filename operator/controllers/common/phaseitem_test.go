@@ -36,11 +36,15 @@ func TestPhaseItem(t *testing.T) {
 		GetStateFunc: func() common.KeptnState {
 			return common.StatePending
 		},
-		SetStateFunc: func(keptnState common.KeptnState) {},
+		SetStateFunc: func(keptnState common.KeptnState) {
+			return
+		},
 		GetCurrentPhaseFunc: func() string {
 			return "phase"
 		},
-		SetCurrentPhaseFunc: func(s string) {},
+		SetCurrentPhaseFunc: func(s string) {
+			return
+		},
 		GetVersionFunc: func() string {
 			return "version"
 		},
@@ -53,7 +57,9 @@ func TestPhaseItem(t *testing.T) {
 		GetSpanNameFunc: func(phase string) string {
 			return "name"
 		},
-		CompleteFunc: func() {},
+		CompleteFunc: func() {
+			return
+		},
 		IsEndTimeSetFunc: func() bool {
 			return true
 		},
@@ -105,8 +111,12 @@ func TestPhaseItem(t *testing.T) {
 		GenerateEvaluationFunc: func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
 			return v1alpha1.KeptnEvaluation{}
 		},
-		SetSpanAttributesFunc:     func(span trace.Span) {},
-		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {},
+		SetSpanAttributesFunc: func(span trace.Span) {
+			return
+		},
+		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
+			return
+		},
 	}
 
 	wrapper := PhaseItemWrapper{Obj: &phaseItemMock}

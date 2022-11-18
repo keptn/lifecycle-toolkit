@@ -13,7 +13,7 @@ import (
 )
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
-//an object which has reconcile phases
+//PhaseItem represents an object which has reconcile phases
 type PhaseItem interface {
 	GetState() apicommon.KeptnState
 	SetState(apicommon.KeptnState)

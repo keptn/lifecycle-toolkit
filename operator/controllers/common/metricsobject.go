@@ -8,7 +8,7 @@ import (
 )
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/metricsobject_mock.go . MetricsObject
-//represents an object whose metrics are stored
+//MetricsObject represents an object whose metrics are stored
 type MetricsObject interface {
 	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetMetricsAttributes() []attribute.KeyValue

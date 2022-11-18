@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -79,6 +81,12 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 			piWrapper.Complete()
 			piWrapper.SetState(common.StateFailed)
 			spanAppTrace.AddEvent(phase.LongName + " has failed")
+			msg, err := r.CreateFailureReasonMessages(ctx, phase, piWrapper)
+			if err != nil {
+				r.Log.Error(err, "cannot create failure spans")
+			} else {
+				spanAppTrace.AddEvent(msg)
+			}
 			spanAppTrace.SetStatus(codes.Error, "Failed")
 			spanAppTrace.End()
 			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
@@ -105,4 +113,67 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
+}
+
+func (r PhaseHandler) CreateFailureReasonMessages(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+	if phase.IsEvaluation() {
+		return r.GetEvaluationFailureReasons(ctx, phase, object)
+	} else if phase.IsTask() {
+		return r.GetTaskFailureReasons(ctx, phase, object)
+	}
+	return "", nil
+}
+
+func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+	resultMsg := ""
+	var evaluations []klcv1alpha1.KeptnEvaluation
+	var status []klcv1alpha1.EvaluationStatus
+	if phase.IsPreEvaluation() {
+		status = object.GetPreDeploymentEvaluationTaskStatus()
+	} else {
+		status = object.GetPostDeploymentEvaluationTaskStatus()
+	}
+
+	for _, item := range status {
+		evaluation := &klcv1alpha1.KeptnEvaluation{}
+		if err := r.Client.Get(ctx, types.NamespacedName{Name: item.EvaluationName, Namespace: object.GetNamespace()}, evaluation); err != nil {
+			return "", err
+		}
+		evaluations = append(evaluations, *evaluation)
+	}
+
+	for _, eval := range evaluations {
+		for k, v := range eval.Status.EvaluationStatus {
+			if v.Status == common.StateFailed {
+				resultMsg = resultMsg + fmt.Sprintf("\n evaluation of '%s' failed with value: '%s': %s", k, v.Value, v.Message)
+			}
+		}
+	}
+
+	return resultMsg, nil
+}
+
+func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+	resultMsg := ""
+	var tasks []klcv1alpha1.KeptnTask
+	var status []klcv1alpha1.TaskStatus
+	if phase.IsPreTask() {
+		status = object.GetPreDeploymentTaskStatus()
+	} else {
+		status = object.GetPostDeploymentTaskStatus()
+	}
+
+	for _, item := range status {
+		task := &klcv1alpha1.KeptnTask{}
+		if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
+			return "", err
+		}
+		tasks = append(tasks, *task)
+	}
+
+	for _, task := range tasks {
+		//get job
+	}
+
+	return resultMsg, nil
 }

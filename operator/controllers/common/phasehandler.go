@@ -126,7 +126,6 @@ func (r PhaseHandler) CreateFailureReasonMessages(ctx context.Context, phase com
 
 func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
 	resultMsg := ""
-	var evaluations []klcv1alpha1.KeptnEvaluation
 	var status []klcv1alpha1.EvaluationStatus
 	if phase.IsPreEvaluation() {
 		status = object.GetPreDeploymentEvaluationTaskStatus()
@@ -134,19 +133,20 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 		status = object.GetPostDeploymentEvaluationTaskStatus()
 	}
 
-	for _, item := range status {
-		evaluation := &klcv1alpha1.KeptnEvaluation{}
-		if err := r.Client.Get(ctx, types.NamespacedName{Name: item.EvaluationName, Namespace: object.GetNamespace()}, evaluation); err != nil {
-			return "", err
-		}
-		evaluations = append(evaluations, *evaluation)
+	// there can be only one evaluation and in this section of the code, it can only be failed
+	// checking length of the status only for safety reasons
+	if len(status) != 1 {
+		return "", fmt.Errorf("evaluation status not found")
 	}
 
-	for _, eval := range evaluations {
-		for k, v := range eval.Status.EvaluationStatus {
-			if v.Status == common.StateFailed {
-				resultMsg = resultMsg + fmt.Sprintf("\n evaluation of '%s' failed with value: '%s': %s", k, v.Value, v.Message)
-			}
+	evaluation := &klcv1alpha1.KeptnEvaluation{}
+	if err := r.Client.Get(ctx, types.NamespacedName{Name: status[0].EvaluationName, Namespace: object.GetNamespace()}, evaluation); err != nil {
+		return "", err
+	}
+
+	for k, v := range evaluation.Status.EvaluationStatus {
+		if v.Status == common.StateFailed {
+			resultMsg = resultMsg + fmt.Sprintf("\n evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message)
 		}
 	}
 
@@ -155,7 +155,7 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 
 func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
 	resultMsg := ""
-	var tasks []klcv1alpha1.KeptnTask
+	var failedTasks []klcv1alpha1.KeptnTask
 	var status []klcv1alpha1.TaskStatus
 	if phase.IsPreTask() {
 		status = object.GetPreDeploymentTaskStatus()
@@ -164,16 +164,18 @@ func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.Ke
 	}
 
 	for _, item := range status {
-		task := &klcv1alpha1.KeptnTask{}
-		if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
-			return "", err
+		if item.Status == common.StateFailed {
+			task := &klcv1alpha1.KeptnTask{}
+			if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
+				return "", err
+			}
+			failedTasks = append(failedTasks, *task)
 		}
-		tasks = append(tasks, *task)
 	}
 
-	for _, task := range tasks {
-		//get job
-	}
+	// for _, task := range failedTasks {
+	// 	//get job failure details
+	// }
 
 	return resultMsg, nil
 }

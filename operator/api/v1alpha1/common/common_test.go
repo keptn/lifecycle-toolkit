@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestKeptnKeptnState_IsCompleted(t *testing.T) {
+func TestKeptnState_IsCompleted(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool
@@ -36,7 +36,7 @@ func TestKeptnKeptnState_IsCompleted(t *testing.T) {
 	}
 }
 
-func TestKeptnKeptnState_IsSucceeded(t *testing.T) {
+func TestKeptnState_IsSucceeded(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool
@@ -57,7 +57,7 @@ func TestKeptnKeptnState_IsSucceeded(t *testing.T) {
 	}
 }
 
-func TestKeptnKeptnState_IsFailed(t *testing.T) {
+func TestKeptnState_IsFailed(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool
@@ -78,7 +78,7 @@ func TestKeptnKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
-func TestKeptnKeptnState_IsCancelled(t *testing.T) {
+func TestKeptnState_IsCancelled(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool

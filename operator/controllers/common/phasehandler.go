@@ -115,15 +115,6 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }
 
-func (r PhaseHandler) CreateFailureReasonMessages(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
-	if phase.IsEvaluation() {
-		return r.GetEvaluationFailureReasons(ctx, phase, object)
-	} else if phase.IsTask() {
-		return r.GetTaskFailureReasons(ctx, phase, object)
-	}
-	return "", nil
-}
-
 func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
 	resultMsg := ""
 	var status []klcv1alpha1.EvaluationStatus
@@ -149,33 +140,6 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 			resultMsg = resultMsg + fmt.Sprintf("\n evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message)
 		}
 	}
-
-	return resultMsg, nil
-}
-
-func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
-	resultMsg := ""
-	var failedTasks []klcv1alpha1.KeptnTask
-	var status []klcv1alpha1.TaskStatus
-	if phase.IsPreTask() {
-		status = object.GetPreDeploymentTaskStatus()
-	} else {
-		status = object.GetPostDeploymentTaskStatus()
-	}
-
-	for _, item := range status {
-		if item.Status == common.StateFailed {
-			task := &klcv1alpha1.KeptnTask{}
-			if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
-				return "", err
-			}
-			failedTasks = append(failedTasks, *task)
-		}
-	}
-
-	// for _, task := range failedTasks {
-	// 	//get job failure details
-	// }
 
 	return resultMsg, nil
 }

@@ -21,7 +21,7 @@ install:
 	@echo "Create Namespace and install ArgoCD"
 	@echo "-----------------------------------"
 	kubectl create namespace $(ARGO_NAMESPACE)
-	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGO_VERSION)/manifests/install.yaml
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/$(ARGO_VERSION)/manifests/install.yaml
 
 	@echo ""
 	@echo "-------------------------------"
@@ -67,7 +67,7 @@ argo-install-podtatohead:
 
 .PHONY: uninstall
 uninstall:
-	kubectl delete -n $(ARGO_VERSION) -f https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGO_VERSION)/manifests/install.yaml --ignore-not-found=true
+	kubectl delete -n $(ARGO_VERSION) -f https://raw.githubusercontent.com/argoproj/argo-cd/$(ARGO_VERSION)/manifests/install.yaml --ignore-not-found=true
 	kubectl delete namespace $(ARGO_NAMESPACE) --ignore-not-found=true
 	@echo ""
 	@echo "##########################"

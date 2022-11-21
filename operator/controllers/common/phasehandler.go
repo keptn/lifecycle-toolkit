@@ -115,7 +115,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }
 
-func (r PhaseHandler) CreateFailureReasonSpanEvents(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+func (r PhaseHandler) createFailureReasonSpanEvents(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
 	if phase.IsEvaluation() {
 		return r.GetEvaluationFailureReasons(ctx, phase, object)
 	} else if phase.IsTask() {
@@ -124,7 +124,7 @@ func (r PhaseHandler) CreateFailureReasonSpanEvents(ctx context.Context, phase c
 	return "", nil
 }
 
-func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object PhaseItem) (string, error) {
 	resultMsg := ""
 	var status []klcv1alpha1.EvaluationStatus
 	if phase.IsPreEvaluation() {
@@ -141,7 +141,7 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 
 	evaluation := &klcv1alpha1.KeptnEvaluation{}
 	if err := r.Client.Get(ctx, types.NamespacedName{Name: status[0].EvaluationName, Namespace: object.GetNamespace()}, evaluation); err != nil {
-		return "", err
+		return "", fmt.Errorf("evaluation %s not found", status[0].EvaluationName)
 	}
 
 	for k, v := range evaluation.Status.EvaluationStatus {
@@ -153,7 +153,7 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 	return resultMsg, nil
 }
 
-func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object PhaseItem) (string, error) {
 	resultMsg := ""
 	var failedTasks []klcv1alpha1.KeptnTask
 	var status []klcv1alpha1.TaskStatus
@@ -167,7 +167,7 @@ func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.Ke
 		if item.Status == common.StateFailed {
 			task := &klcv1alpha1.KeptnTask{}
 			if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
-				return "", err
+				return "", fmt.Errorf("task %s not found", item.TaskName)
 			}
 			failedTasks = append(failedTasks, *task)
 		}

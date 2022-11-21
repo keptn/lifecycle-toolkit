@@ -233,7 +233,7 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 		object       *v1alpha1.KeptnAppVersion
 		clientObject *v1alpha1.KeptnEvaluation
 		phase        common.KeptnPhaseType
-		want         string
+		want         []string
 		wantErr      error
 	}{
 		{
@@ -251,8 +251,8 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 			},
 			clientObject: &v1alpha1.KeptnEvaluation{},
 			phase:        common.PhaseAppPreEvaluation,
-			want:         "",
-			wantErr:      fmt.Errorf("evaluation status not found"),
+			want:         []string{},
+			wantErr:      fmt.Errorf("evaluation status not found for /"),
 		},
 		{
 			name: "cannot get evaluation",
@@ -278,8 +278,8 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 			},
 			clientObject: &v1alpha1.KeptnEvaluation{},
 			phase:        common.PhaseAppPreEvaluation,
-			want:         "",
-			wantErr:      fmt.Errorf("evaluation eval-name not found"),
+			want:         []string{},
+			wantErr:      fmt.Errorf("evaluation eval-name not found for /"),
 		},
 		{
 			name: "evaluation failed",
@@ -324,7 +324,7 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 				},
 			},
 			phase:   common.PhaseAppPreEvaluation,
-			want:    "evaluation of 'cpu' failed with value: '10' and reason: 'cpu failed'\n",
+			want:    []string{"evaluation of 'cpu' failed with value: '10' and reason: 'cpu failed'\n"},
 			wantErr: nil,
 		},
 	}
@@ -348,7 +348,7 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 		object       *v1alpha1.KeptnAppVersion
 		clientObject *v1alpha1.KeptnTask
 		phase        common.KeptnPhaseType
-		want         string
+		want         []string
 		wantErr      error
 	}{
 		{
@@ -376,7 +376,7 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 			},
 			clientObject: &v1alpha1.KeptnTask{},
 			phase:        common.PhaseAppPreDeployment,
-			want:         "",
+			want:         []string{},
 			wantErr:      nil,
 		},
 		{
@@ -404,8 +404,8 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 			},
 			clientObject: &v1alpha1.KeptnTask{},
 			phase:        common.PhaseAppPreDeployment,
-			want:         "",
-			wantErr:      fmt.Errorf("task task-name not found"),
+			want:         []string{},
+			wantErr:      fmt.Errorf("task task-name not found for /"),
 		},
 		{
 			name: "task failed",
@@ -441,7 +441,7 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 				},
 			},
 			phase:   common.PhaseAppPreDeployment,
-			want:    "task 'task-name' failed with reason: 'task failed'\n",
+			want:    []string{"task 'task-name' failed with reason: 'task failed'\n"},
 			wantErr: nil,
 		},
 	}

@@ -15,7 +15,7 @@ ignore:
   - "**/*.md"          # ignore all markdown files, those are not relevant for building/testing
   - "**/Dockerfile"    # ignore Dockerfiles, those are build with GH Actions
   - "**/*.sh"          # ignore shell scripts
-  - "**/Test_utils.go" # test utils don't need to be covered
+  - "**/test_utils.go" # test utils don't need to be covered
 
 comment:
   layout: "diff, files, flags"

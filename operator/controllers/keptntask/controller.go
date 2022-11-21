@@ -165,26 +165,3 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 
 	return false, nil
 }
-
-func (r *KeptnTaskReconciler) GetActiveTasks(ctx context.Context) ([]common.GaugeValue, error) {
-	tasks := &klcv1alpha1.KeptnTaskList{}
-	err := r.List(ctx, tasks)
-	if err != nil {
-		return nil, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
-	}
-
-	res := []common.GaugeValue{}
-
-	for _, task := range tasks.Items {
-		gaugeValue := int64(0)
-		if !task.IsEndTimeSet() {
-			gaugeValue = int64(1)
-		}
-		res = append(res, common.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: task.GetActiveMetricsAttributes(),
-		})
-	}
-
-	return res, nil
-}

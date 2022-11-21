@@ -11,7 +11,6 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func TestPhaseItemWrapper_GetState(t *testing.T) {
@@ -32,57 +31,22 @@ func TestPhaseItemWrapper_GetState(t *testing.T) {
 	require.NotZero(t, appVersion.Status.EndTime)
 }
 
-func TestListItemWrapper(t *testing.T) {
-	appVersionList := v1alpha1.KeptnAppVersionList{
-		Items: []v1alpha1.KeptnAppVersion{
-			{
-				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateFailed,
-					CurrentPhase: "test",
-				},
-			},
-		},
-	}
-
-	object, err := NewListItemWrapperFromClientObjectList(&appVersionList)
-	require.Nil(t, err)
-
-	items := object.GetItems()
-	require.Len(t, items, 1)
-}
-
-func TestListItem(t *testing.T) {
-	listItemMock := fake.ListItemMock{
-		GetItemsFunc: func() []client.Object {
-			return nil
-		},
-	}
-	wrapper := ListItemWrapper{Obj: &listItemMock}
-	_ = wrapper.GetItems()
-	require.Len(t, listItemMock.GetItemsCalls(), 1)
-}
-
 func TestPhaseItem(t *testing.T) {
 	phaseItemMock := fake.PhaseItemMock{
 		GetStateFunc: func() common.KeptnState {
 			return common.StatePending
 		},
-		SetStateFunc: func(keptnState common.KeptnState) {},
+		SetStateFunc: func(keptnState common.KeptnState) {
+			return
+		},
 		GetCurrentPhaseFunc: func() string {
 			return "phase"
 		},
-		SetCurrentPhaseFunc: func(s string) {},
+		SetCurrentPhaseFunc: func(s string) {
+			return
+		},
 		GetVersionFunc: func() string {
 			return "version"
-		},
-		GetActiveMetricsAttributesFunc: func() []attribute.KeyValue {
-			return nil
-		},
-		GetDurationMetricsAttributesFunc: func() []attribute.KeyValue {
-			return nil
-		},
-		GetMetricsAttributesFunc: func() []attribute.KeyValue {
-			return nil
 		},
 		GetSpanAttributesFunc: func() []attribute.KeyValue {
 			return nil
@@ -93,7 +57,9 @@ func TestPhaseItem(t *testing.T) {
 		GetSpanNameFunc: func(phase string) string {
 			return "name"
 		},
-		CompleteFunc: func() {},
+		CompleteFunc: func() {
+			return
+		},
 		IsEndTimeSetFunc: func() bool {
 			return true
 		},
@@ -145,8 +111,12 @@ func TestPhaseItem(t *testing.T) {
 		GenerateEvaluationFunc: func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
 			return v1alpha1.KeptnEvaluation{}
 		},
-		SetSpanAttributesFunc:     func(span trace.Span) {},
-		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {},
+		SetSpanAttributesFunc: func(span trace.Span) {
+			return
+		},
+		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
+			return
+		},
 	}
 
 	wrapper := PhaseItemWrapper{Obj: &phaseItemMock}
@@ -165,15 +135,6 @@ func TestPhaseItem(t *testing.T) {
 
 	_ = wrapper.GetVersion()
 	require.Len(t, phaseItemMock.GetVersionCalls(), 1)
-
-	_ = wrapper.GetActiveMetricsAttributes()
-	require.Len(t, phaseItemMock.GetActiveMetricsAttributesCalls(), 1)
-
-	_ = wrapper.GetDurationMetricsAttributes()
-	require.Len(t, phaseItemMock.GetDurationMetricsAttributesCalls(), 1)
-
-	_ = wrapper.GetMetricsAttributes()
-	require.Len(t, phaseItemMock.GetMetricsAttributesCalls(), 1)
 
 	_ = wrapper.GetSpanAttributes()
 	require.Len(t, phaseItemMock.GetSpanAttributesCalls(), 1)

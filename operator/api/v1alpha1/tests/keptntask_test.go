@@ -79,3 +79,23 @@ func TestKeptnTask(t *testing.T) {
 	}, task.GetSpanAttributes())
 
 }
+
+func TestKeptnTaskList(t *testing.T) {
+	list := v1alpha1.KeptnTaskList{
+		Items: []v1alpha1.KeptnTask{
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj1",
+				},
+			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "obj2",
+				},
+			},
+		},
+	}
+
+	got := list.GetItems()
+	require.Len(t, got, 2)
+}

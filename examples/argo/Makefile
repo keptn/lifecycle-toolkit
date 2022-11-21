@@ -2,7 +2,7 @@ LFC_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 ARGO_NAMESPACE ?= argocd
 # renovate: datasource=github-tags depName=argoproj/argo-cd
-ARGO_VERSION ?= v2.4.17
+ARGO_VERSION ?= v2.5.2
 # renovate: datasource=github-tags depName=cert-manager/cert-manager
 CERT_MANAGER_VERSION ?= v1.10.0
 ARGO_SECRET = $(shell kubectl -n ${ARGO_NAMESPACE} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo)

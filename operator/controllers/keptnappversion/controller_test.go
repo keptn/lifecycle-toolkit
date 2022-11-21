@@ -23,7 +23,7 @@ import (
 )
 
 // this test checks if the chain of reconcile events is correct
-func TestKeptnApVersionReconciler_reconcile(t *testing.T) {
+func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, tracer, _ := setupReconciler(t)
 

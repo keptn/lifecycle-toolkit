@@ -1,6 +1,7 @@
 package component
 
 import (
+	"fmt"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -11,6 +12,7 @@ import (
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
 )
 
 // clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
@@ -63,7 +65,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "test-appcontroller"
+		name = names.SimpleNameGenerator.GenerateName("my-app-")
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
@@ -75,15 +77,16 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 
 		BeforeEach(func() {
 			instance = createInstanceInCluster(name, namespace, version, instance)
+			fmt.Println("created ", instance.Name)
 		})
 
 		Context("with a new App CRD", func() {
 
-			It("should update the status of the CR ", func() {
-				assertResourceUpdated(instance)
-			})
 			It("should update the spans", func() {
+				By("creating a new app version")
+				assertResourceUpdated(instance)
 				assertAppSpan(instance, spanRecorder)
+				fmt.Println("spanned ", instance.Name)
 			})
 
 		})
@@ -104,20 +107,27 @@ func deleteAppInCluster(instance *klcv1alpha1.KeptnApp) {
 
 func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
 
-	appVersion := &klcv1alpha1.KeptnAppVersion{}
-	appvName := types.NamespacedName{
-		Namespace: instance.Namespace,
-		Name:      instance.Name + "-" + instance.Spec.Version,
-	}
-	By("Retrieving Created app version")
-	Eventually(func() error {
-		return k8sClient.Get(ctx, appvName, appVersion)
-	}, "20s").Should(Succeed())
+	appVersion := getAppVersion(instance)
 
 	By("Comparing expected app version")
 	Expect(appVersion.Spec.AppName).To(Equal(instance.Name))
 	Expect(appVersion.Spec.Version).To(Equal(instance.Spec.Version))
 	Expect(appVersion.Spec.Workloads).To(Equal(instance.Spec.Workloads))
+
+	return appVersion
+}
+
+func getAppVersion(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
+	appvName := types.NamespacedName{
+		Namespace: instance.Namespace,
+		Name:      instance.Name + "-" + instance.Spec.Version,
+	}
+
+	appVersion := &klcv1alpha1.KeptnAppVersion{}
+	By("Retrieving Created app version")
+	Eventually(func() error {
+		return k8sClient.Get(ctx, appvName, appVersion)
+	}, "20s").Should(Succeed())
 
 	return appVersion
 }
@@ -161,6 +171,6 @@ func createInstanceInCluster(name string, namespace string, version string, inst
 	}
 	By("Invoking Reconciling for Create")
 
-	Expect(ignoreAlreadyExists(k8sClient.Create(ctx, instance))).Should(Succeed())
+	Expect(k8sClient.Create(ctx, instance)).Should(Succeed())
 	return instance
 }

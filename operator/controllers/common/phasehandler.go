@@ -81,11 +81,8 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 			piWrapper.Complete()
 			piWrapper.SetState(common.StateFailed)
 			spanAppTrace.AddEvent(phase.LongName + " has failed")
-			msg, err := r.CreateFailureReasonMessages(ctx, phase, piWrapper)
-			if err != nil {
+			if err := r.createFailureReasonSpanEvents(ctx, phase, piWrapper, spanAppTrace); err != nil {
 				r.Log.Error(err, "cannot create failure spans")
-			} else {
-				spanAppTrace.AddEvent(msg)
 			}
 			spanAppTrace.SetStatus(codes.Error, "Failed")
 			spanAppTrace.End()

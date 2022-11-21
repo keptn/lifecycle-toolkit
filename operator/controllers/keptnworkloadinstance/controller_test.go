@@ -558,7 +558,20 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			},
 		},
 		klcv1alpha1.KeptnAppVersionStatus{
-			Status: keptncommon.StateSucceeded,
+			PreDeploymentStatus:                keptncommon.StateSucceeded,
+			PostDeploymentStatus:               keptncommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:      keptncommon.StateSucceeded,
+			PostDeploymentEvaluationStatus:     keptncommon.StateSucceeded,
+			WorkloadOverallStatus:              keptncommon.StateSucceeded,
+			WorkloadStatus:                     nil,
+			CurrentPhase:                       keptncommon.PhaseWorkloadPostEvaluation.ShortName,
+			PreDeploymentTaskStatus:            nil,
+			PostDeploymentTaskStatus:           nil,
+			PreDeploymentEvaluationTaskStatus:  nil,
+			PostDeploymentEvaluationTaskStatus: nil,
+			Status:                             keptncommon.StateSucceeded,
+			StartTime:                          metav1.Time{},
+			EndTime:                            metav1.Time{},
 		},
 	)
 

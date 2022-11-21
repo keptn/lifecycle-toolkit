@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -60,7 +61,21 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: lfcv1alpha1.KeptnWorkloadInstanceStatus{},
+		Status: lfcv1alpha1.KeptnWorkloadInstanceStatus{
+			DeploymentStatus:                   keptncommon.StateSucceeded,
+			PreDeploymentStatus:                keptncommon.StateSucceeded,
+			PostDeploymentStatus:               keptncommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:      keptncommon.StateSucceeded,
+			PostDeploymentEvaluationStatus:     keptncommon.StateSucceeded,
+			CurrentPhase:                       keptncommon.PhaseWorkloadPostEvaluation.ShortName,
+			PreDeploymentTaskStatus:            nil,
+			PostDeploymentTaskStatus:           nil,
+			PreDeploymentEvaluationTaskStatus:  nil,
+			PostDeploymentEvaluationTaskStatus: nil,
+			Status:                             keptncommon.StateSucceeded,
+			StartTime:                          metav1.Time{},
+			EndTime:                            metav1.Time{},
+		},
 	}
 	return c.Create(context.TODO(), wi)
 

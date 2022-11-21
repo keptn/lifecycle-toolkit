@@ -3,16 +3,17 @@ package klcpermit
 import (
 	"context"
 	"fmt"
+	"hash/fnv"
+	"strings"
+
 	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/tracing"
 	"go.opentelemetry.io/otel/codes"
-	"hash/fnv"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/klog/v2"
-	"strings"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
@@ -76,7 +77,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 		return WorkloadInstanceNotFound
 	}
 
-	ctx, span := sMgr.getSpan(ctx, crd, pod)
+	_, span := sMgr.getSpan(ctx, crd, pod)
 
 	//check CRD status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")

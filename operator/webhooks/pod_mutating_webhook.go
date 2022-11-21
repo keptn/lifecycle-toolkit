@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	appsv1 "k8s.io/api/apps/v1"
 	"net/http"
 	"reflect"
 	"strings"
+
+	appsv1 "k8s.io/api/apps/v1"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
@@ -89,7 +90,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		podIsAnnotated, _ = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if podIsAnnotated {

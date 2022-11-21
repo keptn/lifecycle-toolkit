@@ -139,7 +139,7 @@ func ignoreAlreadyExists(err error) error {
 
 func setupManager(rec []keptncontroller.Controller) {
 	for _, r := range rec {
-		r.SetupWithManager(k8sManager)
+		_ = r.SetupWithManager(k8sManager)
 	}
 
 }

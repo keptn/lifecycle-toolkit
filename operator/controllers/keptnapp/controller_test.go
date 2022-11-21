@@ -89,9 +89,9 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	utils.AddApp(r.Client, "myapp")
-	utils.AddApp(r.Client, "myfinishedapp")
-	utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
+	_ = utils.AddApp(r.Client, "myapp")
+	_ = utils.AddApp(r.Client, "myfinishedapp")
+	_ = utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

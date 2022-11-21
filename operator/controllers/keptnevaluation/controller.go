@@ -101,7 +101,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		err := controllercommon.ErrRetryCountExceeded
 		span.SetStatus(codes.Error, err.Error())
 		evaluation.Status.OverallStatus = common.StateFailed
-		r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
+		_ = r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 		return ctrl.Result{}, nil
 	}
 
@@ -237,7 +237,7 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 	queryTime := time.Now().UTC()
 	r.Log.Info("Running query: /api/v1/query?query=" + objective.Query + "&time=" + queryTime.String())
 
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &http.Client{}})
+	client, _ := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &http.Client{}})
 	api := prometheus.NewAPI(client)
 	result, w, err := api.Query(
 		context.Background(),

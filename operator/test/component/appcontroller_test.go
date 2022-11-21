@@ -102,7 +102,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 
 func deleteAppInCluster(instance *klcv1alpha1.KeptnApp) {
 	By("Cleaning Up KeptnApp CRD ")
-	k8sClient.Delete(ctx, instance)
+	_ = k8sClient.Delete(ctx, instance)
 }
 
 func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {

@@ -161,7 +161,7 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 		if v.Status == common.StateFailed {
 			obj := failedCheckReason{
 				Time:    evaluation.Status.EndTime.Time,
-				Message: fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'\n", k, v.Value, v.Message),
+				Message: fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message),
 			}
 			resultEvents = append(resultEvents, obj)
 		}
@@ -193,7 +193,7 @@ func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.Ke
 	for _, task := range failedTasks {
 		obj := failedCheckReason{
 			Time:    task.Status.EndTime.Time,
-			Message: fmt.Sprintf("task '%s' failed with reason: '%s'\n", task.Name, task.Status.Message),
+			Message: fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message),
 		}
 		resultEvents = append(resultEvents, obj)
 	}

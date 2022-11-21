@@ -327,7 +327,7 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 			phase: common.PhaseAppPreEvaluation,
 			want: []failedCheckReason{
 				{
-					Message: "evaluation of 'cpu' failed with value: '10' and reason: 'cpu failed'\n",
+					Message: "evaluation of 'cpu' failed with value: '10' and reason: 'cpu failed'",
 					Time:    time.Date(1, 1, 1, 1, 1, 1, 0, time.Local),
 				},
 			},
@@ -450,7 +450,7 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 			phase: common.PhaseAppPreDeployment,
 			want: []failedCheckReason{
 				{
-					Message: "task 'task-name' failed with reason: 'task failed'\n",
+					Message: "task 'task-name' failed with reason: 'task failed'",
 					Time:    time.Date(1, 1, 1, 1, 1, 1, 0, time.Local),
 				},
 			},

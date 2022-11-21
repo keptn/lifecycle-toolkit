@@ -5,6 +5,9 @@ import (
 	"fmt"
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/metric/unit"
+	"go.opentelemetry.io/otel/sdk/metric"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -78,5 +81,21 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 		},
 	}
 	return c.Create(context.TODO(), wi)
+}
 
+func InitAppMeters() keptncommon.KeptnMeters {
+	provider := metric.NewMeterProvider()
+	meter := provider.Meter("keptn/task")
+	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
+	appDuration, _ := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit("s"))
+	deploymentCount, _ := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
+	deploymentDuration, _ := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
+
+	meters := keptncommon.KeptnMeters{
+		AppCount:           appCount,
+		AppDuration:        appDuration,
+		DeploymentCount:    deploymentCount,
+		DeploymentDuration: deploymentDuration,
+	}
+	return meters
 }

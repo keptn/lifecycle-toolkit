@@ -2,6 +2,7 @@ package keptnworkloadinstance
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -23,6 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"strings"
 	"testing"
 )
 
@@ -520,12 +522,12 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		event   string
+		events  []string
 		wantErr bool
 	}{
 		{
 			name:    "Test that nothing happens when nothing is there to reconcile",
-			event:   "",
+			events:  nil,
 			wantErr: false,
 		},
 		{
@@ -539,7 +541,10 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 					},
 				},
 			},
-			event:   "Normal AppPreDeployEvaluationsNotFinished App Pre-Deployment Evaluations Pre evaluations tasks for app not finished / Namespace: some-ns, Name: some-wi, Version: 1.0.0",
+			events: []string{
+				"AppPreDeployEvaluationsFinishedSuccess",
+				"WorkloadPostDeployEvaluationsFinished",
+			},
 			wantErr: false,
 		},
 	}
@@ -582,9 +587,13 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 				t.Errorf("Reconcile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if tt.event != "" {
-				event := <-eventChannel
-				assert.Matches(t, event, tt.event)
+			if tt.events != nil {
+				for _, e := range tt.events {
+					event := <-eventChannel
+					assert.Equal(t, strings.Contains(event, tt.args.req.Name), true, "wrong appversion")
+					assert.Equal(t, strings.Contains(event, tt.args.req.Namespace), true, "wrong namespace")
+					assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+				}
 			}
 		})
 	}
@@ -613,6 +622,7 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 		Recorder: recorder,
 		Log:      ctrl.Log.WithName("test-appController"),
 		Tracer:   tr,
+		Meters:   utils.InitAppMeters(),
 	}
 	return r, recorder.Events, tr
 }

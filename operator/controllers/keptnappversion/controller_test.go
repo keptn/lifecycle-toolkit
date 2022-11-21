@@ -8,8 +8,6 @@ import (
 	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -99,7 +97,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 					assert.Equal(t, strings.Contains(event, tt.req.Namespace), true, "wrong namespace")
 					assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 				}
-
 			}
 			if tt.startTrace {
 				//A different trace for each app-version
@@ -163,7 +160,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 		Log:         ctrl.Log.WithName("test-appVersionController"),
 		Tracer:      tr,
 		SpanHandler: spanRecorder,
-		Meters:      InitAppMeters(),
+		Meters:      utils.InitAppMeters(),
 	}
 	return r, recorder.Events, tr, spanRecorder
 }
@@ -200,20 +197,6 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 			if !reflect.DeepEqual(ctxAppTrace, tt.appCtx) {
 				t.Errorf("setupSpansContexts() got: %v as appCtx, wanted: %v", ctxAppTrace, tt.appCtx)
 			}
-
 		})
 	}
-}
-
-func InitAppMeters() keptncommon.KeptnMeters {
-	provider := metric.NewMeterProvider()
-	meter := provider.Meter("keptn/task")
-	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
-	appDuration, _ := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit("s"))
-
-	meters := keptncommon.KeptnMeters{
-		AppCount:    appCount,
-		AppDuration: appDuration,
-	}
-	return meters
 }

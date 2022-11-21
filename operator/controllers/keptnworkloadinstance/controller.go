@@ -280,7 +280,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 
 	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
-		r.Log.Error(err, "could not look  up KeptnAppVersion for WorkloadInstance")
+		r.Log.Error(err, "could not look up KeptnAppVersion for WorkloadInstance")
 		return false, latestVersion, err
 	}
 

@@ -134,7 +134,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, "appversion_deployment", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, app.GetAppVersionName(), trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer spanAppTrace.End()
 
 	app.SetSpanAttributes(span)

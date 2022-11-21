@@ -134,6 +134,14 @@ spec:
               endTime:
                 format: date-time
                 type: string
+              phaseTraceIDs:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
+                  type: object
+                type: object
               postDeploymentEvaluationStatus:
                 default: Pending
                 type: string

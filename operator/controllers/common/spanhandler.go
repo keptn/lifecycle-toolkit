@@ -2,6 +2,8 @@ package common
 
 import (
 	"context"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"sync"
 
 	"go.opentelemetry.io/otel/trace"
@@ -34,10 +36,15 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 		return ctx, span, nil
 	}
 	spanName := piWrapper.GetSpanName(phase)
-	ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
+	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
 	piWrapper.SetSpanAttributes(span)
+
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(childCtx, traceContextCarrier)
+	piWrapper.SetPhaseTraceID(phase, traceContextCarrier)
+
 	r.bindCRDSpan[appvName] = span
-	return ctx, span, nil
+	return childCtx, span, nil
 }
 
 func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {

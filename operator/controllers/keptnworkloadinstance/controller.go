@@ -119,9 +119,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
 	}
 
-	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
-	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		if appPreEvalStatus.IsFailed() {
@@ -145,10 +142,23 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// set the App trace id if not already set
 	if len(workloadInstance.Spec.TraceId) < 1 {
-		workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
+		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[common.PhaseAppDeployment.ShortName]
+		if appDeploymentTraceID != nil {
+			workloadInstance.Spec.TraceId = appDeploymentTraceID
+		} else {
+			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
+		}
 		if err := r.Update(ctx, workloadInstance); err != nil {
 			return ctrl.Result{}, err
 		}
+	}
+
+	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
+	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
+	ctxWorkloadTrace, spanTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, workloadInstance.Name)
+	if err != nil {
+		r.Log.Error(err, "could not get span")
 	}
 
 	if workloadInstance.Status.CurrentPhase == "" {
@@ -156,7 +166,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 			r.Log.Error(err, "cannot unbind span")
 		}
 		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, phase.ShortName)
+		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxWorkloadTrace, r.Tracer, workloadInstance, phase.ShortName)
 		if err != nil {
 			r.Log.Error(err, "could not get span")
 		}
@@ -169,7 +179,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePre := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -181,7 +191,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePreEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -193,7 +203,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcileWorkloadInstance := func() (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -205,7 +215,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostDeployment := func() (common.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -217,7 +227,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -241,6 +251,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	// metrics: add deployment duration
 	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
+
+	spanTrace.AddEvent(workloadInstance.Name + " has finished")
+	spanTrace.SetStatus(codes.Ok, "Finished")
+	spanTrace.End()
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 

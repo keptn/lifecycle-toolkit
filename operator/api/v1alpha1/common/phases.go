@@ -1,6 +1,10 @@
 package common
 
-import "strings"
+import (
+	"strings"
+
+	"go.opentelemetry.io/otel/propagation"
+)
 
 type KeptnPhase KeptnPhaseType
 
@@ -47,3 +51,13 @@ var (
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseCancelled              = KeptnPhaseType{LongName: "Cancelled", ShortName: "Cancelled"}
 )
+
+type PhaseTraceID map[string]propagation.MapCarrier
+
+func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	pid[phase] = carrier
+}
+
+func (pid PhaseTraceID) GetPhaseTraceID(phase string) propagation.MapCarrier {
+	return pid[phase]
+}

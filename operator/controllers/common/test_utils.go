@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"fmt"
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -23,14 +24,21 @@ func AddApp(c client.Client, name string) error {
 
 }
 
-func AddAppVersion(c client.Client, name string, namespace string, status lfcv1alpha1.KeptnAppVersionStatus) error {
+func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha1.KeptnWorkloadRef, status lfcv1alpha1.KeptnAppVersionStatus) error {
+	appVersionName := fmt.Sprintf("%s-%s", appName, version)
 	app := &lfcv1alpha1.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
+			Name:      appVersionName,
 			Namespace: namespace,
 		},
-		Spec:   lfcv1alpha1.KeptnAppVersionSpec{KeptnAppSpec: lfcv1alpha1.KeptnAppSpec{Version: "1.0.0"}},
+		Spec: lfcv1alpha1.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1alpha1.KeptnAppSpec{
+				Version:   version,
+				Workloads: workloads,
+			},
+			AppName: appName,
+		},
 		Status: status,
 	}
 	return c.Create(context.TODO(), app)

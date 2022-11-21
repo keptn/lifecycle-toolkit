@@ -80,8 +80,8 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	utils.AddAppVersion(r.Client, "myappversion-1.0.0", lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StatePending})
-	utils.AddAppVersion(r.Client, "myfinishedapp-1.0.0", createFinishedAppVersionStatus())
+	utils.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StatePending})
+	utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
 
 	traces := 0
 	for _, tt := range tests {

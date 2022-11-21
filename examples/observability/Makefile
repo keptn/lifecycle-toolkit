@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger
-JAEGER_VERSION ?= v1.38.0
+JAEGER_VERSION ?= v1.38.1
 # renovate: datasource=github-tags depName=cert-manager/cert-manager
 CERT_MANAGER_VERSION ?= v1.10.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system

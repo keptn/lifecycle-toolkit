@@ -115,7 +115,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }
 
-func (r PhaseHandler) CreateFailureReasonMessages(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
+func (r PhaseHandler) CreateFailureReasonSpanEvents(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper) (string, error) {
 	if phase.IsEvaluation() {
 		return r.GetEvaluationFailureReasons(ctx, phase, object)
 	} else if phase.IsTask() {
@@ -146,7 +146,7 @@ func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase com
 
 	for k, v := range evaluation.Status.EvaluationStatus {
 		if v.Status == common.StateFailed {
-			resultMsg = resultMsg + fmt.Sprintf("\nevaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message)
+			resultMsg = resultMsg + fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'\n", k, v.Value, v.Message)
 		}
 	}
 
@@ -174,7 +174,7 @@ func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.Ke
 	}
 
 	for _, task := range failedTasks {
-		resultMsg = resultMsg + fmt.Sprintf("\ntask '%s' failed with reason: '%s'", task.Name, task.Status.Message)
+		resultMsg = resultMsg + fmt.Sprintf("task '%s' failed with reason: '%s'\n", task.Name, task.Status.Message)
 	}
 
 	return resultMsg, nil

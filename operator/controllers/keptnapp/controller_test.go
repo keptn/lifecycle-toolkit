@@ -4,6 +4,7 @@ import (
 	"context"
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
 	"go.opentelemetry.io/otel/trace"
@@ -43,7 +44,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 }
 
-func TestKeptnAppReconciler_Reconcile(t *testing.T) {
+func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, tracer := setupReconciler(t)
 
@@ -88,9 +89,9 @@ func TestKeptnAppReconciler_Reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	addApp(r, "myapp")
-	addApp(r, "myfinishedapp")
-	addAppVersion(r, "myfinishedapp-1.0.0", keptncommon.StateSucceeded)
+	utils.AddApp(r.Client, "myapp")
+	utils.AddApp(r.Client, "myfinishedapp")
+	utils.AddAppVersion(r.Client, "myfinishedapp-1.0.0", lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -145,36 +146,4 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITra
 		Tracer:   tr,
 	}
 	return r, recorder.Events, tr
-}
-
-func addApp(r *KeptnAppReconciler, name string) error {
-	app := &lfcv1alpha1.KeptnApp{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: "default",
-		},
-		Spec: lfcv1alpha1.KeptnAppSpec{
-			Version: "1.0.0",
-		},
-		Status: lfcv1alpha1.KeptnAppStatus{},
-	}
-	return r.Client.Create(context.TODO(), app)
-
-}
-
-func addAppVersion(r *KeptnAppReconciler, name string, status keptncommon.KeptnState) error {
-	app := &lfcv1alpha1.KeptnAppVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: "default",
-		},
-		Spec: lfcv1alpha1.KeptnAppVersionSpec{},
-		Status: lfcv1alpha1.KeptnAppVersionStatus{
-			Status: status,
-		},
-	}
-	return r.Client.Create(context.TODO(), app)
-
 }

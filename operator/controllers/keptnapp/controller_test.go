@@ -91,7 +91,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	utils.AddApp(r.Client, "myapp")
 	utils.AddApp(r.Client, "myfinishedapp")
-	utils.AddAppVersion(r.Client, "myfinishedapp-1.0.0", lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
+	utils.AddAppVersion(r.Client, "myfinishedapp-1.0.0", "default", lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

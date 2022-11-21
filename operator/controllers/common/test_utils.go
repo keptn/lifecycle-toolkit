@@ -23,16 +23,37 @@ func AddApp(c client.Client, name string) error {
 
 }
 
-func AddAppVersion(c client.Client, name string, status lfcv1alpha1.KeptnAppVersionStatus) error {
+func AddAppVersion(c client.Client, name string, namespace string, status lfcv1alpha1.KeptnAppVersionStatus) error {
 	app := &lfcv1alpha1.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
-			Namespace: "default",
+			Namespace: namespace,
 		},
 		Spec:   lfcv1alpha1.KeptnAppVersionSpec{KeptnAppSpec: lfcv1alpha1.KeptnAppSpec{Version: "1.0.0"}},
 		Status: status,
 	}
 	return c.Create(context.TODO(), app)
+}
+
+func AddWorkloadInstance(c client.Client, name string, namespace string) error {
+	wi := &lfcv1alpha1.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+		},
+		Spec: lfcv1alpha1.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: lfcv1alpha1.KeptnWorkloadSpec{
+				AppName: "some-app",
+				Version: "1.0.0",
+			},
+			WorkloadName:    "some-app-some-workload",
+			PreviousVersion: "",
+			TraceId:         nil,
+		},
+		Status: lfcv1alpha1.KeptnWorkloadInstanceStatus{},
+	}
+	return c.Create(context.TODO(), wi)
 
 }

@@ -6,6 +6,7 @@ import (
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
@@ -543,8 +544,8 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	addWorkloadInstance(r, "some-wi", testNamespace)
-	addAppVersion(r, "some-app-1.0.0", testNamespace, keptncommon.StateSucceeded)
+	utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
+	utils.AddAppVersion(r.Client, "some-app-1.0.0", testNamespace, klcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -586,54 +587,4 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 		Tracer:   tr,
 	}
 	return r, recorder.Events, tr
-}
-
-func addWorkloadInstance(r *KeptnWorkloadInstanceReconciler, name string, namespace string) error {
-	wi := &klcv1alpha1.KeptnWorkloadInstance{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
-		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1alpha1.KeptnWorkloadInstanceStatus{},
-	}
-	return r.Client.Create(context.TODO(), wi)
-
-}
-
-func addAppVersion(r *KeptnWorkloadInstanceReconciler, name string, namespace string, status keptncommon.KeptnState) error {
-	app := &klcv1alpha1.KeptnAppVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
-		Spec: klcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
-				Version: "0.0.1",
-				Workloads: []klcv1alpha1.KeptnWorkloadRef{
-					{
-						Name:    "some-workload",
-						Version: "1.0.0",
-					},
-				},
-			},
-			AppName:         "some-app",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1alpha1.KeptnAppVersionStatus{
-			Status: status,
-		},
-	}
-	return r.Client.Create(context.TODO(), app)
 }

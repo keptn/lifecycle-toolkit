@@ -85,7 +85,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if err != nil {
 			r.Log.Error(err, "could not update status")
 		}
-
 	}(task)
 
 	jobExists, err := r.JobExists(ctx, *task, req.Namespace)

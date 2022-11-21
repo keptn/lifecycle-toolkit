@@ -117,10 +117,8 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 	}
 	if job.Status.Succeeded > 0 {
 		task.Status.Status = common.StateSucceeded
-		err = r.Client.Status().Update(ctx, task)
-		if err != nil {
-			r.Log.Error(err, "could not update job status for: "+task.Name)
-		}
+	} else if job.Status.Failed > 0 {
+		task.Status.Status = common.StateFailed
 	}
 	return nil
 }

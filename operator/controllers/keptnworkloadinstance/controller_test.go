@@ -529,7 +529,7 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Test 2",
+			name: "Test fetching of data while pre deployment evaluations are not done",
 			args: args{
 				ctx: context.TODO(),
 				req: ctrl.Request{
@@ -545,7 +545,22 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 	}
 
 	utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
-	utils.AddAppVersion(r.Client, "some-app-1.0.0", testNamespace, klcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
+	utils.AddApp(r.Client, "some-app")
+	utils.AddAppVersion(
+		r.Client,
+		testNamespace,
+		"some-app",
+		"1.0.0",
+		[]klcv1alpha1.KeptnWorkloadRef{
+			{
+				Name:    "some-workload",
+				Version: "1.0.0",
+			},
+		},
+		klcv1alpha1.KeptnAppVersionStatus{
+			Status: keptncommon.StateSucceeded,
+		},
+	)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

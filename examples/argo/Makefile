@@ -2,7 +2,7 @@ LFC_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 ARGO_NAMESPACE ?= argocd
 # renovate: datasource=github-tags depName=argoproj/argo-cd
-ARGO_VERSION ?= 2.4.14
+ARGO_VERSION ?= v2.4.17
 # renovate: datasource=github-tags depName=cert-manager/cert-manager
 CERT_MANAGER_VERSION ?= v1.10.0
 ARGO_SECRET = $(shell kubectl -n ${ARGO_NAMESPACE} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo)
@@ -21,7 +21,7 @@ install:
 	@echo "Create Namespace and install ArgoCD"
 	@echo "-----------------------------------"
 	kubectl create namespace $(ARGO_NAMESPACE)
-	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGO_VERSION)/manifests/install.yaml
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/$(ARGO_VERSION)/manifests/install.yaml
 
 	@echo ""
 	@echo "-------------------------------"
@@ -67,7 +67,7 @@ argo-install-podtatohead:
 
 .PHONY: uninstall
 uninstall:
-	kubectl delete -n $(ARGO_VERSION) -f https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGO_VERSION)/manifests/install.yaml --ignore-not-found=true
+	kubectl delete -n $(ARGO_VERSION) -f https://raw.githubusercontent.com/argoproj/argo-cd/$(ARGO_VERSION)/manifests/install.yaml --ignore-not-found=true
 	kubectl delete namespace $(ARGO_NAMESPACE) --ignore-not-found=true
 	@echo ""
 	@echo "##########################"

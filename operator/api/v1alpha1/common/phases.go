@@ -21,6 +21,18 @@ func (p KeptnPhaseType) IsPostEvaluation() bool {
 	return strings.Contains(p.ShortName, "PostDeployEvaluations")
 }
 
+func (p KeptnPhaseType) IsTask() bool {
+	return strings.Contains(p.ShortName, "DeployTasks")
+}
+
+func (p KeptnPhaseType) IsPreTask() bool {
+	return strings.Contains(p.ShortName, "PreDeployTasks")
+}
+
+func (p KeptnPhaseType) IsPostTask() bool {
+	return strings.Contains(p.ShortName, "PostDeployTasks")
+}
+
 var (
 	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
 	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}

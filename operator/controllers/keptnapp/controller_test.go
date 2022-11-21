@@ -2,8 +2,9 @@ package keptnapp
 
 import (
 	"context"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
 	"go.opentelemetry.io/otel/trace"
@@ -20,16 +21,16 @@ import (
 // Example Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
-	app := &klcv1alpha1.KeptnApp{
+	app := &lfcv1alpha1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-app",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha1.KeptnAppSpec{
+		Spec: lfcv1alpha1.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: klcv1alpha1.KeptnAppStatus{},
+		Status: lfcv1alpha1.KeptnAppStatus{},
 	}
 	r, _, _ := setupReconciler(t)
 
@@ -88,9 +89,9 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	fake.AddApp(r.Client, "myapp")
-	fake.AddApp(r.Client, "myfinishedapp")
-	fake.AddAppVersion(r.Client, "myfinishedapp-1.0.0", klcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
+	utils.AddApp(r.Client, "myapp")
+	utils.AddApp(r.Client, "myfinishedapp")
+	utils.AddAppVersion(r.Client, "myfinishedapp-1.0.0", lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

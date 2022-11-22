@@ -103,7 +103,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		if workloadInstance.IsEndTimeSet() {
 			r.Log.Info("Increasing deployment count")
 			attrs := workloadInstance.GetMetricsAttributes()
-			r.Meters.AppCount.Add(ctx, 1, attrs...)
+			r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
 		}
 		span.End()
 	}(span, workloadInstance)
@@ -280,7 +280,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 
 	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
-		r.Log.Error(err, "could not look  up KeptnAppVersion for WorkloadInstance")
+		r.Log.Error(err, "could not look up KeptnAppVersion for WorkloadInstance")
 		return false, latestVersion, err
 	}
 

@@ -90,7 +90,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated, _ = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		if err != nil {
+			span.SetStatus(codes.Error, "Invalid annotations")
+			return admission.Errored(http.StatusBadRequest, err)
+		}
 	}
 
 	if podIsAnnotated {

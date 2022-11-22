@@ -2,9 +2,7 @@ run:
   timeout: 5m
   go: '1.19'
 output:
-  format:
-    - colored-line-number
-    - github-actions
+  format: "colored-line-number,github-actions"
 linters:
   enable:
     - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification

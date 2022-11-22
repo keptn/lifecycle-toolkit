@@ -142,7 +142,7 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 		return len(spans) >= 3
 	}, "10s").Should(BeTrue())
 
-	Expect(spans[0].Name()).To(Equal("appversion_deployment"))
+	Expect(spans[0].Name()).To(Equal("my-app-lkd86-1.0.0"))
 	Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
 

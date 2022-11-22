@@ -547,6 +547,9 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 				"WorkloadPostDeployEvaluationsFinished",
 			},
 			wantErr: false,
+			fields: fields{
+				SpanHandler: &utils.SpanHandler{},
+			},
 		},
 	}
 

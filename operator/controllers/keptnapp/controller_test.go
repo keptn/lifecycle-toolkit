@@ -120,7 +120,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
-	assert.Equal(t, tracer.StartCalls()[2].SpanName, "appversion_deployment")
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0")
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")

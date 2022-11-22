@@ -1,10 +1,36 @@
 package common
 
+import "strings"
+
 type KeptnPhase KeptnPhaseType
 
 type KeptnPhaseType struct {
 	LongName  string
 	ShortName string
+}
+
+func (p KeptnPhaseType) IsEvaluation() bool {
+	return strings.Contains(p.ShortName, "DeployEvaluations")
+}
+
+func (p KeptnPhaseType) IsPreEvaluation() bool {
+	return strings.Contains(p.ShortName, "PreDeployEvaluations")
+}
+
+func (p KeptnPhaseType) IsPostEvaluation() bool {
+	return strings.Contains(p.ShortName, "PostDeployEvaluations")
+}
+
+func (p KeptnPhaseType) IsTask() bool {
+	return strings.Contains(p.ShortName, "DeployTasks")
+}
+
+func (p KeptnPhaseType) IsPreTask() bool {
+	return strings.Contains(p.ShortName, "PreDeployTasks")
+}
+
+func (p KeptnPhaseType) IsPostTask() bool {
+	return strings.Contains(p.ShortName, "PostDeployTasks")
 }
 
 var (

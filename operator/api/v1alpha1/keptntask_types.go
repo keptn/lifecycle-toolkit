@@ -64,6 +64,7 @@ type KeptnTaskStatus struct {
 	JobName string `json:"jobName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
+	Message   string            `json:"message,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster

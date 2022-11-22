@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -24,6 +26,11 @@ type PhaseHandler struct {
 type PhaseResult struct {
 	Continue bool
 	ctrl.Result
+}
+
+type failedCheckReason struct {
+	Message string
+	Time    time.Time
 }
 
 func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
@@ -79,6 +86,9 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 			piWrapper.Complete()
 			piWrapper.SetState(common.StateFailed)
 			spanAppTrace.AddEvent(phase.LongName + " has failed")
+			if err := r.createFailureReasonSpanEvents(ctx, phase, piWrapper, spanAppTrace); err != nil {
+				r.Log.Error(err, "cannot add failure events to spans")
+			}
 			spanAppTrace.SetStatus(codes.Error, "Failed")
 			spanAppTrace.End()
 			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
@@ -105,4 +115,88 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
+}
+
+func (r PhaseHandler) createFailureReasonSpanEvents(ctx context.Context, phase common.KeptnPhaseType, object *PhaseItemWrapper, spanTrace trace.Span) error {
+	var messageObjects []failedCheckReason
+	var err error
+	if phase.IsEvaluation() {
+		messageObjects, err = r.GetEvaluationFailureReasons(ctx, phase, object)
+	} else if phase.IsTask() {
+		messageObjects, err = r.GetTaskFailureReasons(ctx, phase, object)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	for _, msgObject := range messageObjects {
+		spanTrace.AddEvent(msgObject.Message, trace.WithTimestamp(msgObject.Time))
+	}
+
+	return nil
+}
+
+func (r PhaseHandler) GetEvaluationFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object PhaseItem) ([]failedCheckReason, error) {
+	resultEvents := []failedCheckReason{}
+	var status []klcv1alpha1.EvaluationStatus
+	if phase.IsPreEvaluation() {
+		status = object.GetPreDeploymentEvaluationTaskStatus()
+	} else {
+		status = object.GetPostDeploymentEvaluationTaskStatus()
+	}
+
+	// there can be only one evaluation and in this section of the code, it can only be failed
+	// checking length of the status only for safety reasons
+	if len(status) != 1 {
+		return nil, fmt.Errorf("evaluation status not found for %s/%s", object.GetAppName(), object.GetParentName())
+	}
+
+	evaluation := &klcv1alpha1.KeptnEvaluation{}
+	if err := r.Client.Get(ctx, types.NamespacedName{Name: status[0].EvaluationName, Namespace: object.GetNamespace()}, evaluation); err != nil {
+		return nil, fmt.Errorf("evaluation %s not found for %s/%s", status[0].EvaluationName, object.GetAppName(), object.GetParentName())
+	}
+
+	for k, v := range evaluation.Status.EvaluationStatus {
+		if v.Status == common.StateFailed {
+			obj := failedCheckReason{
+				Time:    evaluation.Status.EndTime.Time,
+				Message: fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message),
+			}
+			resultEvents = append(resultEvents, obj)
+		}
+	}
+
+	return resultEvents, nil
+}
+
+func (r PhaseHandler) GetTaskFailureReasons(ctx context.Context, phase common.KeptnPhaseType, object PhaseItem) ([]failedCheckReason, error) {
+	resultEvents := []failedCheckReason{}
+	var failedTasks []klcv1alpha1.KeptnTask
+	var status []klcv1alpha1.TaskStatus
+	if phase.IsPreTask() {
+		status = object.GetPreDeploymentTaskStatus()
+	} else {
+		status = object.GetPostDeploymentTaskStatus()
+	}
+
+	for _, item := range status {
+		if item.Status == common.StateFailed {
+			task := &klcv1alpha1.KeptnTask{}
+			if err := r.Client.Get(ctx, types.NamespacedName{Name: item.TaskName, Namespace: object.GetNamespace()}, task); err != nil {
+				return nil, fmt.Errorf("task %s not found for %s/%s", item.TaskName, object.GetAppName(), object.GetParentName())
+			}
+			failedTasks = append(failedTasks, *task)
+		}
+	}
+
+	for _, task := range failedTasks {
+		obj := failedCheckReason{
+			Time:    task.Status.EndTime.Time,
+			Message: fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message),
+		}
+		resultEvents = append(resultEvents, obj)
+	}
+
+	return resultEvents, nil
 }

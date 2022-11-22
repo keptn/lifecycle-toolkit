@@ -116,6 +116,8 @@ spec:
                 type: string
               jobName:
                 type: string
+              message:
+                type: string
               startTime:
                 format: date-time
                 type: string

@@ -379,5 +379,5 @@ func (a *KeptnAppVersion) SetPhaseTraceID(phase string, carrier propagation.MapC
 	if a.Status.PhaseTraceIDs == nil {
 		a.Status.PhaseTraceIDs = common.PhaseTraceID{}
 	}
-	a.Status.PhaseTraceIDs[phase] = carrier
+	a.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }

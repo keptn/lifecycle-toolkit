@@ -420,5 +420,5 @@ func (w *KeptnWorkloadInstance) SetPhaseTraceID(phase string, carrier propagatio
 	if w.Status.PhaseTraceIDs == nil {
 		w.Status.PhaseTraceIDs = common.PhaseTraceID{}
 	}
-	w.Status.PhaseTraceIDs[phase] = carrier
+	w.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }

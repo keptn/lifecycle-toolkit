@@ -5,7 +5,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate moq -pkg fake --skip-ensure -out ./fake/activemetricsobject_mock.go . ActiveMetricsObject
+
 // ActiveMetricsObject represents an object whose active metrics are stored
 type ActiveMetricsObject interface {
 	GetActiveMetricsAttributes() []attribute.KeyValue

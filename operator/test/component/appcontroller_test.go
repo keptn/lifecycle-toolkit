@@ -154,7 +154,7 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 }
 
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha1.KeptnApp {
-	instance = &klcv1alpha1.KeptnApp{
+	instance := &klcv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,

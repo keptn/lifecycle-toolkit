@@ -76,7 +76,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 		)
 
 		BeforeEach(func() {
-			instance = createInstanceInCluster(name, namespace, version, instance)
+			instance = createInstanceInCluster(name, namespace, version)
 			fmt.Println("created ", instance.Name)
 		})
 
@@ -153,7 +153,7 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 	Expect(spans[2].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
 }
 
-func createInstanceInCluster(name string, namespace string, version string, instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp {
+func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha1.KeptnApp {
 	instance = &klcv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,

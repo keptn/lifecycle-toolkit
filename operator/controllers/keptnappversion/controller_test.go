@@ -8,8 +8,6 @@ import (
 	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"

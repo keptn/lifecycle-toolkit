@@ -549,9 +549,9 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
-	utils.AddApp(r.Client, "some-app")
-	utils.AddAppVersion(
+	_ = utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
+	_ = utils.AddApp(r.Client, "some-app")
+	_ = utils.AddAppVersion(
 		r.Client,
 		testNamespace,
 		"some-app",

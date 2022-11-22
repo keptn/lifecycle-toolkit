@@ -389,6 +389,9 @@ func (w KeptnWorkloadInstance) GetSpanKey(phase string) string {
 }
 
 func (w KeptnWorkloadInstance) GetSpanName(phase string) string {
+	if phase == "" {
+		return w.Name
+	}
 	return fmt.Sprintf("%s/%s", w.Spec.WorkloadName, phase)
 }
 

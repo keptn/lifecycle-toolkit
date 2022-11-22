@@ -205,6 +205,8 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 	}, evaluation.Spec)
 
+	require.Equal(t, "workload", workload.GetSpanName(""))
+
 	require.Equal(t, "workloadname/phase", workload.GetSpanName("phase"))
 
 	require.Equal(t, []attribute.KeyValue{

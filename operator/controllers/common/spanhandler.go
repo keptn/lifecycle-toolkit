@@ -16,8 +16,13 @@ type ISpanHandler interface {
 	UnbindSpan(reconcileObject client.Object, phase string) error
 }
 
+type spanContext struct {
+	Span trace.Span
+	Ctx  context.Context
+}
+
 type SpanHandler struct {
-	bindCRDSpan map[string]trace.Span
+	bindCRDSpan map[string]spanContext
 	mtx         sync.Mutex
 }
 
@@ -26,14 +31,14 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	if err != nil {
 		return nil, nil, err
 	}
-	appvName := piWrapper.GetSpanKey(phase)
+	spanKey := piWrapper.GetSpanKey(phase)
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 	if r.bindCRDSpan == nil {
-		r.bindCRDSpan = make(map[string]trace.Span)
+		r.bindCRDSpan = make(map[string]spanContext)
 	}
-	if span, ok := r.bindCRDSpan[appvName]; ok {
-		return ctx, span, nil
+	if span, ok := r.bindCRDSpan[spanKey]; ok {
+		return span.Ctx, span.Span, nil
 	}
 	spanName := piWrapper.GetSpanName(phase)
 	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
@@ -43,7 +48,10 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	otel.GetTextMapPropagator().Inject(childCtx, traceContextCarrier)
 	piWrapper.SetPhaseTraceID(phase, traceContextCarrier)
 
-	r.bindCRDSpan[appvName] = span
+	r.bindCRDSpan[spanKey] = spanContext{
+		Span: span,
+		Ctx:  childCtx,
+	}
 	return childCtx, span, nil
 }
 

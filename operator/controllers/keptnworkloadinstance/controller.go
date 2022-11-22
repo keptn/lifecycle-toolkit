@@ -156,7 +156,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	ctxWorkloadTrace, spanTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, workloadInstance.Name)
+	// this will be the parent span for all phases of the WorkloadInstance
+	ctxWorkloadTrace, spanTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}

@@ -50,15 +50,15 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus               common.KeptnState                 `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus            []TaskStatus                      `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []TaskStatus                      `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []EvaluationStatus                `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []EvaluationStatus                `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	StartTime                          metav1.Time                       `json:"startTime,omitempty"`
-	EndTime                            metav1.Time                       `json:"endTime,omitempty"`
-	CurrentPhase                       string                            `json:"currentPhase,omitempty"`
-	PhaseTraceIDs                      map[string]propagation.MapCarrier `json:"phaseTraceIDs,omitempty"`
+	PostDeploymentStatus               common.KeptnState   `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus            []TaskStatus        `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []TaskStatus        `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []EvaluationStatus  `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []EvaluationStatus  `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	StartTime                          metav1.Time         `json:"startTime,omitempty"`
+	EndTime                            metav1.Time         `json:"endTime,omitempty"`
+	CurrentPhase                       string              `json:"currentPhase,omitempty"`
+	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 }
@@ -418,7 +418,7 @@ func (w *KeptnWorkloadInstance) CancelRemainingPhases(phase common.KeptnPhaseTyp
 
 func (w *KeptnWorkloadInstance) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
 	if w.Status.PhaseTraceIDs == nil {
-		w.Status.PhaseTraceIDs = map[string]propagation.MapCarrier{}
+		w.Status.PhaseTraceIDs = common.PhaseTraceID{}
 	}
 	w.Status.PhaseTraceIDs[phase] = carrier
 }

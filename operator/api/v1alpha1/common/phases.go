@@ -37,6 +37,37 @@ func (p KeptnPhaseType) IsPostTask() bool {
 	return strings.Contains(p.ShortName, "PostDeployTasks")
 }
 
+func GetShortPhaseName(phase string) string {
+	var phases = []KeptnPhaseType{
+		PhaseWorkloadPreDeployment,
+		PhaseWorkloadPostDeployment,
+		PhaseWorkloadPreEvaluation,
+		PhaseWorkloadPostEvaluation,
+		PhaseWorkloadDeployment,
+		PhaseAppPreDeployment,
+		PhaseAppPostDeployment,
+		PhaseAppPreEvaluation,
+		PhaseAppPostEvaluation,
+		PhaseAppDeployment,
+		PhaseCompleted,
+		PhaseCancelled,
+	}
+
+	for _, p := range phases {
+		if phase == p.ShortName {
+			return p.ShortName
+		}
+	}
+
+	for _, p := range phases {
+		if phase == p.LongName {
+			return p.ShortName
+		}
+	}
+
+	return ""
+}
+
 var (
 	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
 	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}
@@ -55,9 +86,10 @@ var (
 type PhaseTraceID map[string]propagation.MapCarrier
 
 func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	pid[phase] = carrier
+	pid[GetShortPhaseName(phase)] = carrier
+
 }
 
 func (pid PhaseTraceID) GetPhaseTraceID(phase string) propagation.MapCarrier {
-	return pid[phase]
+	return pid[GetShortPhaseName(phase)]
 }

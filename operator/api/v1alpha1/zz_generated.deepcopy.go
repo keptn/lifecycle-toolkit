@@ -22,6 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/propagation"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -403,7 +404,7 @@ func (in *KeptnAppVersionStatus) DeepCopyInto(out *KeptnAppVersionStatus) {
 	}
 	if in.PhaseTraceIDs != nil {
 		in, out := &in.PhaseTraceIDs, &out.PhaseTraceIDs
-		*out = make(map[string]propagation.MapCarrier, len(*in))
+		*out = make(common.PhaseTraceID, len(*in))
 		for key, val := range *in {
 			var outVal map[string]string
 			if val == nil {
@@ -1043,7 +1044,7 @@ func (in *KeptnWorkloadInstanceStatus) DeepCopyInto(out *KeptnWorkloadInstanceSt
 	in.EndTime.DeepCopyInto(&out.EndTime)
 	if in.PhaseTraceIDs != nil {
 		in, out := &in.PhaseTraceIDs, &out.PhaseTraceIDs
-		*out = make(map[string]propagation.MapCarrier, len(*in))
+		*out = make(common.PhaseTraceID, len(*in))
 		for key, val := range *in {
 			var outVal map[string]string
 			if val == nil {

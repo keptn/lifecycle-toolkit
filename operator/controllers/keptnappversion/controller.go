@@ -92,17 +92,12 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		SpanHandler: r.SpanHandler,
 	}
 
-	if appVersion.Status.CurrentPhase == "" {
-		if err := r.SpanHandler.UnbindSpan(appVersion, phase.ShortName); err != nil {
-			r.Log.Error(err, "cannot unbind span")
-		}
-		var spanAppTrace trace.Span
-		// ignoring ctx to don't use this as parent span
-		_, spanAppTrace, err = r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, phase.ShortName)
-		if err != nil {
-			r.Log.Error(err, "could not get span")
-		}
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, appVersion, "")
+	if err != nil {
+		r.Log.Error(err, "could not get span")
+	}
 
+	if appVersion.Status.CurrentPhase == "" {
 		appVersion.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Started", "have started", appVersion.GetVersion())
@@ -186,6 +181,13 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)
 	r.Meters.AppDuration.Record(ctx, duration.Seconds(), attrs...)
+
+	spanAppTrace.AddEvent(appVersion.Name + " has finished")
+	spanAppTrace.SetStatus(codes.Ok, "Finished")
+	spanAppTrace.End()
+	if err := r.SpanHandler.UnbindSpan(appVersion, ""); err != nil {
+		r.Log.Error(err, "Could not unbind span")
+	}
 
 	return ctrl.Result{}, nil
 }

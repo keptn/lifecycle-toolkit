@@ -337,6 +337,9 @@ func (a KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapC
 }
 
 func (a KeptnAppVersion) GetSpanName(phase string) string {
+	if phase == "" {
+		return a.Name
+	}
 	return phase
 }
 

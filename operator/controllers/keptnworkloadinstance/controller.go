@@ -157,22 +157,22 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
 	// this will be the parent span for all phases of the WorkloadInstance
-	ctxWorkloadTrace, spanTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, "")
+	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
 
 	if workloadInstance.Status.CurrentPhase == "" {
-		if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
-			r.Log.Error(err, "cannot unbind span")
-		}
-		var spanAppTrace trace.Span
-		ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxWorkloadTrace, r.Tracer, workloadInstance, phase.ShortName)
-		if err != nil {
-			r.Log.Error(err, "could not get span")
-		}
-		workloadInstance.SetSpanAttributes(spanAppTrace)
-		spanAppTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
+		//if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
+		//	r.Log.Error(err, "cannot unbind span")
+		//}
+		//var spanAppTrace trace.Span
+		//ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxWorkloadTrace, r.Tracer, workloadInstance, phase.ShortName)
+		//if err != nil {
+		//	r.Log.Error(err, "could not get span")
+		//}
+		//workloadInstance.SetSpanAttributes(spanAppTrace)
+		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}
 
@@ -253,9 +253,12 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
 
-	spanTrace.AddEvent(workloadInstance.Name + " has finished")
-	spanTrace.SetStatus(codes.Ok, "Finished")
-	spanTrace.End()
+	spanWorkloadTrace.AddEvent(workloadInstance.Name + " has finished")
+	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
+	spanWorkloadTrace.End()
+	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
+		r.Log.Error(err, "Could not unbind span")
+	}
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 

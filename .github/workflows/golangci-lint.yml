@@ -28,4 +28,4 @@ jobs:
         with:
           working-directory: ${{ matrix.config.folder }}
           version: ${{ env.GOLANGCI_LINT_VERSION }}
-          args: --config ../.golangci.yml
+          args: --config ../.golangci.yml -v

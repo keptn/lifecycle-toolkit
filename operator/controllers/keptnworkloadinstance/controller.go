@@ -163,15 +163,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if workloadInstance.Status.CurrentPhase == "" {
-		//if err := r.SpanHandler.UnbindSpan(workloadInstance, phase.ShortName); err != nil {
-		//	r.Log.Error(err, "cannot unbind span")
-		//}
-		//var spanAppTrace trace.Span
-		//ctxAppTrace, spanAppTrace, err = r.SpanHandler.GetSpan(ctxWorkloadTrace, r.Tracer, workloadInstance, phase.ShortName)
-		//if err != nil {
-		//	r.Log.Error(err, "could not get span")
-		//}
-		//workloadInstance.SetSpanAttributes(spanAppTrace)
 		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}

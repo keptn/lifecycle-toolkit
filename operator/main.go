@@ -35,6 +35,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
@@ -113,10 +114,12 @@ func main() {
 	// implements prometheus.Collector, allowing it to be used as
 	// both a Reader and Collector.
 
-	exporter, err := otelprom.New()
-	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
-	}
+	exporter := otelprom.New()
+	// TODO uncomment after bumping OTel version to 1.11.2 or higher
+	// exporter, err := otelprom.New()
+	// if err != nil {
+	// 	setupLog.Error(err, "unable to start OTel")
+	// }
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
 	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
@@ -199,7 +202,9 @@ func main() {
 	}
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
-	go serveMetrics()
+	// TODO uncomment after bumping OTel version to 1.11.2 or higher
+	//go serveMetrics()
+	go serveMetrics(exporter.Collector)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -512,10 +517,17 @@ func newResource() *resource.Resource {
 	return r
 }
 
-func serveMetrics() {
+func serveMetrics(collector prometheus.Collector) {
+	registry := prometheus.NewRegistry()
+	err := registry.Register(collector)
+	if err != nil {
+		fmt.Printf("error registering collector: %v", err)
+		return
+	}
+
 	log.Printf("serving metrics at localhost:2222/metrics")
-	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":2222", nil)
+	http.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
+	err = http.ListenAndServe(":2222", nil)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return

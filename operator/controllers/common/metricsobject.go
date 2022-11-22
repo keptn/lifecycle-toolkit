@@ -7,8 +7,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// MetricsObject represents an object whose metrics are stored
+//
 //go:generate moq -pkg fake --skip-ensure -out ./fake/metricsobject_mock.go . MetricsObject
-//MetricsObject represents an object whose metrics are stored
 type MetricsObject interface {
 	GetDurationMetricsAttributes() []attribute.KeyValue
 	GetMetricsAttributes() []attribute.KeyValue

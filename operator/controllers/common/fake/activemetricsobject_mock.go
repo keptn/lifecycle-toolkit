@@ -10,22 +10,22 @@ import (
 
 // ActiveMetricsObjectMock is a mock implementation of common.ActiveMetricsObject.
 //
-// 	func TestSomethingThatUsesActiveMetricsObject(t *testing.T) {
+//	func TestSomethingThatUsesActiveMetricsObject(t *testing.T) {
 //
-// 		// make and configure a mocked common.ActiveMetricsObject
-// 		mockedActiveMetricsObject := &ActiveMetricsObjectMock{
-// 			GetActiveMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetActiveMetricsAttributes method")
-// 			},
-// 			IsEndTimeSetFunc: func() bool {
-// 				panic("mock out the IsEndTimeSet method")
-// 			},
-// 		}
+//		// make and configure a mocked common.ActiveMetricsObject
+//		mockedActiveMetricsObject := &ActiveMetricsObjectMock{
+//			GetActiveMetricsAttributesFunc: func() []attribute.KeyValue {
+//				panic("mock out the GetActiveMetricsAttributes method")
+//			},
+//			IsEndTimeSetFunc: func() bool {
+//				panic("mock out the IsEndTimeSet method")
+//			},
+//		}
 //
-// 		// use mockedActiveMetricsObject in code that requires common.ActiveMetricsObject
-// 		// and then make assertions.
+//		// use mockedActiveMetricsObject in code that requires common.ActiveMetricsObject
+//		// and then make assertions.
 //
-// 	}
+//	}
 type ActiveMetricsObjectMock struct {
 	// GetActiveMetricsAttributesFunc mocks the GetActiveMetricsAttributes method.
 	GetActiveMetricsAttributesFunc func() []attribute.KeyValue
@@ -61,7 +61,8 @@ func (mock *ActiveMetricsObjectMock) GetActiveMetricsAttributes() []attribute.Ke
 
 // GetActiveMetricsAttributesCalls gets all the calls that were made to GetActiveMetricsAttributes.
 // Check the length with:
-//     len(mockedActiveMetricsObject.GetActiveMetricsAttributesCalls())
+//
+//	len(mockedActiveMetricsObject.GetActiveMetricsAttributesCalls())
 func (mock *ActiveMetricsObjectMock) GetActiveMetricsAttributesCalls() []struct {
 } {
 	var calls []struct {
@@ -87,7 +88,8 @@ func (mock *ActiveMetricsObjectMock) IsEndTimeSet() bool {
 
 // IsEndTimeSetCalls gets all the calls that were made to IsEndTimeSet.
 // Check the length with:
-//     len(mockedActiveMetricsObject.IsEndTimeSetCalls())
+//
+//	len(mockedActiveMetricsObject.IsEndTimeSetCalls())
 func (mock *ActiveMetricsObjectMock) IsEndTimeSetCalls() []struct {
 } {
 	var calls []struct {

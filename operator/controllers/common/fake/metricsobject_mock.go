@@ -11,40 +11,40 @@ import (
 
 // MetricsObjectMock is a mock implementation of common.MetricsObject.
 //
-// 	func TestSomethingThatUsesMetricsObject(t *testing.T) {
+//	func TestSomethingThatUsesMetricsObject(t *testing.T) {
 //
-// 		// make and configure a mocked common.MetricsObject
-// 		mockedMetricsObject := &MetricsObjectMock{
-// 			GetDurationMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetDurationMetricsAttributes method")
-// 			},
-// 			GetEndTimeFunc: func() time.Time {
-// 				panic("mock out the GetEndTime method")
-// 			},
-// 			GetMetricsAttributesFunc: func() []attribute.KeyValue {
-// 				panic("mock out the GetMetricsAttributes method")
-// 			},
-// 			GetNamespaceFunc: func() string {
-// 				panic("mock out the GetNamespace method")
-// 			},
-// 			GetParentNameFunc: func() string {
-// 				panic("mock out the GetParentName method")
-// 			},
-// 			GetPreviousVersionFunc: func() string {
-// 				panic("mock out the GetPreviousVersion method")
-// 			},
-// 			GetStartTimeFunc: func() time.Time {
-// 				panic("mock out the GetStartTime method")
-// 			},
-// 			IsEndTimeSetFunc: func() bool {
-// 				panic("mock out the IsEndTimeSet method")
-// 			},
-// 		}
+//		// make and configure a mocked common.MetricsObject
+//		mockedMetricsObject := &MetricsObjectMock{
+//			GetDurationMetricsAttributesFunc: func() []attribute.KeyValue {
+//				panic("mock out the GetDurationMetricsAttributes method")
+//			},
+//			GetEndTimeFunc: func() time.Time {
+//				panic("mock out the GetEndTime method")
+//			},
+//			GetMetricsAttributesFunc: func() []attribute.KeyValue {
+//				panic("mock out the GetMetricsAttributes method")
+//			},
+//			GetNamespaceFunc: func() string {
+//				panic("mock out the GetNamespace method")
+//			},
+//			GetParentNameFunc: func() string {
+//				panic("mock out the GetParentName method")
+//			},
+//			GetPreviousVersionFunc: func() string {
+//				panic("mock out the GetPreviousVersion method")
+//			},
+//			GetStartTimeFunc: func() time.Time {
+//				panic("mock out the GetStartTime method")
+//			},
+//			IsEndTimeSetFunc: func() bool {
+//				panic("mock out the IsEndTimeSet method")
+//			},
+//		}
 //
-// 		// use mockedMetricsObject in code that requires common.MetricsObject
-// 		// and then make assertions.
+//		// use mockedMetricsObject in code that requires common.MetricsObject
+//		// and then make assertions.
 //
-// 	}
+//	}
 type MetricsObjectMock struct {
 	// GetDurationMetricsAttributesFunc mocks the GetDurationMetricsAttributes method.
 	GetDurationMetricsAttributesFunc func() []attribute.KeyValue
@@ -122,7 +122,8 @@ func (mock *MetricsObjectMock) GetDurationMetricsAttributes() []attribute.KeyVal
 
 // GetDurationMetricsAttributesCalls gets all the calls that were made to GetDurationMetricsAttributes.
 // Check the length with:
-//     len(mockedMetricsObject.GetDurationMetricsAttributesCalls())
+//
+//	len(mockedMetricsObject.GetDurationMetricsAttributesCalls())
 func (mock *MetricsObjectMock) GetDurationMetricsAttributesCalls() []struct {
 } {
 	var calls []struct {
@@ -148,7 +149,8 @@ func (mock *MetricsObjectMock) GetEndTime() time.Time {
 
 // GetEndTimeCalls gets all the calls that were made to GetEndTime.
 // Check the length with:
-//     len(mockedMetricsObject.GetEndTimeCalls())
+//
+//	len(mockedMetricsObject.GetEndTimeCalls())
 func (mock *MetricsObjectMock) GetEndTimeCalls() []struct {
 } {
 	var calls []struct {
@@ -174,7 +176,8 @@ func (mock *MetricsObjectMock) GetMetricsAttributes() []attribute.KeyValue {
 
 // GetMetricsAttributesCalls gets all the calls that were made to GetMetricsAttributes.
 // Check the length with:
-//     len(mockedMetricsObject.GetMetricsAttributesCalls())
+//
+//	len(mockedMetricsObject.GetMetricsAttributesCalls())
 func (mock *MetricsObjectMock) GetMetricsAttributesCalls() []struct {
 } {
 	var calls []struct {
@@ -200,7 +203,8 @@ func (mock *MetricsObjectMock) GetNamespace() string {
 
 // GetNamespaceCalls gets all the calls that were made to GetNamespace.
 // Check the length with:
-//     len(mockedMetricsObject.GetNamespaceCalls())
+//
+//	len(mockedMetricsObject.GetNamespaceCalls())
 func (mock *MetricsObjectMock) GetNamespaceCalls() []struct {
 } {
 	var calls []struct {
@@ -226,7 +230,8 @@ func (mock *MetricsObjectMock) GetParentName() string {
 
 // GetParentNameCalls gets all the calls that were made to GetParentName.
 // Check the length with:
-//     len(mockedMetricsObject.GetParentNameCalls())
+//
+//	len(mockedMetricsObject.GetParentNameCalls())
 func (mock *MetricsObjectMock) GetParentNameCalls() []struct {
 } {
 	var calls []struct {
@@ -252,7 +257,8 @@ func (mock *MetricsObjectMock) GetPreviousVersion() string {
 
 // GetPreviousVersionCalls gets all the calls that were made to GetPreviousVersion.
 // Check the length with:
-//     len(mockedMetricsObject.GetPreviousVersionCalls())
+//
+//	len(mockedMetricsObject.GetPreviousVersionCalls())
 func (mock *MetricsObjectMock) GetPreviousVersionCalls() []struct {
 } {
 	var calls []struct {
@@ -278,7 +284,8 @@ func (mock *MetricsObjectMock) GetStartTime() time.Time {
 
 // GetStartTimeCalls gets all the calls that were made to GetStartTime.
 // Check the length with:
-//     len(mockedMetricsObject.GetStartTimeCalls())
+//
+//	len(mockedMetricsObject.GetStartTimeCalls())
 func (mock *MetricsObjectMock) GetStartTimeCalls() []struct {
 } {
 	var calls []struct {
@@ -304,7 +311,8 @@ func (mock *MetricsObjectMock) IsEndTimeSet() bool {
 
 // IsEndTimeSetCalls gets all the calls that were made to IsEndTimeSet.
 // Check the length with:
-//     len(mockedMetricsObject.IsEndTimeSetCalls())
+//
+//	len(mockedMetricsObject.IsEndTimeSetCalls())
 func (mock *MetricsObjectMock) IsEndTimeSetCalls() []struct {
 } {
 	var calls []struct {

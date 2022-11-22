@@ -12,8 +12,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// PhaseItem represents an object which has reconcile phases
+//
 //go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
-//PhaseItem represents an object which has reconcile phases
 type PhaseItem interface {
 	GetState() apicommon.KeptnState
 	SetState(apicommon.KeptnState)

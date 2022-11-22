@@ -10,19 +10,19 @@ import (
 
 // ListItemMock is a mock implementation of common.ListItem.
 //
-// 	func TestSomethingThatUsesListItem(t *testing.T) {
+//	func TestSomethingThatUsesListItem(t *testing.T) {
 //
-// 		// make and configure a mocked common.ListItem
-// 		mockedListItem := &ListItemMock{
-// 			GetItemsFunc: func() []client.Object {
-// 				panic("mock out the GetItems method")
-// 			},
-// 		}
+//		// make and configure a mocked common.ListItem
+//		mockedListItem := &ListItemMock{
+//			GetItemsFunc: func() []client.Object {
+//				panic("mock out the GetItems method")
+//			},
+//		}
 //
-// 		// use mockedListItem in code that requires common.ListItem
-// 		// and then make assertions.
+//		// use mockedListItem in code that requires common.ListItem
+//		// and then make assertions.
 //
-// 	}
+//	}
 type ListItemMock struct {
 	// GetItemsFunc mocks the GetItems method.
 	GetItemsFunc func() []client.Object
@@ -51,7 +51,8 @@ func (mock *ListItemMock) GetItems() []client.Object {
 
 // GetItemsCalls gets all the calls that were made to GetItems.
 // Check the length with:
-//     len(mockedListItem.GetItemsCalls())
+//
+//	len(mockedListItem.GetItemsCalls())
 func (mock *ListItemMock) GetItemsCalls() []struct {
 } {
 	var calls []struct {

@@ -21,6 +21,7 @@ import (
 )
 
 type contextID string
+
 const CONTEXTID contextID = "start"
 
 // this test checks if the chain of reconcile events is correct

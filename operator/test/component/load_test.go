@@ -9,7 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
-	"io/ioutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log"
 	"os"
@@ -110,7 +109,7 @@ func generateMetricReport(metric Metric) {
 
 	filePath := path.Join(dir, "load-report."+time.Now().Format(time.RFC3339)+".json")
 	report := []byte(fmt.Sprintf("Overall AppVersions created %d/%d \n Creation times: %+v ", metric.succeededAppVersionCount, LOAD, metric.creationTime))
-	if err := ioutil.WriteFile(filePath, report, 0644); err != nil {
+	if err := os.WriteFile(filePath, report, 0644); err != nil {
 		GinkgoLogr.Error(err, "error writing to ", filePath)
 	}
 

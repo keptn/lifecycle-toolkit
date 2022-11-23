@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	appsv1 "k8s.io/api/apps/v1"
 	"net/http"
 	"reflect"
 	"strings"
+
+	appsv1 "k8s.io/api/apps/v1"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
@@ -42,6 +43,8 @@ type PodMutatingWebhook struct {
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
+
+const InvalidAnnotationMessage = "Invalid annotations"
 
 var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
 
@@ -83,13 +86,17 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	logger.Info("Checked if pod is annotated.")
 
 	if err != nil {
-		span.SetStatus(codes.Error, "Invalid annotations")
+		span.SetStatus(codes.Error, InvalidAnnotationMessage)
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		if err != nil {
+			span.SetStatus(codes.Error, InvalidAnnotationMessage)
+			return admission.Errored(http.StatusBadRequest, err)
+		}
 	}
 
 	if podIsAnnotated {
@@ -99,7 +106,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
 		if err != nil {
-			span.SetStatus(codes.Error, "Invalid annotations")
+			span.SetStatus(codes.Error, InvalidAnnotationMessage)
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 		if !isAppAnnotationPresent {

@@ -337,7 +337,8 @@ func TestPhaseHandler_GetEvaluationFailureReasons(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v1alpha1.AddToScheme(scheme.Scheme)
+			err := v1alpha1.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).Build()
 			tt.handler.Client = client
 			result, err := tt.handler.GetEvaluationFailureReasons(context.TODO(), tt.phase, tt.object)
@@ -460,7 +461,8 @@ func TestPhaseHandler_GetTaskFailureReasons(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v1alpha1.AddToScheme(scheme.Scheme)
+			err := v1alpha1.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).Build()
 			tt.handler.Client = client
 			result, err := tt.handler.GetTaskFailureReasons(context.TODO(), tt.phase, tt.object)

@@ -389,8 +389,10 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 			})
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
-				k8sClient.Delete(ctx, appVersion)
-				k8sClient.Delete(ctx, wi)
+				err := k8sClient.Delete(ctx, appVersion)
+				logErrorIfPresent(err)
+				err = k8sClient.Delete(ctx, wi)
+				logErrorIfPresent(err)
 				// Reset span recorder after each spec
 				resetSpanRecords(tracer, spanRecorder)
 			})

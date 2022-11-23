@@ -54,7 +54,7 @@ var _ = Describe("KeptnAppController", func() {
             Context("with one App", func() {
                 BeforeEach(func() {  
                 //create it using the client eg. Expect(k8sClient.Create(ctx, instance)).Should(Succeed())
-                    instance = createInstanceInCluster(name, namespace, version, instance)
+                    instance = createInstanceInCluster(name, namespace, version)
                 })
                 AfterEach(func() {
                     // Remember to clean up the cluster after each test

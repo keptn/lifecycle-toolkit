@@ -37,13 +37,11 @@ func TestPhaseItem(t *testing.T) {
 			return common.StatePending
 		},
 		SetStateFunc: func(keptnState common.KeptnState) {
-			return
 		},
 		GetCurrentPhaseFunc: func() string {
 			return "phase"
 		},
 		SetCurrentPhaseFunc: func(s string) {
-			return
 		},
 		GetVersionFunc: func() string {
 			return "version"
@@ -58,7 +56,6 @@ func TestPhaseItem(t *testing.T) {
 			return "name"
 		},
 		CompleteFunc: func() {
-			return
 		},
 		IsEndTimeSetFunc: func() bool {
 			return true
@@ -112,10 +109,8 @@ func TestPhaseItem(t *testing.T) {
 			return v1alpha1.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
-			return
 		},
 		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
-			return
 		},
 	}
 

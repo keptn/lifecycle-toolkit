@@ -80,7 +80,8 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentDuration(context.TODO(), client, tt.list)
 			require.ErrorIs(t, err, tt.err)
@@ -176,7 +177,8 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetActiveInstances(context.TODO(), client, tt.list)
 			require.ErrorIs(t, err, tt.err)
@@ -383,7 +385,8 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentInterval(context.TODO(), client, tt.list, tt.previous)
 			require.ErrorIs(t, err, tt.err)

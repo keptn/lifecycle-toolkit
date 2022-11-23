@@ -53,6 +53,12 @@ func TestE2EScheduler(t *testing.T) {
 	RunSpecs(t, "Scheduler Suite")
 }
 
+func logErrorIfPresent(err error) {
+	if err != nil {
+		GinkgoLogr.Error(err, "Something went wrong while cleaning up the test environment")
+	}
+}
+
 var _ = BeforeSuite(func() {
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
 	ctx, cancel = context.WithCancel(context.TODO())

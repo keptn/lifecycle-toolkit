@@ -1,0 +1,12 @@
+run:
+  timeout: 5m
+  go: '1.19'
+linters:
+  enable:
+    - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
+#    - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
+#    - containedctx  # containedctx is a linter that detects struct contained context.Context field
+#    - errorlint     # errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
+#    - gci           # Gci controls golang package import order and makes it always deterministic.
+#    - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
+#    - noctx         # noctx finds sending http request without context.Context

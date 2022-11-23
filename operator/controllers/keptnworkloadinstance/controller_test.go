@@ -549,9 +549,11 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
-	utils.AddApp(r.Client, "some-app")
-	utils.AddAppVersion(
+	err := utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
+	require.Nil(t, err)
+	err = utils.AddApp(r.Client, "some-app")
+	require.Nil(t, err)
+	err = utils.AddAppVersion(
 		r.Client,
 		testNamespace,
 		"some-app",
@@ -579,6 +581,7 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			EndTime:                            metav1.Time{},
 		},
 	)
+	require.Nil(t, err)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

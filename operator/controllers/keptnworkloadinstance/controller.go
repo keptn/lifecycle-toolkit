@@ -29,7 +29,6 @@ import (
 	"github.com/go-logr/logr"
 	version "github.com/hashicorp/go-version"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
@@ -256,18 +255,6 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha1.KeptnWorkloadInstance{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnWorkloadInstanceReconciler) getAppVersion(ctx context.Context, appName types.NamespacedName) (*klcv1alpha1.KeptnAppVersion, error) {
-	app := &klcv1alpha1.KeptnApp{}
-	err := r.Get(ctx, appName, app)
-	if err != nil {
-		return nil, err
-	}
-
-	appVersion := &klcv1alpha1.KeptnAppVersion{}
-	err = r.Get(ctx, controllercommon.GetAppVersionName(appName.Namespace, appName.Name, app.Spec.Version), appVersion)
-	return appVersion, err
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha1.KeptnWorkloadInstance) (bool, klcv1alpha1.KeptnAppVersion, error) {

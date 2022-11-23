@@ -104,8 +104,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !appVersion.IsPreDeploymentSucceeded() {
-		reconcilePreDep := func() (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, appVersion, common.PreDeploymentCheckType)
+		reconcilePreDep := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, common.PreDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, appVersion, phase, span, reconcilePreDep)
 		if !result.Continue {
@@ -115,8 +115,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	phase = common.PhaseAppPreEvaluation
 	if !appVersion.IsPreDeploymentEvaluationSucceeded() {
-		reconcilePreEval := func() (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PreDeploymentEvaluationCheckType)
+		reconcilePreEval := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, common.PreDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, appVersion, phase, span, reconcilePreEval)
 		if !result.Continue {
@@ -126,7 +126,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	phase = common.PhaseAppDeployment
 	if !appVersion.AreWorkloadsSucceeded() {
-		reconcileAppDep := func() (common.KeptnState, error) {
+		reconcileAppDep := func(phaseCtx context.Context) (common.KeptnState, error) {
 			return r.reconcileWorkloads(ctx, appVersion)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, appVersion, phase, span, reconcileAppDep)
@@ -137,8 +137,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	phase = common.PhaseAppPostDeployment
 	if !appVersion.IsPostDeploymentSucceeded() {
-		reconcilePostDep := func() (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, appVersion, common.PostDeploymentCheckType)
+		reconcilePostDep := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, common.PostDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, appVersion, phase, span, reconcilePostDep)
 		if !result.Continue {
@@ -148,8 +148,8 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	phase = common.PhaseAppPostEvaluation
 	if !appVersion.IsPostDeploymentEvaluationCompleted() {
-		reconcilePostEval := func() (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PostDeploymentEvaluationCheckType)
+		reconcilePostEval := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, common.PostDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.Tracer, appVersion, phase, span, reconcilePostEval)
 		if !result.Continue {

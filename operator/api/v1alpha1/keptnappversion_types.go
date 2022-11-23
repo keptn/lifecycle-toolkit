@@ -299,12 +299,11 @@ func (a KeptnAppVersion) GetVersion() string {
 	return a.Spec.Version
 }
 
-func (a KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
+func (a KeptnAppVersion) GenerateTask(taskDefinition string, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   a.Namespace,
-			Annotations: traceContextCarrier,
+			Name:      common.GenerateTaskName(checkType, taskDefinition),
+			Namespace: a.Namespace,
 		},
 		Spec: KeptnTaskSpec{
 			AppVersion:       a.GetVersion(),
@@ -317,12 +316,11 @@ func (a KeptnAppVersion) GenerateTask(traceContextCarrier propagation.MapCarrier
 	}
 }
 
-func (a KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+func (a KeptnAppVersion) GenerateEvaluation(evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
 	return KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
-			Namespace:   a.Namespace,
-			Annotations: traceContextCarrier,
+			Name:      common.GenerateEvaluationName(checkType, evaluationDefinition),
+			Namespace: a.Namespace,
 		},
 		Spec: KeptnEvaluationSpec{
 			AppVersion:           a.Spec.Version,

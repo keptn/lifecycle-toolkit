@@ -7,7 +7,6 @@ import (
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sync"
 	"time"
@@ -29,6 +28,10 @@ import (
 // 				panic("mock out the GenerateEvaluation method")
 // 			},
 // 			GenerateTaskFunc: func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
+// 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
+// 				panic("mock out the GenerateEvaluation method")
+// 			},
+// 			GenerateTaskFunc: func(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
 // 				panic("mock out the GenerateTask method")
 // 			},
 // 			GetAppNameFunc: func() string {
@@ -170,12 +173,6 @@ type PhaseItemMock struct {
 	// GetSpanAttributesFunc mocks the GetSpanAttributes method.
 	GetSpanAttributesFunc func() []attribute.KeyValue
 
-	// GetSpanKeyFunc mocks the GetSpanKey method.
-	GetSpanKeyFunc func(phase string) string
-
-	// GetSpanNameFunc mocks the GetSpanName method.
-	GetSpanNameFunc func(phase string) string
-
 	// GetStartTimeFunc mocks the GetStartTime method.
 	GetStartTimeFunc func() time.Time
 
@@ -190,9 +187,6 @@ type PhaseItemMock struct {
 
 	// SetCurrentPhaseFunc mocks the SetCurrentPhase method.
 	SetCurrentPhaseFunc func(s string)
-
-	// SetPhaseTraceIDFunc mocks the SetPhaseTraceID method.
-	SetPhaseTraceIDFunc func(phase string, carrier propagation.MapCarrier)
 
 	// SetSpanAttributesFunc mocks the SetSpanAttributes method.
 	SetSpanAttributesFunc func(span trace.Span)
@@ -212,8 +206,6 @@ type PhaseItemMock struct {
 		}
 		// GenerateEvaluation holds details about calls to the GenerateEvaluation method.
 		GenerateEvaluation []struct {
-			// TraceContextCarrier is the traceContextCarrier argument value.
-			TraceContextCarrier propagation.MapCarrier
 			// EvaluationDefinition is the evaluationDefinition argument value.
 			EvaluationDefinition string
 			// CheckType is the checkType argument value.
@@ -221,8 +213,6 @@ type PhaseItemMock struct {
 		}
 		// GenerateTask holds details about calls to the GenerateTask method.
 		GenerateTask []struct {
-			// TraceContextCarrier is the traceContextCarrier argument value.
-			TraceContextCarrier propagation.MapCarrier
 			// TaskDefinition is the taskDefinition argument value.
 			TaskDefinition string
 			// CheckType is the checkType argument value.
@@ -273,16 +263,6 @@ type PhaseItemMock struct {
 		// GetSpanAttributes holds details about calls to the GetSpanAttributes method.
 		GetSpanAttributes []struct {
 		}
-		// GetSpanKey holds details about calls to the GetSpanKey method.
-		GetSpanKey []struct {
-			// Phase is the phase argument value.
-			Phase string
-		}
-		// GetSpanName holds details about calls to the GetSpanName method.
-		GetSpanName []struct {
-			// Phase is the phase argument value.
-			Phase string
-		}
 		// GetStartTime holds details about calls to the GetStartTime method.
 		GetStartTime []struct {
 		}
@@ -299,13 +279,6 @@ type PhaseItemMock struct {
 		SetCurrentPhase []struct {
 			// S is the s argument value.
 			S string
-		}
-		// SetPhaseTraceID holds details about calls to the SetPhaseTraceID method.
-		SetPhaseTraceID []struct {
-			// Phase is the phase argument value.
-			Phase string
-			// Carrier is the carrier argument value.
-			Carrier propagation.MapCarrier
 		}
 		// SetSpanAttributes holds details about calls to the SetSpanAttributes method.
 		SetSpanAttributes []struct {
@@ -337,14 +310,11 @@ type PhaseItemMock struct {
 	lockGetPreDeploymentTasks                 sync.RWMutex
 	lockGetPreviousVersion                    sync.RWMutex
 	lockGetSpanAttributes                     sync.RWMutex
-	lockGetSpanKey                            sync.RWMutex
-	lockGetSpanName                           sync.RWMutex
 	lockGetStartTime                          sync.RWMutex
 	lockGetState                              sync.RWMutex
 	lockGetVersion                            sync.RWMutex
 	lockIsEndTimeSet                          sync.RWMutex
 	lockSetCurrentPhase                       sync.RWMutex
-	lockSetPhaseTraceID                       sync.RWMutex
 	lockSetSpanAttributes                     sync.RWMutex
 	lockSetState                              sync.RWMutex
 }
@@ -408,34 +378,31 @@ func (mock *PhaseItemMock) CompleteCalls() []struct {
 
 // GenerateEvaluation calls GenerateEvaluationFunc.
 func (mock *PhaseItemMock) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
+func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 	if mock.GenerateEvaluationFunc == nil {
 		panic("PhaseItemMock.GenerateEvaluationFunc: method is nil but PhaseItem.GenerateEvaluation was just called")
 	}
 	callInfo := struct {
-		TraceContextCarrier  propagation.MapCarrier
 		EvaluationDefinition string
 		CheckType            keptncommon.CheckType
 	}{
-		TraceContextCarrier:  traceContextCarrier,
 		EvaluationDefinition: evaluationDefinition,
 		CheckType:            checkType,
 	}
 	mock.lockGenerateEvaluation.Lock()
 	mock.calls.GenerateEvaluation = append(mock.calls.GenerateEvaluation, callInfo)
 	mock.lockGenerateEvaluation.Unlock()
-	return mock.GenerateEvaluationFunc(traceContextCarrier, evaluationDefinition, checkType)
+	return mock.GenerateEvaluationFunc(evaluationDefinition, checkType)
 }
 
 // GenerateEvaluationCalls gets all the calls that were made to GenerateEvaluation.
 // Check the length with:
 //     len(mockedPhaseItem.GenerateEvaluationCalls())
 func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
-	TraceContextCarrier  propagation.MapCarrier
 	EvaluationDefinition string
 	CheckType            keptncommon.CheckType
 } {
 	var calls []struct {
-		TraceContextCarrier  propagation.MapCarrier
 		EvaluationDefinition string
 		CheckType            keptncommon.CheckType
 	}
@@ -455,14 +422,13 @@ func (mock *PhaseItemMock) GenerateTask(traceContextCarrier propagation.MapCarri
 		TaskDefinition      string
 		CheckType           keptncommon.CheckType
 	}{
-		TraceContextCarrier: traceContextCarrier,
-		TaskDefinition:      taskDefinition,
-		CheckType:           checkType,
+		TaskDefinition: taskDefinition,
+		CheckType:      checkType,
 	}
 	mock.lockGenerateTask.Lock()
 	mock.calls.GenerateTask = append(mock.calls.GenerateTask, callInfo)
 	mock.lockGenerateTask.Unlock()
-	return mock.GenerateTaskFunc(traceContextCarrier, taskDefinition, checkType)
+	return mock.GenerateTaskFunc(taskDefinition, checkType)
 }
 
 // GenerateTaskCalls gets all the calls that were made to GenerateTask.

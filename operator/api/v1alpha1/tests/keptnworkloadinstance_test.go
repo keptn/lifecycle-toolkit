@@ -183,7 +183,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 
 	require.Equal(t, "trace1.workloadname.version.phase", workload.GetSpanKey("phase"))
 
-	task := workload.GenerateTask(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
+	task := workload.GenerateTask("taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnTaskSpec{
 		AppName:          workload.GetAppName(),
 		WorkloadVersion:  workload.GetVersion(),
@@ -194,7 +194,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		Type:             common.PostDeploymentCheckType,
 	}, task.Spec)
 
-	evaluation := workload.GenerateEvaluation(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
+	evaluation := workload.GenerateEvaluation("taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnEvaluationSpec{
 		AppName:              workload.GetAppName(),
 		WorkloadVersion:      workload.GetVersion(),

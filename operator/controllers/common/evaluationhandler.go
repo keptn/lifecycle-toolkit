@@ -3,12 +3,13 @@ package common
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -20,10 +21,11 @@ import (
 
 type EvaluationHandler struct {
 	client.Client
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Tracer   trace.Tracer
-	Scheme   *runtime.Scheme
+	Recorder    record.EventRecorder
+	Log         logr.Logger
+	Tracer      trace.Tracer
+	Scheme      *runtime.Scheme
+	SpanHandler ISpanHandler
 }
 
 type EvaluationCreateAttributes struct {
@@ -32,7 +34,7 @@ type EvaluationCreateAttributes struct {
 	CheckType            apicommon.CheckType
 }
 
-func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -101,10 +103,30 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, reconcileOb
 			}
 			evaluationStatus.EvaluationName = evaluationName
 			evaluationStatus.SetStartTime()
+			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
+			if err != nil {
+				r.Log.Error(err, "could not get span")
+			}
 		} else {
+			_, spanEvaluationTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
+			if err != nil {
+				r.Log.Error(err, "could not get span")
+			}
 			// Update state of Evaluation if it is already created
 			evaluationStatus.Status = evaluation.Status.OverallStatus
 			if evaluationStatus.Status.IsCompleted() {
+				if evaluationStatus.Status.IsSucceeded() {
+					spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
+					spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
+				} else {
+					spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
+					r.setEvaluationFailureEvents(evaluation, spanEvaluationTrace)
+					spanEvaluationTrace.SetStatus(codes.Error, "Failed")
+				}
+				spanEvaluationTrace.End()
+				if err := r.SpanHandler.UnbindSpan(evaluation, ""); err != nil {
+					r.Log.Error(err, "Could not unbind span")
+				}
 				evaluationStatus.SetEndTime()
 			}
 		}
@@ -127,22 +149,12 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 		return "", err
 	}
 
-	ctx, span := r.Tracer.Start(ctx, evaluationCreateAttributes.SpanName, trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	piWrapper.SetSpanAttributes(span)
-
-	// create TraceContext
-	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
-
 	phase := apicommon.KeptnPhaseType{
 		ShortName: "KeptnEvaluationCreate",
 		LongName:  "Keptn Evaluation Create",
 	}
 
-	newEvaluation := piWrapper.GenerateEvaluation(traceContextCarrier, evaluationCreateAttributes.EvaluationDefinition, evaluationCreateAttributes.CheckType)
+	newEvaluation := piWrapper.GenerateEvaluation(evaluationCreateAttributes.EvaluationDefinition, evaluationCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newEvaluation, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -156,4 +168,12 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 	RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
 
 	return newEvaluation.Name, nil
+}
+
+func (r EvaluationHandler) setEvaluationFailureEvents(evaluation *klcv1alpha1.KeptnEvaluation, spanTrace trace.Span) {
+	for k, v := range evaluation.Status.EvaluationStatus {
+		if v.Status == apicommon.StateFailed {
+			spanTrace.AddEvent(fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message), trace.WithTimestamp(time.Now().UTC()))
+		}
+	}
 }

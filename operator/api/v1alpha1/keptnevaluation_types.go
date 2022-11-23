@@ -21,6 +21,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -174,4 +175,16 @@ func (e KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
 		common.EvaluationName.String(e.Name),
 		common.EvaluationType.String(string(e.Spec.Type)),
 	}
+}
+
+func (e *KeptnEvaluation) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	return
+}
+
+func (e KeptnEvaluation) GetSpanKey(phase string) string {
+	return e.Name
+}
+
+func (e KeptnEvaluation) GetSpanName(phase string) string {
+	return e.Name
 }

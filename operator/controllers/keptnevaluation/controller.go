@@ -19,12 +19,14 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"math"
 	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/go-logr/logr"
+	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -41,10 +43,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-
-	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 )
 
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object

@@ -2,10 +2,10 @@ package keptnworkloadinstance
 
 import (
 	"context"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"

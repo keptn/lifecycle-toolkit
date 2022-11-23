@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"

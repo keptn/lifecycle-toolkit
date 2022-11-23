@@ -2,6 +2,11 @@ package component
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path"
+	"time"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
@@ -10,10 +15,6 @@ import (
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"log"
-	"os"
-	"path"
-	"time"
 )
 
 type Metric struct {

@@ -5,14 +5,17 @@ linters:
   enable:
     - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
     - gci           # Gci controls golang package import order and makes it always deterministic.
-#    - errorlint       # errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
-#    - containedctx  # containedctx is a linter that detects struct contained context.Context field
-#    - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
-#    - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
-#    - noctx         # noctx finds sending http request without context.Context
+    - errorlint       # errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
+    - containedctx  # containedctx is a linter that detects struct contained context.Context field
+    - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
+    - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
+    - noctx         # noctx finds sending http request without context.Context
 
 issues:
   exclude-rules:
     - linters:
         - gci
       text: '//+kubebuilder'
+    - linters:
+        - containedctx
+      path: _test\.go

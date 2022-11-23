@@ -139,9 +139,15 @@ func ignoreAlreadyExists(err error) error {
 
 func setupManager(rec []keptncontroller.Controller) {
 	for _, r := range rec {
-		_ = r.SetupWithManager(k8sManager)
+		err := r.SetupWithManager(k8sManager)
+		Expect(err).To(BeNil())
 	}
+}
 
+func logErrorIfPresent(err error) {
+	if err != nil {
+		GinkgoLogr.Error(err, "Something went wrong while cleaning up the test environment")
+	}
 }
 
 func resetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanRecorder) {

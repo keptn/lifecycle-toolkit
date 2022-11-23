@@ -43,7 +43,8 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 		)
 		BeforeEach(func() {
 			DeferCleanup(func() {
-				_ = k8sClient.Delete(ctx, pod)
+				err := k8sClient.Delete(ctx, pod)
+				logErrorIfPresent(err)
 			})
 
 			//create a test Pod
@@ -108,7 +109,8 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 		)
 		BeforeEach(func() {
 			DeferCleanup(func() {
-				_ = k8sClient.Delete(ctx, pod)
+				err := k8sClient.Delete(ctx, pod)
+				logErrorIfPresent(err)
 			})
 
 			//create a test Pod

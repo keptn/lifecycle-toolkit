@@ -105,8 +105,10 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 				}, "10s").Should(Succeed())
 			})
 			AfterEach(func() {
-				_ = k8sClient.Delete(context.TODO(), taskDefinition)
-				_ = k8sClient.Delete(context.TODO(), task)
+				err := k8sClient.Delete(context.TODO(), taskDefinition)
+				logErrorIfPresent(err)
+				err = k8sClient.Delete(context.TODO(), task)
+				logErrorIfPresent(err)
 			})
 		})
 	})

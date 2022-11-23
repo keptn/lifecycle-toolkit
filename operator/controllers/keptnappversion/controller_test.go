@@ -8,6 +8,7 @@ import (
 	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -82,8 +83,10 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	_ = utils.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StatePending})
-	_ = utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	err := utils.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StatePending})
+	require.Nil(t, err)
+	err = utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	require.Nil(t, err)
 
 	traces := 0
 	for _, tt := range tests {

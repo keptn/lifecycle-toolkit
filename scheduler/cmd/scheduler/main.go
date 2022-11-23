@@ -25,22 +25,20 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpgrpc"
-	"google.golang.org/grpc"
-	"k8s.io/klog/v2"
-
-	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit"
-	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/component-base/cli"
-	"k8s.io/kubernetes/cmd/kube-scheduler/app"
-
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/semconv"
+	"google.golang.org/grpc"
+	"k8s.io/apimachinery/pkg/util/rand"
+	"k8s.io/component-base/cli"
+	"k8s.io/klog/v2"
+	"k8s.io/kubernetes/cmd/kube-scheduler/app"
 )
 
 var (

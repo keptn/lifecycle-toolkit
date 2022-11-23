@@ -2,6 +2,7 @@ package tracing
 
 import (
 	"context"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"

@@ -19,6 +19,11 @@ package e2e
 import (
 	"context"
 	"fmt"
+	"os"
+	"sync"
+	"testing"
+	"time"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
@@ -26,15 +31,10 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"sync"
-	"testing"
-	"time"
-	//+kubebuilder:scaffold:imports
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to

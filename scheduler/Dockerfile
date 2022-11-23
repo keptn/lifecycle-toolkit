@@ -32,9 +32,9 @@ COPY pkg pkg
 
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
     -X k8s.io/component-base/version.gitVersion=${SCHEDULER_COMPATIBLE_K8S_VERSION} \
-    -X main.gitCommit=$GIT_HASH \
-    -X main.buildTime=$BUILD_TIME \
-    -X main.buildVersion=$RELEASE_VERSION \
+    -X main.gitCommit=$(GIT_HASH) \
+    -X main.buildTime=$(BUILD_TIME) \
+    -X main.buildVersion=$(RELEASE_VERSION) \
     -w" \
     -o bin/kube-scheduler cmd/scheduler/main.go
 

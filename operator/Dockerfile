@@ -28,9 +28,9 @@ RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && 
   GOOS=$TARGETOS GOARCH=$TARGETARCH \
   go build -ldflags "\
     -w \
-    -X main.gitCommit=$(GIT_HASH) \
-    -X main.buildTime=$(BUILD_TIME) \
-    -X main.buildVersion=$(RELEASE_VERSION)" \
+    -X main.gitCommit=${GIT_HASH} \
+    -X main.buildTime=${BUILD_TIME} \
+    -X main.buildVersion=${RELEASE_VERSION}" \
     -o bin/manager main.go
 
 FROM gcr.io/distroless/base-debian11:debug-nonroot as debug

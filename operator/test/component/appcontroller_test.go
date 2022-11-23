@@ -2,6 +2,7 @@ package component
 
 import (
 	"fmt"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"

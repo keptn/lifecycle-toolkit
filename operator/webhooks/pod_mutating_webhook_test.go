@@ -2,6 +2,9 @@ package webhooks
 
 import (
 	"context"
+	"reflect"
+	"testing"
+
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -14,10 +17,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
-	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
-	"testing"
 )
 
 func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {

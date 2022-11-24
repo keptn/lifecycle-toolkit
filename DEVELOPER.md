@@ -3,11 +3,12 @@
 ## Linters
 
 This project uses a set of linters to ensure a good code quality.
-In order to make proper use of those linters inside an IDE, the following configurations are required.
+In order to make proper use of those linters inside an IDE, the following configurations are required.<br>
+Further information can also be found at the `golangci-lint` documentation [here](https://golangci-lint.run/usage/integrations/)
 
 ### Visual Studio Code
 
-In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi) extension is required. 
+In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi) extension is required.<br>
 Adding the following lines to the Golang extension configuration file will enable all linters used in this project.
 
 ```

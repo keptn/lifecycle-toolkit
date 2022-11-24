@@ -43,6 +43,7 @@ type PhaseItem interface {
 	GetSpanKey(phase string) string
 	GetSpanName(phase string) string
 	SetSpanAttributes(span trace.Span)
+	SetPhaseTraceID(phase string, carrier propagation.MapCarrier)
 	CancelRemainingPhases(phase common.KeptnPhaseType)
 }
 
@@ -168,4 +169,8 @@ func (pw PhaseItemWrapper) GetSpanName(phase string) string {
 
 func (pw PhaseItemWrapper) CancelRemainingPhases(phase common.KeptnPhaseType) {
 	pw.Obj.CancelRemainingPhases(phase)
+}
+
+func (pw PhaseItemWrapper) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	pw.Obj.SetPhaseTraceID(phase, carrier)
 }

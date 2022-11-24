@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel/propagation"
 )
 
 func TestKeptnPhaseType_IsEvaluation(t *testing.T) {
@@ -226,4 +227,49 @@ func TestKeptnPhaseType_IsPostTask(t *testing.T) {
 			require.Equal(t, tt.State.IsPostTask(), tt.Want)
 		})
 	}
+}
+
+func TestPhaseTraceID(t *testing.T) {
+	trace := PhaseTraceID{}
+
+	trace.SetPhaseTraceID(PhaseAppDeployment.LongName, propagation.MapCarrier{
+		"name":  "trace",
+		"name2": "trace2",
+	})
+
+	require.Equal(t, PhaseTraceID{
+		PhaseAppDeployment.ShortName: propagation.MapCarrier{
+			"name":  "trace",
+			"name2": "trace2",
+		},
+	}, trace)
+
+	trace.SetPhaseTraceID(PhaseWorkloadDeployment.ShortName, propagation.MapCarrier{
+		"name3": "trace3",
+	})
+
+	require.Equal(t, PhaseTraceID{
+		PhaseAppDeployment.ShortName: propagation.MapCarrier{
+			"name":  "trace",
+			"name2": "trace2",
+		},
+		PhaseWorkloadDeployment.ShortName: propagation.MapCarrier{
+			"name3": "trace3",
+		},
+	}, trace)
+
+	require.Equal(t, propagation.MapCarrier{
+		"name":  "trace",
+		"name2": "trace2",
+	}, trace.GetPhaseTraceID(PhaseAppDeployment.LongName))
+
+	require.Equal(t, propagation.MapCarrier{
+		"name3": "trace3",
+	}, trace.GetPhaseTraceID(PhaseWorkloadDeployment.ShortName))
+}
+
+func TestGetShortPhaseName(t *testing.T) {
+	require.Equal(t, "WorkloadPreDeployTasks", GetShortPhaseName("WorkloadPreDeployTasks"))
+	require.Equal(t, "WorkloadPreDeployTasks", GetShortPhaseName("Workload Pre-Deployment Tasks"))
+	require.Equal(t, "", GetShortPhaseName("Workload Pre-Deploycdddment Tasks"))
 }

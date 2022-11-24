@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
+    controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
   name: keptnworkloadinstances.lifecycle.keptn.sh
 spec:
@@ -134,6 +134,14 @@ spec:
               endTime:
                 format: date-time
                 type: string
+              phaseTraceIDs:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
+                  type: object
+                type: object
               postDeploymentEvaluationStatus:
                 default: Pending
                 type: string

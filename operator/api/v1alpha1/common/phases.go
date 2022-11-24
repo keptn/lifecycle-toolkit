@@ -1,12 +1,31 @@
 package common
 
-import "strings"
+import (
+	"strings"
+
+	"go.opentelemetry.io/otel/propagation"
+)
 
 type KeptnPhase KeptnPhaseType
 
 type KeptnPhaseType struct {
 	LongName  string
 	ShortName string
+}
+
+var phases = []KeptnPhaseType{
+	PhaseWorkloadPreDeployment,
+	PhaseWorkloadPostDeployment,
+	PhaseWorkloadPreEvaluation,
+	PhaseWorkloadPostEvaluation,
+	PhaseWorkloadDeployment,
+	PhaseAppPreDeployment,
+	PhaseAppPostDeployment,
+	PhaseAppPreEvaluation,
+	PhaseAppPostEvaluation,
+	PhaseAppDeployment,
+	PhaseCompleted,
+	PhaseCancelled,
 }
 
 func (p KeptnPhaseType) IsEvaluation() bool {
@@ -33,6 +52,22 @@ func (p KeptnPhaseType) IsPostTask() bool {
 	return strings.Contains(p.ShortName, "PostDeployTasks")
 }
 
+func GetShortPhaseName(phase string) string {
+	for _, p := range phases {
+		if phase == p.ShortName {
+			return p.ShortName
+		}
+	}
+
+	for _, p := range phases {
+		if phase == p.LongName {
+			return p.ShortName
+		}
+	}
+
+	return ""
+}
+
 var (
 	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
 	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}
@@ -47,3 +82,14 @@ var (
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseCancelled              = KeptnPhaseType{LongName: "Cancelled", ShortName: "Cancelled"}
 )
+
+type PhaseTraceID map[string]propagation.MapCarrier
+
+func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	pid[GetShortPhaseName(phase)] = carrier
+
+}
+
+func (pid PhaseTraceID) GetPhaseTraceID(phase string) propagation.MapCarrier {
+	return pid[GetShortPhaseName(phase)]
+}

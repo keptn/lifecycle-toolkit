@@ -112,6 +112,8 @@ func TestPhaseItem(t *testing.T) {
 		},
 		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
 		},
+		SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier) {
+		},
 	}
 
 	wrapper := PhaseItemWrapper{Obj: &phaseItemMock}
@@ -199,5 +201,8 @@ func TestPhaseItem(t *testing.T) {
 
 	wrapper.CancelRemainingPhases(common.PhaseAppDeployment)
 	require.Len(t, phaseItemMock.CancelRemainingPhasesCalls(), 1)
+
+	wrapper.SetPhaseTraceID(common.PhaseAppDeployment.LongName, propagation.MapCarrier{})
+	require.Len(t, phaseItemMock.SetPhaseTraceIDCalls(), 1)
 
 }

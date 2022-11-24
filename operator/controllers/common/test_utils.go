@@ -43,6 +43,9 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 				Workloads: workloads,
 			},
 			AppName: appName,
+			TraceId: map[string]string{
+				"traceparent": "parent-trace",
+			},
 		},
 		Status: status,
 	}

@@ -547,6 +547,9 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 				"WorkloadPostDeployEvaluationsFinished",
 			},
 			wantErr: false,
+			fields: fields{
+				SpanHandler: &utils.SpanHandler{},
+			},
 		},
 	}
 
@@ -621,12 +624,13 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 	}
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnWorkloadInstanceReconciler{
-		Client:   fakeClient,
-		Scheme:   scheme.Scheme,
-		Recorder: recorder,
-		Log:      ctrl.Log.WithName("test-appController"),
-		Tracer:   tr,
-		Meters:   utils.InitAppMeters(),
+		Client:      fakeClient,
+		Scheme:      scheme.Scheme,
+		Recorder:    recorder,
+		Log:         ctrl.Log.WithName("test-appController"),
+		Tracer:      tr,
+		Meters:      utils.InitAppMeters(),
+		SpanHandler: &controllercommon.SpanHandler{},
 	}
 	return r, recorder.Events, tr
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -311,6 +312,43 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 			require.Equal(t, tt.want, tt.app)
 		})
 	}
+}
+
+func TestKeptnAppVersion_SetPhaseTraceID(t *testing.T) {
+	app := v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{},
+	}
+
+	app.SetPhaseTraceID(common.PhaseAppDeployment.ShortName, propagation.MapCarrier{
+		"name3": "trace3",
+	})
+
+	require.Equal(t, v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
+			PhaseTraceIDs: common.PhaseTraceID{
+				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
+					"name3": "trace3",
+				},
+			},
+		},
+	}, app)
+
+	app.SetPhaseTraceID(common.PhaseWorkloadDeployment.LongName, propagation.MapCarrier{
+		"name2": "trace2",
+	})
+
+	require.Equal(t, v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
+			PhaseTraceIDs: common.PhaseTraceID{
+				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
+					"name3": "trace3",
+				},
+				common.PhaseWorkloadDeployment.ShortName: propagation.MapCarrier{
+					"name2": "trace2",
+				},
+			},
+		},
+	}, app)
 }
 
 func TestKeptnAppVersionList(t *testing.T) {

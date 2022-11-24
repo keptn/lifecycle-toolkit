@@ -4,6 +4,8 @@ import (
 	"context"
 	"sync"
 
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -14,8 +16,13 @@ type ISpanHandler interface {
 	UnbindSpan(reconcileObject client.Object, phase string) error
 }
 
+type keptnSpanCtx struct {
+	Span trace.Span
+	Ctx  context.Context
+}
+
 type SpanHandler struct {
-	bindCRDSpan map[string]trace.Span
+	bindCRDSpan map[string]keptnSpanCtx
 	mtx         sync.Mutex
 }
 
@@ -24,20 +31,28 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	if err != nil {
 		return nil, nil, err
 	}
-	appvName := piWrapper.GetSpanKey(phase)
+	spanKey := piWrapper.GetSpanKey(phase)
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 	if r.bindCRDSpan == nil {
-		r.bindCRDSpan = make(map[string]trace.Span)
+		r.bindCRDSpan = make(map[string]keptnSpanCtx)
 	}
-	if span, ok := r.bindCRDSpan[appvName]; ok {
-		return ctx, span, nil
+	if span, ok := r.bindCRDSpan[spanKey]; ok {
+		return span.Ctx, span.Span, nil
 	}
 	spanName := piWrapper.GetSpanName(phase)
-	ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
+	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
 	piWrapper.SetSpanAttributes(span)
-	r.bindCRDSpan[appvName] = span
-	return ctx, span, nil
+
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(childCtx, traceContextCarrier)
+	piWrapper.SetPhaseTraceID(phase, traceContextCarrier)
+
+	r.bindCRDSpan[spanKey] = keptnSpanCtx{
+		Span: span,
+		Ctx:  childCtx,
+	}
+	return childCtx, span, nil
 }
 
 func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {

@@ -51,13 +51,14 @@ type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	WorkloadOverallStatus              common.KeptnState  `json:"workloadOverallStatus,omitempty"`
-	WorkloadStatus                     []WorkloadStatus   `json:"workloadStatus,omitempty"`
-	CurrentPhase                       string             `json:"currentPhase,omitempty"`
-	PreDeploymentTaskStatus            []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	WorkloadOverallStatus              common.KeptnState   `json:"workloadOverallStatus,omitempty"`
+	WorkloadStatus                     []WorkloadStatus    `json:"workloadStatus,omitempty"`
+	CurrentPhase                       string              `json:"currentPhase,omitempty"`
+	PreDeploymentTaskStatus            []TaskStatus        `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []TaskStatus        `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []EvaluationStatus  `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []EvaluationStatus  `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 
@@ -336,6 +337,9 @@ func (a KeptnAppVersion) GenerateEvaluation(traceContextCarrier propagation.MapC
 }
 
 func (a KeptnAppVersion) GetSpanName(phase string) string {
+	if phase == "" {
+		return a.Name
+	}
 	return phase
 }
 
@@ -372,5 +376,11 @@ func (a *KeptnAppVersion) CancelRemainingPhases(phase common.KeptnPhaseType) {
 	a.Status.PostDeploymentStatus = common.StateCancelled
 	a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
 	a.Status.Status = common.StateFailed
+}
 
+func (a *KeptnAppVersion) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	if a.Status.PhaseTraceIDs == nil {
+		a.Status.PhaseTraceIDs = common.PhaseTraceID{}
+	}
+	a.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }

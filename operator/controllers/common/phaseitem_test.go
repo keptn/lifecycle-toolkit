@@ -113,7 +113,6 @@ func TestPhaseItem(t *testing.T) {
 		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
 		},
 		SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier) {
-			return
 		},
 	}
 

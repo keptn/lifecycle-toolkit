@@ -16,7 +16,7 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
     steps:
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v3
       
       - uses: actions/setup-go@v3

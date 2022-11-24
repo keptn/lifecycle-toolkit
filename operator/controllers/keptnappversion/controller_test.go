@@ -136,6 +136,26 @@ func createFinishedAppVersionStatus() lfcv1alpha1.KeptnAppVersionStatus {
 	}
 }
 
+func setupReconcilerWithMeters(t *testing.T) *KeptnAppVersionReconciler {
+	//setup logger
+	opts := zap.Options{
+		Development: true,
+	}
+	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	//fake a tracer
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	r := &KeptnAppVersionReconciler{
+		Log:    ctrl.Log.WithName("test-appVersionController"),
+		Tracer: tr,
+		Meters: utils.InitAppMeters(),
+	}
+	return r
+}
+
 func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.SpanHandlerIMock) {
 	//setup logger
 	opts := zap.Options{
@@ -176,7 +196,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 
 func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 
-	r, _, _, _ := setupReconciler(t)
+	r := setupReconcilerWithMeters(t)
 	type args struct {
 		ctx        context.Context
 		appVersion *lfcv1alpha1.KeptnAppVersion

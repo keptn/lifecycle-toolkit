@@ -178,7 +178,6 @@ func (e KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
 }
 
 func (e *KeptnEvaluation) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	return
 }
 
 func (e KeptnEvaluation) GetSpanKey(phase string) string {

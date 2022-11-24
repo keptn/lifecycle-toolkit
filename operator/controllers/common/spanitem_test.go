@@ -36,10 +36,8 @@ func TestSpanItemWrapper(t *testing.T) {
 func TestSpanItem(t *testing.T) {
 	spanItemMock := fake.SpanItemMock{
 		SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier) {
-			return
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
-			return
 		},
 		GetSpanKeyFunc: func(phase string) string {
 			return "key"

@@ -186,7 +186,6 @@ func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
 }
 
 func (t *KeptnTask) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	return
 }
 
 func (t KeptnTask) GetSpanKey(phase string) string {

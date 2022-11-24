@@ -2,7 +2,6 @@ package common
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"testing"
 
@@ -79,7 +78,7 @@ func TestEvaluationHandler(t *testing.T) {
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{1, 0, 0, 0, 1, 0, 0},
+			wantSummary:     common.StatusSummary{Total: 1, Pending: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 0,
@@ -116,7 +115,7 @@ func TestEvaluationHandler(t *testing.T) {
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{1, 0, 0, 1, 0, 0, 0},
+			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
@@ -164,7 +163,7 @@ func TestEvaluationHandler(t *testing.T) {
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{1, 0, 1, 0, 0, 0, 0},
+			wantSummary:     common.StatusSummary{Total: 1, Failed: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -212,7 +211,7 @@ func TestEvaluationHandler(t *testing.T) {
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{1, 0, 0, 1, 0, 0, 0},
+			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -247,7 +246,7 @@ func TestEvaluationHandler(t *testing.T) {
 					require.Equal(t, tt.wantStatus[j].Status, item.Status)
 				}
 			} else {
-				fmt.Errorf("unexpected result, want %+v, got %+v", tt.wantStatus, status)
+				t.Errorf("unexpected result, want %+v, got %+v", tt.wantStatus, status)
 			}
 			require.Equal(t, tt.wantSummary, summary)
 			require.Equal(t, tt.wantErr, err)

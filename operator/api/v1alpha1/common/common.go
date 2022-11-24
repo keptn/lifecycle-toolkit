@@ -64,47 +64,47 @@ func (k KeptnState) IsPending() bool {
 
 type StatusSummary struct {
 	Total       int
-	progressing int
-	failed      int
-	succeeded   int
-	pending     int
-	unknown     int
-	cancelled   int
+	Progressing int
+	Failed      int
+	Succeeded   int
+	Pending     int
+	Unknown     int
+	Cancelled   int
 }
 
 func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary {
 	switch status {
 	case StateFailed:
-		summary.failed++
+		summary.Failed++
 	case StateCancelled:
-		summary.cancelled++
+		summary.Cancelled++
 	case StateSucceeded:
-		summary.succeeded++
+		summary.Succeeded++
 	case StateProgressing:
-		summary.progressing++
+		summary.Progressing++
 	case StatePending, "":
-		summary.pending++
+		summary.Pending++
 	case StateUnknown:
-		summary.unknown++
+		summary.Unknown++
 	}
 	return summary
 }
 
 func (s StatusSummary) GetTotalCount() int {
-	return s.failed + s.succeeded + s.progressing + s.pending + s.unknown + s.cancelled
+	return s.Failed + s.Succeeded + s.Progressing + s.Pending + s.Unknown + s.Cancelled
 }
 
 func GetOverallState(s StatusSummary) KeptnState {
-	if s.failed > 0 || s.cancelled > 0 {
+	if s.Failed > 0 || s.Cancelled > 0 {
 		return StateFailed
 	}
-	if s.progressing > 0 {
+	if s.Progressing > 0 {
 		return StateProgressing
 	}
-	if s.pending > 0 {
+	if s.Pending > 0 {
 		return StatePending
 	}
-	if s.unknown > 0 || s.GetTotalCount() != s.Total {
+	if s.Unknown > 0 || s.GetTotalCount() != s.Total {
 		return StateUnknown
 	}
 	return StateSucceeded

@@ -18,7 +18,6 @@ import (
 )
 
 func TestPhaseHandler(t *testing.T) {
-	//phase, state, endtimeset
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	tests := []struct {
 		name           string

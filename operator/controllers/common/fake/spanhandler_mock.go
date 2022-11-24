@@ -10,25 +10,25 @@ import (
 	"sync"
 )
 
-// SpanHandlerIMock is a mock implementation of common.SpanHandlerI.
+// ISpanHandlerMock is a mock implementation of common.ISpanHandler.
 //
-//	func TestSomethingThatUsesSpanHandlerI(t *testing.T) {
+// 	func TestSomethingThatUsesISpanHandler(t *testing.T) {
 //
-//		// make and configure a mocked common.SpanHandlerI
-//		mockedSpanHandlerI := &SpanHandlerIMock{
-//			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
-//				panic("mock out the GetSpan method")
-//			},
-//			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
-//				panic("mock out the UnbindSpan method")
-//			},
-//		}
+// 		// make and configure a mocked common.ISpanHandler
+// 		mockedISpanHandler := &ISpanHandlerMock{
+// 			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+// 				panic("mock out the GetSpan method")
+// 			},
+// 			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
+// 				panic("mock out the UnbindSpan method")
+// 			},
+// 		}
 //
-//		// use mockedSpanHandlerI in code that requires common.SpanHandlerI
-//		// and then make assertions.
+// 		// use mockedISpanHandler in code that requires common.ISpanHandler
+// 		// and then make assertions.
 //
-//	}
-type SpanHandlerIMock struct {
+// 	}
+type ISpanHandlerMock struct {
 	// GetSpanFunc mocks the GetSpan method.
 	GetSpanFunc func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
 
@@ -61,9 +61,9 @@ type SpanHandlerIMock struct {
 }
 
 // GetSpan calls GetSpanFunc.
-func (mock *SpanHandlerIMock) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 	if mock.GetSpanFunc == nil {
-		panic("SpanHandlerIMock.GetSpanFunc: method is nil but SpanHandlerI.GetSpan was just called")
+		panic("ISpanHandlerMock.GetSpanFunc: method is nil but ISpanHandler.GetSpan was just called")
 	}
 	callInfo := struct {
 		Ctx             context.Context
@@ -84,9 +84,8 @@ func (mock *SpanHandlerIMock) GetSpan(ctx context.Context, tracer trace.Tracer, 
 
 // GetSpanCalls gets all the calls that were made to GetSpan.
 // Check the length with:
-//
-//	len(mockedSpanHandlerI.GetSpanCalls())
-func (mock *SpanHandlerIMock) GetSpanCalls() []struct {
+//     len(mockedISpanHandler.GetSpanCalls())
+func (mock *ISpanHandlerMock) GetSpanCalls() []struct {
 	Ctx             context.Context
 	Tracer          trace.Tracer
 	ReconcileObject client.Object
@@ -105,9 +104,9 @@ func (mock *SpanHandlerIMock) GetSpanCalls() []struct {
 }
 
 // UnbindSpan calls UnbindSpanFunc.
-func (mock *SpanHandlerIMock) UnbindSpan(reconcileObject client.Object, phase string) error {
+func (mock *ISpanHandlerMock) UnbindSpan(reconcileObject client.Object, phase string) error {
 	if mock.UnbindSpanFunc == nil {
-		panic("SpanHandlerIMock.UnbindSpanFunc: method is nil but SpanHandlerI.UnbindSpan was just called")
+		panic("ISpanHandlerMock.UnbindSpanFunc: method is nil but ISpanHandler.UnbindSpan was just called")
 	}
 	callInfo := struct {
 		ReconcileObject client.Object
@@ -124,9 +123,8 @@ func (mock *SpanHandlerIMock) UnbindSpan(reconcileObject client.Object, phase st
 
 // UnbindSpanCalls gets all the calls that were made to UnbindSpan.
 // Check the length with:
-//
-//	len(mockedSpanHandlerI.UnbindSpanCalls())
-func (mock *SpanHandlerIMock) UnbindSpanCalls() []struct {
+//     len(mockedISpanHandler.UnbindSpanCalls())
+func (mock *ISpanHandlerMock) UnbindSpanCalls() []struct {
 	ReconcileObject client.Object
 	Phase           string
 } {

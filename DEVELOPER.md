@@ -12,11 +12,24 @@ In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?it
 Adding the following lines to the Golang extension configuration file will enable all linters used in this project.
 
 ```
-"go.lintTool": "golangci-lint",
-"go.lintFlags": [
-  "--fast",
-  "--fix"
-]
+"go.lintTool": {
+	"type": "string",
+	"default": "golangci-lint",
+	"description": "GolangGCI Linter",
+	"scope": "resource",
+	"enum": [
+		"golangci-lint",
+	]
+},
+"go.lintFlags": {
+	"type": "array",
+	"items": {
+		"type": "string"
+	},
+	"default": ["--fast", "--fix"],
+	"description": "Flags to pass to GCI Linter",
+	"scope": "resource"
+},
 ```
 
 ### GoLand / IntelliJ

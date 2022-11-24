@@ -3,3 +3,5 @@
 bin/
 testbin/
 hack/tools/bin/*
+README.md
+sonar-project.properties

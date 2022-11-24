@@ -83,11 +83,12 @@ vet: ## Run go vet against code.
 
 .PHONY: test
 test: manifests fmt vet generate envtest ## Run tests.
-	go test ./api/... -v
+	go test ./api/... -v -coverprofile cover-api.out
 	go test ./controllers/... -v  -coverprofile cover-pkg.out
 	go test ./webhooks/... -v  -coverprofile cover-main.out
-	cat cover-main.out cover-pkg.out > cover.out
-	rm cover-pkg.out cover-main.out
+	cat cover-main.out cover-pkg.out cover-api.out > cover.out
+	cat cover-api.out
+	rm cover-pkg.out cover-main.out cover-api.out
 
 .PHONY: component-test
 component-test: manifests generate envtest ## Run tests.

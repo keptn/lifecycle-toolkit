@@ -248,7 +248,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
 	spanWorkloadTrace.End()
 	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
-		r.Log.Error(err, "Could not unbind span")
+		r.Log.Error(err, "could not unbind span for %s", workloadInstance.Name)
 	}
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())

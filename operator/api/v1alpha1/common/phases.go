@@ -13,6 +13,21 @@ type KeptnPhaseType struct {
 	ShortName string
 }
 
+var phases = []KeptnPhaseType{
+	PhaseWorkloadPreDeployment,
+	PhaseWorkloadPostDeployment,
+	PhaseWorkloadPreEvaluation,
+	PhaseWorkloadPostEvaluation,
+	PhaseWorkloadDeployment,
+	PhaseAppPreDeployment,
+	PhaseAppPostDeployment,
+	PhaseAppPreEvaluation,
+	PhaseAppPostEvaluation,
+	PhaseAppDeployment,
+	PhaseCompleted,
+	PhaseCancelled,
+}
+
 func (p KeptnPhaseType) IsEvaluation() bool {
 	return strings.Contains(p.ShortName, "DeployEvaluations")
 }
@@ -38,21 +53,6 @@ func (p KeptnPhaseType) IsPostTask() bool {
 }
 
 func GetShortPhaseName(phase string) string {
-	var phases = []KeptnPhaseType{
-		PhaseWorkloadPreDeployment,
-		PhaseWorkloadPostDeployment,
-		PhaseWorkloadPreEvaluation,
-		PhaseWorkloadPostEvaluation,
-		PhaseWorkloadDeployment,
-		PhaseAppPreDeployment,
-		PhaseAppPostDeployment,
-		PhaseAppPreEvaluation,
-		PhaseAppPostEvaluation,
-		PhaseAppDeployment,
-		PhaseCompleted,
-		PhaseCancelled,
-	}
-
 	for _, p := range phases {
 		if phase == p.ShortName {
 			return p.ShortName

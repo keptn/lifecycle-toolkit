@@ -186,7 +186,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	spanAppTrace.SetStatus(codes.Ok, "Finished")
 	spanAppTrace.End()
 	if err := r.SpanHandler.UnbindSpan(appVersion, ""); err != nil {
-		r.Log.Error(err, "Could not unbind span")
+		r.Log.Error(err, "could not unbind span for %s", appVersion.Name)
 	}
 
 	return ctrl.Result{}, nil

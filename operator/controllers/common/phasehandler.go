@@ -82,7 +82,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 			spanPhaseTrace.SetStatus(codes.Error, "Failed")
 			spanPhaseTrace.End()
 			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
-				r.Log.Error(err, "cannot unbind span")
+				r.Log.Error(err, ErrCouldNotUnbindSpan, reconcileObject.GetName())
 			}
 			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
 			piWrapper.CancelRemainingPhases(phase)
@@ -94,7 +94,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 		spanPhaseTrace.SetStatus(codes.Ok, "Succeeded")
 		spanPhaseTrace.End()
 		if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
-			r.Log.Error(err, "cannot unbind span")
+			r.Log.Error(err, ErrCouldNotUnbindSpan, reconcileObject.GetName())
 		}
 		RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
 

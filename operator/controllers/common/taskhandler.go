@@ -125,7 +125,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				}
 				spanTaskTrace.End()
 				if err := r.SpanHandler.UnbindSpan(task, ""); err != nil {
-					r.Log.Error(err, "Could not unbind span")
+					r.Log.Error(err, ErrCouldNotUnbindSpan, task.Name)
 				}
 				taskStatus.SetEndTime()
 			}

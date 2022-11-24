@@ -124,7 +124,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 				}
 				spanEvaluationTrace.End()
 				if err := r.SpanHandler.UnbindSpan(evaluation, ""); err != nil {
-					r.Log.Error(err, "Could not unbind span")
+					r.Log.Error(err, ErrCouldNotUnbindSpan, evaluation.Name)
 				}
 				evaluationStatus.SetEndTime()
 			}

@@ -18,7 +18,7 @@ type ISpanHandler interface {
 
 type keptnSpanCtx struct {
 	Span trace.Span
-	Ctx  context.Context
+	Ctx  context.Context //nolint:all
 }
 
 type SpanHandler struct {

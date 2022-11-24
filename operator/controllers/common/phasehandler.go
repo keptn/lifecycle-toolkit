@@ -61,18 +61,14 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 		state = common.StateProgressing
 	}
 
-	defer func(oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
+	defer func(ctx context.Context, oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
 		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {
-			ctx, spanPhaseTrace, err = r.SpanHandler.GetSpan(ctxTrace, tracer, reconcileObject, piWrapper.GetCurrentPhase())
-			if err != nil {
-				r.Log.Error(err, "could not get span")
-			}
 			if err := r.Status().Update(ctx, reconcileObject); err != nil {
 				r.Log.Error(err, "could not update status")
 			}
 		}
-	}(oldStatus, oldPhase, reconcileObject)
+	}(ctx, oldStatus, oldPhase, reconcileObject)
 
 	if state.IsCompleted() {
 		if state.IsFailed() {

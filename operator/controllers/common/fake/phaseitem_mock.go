@@ -24,10 +24,6 @@ import (
 // 			CompleteFunc: func()  {
 // 				panic("mock out the Complete method")
 // 			},
-// 			GenerateEvaluationFunc: func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
-// 				panic("mock out the GenerateEvaluation method")
-// 			},
-// 			GenerateTaskFunc: func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
 // 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 // 				panic("mock out the GenerateEvaluation method")
 // 			},
@@ -79,12 +75,6 @@ import (
 // 			GetSpanAttributesFunc: func() []attribute.KeyValue {
 // 				panic("mock out the GetSpanAttributes method")
 // 			},
-// 			GetSpanKeyFunc: func(phase string) string {
-// 				panic("mock out the GetSpanKey method")
-// 			},
-// 			GetSpanNameFunc: func(phase string) string {
-// 				panic("mock out the GetSpanName method")
-// 			},
 // 			GetStartTimeFunc: func() time.Time {
 // 				panic("mock out the GetStartTime method")
 // 			},
@@ -99,9 +89,6 @@ import (
 // 			},
 // 			SetCurrentPhaseFunc: func(s string)  {
 // 				panic("mock out the SetCurrentPhase method")
-// 			},
-// 			SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier)  {
-// 				panic("mock out the SetPhaseTraceID method")
 // 			},
 // 			SetSpanAttributesFunc: func(span trace.Span)  {
 // 				panic("mock out the SetSpanAttributes method")
@@ -123,10 +110,10 @@ type PhaseItemMock struct {
 	CompleteFunc func()
 
 	// GenerateEvaluationFunc mocks the GenerateEvaluation method.
-	GenerateEvaluationFunc func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation
+	GenerateEvaluationFunc func(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation
 
 	// GenerateTaskFunc mocks the GenerateTask method.
-	GenerateTaskFunc func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask
+	GenerateTaskFunc func(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask
 
 	// GetAppNameFunc mocks the GetAppName method.
 	GetAppNameFunc func() string
@@ -377,7 +364,6 @@ func (mock *PhaseItemMock) CompleteCalls() []struct {
 }
 
 // GenerateEvaluation calls GenerateEvaluationFunc.
-func (mock *PhaseItemMock) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 	if mock.GenerateEvaluationFunc == nil {
 		panic("PhaseItemMock.GenerateEvaluationFunc: method is nil but PhaseItem.GenerateEvaluation was just called")
@@ -413,14 +399,13 @@ func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 }
 
 // GenerateTask calls GenerateTaskFunc.
-func (mock *PhaseItemMock) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
+func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
 	if mock.GenerateTaskFunc == nil {
 		panic("PhaseItemMock.GenerateTaskFunc: method is nil but PhaseItem.GenerateTask was just called")
 	}
 	callInfo := struct {
-		TraceContextCarrier propagation.MapCarrier
-		TaskDefinition      string
-		CheckType           keptncommon.CheckType
+		TaskDefinition string
+		CheckType      keptncommon.CheckType
 	}{
 		TaskDefinition: taskDefinition,
 		CheckType:      checkType,
@@ -435,14 +420,12 @@ func (mock *PhaseItemMock) GenerateTask(traceContextCarrier propagation.MapCarri
 // Check the length with:
 //     len(mockedPhaseItem.GenerateTaskCalls())
 func (mock *PhaseItemMock) GenerateTaskCalls() []struct {
-	TraceContextCarrier propagation.MapCarrier
-	TaskDefinition      string
-	CheckType           keptncommon.CheckType
+	TaskDefinition string
+	CheckType      keptncommon.CheckType
 } {
 	var calls []struct {
-		TraceContextCarrier propagation.MapCarrier
-		TaskDefinition      string
-		CheckType           keptncommon.CheckType
+		TaskDefinition string
+		CheckType      keptncommon.CheckType
 	}
 	mock.lockGenerateTask.RLock()
 	calls = mock.calls.GenerateTask
@@ -840,68 +823,6 @@ func (mock *PhaseItemMock) GetSpanAttributesCalls() []struct {
 	return calls
 }
 
-// GetSpanKey calls GetSpanKeyFunc.
-func (mock *PhaseItemMock) GetSpanKey(phase string) string {
-	if mock.GetSpanKeyFunc == nil {
-		panic("PhaseItemMock.GetSpanKeyFunc: method is nil but PhaseItem.GetSpanKey was just called")
-	}
-	callInfo := struct {
-		Phase string
-	}{
-		Phase: phase,
-	}
-	mock.lockGetSpanKey.Lock()
-	mock.calls.GetSpanKey = append(mock.calls.GetSpanKey, callInfo)
-	mock.lockGetSpanKey.Unlock()
-	return mock.GetSpanKeyFunc(phase)
-}
-
-// GetSpanKeyCalls gets all the calls that were made to GetSpanKey.
-// Check the length with:
-//     len(mockedPhaseItem.GetSpanKeyCalls())
-func (mock *PhaseItemMock) GetSpanKeyCalls() []struct {
-	Phase string
-} {
-	var calls []struct {
-		Phase string
-	}
-	mock.lockGetSpanKey.RLock()
-	calls = mock.calls.GetSpanKey
-	mock.lockGetSpanKey.RUnlock()
-	return calls
-}
-
-// GetSpanName calls GetSpanNameFunc.
-func (mock *PhaseItemMock) GetSpanName(phase string) string {
-	if mock.GetSpanNameFunc == nil {
-		panic("PhaseItemMock.GetSpanNameFunc: method is nil but PhaseItem.GetSpanName was just called")
-	}
-	callInfo := struct {
-		Phase string
-	}{
-		Phase: phase,
-	}
-	mock.lockGetSpanName.Lock()
-	mock.calls.GetSpanName = append(mock.calls.GetSpanName, callInfo)
-	mock.lockGetSpanName.Unlock()
-	return mock.GetSpanNameFunc(phase)
-}
-
-// GetSpanNameCalls gets all the calls that were made to GetSpanName.
-// Check the length with:
-//     len(mockedPhaseItem.GetSpanNameCalls())
-func (mock *PhaseItemMock) GetSpanNameCalls() []struct {
-	Phase string
-} {
-	var calls []struct {
-		Phase string
-	}
-	mock.lockGetSpanName.RLock()
-	calls = mock.calls.GetSpanName
-	mock.lockGetSpanName.RUnlock()
-	return calls
-}
-
 // GetStartTime calls GetStartTimeFunc.
 func (mock *PhaseItemMock) GetStartTime() time.Time {
 	if mock.GetStartTimeFunc == nil {
@@ -1034,41 +955,6 @@ func (mock *PhaseItemMock) SetCurrentPhaseCalls() []struct {
 	mock.lockSetCurrentPhase.RLock()
 	calls = mock.calls.SetCurrentPhase
 	mock.lockSetCurrentPhase.RUnlock()
-	return calls
-}
-
-// SetPhaseTraceID calls SetPhaseTraceIDFunc.
-func (mock *PhaseItemMock) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	if mock.SetPhaseTraceIDFunc == nil {
-		panic("PhaseItemMock.SetPhaseTraceIDFunc: method is nil but PhaseItem.SetPhaseTraceID was just called")
-	}
-	callInfo := struct {
-		Phase   string
-		Carrier propagation.MapCarrier
-	}{
-		Phase:   phase,
-		Carrier: carrier,
-	}
-	mock.lockSetPhaseTraceID.Lock()
-	mock.calls.SetPhaseTraceID = append(mock.calls.SetPhaseTraceID, callInfo)
-	mock.lockSetPhaseTraceID.Unlock()
-	mock.SetPhaseTraceIDFunc(phase, carrier)
-}
-
-// SetPhaseTraceIDCalls gets all the calls that were made to SetPhaseTraceID.
-// Check the length with:
-//     len(mockedPhaseItem.SetPhaseTraceIDCalls())
-func (mock *PhaseItemMock) SetPhaseTraceIDCalls() []struct {
-	Phase   string
-	Carrier propagation.MapCarrier
-} {
-	var calls []struct {
-		Phase   string
-		Carrier propagation.MapCarrier
-	}
-	mock.lockSetPhaseTraceID.RLock()
-	calls = mock.calls.SetPhaseTraceID
-	mock.lockSetPhaseTraceID.RUnlock()
 	return calls
 }
 

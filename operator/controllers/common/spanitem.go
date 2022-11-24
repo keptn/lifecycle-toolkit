@@ -6,8 +6,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// SpanItem represents an object whose metrics are stored
+//
 //go:generate moq -pkg fake --skip-ensure -out ./fake/spanitem_mock.go . SpanItem
-//SpanItem represents an object whose metrics are stored
 type SpanItem interface {
 	SetSpanAttributes(span trace.Span)
 	SetPhaseTraceID(phase string, carrier propagation.MapCarrier)

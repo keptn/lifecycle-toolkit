@@ -105,11 +105,6 @@ func TestPhaseItem(t *testing.T) {
 		},
 		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
 		},
-<<<<<<< HEAD
-		SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier) {
-		},
-=======
->>>>>>> 110ef61... feat(operator): rework Task and Evaluation span structure
 	}
 
 	wrapper := PhaseItemWrapper{Obj: &phaseItemMock}

@@ -178,6 +178,7 @@ func (e KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
 }
 
 func (e *KeptnEvaluation) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	// present due to SpanItem interface
 }
 
 func (e KeptnEvaluation) GetSpanKey(phase string) string {

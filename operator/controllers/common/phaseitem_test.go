@@ -9,7 +9,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -48,12 +47,6 @@ func TestPhaseItem(t *testing.T) {
 		},
 		GetSpanAttributesFunc: func() []attribute.KeyValue {
 			return nil
-		},
-		GetSpanKeyFunc: func(phase string) string {
-			return "span"
-		},
-		GetSpanNameFunc: func(phase string) string {
-			return "name"
 		},
 		CompleteFunc: func() {
 		},
@@ -102,17 +95,15 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha1.EvaluationStatus {
 			return nil
 		},
-		GenerateTaskFunc: func(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) v1alpha1.KeptnTask {
+		GenerateTaskFunc: func(taskDefinition string, checkType common.CheckType) v1alpha1.KeptnTask {
 			return v1alpha1.KeptnTask{}
 		},
-		GenerateEvaluationFunc: func(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
+		GenerateEvaluationFunc: func(evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
 			return v1alpha1.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
 		},
 		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
-		},
-		SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier) {
 		},
 	}
 
@@ -135,12 +126,6 @@ func TestPhaseItem(t *testing.T) {
 
 	_ = wrapper.GetSpanAttributes()
 	require.Len(t, phaseItemMock.GetSpanAttributesCalls(), 1)
-
-	_ = wrapper.GetSpanKey("phase")
-	require.Len(t, phaseItemMock.GetSpanKeyCalls(), 1)
-
-	_ = wrapper.GetSpanName("phase")
-	require.Len(t, phaseItemMock.GetSpanNameCalls(), 1)
 
 	wrapper.Complete()
 	require.Len(t, phaseItemMock.CompleteCalls(), 1)
@@ -190,10 +175,10 @@ func TestPhaseItem(t *testing.T) {
 	_ = wrapper.GetPostDeploymentEvaluationTaskStatus()
 	require.Len(t, phaseItemMock.GetPostDeploymentEvaluationTaskStatusCalls(), 1)
 
-	_ = wrapper.GenerateTask(nil, "", common.PostDeploymentCheckType)
+	_ = wrapper.GenerateTask("", common.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateTaskCalls(), 1)
 
-	_ = wrapper.GenerateEvaluation(nil, "", common.PostDeploymentCheckType)
+	_ = wrapper.GenerateEvaluation("", common.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateEvaluationCalls(), 1)
 
 	wrapper.SetSpanAttributes(nil)
@@ -201,8 +186,5 @@ func TestPhaseItem(t *testing.T) {
 
 	wrapper.CancelRemainingPhases(common.PhaseAppDeployment)
 	require.Len(t, phaseItemMock.CancelRemainingPhasesCalls(), 1)
-
-	wrapper.SetPhaseTraceID(common.PhaseAppDeployment.LongName, propagation.MapCarrier{})
-	require.Len(t, phaseItemMock.SetPhaseTraceIDCalls(), 1)
 
 }

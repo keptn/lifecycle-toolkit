@@ -18,7 +18,7 @@ type ISpanHandler interface {
 
 type keptnSpanCtx struct {
 	Span trace.Span
-	Ctx  context.Context
+	Ctx  context.Context //nolint:all
 }
 
 type SpanHandler struct {
@@ -27,7 +27,7 @@ type SpanHandler struct {
 }
 
 func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -56,7 +56,7 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 }
 
 func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return err
 	}

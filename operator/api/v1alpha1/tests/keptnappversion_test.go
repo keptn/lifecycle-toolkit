@@ -179,7 +179,7 @@ func TestKeptnAppVersion(t *testing.T) {
 
 	require.Equal(t, "trace1.appname.version.phase", app.GetSpanKey("phase"))
 
-	task := app.GenerateTask(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
+	task := app.GenerateTask("taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnTaskSpec{
 		AppVersion:       app.GetVersion(),
 		AppName:          app.GetParentName(),
@@ -189,7 +189,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		Type:             common.PostDeploymentCheckType,
 	}, task.Spec)
 
-	evaluation := app.GenerateEvaluation(map[string]string{}, "taskdef", common.PostDeploymentCheckType)
+	evaluation := app.GenerateEvaluation("taskdef", common.PostDeploymentCheckType)
 	require.Equal(t, v1alpha1.KeptnEvaluationSpec{
 		AppVersion:           app.GetVersion(),
 		AppName:              app.GetParentName(),

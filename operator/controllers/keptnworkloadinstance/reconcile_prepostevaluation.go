@@ -9,13 +9,14 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType common.CheckType) (common.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType common.CheckType) (common.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
-		Client:   r.Client,
-		Recorder: r.Recorder,
-		Log:      r.Log,
-		Tracer:   r.Tracer,
-		Scheme:   r.Scheme,
+		Client:      r.Client,
+		Recorder:    r.Recorder,
+		Log:         r.Log,
+		Tracer:      r.Tracer,
+		Scheme:      r.Scheme,
+		SpanHandler: r.SpanHandler,
 	}
 
 	evaluationCreateAttributes := controllercommon.EvaluationCreateAttributes{
@@ -23,7 +24,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, workloadInstance, evaluationCreateAttributes)
+	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadInstance, evaluationCreateAttributes)
 	if err != nil {
 		return common.StateUnknown, err
 	}

@@ -25,6 +25,24 @@ func TestKeptnTask(t *testing.T) {
 		},
 	}
 
+	task.SetPhaseTraceID("", nil)
+	require.Equal(t, v1alpha1.KeptnTask{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "task",
+		},
+		Spec: v1alpha1.KeptnTaskSpec{
+			AppName:    "app",
+			AppVersion: "appversion",
+			Type:       common.PostDeploymentCheckType,
+		},
+		Status: v1alpha1.KeptnTaskStatus{
+			Status: common.StateFailed,
+		},
+	}, *task)
+
+	require.Equal(t, "task", task.GetSpanKey(""))
+	require.Equal(t, "task", task.GetSpanName(""))
+
 	require.False(t, task.IsEndTimeSet())
 	require.False(t, task.IsStartTimeSet())
 

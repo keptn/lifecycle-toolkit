@@ -25,6 +25,24 @@ func TestKeptnEvaluation(t *testing.T) {
 		},
 	}
 
+	evaluation.SetPhaseTraceID("", nil)
+	require.Equal(t, v1alpha1.KeptnEvaluation{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "evaluation",
+		},
+		Spec: v1alpha1.KeptnEvaluationSpec{
+			AppName:    "app",
+			AppVersion: "appversion",
+			Type:       common.PostDeploymentCheckType,
+		},
+		Status: v1alpha1.KeptnEvaluationStatus{
+			OverallStatus: common.StateFailed,
+		},
+	}, *evaluation)
+
+	require.Equal(t, "evaluation", evaluation.GetSpanKey(""))
+	require.Equal(t, "evaluation", evaluation.GetSpanName(""))
+
 	require.False(t, evaluation.IsEndTimeSet())
 	require.False(t, evaluation.IsStartTimeSet())
 

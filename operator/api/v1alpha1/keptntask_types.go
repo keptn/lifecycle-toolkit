@@ -21,6 +21,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -182,4 +183,16 @@ func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
 		common.TaskName.String(t.Name),
 		common.TaskType.String(string(t.Spec.Type)),
 	}
+}
+
+func (t *KeptnTask) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
+	// present due to SpanItem interface
+}
+
+func (t KeptnTask) GetSpanKey(phase string) string {
+	return t.Name
+}
+
+func (t KeptnTask) GetSpanName(phase string) string {
+	return t.Name
 }

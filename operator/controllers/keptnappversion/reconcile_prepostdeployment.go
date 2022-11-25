@@ -9,13 +9,14 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, checkType common.CheckType) (common.KeptnState, error) {
+func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, checkType common.CheckType) (common.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
-		Client:   r.Client,
-		Recorder: r.Recorder,
-		Log:      r.Log,
-		Tracer:   r.Tracer,
-		Scheme:   r.Scheme,
+		Client:      r.Client,
+		Recorder:    r.Recorder,
+		Log:         r.Log,
+		Tracer:      r.Tracer,
+		Scheme:      r.Scheme,
+		SpanHandler: r.SpanHandler,
 	}
 
 	taskCreateAttributes := controllercommon.TaskCreateAttributes{
@@ -23,7 +24,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Conte
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := taskHandler.ReconcileTasks(ctx, appVersion, taskCreateAttributes)
+	newStatus, state, err := taskHandler.ReconcileTasks(ctx, phaseCtx, appVersion, taskCreateAttributes)
 	if err != nil {
 		return common.StateUnknown, err
 	}

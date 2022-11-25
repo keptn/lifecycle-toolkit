@@ -336,12 +336,11 @@ func (w KeptnWorkloadInstance) GetVersion() string {
 	return w.Spec.Version
 }
 
-func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapCarrier, taskDefinition string, checkType common.CheckType) KeptnTask {
+func (w KeptnWorkloadInstance) GenerateTask(taskDefinition string, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition),
-			Namespace:   w.Namespace,
-			Annotations: traceContextCarrier,
+			Name:      common.GenerateTaskName(checkType, taskDefinition),
+			Namespace: w.Namespace,
 		},
 		Spec: KeptnTaskSpec{
 			AppName:          w.GetAppName(),
@@ -355,12 +354,11 @@ func (w KeptnWorkloadInstance) GenerateTask(traceContextCarrier propagation.MapC
 	}
 }
 
-func (w KeptnWorkloadInstance) GenerateEvaluation(traceContextCarrier propagation.MapCarrier, evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+func (w KeptnWorkloadInstance) GenerateEvaluation(evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
 	return KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateEvaluationName(checkType, evaluationDefinition),
-			Namespace:   w.Namespace,
-			Annotations: traceContextCarrier,
+			Name:      common.GenerateEvaluationName(checkType, evaluationDefinition),
+			Namespace: w.Namespace,
 		},
 		Spec: KeptnEvaluationSpec{
 			AppName:              w.GetAppName(),

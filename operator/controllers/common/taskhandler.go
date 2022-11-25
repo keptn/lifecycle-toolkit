@@ -3,13 +3,13 @@ package common
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -21,10 +21,11 @@ import (
 
 type TaskHandler struct {
 	client.Client
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Tracer   trace.Tracer
-	Scheme   *runtime.Scheme
+	Recorder    record.EventRecorder
+	Log         logr.Logger
+	Tracer      trace.Tracer
+	Scheme      *runtime.Scheme
+	SpanHandler ISpanHandler
 }
 
 type TaskCreateAttributes struct {
@@ -33,7 +34,7 @@ type TaskCreateAttributes struct {
 	CheckType      common.CheckType
 }
 
-func (r TaskHandler) ReconcileTasks(ctx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
+func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -102,10 +103,30 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, reconcileObject client.
 			}
 			taskStatus.TaskName = taskName
 			taskStatus.SetStartTime()
+			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
+			if err != nil {
+				r.Log.Error(err, "could not get span")
+			}
 		} else {
+			_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
+			if err != nil {
+				r.Log.Error(err, "could not get span")
+			}
 			// Update state of Task if it is already created
 			taskStatus.Status = task.Status.Status
 			if taskStatus.Status.IsCompleted() {
+				if taskStatus.Status.IsSucceeded() {
+					spanTaskTrace.AddEvent(task.Name + " has finished")
+					spanTaskTrace.SetStatus(codes.Ok, "Finished")
+				} else {
+					spanTaskTrace.AddEvent(task.Name + " has failed")
+					r.setTaskFailureEvents(task, spanTaskTrace)
+					spanTaskTrace.SetStatus(codes.Error, "Failed")
+				}
+				spanTaskTrace.End()
+				if err := r.SpanHandler.UnbindSpan(task, ""); err != nil {
+					r.Log.Error(err, ErrCouldNotUnbindSpan, task.Name)
+				}
 				taskStatus.SetEndTime()
 			}
 		}
@@ -128,22 +149,12 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 		return "", err
 	}
 
-	ctx, span := r.Tracer.Start(ctx, taskCreateAttributes.SpanName, trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	piWrapper.SetSpanAttributes(span)
-
-	// create TraceContext
-	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
-
 	phase := apicommon.KeptnPhaseType{
 		ShortName: "KeptnTaskCreate",
 		LongName:  "Keptn Task Create",
 	}
 
-	newTask := piWrapper.GenerateTask(traceContextCarrier, taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
+	newTask := piWrapper.GenerateTask(taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -157,4 +168,8 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
+}
+
+func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha1.KeptnTask, spanTrace trace.Span) {
+	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
 }

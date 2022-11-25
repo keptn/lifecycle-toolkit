@@ -168,8 +168,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if !workloadInstance.IsPreDeploymentSucceeded() {
-		reconcilePre := func() (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PreDeploymentCheckType)
+		reconcilePre := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, common.PreDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
 		if !result.Continue {
@@ -180,8 +180,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for pre-evaluation checks of Workload
 	phase = common.PhaseWorkloadPreEvaluation
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
-		reconcilePreEval := func() (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PreDeploymentEvaluationCheckType)
+		reconcilePreEval := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, common.PreDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
 		if !result.Continue {
@@ -192,7 +192,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for deployment of Workload
 	phase = common.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {
-		reconcileWorkloadInstance := func() (common.KeptnState, error) {
+		reconcileWorkloadInstance := func(phaseCtx context.Context) (common.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
@@ -204,8 +204,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for post-deployment checks of Workload
 	phase = common.PhaseWorkloadPostDeployment
 	if !workloadInstance.IsPostDeploymentSucceeded() {
-		reconcilePostDeployment := func() (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, workloadInstance, common.PostDeploymentCheckType)
+		reconcilePostDeployment := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, common.PostDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
 		if !result.Continue {
@@ -216,8 +216,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	//Wait for post-evaluation checks of Workload
 	phase = common.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
-		reconcilePostEval := func() (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, workloadInstance, common.PostDeploymentEvaluationCheckType)
+		reconcilePostEval := func(phaseCtx context.Context) (common.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, common.PostDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
 		if !result.Continue {
@@ -248,7 +248,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
 	spanWorkloadTrace.End()
 	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
-		r.Log.Error(err, "could not unbind span for %s", workloadInstance.Name)
+		r.Log.Error(err, controllercommon.ErrCouldNotUnbindSpan, workloadInstance.Name)
 	}
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())

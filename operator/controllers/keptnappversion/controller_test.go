@@ -156,7 +156,7 @@ func setupReconcilerWithMeters(t *testing.T) *KeptnAppVersionReconciler {
 	return r
 }
 
-func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.SpanHandlerIMock) {
+func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -170,7 +170,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 
 	//fake span handler
 
-	spanRecorder := &fake.SpanHandlerIMock{
+	spanRecorder := &fake.ISpanHandlerMock{
 		GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},

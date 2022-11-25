@@ -2,5 +2,5 @@ package common
 
 import "go.opentelemetry.io/otel/trace"
 
-//go:generate moq -pkg fake -skip-ensure -out ./fake/tracer.go . ITracer
+//go:generate moq -pkg fake -skip-ensure -out ./fake/tracer_mock.go . ITracer
 type ITracer = trace.Tracer

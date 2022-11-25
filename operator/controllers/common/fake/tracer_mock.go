@@ -11,19 +11,19 @@ import (
 
 // ITracerMock is a mock implementation of common.ITracer.
 //
-//	func TestSomethingThatUsesITracer(t *testing.T) {
+// 	func TestSomethingThatUsesITracer(t *testing.T) {
 //
-//		// make and configure a mocked common.ITracer
-//		mockedITracer := &ITracerMock{
-//			StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-//				panic("mock out the Start method")
-//			},
-//		}
+// 		// make and configure a mocked common.ITracer
+// 		mockedITracer := &ITracerMock{
+// 			StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+// 				panic("mock out the Start method")
+// 			},
+// 		}
 //
-//		// use mockedITracer in code that requires common.ITracer
-//		// and then make assertions.
+// 		// use mockedITracer in code that requires common.ITracer
+// 		// and then make assertions.
 //
-//	}
+// 	}
 type ITracerMock struct {
 	// StartFunc mocks the Start method.
 	StartFunc func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span)
@@ -65,8 +65,7 @@ func (mock *ITracerMock) Start(ctx context.Context, spanName string, opts ...tra
 
 // StartCalls gets all the calls that were made to Start.
 // Check the length with:
-//
-//	len(mockedITracer.StartCalls())
+//     len(mockedITracer.StartCalls())
 func (mock *ITracerMock) StartCalls() []struct {
 	Ctx      context.Context
 	SpanName string

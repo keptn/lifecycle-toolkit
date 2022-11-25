@@ -240,7 +240,7 @@ func TestTaskHandler(t *testing.T) {
 			}
 			status, summary, err := handler.ReconcileTasks(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
-				for j, item := range tt.wantStatus {
+				for j, item := range status {
 					require.Equal(t, tt.wantStatus[j].TaskDefinitionName, item.TaskDefinitionName)
 					require.True(t, strings.Contains(item.TaskName, tt.wantStatus[j].TaskName))
 					require.Equal(t, tt.wantStatus[j].Status, item.Status)

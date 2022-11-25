@@ -240,7 +240,7 @@ func TestEvaluationHandler(t *testing.T) {
 			}
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
-				for j, item := range tt.wantStatus {
+				for j, item := range status {
 					require.Equal(t, tt.wantStatus[j].EvaluationDefinitionName, item.EvaluationDefinitionName)
 					require.True(t, strings.Contains(item.EvaluationName, tt.wantStatus[j].EvaluationName))
 					require.Equal(t, tt.wantStatus[j].Status, item.Status)

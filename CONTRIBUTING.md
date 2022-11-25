@@ -35,6 +35,6 @@ Adding the following lines to the `Golang` extension configuration file will ena
 ### GoLand / IntelliJ
 
 In GoLand or IntelliJ, the plugin [Go Linter](https://plugins.jetbrains.com/plugin/12496-go-linter) will be required.<br>
-The plugin can bi installed via `Settings` >> `Plugins` >> `Marketplace`, search for `Go Linter` and install it.<br>
+The plugin can be installed via `Settings` >> `Plugins` >> `Marketplace`, search for `Go Linter` and install it.<br>
 Once installed, make sure that the plugin is using the `.golangci.yml` file from the root directory.<br>
 The configuration of `Go Linter` can be found in the `Tools` section of the settings.

@@ -24,3 +24,9 @@ jobs:
     - name: Execute Component Tests
       working-directory: operator
       run: make component-test
+
+    - name: Upload coverage for component tests
+      uses: actions/upload-artifact@v3
+      with:
+        name: cover-component.out
+        path: 'operator/cover-component.out'

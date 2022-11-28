@@ -237,6 +237,8 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnAppVersionReconciler) removeDeprecatedAppVersions(ctx context.Context, appVersion v1alpha1.KeptnAppVersion) error {
+	var resultErr error
+	resultErr = nil
 	for i := 1; i < appVersion.Spec.Revision; i++ {
 		deprecatedAppVersion := &klcv1alpha1.KeptnAppVersion{}
 		err := r.Get(ctx, types.NamespacedName{Namespace: appVersion.Namespace, Name: appVersion.Spec.AppName + "-" + appVersion.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
@@ -246,10 +248,16 @@ func (r *KeptnAppVersionReconciler) removeDeprecatedAppVersions(ctx context.Cont
 
 		if err != nil {
 			r.Log.Error(err, "AppVersion not found")
+			resultErr = err
+			continue
 		}
 
 		bak := v1.DeletePropagationBackground
-		r.Client.Delete(ctx, deprecatedAppVersion, &client.DeleteOptions{PropagationPolicy: &bak})
+		if err := r.Client.Delete(ctx, deprecatedAppVersion, &client.DeleteOptions{PropagationPolicy: &bak}); err != nil {
+			r.Log.Error(err, "could not delete appVersion %s", deprecatedAppVersion.Name)
+			resultErr = err
+			continue
+		}
 	}
-	return nil
+	return resultErr
 }

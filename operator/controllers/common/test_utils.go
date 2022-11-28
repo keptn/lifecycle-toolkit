@@ -21,7 +21,8 @@ func AddApp(c client.Client, name string) error {
 			Namespace: "default",
 		},
 		Spec: lfcv1alpha1.KeptnAppSpec{
-			Version: "1.0.0",
+			Version:  "1.0.0",
+			Revision: 1,
 		},
 		Status: lfcv1alpha1.KeptnAppStatus{},
 	}
@@ -41,6 +42,7 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 			KeptnAppSpec: lfcv1alpha1.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
+				Revision:  1,
 			},
 			AppName: appName,
 			TraceId: map[string]string{

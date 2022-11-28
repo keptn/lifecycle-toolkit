@@ -20,34 +20,20 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"go.opentelemetry.io/otel/propagation"
+
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
-	"sigs.k8s.io/controller-runtime/pkg/healthz"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnappversion"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnevaluation"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntask"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntaskdefinition"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkload"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 
 	"github.com/kelseyhightower/envconfig"
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnevaluation"
@@ -55,25 +41,10 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
-	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
-	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
-	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/metric/unit"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/sdk/resource"
-	"go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -92,14 +63,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	//+kubebuilder:scaffold:imports

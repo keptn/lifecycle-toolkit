@@ -139,10 +139,8 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *interface
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("Reconcile() error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{
 		Client:   fakeClient,

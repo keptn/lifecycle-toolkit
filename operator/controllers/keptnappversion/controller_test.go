@@ -178,10 +178,8 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *in
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
 	}
 
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("Reconcile() error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
 		Client:      fakeClient,

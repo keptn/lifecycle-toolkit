@@ -7,8 +7,8 @@ import (
 	"os"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,7 +25,7 @@ type FunctionExecutionParams struct {
 
 func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
 	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%d", common.TruncateString(task.Name, common.MaxTaskNameLength), randomId)
+	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      jobId,
@@ -55,14 +55,14 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha1.KeptnTask, p
 	if len(params.Parameters) > 0 {
 		jsonParams, err := json.Marshal(params.Parameters)
 		if err != nil {
-			return job, controllercommon.ErrCannotMarshalParams
+			return job, controllererrors.ErrCannotMarshalParams
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
-		return job, controllercommon.ErrCannotMarshalParams
+		return job, controllererrors.ErrCannotMarshalParams
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
@@ -133,7 +133,7 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 	} else {
 		// If not, check if it has an HTTP reference. If this is also not the case and the object has no parent, something is wrong
 		if definition.Spec.Function.HttpReference.Url == "" && !hasParent {
-			return params, false, fmt.Errorf(controllercommon.ErrNoConfigMapMsg, definition.Namespace, definition.Name)
+			return params, false, fmt.Errorf(controllererrors.ErrNoConfigMapMsg, definition.Namespace, definition.Name)
 		}
 		params.URL = definition.Spec.Function.HttpReference.Url
 	}

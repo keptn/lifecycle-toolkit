@@ -1,12 +1,12 @@
-package common
+package interfaces
 
 import (
 	"testing"
 	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -15,7 +15,7 @@ import (
 func TestPhaseItemWrapper_GetState(t *testing.T) {
 	appVersion := &v1alpha1.KeptnAppVersion{
 		Status: v1alpha1.KeptnAppVersionStatus{
-			Status:       common.StateFailed,
+			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},
 	}
@@ -32,10 +32,10 @@ func TestPhaseItemWrapper_GetState(t *testing.T) {
 
 func TestPhaseItem(t *testing.T) {
 	phaseItemMock := fake.PhaseItemMock{
-		GetStateFunc: func() common.KeptnState {
-			return common.StatePending
+		GetStateFunc: func() apicommon.KeptnState {
+			return apicommon.StatePending
 		},
-		SetStateFunc: func(keptnState common.KeptnState) {
+		SetStateFunc: func(keptnState apicommon.KeptnState) {
 		},
 		GetCurrentPhaseFunc: func() string {
 			return "phase"
@@ -95,15 +95,15 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha1.EvaluationStatus {
 			return nil
 		},
-		GenerateTaskFunc: func(taskDefinition string, checkType common.CheckType) v1alpha1.KeptnTask {
+		GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) v1alpha1.KeptnTask {
 			return v1alpha1.KeptnTask{}
 		},
-		GenerateEvaluationFunc: func(evaluationDefinition string, checkType common.CheckType) v1alpha1.KeptnEvaluation {
+		GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) v1alpha1.KeptnEvaluation {
 			return v1alpha1.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
 		},
-		CancelRemainingPhasesFunc: func(phase common.KeptnPhaseType) {
+		CancelRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType) {
 		},
 	}
 
@@ -112,7 +112,7 @@ func TestPhaseItem(t *testing.T) {
 	_ = wrapper.GetState()
 	require.Len(t, phaseItemMock.GetStateCalls(), 1)
 
-	wrapper.SetState(common.StateFailed)
+	wrapper.SetState(apicommon.StateFailed)
 	require.Len(t, phaseItemMock.SetStateCalls(), 1)
 
 	_ = wrapper.GetCurrentPhase()
@@ -175,16 +175,16 @@ func TestPhaseItem(t *testing.T) {
 	_ = wrapper.GetPostDeploymentEvaluationTaskStatus()
 	require.Len(t, phaseItemMock.GetPostDeploymentEvaluationTaskStatusCalls(), 1)
 
-	_ = wrapper.GenerateTask("", common.PostDeploymentCheckType)
+	_ = wrapper.GenerateTask("", apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateTaskCalls(), 1)
 
-	_ = wrapper.GenerateEvaluation("", common.PostDeploymentCheckType)
+	_ = wrapper.GenerateEvaluation("", apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateEvaluationCalls(), 1)
 
 	wrapper.SetSpanAttributes(nil)
 	require.Len(t, phaseItemMock.SetSpanAttributesCalls(), 1)
 
-	wrapper.CancelRemainingPhases(common.PhaseAppDeployment)
+	wrapper.CancelRemainingPhases(apicommon.PhaseAppDeployment)
 	require.Len(t, phaseItemMock.CancelRemainingPhasesCalls(), 1)
 
 }

@@ -1,6 +1,9 @@
-package common
+package interfaces
 
-import "sigs.k8s.io/controller-runtime/pkg/client"
+import (
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+)
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/listitem_mock.go . ListItem
 type ListItem interface {
@@ -14,7 +17,7 @@ type ListItemWrapper struct {
 func NewListItemWrapperFromClientObjectList(object client.ObjectList) (*ListItemWrapper, error) {
 	pi, ok := object.(ListItem)
 	if !ok {
-		return nil, ErrCannotWrapToListItem
+		return nil, errors.ErrCannotWrapToListItem
 	}
 	return &ListItemWrapper{Obj: pi}, nil
 }

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,7 +28,7 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           ErrCannotWrapToListItem,
+			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -69,9 +69,9 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 				{
 					Value: 5 * time.Second.Seconds(),
 					Attributes: []attribute.KeyValue{
-						common.AppName.String("appName"),
-						common.AppVersion.String("version"),
-						common.AppPreviousVersion.String("previousVersion"),
+						apicommon.AppName.String("appName"),
+						apicommon.AppVersion.String("version"),
+						apicommon.AppPreviousVersion.String("previousVersion"),
 					},
 				},
 			},
@@ -103,7 +103,7 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			err:           ErrCannotWrapToListItem,
+			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -131,9 +131,9 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 				{
 					Value: 1,
 					Attributes: []attribute.KeyValue{
-						common.AppName.String("appName"),
-						common.AppVersion.String("version"),
-						common.AppNamespace.String("namespace"),
+						apicommon.AppName.String("appName"),
+						apicommon.AppVersion.String("version"),
+						apicommon.AppNamespace.String("namespace"),
 					},
 				},
 			},
@@ -166,9 +166,9 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 				{
 					Value: 0,
 					Attributes: []attribute.KeyValue{
-						common.AppName.String("appName"),
-						common.AppVersion.String("version"),
-						common.AppNamespace.String("namespace"),
+						apicommon.AppName.String("appName"),
+						apicommon.AppVersion.String("version"),
+						apicommon.AppNamespace.String("namespace"),
 					},
 				},
 			},
@@ -203,7 +203,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 			list:          &lifecyclev1alpha1.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
 			clientObject:  &lifecyclev1alpha1.KeptnApp{},
-			err:           ErrCannotWrapToListItem,
+			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
@@ -279,7 +279,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    ErrCannotWrapToMetricsObject,
+			err:    controllererrors.ErrCannotWrapToMetricsObject,
 			result: nil,
 		},
 		{
@@ -366,17 +366,17 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 				{
 					Value: 5,
 					Attributes: []attribute.KeyValue{
-						common.AppName.String("appName"),
-						common.AppVersion.String("version"),
-						common.AppPreviousVersion.String("previousVersion"),
+						apicommon.AppName.String("appName"),
+						apicommon.AppVersion.String("version"),
+						apicommon.AppPreviousVersion.String("previousVersion"),
 					},
 				},
 				{
 					Value: 5,
 					Attributes: []attribute.KeyValue{
-						common.AppName.String("appName"),
-						common.AppVersion.String("version"),
-						common.AppPreviousVersion.String("previousVersion"),
+						apicommon.AppName.String("appName"),
+						apicommon.AppVersion.String("version"),
+						apicommon.AppPreviousVersion.String("previousVersion"),
 					},
 				},
 			},

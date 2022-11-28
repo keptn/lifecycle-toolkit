@@ -1,8 +1,9 @@
-package common
+package interfaces
 
 import (
 	"time"
 
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -28,7 +29,7 @@ type MetricsObjectWrapper struct {
 func NewMetricsObjectWrapperFromClientObject(object client.Object) (*MetricsObjectWrapper, error) {
 	mo, ok := object.(MetricsObject)
 	if !ok {
-		return nil, ErrCannotWrapToMetricsObject
+		return nil, errors.ErrCannotWrapToMetricsObject
 	}
 	return &MetricsObjectWrapper{Obj: mo}, nil
 }

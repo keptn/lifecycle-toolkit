@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/client-go/tools/record"
@@ -26,13 +28,13 @@ type PhaseResult struct {
 	ctrl.Result
 }
 
-func RecordEvent(recorder record.EventRecorder, phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
+func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
 	recorder.Event(reconcileObject, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version))
 }
 
-func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase common.KeptnPhaseType, span trace.Span, reconcilePhase func(phaseCtx context.Context) (common.KeptnState, error)) (*PhaseResult, error) {
+func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, span trace.Span, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return &PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, err
 	}
@@ -58,11 +60,11 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	}
 
 	if state.IsPending() {
-		state = common.StateProgressing
+		state = apicommon.StateProgressing
 	}
 
-	defer func(ctx context.Context, oldStatus common.KeptnState, oldPhase string, reconcileObject client.Object) {
-		piWrapper, _ := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	defer func(ctx context.Context, oldStatus apicommon.KeptnState, oldPhase string, reconcileObject client.Object) {
+		piWrapper, _ := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 		if oldStatus != piWrapper.GetState() || oldPhase != piWrapper.GetCurrentPhase() {
 			if err := r.Status().Update(ctx, reconcileObject); err != nil {
 				r.Log.Error(err, "could not update status")
@@ -73,31 +75,31 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	if state.IsCompleted() {
 		if state.IsFailed() {
 			piWrapper.Complete()
-			piWrapper.SetState(common.StateFailed)
+			piWrapper.SetState(apicommon.StateFailed)
 			spanPhaseTrace.AddEvent(phase.LongName + " has failed")
 			spanPhaseTrace.SetStatus(codes.Error, "Failed")
 			spanPhaseTrace.End()
 			if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
-				r.Log.Error(err, ErrCouldNotUnbindSpan, reconcileObject.GetName())
+				r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, reconcileObject.GetName())
 			}
 			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
 			piWrapper.CancelRemainingPhases(phase)
 			return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 		}
 
-		piWrapper.SetState(common.StateSucceeded)
+		piWrapper.SetState(apicommon.StateSucceeded)
 		spanPhaseTrace.AddEvent(phase.LongName + " has succeeded")
 		spanPhaseTrace.SetStatus(codes.Ok, "Succeeded")
 		spanPhaseTrace.End()
 		if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
-			r.Log.Error(err, ErrCouldNotUnbindSpan, reconcileObject.GetName())
+			r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, reconcileObject.GetName())
 		}
 		RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
 
 		return &PhaseResult{Continue: true, Result: requeueResult}, nil
 	}
 
-	piWrapper.SetState(common.StateProgressing)
+	piWrapper.SetState(apicommon.StateProgressing)
 	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil

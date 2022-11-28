@@ -1,11 +1,11 @@
-package common
+package interfaces
 
 import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -20,10 +20,10 @@ func TestSpanItemWrapper(t *testing.T) {
 		Spec: v1alpha1.KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
-			Type:       common.PostDeploymentCheckType,
+			Type:       apicommon.PostDeploymentCheckType,
 		},
 		Status: v1alpha1.KeptnEvaluationStatus{
-			OverallStatus: common.StateFailed,
+			OverallStatus: apicommon.StateFailed,
 		},
 	}
 

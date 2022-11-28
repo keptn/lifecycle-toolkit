@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -117,7 +117,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation: "SOME-APP-NAME",
+							apicommon.AppAnnotation: "SOME-APP-NAME",
 						},
 					},
 				},
@@ -130,7 +130,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							common.AppAnnotation: "SOME-APP-NAME",
+							apicommon.AppAnnotation: "SOME-APP-NAME",
 						},
 					},
 				},
@@ -143,10 +143,10 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation: "SOME-APP-NAME-ANNOTATION",
+							apicommon.AppAnnotation: "SOME-APP-NAME-ANNOTATION",
 						},
 						Labels: map[string]string{
-							common.AppAnnotation: "SOME-APP-NAME-LABEL",
+							apicommon.AppAnnotation: "SOME-APP-NAME-LABEL",
 						},
 					},
 				},
@@ -193,8 +193,8 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation:      "SOME-APP-NAME",
-							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
+							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
 				},
@@ -207,8 +207,8 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							common.AppAnnotation:      "SOME-APP-NAME",
-							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
+							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
 				},
@@ -221,12 +221,12 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
-							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
+							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
 						},
 						Labels: map[string]string{
-							common.AppAnnotation:      "SOME-APP-NAME-LABEL",
-							common.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
+							apicommon.AppAnnotation:      "SOME-APP-NAME-LABEL",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
 						},
 					},
 				},
@@ -267,11 +267,11 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.AppAnnotation: "some-app-name",
+						apicommon.AppAnnotation: "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
-				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+				primaryAnnotation:   apicommon.AppAnnotation,
+				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
 			want:  "some-app-name",
 			want1: true,
@@ -281,11 +281,11 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.K8sRecommendedAppAnnotations: "some-app-name",
+						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
-				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+				primaryAnnotation:   apicommon.AppAnnotation,
+				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
 			want:  "some-app-name",
 			want1: true,
@@ -295,11 +295,11 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Labels: map[string]string{
-						common.AppAnnotation: "some-app-name",
+						apicommon.AppAnnotation: "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
-				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+				primaryAnnotation:   apicommon.AppAnnotation,
+				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
 			want:  "some-app-name",
 			want1: true,
@@ -309,11 +309,11 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Labels: map[string]string{
-						common.K8sRecommendedAppAnnotations: "some-app-name",
+						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
-				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+				primaryAnnotation:   apicommon.AppAnnotation,
+				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
 			want:  "some-app-name",
 			want1: true,
@@ -326,8 +326,8 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 						"some-other-annotation": "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
-				secondaryAnnotation: common.K8sRecommendedAppAnnotations,
+				primaryAnnotation:   apicommon.AppAnnotation,
+				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
 			want:  "",
 			want1: false,
@@ -340,7 +340,7 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 						"some-other-annotation": "some-app-name",
 					},
 				},
-				primaryAnnotation:   common.AppAnnotation,
+				primaryAnnotation:   apicommon.AppAnnotation,
 				secondaryAnnotation: "",
 			},
 			want:  "",
@@ -385,8 +385,8 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
-							common.WorkloadAnnotation: "workload-name-that-is-too-loooooooooooooooooooooooooooooooooooooooooooooooooong",
+							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
+							apicommon.WorkloadAnnotation: "workload-name-that-is-too-loooooooooooooooooooooooooooooooooooooooooooooooooong",
 						},
 					},
 				},
@@ -400,7 +400,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.WorkloadAnnotation: "some-workload-name",
+							apicommon.WorkloadAnnotation: "some-workload-name",
 						},
 					},
 				},
@@ -421,7 +421,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							common.WorkloadAnnotation: "some-workload-name",
+							apicommon.WorkloadAnnotation: "some-workload-name",
 						},
 					},
 				},
@@ -438,10 +438,10 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 				},
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						common.WorkloadAnnotation: "some-workload-name",
+						apicommon.WorkloadAnnotation: "some-workload-name",
 					},
 					Annotations: map[string]string{
-						common.VersionAnnotation: "v1",
+						apicommon.VersionAnnotation: "v1",
 					},
 				},
 			},
@@ -764,13 +764,13 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Annotations: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.VersionAnnotation:                  "v1.0.0",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.VersionAnnotation:                  "v1.0.0",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -786,13 +786,13 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.VersionAnnotation:                  "v1.0.0",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.VersionAnnotation:                  "v1.0.0",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 			},
@@ -803,13 +803,13 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Labels: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.VersionAnnotation:                  "v1.0.0",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.VersionAnnotation:                  "v1.0.0",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 				targetPod: &corev1.Pod{},
@@ -820,13 +820,13 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.VersionAnnotation:                  "v1.0.0",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.VersionAnnotation:                  "v1.0.0",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 			},
@@ -837,12 +837,12 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Labels: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -864,13 +864,13 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.WorkloadAnnotation:                 "some-workload-name",
-						common.AppAnnotation:                      "some-app-name",
-						common.VersionAnnotation:                  "v1.0.0",
-						common.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						common.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						common.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						common.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 "some-workload-name",
+						apicommon.AppAnnotation:                      "some-app-name",
+						apicommon.VersionAnnotation:                  "v1.0.0",
+						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
+						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
+						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
+						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
 					},
 				},
 				Spec: corev1.PodSpec{
@@ -889,7 +889,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Labels: map[string]string{
-						common.WorkloadAnnotation: "some-workload-name-that-is-very-looooooooooooooooooooooong",
+						apicommon.WorkloadAnnotation: "some-workload-name-that-is-very-looooooooooooooooooooooong",
 					},
 				},
 				targetPod: &corev1.Pod{},
@@ -947,7 +947,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation: "some-app-name",
+							apicommon.AppAnnotation: "some-app-name",
 						},
 					},
 				},
@@ -969,7 +969,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.AppAnnotation: "some-app-annotation-that-is-very-looooooooooooooooooooong",
+							apicommon.AppAnnotation: "some-app-annotation-that-is-very-looooooooooooooooooooong",
 						},
 					},
 				},
@@ -983,7 +983,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							common.WorkloadAnnotation: "some-workload-name",
+							apicommon.WorkloadAnnotation: "some-workload-name",
 						},
 					},
 				},
@@ -993,8 +993,8 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 			wantedPod: &corev1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						common.AppAnnotation:      "some-workload-name",
-						common.WorkloadAnnotation: "some-workload-name",
+						apicommon.AppAnnotation:      "some-workload-name",
+						apicommon.WorkloadAnnotation: "some-workload-name",
 					},
 				},
 			},

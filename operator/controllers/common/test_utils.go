@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -69,17 +69,17 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 			TraceId:         nil,
 		},
 		Status: lfcv1alpha1.KeptnWorkloadInstanceStatus{
-			DeploymentStatus:                   keptncommon.StateSucceeded,
-			PreDeploymentStatus:                keptncommon.StateSucceeded,
-			PostDeploymentStatus:               keptncommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:      keptncommon.StateSucceeded,
-			PostDeploymentEvaluationStatus:     keptncommon.StateSucceeded,
-			CurrentPhase:                       keptncommon.PhaseWorkloadPostEvaluation.ShortName,
+			DeploymentStatus:                   apicommon.StateSucceeded,
+			PreDeploymentStatus:                apicommon.StateSucceeded,
+			PostDeploymentStatus:               apicommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
+			PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+			CurrentPhase:                       apicommon.PhaseWorkloadPostEvaluation.ShortName,
 			PreDeploymentTaskStatus:            nil,
 			PostDeploymentTaskStatus:           nil,
 			PreDeploymentEvaluationTaskStatus:  nil,
 			PostDeploymentEvaluationTaskStatus: nil,
-			Status:                             keptncommon.StateSucceeded,
+			Status:                             apicommon.StateSucceeded,
 			StartTime:                          metav1.Time{},
 			EndTime:                            metav1.Time{},
 		},
@@ -87,7 +87,7 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 	return c.Create(context.TODO(), wi)
 }
 
-func InitAppMeters() keptncommon.KeptnMeters {
+func InitAppMeters() apicommon.KeptnMeters {
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")
 	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
@@ -95,7 +95,7 @@ func InitAppMeters() keptncommon.KeptnMeters {
 	deploymentCount, _ := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
 	deploymentDuration, _ := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
 
-	meters := keptncommon.KeptnMeters{
+	meters := apicommon.KeptnMeters{
 		AppCount:           appCount,
 		AppDuration:        appDuration,
 		DeploymentCount:    deploymentCount,

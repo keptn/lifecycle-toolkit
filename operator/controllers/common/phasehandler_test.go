@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -23,8 +23,8 @@ func TestPhaseHandler(t *testing.T) {
 		name           string
 		handler        PhaseHandler
 		object         *v1alpha1.KeptnAppVersion
-		phase          common.KeptnPhaseType
-		reconcilePhase func(phaseCtx context.Context) (common.KeptnState, error)
+		phase          apicommon.KeptnPhaseType
+		reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)
 		wantObject     *v1alpha1.KeptnAppVersion
 		want           *PhaseResult
 		wantErr        error
@@ -37,14 +37,14 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status: common.StateCancelled,
+					Status: apicommon.StateCancelled,
 				},
 			},
 			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status: common.StateCancelled,
+					Status: apicommon.StateCancelled,
 				},
 			},
 		},
@@ -58,20 +58,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StatePending,
-					CurrentPhase: common.PhaseAppDeployment.LongName,
+					Status:       apicommon.StatePending,
+					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
 			},
-			phase: common.PhaseAppDeployment,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
+			phase: apicommon.PhaseAppDeployment,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return "", fmt.Errorf("some err")
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: fmt.Errorf("some err"),
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StatePending,
-					CurrentPhase: common.PhaseAppDeployment.ShortName,
+					Status:       apicommon.StatePending,
+					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
 			},
 		},
@@ -85,20 +85,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StatePending,
-					CurrentPhase: common.PhaseAppDeployment.LongName,
+					Status:       apicommon.StatePending,
+					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
 			},
-			phase: common.PhaseAppDeployment,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
-				return common.StatePending, nil
+			phase: apicommon.PhaseAppDeployment,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+				return apicommon.StatePending, nil
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateProgressing,
-					CurrentPhase: common.PhaseAppDeployment.ShortName,
+					Status:       apicommon.StateProgressing,
+					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
 			},
 		},
@@ -112,20 +112,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StatePending,
-					CurrentPhase: common.PhaseAppDeployment.LongName,
+					Status:       apicommon.StatePending,
+					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
 			},
-			phase: common.PhaseAppDeployment,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
-				return common.StateProgressing, nil
+			phase: apicommon.PhaseAppDeployment,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+				return apicommon.StateProgressing, nil
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateProgressing,
-					CurrentPhase: common.PhaseAppDeployment.ShortName,
+					Status:       apicommon.StateProgressing,
+					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
 			},
 		},
@@ -139,20 +139,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StatePending,
-					CurrentPhase: common.PhaseAppDeployment.LongName,
+					Status:       apicommon.StatePending,
+					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
 			},
-			phase: common.PhaseAppDeployment,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
-				return common.StateSucceeded, nil
+			phase: apicommon.PhaseAppDeployment,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+				return apicommon.StateSucceeded, nil
 			},
 			want:    &PhaseResult{Continue: true, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateSucceeded,
-					CurrentPhase: common.PhaseAppDeployment.ShortName,
+					Status:       apicommon.StateSucceeded,
+					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
 			},
 		},
@@ -166,20 +166,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateProgressing,
-					CurrentPhase: common.PhaseAppPreEvaluation.LongName,
+					Status:       apicommon.StateProgressing,
+					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
 			},
-			phase: common.PhaseAppPreEvaluation,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
-				return common.StateFailed, nil
+			phase: apicommon.PhaseAppPreEvaluation,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+				return apicommon.StateFailed, nil
 			},
 			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateFailed,
-					CurrentPhase: common.PhaseAppPreEvaluation.ShortName,
+					Status:       apicommon.StateFailed,
+					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 					EndTime:      v1.Time{Time: time.Now().UTC()},
 				},
 			},
@@ -194,20 +194,20 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateProgressing,
-					CurrentPhase: common.PhaseAppPreEvaluation.LongName,
+					Status:       apicommon.StateProgressing,
+					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
 			},
-			phase: common.PhaseAppPreEvaluation,
-			reconcilePhase: func(phaseCtx context.Context) (common.KeptnState, error) {
-				return common.StateUnknown, nil
+			phase: apicommon.PhaseAppPreEvaluation,
+			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+				return apicommon.StateUnknown, nil
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status:       common.StateProgressing,
-					CurrentPhase: common.PhaseAppPreEvaluation.ShortName,
+					Status:       apicommon.StateProgressing,
+					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 				},
 			},
 		},

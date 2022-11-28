@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -57,7 +57,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	wi.Spec.Version = "test"
 
 	r := SpanHandler{}
-	phase := common.PhaseAppDeployment.ShortName
+	phase := apicommon.PhaseAppDeployment.ShortName
 	tracer := otel.Tracer("keptn/test")
 
 	ctx, span, err := r.GetSpan(context.TODO(), tracer, wi, phase)
@@ -80,7 +80,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	wi2.Spec.Version = "test2"
 
 	tracer2 := otel.Tracer("keptn/test2")
-	phase2 := common.PhaseWorkloadPreDeployment.LongName
+	phase2 := apicommon.PhaseWorkloadPreDeployment.LongName
 
 	ctx3, span3, err3 := r.GetSpan(context.TODO(), tracer2, wi2, phase2)
 

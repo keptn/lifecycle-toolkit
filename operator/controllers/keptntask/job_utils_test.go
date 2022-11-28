@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -121,7 +121,7 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = r.updateJob(context.TODO(), req, task)
 	require.Nil(t, err)
 
-	require.Equal(t, common.StateFailed, task.Status.Status)
+	require.Equal(t, apicommon.StateFailed, task.Status.Status)
 
 	// now, set the job to succeeded
 	job.Status.Succeeded = 1
@@ -133,7 +133,7 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = r.updateJob(context.TODO(), req, task)
 	require.Nil(t, err)
 
-	require.Equal(t, common.StateSucceeded, task.Status.Status)
+	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
 
 func makeJob(name, namespace string) *batchv1.Job {

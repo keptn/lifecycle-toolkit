@@ -7,8 +7,9 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -31,11 +32,11 @@ type TaskHandler struct {
 type TaskCreateAttributes struct {
 	SpanName       string
 	TaskDefinition string
-	CheckType      common.CheckType
+	CheckType      apicommon.CheckType
 }
 
 func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
 	}
@@ -125,7 +126,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				}
 				spanTaskTrace.End()
 				if err := r.SpanHandler.UnbindSpan(task, ""); err != nil {
-					r.Log.Error(err, ErrCouldNotUnbindSpan, task.Name)
+					r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, task.Name)
 				}
 				taskStatus.SetEndTime()
 			}
@@ -144,7 +145,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 }
 
 func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) (string, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
 	}

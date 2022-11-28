@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType common.CheckType) (common.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -20,22 +20,22 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 	}
 
 	taskCreateAttributes := controllercommon.TaskCreateAttributes{
-		SpanName:  fmt.Sprintf(common.CreateWorkloadTaskSpanName, checkType),
+		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadTaskSpanName, checkType),
 		CheckType: checkType,
 	}
 
 	newStatus, state, err := taskHandler.ReconcileTasks(ctx, phaseCtx, workloadInstance, taskCreateAttributes)
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 
-	overallState := common.GetOverallState(state)
+	overallState := apicommon.GetOverallState(state)
 
 	switch checkType {
-	case common.PreDeploymentCheckType:
+	case apicommon.PreDeploymentCheckType:
 		workloadInstance.Status.PreDeploymentStatus = overallState
 		workloadInstance.Status.PreDeploymentTaskStatus = newStatus
-	case common.PostDeploymentCheckType:
+	case apicommon.PostDeploymentCheckType:
 		workloadInstance.Status.PostDeploymentStatus = overallState
 		workloadInstance.Status.PostDeploymentTaskStatus = newStatus
 	}
@@ -43,7 +43,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 	// Write Status Field
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 	return overallState, nil
 }

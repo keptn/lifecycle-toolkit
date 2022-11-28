@@ -1,4 +1,4 @@
-package common
+package interfaces
 
 import "go.opentelemetry.io/otel/trace"
 

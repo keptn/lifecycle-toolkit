@@ -6,8 +6,9 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,7 +25,7 @@ func TestTaskHandler(t *testing.T) {
 		object          client.Object
 		createAttr      TaskCreateAttributes
 		wantStatus      []v1alpha1.TaskStatus
-		wantSummary     common.StatusSummary
+		wantSummary     apicommon.StatusSummary
 		taskObj         v1alpha1.KeptnTask
 		wantErr         error
 		getSpanCalls    int
@@ -36,8 +37,8 @@ func TestTaskHandler(t *testing.T) {
 			taskObj:         v1alpha1.KeptnTask{},
 			createAttr:      TaskCreateAttributes{},
 			wantStatus:      nil,
-			wantSummary:     common.StatusSummary{},
-			wantErr:         ErrCannotWrapToPhaseItem,
+			wantSummary:     apicommon.StatusSummary{},
+			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
 		},
@@ -48,10 +49,10 @@ func TestTaskHandler(t *testing.T) {
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
 				TaskDefinition: "",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 			},
 			wantStatus:      []v1alpha1.TaskStatus(nil),
-			wantSummary:     common.StatusSummary{},
+			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
@@ -69,16 +70,16 @@ func TestTaskHandler(t *testing.T) {
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
 				TaskDefinition: "task-def",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "task-def",
-					Status:             common.StatePending,
+					Status:             apicommon.StatePending,
 					TaskName:           "pre-task-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Pending: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 0,
@@ -92,11 +93,11 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentStatus: common.StateSucceeded,
+					PreDeploymentStatus: apicommon.StateSucceeded,
 					PreDeploymentTaskStatus: []v1alpha1.TaskStatus{
 						{
 							TaskDefinitionName: "task-def",
-							Status:             common.StateSucceeded,
+							Status:             apicommon.StateSucceeded,
 							TaskName:           "pre-task-def-",
 						},
 					},
@@ -106,16 +107,16 @@ func TestTaskHandler(t *testing.T) {
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
 				TaskDefinition: "task-def",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "task-def",
-					Status:             common.StateSucceeded,
+					Status:             apicommon.StateSucceeded,
 					TaskName:           "pre-task-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
@@ -132,11 +133,11 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentStatus: common.StateSucceeded,
+					PreDeploymentStatus: apicommon.StateSucceeded,
 					PreDeploymentTaskStatus: []v1alpha1.TaskStatus{
 						{
 							TaskDefinitionName: "task-def",
-							Status:             common.StateProgressing,
+							Status:             apicommon.StateProgressing,
 							TaskName:           "pre-task-def-",
 						},
 					},
@@ -148,22 +149,22 @@ func TestTaskHandler(t *testing.T) {
 					Name:      "pre-task-def-",
 				},
 				Status: v1alpha1.KeptnTaskStatus{
-					Status: common.StateFailed,
+					Status: apicommon.StateFailed,
 				},
 			},
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
 				TaskDefinition: "task-def",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "task-def",
-					Status:             common.StateFailed,
+					Status:             apicommon.StateFailed,
 					TaskName:           "pre-task-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Failed: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Failed: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -180,11 +181,11 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentStatus: common.StateSucceeded,
+					PreDeploymentStatus: apicommon.StateSucceeded,
 					PreDeploymentTaskStatus: []v1alpha1.TaskStatus{
 						{
 							TaskDefinitionName: "task-def",
-							Status:             common.StateProgressing,
+							Status:             apicommon.StateProgressing,
 							TaskName:           "pre-task-def-",
 						},
 					},
@@ -196,22 +197,22 @@ func TestTaskHandler(t *testing.T) {
 					Name:      "pre-task-def-",
 				},
 				Status: v1alpha1.KeptnTaskStatus{
-					Status: common.StateSucceeded,
+					Status: apicommon.StateSucceeded,
 				},
 			},
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
 				TaskDefinition: "task-def",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "task-def",
-					Status:             common.StateSucceeded,
+					Status:             apicommon.StateSucceeded,
 					TaskName:           "pre-task-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -269,7 +270,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 			object:     &v1alpha1.KeptnEvaluation{},
 			createAttr: TaskCreateAttributes{},
 			wantName:   "",
-			wantErr:    ErrCannotWrapToPhaseItem,
+			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
 		{
 			name: "created task",
@@ -285,7 +286,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 			},
 			createAttr: TaskCreateAttributes{
 				SpanName:       "",
-				CheckType:      common.PreDeploymentCheckType,
+				CheckType:      apicommon.PreDeploymentCheckType,
 				TaskDefinition: "task-def",
 			},
 			wantName: "pre-task-def-",

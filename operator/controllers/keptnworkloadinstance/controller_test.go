@@ -8,10 +8,10 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	testrequire "github.com/stretchr/testify/require"
@@ -50,7 +50,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t 
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateProgressing, keptnState)
+	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha1.KeptnWorkloadInstance {
@@ -93,7 +93,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateProgressing, keptnState)
+	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
@@ -116,7 +116,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateProgressing, keptnState)
+	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
@@ -140,7 +140,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateSucceeded, keptnState)
+	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
@@ -164,7 +164,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t 
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateSucceeded, keptnState)
+	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
@@ -187,7 +187,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *t
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
 	testrequire.Nil(t, err)
-	testrequire.Equal(t, keptncommon.StateSucceeded, keptnState)
+	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
@@ -511,7 +511,7 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		Scheme      *runtime.Scheme
 		Recorder    record.EventRecorder
 		Log         logr.Logger
-		Meters      keptncommon.KeptnMeters
+		Meters      apicommon.KeptnMeters
 		Tracer      trace.Tracer
 		SpanHandler *controllercommon.SpanHandler
 	}
@@ -548,16 +548,16 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			},
 			wantErr: false,
 			fields: fields{
-				SpanHandler: &utils.SpanHandler{},
+				SpanHandler: &controllercommon.SpanHandler{},
 			},
 		},
 	}
 
-	err := utils.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
+	err := controllercommon.AddWorkloadInstance(r.Client, "some-wi", testNamespace)
 	require.Nil(t, err)
-	err = utils.AddApp(r.Client, "some-app")
+	err = controllercommon.AddApp(r.Client, "some-app")
 	require.Nil(t, err)
-	err = utils.AddAppVersion(
+	err = controllercommon.AddAppVersion(
 		r.Client,
 		testNamespace,
 		"some-app",
@@ -569,18 +569,18 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			},
 		},
 		klcv1alpha1.KeptnAppVersionStatus{
-			PreDeploymentStatus:                keptncommon.StateSucceeded,
-			PostDeploymentStatus:               keptncommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:      keptncommon.StateSucceeded,
-			PostDeploymentEvaluationStatus:     keptncommon.StateSucceeded,
-			WorkloadOverallStatus:              keptncommon.StateSucceeded,
+			PreDeploymentStatus:                apicommon.StateSucceeded,
+			PostDeploymentStatus:               apicommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
+			PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+			WorkloadOverallStatus:              apicommon.StateSucceeded,
 			WorkloadStatus:                     nil,
-			CurrentPhase:                       keptncommon.PhaseWorkloadPostEvaluation.ShortName,
+			CurrentPhase:                       apicommon.PhaseWorkloadPostEvaluation.ShortName,
 			PreDeploymentTaskStatus:            nil,
 			PostDeploymentTaskStatus:           nil,
 			PreDeploymentEvaluationTaskStatus:  nil,
 			PostDeploymentEvaluationTaskStatus: nil,
-			Status:                             keptncommon.StateSucceeded,
+			Status:                             apicommon.StateSucceeded,
 			StartTime:                          metav1.Time{},
 			EndTime:                            metav1.Time{},
 		},
@@ -606,7 +606,7 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 	}
 }
 
-func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan string, *interfacesfake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -614,7 +614,7 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
@@ -629,7 +629,7 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 		Recorder:    recorder,
 		Log:         ctrl.Log.WithName("test-appController"),
 		Tracer:      tr,
-		Meters:      utils.InitAppMeters(),
+		Meters:      controllercommon.InitAppMeters(),
 		SpanHandler: &controllercommon.SpanHandler{},
 	}
 	return r, recorder.Events, tr

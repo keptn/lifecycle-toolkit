@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -27,7 +28,7 @@ type SpanHandler struct {
 }
 
 func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
-	piWrapper, err := NewSpanItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -56,7 +57,7 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 }
 
 func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {
-	piWrapper, err := NewSpanItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return err
 	}

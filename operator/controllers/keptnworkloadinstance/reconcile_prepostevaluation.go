@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType common.CheckType) (common.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -20,22 +20,22 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 	}
 
 	evaluationCreateAttributes := controllercommon.EvaluationCreateAttributes{
-		SpanName:  fmt.Sprintf(common.CreateWorkloadEvalSpanName, checkType),
+		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,
 	}
 
 	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadInstance, evaluationCreateAttributes)
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 
-	overallState := common.GetOverallState(state)
+	overallState := apicommon.GetOverallState(state)
 
 	switch checkType {
-	case common.PreDeploymentEvaluationCheckType:
+	case apicommon.PreDeploymentEvaluationCheckType:
 		workloadInstance.Status.PreDeploymentEvaluationStatus = overallState
 		workloadInstance.Status.PreDeploymentEvaluationTaskStatus = newStatus
-	case common.PostDeploymentEvaluationCheckType:
+	case apicommon.PostDeploymentEvaluationCheckType:
 		workloadInstance.Status.PostDeploymentEvaluationStatus = overallState
 		workloadInstance.Status.PostDeploymentEvaluationTaskStatus = newStatus
 	}
@@ -43,7 +43,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 	// Write Status Field
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 	return overallState, nil
 }

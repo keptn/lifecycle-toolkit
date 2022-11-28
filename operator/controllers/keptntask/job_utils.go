@@ -7,7 +7,7 @@ import (
 
 	"github.com/imdario/mergo"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -29,7 +29,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	}
 
 	task.Status.JobName = jobName
-	task.Status.Status = common.StatePending
+	task.Status.Status = apicommon.StatePending
 	err = r.Client.Status().Update(ctx, task)
 	if err != nil {
 		r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
@@ -115,9 +115,9 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 	if job.Status.Succeeded > 0 {
-		task.Status.Status = common.StateSucceeded
+		task.Status.Status = apicommon.StateSucceeded
 	} else if job.Status.Failed > 0 {
-		task.Status.Status = common.StateFailed
+		task.Status.Status = apicommon.StateFailed
 	}
 	return nil
 }

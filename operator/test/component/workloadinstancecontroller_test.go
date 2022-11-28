@@ -432,7 +432,8 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 		Spec: klcv1alpha1.KeptnAppVersionSpec{
 			AppName: name,
 			KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
-				Version: version,
+				Version:  version,
+				Revision: 1,
 				Workloads: []klcv1alpha1.KeptnWorkloadRef{
 					{
 						Name:    "wname",

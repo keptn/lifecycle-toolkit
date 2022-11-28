@@ -81,7 +81,7 @@ jobs:
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
-      - name: Test ${{ matrix.config.name }}
+      - name: Unit Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
         run: make test
 
@@ -89,6 +89,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           flags: ${{ matrix.config.name }}
+
 
   build_image:
     name: Build Docker Image
@@ -115,7 +116,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2      
+        uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
         uses: docker/build-push-action@v3
@@ -136,7 +137,7 @@ jobs:
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
           outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
-      
+
       - name: Upload image as artifact
         uses: actions/upload-artifact@v3
         with:
@@ -166,6 +167,7 @@ jobs:
     name: Component Tests
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
+
 
   integration_tests:
     name: Integration Tests
@@ -211,7 +213,7 @@ jobs:
 
     - name: Set up Docker Buildx
       id: buildx
-      uses: docker/setup-buildx-action@v2  
+      uses: docker/setup-buildx-action@v2
 
     - name: Build Docker Image
       uses: docker/build-push-action@v3

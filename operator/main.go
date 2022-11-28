@@ -73,14 +73,11 @@ import (
 )
 
 var (
-	scheme                 = runtime.NewScheme()
-	setupLog               = ctrl.Log.WithName("setup")
-	gitCommit              string
-	buildTime              string
-	buildVersion           string
-	certificateDirectory   string
-	certificateFileName    string
-	certificateKeyFileName string
+	scheme       = runtime.NewScheme()
+	setupLog     = ctrl.Log.WithName("setup")
+	gitCommit    string
+	buildTime    string
+	buildVersion string
 )
 
 func init() {

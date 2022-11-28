@@ -262,10 +262,10 @@ func main() {
 	spanHandler := &controllercommon.SpanHandler{}
 
 	if !disableWebhook {
-		setupLog.Info("waiting for certificate:  ", os.Getenv(env.PodNamespace))
+		setupLog.Info("waiting for certificate:  ", "podnamespace", os.Getenv(env.PodNamespace))
 		webhookBuilder := webhook.NewWebhookBuilder().
-			SetNamespace(os.Getenv(env.PodNamespace)).
-			SetPodName(os.Getenv(env.PodName)).
+			SetNamespace(env.PodNamespace).
+			SetPodName(env.PodName).
 			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
 
 		go func() {

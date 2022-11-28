@@ -1,11 +1,11 @@
-package common
+package interfaces
 
 import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 )
@@ -13,7 +13,7 @@ import (
 func TestActiveMetricsObjectWrapper(t *testing.T) {
 	appVersion := v1alpha1.KeptnAppVersion{
 		Status: v1alpha1.KeptnAppVersionStatus{
-			Status:       common.StateFailed,
+			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},
 	}

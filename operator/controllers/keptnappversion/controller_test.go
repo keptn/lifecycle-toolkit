@@ -8,9 +8,10 @@ import (
 	"testing"
 
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -84,9 +85,9 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	err := utils.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StatePending})
+	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: apicommon.StatePending})
 	require.Nil(t, err)
-	err = utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
 	require.Nil(t, err)
 
 	traces := 0
@@ -121,18 +122,18 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 func createFinishedAppVersionStatus() lfcv1alpha1.KeptnAppVersionStatus {
 	return lfcv1alpha1.KeptnAppVersionStatus{
-		CurrentPhase:                       keptncommon.PhaseCompleted.ShortName,
-		PreDeploymentStatus:                keptncommon.StateSucceeded,
-		PostDeploymentStatus:               keptncommon.StateSucceeded,
-		PreDeploymentEvaluationStatus:      keptncommon.StateSucceeded,
-		PostDeploymentEvaluationStatus:     keptncommon.StateSucceeded,
-		PreDeploymentTaskStatus:            []lfcv1alpha1.TaskStatus{{Status: keptncommon.StateSucceeded}},
-		PostDeploymentTaskStatus:           []lfcv1alpha1.TaskStatus{{Status: keptncommon.StateSucceeded}},
-		PreDeploymentEvaluationTaskStatus:  []lfcv1alpha1.EvaluationStatus{{Status: keptncommon.StateSucceeded}},
-		PostDeploymentEvaluationTaskStatus: []lfcv1alpha1.EvaluationStatus{{Status: keptncommon.StateSucceeded}},
-		WorkloadOverallStatus:              keptncommon.StateSucceeded,
-		WorkloadStatus:                     []lfcv1alpha1.WorkloadStatus{{Status: keptncommon.StateSucceeded}},
-		Status:                             keptncommon.StateSucceeded,
+		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
+		PreDeploymentStatus:                apicommon.StateSucceeded,
+		PostDeploymentStatus:               apicommon.StateSucceeded,
+		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
+		PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+		PreDeploymentTaskStatus:            []lfcv1alpha1.TaskStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentTaskStatus:           []lfcv1alpha1.TaskStatus{{Status: apicommon.StateSucceeded}},
+		PreDeploymentEvaluationTaskStatus:  []lfcv1alpha1.EvaluationStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentEvaluationTaskStatus: []lfcv1alpha1.EvaluationStatus{{Status: apicommon.StateSucceeded}},
+		WorkloadOverallStatus:              apicommon.StateSucceeded,
+		WorkloadStatus:                     []lfcv1alpha1.WorkloadStatus{{Status: apicommon.StateSucceeded}},
+		Status:                             apicommon.StateSucceeded,
 	}
 }
 
@@ -144,19 +145,19 @@ func setupReconcilerWithMeters(t *testing.T) *KeptnAppVersionReconciler {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
 	r := &KeptnAppVersionReconciler{
 		Log:    ctrl.Log.WithName("test-appVersionController"),
 		Tracer: tr,
-		Meters: utils.InitAppMeters(),
+		Meters: controllercommon.InitAppMeters(),
 	}
 	return r
 }
 
-func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *interfacesfake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -164,7 +165,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
@@ -189,7 +190,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *fa
 		Log:         ctrl.Log.WithName("test-appVersionController"),
 		Tracer:      tr,
 		SpanHandler: spanRecorder,
-		Meters:      utils.InitAppMeters(),
+		Meters:      controllercommon.InitAppMeters(),
 	}
 	return r, recorder.Events, tr, spanRecorder
 }

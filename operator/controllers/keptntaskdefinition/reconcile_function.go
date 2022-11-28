@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -41,7 +41,7 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Cont
 		if errors.IsNotFound(err) {
 			cmIsNew = true
 		} else {
-			return fmt.Errorf(controllercommon.ErrCannotGetFunctionConfigMap, err)
+			return fmt.Errorf(controllererrors.ErrCannotGetFunctionConfigMap, err)
 		}
 	}
 

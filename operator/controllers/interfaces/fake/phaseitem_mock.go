@@ -5,7 +5,7 @@ package fake
 
 import (
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	"sync"
@@ -18,16 +18,16 @@ import (
 //
 // 		// make and configure a mocked common.PhaseItem
 // 		mockedPhaseItem := &PhaseItemMock{
-// 			CancelRemainingPhasesFunc: func(phase keptncommon.KeptnPhaseType)  {
+// 			CancelRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType)  {
 // 				panic("mock out the CancelRemainingPhases method")
 // 			},
 // 			CompleteFunc: func()  {
 // 				panic("mock out the Complete method")
 // 			},
-// 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
+// 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 // 				panic("mock out the GenerateEvaluation method")
 // 			},
-// 			GenerateTaskFunc: func(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
+// 			GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnTask {
 // 				panic("mock out the GenerateTask method")
 // 			},
 // 			GetAppNameFunc: func() string {
@@ -78,7 +78,7 @@ import (
 // 			GetStartTimeFunc: func() time.Time {
 // 				panic("mock out the GetStartTime method")
 // 			},
-// 			GetStateFunc: func() keptncommon.KeptnState {
+// 			GetStateFunc: func() apicommon.KeptnState {
 // 				panic("mock out the GetState method")
 // 			},
 // 			GetVersionFunc: func() string {
@@ -93,7 +93,7 @@ import (
 // 			SetSpanAttributesFunc: func(span trace.Span)  {
 // 				panic("mock out the SetSpanAttributes method")
 // 			},
-// 			SetStateFunc: func(keptnState keptncommon.KeptnState)  {
+// 			SetStateFunc: func(keptnState apicommon.KeptnState)  {
 // 				panic("mock out the SetState method")
 // 			},
 // 		}
@@ -104,16 +104,16 @@ import (
 // 	}
 type PhaseItemMock struct {
 	// CancelRemainingPhasesFunc mocks the CancelRemainingPhases method.
-	CancelRemainingPhasesFunc func(phase keptncommon.KeptnPhaseType)
+	CancelRemainingPhasesFunc func(phase apicommon.KeptnPhaseType)
 
 	// CompleteFunc mocks the Complete method.
 	CompleteFunc func()
 
 	// GenerateEvaluationFunc mocks the GenerateEvaluation method.
-	GenerateEvaluationFunc func(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation
+	GenerateEvaluationFunc func(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnEvaluation
 
 	// GenerateTaskFunc mocks the GenerateTask method.
-	GenerateTaskFunc func(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask
+	GenerateTaskFunc func(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnTask
 
 	// GetAppNameFunc mocks the GetAppName method.
 	GetAppNameFunc func() string
@@ -164,7 +164,7 @@ type PhaseItemMock struct {
 	GetStartTimeFunc func() time.Time
 
 	// GetStateFunc mocks the GetState method.
-	GetStateFunc func() keptncommon.KeptnState
+	GetStateFunc func() apicommon.KeptnState
 
 	// GetVersionFunc mocks the GetVersion method.
 	GetVersionFunc func() string
@@ -179,14 +179,14 @@ type PhaseItemMock struct {
 	SetSpanAttributesFunc func(span trace.Span)
 
 	// SetStateFunc mocks the SetState method.
-	SetStateFunc func(keptnState keptncommon.KeptnState)
+	SetStateFunc func(keptnState apicommon.KeptnState)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// CancelRemainingPhases holds details about calls to the CancelRemainingPhases method.
 		CancelRemainingPhases []struct {
 			// Phase is the phase argument value.
-			Phase keptncommon.KeptnPhaseType
+			Phase apicommon.KeptnPhaseType
 		}
 		// Complete holds details about calls to the Complete method.
 		Complete []struct {
@@ -196,14 +196,14 @@ type PhaseItemMock struct {
 			// EvaluationDefinition is the evaluationDefinition argument value.
 			EvaluationDefinition string
 			// CheckType is the checkType argument value.
-			CheckType keptncommon.CheckType
+			CheckType apicommon.CheckType
 		}
 		// GenerateTask holds details about calls to the GenerateTask method.
 		GenerateTask []struct {
 			// TaskDefinition is the taskDefinition argument value.
 			TaskDefinition string
 			// CheckType is the checkType argument value.
-			CheckType keptncommon.CheckType
+			CheckType apicommon.CheckType
 		}
 		// GetAppName holds details about calls to the GetAppName method.
 		GetAppName []struct {
@@ -275,7 +275,7 @@ type PhaseItemMock struct {
 		// SetState holds details about calls to the SetState method.
 		SetState []struct {
 			// KeptnState is the keptnState argument value.
-			KeptnState keptncommon.KeptnState
+			KeptnState apicommon.KeptnState
 		}
 	}
 	lockCancelRemainingPhases                 sync.RWMutex
@@ -307,12 +307,12 @@ type PhaseItemMock struct {
 }
 
 // CancelRemainingPhases calls CancelRemainingPhasesFunc.
-func (mock *PhaseItemMock) CancelRemainingPhases(phase keptncommon.KeptnPhaseType) {
+func (mock *PhaseItemMock) CancelRemainingPhases(phase apicommon.KeptnPhaseType) {
 	if mock.CancelRemainingPhasesFunc == nil {
 		panic("PhaseItemMock.CancelRemainingPhasesFunc: method is nil but PhaseItem.CancelRemainingPhases was just called")
 	}
 	callInfo := struct {
-		Phase keptncommon.KeptnPhaseType
+		Phase apicommon.KeptnPhaseType
 	}{
 		Phase: phase,
 	}
@@ -326,10 +326,10 @@ func (mock *PhaseItemMock) CancelRemainingPhases(phase keptncommon.KeptnPhaseTyp
 // Check the length with:
 //     len(mockedPhaseItem.CancelRemainingPhasesCalls())
 func (mock *PhaseItemMock) CancelRemainingPhasesCalls() []struct {
-	Phase keptncommon.KeptnPhaseType
+	Phase apicommon.KeptnPhaseType
 } {
 	var calls []struct {
-		Phase keptncommon.KeptnPhaseType
+		Phase apicommon.KeptnPhaseType
 	}
 	mock.lockCancelRemainingPhases.RLock()
 	calls = mock.calls.CancelRemainingPhases
@@ -364,13 +364,13 @@ func (mock *PhaseItemMock) CompleteCalls() []struct {
 }
 
 // GenerateEvaluation calls GenerateEvaluationFunc.
-func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnEvaluation {
+func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnEvaluation {
 	if mock.GenerateEvaluationFunc == nil {
 		panic("PhaseItemMock.GenerateEvaluationFunc: method is nil but PhaseItem.GenerateEvaluation was just called")
 	}
 	callInfo := struct {
 		EvaluationDefinition string
-		CheckType            keptncommon.CheckType
+		CheckType            apicommon.CheckType
 	}{
 		EvaluationDefinition: evaluationDefinition,
 		CheckType:            checkType,
@@ -386,11 +386,11 @@ func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, check
 //     len(mockedPhaseItem.GenerateEvaluationCalls())
 func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 	EvaluationDefinition string
-	CheckType            keptncommon.CheckType
+	CheckType            apicommon.CheckType
 } {
 	var calls []struct {
 		EvaluationDefinition string
-		CheckType            keptncommon.CheckType
+		CheckType            apicommon.CheckType
 	}
 	mock.lockGenerateEvaluation.RLock()
 	calls = mock.calls.GenerateEvaluation
@@ -399,13 +399,13 @@ func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 }
 
 // GenerateTask calls GenerateTaskFunc.
-func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType keptncommon.CheckType) lfcv1alpha1.KeptnTask {
+func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha1.KeptnTask {
 	if mock.GenerateTaskFunc == nil {
 		panic("PhaseItemMock.GenerateTaskFunc: method is nil but PhaseItem.GenerateTask was just called")
 	}
 	callInfo := struct {
 		TaskDefinition string
-		CheckType      keptncommon.CheckType
+		CheckType      apicommon.CheckType
 	}{
 		TaskDefinition: taskDefinition,
 		CheckType:      checkType,
@@ -421,11 +421,11 @@ func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType keptnco
 //     len(mockedPhaseItem.GenerateTaskCalls())
 func (mock *PhaseItemMock) GenerateTaskCalls() []struct {
 	TaskDefinition string
-	CheckType      keptncommon.CheckType
+	CheckType      apicommon.CheckType
 } {
 	var calls []struct {
 		TaskDefinition string
-		CheckType      keptncommon.CheckType
+		CheckType      apicommon.CheckType
 	}
 	mock.lockGenerateTask.RLock()
 	calls = mock.calls.GenerateTask
@@ -850,7 +850,7 @@ func (mock *PhaseItemMock) GetStartTimeCalls() []struct {
 }
 
 // GetState calls GetStateFunc.
-func (mock *PhaseItemMock) GetState() keptncommon.KeptnState {
+func (mock *PhaseItemMock) GetState() apicommon.KeptnState {
 	if mock.GetStateFunc == nil {
 		panic("PhaseItemMock.GetStateFunc: method is nil but PhaseItem.GetState was just called")
 	}
@@ -990,12 +990,12 @@ func (mock *PhaseItemMock) SetSpanAttributesCalls() []struct {
 }
 
 // SetState calls SetStateFunc.
-func (mock *PhaseItemMock) SetState(keptnState keptncommon.KeptnState) {
+func (mock *PhaseItemMock) SetState(keptnState apicommon.KeptnState) {
 	if mock.SetStateFunc == nil {
 		panic("PhaseItemMock.SetStateFunc: method is nil but PhaseItem.SetState was just called")
 	}
 	callInfo := struct {
-		KeptnState keptncommon.KeptnState
+		KeptnState apicommon.KeptnState
 	}{
 		KeptnState: keptnState,
 	}
@@ -1009,10 +1009,10 @@ func (mock *PhaseItemMock) SetState(keptnState keptncommon.KeptnState) {
 // Check the length with:
 //     len(mockedPhaseItem.SetStateCalls())
 func (mock *PhaseItemMock) SetStateCalls() []struct {
-	KeptnState keptncommon.KeptnState
+	KeptnState apicommon.KeptnState
 } {
 	var calls []struct {
-		KeptnState keptncommon.KeptnState
+		KeptnState apicommon.KeptnState
 	}
 	mock.lockSetState.RLock()
 	calls = mock.calls.SetState

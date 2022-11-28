@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -72,7 +72,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 
-	if namespace.GetAnnotations()[common.NamespaceEnabledAnnotation] != "enabled" {
+	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
 		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
@@ -143,10 +143,10 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 }
 
 func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
-	workload, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	version, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	workload, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	version, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 
-	if len(workload) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+	if len(workload) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
 		return false, ErrTooLongAnnotations
 	}
 
@@ -155,7 +155,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 			if len(pod.Annotations) == 0 {
 				pod.Annotations = make(map[string]string)
 			}
-			pod.Annotations[common.VersionAnnotation] = a.calculateVersion(pod)
+			pod.Annotations[apicommon.VersionAnnotation] = a.calculateVersion(pod)
 		}
 		return true, nil
 	}
@@ -209,15 +209,15 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
 	var gotWorkloadName, gotVersion bool
 
-	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	appName, _ = getLabelOrAnnotation(sourceResource, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
-	version, gotVersion = getLabelOrAnnotation(sourceResource, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-	preDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentTaskAnnotation, "")
-	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentTaskAnnotation, "")
-	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PreDeploymentEvaluationAnnotation, "")
-	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, common.PostDeploymentEvaluationAnnotation, "")
+	workloadName, gotWorkloadName = getLabelOrAnnotation(sourceResource, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	appName, _ = getLabelOrAnnotation(sourceResource, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	version, gotVersion = getLabelOrAnnotation(sourceResource, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	preDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PreDeploymentTaskAnnotation, "")
+	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentTaskAnnotation, "")
+	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
+	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
 
-	if len(workloadName) > common.MaxWorkloadNameLength || len(version) > common.MaxVersionLength {
+	if len(workloadName) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
 		return false, ErrTooLongAnnotations
 	}
 
@@ -226,19 +226,19 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	}
 
 	if gotWorkloadName {
-		setMapKey(targetPod.Annotations, common.WorkloadAnnotation, workloadName)
+		setMapKey(targetPod.Annotations, apicommon.WorkloadAnnotation, workloadName)
 
 		if !gotVersion {
-			setMapKey(targetPod.Annotations, common.VersionAnnotation, a.calculateVersion(targetPod))
+			setMapKey(targetPod.Annotations, apicommon.VersionAnnotation, a.calculateVersion(targetPod))
 		} else {
-			setMapKey(targetPod.Annotations, common.VersionAnnotation, version)
+			setMapKey(targetPod.Annotations, apicommon.VersionAnnotation, version)
 		}
 
-		setMapKey(targetPod.Annotations, common.AppAnnotation, appName)
-		setMapKey(targetPod.Annotations, common.PreDeploymentTaskAnnotation, preDeploymentChecks)
-		setMapKey(targetPod.Annotations, common.PostDeploymentTaskAnnotation, postDeploymentChecks)
-		setMapKey(targetPod.Annotations, common.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
-		setMapKey(targetPod.Annotations, common.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
+		setMapKey(targetPod.Annotations, apicommon.AppAnnotation, appName)
+		setMapKey(targetPod.Annotations, apicommon.PreDeploymentTaskAnnotation, preDeploymentChecks)
+		setMapKey(targetPod.Annotations, apicommon.PostDeploymentTaskAnnotation, postDeploymentChecks)
+		setMapKey(targetPod.Annotations, apicommon.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
+		setMapKey(targetPod.Annotations, apicommon.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
 
 		return true, nil
 	}
@@ -246,10 +246,10 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 }
 
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	app, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
-		if len(app) > common.MaxAppNameLength {
+		if len(app) > apicommon.MaxAppNameLength {
 			return false, ErrTooLongAnnotations
 		}
 		return true, nil
@@ -258,7 +258,7 @@ func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, erro
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string)
 	}
-	pod.Annotations[common.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
+	pod.Annotations[apicommon.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	return false, nil
 }
 
@@ -393,27 +393,27 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 }
 
 func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
-	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
-	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
 	var preDeploymentEvaluation []string
 	var postDeploymentEvaluation []string
 
-	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PreDeploymentTaskAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation, ""); found {
 		preDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PostDeploymentTaskAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation, ""); found {
 		postDeploymentTasks = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PreDeploymentEvaluationAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation, ""); found {
 		preDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
-	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, common.PostDeploymentEvaluationAnnotation, ""); found {
+	if annotations, found := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation, ""); found {
 		postDeploymentEvaluation = strings.Split(annotations, ",")
 	}
 
@@ -443,7 +443,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 }
 
 func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
-	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.VersionAnnotation, common.K8sRecommendedVersionAnnotations)
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	appName := a.getAppName(pod)
 
 	// create TraceContext
@@ -474,13 +474,13 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 }
 
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
-	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.WorkloadAnnotation, common.K8sRecommendedWorkloadAnnotations)
-	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName + "-" + workloadName)
 }
 
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
-	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, common.AppAnnotation, common.K8sRecommendedAppAnnotations)
+	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName)
 }
 

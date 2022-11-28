@@ -1,4 +1,4 @@
-package common
+package interfaces
 
 import ctrl "sigs.k8s.io/controller-runtime"
 

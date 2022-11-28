@@ -4,15 +4,15 @@ import (
 	"context"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (common.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (apicommon.KeptnState, error) {
 	var isRunning bool
 	var err error
 
@@ -26,21 +26,21 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	case "DaemonSet":
 		isRunning, err = r.isDaemonSetRunning(ctx, workloadInstance.Spec.ResourceReference, workloadInstance.Namespace)
 	default:
-		isRunning, err = false, controllercommon.ErrUnsupportedWorkloadInstanceResourceReference
+		isRunning, err = false, controllererrors.ErrUnsupportedWorkloadInstanceResourceReference
 	}
 
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 	if isRunning {
-		workloadInstance.Status.DeploymentStatus = common.StateSucceeded
+		workloadInstance.Status.DeploymentStatus = apicommon.StateSucceeded
 	} else {
-		workloadInstance.Status.DeploymentStatus = common.StateProgressing
+		workloadInstance.Status.DeploymentStatus = apicommon.StateProgressing
 	}
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
-		return common.StateUnknown, err
+		return apicommon.StateUnknown, err
 	}
 	return workloadInstance.Status.DeploymentStatus, nil
 }

@@ -6,8 +6,9 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,7 +25,7 @@ func TestEvaluationHandler(t *testing.T) {
 		object          client.Object
 		createAttr      EvaluationCreateAttributes
 		wantStatus      []v1alpha1.EvaluationStatus
-		wantSummary     common.StatusSummary
+		wantSummary     apicommon.StatusSummary
 		evalObj         v1alpha1.KeptnEvaluation
 		wantErr         error
 		getSpanCalls    int
@@ -36,8 +37,8 @@ func TestEvaluationHandler(t *testing.T) {
 			evalObj:         v1alpha1.KeptnEvaluation{},
 			createAttr:      EvaluationCreateAttributes{},
 			wantStatus:      nil,
-			wantSummary:     common.StatusSummary{},
-			wantErr:         ErrCannotWrapToPhaseItem,
+			wantSummary:     apicommon.StatusSummary{},
+			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
 		},
@@ -48,10 +49,10 @@ func TestEvaluationHandler(t *testing.T) {
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus:      []v1alpha1.EvaluationStatus(nil),
-			wantSummary:     common.StatusSummary{},
+			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
@@ -69,16 +70,16 @@ func TestEvaluationHandler(t *testing.T) {
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "eval-def",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "eval-def",
-					Status:                   common.StatePending,
+					Status:                   apicommon.StatePending,
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Pending: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 0,
@@ -92,11 +93,11 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentEvaluationStatus: common.StateSucceeded,
+					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 					PreDeploymentEvaluationTaskStatus: []v1alpha1.EvaluationStatus{
 						{
 							EvaluationDefinitionName: "eval-def",
-							Status:                   common.StateSucceeded,
+							Status:                   apicommon.StateSucceeded,
 							EvaluationName:           "pre-eval-eval-def-",
 						},
 					},
@@ -106,16 +107,16 @@ func TestEvaluationHandler(t *testing.T) {
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "eval-def",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "eval-def",
-					Status:                   common.StateSucceeded,
+					Status:                   apicommon.StateSucceeded,
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
@@ -132,11 +133,11 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentEvaluationStatus: common.StateSucceeded,
+					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 					PreDeploymentEvaluationTaskStatus: []v1alpha1.EvaluationStatus{
 						{
 							EvaluationDefinitionName: "eval-def",
-							Status:                   common.StateProgressing,
+							Status:                   apicommon.StateProgressing,
 							EvaluationName:           "pre-eval-eval-def-",
 						},
 					},
@@ -148,22 +149,22 @@ func TestEvaluationHandler(t *testing.T) {
 					Name:      "pre-eval-eval-def-",
 				},
 				Status: v1alpha1.KeptnEvaluationStatus{
-					OverallStatus: common.StateFailed,
+					OverallStatus: apicommon.StateFailed,
 				},
 			},
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "eval-def",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "eval-def",
-					Status:                   common.StateFailed,
+					Status:                   apicommon.StateFailed,
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Failed: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Failed: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -180,11 +181,11 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha1.KeptnAppVersionStatus{
-					PreDeploymentEvaluationStatus: common.StateSucceeded,
+					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 					PreDeploymentEvaluationTaskStatus: []v1alpha1.EvaluationStatus{
 						{
 							EvaluationDefinitionName: "eval-def",
-							Status:                   common.StateProgressing,
+							Status:                   apicommon.StateProgressing,
 							EvaluationName:           "pre-eval-eval-def-",
 						},
 					},
@@ -196,22 +197,22 @@ func TestEvaluationHandler(t *testing.T) {
 					Name:      "pre-eval-eval-def-",
 				},
 				Status: v1alpha1.KeptnEvaluationStatus{
-					OverallStatus: common.StateSucceeded,
+					OverallStatus: apicommon.StateSucceeded,
 				},
 			},
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "eval-def",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "eval-def",
-					Status:                   common.StateSucceeded,
+					Status:                   apicommon.StateSucceeded,
 					EvaluationName:           "pre-eval-eval-def-",
 				},
 			},
-			wantSummary:     common.StatusSummary{Total: 1, Succeeded: 1},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
@@ -269,7 +270,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			object:     &v1alpha1.KeptnEvaluation{},
 			createAttr: EvaluationCreateAttributes{},
 			wantName:   "",
-			wantErr:    ErrCannotWrapToPhaseItem,
+			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
 		{
 			name: "created evaluation",
@@ -286,7 +287,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			createAttr: EvaluationCreateAttributes{
 				SpanName:             "",
 				EvaluationDefinition: "eval-def",
-				CheckType:            common.PreDeploymentEvaluationCheckType,
+				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantName: "pre-eval-eval-def-",
 			wantErr:  nil,

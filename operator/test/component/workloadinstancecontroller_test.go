@@ -5,8 +5,9 @@ import (
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -64,13 +65,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 		////setup controllers here
-		controllers := []keptncontroller.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+		controllers := []interfaces.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 			Client:      k8sManager.GetClient(),
 			Scheme:      k8sManager.GetScheme(),
 			Recorder:    k8sManager.GetEventRecorderFor("test-app-controller"),
 			Log:         GinkgoLogr,
 			Meters:      initKeptnMeters(),
-			SpanHandler: &keptncontroller.SpanHandler{},
+			SpanHandler: &controllercommon.SpanHandler{},
 			Tracer:      tracer.Tracer("test-app-tracer"),
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
@@ -162,7 +163,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
-				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				appVersion.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
 				err = k8sClient.Status().Update(ctx, appVersion)
 				Expect(err).To(BeNil())
 
@@ -212,7 +213,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					wi := &klcv1alpha1.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
-					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
 			It("should detect that the referenced DaemonSet is progressing", func() {
@@ -240,7 +241,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
-				appVersion.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+				appVersion.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
 				err = k8sClient.Status().Update(ctx, appVersion)
 				Expect(err).To(BeNil())
 
@@ -289,7 +290,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					wi := &klcv1alpha1.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
-					g.Expect(wi.Status.DeploymentStatus).To(Equal(common.StateSucceeded))
+					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
 			It("should be cancelled when pre-eval checks failed", func() {
@@ -302,7 +303,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 						EvaluationDefinition: "eval-def",
 						Workload:             "test-app-wname",
 						WorkloadVersion:      "2.0",
-						Type:                 common.PreDeploymentEvaluationCheckType,
+						Type:                 apicommon.PreDeploymentEvaluationCheckType,
 						Retries:              10,
 					},
 				}
@@ -316,11 +317,11 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				evaluation.Status = klcv1alpha1.KeptnEvaluationStatus{
-					OverallStatus: common.StateFailed,
+					OverallStatus: apicommon.StateFailed,
 					RetryCount:    10,
 					EvaluationStatus: map[string]klcv1alpha1.EvaluationStatusItem{
 						"something": {
-							Status: common.StateFailed,
+							Status: apicommon.StateFailed,
 							Value:  "10",
 						},
 					},
@@ -350,17 +351,17 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				wi.Status = klcv1alpha1.KeptnWorkloadInstanceStatus{
-					PreDeploymentStatus:            common.StateSucceeded,
-					PreDeploymentEvaluationStatus:  common.StateProgressing,
-					DeploymentStatus:               common.StatePending,
-					PostDeploymentStatus:           common.StatePending,
-					PostDeploymentEvaluationStatus: common.StatePending,
-					CurrentPhase:                   common.PhaseWorkloadPreEvaluation.ShortName,
-					Status:                         common.StateProgressing,
+					PreDeploymentStatus:            apicommon.StateSucceeded,
+					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
+					DeploymentStatus:               apicommon.StatePending,
+					PostDeploymentStatus:           apicommon.StatePending,
+					PostDeploymentEvaluationStatus: apicommon.StatePending,
+					CurrentPhase:                   apicommon.PhaseWorkloadPreEvaluation.ShortName,
+					Status:                         apicommon.StateProgressing,
 					PreDeploymentEvaluationTaskStatus: []klcv1alpha1.EvaluationStatus{
 						{
 							EvaluationName:           "pre-eval-eval-def",
-							Status:                   common.StateProgressing,
+							Status:                   apicommon.StateProgressing,
 							EvaluationDefinitionName: "eval-def",
 						},
 					},
@@ -379,12 +380,12 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))
-					g.Expect(wi.Status.PreDeploymentStatus).To(BeEquivalentTo(common.StateSucceeded))
-					g.Expect(wi.Status.PreDeploymentEvaluationStatus).To(BeEquivalentTo(common.StateFailed))
-					g.Expect(wi.Status.DeploymentStatus).To(BeEquivalentTo(common.StateCancelled))
-					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(common.StateCancelled))
-					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(common.StateCancelled))
-					g.Expect(wi.Status.Status).To(BeEquivalentTo(common.StateFailed))
+					g.Expect(wi.Status.PreDeploymentStatus).To(BeEquivalentTo(apicommon.StateSucceeded))
+					g.Expect(wi.Status.PreDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateFailed))
+					g.Expect(wi.Status.DeploymentStatus).To(BeEquivalentTo(apicommon.StateCancelled))
+					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(apicommon.StateCancelled))
+					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateCancelled))
+					g.Expect(wi.Status.Status).To(BeEquivalentTo(apicommon.StateFailed))
 				}, "30s").Should(Succeed())
 			})
 			AfterEach(func() {
@@ -424,7 +425,7 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 	By("Invoking Reconciling for Create")
 
 	Expect(ignoreAlreadyExists(k8sClient.Create(ctx, instance))).Should(Succeed())
-	instance.Status.PreDeploymentEvaluationStatus = common.StateSucceeded
+	instance.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
 	_ = k8sClient.Status().Update(ctx, instance)
 	return instance
 }

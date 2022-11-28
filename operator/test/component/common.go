@@ -1,13 +1,13 @@
 package component
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
 )
 
-func initKeptnMeters() common.KeptnMeters {
+func initKeptnMeters() apicommon.KeptnMeters {
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")
 	deploymentCount, _ := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
@@ -19,7 +19,7 @@ func initKeptnMeters() common.KeptnMeters {
 	evaluationCount, _ := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
 	evaluationDuration, _ := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
 
-	meters := common.KeptnMeters{
+	meters := apicommon.KeptnMeters{
 		TaskCount:          taskCount,
 		TaskDuration:       taskDuration,
 		DeploymentCount:    deploymentCount,

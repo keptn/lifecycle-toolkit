@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -44,7 +44,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 		////setup controllers here
-		controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
+		controllers := []interfaces.Controller{&keptnapp.KeptnAppReconciler{
 			Client:   k8sManager.GetClient(),
 			Scheme:   k8sManager.GetScheme(),
 			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
@@ -143,16 +143,16 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 	}, "10s").Should(BeTrue())
 
 	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s", instance.Name, instance.Spec.Version)))
-	Expect(spans[0].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
-	Expect(spans[0].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
+	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 
 	Expect(spans[1].Name()).To(Equal("create_app_version"))
-	Expect(spans[1].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
-	Expect(spans[1].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
+	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 
 	Expect(spans[2].Name()).To(Equal("reconcile_app"))
-	Expect(spans[2].Attributes()).To(ContainElement(common.AppName.String(instance.Name)))
-	Expect(spans[2].Attributes()).To(ContainElement(common.AppVersion.String(instance.Spec.Version)))
+	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
+	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 }
 
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha1.KeptnApp {

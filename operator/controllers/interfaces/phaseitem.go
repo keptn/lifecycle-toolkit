@@ -1,11 +1,11 @@
-package common
+package interfaces
 
 import (
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -36,11 +36,11 @@ type PhaseItem interface {
 	GetPostDeploymentEvaluations() []string
 	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
 	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1.EvaluationStatus
-	GenerateTask(taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask
-	GenerateEvaluation(evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation
+	GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnTask
+	GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnEvaluation
 	GetSpanAttributes() []attribute.KeyValue
 	SetSpanAttributes(span trace.Span)
-	CancelRemainingPhases(phase common.KeptnPhaseType)
+	CancelRemainingPhases(phase apicommon.KeptnPhaseType)
 }
 
 type PhaseItemWrapper struct {
@@ -50,7 +50,7 @@ type PhaseItemWrapper struct {
 func NewPhaseItemWrapperFromClientObject(object client.Object) (*PhaseItemWrapper, error) {
 	pi, ok := object.(PhaseItem)
 	if !ok {
-		return nil, ErrCannotWrapToPhaseItem
+		return nil, errors.ErrCannotWrapToPhaseItem
 	}
 	return &PhaseItemWrapper{Obj: pi}, nil
 }
@@ -139,11 +139,11 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha1
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GenerateTask(taskDefinition string, checkType common.CheckType) klcv1alpha1.KeptnTask {
+func (pw PhaseItemWrapper) GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnTask {
 	return pw.Obj.GenerateTask(taskDefinition, checkType)
 }
 
-func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition string, checkType common.CheckType) klcv1alpha1.KeptnEvaluation {
+func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha1.KeptnEvaluation {
 	return pw.Obj.GenerateEvaluation(evaluationDefinition, checkType)
 }
 
@@ -155,6 +155,6 @@ func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 	return pw.Obj.GetSpanAttributes()
 }
 
-func (pw PhaseItemWrapper) CancelRemainingPhases(phase common.KeptnPhaseType) {
+func (pw PhaseItemWrapper) CancelRemainingPhases(phase apicommon.KeptnPhaseType) {
 	pw.Obj.CancelRemainingPhases(phase)
 }

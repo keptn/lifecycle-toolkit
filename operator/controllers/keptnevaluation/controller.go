@@ -26,8 +26,8 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -51,7 +51,7 @@ type KeptnEvaluationReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
-	Meters   common.KeptnMeters
+	Meters   apicommon.KeptnMeters
 	Tracer   trace.Tracer
 }
 
@@ -96,9 +96,9 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
 		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
-		err := controllercommon.ErrRetryCountExceeded
+		err := controllererrors.ErrRetryCountExceeded
 		span.SetStatus(codes.Error, err.Error())
-		evaluation.Status.OverallStatus = common.StateFailed
+		evaluation.Status.OverallStatus = apicommon.StateFailed
 		err2 := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 		if err2 != nil {
 			r.Log.Error(err2, "failed to update finished evaluation metrics")
@@ -121,7 +121,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{}, nil
 		}
 
-		statusSummary := common.StatusSummary{}
+		statusSummary := apicommon.StatusSummary{}
 		statusSummary.Total = len(evaluationDefinition.Spec.Objectives)
 		newStatus := make(map[string]klcv1alpha1.EvaluationStatusItem)
 
@@ -134,21 +134,21 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 				evaluation.AddEvaluationStatus(query)
 			}
 			if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
-				statusSummary = common.UpdateStatusSummary(common.StateSucceeded, statusSummary)
+				statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
 				newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
 				continue
 			}
 			statusItem := r.queryEvaluation(query, *evaluationProvider)
-			statusSummary = common.UpdateStatusSummary(statusItem.Status, statusSummary)
+			statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
 			newStatus[query.Name] = *statusItem
 		}
 
 		evaluation.Status.RetryCount++
 		evaluation.Status.EvaluationStatus = newStatus
-		if common.GetOverallState(statusSummary) == common.StateSucceeded {
-			evaluation.Status.OverallStatus = common.StateSucceeded
+		if apicommon.GetOverallState(statusSummary) == apicommon.StateSucceeded {
+			evaluation.Status.OverallStatus = apicommon.StateSucceeded
 		} else {
-			evaluation.Status.OverallStatus = common.StateProgressing
+			evaluation.Status.OverallStatus = apicommon.StateProgressing
 		}
 
 	}
@@ -232,7 +232,7 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Objective, provider klcv1alpha1.KeptnEvaluationProvider) *klcv1alpha1.EvaluationStatusItem {
 	query := &klcv1alpha1.EvaluationStatusItem{
 		Value:  "",
-		Status: common.StateFailed, //setting status per default to failed
+		Status: apicommon.StateFailed, //setting status per default to failed
 	}
 
 	queryTime := time.Now().UTC()
@@ -288,7 +288,7 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 		r.Log.Error(err, "Could not check query result")
 	}
 	if check {
-		query.Status = common.StateSucceeded
+		query.Status = apicommon.StateSucceeded
 	}
 	return query
 }
@@ -296,7 +296,7 @@ func (r *KeptnEvaluationReconciler) queryEvaluation(objective klcv1alpha1.Object
 func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, query *klcv1alpha1.EvaluationStatusItem) (bool, error) {
 
 	if len(query.Value) == 0 || len(objective.EvaluationTarget) == 0 {
-		return false, controllercommon.ErrNoValues
+		return false, controllererrors.ErrNoValues
 	}
 
 	eval := objective.EvaluationTarget[1:]
@@ -319,7 +319,7 @@ func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, 
 	case "<":
 		return resultValue < compareValue, nil
 	default:
-		return false, controllercommon.ErrInvalidOperator
+		return false, controllererrors.ErrInvalidOperator
 	}
 }
 

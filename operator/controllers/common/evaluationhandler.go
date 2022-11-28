@@ -8,6 +8,8 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -34,7 +36,7 @@ type EvaluationCreateAttributes struct {
 }
 
 func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
 	}
@@ -124,7 +126,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 				}
 				spanEvaluationTrace.End()
 				if err := r.SpanHandler.UnbindSpan(evaluation, ""); err != nil {
-					r.Log.Error(err, ErrCouldNotUnbindSpan, evaluation.Name)
+					r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, evaluation.Name)
 				}
 				evaluationStatus.SetEndTime()
 			}
@@ -143,7 +145,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 }
 
 func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) (string, error) {
-	piWrapper, err := NewPhaseItemWrapperFromClientObject(reconcileObject)
+	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
 	}

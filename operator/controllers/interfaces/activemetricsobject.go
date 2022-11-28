@@ -1,6 +1,7 @@
-package common
+package interfaces
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -20,7 +21,7 @@ type ActiveMetricsObjectWrapper struct {
 func NewActiveMetricsObjectWrapperFromClientObject(object client.Object) (*ActiveMetricsObjectWrapper, error) {
 	amo, ok := object.(ActiveMetricsObject)
 	if !ok {
-		return nil, ErrCannotWrapToActiveMetricsObject
+		return nil, errors.ErrCannotWrapToActiveMetricsObject
 	}
 	return &ActiveMetricsObjectWrapper{Obj: amo}, nil
 }

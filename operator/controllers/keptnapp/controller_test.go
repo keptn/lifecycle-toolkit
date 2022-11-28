@@ -6,9 +6,10 @@ import (
 	"testing"
 
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	utils "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -91,11 +92,11 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	err := utils.AddApp(r.Client, "myapp")
+	err := controllercommon.AddApp(r.Client, "myapp")
 	require.Nil(t, err)
-	err = utils.AddApp(r.Client, "myfinishedapp")
+	err = controllercommon.AddApp(r.Client, "myfinishedapp")
 	require.Nil(t, err)
-	err = utils.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: keptncommon.StateSucceeded})
+	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
 	require.Nil(t, err)
 
 	for _, tt := range tests {
@@ -126,7 +127,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")
 }
 
-func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *interfacesfake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -134,7 +135,7 @@ func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *fake.ITra
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -42,7 +42,7 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 		spanRecorder = sdktest.NewSpanRecorder()
 		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
-		controllers := []keptncontroller.Controller{&keptnapp.KeptnAppReconciler{
+		controllers := []interfaces.Controller{&keptnapp.KeptnAppReconciler{
 			Client:   k8sManager.GetClient(),
 			Scheme:   k8sManager.GetScheme(),
 			Recorder: k8sManager.GetEventRecorderFor("load-app-controller"),

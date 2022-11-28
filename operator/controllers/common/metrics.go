@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -13,10 +14,10 @@ import (
 func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]apicommon.GaugeFloatValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
+		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
-	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
+	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +25,7 @@ func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileO
 	res := []apicommon.GaugeFloatValue{}
 
 	for _, ro := range piWrapper.GetItems() {
-		reconcileObject, _ := NewMetricsObjectWrapperFromClientObject(ro)
+		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.IsEndTimeSet() {
 			duration := reconcileObject.GetEndTime().Sub(reconcileObject.GetStartTime())
 			res = append(res, apicommon.GaugeFloatValue{
@@ -40,29 +41,29 @@ func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileO
 func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object) ([]apicommon.GaugeFloatValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
+		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
-	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
+	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
 		return nil, err
 	}
 
-	res := []common.GaugeFloatValue{}
+	res := []apicommon.GaugeFloatValue{}
 	for _, ro := range piWrapper.GetItems() {
-		reconcileObject, _ := NewMetricsObjectWrapperFromClientObject(ro)
+		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.GetPreviousVersion() != "" {
 			err := client.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", reconcileObject.GetParentName(), reconcileObject.GetPreviousVersion()), Namespace: reconcileObject.GetNamespace()}, previousObject)
 			if err != nil {
 				return nil, nil
 			}
-			piWrapper2, err := NewMetricsObjectWrapperFromClientObject(previousObject)
+			piWrapper2, err := interfaces.NewMetricsObjectWrapperFromClientObject(previousObject)
 			if err != nil {
 				return nil, err
 			}
 			if reconcileObject.IsEndTimeSet() {
 				previousInterval := reconcileObject.GetEndTime().Sub(piWrapper2.GetStartTime())
-				res = append(res, common.GaugeFloatValue{
+				res = append(res, apicommon.GaugeFloatValue{
 					Value:      previousInterval.Seconds(),
 					Attributes: reconcileObject.GetDurationMetricsAttributes(),
 				})
@@ -72,25 +73,25 @@ func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileO
 	return res, nil
 }
 
-func GetActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]common.GaugeValue, error) {
+func GetActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]apicommon.GaugeValue, error) {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(ErrCannotRetrieveInstancesMsg, err)
+		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
-	piWrapper, err := NewListItemWrapperFromClientObjectList(reconcileObjectList)
+	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
 		return nil, err
 	}
 
-	res := []common.GaugeValue{}
+	res := []apicommon.GaugeValue{}
 	for _, ro := range piWrapper.GetItems() {
-		activeMetricsObject, _ := NewActiveMetricsObjectWrapperFromClientObject(ro)
+		activeMetricsObject, _ := interfaces.NewActiveMetricsObjectWrapperFromClientObject(ro)
 		gaugeValue := int64(0)
 		if !activeMetricsObject.IsEndTimeSet() {
 			gaugeValue = int64(1)
 		}
-		res = append(res, common.GaugeValue{
+		res = append(res, apicommon.GaugeValue{
 			Value:      gaugeValue,
 			Attributes: activeMetricsObject.GetActiveMetricsAttributes(),
 		})

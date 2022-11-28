@@ -23,8 +23,8 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -45,7 +45,7 @@ type KeptnTaskReconciler struct {
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
 	Log      logr.Logger
-	Meters   common.KeptnMeters
+	Meters   apicommon.KeptnMeters
 	Tracer   trace.Tracer
 }
 
@@ -99,7 +99,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			span.SetStatus(codes.Error, err.Error())
 			r.Log.Error(err, "could not create Job")
 		} else {
-			task.Status.Status = common.StateProgressing
+			task.Status.Status = apicommon.StateProgressing
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
@@ -150,7 +150,7 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.Ke
 	}
 
 	if len(jobLabels) == 0 {
-		return false, fmt.Errorf(controllercommon.ErrNoLabelsFoundTask, task.Name)
+		return false, fmt.Errorf(controllererrors.ErrNoLabelsFoundTask, task.Name)
 	}
 
 	if err := r.Client.List(ctx, jobList, client.InNamespace(namespace), jobLabels); err != nil {

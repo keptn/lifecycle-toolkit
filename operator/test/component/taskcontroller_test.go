@@ -5,8 +5,8 @@ import (
 	"os"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	keptncommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	keptncontroller "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntask"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -41,7 +41,7 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 		////setup controllers here
-		controllers := []keptncontroller.Controller{&keptntask.KeptnTaskReconciler{
+		controllers := []interfaces.Controller{&keptntask.KeptnTaskReconciler{
 			Client:   k8sManager.GetClient(),
 			Scheme:   k8sManager.GetScheme(),
 			Recorder: k8sManager.GetEventRecorderFor("test-task-controller"),
@@ -102,7 +102,7 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 						Name:      task.Name,
 					}, task)
 					g.Expect(err).To(BeNil())
-					g.Expect(task.Status.Status).To(Equal(keptncommon.StateFailed))
+					g.Expect(task.Status.Status).To(Equal(apicommon.StateFailed))
 				}, "10s").Should(Succeed())
 			})
 			AfterEach(func() {

@@ -22,7 +22,7 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -73,7 +73,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return reconcile.Result{}, nil
 	}
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadMsg, err)
+		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadMsg, err)
 	}
 
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)

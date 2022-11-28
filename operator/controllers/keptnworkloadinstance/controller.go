@@ -24,8 +24,9 @@ import (
 	"github.com/go-logr/logr"
 	version "github.com/hashicorp/go-version"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -46,7 +47,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Scheme      *runtime.Scheme
 	Recorder    record.EventRecorder
 	Log         logr.Logger
-	Meters      common.KeptnMeters
+	Meters      apicommon.KeptnMeters
 	Tracer      trace.Tracer
 	SpanHandler *controllercommon.SpanHandler
 }
@@ -82,7 +83,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if err != nil {
 		r.Log.Error(err, "Workload Instance not found")
-		return reconcile.Result{}, fmt.Errorf(controllercommon.ErrCannotRetrieveWorkloadInstancesMsg, err)
+		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
 	//setup otel
@@ -106,17 +107,17 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}(span, workloadInstance)
 
 	//Wait for pre-evaluation checks of App
-	phase := common.PhaseAppPreEvaluation
+	phase := apicommon.PhaseAppPreEvaluation
 
 	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllercommon.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
 	}
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
@@ -132,7 +133,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
 
 	//Wait for pre-deployment checks of Workload
-	phase = common.PhaseWorkloadPreDeployment
+	phase = apicommon.PhaseWorkloadPreDeployment
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -142,7 +143,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// set the App trace id if not already set
 	if len(workloadInstance.Spec.TraceId) < 1 {
-		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[common.PhaseAppDeployment.ShortName]
+		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
 		if appDeploymentTraceID != nil {
 			workloadInstance.Spec.TraceId = appDeploymentTraceID
 		} else {
@@ -168,8 +169,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if !workloadInstance.IsPreDeploymentSucceeded() {
-		reconcilePre := func(phaseCtx context.Context) (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, common.PreDeploymentCheckType)
+		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
 		if !result.Continue {
@@ -178,10 +179,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for pre-evaluation checks of Workload
-	phase = common.PhaseWorkloadPreEvaluation
+	phase = apicommon.PhaseWorkloadPreEvaluation
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
-		reconcilePreEval := func(phaseCtx context.Context) (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, common.PreDeploymentEvaluationCheckType)
+		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
 		if !result.Continue {
@@ -190,9 +191,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for deployment of Workload
-	phase = common.PhaseWorkloadDeployment
+	phase = apicommon.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {
-		reconcileWorkloadInstance := func(phaseCtx context.Context) (common.KeptnState, error) {
+		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
@@ -202,10 +203,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-deployment checks of Workload
-	phase = common.PhaseWorkloadPostDeployment
+	phase = apicommon.PhaseWorkloadPostDeployment
 	if !workloadInstance.IsPostDeploymentSucceeded() {
-		reconcilePostDeployment := func(phaseCtx context.Context) (common.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, common.PostDeploymentCheckType)
+		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
 		if !result.Continue {
@@ -214,10 +215,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	//Wait for post-evaluation checks of Workload
-	phase = common.PhaseWorkloadPostEvaluation
+	phase = apicommon.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
-		reconcilePostEval := func(phaseCtx context.Context) (common.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, common.PostDeploymentEvaluationCheckType)
+		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentEvaluationCheckType)
 		}
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
 		if !result.Continue {
@@ -227,8 +228,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// WorkloadInstance is completed at this place
 	if !workloadInstance.IsEndTimeSet() {
-		workloadInstance.Status.CurrentPhase = common.PhaseCompleted.ShortName
-		workloadInstance.Status.Status = common.StateSucceeded
+		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
+		workloadInstance.Status.Status = apicommon.StateSucceeded
 		workloadInstance.SetEndTime()
 	}
 
@@ -248,7 +249,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
 	spanWorkloadTrace.End()
 	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
-		r.Log.Error(err, controllercommon.ErrCouldNotUnbindSpan, workloadInstance.Name)
+		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadInstance.Name)
 	}
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())

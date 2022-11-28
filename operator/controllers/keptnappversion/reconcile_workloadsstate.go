@@ -4,18 +4,18 @@ import (
 	"context"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 )
 
-func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion) (common.KeptnState, error) {
+func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion) (apicommon.KeptnState, error) {
 	r.Log.Info("Reconciling Workloads")
-	var summary common.StatusSummary
+	var summary apicommon.StatusSummary
 	summary.Total = len(appVersion.Spec.Workloads)
 
-	phase := common.KeptnPhaseType{
+	phase := apicommon.KeptnPhaseType{
 		ShortName: "ReconcileWorkload",
 		LongName:  "Reconcile Workloads",
 	}
@@ -26,10 +26,10 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
 		if err != nil && errors.IsNotFound(err) {
 			controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
-			workload.Status.Status = common.StatePending
+			workload.Status.Status = apicommon.StatePending
 		} else if err != nil {
 			r.Log.Error(err, "Could not get workload")
-			workload.Status.Status = common.StateUnknown
+			workload.Status.Status = apicommon.StateUnknown
 		}
 		workloadStatus := workload.Status.Status
 
@@ -37,10 +37,10 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 			Workload: w,
 			Status:   workloadStatus,
 		})
-		summary = common.UpdateStatusSummary(workloadStatus, summary)
+		summary = apicommon.UpdateStatusSummary(workloadStatus, summary)
 	}
 
-	overallState := common.GetOverallState(summary)
+	overallState := apicommon.GetOverallState(summary)
 	appVersion.Status.WorkloadOverallStatus = overallState
 	r.Log.Info("Overall state of workloads", "state", appVersion.Status.WorkloadOverallStatus)
 

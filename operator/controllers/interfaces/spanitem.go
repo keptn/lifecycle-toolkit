@@ -1,6 +1,7 @@
-package common
+package interfaces
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -23,7 +24,7 @@ type SpanItemWrapper struct {
 func NewSpanItemWrapperFromClientObject(object client.Object) (*SpanItemWrapper, error) {
 	mo, ok := object.(SpanItem)
 	if !ok {
-		return nil, ErrCannotWrapToSpanItem
+		return nil, errors.ErrCannotWrapToSpanItem
 	}
 	return &SpanItemWrapper{Obj: mo}, nil
 }

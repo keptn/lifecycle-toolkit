@@ -79,6 +79,8 @@ var (
 	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Deployment Evaluations", ShortName: "AppPreDeployEvaluations"}
 	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
+	PhaseReconcileEvaluation    = KeptnPhaseType{ShortName: "ReconcileEvaluations", LongName: "Reconcile Evaluations"}
+	PhaseCreateEvaluation       = KeptnPhaseType{ShortName: "KeptnEvaluationCreate", LongName: "Keptn Evaluation Create"}
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseCancelled              = KeptnPhaseType{LongName: "Cancelled", ShortName: "Cancelled"}
 )

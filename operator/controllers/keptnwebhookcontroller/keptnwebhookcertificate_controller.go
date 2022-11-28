@@ -38,7 +38,6 @@ const (
 	SuccessDuration              = 3 * time.Hour
 	secretPostfix                = "-certs"
 	errorCertificatesSecretEmpty = "certificates secret is empty"
-	crdName                      = "keptnwebhookcertificates.lifecycle.keptn.sh"
 )
 
 // KeptnWebhookCertificateReconciler reconciles a KeptnWebhookCertificate object

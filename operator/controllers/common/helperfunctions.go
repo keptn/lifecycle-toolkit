@@ -33,5 +33,8 @@ func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.Eva
 }
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
+	if namespace == "" {
+		return types.NamespacedName{Namespace: "default", Name: appName + "-" + version}
+	}
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
 }

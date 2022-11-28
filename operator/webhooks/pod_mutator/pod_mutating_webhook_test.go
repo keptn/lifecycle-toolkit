@@ -1,4 +1,4 @@
-package webhooks
+package pod_mutator
 
 import (
 	"context"
@@ -553,11 +553,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient, err := fake.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
-
-	if err != nil {
-		t.Errorf("Error when creating objects in fake client %v", err)
-	}
+	fakeClient := fake.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	type fields struct {
 		Client   client.Client

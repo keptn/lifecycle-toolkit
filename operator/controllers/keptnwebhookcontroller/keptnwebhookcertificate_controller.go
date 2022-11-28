@@ -28,8 +28,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
-	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
@@ -51,8 +49,8 @@ type KeptnWebhookCertificateReconciler struct {
 	Log           logr.Logger
 }
 
-//+kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,resourceNames=klc-mutating-webhook-configuration,verbs=get;list;watch
-//+kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,resourceNames=klc-mutating-webhook-configuration,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -147,22 +145,6 @@ func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	return &mutatingWebhook, nil
 }
 
-func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfiguration() (
-	*admissionregistrationv1.ValidatingWebhookConfiguration, error) {
-	var mutatingWebhook admissionregistrationv1.ValidatingWebhookConfiguration
-	err := r.ApiReader.Get(r.ctx, client.ObjectKey{
-		Name: webhooks.DeploymentName,
-	}, &mutatingWebhook)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(mutatingWebhook.Webhooks) <= 0 {
-		return nil, errors.New("validating webhook configuration has no registered webhooks")
-	}
-	return &mutatingWebhook, nil
-}
-
 func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(bundle []byte,
 	webhookClientConfigs []*admissionregistrationv1.WebhookClientConfig, webhookConfig client.Object) error {
 	if webhookConfig == nil || reflect.ValueOf(webhookConfig).IsNil() {
@@ -177,27 +159,4 @@ func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(bundle []
 		return err
 	}
 	return nil
-}
-
-func (r *KeptnWebhookCertificateReconciler) updateCRDConfiguration(crdName string, bundle []byte) error {
-	var crd apiv1.CustomResourceDefinition
-	if err := r.ApiReader.Get(r.ctx, types.NamespacedName{Name: crdName}, &crd); err != nil {
-		return err
-	}
-
-	if !hasConversionWebhook(crd) {
-		r.Log.Info("no conversion webhook config, no cert will be provided")
-		return nil
-	}
-
-	// update crd
-	crd.Spec.Conversion.Webhook.ClientConfig.CABundle = bundle
-	if err := r.Client.Update(r.ctx, &crd); err != nil {
-		return err
-	}
-	return nil
-}
-
-func hasConversionWebhook(crd apiv1.CustomResourceDefinition) bool {
-	return crd.Spec.Conversion != nil && crd.Spec.Conversion.Webhook != nil && crd.Spec.Conversion.Webhook.ClientConfig != nil
 }

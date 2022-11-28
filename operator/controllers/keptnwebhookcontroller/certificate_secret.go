@@ -13,7 +13,6 @@ import (
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"
-	apiextensionv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -88,10 +87,6 @@ func (certSecret *certificateSecret) areWebhookConfigsValid(configs []*admission
 		}
 	}
 	return true
-}
-
-func (certSecret *certificateSecret) isCRDConversionValid(conversion *apiextensionv1.CustomResourceConversion) bool {
-	return certSecret.isBundleValid(conversion.Webhook.ClientConfig.CABundle)
 }
 
 func (certSecret *certificateSecret) isBundleValid(bundle []byte) bool {

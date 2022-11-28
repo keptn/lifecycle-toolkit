@@ -19,7 +19,7 @@ cleanup-manifests:
 	rm -rf manifests
 
 .PHONY: build-deploy-operator
-build-deploy-operator: deploy-cert-manager
+build-deploy-operator:
 	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)

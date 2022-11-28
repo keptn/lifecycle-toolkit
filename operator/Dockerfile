@@ -19,9 +19,11 @@ RUN go mod download
 # Copy the go source
 COPY main.go main.go
 COPY hack/ hack/
+COPY cmd/ cmd/
 COPY api/ api/
 COPY controllers/ controllers/
 COPY webhooks/ webhooks/
+COPY kubeobjects/ kubeobjects/
 
 # Build
 RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \

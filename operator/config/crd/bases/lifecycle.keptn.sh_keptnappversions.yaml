@@ -87,6 +87,9 @@ spec:
                 type: array
               previousVersion:
                 type: string
+              revision:
+                default: 1
+                type: integer
               traceId:
                 additionalProperties:
                   type: string

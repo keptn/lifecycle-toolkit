@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -36,6 +37,8 @@ type KeptnAppSpec struct {
 	PostDeploymentTasks       []string           `json:"postDeploymentTasks,omitempty"`
 	PreDeploymentEvaluations  []string           `json:"preDeploymentEvaluations,omitempty"`
 	PostDeploymentEvaluations []string           `json:"postDeploymentEvaluations,omitempty"`
+	// +kubebuilder:default:=1
+	Revision int `json:"revision,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp
@@ -74,7 +77,7 @@ func init() {
 }
 
 func (a KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(a.Name + "-" + a.Spec.Version)
+	return strings.ToLower(a.Name + "-" + a.Spec.Version + "-" + strconv.Itoa(a.Spec.Revision))
 }
 
 func (a KeptnApp) SetSpanAttributes(span trace.Span) {

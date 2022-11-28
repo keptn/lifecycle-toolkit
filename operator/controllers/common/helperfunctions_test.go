@@ -138,7 +138,7 @@ func Test_GetAppVersionName(t *testing.T) {
 			appName:   "name",
 			version:   "version",
 			want: types.NamespacedName{
-				Namespace: "default",
+				Namespace: "",
 				Name:      "name-version",
 			},
 		},

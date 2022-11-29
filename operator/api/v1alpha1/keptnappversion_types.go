@@ -110,10 +110,10 @@ func (a KeptnAppVersionList) GetItems() []client.Object {
 	return b
 }
 
-func (a *KeptnAppVersionList) RemoveCancelled() {
+func (a *KeptnAppVersionList) RemoveDeprecated() {
 	var b []KeptnAppVersion
 	for _, i := range a.Items {
-		if i.Status.Status != common.StateCancelled {
+		if i.Status.Status != common.StateDeprecated {
 			b = append(b, i)
 		}
 	}
@@ -371,41 +371,42 @@ func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
 	return fmt.Sprintf("%s-%s", v.Spec.AppName, workloadName)
 }
 
-func (a *KeptnAppVersion) CancelRemainingPhases(phase common.KeptnPhaseType) {
+func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
 	// no need to cancel anything when post-eval tasks fail
 	if phase == common.PhaseAppPostEvaluation {
 		return
 	}
 	//cancel post evaluation when post tasks failed
 	if phase == common.PhaseAppPostDeployment {
-		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	//cancel post evaluation and tasks when app deployment failed
 	if phase == common.PhaseAppDeployment {
-		a.Status.PostDeploymentStatus = common.StateCancelled
-		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.PostDeploymentStatus = common.StateDeprecated
+		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	//cancel app deployment, post tasks and evaluations if app pre-eval failed
 	if phase == common.PhaseAppPreEvaluation {
-		a.Status.PostDeploymentStatus = common.StateCancelled
-		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		a.Status.WorkloadOverallStatus = common.StateCancelled
+		a.Status.PostDeploymentStatus = common.StateDeprecated
+		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.WorkloadOverallStatus = common.StateDeprecated
 	}
 	//cancel pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
 	if phase == common.PhaseAppPreDeployment {
-		a.Status.PostDeploymentStatus = common.StateCancelled
-		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		a.Status.WorkloadOverallStatus = common.StateCancelled
-		a.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.PostDeploymentStatus = common.StateDeprecated
+		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.WorkloadOverallStatus = common.StateDeprecated
+		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	// cancell completely everything
-	if phase == common.PhaseCancelled {
-		a.Status.PostDeploymentStatus = common.StateCancelled
-		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		a.Status.WorkloadOverallStatus = common.StateCancelled
-		a.Status.PreDeploymentEvaluationStatus = common.StateCancelled
-		a.Status.PreDeploymentStatus = common.StateCancelled
-		a.Status.Status = common.StateCancelled
+	if phase == common.PhaseDeprecated {
+		a.Status.PostDeploymentStatus = common.StateDeprecated
+		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.WorkloadOverallStatus = common.StateDeprecated
+		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.PreDeploymentStatus = common.StateDeprecated
+		a.Status.Status = common.StateDeprecated
+		a.Status.CurrentPhase = common.PhaseDeprecated.ShortName
 		return
 	}
 	a.Status.Status = common.StateFailed

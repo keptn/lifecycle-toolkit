@@ -397,41 +397,42 @@ func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(w.GetSpanAttributes()...)
 }
 
-func (w *KeptnWorkloadInstance) CancelRemainingPhases(phase common.KeptnPhaseType) {
+func (w *KeptnWorkloadInstance) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
 	// no need to cancel anything when post-eval tasks fail
 	if phase == common.PhaseWorkloadPostEvaluation {
 		return
 	}
 	//cancel post evaluation when post tasks failed
 	if phase == common.PhaseWorkloadPostDeployment {
-		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	//cancel post evaluation and tasks when app deployment failed
 	if phase == common.PhaseWorkloadDeployment {
-		w.Status.PostDeploymentStatus = common.StateCancelled
-		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.PostDeploymentStatus = common.StateDeprecated
+		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	//cancel app deployment, post tasks and evaluations if app pre-eval failed
 	if phase == common.PhaseWorkloadPreEvaluation {
-		w.Status.PostDeploymentStatus = common.StateCancelled
-		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		w.Status.DeploymentStatus = common.StateCancelled
+		w.Status.PostDeploymentStatus = common.StateDeprecated
+		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		w.Status.DeploymentStatus = common.StateDeprecated
 	}
 	//cancel pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
 	if phase == common.PhaseWorkloadPreDeployment {
-		w.Status.PostDeploymentStatus = common.StateCancelled
-		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		w.Status.DeploymentStatus = common.StateCancelled
-		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.PostDeploymentStatus = common.StateDeprecated
+		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		w.Status.DeploymentStatus = common.StateDeprecated
+		w.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
 	}
 	// cancell completely everything
-	if phase == common.PhaseCancelled {
-		w.Status.PostDeploymentStatus = common.StateCancelled
-		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
-		w.Status.DeploymentStatus = common.StateCancelled
-		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
-		w.Status.PreDeploymentStatus = common.StateCancelled
-		w.Status.Status = common.StateCancelled
+	if phase == common.PhaseDeprecated {
+		w.Status.PostDeploymentStatus = common.StateDeprecated
+		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		w.Status.DeploymentStatus = common.StateDeprecated
+		w.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
+		w.Status.PreDeploymentStatus = common.StateDeprecated
+		w.Status.Status = common.StateDeprecated
+		w.Status.CurrentPhase = common.PhaseDeprecated.ShortName
 		return
 	}
 

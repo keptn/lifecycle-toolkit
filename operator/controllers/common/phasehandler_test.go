@@ -31,20 +31,20 @@ func TestPhaseHandler(t *testing.T) {
 		endTimeSet     bool
 	}{
 		{
-			name: "cancelled",
+			name: "Deprecated",
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 			},
 			object: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status: apicommon.StateCancelled,
+					Status: apicommon.StateDeprecated,
 				},
 			},
 			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
-					Status: apicommon.StateCancelled,
+					Status: apicommon.StateDeprecated,
 				},
 			},
 		},

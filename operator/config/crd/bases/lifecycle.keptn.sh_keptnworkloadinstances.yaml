@@ -73,6 +73,9 @@ spec:
             properties:
               app:
                 type: string
+              appRevision:
+                default: 1
+                type: integer
               postDeploymentEvaluations:
                 items:
                   type: string

@@ -110,6 +110,16 @@ func (a KeptnAppVersionList) GetItems() []client.Object {
 	return b
 }
 
+func (a *KeptnAppVersionList) RemoveCancelled() {
+	var b []KeptnAppVersion
+	for _, i := range a.Items {
+		if i.Status.Status != common.StateCancelled {
+			b = append(b, i)
+		}
+	}
+	a.Items = b
+}
+
 func init() {
 	SchemeBuilder.Register(&KeptnAppVersion{}, &KeptnAppVersionList{})
 }
@@ -366,13 +376,38 @@ func (a *KeptnAppVersion) CancelRemainingPhases(phase common.KeptnPhaseType) {
 	if phase == common.PhaseAppPostEvaluation {
 		return
 	}
-	// cancel workload deployment and post-deployment tasks if app pre-eval failed
+	//cancel post evaluation when post tasks failed
+	if phase == common.PhaseAppPostDeployment {
+		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	}
+	//cancel post evaluation and tasks when app deployment failed
+	if phase == common.PhaseAppDeployment {
+		a.Status.PostDeploymentStatus = common.StateCancelled
+		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	}
+	//cancel app deployment, post tasks and evaluations if app pre-eval failed
 	if phase == common.PhaseAppPreEvaluation {
+		a.Status.PostDeploymentStatus = common.StateCancelled
+		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
 		a.Status.WorkloadOverallStatus = common.StateCancelled
 	}
-	// cancel post-deployment tasks if workload deployment failed
-	a.Status.PostDeploymentStatus = common.StateCancelled
-	a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	//cancel pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
+	if phase == common.PhaseAppPreDeployment {
+		a.Status.PostDeploymentStatus = common.StateCancelled
+		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.WorkloadOverallStatus = common.StateCancelled
+		a.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+	}
+	// cancell completely everything
+	if phase == common.PhaseCancelled {
+		a.Status.PostDeploymentStatus = common.StateCancelled
+		a.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.WorkloadOverallStatus = common.StateCancelled
+		a.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+		a.Status.PreDeploymentStatus = common.StateCancelled
+		a.Status.Status = common.StateCancelled
+		return
+	}
 	a.Status.Status = common.StateFailed
 }
 

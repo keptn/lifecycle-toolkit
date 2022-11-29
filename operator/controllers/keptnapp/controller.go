@@ -19,9 +19,11 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel"
@@ -113,6 +115,14 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
+		if app.Spec.Revision != 1 {
+			if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
+				r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", appVersion.Name)
+				return ctrl.Result{Requeue: true}, nil
+			}
+			//update workload revisions
+			//orphan WI with lower app revision
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -161,4 +171,30 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	return &appVersion, err
+}
+
+func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, appVersion klcv1alpha1.KeptnApp) error {
+	var resultErr error
+	resultErr = nil
+	for i := 1; i < appVersion.Spec.Revision; i++ {
+		deprecatedAppVersion := &klcv1alpha1.KeptnAppVersion{}
+		err := r.Get(ctx, types.NamespacedName{Namespace: appVersion.Namespace, Name: appVersion.Name + "-" + appVersion.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
+		if errors.IsNotFound(err) {
+			continue
+		}
+
+		if err != nil {
+			r.Log.Error(err, "AppVersion not found")
+			resultErr = err
+			continue
+		}
+
+		deprecatedAppVersion.CancelRemainingPhases(common.PhaseCancelled)
+		if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
+			r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
+			resultErr = err
+			continue
+		}
+	}
+	return resultErr
 }

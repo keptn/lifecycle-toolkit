@@ -19,11 +19,9 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -34,9 +32,7 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -195,13 +191,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, appVersion.Name)
 	}
 
-	// clean up deprecated appVersions
-	err = r.removeDeprecatedAppVersions(ctx, *appVersion)
-	if err != nil {
-		r.Log.Error(err, "could not remove deprecated appVersions for appVersion %s", appVersion.Name)
-		return ctrl.Result{Requeue: true}, nil
-	}
-
 	return ctrl.Result{}, nil
 }
 
@@ -234,30 +223,4 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha1.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnAppVersionReconciler) removeDeprecatedAppVersions(ctx context.Context, appVersion v1alpha1.KeptnAppVersion) error {
-	var resultErr error
-	resultErr = nil
-	for i := 1; i < appVersion.Spec.Revision; i++ {
-		deprecatedAppVersion := &klcv1alpha1.KeptnAppVersion{}
-		err := r.Get(ctx, types.NamespacedName{Namespace: appVersion.Namespace, Name: appVersion.Spec.AppName + "-" + appVersion.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
-		if errors.IsNotFound(err) {
-			continue
-		}
-
-		if err != nil {
-			r.Log.Error(err, "AppVersion not found")
-			resultErr = err
-			continue
-		}
-
-		bak := v1.DeletePropagationBackground
-		if err := r.Client.Delete(ctx, deprecatedAppVersion, &client.DeleteOptions{PropagationPolicy: &bak}); err != nil {
-			r.Log.Error(err, "could not delete appVersion %s", deprecatedAppVersion.Name)
-			resultErr = err
-			continue
-		}
-	}
-	return resultErr
 }

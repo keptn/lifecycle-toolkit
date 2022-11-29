@@ -402,15 +402,39 @@ func (w *KeptnWorkloadInstance) CancelRemainingPhases(phase common.KeptnPhaseTyp
 	if phase == common.PhaseWorkloadPostEvaluation {
 		return
 	}
-	//cancel everything if app pre-eval tasks have failed
-	if phase == common.PhaseAppPreEvaluation {
-		w.Status.PreDeploymentStatus = common.StateCancelled
+	//cancel post evaluation when post tasks failed
+	if phase == common.PhaseWorkloadPostDeployment {
+		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	}
+	//cancel post evaluation and tasks when app deployment failed
+	if phase == common.PhaseWorkloadDeployment {
+		w.Status.PostDeploymentStatus = common.StateCancelled
+		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	}
+	//cancel app deployment, post tasks and evaluations if app pre-eval failed
+	if phase == common.PhaseWorkloadPreEvaluation {
+		w.Status.PostDeploymentStatus = common.StateCancelled
+		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.DeploymentStatus = common.StateCancelled
+	}
+	//cancel pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
+	if phase == common.PhaseWorkloadPreDeployment {
+		w.Status.PostDeploymentStatus = common.StateCancelled
+		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.DeploymentStatus = common.StateCancelled
 		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
 	}
-	//cancel deployment and post-deployment tasks if workload pre-eval tasks have failed
-	w.Status.DeploymentStatus = common.StateCancelled
-	w.Status.PostDeploymentStatus = common.StateCancelled
-	w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+	// cancell completely everything
+	if phase == common.PhaseCancelled {
+		w.Status.PostDeploymentStatus = common.StateCancelled
+		w.Status.PostDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.DeploymentStatus = common.StateCancelled
+		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
+		w.Status.PreDeploymentStatus = common.StateCancelled
+		w.Status.Status = common.StateCancelled
+		return
+	}
+
 	w.Status.Status = common.StateFailed
 }
 

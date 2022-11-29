@@ -1,6 +1,9 @@
 package component
 
 import (
+	"strings"
+	"time"
+
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -14,8 +17,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
-	"time"
 )
 
 // clean example of component test (E2E test/ integration test can be achieved adding a real cluster)

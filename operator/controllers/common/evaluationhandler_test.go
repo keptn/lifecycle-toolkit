@@ -152,6 +152,13 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 				Status: v1alpha1.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
+					EvaluationStatus: map[string]v1alpha1.EvaluationStatusItem{
+						"my-target": {
+							Value:   "1",
+							Status:  apicommon.StateFailed,
+							Message: "failed",
+						},
+					},
 				},
 			},
 			createAttr: EvaluationCreateAttributes{
@@ -170,6 +177,9 @@ func TestEvaluationHandler(t *testing.T) {
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
+			events: []string{
+				"evaluation of 'my-target' failed with value: '1' and reason: 'failed'",
+			},
 		},
 		{
 			name: "succeeded evaluation",
@@ -218,7 +228,9 @@ func TestEvaluationHandler(t *testing.T) {
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
-			events:          []string{},
+			events: []string{
+				"ReconcileEvaluationsSucceeded",
+			},
 		},
 	}
 

@@ -2,7 +2,7 @@
 
 ## Linters
 
-This project uses a set of linters to ensure a good code quality.
+This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE, the following configurations are required.<br>
 Further information can also be found at the `golangci-lint` documentation [here](https://golangci-lint.run/usage/integrations/)
 

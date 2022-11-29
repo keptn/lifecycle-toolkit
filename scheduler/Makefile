@@ -86,7 +86,10 @@ test: manifests fmt vet envtest## Run tests.
 	go test ./pkg/... -coverprofile cover-pkg.out
 	go test ./cmd/scheduler -coverprofile cover-main.out
 	go test ./test/... -v -ginkgo.skip-file="e2e"
-	cat cover-main.out cover-pkg.out > cover.out
+	sed -i '/mode: set/d' cover-pkg.out
+	sed -i '/mode: set/d' cover-main.out
+	echo "mode: set" > cover.out
+	cat cover-main.out cover-pkg.out >> cover.out
 	rm cover-pkg.out cover-main.out
 
 

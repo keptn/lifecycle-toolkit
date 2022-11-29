@@ -292,7 +292,7 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			app:   app,
-			phase: common.PhaseWorkloadDeployment,
+			phase: common.PhaseAppDeployment,
 			want: v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,

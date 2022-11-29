@@ -254,11 +254,11 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 			phase:            common.PhaseAppPreEvaluation,
 			want: v1alpha1.KeptnWorkloadInstance{
 				Status: v1alpha1.KeptnWorkloadInstanceStatus{
-					PreDeploymentStatus:            common.StateCancelled,
-					PreDeploymentEvaluationStatus:  common.StateCancelled,
-					PostDeploymentStatus:           common.StateCancelled,
-					PostDeploymentEvaluationStatus: common.StateCancelled,
-					DeploymentStatus:               common.StateCancelled,
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
+					DeploymentStatus:               common.StatePending,
 					Status:                         common.StateFailed,
 				},
 			},

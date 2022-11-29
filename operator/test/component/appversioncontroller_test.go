@@ -119,11 +119,11 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 					err := k8sClient.Get(ctx, appVersionNameObj, appVersion)
 					g.Expect(err).To(BeNil())
 					g.Expect(appVersion.Status.PreDeploymentEvaluationTaskStatus).To(Not(BeEmpty()))
-					err = k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Status.PreDeploymentEvaluationTaskStatus[0].EvaluationName}, evaluation)
-					g.Expect(err).ToNot(BeNil())
 				}, "30s").Should(Succeed())
 
 				By("Updating Evaluation status")
+				err := k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Status.PreDeploymentEvaluationTaskStatus[0].EvaluationName}, evaluation)
+				Expect(err).To(BeNil())
 
 				evaluation.Status = klcv1alpha1.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
@@ -138,7 +138,7 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 					EndTime:   metav1.Time{Time: time.Now().UTC().Add(5 * time.Second)},
 				}
 
-				err := k8sClient.Status().Update(ctx, evaluation)
+				err = k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
 				By("Ensuring all phases after pre-eval checks are cancelled")

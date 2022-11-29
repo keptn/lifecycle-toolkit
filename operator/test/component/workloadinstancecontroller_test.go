@@ -2,6 +2,7 @@ package component
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
@@ -17,6 +18,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func getPodTemplateSpec() corev1.PodTemplateSpec {
@@ -386,6 +388,24 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(apicommon.StateCancelled))
 					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateCancelled))
 					g.Expect(wi.Status.Status).To(BeEquivalentTo(apicommon.StateFailed))
+				}, "30s").Should(Succeed())
+
+				By("Ensuring that a K8s Event containing the reason for the failed evaluation has been sent")
+
+				Eventually(func(g Gomega) {
+					eventList := &corev1.EventList{}
+					err := k8sClient.List(ctx, eventList, client.InNamespace(namespace))
+					g.Expect(err).To(BeNil())
+
+					foundEvent := &corev1.Event{}
+
+					for _, e := range eventList.Items {
+						if strings.Contains(e.Name, wi.GetName()) && e.Reason == "AppPreDeployEvaluationsFailed" {
+							foundEvent = &e
+							break
+						}
+					}
+					g.Expect(foundEvent).NotTo(BeNil())
 				}, "30s").Should(Succeed())
 			})
 			AfterEach(func() {

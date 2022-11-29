@@ -177,8 +177,6 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 }
 
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) error {
-	r.recordEvent("Normal", evaluation, string(evaluation.Status.OverallStatus), "the evaluation has "+string(evaluation.Status.OverallStatus))
-
 	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)

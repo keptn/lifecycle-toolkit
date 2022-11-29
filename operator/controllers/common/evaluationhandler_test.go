@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -30,6 +31,7 @@ func TestEvaluationHandler(t *testing.T) {
 		wantErr         error
 		getSpanCalls    int
 		unbindSpanCalls int
+		events          []string
 	}{
 		{
 			name:            "cannot unwrap object",
@@ -216,6 +218,7 @@ func TestEvaluationHandler(t *testing.T) {
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
+			events:          []string{},
 		},
 	}
 
@@ -231,10 +234,11 @@ func TestEvaluationHandler(t *testing.T) {
 					return nil
 				},
 			}
+			fakeRecorder := record.NewFakeRecorder(100)
 			handler := EvaluationHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				Recorder:    fakeRecorder,
 				Client:      fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -253,6 +257,16 @@ func TestEvaluationHandler(t *testing.T) {
 			require.Equal(t, tt.wantErr, err)
 			require.Equal(t, tt.getSpanCalls, len(spanHandlerMock.GetSpanCalls()))
 			require.Equal(t, tt.unbindSpanCalls, len(spanHandlerMock.UnbindSpanCalls()))
+
+			if tt.events != nil {
+				for _, e := range tt.events {
+					event := <-fakeRecorder.Events
+					require.Equal(t, strings.Contains(event, tt.object.GetName()), true, "wrong appversion")
+					require.Equal(t, strings.Contains(event, tt.object.GetNamespace()), true, "wrong namespace")
+					require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+				}
+
+			}
 		})
 	}
 }

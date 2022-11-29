@@ -114,18 +114,14 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 
 				By("Ensuring an evaluation has been created")
 
+				evaluation := &klcv1alpha1.KeptnEvaluation{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(ctx, appVersionNameObj, appVersion)
 					g.Expect(err).To(BeNil())
 					g.Expect(appVersion.Status.PreDeploymentEvaluationTaskStatus).To(Not(BeEmpty()))
+					err = k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Status.PreDeploymentEvaluationTaskStatus[0].EvaluationName}, evaluation)
+					g.Expect(err).ToNot(BeNil())
 				}, "30s").Should(Succeed())
-
-				evaluation := &klcv1alpha1.KeptnEvaluation{}
-				err := k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: appVersion.Status.PreDeploymentEvaluationTaskStatus[0].EvaluationName}, evaluation)
-				defer func() {
-					_ = k8sClient.Delete(ctx, evaluation)
-				}()
-				Expect(err).ToNot(BeNil())
 
 				By("Updating Evaluation status")
 
@@ -142,7 +138,7 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 					EndTime:   metav1.Time{Time: time.Now().UTC().Add(5 * time.Second)},
 				}
 
-				err = k8sClient.Status().Update(ctx, evaluation)
+				err := k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
 				By("Ensuring all phases after pre-eval checks are cancelled")

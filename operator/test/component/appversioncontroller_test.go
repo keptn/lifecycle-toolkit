@@ -71,7 +71,7 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "test-app"
+		name = "test-appversion"
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"

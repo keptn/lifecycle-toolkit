@@ -4,7 +4,7 @@
 
 This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE, the following configuration is required.<br>
-Further information can also be found at the `golangci-lint` documentation [here](https://golangci-lint.run/usage/integrations/)
+Further information can also be found in the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
 
 ### Visual Studio Code
 

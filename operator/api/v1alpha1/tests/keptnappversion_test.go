@@ -278,6 +278,34 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			app:   app,
+			phase: common.PhaseAppPostDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseAppDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
 			phase: common.PhaseAppPreEvaluation,
 			want: v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
@@ -292,13 +320,41 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			app:   app,
-			phase: common.PhaseAppDeployment,
+			phase: common.PhaseAppPreDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StateCancelled,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StateCancelled,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseCancelled,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StateCancelled,
+					PreDeploymentEvaluationStatus:  common.StateCancelled,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					WorkloadOverallStatus:          common.StateCancelled,
+					Status:                         common.StateCancelled,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseWorkloadPreDeployment,
 			want: v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
-					PostDeploymentStatus:           common.StateCancelled,
-					PostDeploymentEvaluationStatus: common.StateCancelled,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
 					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},
@@ -358,10 +414,16 @@ func TestKeptnAppVersionList(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",
 				},
+				Status: v1alpha1.KeptnAppVersionStatus{
+					Status: common.StateSucceeded,
+				},
 			},
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj2",
+				},
+				Status: v1alpha1.KeptnAppVersionStatus{
+					Status: common.StateCancelled,
 				},
 			},
 		},
@@ -369,4 +431,10 @@ func TestKeptnAppVersionList(t *testing.T) {
 
 	got := list.GetItems()
 	require.Len(t, got, 2)
+
+	list.RemoveCancelled()
+
+	got = list.GetItems()
+	require.Len(t, got, 1)
+
 }

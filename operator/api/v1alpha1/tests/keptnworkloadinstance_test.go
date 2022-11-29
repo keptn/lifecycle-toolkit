@@ -251,13 +251,27 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			workloadInstance: workloadInstance,
-			phase:            common.PhaseAppPreEvaluation,
+			phase:            common.PhaseWorkloadPostDeployment,
 			want: v1alpha1.KeptnWorkloadInstance{
 				Status: v1alpha1.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
-					PostDeploymentEvaluationStatus: common.StatePending,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					DeploymentStatus:               common.StatePending,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			workloadInstance: workloadInstance,
+			phase:            common.PhaseWorkloadDeployment,
+			want: v1alpha1.KeptnWorkloadInstance{
+				Status: v1alpha1.KeptnWorkloadInstanceStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
 					DeploymentStatus:               common.StatePending,
 					Status:                         common.StateFailed,
 				},
@@ -273,6 +287,48 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 					PostDeploymentStatus:           common.StateCancelled,
 					PostDeploymentEvaluationStatus: common.StateCancelled,
 					DeploymentStatus:               common.StateCancelled,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			workloadInstance: workloadInstance,
+			phase:            common.PhaseWorkloadPreDeployment,
+			want: v1alpha1.KeptnWorkloadInstance{
+				Status: v1alpha1.KeptnWorkloadInstanceStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StateCancelled,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					DeploymentStatus:               common.StateCancelled,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			workloadInstance: workloadInstance,
+			phase:            common.PhaseCancelled,
+			want: v1alpha1.KeptnWorkloadInstance{
+				Status: v1alpha1.KeptnWorkloadInstanceStatus{
+					PreDeploymentStatus:            common.StateCancelled,
+					PreDeploymentEvaluationStatus:  common.StateCancelled,
+					PostDeploymentStatus:           common.StateCancelled,
+					PostDeploymentEvaluationStatus: common.StateCancelled,
+					DeploymentStatus:               common.StateCancelled,
+					Status:                         common.StateCancelled,
+				},
+			},
+		},
+		{
+			workloadInstance: workloadInstance,
+			phase:            common.PhaseAppPreDeployment,
+			want: v1alpha1.KeptnWorkloadInstance{
+				Status: v1alpha1.KeptnWorkloadInstanceStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
+					DeploymentStatus:               common.StatePending,
 					Status:                         common.StateFailed,
 				},
 			},

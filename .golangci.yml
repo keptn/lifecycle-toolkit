@@ -22,6 +22,7 @@ issues:
     - linters:
         - containedctx
         - gocyclo
+        - gocognit
       path: _test\.go
 
 linters-settings:

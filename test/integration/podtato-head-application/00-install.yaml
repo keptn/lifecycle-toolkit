@@ -2,7 +2,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnApp
 metadata:
   name: podtato-head
-  namespace: podtato-kubectl
 spec:
   version: "1.3"
   workloads:
@@ -21,18 +20,10 @@ spec:
   postDeploymentTasks:
     - post-deployment-hello
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: podtato-kubectl
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-entry
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -68,7 +59,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-entry
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -87,7 +77,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-hat
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -121,7 +110,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-hat
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -138,7 +126,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-left-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -170,7 +157,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-left-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -187,7 +173,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-left-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -218,8 +203,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: podtato-head-left-arm
-  namespace: podtato-kubectl
+  name: podtato-head-left-arml
   labels:
     app: podtato-head
 spec:
@@ -236,7 +220,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-right-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -268,7 +251,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-right-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -285,7 +267,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-right-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -317,7 +298,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-right-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -334,7 +314,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
-  namespace: podtato-kubectl
 spec:
   function:
     inline:
@@ -345,7 +324,6 @@ apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
-  namespace: podtato-kubectl
 spec:
   function:
     httpRef:

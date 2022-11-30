@@ -181,7 +181,7 @@ jobs:
 
   performance_tests:
     name: Performance Tests
-    needs: [ prepare_ci_run, build_image ]
+    needs: [ prepare_ci_run, build_image, component_tests, integration_tests, e2e_tests, test ]
     uses: ./.github/workflows/performance-test.yml
 
   upload_images:

@@ -10,7 +10,7 @@ linters:
     - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
     - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
     - noctx         # noctx finds sending http request without context.Context
-    - gocyclo        # measure cyclomatic complexity
+    - gocyclo       # measure cyclomatic complexity
     - gocognit      # measure cognitive complexity
     - funlen        # limit function length
 

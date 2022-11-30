@@ -28,7 +28,7 @@ jobs:
         with:
           cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
           k3d-version: ${{ env.K3D_VERSION }}
-          tag: ${{ inputs.tag }}
+          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
 
       - name: Download KUTTL
         run: |

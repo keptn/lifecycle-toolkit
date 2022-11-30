@@ -179,6 +179,8 @@ jobs:
   e2e_tests:
     name: End to End Tests
     needs: [ prepare_ci_run, build_image ]
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
 
   performance_tests:

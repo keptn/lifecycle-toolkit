@@ -21,6 +21,8 @@ import (
 	"flag"
 	"fmt"
 	metric2 "go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
+	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
 	"log"
 	"net/http"
 	"os"
@@ -230,81 +232,32 @@ func main() {
 	setupEvaluationReconciler(mgr, meters)
 	//+kubebuilder:scaffold:builder
 
+	asyncInstruments := []instrument.Asynchronous{
+		deploymentActiveGauge,
+		taskActiveGauge,
+		appActiveGauge,
+		evaluationActiveGauge,
+		appDeploymentIntervalGauge,
+		appDeploymentDurationGauge,
+		workloadDeploymentIntervalGauge,
+		workloadDeploymentDurationGauge,
+	}
+
 	err = meter.RegisterCallback(
-		[]instrument.Asynchronous{
-			deploymentActiveGauge,
-			taskActiveGauge,
-			appActiveGauge,
-			evaluationActiveGauge,
-			appDeploymentIntervalGauge,
-			appDeploymentDurationGauge,
-			workloadDeploymentIntervalGauge,
-			workloadDeploymentDurationGauge,
-		},
+		asyncInstruments,
 		func(ctx context.Context) {
-			activeDeployments, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather active deployments")
-			}
-			for _, val := range activeDeployments {
-				deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather active apps")
-			}
-			for _, val := range activeApps {
-				appActiveGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			activeTasks, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnTaskList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather active tasks")
-			}
-			for _, val := range activeTasks {
-				taskActiveGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			activeEvaluations, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnEvaluationList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather active evaluations")
-			}
-			for _, val := range activeEvaluations {
-				evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{}, &lifecyclev1alpha1.KeptnAppVersion{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather app deployment intervals")
-			}
-			for _, val := range appDeploymentInterval {
-				appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			appDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather app deployment durations")
-			}
-			for _, val := range appDeploymentDuration {
-				appDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			workloadDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{}, &lifecyclev1alpha1.KeptnWorkloadInstance{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather workload deployment intervals")
-			}
-			for _, val := range workloadDeploymentInterval {
-				workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
-
-			workloadDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
-			if err != nil {
-				setupLog.Error(err, "unable to gather workload deployment durations")
-			}
-			for _, val := range workloadDeploymentDuration {
-				workloadDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
-			}
+			setupMeterCallbacks(
+				ctx,
+				mgr,
+				deploymentActiveGauge,
+				taskActiveGauge,
+				appActiveGauge,
+				evaluationActiveGauge,
+				appDeploymentIntervalGauge,
+				appDeploymentDurationGauge,
+				workloadDeploymentIntervalGauge,
+				workloadDeploymentDurationGauge,
+			)
 		})
 	if err != nil {
 		fmt.Println("Failed to register callback")
@@ -318,6 +271,72 @@ func main() {
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
+	}
+}
+
+func setupMeterCallbacks(ctx context.Context, mgr manager.Manager, deploymentActiveGauge asyncint64.Gauge, taskActiveGauge asyncint64.Gauge, appActiveGauge asyncint64.Gauge, evaluationActiveGauge asyncint64.Gauge, appDeploymentIntervalGauge asyncfloat64.Gauge, appDeploymentDurationGauge asyncfloat64.Gauge, workloadDeploymentIntervalGauge asyncfloat64.Gauge, workloadDeploymentDurationGauge asyncfloat64.Gauge) {
+	activeDeployments, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather active deployments")
+	}
+	for _, val := range activeDeployments {
+		deploymentActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	activeApps, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather active apps")
+	}
+	for _, val := range activeApps {
+		appActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	activeTasks, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnTaskList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather active tasks")
+	}
+	for _, val := range activeTasks {
+		taskActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	activeEvaluations, err := controllercommon.GetActiveInstances(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnEvaluationList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather active evaluations")
+	}
+	for _, val := range activeEvaluations {
+		evaluationActiveGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	appDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{}, &lifecyclev1alpha1.KeptnAppVersion{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather app deployment intervals")
+	}
+	for _, val := range appDeploymentInterval {
+		appDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	appDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnAppVersionList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather app deployment durations")
+	}
+	for _, val := range appDeploymentDuration {
+		appDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	workloadDeploymentInterval, err := controllercommon.GetDeploymentInterval(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{}, &lifecyclev1alpha1.KeptnWorkloadInstance{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather workload deployment intervals")
+	}
+	for _, val := range workloadDeploymentInterval {
+		workloadDeploymentIntervalGauge.Observe(ctx, val.Value, val.Attributes...)
+	}
+
+	workloadDeploymentDuration, err := controllercommon.GetDeploymentDuration(ctx, mgr.GetClient(), &lifecyclev1alpha1.KeptnWorkloadInstanceList{})
+	if err != nil {
+		setupLog.Error(err, "unable to gather workload deployment durations")
+	}
+	for _, val := range workloadDeploymentDuration {
+		workloadDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 	}
 }
 

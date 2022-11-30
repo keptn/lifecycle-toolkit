@@ -10,6 +10,9 @@ linters:
     - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
     - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
     - noctx         # noctx finds sending http request without context.Context
+    - gocyclo        # measure cyclomatic complexity
+    - gocognit      # measure cognitive complexity
+    - funlen        # limit function length
 
 issues:
   exclude-rules:
@@ -18,4 +21,14 @@ issues:
       text: '//+kubebuilder'
     - linters:
         - containedctx
+        - gocyclo
       path: _test\.go
+
+linters-settings:
+  gocyclo:
+    min-complexity: 10
+  gocognit:
+    min-complexity: 20
+  funlen:
+    lines: 120
+    statements: 120

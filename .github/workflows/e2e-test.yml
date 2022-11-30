@@ -1,6 +1,11 @@
 name: E2E-Test
 on:
   workflow_call:
+    inputs:
+      functions_runtime_tag:
+        description: "Tag for the functions runner image"
+        type: "string"
+        required: true
 env:
   GO_VERSION: "~1.19"
   CERT_MANAGER_VERSION: "v1.10.0"
@@ -29,6 +34,7 @@ jobs:
         with:
           cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
           k3d-version: ${{ env.K3D_VERSION }}
+          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
 
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}

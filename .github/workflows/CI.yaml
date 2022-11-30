@@ -172,16 +172,22 @@ jobs:
   integration_tests:
     name: Integration Tests
     needs: [ prepare_ci_run, build_image ]
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/integration-test.yml
 
   e2e_tests:
     name: End to End Tests
     needs: [ prepare_ci_run, build_image ]
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
 
   performance_tests:
     name: Performance Tests
     needs: [ prepare_ci_run, build_image, component_tests, integration_tests, e2e_tests, test ]
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/performance-test.yml
 
   upload_images:

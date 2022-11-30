@@ -28,7 +28,7 @@ linters-settings:
   gocyclo:
     min-complexity: 10
   gocognit:
-    min-complexity: 15
+    min-complexity: 20
   funlen:
     lines: 120
     statements: 120

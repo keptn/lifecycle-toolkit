@@ -85,6 +85,7 @@ type envConfig struct {
 }
 
 func main() {
+	const unableToStartOTelError = "unable to start OTel"
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
 		log.Fatalf("Failed to process env var: %s", err)
@@ -110,71 +111,72 @@ func main() {
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
 	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
+
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	taskActiveGauge, err := meter.AsyncInt64().Gauge("keptn.task.active", instrument.WithDescription("a simple counter of active Keptn Tasks"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	appActiveGauge, err := meter.AsyncInt64().Gauge("keptn.app.active", instrument.WithDescription("a simple counter of active Keptn Apps"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	evaluationActiveGauge, err := meter.AsyncInt64().Gauge("keptn.evaluation.active", instrument.WithDescription("a simple counter of active Keptn Evaluations"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 
 	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 
 	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 
 	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
 	if err != nil {
-		setupLog.Error(err, "unable to start OTel")
+		setupLog.Error(err, unableToStartOTelError)
 	}
 
 	meters := common.KeptnMeters{

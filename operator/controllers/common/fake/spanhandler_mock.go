@@ -12,22 +12,22 @@ import (
 
 // ISpanHandlerMock is a mock implementation of common.ISpanHandler.
 //
-// 	func TestSomethingThatUsesISpanHandler(t *testing.T) {
+//	func TestSomethingThatUsesISpanHandler(t *testing.T) {
 //
-// 		// make and configure a mocked common.ISpanHandler
-// 		mockedISpanHandler := &ISpanHandlerMock{
-// 			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
-// 				panic("mock out the GetSpan method")
-// 			},
-// 			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
-// 				panic("mock out the UnbindSpan method")
-// 			},
-// 		}
+//		// make and configure a mocked common.ISpanHandler
+//		mockedISpanHandler := &ISpanHandlerMock{
+//			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+//				panic("mock out the GetSpan method")
+//			},
+//			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
+//				panic("mock out the UnbindSpan method")
+//			},
+//		}
 //
-// 		// use mockedISpanHandler in code that requires common.ISpanHandler
-// 		// and then make assertions.
+//		// use mockedISpanHandler in code that requires common.ISpanHandler
+//		// and then make assertions.
 //
-// 	}
+//	}
 type ISpanHandlerMock struct {
 	// GetSpanFunc mocks the GetSpan method.
 	GetSpanFunc func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
@@ -84,7 +84,8 @@ func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer trace.Tracer, 
 
 // GetSpanCalls gets all the calls that were made to GetSpan.
 // Check the length with:
-//     len(mockedISpanHandler.GetSpanCalls())
+//
+//	len(mockedISpanHandler.GetSpanCalls())
 func (mock *ISpanHandlerMock) GetSpanCalls() []struct {
 	Ctx             context.Context
 	Tracer          trace.Tracer
@@ -123,7 +124,8 @@ func (mock *ISpanHandlerMock) UnbindSpan(reconcileObject client.Object, phase st
 
 // UnbindSpanCalls gets all the calls that were made to UnbindSpan.
 // Check the length with:
-//     len(mockedISpanHandler.UnbindSpanCalls())
+//
+//	len(mockedISpanHandler.UnbindSpanCalls())
 func (mock *ISpanHandlerMock) UnbindSpanCalls() []struct {
 	ReconcileObject client.Object
 	Phase           string

@@ -122,19 +122,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha1.EvaluationStatusItem)
 		}
 
-		for _, query := range evaluationDefinition.Spec.Objectives {
-			if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
-				evaluation.AddEvaluationStatus(query)
-			}
-			if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
-				statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
-				newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
-				continue
-			}
-			statusItem := r.queryEvaluation(query, *evaluationProvider)
-			statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
-			newStatus[query.Name] = *statusItem
-		}
+		statusSummary = r.updateEvaluationStatuses(evaluationDefinition, evaluation, statusSummary, newStatus, evaluationProvider)
 
 		evaluation.Status.RetryCount++
 		evaluation.Status.EvaluationStatus = newStatus
@@ -163,6 +151,23 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	err := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 
 	return ctrl.Result{}, err
+}
+
+func (r *KeptnEvaluationReconciler) updateEvaluationStatuses(evaluationDefinition *klcv1alpha1.KeptnEvaluationDefinition, evaluation *klcv1alpha1.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha1.EvaluationStatusItem, evaluationProvider *klcv1alpha1.KeptnEvaluationProvider) apicommon.StatusSummary {
+	for _, query := range evaluationDefinition.Spec.Objectives {
+		if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
+			evaluation.AddEvaluationStatus(query)
+		}
+		if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
+			statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
+			newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
+			continue
+		}
+		statusItem := r.queryEvaluation(query, *evaluationProvider)
+		statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
+		newStatus[query.Name] = *statusItem
+	}
+	return statusSummary
 }
 
 func (r *KeptnEvaluationReconciler) recordTooManyRetries(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) (ctrl.Result, error) {

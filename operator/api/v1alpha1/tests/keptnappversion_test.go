@@ -343,6 +343,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
 					WorkloadOverallStatus:          common.StateDeprecated,
 					Status:                         common.StateDeprecated,
+					CurrentPhase:                   string(common.StateDeprecated),
 				},
 			},
 		},

@@ -10,6 +10,9 @@ RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*
 TAG?=latest
 RELEASE_IMAGE:=keptn-lifecycle-operator:$(TAG)
 
+# customize overlay to be used in the build, DEFAULT or HELM
+KUSTOMIZE_OVERLAY ?= DEFAULT
+
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
@@ -27,6 +30,8 @@ ENVTEST_K8S_VERSION=1.24.2
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=kubernetes-sigs/controller-tools
 CONTROLLER_TOOLS_VERSION?=v0.10.0
+# renovate: datasource=github-tags depName=helm/helm
+HELM_VERSION?=v3.10.2
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -127,7 +132,33 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 .PHONY: release-manifests
 release-manifests: manifests kustomize
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-	$(KUSTOMIZE) build config/default > config/rendered/release.yaml
+	@if [ ${KUSTOMIZE_OVERLAY} = DEFAULT ]; then\
+		echo building default overlay;\
+		$(KUSTOMIZE) build config/default > config/rendered/release.yaml;\
+	fi
+	@if [ ${KUSTOMIZE_OVERLAY} = HELM ]; then\
+		echo building helm overlay;\
+		$(KUSTOMIZE) build config/overlays/helm > chart/templates/rendered.yaml;\
+	fi
+
+.PHONY: set-helm-overlay
+set-helm-overlay:
+	${eval KUSTOMIZE_OVERLAY = HELM}
+
+OSARCH=$(shell ../hack/get-os.sh)
+HELM = $(shell pwd)/bin/$(OSARCH)/helm
+HELM_INSTALLER ?= "https://get.helm.sh/helm-$(HELM_VERSION)-$(OSARCH).tar.gz"
+.PHONY: helm
+helm: $(HELM) ## Download helm locally if necessary.
+$(HELM): $(LOCALBIN)
+	[ -e "$(HELM)" ] && rm -rf "$(HELM)" || true
+	cd $(LOCALBIN) && curl -s $(HELM_INSTALLER) | tar -xzf - -C $(LOCALBIN)
+
+helm-package: set-helm-overlay generate release-manifests helm
+	$(HELM) package --version $(CHART_VERSION) chart
+	mkdir -p charts && mv ofo-*.tgz charts
+#	$(HELM) repo index --url <Repo URL> charts
+#	mv charts/index.yaml index.yaml
 
 .PHONY: deploy
 deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.

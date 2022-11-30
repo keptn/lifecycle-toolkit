@@ -1,0 +1,3 @@
+# import the default deployment as the base
+bases:
+  - ../../default

@@ -10,6 +10,11 @@ defaults:
   run:
     shell: bash
 
+inputs:
+  functions_runtime_tag:
+    description: "Tag for the functions runner image"
+    required: true
+
 jobs:
   run-integration-test:
     name: Run Integration Tests
@@ -23,6 +28,7 @@ jobs:
         with:
           cert-manager-version: ${{ env.CERT_MANAGER_VERSION }}
           k3d-version: ${{ env.K3D_VERSION }}
+          tag: ${{ inputs.tag }}
 
       - name: Download KUTTL
         run: |

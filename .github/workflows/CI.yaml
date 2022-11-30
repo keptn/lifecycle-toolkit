@@ -172,8 +172,8 @@ jobs:
   integration_tests:
     name: Integration Tests
     needs: [ prepare_ci_run, build_image ]
-    env:
-      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/integration-test.yml
 
   e2e_tests:

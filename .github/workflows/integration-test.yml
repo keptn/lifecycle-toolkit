@@ -4,6 +4,7 @@ on:
     inputs:
       functions_runtime_tag:
         description: "Tag for the functions runner image"
+        type: "string"
         required: true
 env:
   GO_VERSION: "~1.19"

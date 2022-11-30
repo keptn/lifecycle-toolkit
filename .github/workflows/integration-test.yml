@@ -1,6 +1,10 @@
 name: Integration-Test
 on:
   workflow_call:
+    inputs:
+      functions_runtime_tag:
+        description: "Tag for the functions runner image"
+        required: true
 env:
   GO_VERSION: "~1.19"
   CERT_MANAGER_VERSION: "v1.10.0"
@@ -9,11 +13,6 @@ env:
 defaults:
   run:
     shell: bash
-
-inputs:
-  functions_runtime_tag:
-    description: "Tag for the functions runner image"
-    required: true
 
 jobs:
   run-integration-test:

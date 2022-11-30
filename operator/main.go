@@ -23,6 +23,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
@@ -257,94 +258,13 @@ func main() {
 				Log:      ctrl.Log.WithName("Mutating Webhook"),
 			}})
 	}
-	taskReconciler := &keptntask.KeptnTaskReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnTask Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
-		Meters:   meters,
-		Tracer:   otel.Tracer("keptn/operator/task"),
-	}
-	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
-		os.Exit(1)
-	}
-
-	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
-	}
-	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
-		os.Exit(1)
-	}
-
-	appReconciler := &keptnapp.KeptnAppReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnApp Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
-		Tracer:   otel.Tracer("keptn/operator/app"),
-	}
-	if err = (appReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
-		os.Exit(1)
-	}
-
-	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
-		Tracer:   otel.Tracer("keptn/operator/workload"),
-	}
-	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
-		os.Exit(1)
-	}
-
-	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder:    mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:      meters,
-		Tracer:      otel.Tracer("keptn/operator/workloadinstance"),
-		SpanHandler: spanHandler,
-	}
-	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-
-	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder:    mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:      otel.Tracer("keptn/operator/appversion"),
-		Meters:      meters,
-		SpanHandler: spanHandler,
-	}
-	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
-		os.Exit(1)
-	}
-
-	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnEvaluation Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnevaluation-controller"),
-		Tracer:   otel.Tracer("keptn/operator/evaluation"),
-		Meters:   meters,
-	}
-	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
-		os.Exit(1)
-	}
+	setupTaskReconciler(mgr, meters)
+	setupTaskDefinitionReconciler(mgr)
+	setupAppReconciler(mgr)
+	setupWorkloadReconciler(mgr)
+	setupWorkloadInstanceReconciler(mgr, meters, spanHandler)
+	setupAppVersionReconciler(mgr, meters, spanHandler)
+	setupEvaluationReconciler(mgr, meters)
 	//+kubebuilder:scaffold:builder
 
 	err = meter.RegisterCallback(
@@ -422,26 +342,132 @@ func main() {
 			for _, val := range workloadDeploymentDuration {
 				workloadDeploymentDurationGauge.Observe(ctx, val.Value, val.Attributes...)
 			}
-
 		})
 	if err != nil {
 		fmt.Println("Failed to register callback")
 		panic(err)
 	}
 
+	initHealthProbes(mgr)
+
+	setupLog.Info("starting manager")
+	setupLog.Info("Keptn lifecycle operator is alive")
+	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
+	}
+}
+
+func setupEvaluationReconciler(mgr manager.Manager, meters common.KeptnMeters) {
+	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnEvaluation Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnevaluation-controller"),
+		Tracer:   otel.Tracer("keptn/operator/evaluation"),
+		Meters:   meters,
+	}
+	if err := (evaluationReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
+		os.Exit(1)
+	}
+}
+
+func setupAppVersionReconciler(mgr manager.Manager, meters common.KeptnMeters, spanHandler *controllercommon.SpanHandler) {
+	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder:    mgr.GetEventRecorderFor("keptnappversion-controller"),
+		Tracer:      otel.Tracer("keptn/operator/appversion"),
+		Meters:      meters,
+		SpanHandler: spanHandler,
+	}
+	if err := (appVersionReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
+		os.Exit(1)
+	}
+}
+
+func setupWorkloadInstanceReconciler(mgr manager.Manager, meters common.KeptnMeters, spanHandler *controllercommon.SpanHandler) {
+	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder:    mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:      meters,
+		Tracer:      otel.Tracer("keptn/operator/workloadinstance"),
+		SpanHandler: spanHandler,
+	}
+	if err := (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
+		os.Exit(1)
+	}
+}
+
+func setupWorkloadReconciler(mgr manager.Manager) {
+	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
+		Tracer:   otel.Tracer("keptn/operator/workload"),
+	}
+	if err := (workloadReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
+		os.Exit(1)
+	}
+}
+
+func setupAppReconciler(mgr manager.Manager) {
+	appReconciler := &keptnapp.KeptnAppReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnApp Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
+		Tracer:   otel.Tracer("keptn/operator/app"),
+	}
+	if err := (appReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
+		os.Exit(1)
+	}
+}
+
+func setupTaskDefinitionReconciler(mgr manager.Manager) {
+	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
+	}
+	if err := (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
+		os.Exit(1)
+	}
+}
+
+func setupTaskReconciler(mgr manager.Manager, meters common.KeptnMeters) {
+	taskReconciler := &keptntask.KeptnTaskReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Log:      ctrl.Log.WithName("KeptnTask Controller"),
+		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
+		Meters:   meters,
+		Tracer:   otel.Tracer("keptn/operator/task"),
+	}
+	if err := (taskReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
+		os.Exit(1)
+	}
+}
+
+func initHealthProbes(mgr manager.Manager) {
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")
 		os.Exit(1)
 	}
 	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up ready check")
-		os.Exit(1)
-	}
-
-	setupLog.Info("starting manager")
-	setupLog.Info("Keptn lifecycle operator is alive")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
 }

@@ -67,7 +67,6 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 
 		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha1.KeptnEvaluation{}
-		evaluationExists := false
 
 		if oldStatus != evaluationStatus.Status {
 			RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldStatus, evaluationStatus.Status), piWrapper.GetVersion())
@@ -80,14 +79,9 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 		}
 
 		// Check if Evaluation is already created
-		if evaluationStatus.EvaluationName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: piWrapper.GetNamespace()}, evaluation)
-			if err != nil && errors.IsNotFound(err) {
-				evaluationStatus.EvaluationName = ""
-			} else if err != nil {
-				return nil, nil, summary, err
-			}
-			evaluationExists = true
+		evaluationExists, evaluationStatuses, i, statusSummary, err := r.checkAlreadyCreated(ctx, evaluationStatus, piWrapper, evaluation, summary)
+		if err != nil {
+			return evaluationStatuses, i, statusSummary, err
 		}
 
 		// Create new Evaluation if it does not exist
@@ -131,6 +125,20 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 		newStatus = append(newStatus, evaluationStatus)
 	}
 	return newStatus, nil, apicommon.StatusSummary{}, nil
+}
+
+func (r EvaluationHandler) checkAlreadyCreated(ctx context.Context, evaluationStatus klcv1alpha1.EvaluationStatus, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1alpha1.KeptnEvaluation, summary apicommon.StatusSummary) (bool, []klcv1alpha1.EvaluationStatus, []klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
+	evaluationExists := false
+	if evaluationStatus.EvaluationName != "" {
+		err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: piWrapper.GetNamespace()}, evaluation)
+		if err != nil && errors.IsNotFound(err) {
+			evaluationStatus.EvaluationName = ""
+		} else if err != nil {
+			return false, nil, nil, summary, err
+		}
+		evaluationExists = true
+	}
+	return evaluationExists, nil, nil, apicommon.StatusSummary{}, nil
 }
 
 func (r EvaluationHandler) findOldEvaluationStatus(statuses []klcv1alpha1.EvaluationStatus, evaluationName string) apicommon.KeptnState {

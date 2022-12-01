@@ -40,6 +40,7 @@ const (
 	StateFailed    KeptnState = "Failed"
 	StateUnknown   KeptnState = "Unknown"
 	StatePending   KeptnState = "Pending"
+	StateCancelled KeptnState = "Cancelled"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -83,11 +84,9 @@ func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, handler 
 	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(sMgr.dynamicClient, 0, pod.GetNamespace(), nil)
 
 	gvr, _ := schema.ParseResourceArg("keptnworkloadinstances.v1alpha1.lifecycle.keptn.sh")
-
 	informer := factory.ForResource(*gvr)
 
 	sMgr.startWatching(ctx, informer.Informer(), pod, handler)
-
 }
 
 func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIndexInformer, pod *corev1.Pod, handler framework.WaitingPod) {
@@ -108,7 +107,7 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 		if err == nil && found {
 			span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 			switch KeptnState(phase) {
-			case StateFailed:
+			case StateFailed, StateCancelled:
 				span.End()
 				handler.Reject(PluginName, "Pre Deployment Check failed")
 				unbindSpan(pod)

@@ -46,7 +46,6 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 	waitingPodHandler := pl.handler.GetWaitingPod(p.UID)
 
 	pl.workloadManager.ObserveWorkloadForPod(ctx, waitingPodHandler, p)
-
 }
 
 // New initializes a new plugin and returns it.

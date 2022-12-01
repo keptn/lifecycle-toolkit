@@ -1,6 +1,8 @@
 package e2e
 
 import (
+	"fmt"
+
 	testv1alpha2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -42,11 +44,6 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			pod              *apiv1.Pod
 		)
 		BeforeEach(func() {
-			DeferCleanup(func() {
-				err := k8sClient.Delete(ctx, pod)
-				logErrorIfPresent(err)
-			})
-
 			//create a test Pod
 			name := names.SimpleNameGenerator.GenerateName("my-testpod-")
 
@@ -61,6 +58,10 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			err := k8sClient.Create(ctx, pod)
 			Expect(ignoreAlreadyExists(err)).NotTo(HaveOccurred(), "could not add pod")
 		})
+		AfterEach(func() {
+			err := k8sClient.Delete(ctx, pod)
+			logErrorIfPresent(err)
+		})
 
 		Context("a new Pod", func() {
 
@@ -73,6 +74,94 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 				}).Should(Succeed())
 
 				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
+
+			})
+
+			It(" should stay pending when workload instance pre-evaluation checks have failed", func() {
+
+				workloadinstance = initWorkloadInstance()
+
+				err := k8sClient.Create(ctx, workloadinstance)
+				Expect(ignoreAlreadyExists(err)).To(BeNil())
+
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: "myapp-myworkload-1.0.0"}, workloadinstance)
+					return err
+				}).Should(Succeed())
+				workloadinstance.Status.PreDeploymentEvaluationStatus = "Failed"
+				err = k8sClient.Status().Update(ctx, workloadinstance)
+
+				Expect(err).To(BeNil())
+				Expect(pod.Status.Phase).To(Equal(apiv1.PodPending))
+
+				err = k8sClient.Delete(ctx, workloadinstance)
+				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+
+			})
+
+			It(" should stay pending when workload instance pre-evaluation checks are pending", func() {
+
+				workloadinstance = initWorkloadInstance()
+
+				err := k8sClient.Create(ctx, workloadinstance)
+				Expect(ignoreAlreadyExists(err)).To(BeNil())
+
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: "myapp-myworkload-1.0.0"}, workloadinstance)
+					return err
+				}).Should(Succeed())
+				workloadinstance.Status.PreDeploymentEvaluationStatus = "Pending"
+				err = k8sClient.Status().Update(ctx, workloadinstance)
+
+				Expect(err).To(BeNil())
+				Expect(pod.Status.Phase).To(Equal(apiv1.PodPending))
+
+				err = k8sClient.Delete(ctx, workloadinstance)
+				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+
+			})
+
+			It(" should stay pending when workload instance pre-evaluation checks are progressing", func() {
+
+				workloadinstance = initWorkloadInstance()
+
+				err := k8sClient.Create(ctx, workloadinstance)
+				Expect(ignoreAlreadyExists(err)).To(BeNil())
+
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: "myapp-myworkload-1.0.0"}, workloadinstance)
+					return err
+				}).Should(Succeed())
+				workloadinstance.Status.PreDeploymentEvaluationStatus = "Progressing"
+				err = k8sClient.Status().Update(ctx, workloadinstance)
+
+				Expect(err).To(BeNil())
+				Expect(pod.Status.Phase).To(Equal(apiv1.PodPending))
+
+				err = k8sClient.Delete(ctx, workloadinstance)
+				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+
+			})
+
+			It(" should stay pending when workload instance pre-evaluation checks are cancelled", func() {
+
+				workloadinstance = initWorkloadInstance()
+
+				err := k8sClient.Create(ctx, workloadinstance)
+				Expect(ignoreAlreadyExists(err)).To(BeNil())
+
+				Eventually(func() error {
+					err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: "myapp-myworkload-1.0.0"}, workloadinstance)
+					return err
+				}).Should(Succeed())
+				workloadinstance.Status.PreDeploymentEvaluationStatus = "Cancelled"
+				err = k8sClient.Status().Update(ctx, workloadinstance)
+
+				Expect(err).To(BeNil())
+				Expect(pod.Status.Phase).To(Equal(apiv1.PodPending))
+
+				err = k8sClient.Delete(ctx, workloadinstance)
+				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
 
 			})
 
@@ -169,11 +258,12 @@ func podRunning(namespace, name string) error {
 	}
 
 	for _, c := range pod.Status.Conditions {
-		if c.Type == "PodScheduled" {
+		if c.Type == "PodScheduled" && c.Status == "True" {
 			return nil
 		}
 	}
-	return err
+
+	return fmt.Errorf("Pod not scheduled")
 }
 
 func WithContainer(pod *apiv1.Pod, image string) *apiv1.Pod {

@@ -46,21 +46,31 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
+	newStatus, evaluationStatuses, statusSummary, err2 := r.handlePrePostEvaluations(ctx, phaseCtx, reconcileObject, evaluationCreateAttributes, evaluations, statuses, phase, piWrapper, summary)
+	if err2 != nil {
+		return evaluationStatuses, statusSummary, err2
+	}
+
+	for _, ns := range newStatus {
+		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
+	}
+	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
+		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
+	}
+	return newStatus, summary, nil
+}
+
+func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes, evaluations []string, statuses []klcv1alpha1.EvaluationStatus, phase apicommon.KeptnPhaseType, piWrapper *interfaces.PhaseItemWrapper, summary apicommon.StatusSummary) ([]klcv1alpha1.EvaluationStatus, []klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
 	var newStatus []klcv1alpha1.EvaluationStatus
 	for _, evaluationName := range evaluations {
-		var oldstatus apicommon.KeptnState
-		for _, ts := range statuses {
-			if ts.EvaluationDefinitionName == evaluationName {
-				oldstatus = ts.Status
-			}
-		}
+		oldStatus := r.findOldEvaluationStatus(statuses, evaluationName)
 
 		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha1.KeptnEvaluation{}
 		evaluationExists := false
 
-		if oldstatus != evaluationStatus.Status {
-			RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
+		if oldStatus != evaluationStatus.Status {
+			RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldStatus, evaluationStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -75,7 +85,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 			if err != nil && errors.IsNotFound(err) {
 				evaluationStatus.EvaluationName = ""
 			} else if err != nil {
-				return nil, summary, err
+				return nil, nil, summary, err
 			}
 			evaluationExists = true
 		}
@@ -85,7 +95,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 			evaluationCreateAttributes.EvaluationDefinition = evaluationName
 			evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
 			if err != nil {
-				return nil, summary, err
+				return nil, nil, summary, err
 			}
 			evaluationStatus.EvaluationName = evaluationName
 			evaluationStatus.SetStartTime()
@@ -120,14 +130,17 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		// Update state of the Check
 		newStatus = append(newStatus, evaluationStatus)
 	}
+	return newStatus, nil, apicommon.StatusSummary{}, nil
+}
 
-	for _, ns := range newStatus {
-		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
+func (r EvaluationHandler) findOldEvaluationStatus(statuses []klcv1alpha1.EvaluationStatus, evaluationName string) apicommon.KeptnState {
+	var oldstatus apicommon.KeptnState
+	for _, ts := range statuses {
+		if ts.EvaluationDefinitionName == evaluationName {
+			oldstatus = ts.Status
+		}
 	}
-	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
-	}
-	return newStatus, summary, nil
+	return oldstatus
 }
 
 func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes EvaluationCreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha1.EvaluationStatus) {

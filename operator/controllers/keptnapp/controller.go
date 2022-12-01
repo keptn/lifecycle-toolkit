@@ -21,7 +21,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel"
@@ -69,7 +69,7 @@ type KeptnAppReconciler struct {
 func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for App")
 
-	app := &klcv1alpha1.KeptnApp{}
+	app := &klcv1alpha2.KeptnApp{}
 	err := r.Get(ctx, req.NamespacedName, app)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -88,7 +88,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	r.Log.Info("Reconciling Keptn App", "app", app.Name)
 
-	appVersion := &klcv1alpha1.KeptnAppVersion{}
+	appVersion := &klcv1alpha2.KeptnAppVersion{}
 
 	// Try to find the AppVersion
 	err = r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.GetAppVersionName()}, appVersion)
@@ -127,11 +127,11 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnApp{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha2.KeptnApp{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha1.KeptnApp) (*klcv1alpha1.KeptnAppVersion, error) {
+func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha2.KeptnApp) (*klcv1alpha2.KeptnAppVersion, error) {
 	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 

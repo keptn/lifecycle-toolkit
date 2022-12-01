@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -35,7 +35,7 @@ type TaskCreateAttributes struct {
 	CheckType      apicommon.CheckType
 }
 
-func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha1.TaskStatus, apicommon.StatusSummary, error) {
+func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha2.TaskStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -47,7 +47,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	}
 
 	var tasks []string
-	var statuses []klcv1alpha1.TaskStatus
+	var statuses []klcv1alpha2.TaskStatus
 
 	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
@@ -61,7 +61,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha1.TaskStatus
+	var newStatus []klcv1alpha2.TaskStatus
 	for _, taskDefinitionName := range tasks {
 		var oldstatus apicommon.KeptnState
 		for _, ts := range statuses {
@@ -71,7 +71,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		}
 
 		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
-		task := &klcv1alpha1.KeptnTask{}
+		task := &klcv1alpha2.KeptnTask{}
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
@@ -171,6 +171,6 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	return newTask.Name, nil
 }
 
-func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha1.KeptnTask, spanTrace trace.Span) {
+func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha2.KeptnTask, spanTrace trace.Span) {
 	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
 }

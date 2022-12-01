@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -41,6 +41,11 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		return nil, apicommon.StatusSummary{}, err
 	}
 
+	phase := apicommon.KeptnPhaseType{
+		ShortName: "ReconcileEvaluations",
+		LongName:  "Reconcile Evaluations",
+	}
+
 	var evaluations []string
 	var statuses []klcv1alpha1.EvaluationStatus
 
@@ -70,7 +75,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
-			RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
+			RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -114,10 +119,9 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 				if evaluationStatus.Status.IsSucceeded() {
 					spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
 					spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
-					RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "Succeeded", "evaluation succeeded", piWrapper.GetVersion())
 				} else {
 					spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
-					r.emitEvaluationFailureEvents(evaluation, spanEvaluationTrace, piWrapper)
+					r.setEvaluationFailureEvents(evaluation, spanEvaluationTrace)
 					spanEvaluationTrace.SetStatus(codes.Error, "Failed")
 				}
 				spanEvaluationTrace.End()
@@ -135,7 +139,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
 	}
 	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
+		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 	}
 	return newStatus, summary, nil
 }
@@ -146,7 +150,10 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 		return "", err
 	}
 
-	phase := apicommon.PhaseCreateEvaluation
+	phase := apicommon.KeptnPhaseType{
+		ShortName: "KeptnEvaluationCreate",
+		LongName:  "Keptn Evaluation Create",
+	}
 
 	newEvaluation := piWrapper.GenerateEvaluation(evaluationCreateAttributes.EvaluationDefinition, evaluationCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newEvaluation, r.Scheme)
@@ -164,14 +171,11 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 	return newEvaluation.Name, nil
 }
 
-func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha1.KeptnEvaluation, spanTrace trace.Span, piWrapper *interfaces.PhaseItemWrapper) {
+func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha2.KeptnEvaluation, spanTrace trace.Span, piWrapper *interfaces.PhaseItemWrapper) {
 	k8sEventMessage := "evaluation failed"
 	for k, v := range evaluation.Status.EvaluationStatus {
 		if v.Status == apicommon.StateFailed {
-			msg := fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message)
-			spanTrace.AddEvent(msg, trace.WithTimestamp(time.Now().UTC()))
-			k8sEventMessage = fmt.Sprintf("%s\n%s", k8sEventMessage, msg)
+			spanTrace.AddEvent(fmt.Sprintf("evaluation of '%s' failed with value: '%s' and reason: '%s'", k, v.Value, v.Message), trace.WithTimestamp(time.Now().UTC()))
 		}
 	}
-	RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "Failed", k8sEventMessage, piWrapper.GetVersion())
 }

@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
@@ -36,7 +36,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t 
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(replicasetFail).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
@@ -53,15 +53,15 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t 
 	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
-func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha1.KeptnWorkloadInstance {
-	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{
+func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha2.KeptnWorkloadInstance {
+	workloadInstance := &klcv1alpha2.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-wli",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
-				ResourceReference: klcv1alpha1.ResourceReference{
+		Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+				ResourceReference: klcv1alpha2.ResourceReference{
 					UID:  objectMeta.UID,
 					Name: objectMeta.Name,
 					Kind: refKind,
@@ -79,7 +79,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(statefulsetFail).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
@@ -102,7 +102,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(daemonSetFail).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
@@ -126,7 +126,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(replicaSet).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(replicaSet.ObjectMeta, "ReplicaSet")
@@ -150,7 +150,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t 
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(statefulSet).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(statefulSet.ObjectMeta, "StatefulSet")
@@ -173,7 +173,7 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *t
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects(daemonSet).Build()
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
 	workloadInstance := makeWorkloadInstanceWithRef(daemonSet.ObjectMeta, "DaemonSet")
@@ -198,7 +198,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
 	}
-	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "pod1"}, "node1")
+	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1alpha2.ResourceReference{UID: "pod1"}, "node1")
 	testrequire.Nil(t, err)
 	if !isPodRunning {
 		t.Errorf("Wrong!")
@@ -207,7 +207,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 	r2 := &KeptnWorkloadInstanceReconciler{
 		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
 	}
-	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1alpha1.ResourceReference{UID: "pod1"}, "node1")
+	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1alpha2.ResourceReference{UID: "pod1"}, "node1")
 	testrequire.Nil(t, err)
 	if isPodRunning {
 		t.Errorf("Wrong!")
@@ -293,30 +293,30 @@ func makeDaemonSet(name string, namespace string, wanted int32, available int32)
 
 func Test_getLatestAppVersion(t *testing.T) {
 	type args struct {
-		apps *klcv1alpha1.KeptnAppVersionList
-		wli  *klcv1alpha1.KeptnWorkloadInstance
+		apps *klcv1alpha2.KeptnAppVersionList
+		wli  *klcv1alpha2.KeptnWorkloadInstance
 	}
 	tests := []struct {
 		name           string
 		args           args
 		wantFound      bool
-		wantAppVersion klcv1alpha1.KeptnAppVersion
+		wantAppVersion klcv1alpha2.KeptnAppVersion
 		wantErr        bool
 	}{
 		{
 			name: "app version found",
 			args: args{
-				apps: &klcv1alpha1.KeptnAppVersionList{
-					Items: []klcv1alpha1.KeptnAppVersion{
+				apps: &klcv1alpha2.KeptnAppVersionList{
+					Items: []klcv1alpha2.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
 								Name:      "my-app",
 								Namespace: "default",
 							},
-							Spec: klcv1alpha1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
+							Spec: klcv1alpha2.KeptnAppVersionSpec{
+								KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
 									Version: "1.0",
-									Workloads: []klcv1alpha1.KeptnWorkloadRef{
+									Workloads: []klcv1alpha2.KeptnWorkloadRef{
 										{
 											Name:    "my-workload",
 											Version: "1.0",
@@ -331,10 +331,10 @@ func Test_getLatestAppVersion(t *testing.T) {
 								Name:      "my-app",
 								Namespace: "default",
 							},
-							Spec: klcv1alpha1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
+							Spec: klcv1alpha2.KeptnAppVersionSpec{
+								KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
 									Version: "2.0",
-									Workloads: []klcv1alpha1.KeptnWorkloadRef{
+									Workloads: []klcv1alpha2.KeptnWorkloadRef{
 										{
 											Name:    "my-workload",
 											Version: "1.0",
@@ -346,13 +346,13 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1alpha1.KeptnWorkloadInstance{
+				wli: &klcv1alpha2.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadinstance",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -361,15 +361,15 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound: true,
-			wantAppVersion: klcv1alpha1.KeptnAppVersion{
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "my-app",
 					Namespace: "default",
 				},
-				Spec: klcv1alpha1.KeptnAppVersionSpec{
-					KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
+				Spec: klcv1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
 						Version: "2.0",
-						Workloads: []klcv1alpha1.KeptnWorkloadRef{
+						Workloads: []klcv1alpha2.KeptnWorkloadRef{
 							{
 								Name:    "my-workload",
 								Version: "1.0",
@@ -384,17 +384,17 @@ func Test_getLatestAppVersion(t *testing.T) {
 		{
 			name: "app version not found",
 			args: args{
-				apps: &klcv1alpha1.KeptnAppVersionList{
-					Items: []klcv1alpha1.KeptnAppVersion{
+				apps: &klcv1alpha2.KeptnAppVersionList{
+					Items: []klcv1alpha2.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
 								Name:      "my-app",
 								Namespace: "default",
 							},
-							Spec: klcv1alpha1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
+							Spec: klcv1alpha2.KeptnAppVersionSpec{
+								KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
 									Version: "1.0",
-									Workloads: []klcv1alpha1.KeptnWorkloadRef{
+									Workloads: []klcv1alpha2.KeptnWorkloadRef{
 										{
 											Name:    "my-other-workload",
 											Version: "1.0",
@@ -406,13 +406,13 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1alpha1.KeptnWorkloadInstance{
+				wli: &klcv1alpha2.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadinstance",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -421,23 +421,23 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1alpha1.KeptnAppVersion{},
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
 			wantErr:        false,
 		},
 		{
 			name: "app version with invalid version",
 			args: args{
-				apps: &klcv1alpha1.KeptnAppVersionList{
-					Items: []klcv1alpha1.KeptnAppVersion{
+				apps: &klcv1alpha2.KeptnAppVersionList{
+					Items: []klcv1alpha2.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
 								Name:      "my-app",
 								Namespace: "default",
 							},
-							Spec: klcv1alpha1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1alpha1.KeptnAppSpec{
+							Spec: klcv1alpha2.KeptnAppVersionSpec{
+								KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
 									Version: "",
-									Workloads: []klcv1alpha1.KeptnWorkloadRef{
+									Workloads: []klcv1alpha2.KeptnWorkloadRef{
 										{
 											Name:    "my-workload",
 											Version: "1.0",
@@ -449,13 +449,13 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1alpha1.KeptnWorkloadInstance{
+				wli: &klcv1alpha2.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadinstance",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -464,22 +464,22 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1alpha1.KeptnAppVersion{},
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
 			wantErr:        true,
 		},
 		{
 			name: "app version list empty",
 			args: args{
-				apps: &klcv1alpha1.KeptnAppVersionList{
-					Items: []klcv1alpha1.KeptnAppVersion{},
+				apps: &klcv1alpha2.KeptnAppVersionList{
+					Items: []klcv1alpha2.KeptnAppVersion{},
 				},
-				wli: &klcv1alpha1.KeptnWorkloadInstance{
+				wli: &klcv1alpha2.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadinstance",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha1.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha1.KeptnWorkloadSpec{
+					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -488,7 +488,7 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1alpha1.KeptnAppVersion{},
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
 			wantErr:        false,
 		},
 	}
@@ -562,13 +562,13 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 		testNamespace,
 		"some-app",
 		"1.0.0",
-		[]klcv1alpha1.KeptnWorkloadRef{
+		[]klcv1alpha2.KeptnWorkloadRef{
 			{
 				Name:    "some-workload",
 				Version: "1.0.0",
 			},
 		},
-		klcv1alpha1.KeptnAppVersionStatus{
+		klcv1alpha2.KeptnAppVersionStatus{
 			PreDeploymentStatus:                apicommon.StateSucceeded,
 			PostDeploymentStatus:               apicommon.StateSucceeded,
 			PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,

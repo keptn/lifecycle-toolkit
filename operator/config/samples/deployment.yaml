@@ -1,5 +1,5 @@
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: hello-world
@@ -10,7 +10,7 @@ spec:
         console.log("Hello World");
 
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: hello-world2

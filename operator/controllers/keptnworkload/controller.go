@@ -21,7 +21,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -67,7 +67,7 @@ type KeptnWorkloadReconciler struct {
 func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for workload")
 
-	workload := &klcv1alpha1.KeptnWorkload{}
+	workload := &klcv1alpha2.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -86,7 +86,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
-	workloadInstance := &klcv1alpha1.KeptnWorkloadInstance{}
+	workloadInstance := &klcv1alpha2.KeptnWorkloadInstance{}
 
 	// Try to find the workload instance
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
@@ -124,11 +124,11 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha2.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha1.KeptnWorkload) (*klcv1alpha1.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha2.KeptnWorkload) (*klcv1alpha2.KeptnWorkloadInstance, error) {
 	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 

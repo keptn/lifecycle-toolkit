@@ -3,8 +3,8 @@ package common
 import (
 	"testing"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/types"
 )
@@ -12,19 +12,19 @@ import (
 func Test_GetTaskStatus(t *testing.T) {
 	tests := []struct {
 		name     string
-		inStatus []klcv1alpha1.TaskStatus
-		want     klcv1alpha1.TaskStatus
+		inStatus []klcv1alpha2.TaskStatus
+		want     klcv1alpha2.TaskStatus
 	}{
 		{
 			name: "non-existing",
-			inStatus: []klcv1alpha1.TaskStatus{
+			inStatus: []klcv1alpha2.TaskStatus{
 				{
 					TaskDefinitionName: "def-name",
 					TaskName:           "name",
 					Status:             apicommon.StatePending,
 				},
 			},
-			want: klcv1alpha1.TaskStatus{
+			want: klcv1alpha2.TaskStatus{
 				TaskDefinitionName: "non-existing",
 				Status:             apicommon.StatePending,
 				TaskName:           "",
@@ -32,14 +32,14 @@ func Test_GetTaskStatus(t *testing.T) {
 		},
 		{
 			name: "def-name",
-			inStatus: []klcv1alpha1.TaskStatus{
+			inStatus: []klcv1alpha2.TaskStatus{
 				{
 					TaskDefinitionName: "def-name",
 					TaskName:           "name",
 					Status:             apicommon.StateProgressing,
 				},
 			},
-			want: klcv1alpha1.TaskStatus{
+			want: klcv1alpha2.TaskStatus{
 				TaskDefinitionName: "def-name",
 				TaskName:           "name",
 				Status:             apicommon.StateProgressing,
@@ -47,8 +47,8 @@ func Test_GetTaskStatus(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			inStatus: []klcv1alpha1.TaskStatus{},
-			want: klcv1alpha1.TaskStatus{
+			inStatus: []klcv1alpha2.TaskStatus{},
+			want: klcv1alpha2.TaskStatus{
 				TaskDefinitionName: "empty",
 				Status:             apicommon.StatePending,
 				TaskName:           "",
@@ -66,19 +66,19 @@ func Test_GetTaskStatus(t *testing.T) {
 func Test_GetEvaluationStatus(t *testing.T) {
 	tests := []struct {
 		name     string
-		inStatus []klcv1alpha1.EvaluationStatus
-		want     klcv1alpha1.EvaluationStatus
+		inStatus []klcv1alpha2.EvaluationStatus
+		want     klcv1alpha2.EvaluationStatus
 	}{
 		{
 			name: "non-existing",
-			inStatus: []klcv1alpha1.EvaluationStatus{
+			inStatus: []klcv1alpha2.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "def-name",
 					EvaluationName:           "name",
 					Status:                   apicommon.StatePending,
 				},
 			},
-			want: klcv1alpha1.EvaluationStatus{
+			want: klcv1alpha2.EvaluationStatus{
 				EvaluationDefinitionName: "non-existing",
 				Status:                   apicommon.StatePending,
 				EvaluationName:           "",
@@ -86,14 +86,14 @@ func Test_GetEvaluationStatus(t *testing.T) {
 		},
 		{
 			name: "def-name",
-			inStatus: []klcv1alpha1.EvaluationStatus{
+			inStatus: []klcv1alpha2.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "def-name",
 					EvaluationName:           "name",
 					Status:                   apicommon.StateProgressing,
 				},
 			},
-			want: klcv1alpha1.EvaluationStatus{
+			want: klcv1alpha2.EvaluationStatus{
 				EvaluationDefinitionName: "def-name",
 				EvaluationName:           "name",
 				Status:                   apicommon.StateProgressing,
@@ -101,8 +101,8 @@ func Test_GetEvaluationStatus(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			inStatus: []klcv1alpha1.EvaluationStatus{},
-			want: klcv1alpha1.EvaluationStatus{
+			inStatus: []klcv1alpha2.EvaluationStatus{},
+			want: klcv1alpha2.EvaluationStatus{
 				EvaluationDefinitionName: "empty",
 				Status:                   apicommon.StatePending,
 				EvaluationName:           "",

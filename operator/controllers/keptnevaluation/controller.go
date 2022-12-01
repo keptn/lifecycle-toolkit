@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -72,7 +72,7 @@ type KeptnEvaluationReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling KeptnEvaluation")
-	evaluation := &klcv1alpha1.KeptnEvaluation{}
+	evaluation := &klcv1alpha2.KeptnEvaluation{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {
 		if errors.IsNotFound(err) {
@@ -176,7 +176,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 }
 
-func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha1.KeptnEvaluation, span trace.Span) error {
+func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {
 	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)

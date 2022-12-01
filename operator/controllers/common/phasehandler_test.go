@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,10 +22,10 @@ func TestPhaseHandler(t *testing.T) {
 	tests := []struct {
 		name           string
 		handler        PhaseHandler
-		object         *v1alpha1.KeptnAppVersion
+		object         *v1alpha2.KeptnAppVersion
 		phase          apicommon.KeptnPhaseType
 		reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)
-		wantObject     *v1alpha1.KeptnAppVersion
+		wantObject     *v1alpha2.KeptnAppVersion
 		want           *PhaseResult
 		wantErr        error
 		endTimeSet     bool
@@ -35,15 +35,15 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status: apicommon.StateCancelled,
 				},
 			},
 			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status: apicommon.StateCancelled,
 				},
 			},
@@ -56,8 +56,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -68,8 +68,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: fmt.Errorf("some err"),
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -83,8 +83,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -95,8 +95,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -110,8 +110,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -122,8 +122,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -137,8 +137,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -149,8 +149,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: true, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateSucceeded,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -164,8 +164,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
@@ -176,8 +176,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateFailed,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 					EndTime:      v1.Time{Time: time.Now().UTC()},
@@ -192,8 +192,8 @@ func TestPhaseHandler(t *testing.T) {
 				Recorder:    record.NewFakeRecorder(100),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			object: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
@@ -204,8 +204,8 @@ func TestPhaseHandler(t *testing.T) {
 			},
 			want:    &PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1alpha1.KeptnAppVersion{
-				Status: v1alpha1.KeptnAppVersionStatus{
+			wantObject: &v1alpha2.KeptnAppVersion{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 				},

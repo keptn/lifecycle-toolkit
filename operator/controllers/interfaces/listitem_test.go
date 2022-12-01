@@ -3,18 +3,18 @@ package interfaces
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func TestListItemWrapper(t *testing.T) {
-	appVersionList := v1alpha1.KeptnAppVersionList{
-		Items: []v1alpha1.KeptnAppVersion{
+	appVersionList := v1alpha2.KeptnAppVersionList{
+		Items: []v1alpha2.KeptnAppVersion{
 			{
-				Status: v1alpha1.KeptnAppVersionStatus{
+				Status: v1alpha2.KeptnAppVersionStatus{
 					Status:       apicommon.StateFailed,
 					CurrentPhase: "test",
 				},

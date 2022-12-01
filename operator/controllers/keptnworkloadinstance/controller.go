@@ -305,21 +305,27 @@ func getLatestAppVersion(apps *klcv1alpha1.KeptnAppVersionList, wli *klcv1alpha1
 	latestVersion := klcv1alpha1.KeptnAppVersion{}
 	// ignore the potential error since this can not return an error with 0.0.0
 	oldVersion, _ := version.NewVersion("0.0.0")
-
 	workloadFound := false
-	for _, app := range apps.Items {
-		if app.Spec.AppName == wli.Spec.AppName {
-			for _, appWorkload := range app.Spec.Workloads {
-				if appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName {
-					workloadFound = true
-					newVersion, err := version.NewVersion(app.Spec.Version)
-					if err != nil {
-						return false, klcv1alpha1.KeptnAppVersion{}, err
-					}
-					if newVersion.GreaterThan(oldVersion) {
-						latestVersion = app
-						oldVersion = newVersion
-					}
+
+	var appsWithMatchingName []klcv1alpha1.KeptnAppVersion
+
+	for _, app2 := range apps.Items {
+		if app2.Spec.AppName == wli.Spec.AppName {
+			appsWithMatchingName = append(appsWithMatchingName, app2)
+		}
+	}
+
+	for _, app := range appsWithMatchingName {
+		for _, appWorkload := range app.Spec.Workloads {
+			if appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName {
+				workloadFound = true
+				newVersion, err := version.NewVersion(app.Spec.Version)
+				if err != nil {
+					return false, klcv1alpha1.KeptnAppVersion{}, err
+				}
+				if newVersion.GreaterThan(oldVersion) {
+					latestVersion = app
+					oldVersion = newVersion
 				}
 			}
 		}

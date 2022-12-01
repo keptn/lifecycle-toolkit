@@ -70,7 +70,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
-			RecordEvent(r.Recorder, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
+			RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -146,7 +146,7 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 		return "", err
 	}
 
-	phase := apicommon.PhaseReconcileEvaluation
+	phase := apicommon.PhaseCreateEvaluation
 
 	newEvaluation := piWrapper.GenerateEvaluation(evaluationCreateAttributes.EvaluationDefinition, evaluationCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newEvaluation, r.Scheme)

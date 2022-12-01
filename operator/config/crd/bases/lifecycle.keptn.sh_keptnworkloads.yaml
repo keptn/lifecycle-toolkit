@@ -44,7 +44,7 @@ spec:
             properties:
               app:
                 type: string
-              appRevision:
+              appGeneration:
                 default: 1
                 format: int64
                 type: integer

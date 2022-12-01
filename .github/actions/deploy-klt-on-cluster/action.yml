@@ -63,4 +63,3 @@ runs:
       kubectl apply -f ~/download/artifacts/scheduler-manifest-test
       kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
       kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
-      kubectl describe pods -n keptn-lifecycle-toolkit-system -l component=scheduler

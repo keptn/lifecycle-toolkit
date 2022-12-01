@@ -79,23 +79,16 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 		}
 
 		// Check if Evaluation is already created
-		evaluationExists, evaluationStatuses, i, statusSummary, err := r.checkAlreadyCreated(ctx, evaluationStatus, piWrapper, evaluation, summary)
+		evaluationExists, evaluationStatuses, i, err := r.checkAlreadyCreated(ctx, evaluationStatus, piWrapper, evaluation, &summary)
 		if err != nil {
-			return evaluationStatuses, i, statusSummary, err
+			return evaluationStatuses, i, summary, err
 		}
 
 		// Create new Evaluation if it does not exist
 		if !evaluationExists {
-			evaluationCreateAttributes.EvaluationDefinition = evaluationName
-			evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
+			statusSummary, err := r.createEvaluation(ctx, phaseCtx, reconcileObject, evaluationCreateAttributes, evaluationName, piWrapper, summary, evaluationStatus, evaluation)
 			if err != nil {
-				return nil, nil, summary, err
-			}
-			evaluationStatus.EvaluationName = evaluationName
-			evaluationStatus.SetStartTime()
-			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
-			if err != nil {
-				r.Log.Error(err, "could not get span")
+				return nil, nil, statusSummary, err
 			}
 		} else {
 			_, spanEvaluationTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
@@ -104,22 +97,7 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 			}
 			// Update state of Evaluation if it is already created
 			evaluationStatus.Status = evaluation.Status.OverallStatus
-			if evaluationStatus.Status.IsCompleted() {
-				if evaluationStatus.Status.IsSucceeded() {
-					spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
-					spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
-					RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "Succeeded", "evaluation succeeded", piWrapper.GetVersion())
-				} else {
-					spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
-					r.emitEvaluationFailureEvents(evaluation, spanEvaluationTrace, piWrapper)
-					spanEvaluationTrace.SetStatus(codes.Error, "Failed")
-				}
-				spanEvaluationTrace.End()
-				if err := r.SpanHandler.UnbindSpan(evaluation, ""); err != nil {
-					r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, evaluation.Name)
-				}
-				evaluationStatus.SetEndTime()
-			}
+			r.updateEvaluation(evaluationStatus, spanEvaluationTrace, evaluation)
 		}
 		// Update state of the Check
 		newStatus = append(newStatus, evaluationStatus)
@@ -127,18 +105,50 @@ func (r EvaluationHandler) handlePrePostEvaluations(ctx context.Context, phaseCt
 	return newStatus, nil, apicommon.StatusSummary{}, nil
 }
 
-func (r EvaluationHandler) checkAlreadyCreated(ctx context.Context, evaluationStatus klcv1alpha1.EvaluationStatus, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1alpha1.KeptnEvaluation, summary apicommon.StatusSummary) (bool, []klcv1alpha1.EvaluationStatus, []klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) updateEvaluation(evaluationStatus klcv1alpha1.EvaluationStatus, spanEvaluationTrace trace.Span, evaluation *klcv1alpha1.KeptnEvaluation) {
+	if evaluationStatus.Status.IsCompleted() {
+		if evaluationStatus.Status.IsSucceeded() {
+			spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
+			spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
+		} else {
+			spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
+			spanEvaluationTrace.SetStatus(codes.Error, "Failed")
+		}
+		spanEvaluationTrace.End()
+		if err := r.SpanHandler.UnbindSpan(evaluation, ""); err != nil {
+			r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, evaluation.Name)
+		}
+		evaluationStatus.SetEndTime()
+	}
+}
+
+func (r EvaluationHandler) createEvaluation(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, summary apicommon.StatusSummary, evaluationStatus klcv1alpha1.EvaluationStatus, evaluation *klcv1alpha1.KeptnEvaluation) (apicommon.StatusSummary, error) {
+	evaluationCreateAttributes.EvaluationDefinition = evaluationName
+	evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
+	if err != nil {
+		return summary, err
+	}
+	evaluationStatus.EvaluationName = evaluationName
+	evaluationStatus.SetStartTime()
+	_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
+	if err != nil {
+		r.Log.Error(err, "could not get span")
+	}
+	return apicommon.StatusSummary{}, nil
+}
+
+func (r EvaluationHandler) checkAlreadyCreated(ctx context.Context, evaluationStatus klcv1alpha1.EvaluationStatus, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1alpha1.KeptnEvaluation, summary *apicommon.StatusSummary) (bool, []klcv1alpha1.EvaluationStatus, []klcv1alpha1.EvaluationStatus, error) {
 	evaluationExists := false
 	if evaluationStatus.EvaluationName != "" {
 		err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: piWrapper.GetNamespace()}, evaluation)
 		if err != nil && errors.IsNotFound(err) {
 			evaluationStatus.EvaluationName = ""
 		} else if err != nil {
-			return false, nil, nil, summary, err
+			return false, nil, nil, err
 		}
 		evaluationExists = true
 	}
-	return evaluationExists, nil, nil, apicommon.StatusSummary{}, nil
+	return evaluationExists, nil, nil, nil
 }
 
 func (r EvaluationHandler) findOldEvaluationStatus(statuses []klcv1alpha1.EvaluationStatus, evaluationName string) apicommon.KeptnState {

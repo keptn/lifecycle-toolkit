@@ -9,6 +9,7 @@ BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
 TAG?=latest
 RELEASE_IMAGE:=keptn-lifecycle-operator:$(TAG)
+CHART_VERSION=v0.4.0# x-release-please-version
 
 # customize overlay to be used in the build, DEFAULT or HELM
 KUSTOMIZE_OVERLAY ?= DEFAULT
@@ -156,7 +157,7 @@ $(HELM): $(LOCALBIN)
 
 helm-package: set-helm-overlay generate release-manifests helm
 	$(HELM) package --version $(CHART_VERSION) chart
-	mkdir -p charts && mv ofo-*.tgz charts
+	mkdir -p charts && mv operator-*.tgz charts
 #	$(HELM) repo index --url <Repo URL> charts
 #	mv charts/index.yaml index.yaml
 

@@ -1,3 +1,8 @@
 # import the default deployment as the base
 bases:
   - ../../default
+# replace the default namespace with {{ include "chart.namespace" . }}
+# .Release.Namespace has not been used so that a custom _helpers.tpl file can maintain the expected behaviour of
+# helm install -n
+namespace: |-
+  {{ include "chart.namespace" . }}

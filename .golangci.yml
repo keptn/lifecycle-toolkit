@@ -1,6 +1,7 @@
 run:
   timeout: 5m
   go: '1.19'
+  issue-exit-code: 0
 linters:
   enable:
     - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
@@ -13,6 +14,7 @@ linters:
     - gocyclo       # measure cyclomatic complexity
     - gocognit      # measure cognitive complexity
     - funlen        # limit function length
+    - dupl          # Detect code duplication
 
 issues:
   exclude-rules:

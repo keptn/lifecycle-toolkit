@@ -131,3 +131,20 @@ jobs:
         with:
           tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: manifest.yaml
+
+  release-charts:
+    needs: 
+      - release-please
+      - build-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Helm Charts
+        env:
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        working-directory: operator/
+        run: |
+          make helm-package
+          helm repo index

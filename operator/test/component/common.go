@@ -1,7 +1,7 @@
 package component
 
 import (
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"

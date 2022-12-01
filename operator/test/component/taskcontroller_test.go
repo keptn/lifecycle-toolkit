@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntask"
 	. "github.com/onsi/ginkgo/v2"
@@ -60,8 +60,8 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 
 	Describe("Creation of a Task", func() {
 		var (
-			taskDefinition *klcv1alpha1.KeptnTaskDefinition
-			task           *klcv1alpha1.KeptnTask
+			taskDefinition *klcv1alpha2.KeptnTaskDefinition
+			task           *klcv1alpha2.KeptnTask
 		)
 		Context("with an existing TaskDefinition", func() {
 			BeforeEach(func() {
@@ -115,13 +115,13 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 	})
 })
 
-func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha1.KeptnTask {
-	task := &klcv1alpha1.KeptnTask{
+func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha2.KeptnTask {
+	task := &klcv1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
+		Spec: klcv1alpha2.KeptnTaskSpec{
 			Workload:       "my-workload",
 			AppName:        "my-app",
 			AppVersion:     "0.1.0",
@@ -135,7 +135,7 @@ func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha1.Ke
 	return task
 }
 
-func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha1.KeptnTaskDefinition {
+func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha2.KeptnTaskDefinition {
 	cmName := "my-cm"
 	cm := &v1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
@@ -150,14 +150,14 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha1.Keptn
 
 	Expect(err).To(BeNil())
 
-	taskDefinition := &klcv1alpha1.KeptnTaskDefinition{
+	taskDefinition := &klcv1alpha2.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      taskDefinitionName,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha1.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha1.FunctionSpec{
-				ConfigMapReference: klcv1alpha1.ConfigMapReference{
+		Spec: klcv1alpha2.KeptnTaskDefinitionSpec{
+			Function: klcv1alpha2.FunctionSpec{
+				ConfigMapReference: klcv1alpha2.ConfigMapReference{
 					Name: cmName,
 				},
 			},

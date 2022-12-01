@@ -46,7 +46,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
-	newStatus, evaluationStatuses, statusSummary, err2 := r.handlePrePostEvaluations(ctx, phaseCtx, reconcileObject, evaluationCreateAttributes, evaluations, statuses, phase, piWrapper, summary)
+	newStatus, evaluationStatuses, statusSummary, err2 := r.handlePrePostEvaluations(ctx, phaseCtx, reconcileObject, evaluationCreateAttributes, evaluations, statuses, apicommon.PhaseReconcileEvaluation, piWrapper, summary)
 	if err2 != nil {
 		return evaluationStatuses, statusSummary, err2
 	}
@@ -55,7 +55,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
 	}
 	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
+		RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 	}
 	return newStatus, summary, nil
 }

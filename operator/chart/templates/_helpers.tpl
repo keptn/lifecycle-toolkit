@@ -1,11 +1,10 @@
 {{/*
-Define the chart.namespace variable. If no namespace is defined via the command line then the default value 
-provided in .Values.defaultNamespace is used
+Define the chart.namespace variable. Use the namespace in .Values.defaultNamespace if provided
 */}}
 {{- define "chart.namespace" -}}
-{{- if eq .Release.Namespace "default" -}}
+{{- if .Values.defaultNamespace -}}
 {{- .Values.defaultNamespace -}}
 {{- else -}}
-{{- .Release.Namespace -}}
+default
 {{- end -}}
 {{- end -}}

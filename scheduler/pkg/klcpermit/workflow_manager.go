@@ -57,27 +57,16 @@ type Manager interface {
 type WorkloadManager struct {
 	dynamicClient dynamic.Interface
 	Tracer        trace.Tracer
+	bindCRDSpan   map[string]trace.Span
 }
 
 func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 	sMgr := &WorkloadManager{
 		dynamicClient: d,
 		Tracer:        otel.Tracer("keptn/scheduler"),
+		bindCRDSpan:   make(map[string]trace.Span, 100),
 	}
 	return sMgr
-}
-
-var bindCRDSpan = make(map[string]trace.Span, 100)
-
-func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unstructured, pod *corev1.Pod) (context.Context, trace.Span) {
-	name := getCRDName(pod)
-	if span, ok := bindCRDSpan[name]; ok {
-		return ctx, span
-	}
-	ctx, span := tracing.CreateSpan(ctx, crd, sMgr.Tracer, pod.Namespace)
-	//TODO store only sampled one and cap it
-	bindCRDSpan[name] = span
-	return ctx, span
 }
 
 func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, handler framework.WaitingPod, pod *corev1.Pod) {
@@ -110,12 +99,12 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 			case StateFailed, StateCancelled:
 				span.End()
 				handler.Reject(PluginName, "Pre Deployment Check failed")
-				unbindSpan(pod)
+				sMgr.unbindSpan(pod)
 				stopCh <- struct{}{}
 			case StateSucceeded:
 				handler.Allow(PluginName)
 				span.End()
-				unbindSpan(pod)
+				sMgr.unbindSpan(pod)
 				stopCh <- struct{}{}
 			case StatePending:
 			case StateRunning:
@@ -138,6 +127,22 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 	s.Run(stopCh)
 }
 
+func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unstructured, pod *corev1.Pod) (context.Context, trace.Span) {
+	name := getCRDName(pod)
+	if span, ok := sMgr.bindCRDSpan[name]; ok {
+		return ctx, span
+	}
+	ctx, span := tracing.CreateSpan(ctx, crd, sMgr.Tracer, pod.Namespace)
+	//TODO store only sampled one and cap it
+	sMgr.bindCRDSpan[name] = span
+	return ctx, span
+}
+
+func (sMgr *WorkloadManager) unbindSpan(pod *corev1.Pod) {
+	name := getCRDName(pod)
+	delete(sMgr.bindCRDSpan, name)
+}
+
 func getCRDName(pod *corev1.Pod) string {
 	application, _ := getLabelOrAnnotation(pod, AppAnnotation, K8sRecommendedAppAnnotations)
 	workloadInstance, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)
@@ -146,11 +151,6 @@ func getCRDName(pod *corev1.Pod) string {
 		version = calculateVersion(pod)
 	}
 	return application + "-" + workloadInstance + "-" + version
-}
-
-func unbindSpan(pod *corev1.Pod) {
-	name := getCRDName(pod)
-	delete(bindCRDSpan, name)
 }
 
 func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAnnotation string) (string, bool) {

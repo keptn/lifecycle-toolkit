@@ -1,7 +1,7 @@
 package semconv
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/trace"
 )
 

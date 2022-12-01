@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -71,6 +71,7 @@ type FunctionStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // KeptnTaskDefinition is the Schema for the keptntaskdefinitions API
 type KeptnTaskDefinition struct {
@@ -82,6 +83,7 @@ type KeptnTaskDefinition struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:storageversion
 
 // KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 type KeptnTaskDefinitionList struct {

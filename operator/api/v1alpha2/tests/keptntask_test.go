@@ -3,39 +3,39 @@ package api_test
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnTask(t *testing.T) {
-	task := &v1alpha1.KeptnTask{
+	task := &v1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
 		},
-		Spec: v1alpha1.KeptnTaskSpec{
+		Spec: v1alpha2.KeptnTaskSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: v1alpha1.KeptnTaskStatus{
+		Status: v1alpha2.KeptnTaskStatus{
 			Status: common.StateFailed,
 		},
 	}
 
 	task.SetPhaseTraceID("", nil)
-	require.Equal(t, v1alpha1.KeptnTask{
+	require.Equal(t, v1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
 		},
-		Spec: v1alpha1.KeptnTaskSpec{
+		Spec: v1alpha2.KeptnTaskSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: v1alpha1.KeptnTaskStatus{
+		Status: v1alpha2.KeptnTaskStatus{
 			Status: common.StateFailed,
 		},
 	}, *task)
@@ -99,8 +99,8 @@ func TestKeptnTask(t *testing.T) {
 }
 
 func TestKeptnTaskList(t *testing.T) {
-	list := v1alpha1.KeptnTaskList{
-		Items: []v1alpha1.KeptnTask{
+	list := v1alpha2.KeptnTaskList{
+		Items: []v1alpha2.KeptnTask{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
@@ -75,6 +75,7 @@ type WorkloadStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:resource:path=keptnappversions,shortName=kav
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.currentPhase`
@@ -94,6 +95,7 @@ type KeptnAppVersion struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:storageversion
 
 // KeptnAppVersionList contains a list of KeptnAppVersion
 type KeptnAppVersionList struct {

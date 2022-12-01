@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	"strings"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,6 +50,7 @@ type KeptnWorkloadRef struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // KeptnApp is the Schema for the keptnapps API
 type KeptnApp struct {
@@ -61,6 +62,7 @@ type KeptnApp struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:storageversion
 
 // KeptnAppList contains a list of KeptnApp
 type KeptnAppList struct {

@@ -41,17 +41,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		return nil, apicommon.StatusSummary{}, err
 	}
 
-	var evaluations []string
-	var statuses []klcv1alpha1.EvaluationStatus
-
-	switch evaluationCreateAttributes.CheckType {
-	case apicommon.PreDeploymentEvaluationCheckType:
-		evaluations = piWrapper.GetPreDeploymentEvaluations()
-		statuses = piWrapper.GetPreDeploymentEvaluationTaskStatus()
-	case apicommon.PostDeploymentEvaluationCheckType:
-		evaluations = piWrapper.GetPostDeploymentEvaluations()
-		statuses = piWrapper.GetPostDeploymentEvaluationTaskStatus()
-	}
+	evaluations, statuses := r.setupEvaluations(evaluationCreateAttributes, piWrapper)
 
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
@@ -138,6 +128,21 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 	}
 	return newStatus, summary, nil
+}
+
+func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes EvaluationCreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha1.EvaluationStatus) {
+	var evaluations []string
+	var statuses []klcv1alpha1.EvaluationStatus
+
+	switch evaluationCreateAttributes.CheckType {
+	case apicommon.PreDeploymentEvaluationCheckType:
+		evaluations = piWrapper.GetPreDeploymentEvaluations()
+		statuses = piWrapper.GetPreDeploymentEvaluationTaskStatus()
+	case apicommon.PostDeploymentEvaluationCheckType:
+		evaluations = piWrapper.GetPostDeploymentEvaluations()
+		statuses = piWrapper.GetPostDeploymentEvaluationTaskStatus()
+	}
+	return evaluations, statuses
 }
 
 func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) (string, error) {

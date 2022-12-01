@@ -1,6 +1,7 @@
 run:
   timeout: 5m
   go: '1.19'
+  tests: false
 linters:
   enable:
 #    - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
@@ -19,12 +20,6 @@ issues:
     - linters:
         - gci
       text: '//+kubebuilder'
-    - linters:
-        - containedctx
-        - gocyclo
-        - gocognit
-        - funlen
-      path: _test\.go
 
 linters-settings:
   gocyclo:

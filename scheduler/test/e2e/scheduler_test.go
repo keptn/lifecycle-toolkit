@@ -1,7 +1,7 @@
 package e2e
 
 import (
-	testv1alpha1 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha1"
+	testv1alpha2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	apiv1 "k8s.io/api/core/v1"
@@ -38,7 +38,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		pause := imageutils.GetPauseImageName()
 		var (
-			workloadinstance *testv1alpha1.KeptnWorkloadInstance
+			workloadinstance *testv1alpha2.KeptnWorkloadInstance
 			pod              *apiv1.Pod
 		)
 		BeforeEach(func() {
@@ -140,20 +140,20 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 	})
 })
 
-func initWorkloadInstance() *testv1alpha1.KeptnWorkloadInstance {
+func initWorkloadInstance() *testv1alpha2.KeptnWorkloadInstance {
 
-	var fakeInstance = testv1alpha1.KeptnWorkloadInstance{
+	var fakeInstance = testv1alpha2.KeptnWorkloadInstance{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "KeptnWorkloadInstance",
-			APIVersion: "lifecycle.keptn.sh/v1alpha1",
+			APIVersion: "lifecycle.keptn.sh/v1alpha2",
 		},
 		ObjectMeta: metav1.ObjectMeta{Name: "myapp-myworkload-1.0.0", Namespace: "default"},
-		Spec: testv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: testv1alpha1.KeptnWorkloadSpec{
-				ResourceReference: testv1alpha1.ResourceReference{Name: "myfakeres"},
+		Spec: testv1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: testv1alpha2.KeptnWorkloadSpec{
+				ResourceReference: testv1alpha2.ResourceReference{Name: "myfakeres"},
 			},
 		},
-		Status: testv1alpha1.KeptnWorkloadInstanceStatus{},
+		Status: testv1alpha2.KeptnWorkloadInstanceStatus{},
 	}
 
 	return &fakeInstance

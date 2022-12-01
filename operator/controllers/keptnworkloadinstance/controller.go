@@ -142,16 +142,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// set the App trace id if not already set
-	if len(workloadInstance.Spec.TraceId) < 1 {
-		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
-		if appDeploymentTraceID != nil {
-			workloadInstance.Spec.TraceId = appDeploymentTraceID
-		} else {
-			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
-		}
-		if err := r.Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
+	result, err := r.setTraceId(ctx, workloadInstance, appVersion)
+	if err != nil {
+		return result, err
 	}
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
@@ -163,74 +156,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		r.Log.Error(err, "could not get span")
 	}
 
-	if workloadInstance.Status.CurrentPhase == "" {
-		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
-	}
-
-	if !workloadInstance.IsPreDeploymentSucceeded() {
-		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentCheckType)
-		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
-		if !result.Continue {
-			return result.Result, err
-		}
-	}
-
-	//Wait for pre-evaluation checks of Workload
-	phase = apicommon.PhaseWorkloadPreEvaluation
-	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
-		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentEvaluationCheckType)
-		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
-		if !result.Continue {
-			return result.Result, err
-		}
-	}
-
-	//Wait for deployment of Workload
-	phase = apicommon.PhaseWorkloadDeployment
-	if !workloadInstance.IsDeploymentSucceeded() {
-		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcileDeployment(ctx, workloadInstance)
-		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
-		if !result.Continue {
-			return result.Result, err
-		}
-	}
-
-	//Wait for post-deployment checks of Workload
-	phase = apicommon.PhaseWorkloadPostDeployment
-	if !workloadInstance.IsPostDeploymentSucceeded() {
-		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentCheckType)
-		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
-		if !result.Continue {
-			return result.Result, err
-		}
-	}
-
-	//Wait for post-evaluation checks of Workload
-	phase = apicommon.PhaseWorkloadPostEvaluation
-	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
-		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentEvaluationCheckType)
-		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
-		if !result.Continue {
-			return result.Result, err
-		}
-	}
-
-	// WorkloadInstance is completed at this place
-	if !workloadInstance.IsEndTimeSet() {
-		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
-		workloadInstance.Status.Status = apicommon.StateSucceeded
-		workloadInstance.SetEndTime()
+	phase, c, err, done := r.goThroughPhases(ctx, workloadInstance, spanWorkloadTrace, phase, phaseHandler, ctxWorkloadTrace, span)
+	if done {
+		return c, err
 	}
 
 	err = r.Client.Status().Update(ctx, workloadInstance)
@@ -254,6 +182,94 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 
+	return ctrl.Result{}, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) goThroughPhases(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, spanWorkloadTrace trace.Span, phase apicommon.KeptnPhaseType, phaseHandler controllercommon.PhaseHandler, ctxWorkloadTrace context.Context, span trace.Span) (apicommon.KeptnPhaseType, ctrl.Result, error, bool) {
+	if workloadInstance.Status.CurrentPhase == "" {
+		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
+		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
+	}
+
+	if !workloadInstance.IsPreDeploymentSucceeded() {
+		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentCheckType)
+		}
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
+		if !result.Continue {
+			return apicommon.KeptnPhaseType{}, result.Result, err, true
+		}
+	}
+
+	//Wait for pre-evaluation checks of Workload
+	phase = apicommon.PhaseWorkloadPreEvaluation
+	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
+		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentEvaluationCheckType)
+		}
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
+		if !result.Continue {
+			return apicommon.KeptnPhaseType{}, result.Result, err, true
+		}
+	}
+
+	//Wait for deployment of Workload
+	phase = apicommon.PhaseWorkloadDeployment
+	if !workloadInstance.IsDeploymentSucceeded() {
+		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcileDeployment(ctx, workloadInstance)
+		}
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
+		if !result.Continue {
+			return apicommon.KeptnPhaseType{}, result.Result, err, true
+		}
+	}
+
+	//Wait for post-deployment checks of Workload
+	phase = apicommon.PhaseWorkloadPostDeployment
+	if !workloadInstance.IsPostDeploymentSucceeded() {
+		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentCheckType)
+		}
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
+		if !result.Continue {
+			return apicommon.KeptnPhaseType{}, result.Result, err, true
+		}
+	}
+
+	//Wait for post-evaluation checks of Workload
+	phase = apicommon.PhaseWorkloadPostEvaluation
+	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
+		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentEvaluationCheckType)
+		}
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
+		if !result.Continue {
+			return apicommon.KeptnPhaseType{}, result.Result, err, true
+		}
+	}
+
+	// WorkloadInstance is completed at this place
+	if !workloadInstance.IsEndTimeSet() {
+		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
+		workloadInstance.Status.Status = apicommon.StateSucceeded
+		workloadInstance.SetEndTime()
+	}
+	return phase, ctrl.Result{}, nil, false
+}
+
+func (r *KeptnWorkloadInstanceReconciler) setTraceId(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, appVersion klcv1alpha1.KeptnAppVersion) (ctrl.Result, error) {
+	if len(workloadInstance.Spec.TraceId) < 1 {
+		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
+		if appDeploymentTraceID != nil {
+			workloadInstance.Spec.TraceId = appDeploymentTraceID
+		} else {
+			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
+		}
+		if err := r.Update(ctx, workloadInstance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	return ctrl.Result{}, nil
 }
 

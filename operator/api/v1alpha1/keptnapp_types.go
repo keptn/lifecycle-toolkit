@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"strconv"
+	"fmt"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -77,7 +77,7 @@ func init() {
 }
 
 func (a KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(a.Name + "-" + a.Spec.Version + "-" + strconv.FormatInt(a.Generation, 10))
+	return strings.ToLower(fmt.Sprintf("%s-%s-%d", a.Name, a.Spec.Version, a.Generation))
 }
 
 func (a KeptnApp) SetSpanAttributes(span trace.Span) {

@@ -2,8 +2,8 @@ package keptnapp
 
 import (
 	"context"
+	"fmt"
 	"reflect"
-	"strconv"
 	"testing"
 
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
@@ -46,7 +46,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	}
 	t.Log("Verifying created app")
 	assert.Equal(t, appVersion.Namespace, app.Namespace)
-	assert.Equal(t, appVersion.Name, app.Name+"-"+app.Spec.Version+"-"+strconv.FormatInt(app.Generation, 10))
+	assert.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%d", app.Name, app.Spec.Version, app.Generation))
 
 }
 
@@ -124,7 +124,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
-	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0-0")
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0-1")
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")

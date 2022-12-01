@@ -2,7 +2,6 @@ package component
 
 import (
 	"fmt"
-	"strconv"
 
 	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
@@ -123,7 +122,7 @@ func assertResourceUpdated(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnApp
 func getAppVersion(instance *klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
 	appvName := types.NamespacedName{
 		Namespace: instance.Namespace,
-		Name:      instance.Name + "-" + instance.Spec.Version + "-" + strconv.Itoa(instance.Spec.Revision),
+		Name:      fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation),
 	}
 
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
@@ -143,7 +142,7 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 		return len(spans) >= 3
 	}, "10s").Should(BeTrue())
 
-	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Spec.Revision)))
+	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 
@@ -159,8 +158,9 @@ func assertAppSpan(instance *klcv1alpha1.KeptnApp, spanRecorder *sdktest.SpanRec
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha1.KeptnApp {
 	instance := &klcv1alpha1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
+			Name:       name,
+			Namespace:  namespace,
+			Generation: 1,
 		},
 		Spec: klcv1alpha1.KeptnAppSpec{
 			Version:  version,

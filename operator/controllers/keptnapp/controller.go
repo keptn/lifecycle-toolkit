@@ -264,7 +264,7 @@ func (r *KeptnAppReconciler) bumpRevisionOfWorkloadForApp(ctx context.Context, a
 func (r *KeptnAppReconciler) getPreviousAppVersion(ctx context.Context, app klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
 	for i := app.Generation - 1; i > 0; i-- {
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.FormatInt(i, 10)}, appVersion)
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: fmt.Sprintf("%s-%s-%d", app.Name, app.Spec.Version, i)}, appVersion)
 		if err == nil && appVersion != nil {
 			return appVersion
 		}

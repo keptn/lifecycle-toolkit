@@ -152,7 +152,7 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
-					EvaluationStatus: map[string]v1alpha1.EvaluationStatusItem{
+					EvaluationStatus: map[string]v1alpha2.EvaluationStatusItem{
 						"my-target": {
 							Value:   "1",
 							Status:  apicommon.StateFailed,

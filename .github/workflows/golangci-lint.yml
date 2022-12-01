@@ -1,5 +1,13 @@
 name: golangci-lint
-on: pull_request
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
 env:
   GOLANGCI_LINT_VERSION: "v1.50.1"
   GO_VERSION: "1.19"
@@ -25,6 +33,7 @@ jobs:
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
+        continue-on-error: true
         with:
           working-directory: ${{ matrix.config.folder }}
           version: ${{ env.GOLANGCI_LINT_VERSION }}

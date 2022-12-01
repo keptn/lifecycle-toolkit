@@ -1,11 +1,9 @@
 name: CI
 on:
-  # always execute docker build when something is pushed to main or a maintenance branch
   push:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
-  # in addition, execute for pull requests to those branches
   pull_request:
     branches:
       - 'main'
@@ -69,7 +67,6 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
-            # Nothing to test in functions-runtime
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -89,7 +86,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           flags: ${{ matrix.config.name }}
-
 
   build_image:
     name: Build Docker Image
@@ -167,7 +163,6 @@ jobs:
     name: Component Tests
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
-
 
   integration_tests:
     name: Integration Tests

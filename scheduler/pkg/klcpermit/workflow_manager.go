@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/tracing"
-	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
@@ -97,8 +96,8 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 			span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 			switch KeptnState(phase) {
 			case StateFailed, StateCancelled:
-				span.End()
 				handler.Reject(PluginName, "Pre Deployment Check failed")
+				span.End()
 				sMgr.unbindSpan(pod)
 				stopCh <- struct{}{}
 			case StateSucceeded:
@@ -120,7 +119,7 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 			checkWorkloadInstance(obj)
 		},
 		DeleteFunc: func(obj interface{}) {
-			logrus.Info("received update event!")
+			klog.Info("received delete event!")
 		},
 	}
 	s.AddEventHandler(handlers)

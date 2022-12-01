@@ -28,8 +28,9 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	app := &lfcv1alpha1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-app",
-			Namespace: "default",
+			Name:       "my-app",
+			Namespace:  "default",
+			Generation: 1,
 		},
 		Spec: lfcv1alpha1.KeptnAppSpec{
 			Version:  "1.0.0",
@@ -45,7 +46,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	}
 	t.Log("Verifying created app")
 	assert.Equal(t, appVersion.Namespace, app.Namespace)
-	assert.Equal(t, appVersion.Name, app.Name+"-"+app.Spec.Version+"-"+strconv.Itoa(app.Spec.Revision))
+	assert.Equal(t, appVersion.Name, app.Name+"-"+app.Spec.Version+"-"+strconv.FormatInt(app.Generation, 10))
 
 }
 
@@ -123,7 +124,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
-	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0-1")
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0-0")
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")

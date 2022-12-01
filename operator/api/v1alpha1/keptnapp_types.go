@@ -77,7 +77,7 @@ func init() {
 }
 
 func (a KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(a.Name + "-" + a.Spec.Version + "-" + strconv.Itoa(a.Spec.Revision))
+	return strings.ToLower(a.Name + "-" + a.Spec.Version + "-" + strconv.FormatInt(a.Generation, 10))
 }
 
 func (a KeptnApp) SetSpanAttributes(span trace.Span) {

@@ -116,7 +116,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
-		if app.Spec.Revision != 1 {
+		if app.Generation != 1 {
 			if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
 				r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", appVersion.Name)
 				return ctrl.Result{Requeue: true}, nil
@@ -185,7 +185,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha1.KeptnApp) error {
 	var resultErr error
 	resultErr = nil
-	for i := 1; i < app.Spec.Revision; i++ {
+	for i := 1; i < int(app.Generation); i++ {
 		deprecatedAppVersion := &klcv1alpha1.KeptnAppVersion{}
 		err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
 		if errors.IsNotFound(err) {
@@ -248,7 +248,7 @@ func (r *KeptnAppReconciler) bumpRevisionOfWorkloadForApp(ctx context.Context, a
 			continue
 		}
 
-		workload.Spec.AppRevision = app.Spec.Revision
+		workload.Spec.AppGeneration = app.Generation
 
 		if err := r.Client.Update(ctx, workload); err != nil {
 			r.Log.Error(err, "could not update workload %s", workload.Name)
@@ -263,11 +263,11 @@ func (r *KeptnAppReconciler) bumpRevisionOfWorkloadForApp(ctx context.Context, a
 
 func (r *KeptnAppReconciler) getPreviousAppVersion(ctx context.Context, app klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
 	appVersion := &klcv1alpha1.KeptnAppVersion{}
-	for i := app.Spec.Revision - 1; i > 0; i-- {
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, appVersion)
+	for i := app.Generation - 1; i > 0; i-- {
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.FormatInt(i, 10)}, appVersion)
 		if err == nil && appVersion != nil {
 			return appVersion
 		}
 	}
-	return nil
+	return &klcv1alpha1.KeptnAppVersion{}
 }

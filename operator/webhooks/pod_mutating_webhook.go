@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/semconv"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/semconv"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -295,7 +295,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	logger.Info("Searching for workload")
 
-	workload := &klcv1alpha1.KeptnWorkload{}
+	workload := &klcv1alpha2.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating workload", "workload", workload.Name)
@@ -349,7 +349,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 
 	logger.Info("Searching for app")
 
-	app := &klcv1alpha1.KeptnApp{}
+	app := &klcv1alpha2.KeptnApp{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
 	if errors.IsNotFound(err) {
 		logger.Info("Creating app", "app", app.Name)
@@ -392,7 +392,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	return nil
 }
 
-func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnWorkload {
+func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha2.KeptnWorkload {
 	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
@@ -424,16 +424,16 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 
 	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
 
-	return &klcv1alpha1.KeptnWorkload{
+	return &klcv1alpha2.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        a.getWorkloadName(pod),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha1.KeptnWorkloadSpec{
+		Spec: klcv1alpha2.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         klcv1alpha1.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind, Name: ownerRef.Name},
+			ResourceReference:         klcv1alpha2.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind, Name: ownerRef.Name},
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
@@ -442,7 +442,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 }
 
-func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha1.KeptnApp {
+func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha2.KeptnApp {
 	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	appName := a.getAppName(pod)
 
@@ -451,19 +451,19 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	return &klcv1alpha1.KeptnApp{
+	return &klcv1alpha2.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha1.KeptnAppSpec{
+		Spec: klcv1alpha2.KeptnAppSpec{
 			Version:                   version,
 			PreDeploymentTasks:        []string{},
 			PostDeploymentTasks:       []string{},
 			PreDeploymentEvaluations:  []string{},
 			PostDeploymentEvaluations: []string{},
-			Workloads: []klcv1alpha1.KeptnWorkloadRef{
+			Workloads: []klcv1alpha2.KeptnWorkloadRef{
 				{
 					Name:    appName,
 					Version: version,

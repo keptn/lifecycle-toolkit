@@ -25,7 +25,7 @@ func TestKeptnState_IsCompleted(t *testing.T) {
 			Want:  true,
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  true,
 		},
 	}
@@ -88,7 +88,7 @@ func TestKeptnState_IsCancelled(t *testing.T) {
 			Want:  false,
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  true,
 		},
 	}
@@ -151,7 +151,7 @@ func Test_UpdateStatusSummary(t *testing.T) {
 			Want:  StatusSummary{0, 0, 0, 0, 0, 1, 0},
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  StatusSummary{0, 0, 0, 0, 0, 0, 1},
 		},
 	}

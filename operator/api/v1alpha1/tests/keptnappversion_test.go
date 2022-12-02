@@ -245,7 +245,7 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 	}
 }
 
-func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
+func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 	app := v1alpha1.KeptnAppVersion{
 		Status: v1alpha1.KeptnAppVersionStatus{
 			PreDeploymentStatus:            common.StatePending,
@@ -278,27 +278,84 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			app:   app,
-			phase: common.PhaseAppPreEvaluation,
+			phase: common.PhaseAppPostDeployment,
 			want: v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
-					PostDeploymentStatus:           common.StateCancelled,
-					PostDeploymentEvaluationStatus: common.StateCancelled,
-					WorkloadOverallStatus:          common.StateCancelled,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},
 			},
 		},
 		{
 			app:   app,
-			phase: common.PhaseWorkloadDeployment,
+			phase: common.PhaseAppDeployment,
 			want: v1alpha1.KeptnAppVersion{
 				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
-					PostDeploymentStatus:           common.StateCancelled,
-					PostDeploymentEvaluationStatus: common.StateCancelled,
+					PostDeploymentStatus:           common.StateDeprecated,
+					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseAppPreEvaluation,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StateDeprecated,
+					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					WorkloadOverallStatus:          common.StateDeprecated,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseAppPreDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StateDeprecated,
+					PostDeploymentStatus:           common.StateDeprecated,
+					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					WorkloadOverallStatus:          common.StateDeprecated,
+					Status:                         common.StateFailed,
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseDeprecated,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StateDeprecated,
+					PreDeploymentEvaluationStatus:  common.StateDeprecated,
+					PostDeploymentStatus:           common.StateDeprecated,
+					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					WorkloadOverallStatus:          common.StateDeprecated,
+					Status:                         common.StateDeprecated,
+					CurrentPhase:                   string(common.StateDeprecated),
+				},
+			},
+		},
+		{
+			app:   app,
+			phase: common.PhaseWorkloadPreDeployment,
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
 					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},
@@ -308,7 +365,7 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			tt.app.CancelRemainingPhases(tt.phase)
+			tt.app.DeprecateRemainingPhases(tt.phase)
 			require.Equal(t, tt.want, tt.app)
 		})
 	}
@@ -358,10 +415,16 @@ func TestKeptnAppVersionList(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",
 				},
+				Status: v1alpha1.KeptnAppVersionStatus{
+					Status: common.StateSucceeded,
+				},
 			},
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj2",
+				},
+				Status: v1alpha1.KeptnAppVersionStatus{
+					Status: common.StateDeprecated,
 				},
 			},
 		},
@@ -369,4 +432,10 @@ func TestKeptnAppVersionList(t *testing.T) {
 
 	got := list.GetItems()
 	require.Len(t, got, 2)
+
+	list.RemoveDeprecated()
+
+	got = list.GetItems()
+	require.Len(t, got, 1)
+
 }

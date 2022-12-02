@@ -39,11 +39,11 @@ const (
 	StateFailed      KeptnState = "Failed"
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
-	StateCancelled   KeptnState = "Cancelled"
+	StateDeprecated  KeptnState = "Deprecated"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateCancelled
+	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -55,7 +55,7 @@ func (k KeptnState) IsFailed() bool {
 }
 
 func (k KeptnState) IsCancelled() bool {
-	return k == StateCancelled
+	return k == StateDeprecated
 }
 
 func (k KeptnState) IsPending() bool {
@@ -76,7 +76,7 @@ func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary
 	switch status {
 	case StateFailed:
 		summary.Failed++
-	case StateCancelled:
+	case StateDeprecated:
 		summary.Cancelled++
 	case StateSucceeded:
 		summary.Succeeded++

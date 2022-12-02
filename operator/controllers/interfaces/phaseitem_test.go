@@ -103,7 +103,7 @@ func TestPhaseItem(t *testing.T) {
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
 		},
-		CancelRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType) {
+		DeprecateRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType) {
 		},
 	}
 
@@ -184,7 +184,7 @@ func TestPhaseItem(t *testing.T) {
 	wrapper.SetSpanAttributes(nil)
 	require.Len(t, phaseItemMock.SetSpanAttributesCalls(), 1)
 
-	wrapper.CancelRemainingPhases(apicommon.PhaseAppDeployment)
-	require.Len(t, phaseItemMock.CancelRemainingPhasesCalls(), 1)
+	wrapper.DeprecateRemainingPhases(apicommon.PhaseAppDeployment)
+	require.Len(t, phaseItemMock.DeprecateRemainingPhasesCalls(), 1)
 
 }

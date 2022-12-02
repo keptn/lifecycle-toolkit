@@ -116,21 +116,8 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
-		if app.Generation != 1 {
-			if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
-				r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", appVersion.Name)
-				return ctrl.Result{Requeue: true}, nil
-			}
-			//only cancel this in future
-			if err := r.deleteWorkloadInstancesOfApp(ctx, *app); err != nil {
-				r.Log.Error(err, "could not delete WIs for appVersion %s", appVersion.Name)
-				return ctrl.Result{Requeue: true}, nil
-			}
-			if err := r.bumpRevisionOfWorkloadForApp(ctx, *app); err != nil {
-				r.Log.Error(err, "could not bump workload revision for appVersion %s", appVersion.Name)
-				return ctrl.Result{Requeue: true}, nil
-			}
-
+		if err := r.handleGenerationBump(ctx, app); err != nil {
+			return ctrl.Result{Requeue: true}, nil
 		}
 		return ctrl.Result{}, nil
 	}
@@ -180,6 +167,24 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	return &appVersion, err
+}
+
+func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha1.KeptnApp) error {
+	if app.Generation != 1 {
+		if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
+			r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", app.GetAppVersionName())
+			return err
+		}
+		if err := r.deleteWorkloadInstancesOfApp(ctx, *app); err != nil {
+			r.Log.Error(err, "could not delete WIs for appVersion %s", app.GetAppVersionName())
+			return err
+		}
+		if err := r.bumpRevisionOfWorkloadForApp(ctx, *app); err != nil {
+			r.Log.Error(err, "could not bump workload revision for appVersion %s", app.GetAppVersionName())
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha1.KeptnApp) error {

@@ -91,8 +91,12 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 		_, span := sMgr.getSpan(ctx, unstructuredWI, pod)
 
 		phase, found, err := unstructured.NestedString(unstructuredWI.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")
+		if err != nil {
+			klog.Errorf("[Keptn Permit Plugin] cannot fetch workloadInstance crd %s preDeploymentStatus: %s", unstructuredWI, err.Error())
+			return
+		}
 		klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", unstructuredWI, found, phase)
-		if err == nil && found {
+		if found {
 			span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 			switch KeptnState(phase) {
 			case StateFailed, StateCancelled:

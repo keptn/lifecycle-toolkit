@@ -53,7 +53,6 @@ func Test_getCRDName(t *testing.T) {
 			},
 			want: "myapp-myworkload-0.0.1",
 		},
-
 		{
 			name: "annotated and labeled pod",
 			pod: &corev1.Pod{
@@ -66,6 +65,18 @@ func Test_getCRDName(t *testing.T) {
 				},
 			},
 			want: "myapp-myworkload-0.0.1",
+		},
+		{
+			name: "annotated and labeled pod without version",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						WorkloadAnnotation: "myworkload",
+						AppAnnotation:      "myapp",
+					},
+				},
+			},
+			want: "myapp-myworkload-2166136261",
 		},
 	}
 	for _, tt := range tests {
@@ -321,6 +332,47 @@ func Test_calculateVersion(t *testing.T) {
 				},
 			},
 			want: "3235658121",
+		},
+		{
+			name: "multiple containers with env",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "pod-name",
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "container-name",
+							Image: "image:latest",
+							Env: []corev1.EnvVar{
+								{
+									Name:  "env1",
+									Value: "value1",
+								},
+								{
+									Name:  "env2",
+									Value: "value2",
+								},
+							},
+						},
+						{
+							Name:  "container-name2",
+							Image: "image:latest2",
+							Env: []corev1.EnvVar{
+								{
+									Name:  "env3",
+									Value: "value3",
+								},
+								{
+									Name:  "env4",
+									Value: "value4",
+								},
+							},
+						},
+					},
+				},
+			},
+			want: "2484568705",
 		},
 	}
 

@@ -71,8 +71,7 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, handler framework.WaitingPod, pod *corev1.Pod) {
 	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(sMgr.dynamicClient, 0, pod.GetNamespace(), nil)
 
-	gvr, _ := schema.ParseResourceArg("keptnworkloadinstances.v1alpha1.lifecycle.keptn.sh")
-	informer := factory.ForResource(*gvr)
+	informer := factory.ForResource(workloadInstanceResource)
 
 	sMgr.startWatching(ctx, informer.Informer(), pod, handler)
 }

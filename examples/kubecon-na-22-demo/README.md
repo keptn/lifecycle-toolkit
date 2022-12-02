@@ -41,3 +41,5 @@ The deployment should fail because of too few cpu resources
 > make deploy-version-3
 
 * This should only change one service, you can see that only this changed in the trace
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

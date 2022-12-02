@@ -39,3 +39,5 @@ You can watch the progress of the deployment using:
 
 After some time all resources should be in a succeeded state. Taking a look on the kustomization resource, you can see that the deployment has been updated to the latest version.
 > `kubectl describe kustomizations.kustomize.toolkit.fluxcd.io podtatohead -n default`
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

@@ -59,3 +59,5 @@ In the meanwhile you can watch the progress of the deployment using:
     * See in which phase your application deployment is at the moment
 
 After some time all resources should be in a succeeded state. In the Argo-UI you will see that the application is in sync.
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

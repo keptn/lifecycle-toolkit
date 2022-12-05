@@ -312,6 +312,8 @@ spec:
                 type: array
               previousVersion:
                 type: string
+              revision:
+                type: string
               traceId:
                 additionalProperties:
                   type: string

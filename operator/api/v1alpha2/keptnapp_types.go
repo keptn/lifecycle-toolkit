@@ -31,6 +31,7 @@ import (
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
 	Version                   string             `json:"version"`
+	Revision                  string             `json:"revision,omitempty"`
 	Workloads                 []KeptnWorkloadRef `json:"workloads,omitempty"`
 	PreDeploymentTasks        []string           `json:"preDeploymentTasks,omitempty"`
 	PostDeploymentTasks       []string           `json:"postDeploymentTasks,omitempty"`

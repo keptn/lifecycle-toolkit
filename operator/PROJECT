@@ -111,6 +111,9 @@ resources:
   kind: KeptnApp
   path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
   version: v1alpha2
+  webhooks:
+    conversion: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true

@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
@@ -26,18 +26,18 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 	}{
 		{
 			name:          "failed to create wrapper",
-			list:          &lifecyclev1alpha1.KeptnAppList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
+			list:          &lifecyclev1alpha2.KeptnAppList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
 			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
 			name: "no endtime set",
-			list: &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list: &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
-						Status: lifecyclev1alpha1.KeptnAppVersionStatus{},
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{},
 					},
 				},
 			},
@@ -46,18 +46,18 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 		},
 		{
 			name: "endtime set",
-			list: &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list: &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
 							PreviousVersion: "previousVersion",
 						},
-						Status: lifecyclev1alpha1.KeptnAppVersionStatus{
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
 							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
 							StartTime: metav1.Time{Time: metav1.Now().Time},
 						},
@@ -80,7 +80,7 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentDuration(context.TODO(), client, tt.list)
@@ -101,28 +101,28 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 	}{
 		{
 			name:          "failed to create wrapper",
-			list:          &lifecyclev1alpha1.KeptnAppList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
+			list:          &lifecyclev1alpha2.KeptnAppList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
 			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
 			name: "no endtime set - active instances",
-			list: &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list: &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
 							PreviousVersion: "previousVersion",
 						},
-						Status: lifecyclev1alpha1.KeptnAppVersionStatus{},
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{},
 					},
 				},
 			},
@@ -140,21 +140,21 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 		},
 		{
 			name: "endtime set - no active instances",
-			list: &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list: &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
 							PreviousVersion: "previousVersion",
 						},
-						Status: lifecyclev1alpha1.KeptnAppVersionStatus{
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
 							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
 							StartTime: metav1.Time{Time: metav1.Now().Time},
 						},
@@ -177,7 +177,7 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
 			res, err := GetActiveInstances(context.TODO(), client, tt.list)
@@ -200,24 +200,24 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 	}{
 		{
 			name:          "failed to create wrapper",
-			list:          &lifecyclev1alpha1.KeptnAppList{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppList{},
-			clientObject:  &lifecyclev1alpha1.KeptnApp{},
+			list:          &lifecyclev1alpha2.KeptnAppList{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
+			clientObject:  &lifecyclev1alpha2.KeptnApp{},
 			err:           controllererrors.ErrCannotWrapToListItem,
 			result:        nil,
 		},
 		{
 			name:         "no previous version",
-			list:         &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObject: &lifecyclev1alpha1.KeptnApp{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list:         &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObject: &lifecyclev1alpha2.KeptnApp{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
@@ -231,16 +231,16 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 		},
 		{
 			name:         "previous version - no previous object",
-			list:         &lifecyclev1alpha1.KeptnAppVersionList{},
-			clientObject: &lifecyclev1alpha1.KeptnApp{},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			list:         &lifecyclev1alpha2.KeptnAppVersionList{},
+			clientObject: &lifecyclev1alpha2.KeptnApp{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
@@ -254,23 +254,23 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 		},
 		{
 			name:     "previous version - object found but cannot unwrap",
-			list:     &lifecyclev1alpha1.KeptnAppVersionList{},
-			previous: &lifecyclev1alpha1.KeptnApp{},
-			clientObject: &lifecyclev1alpha1.KeptnApp{
+			list:     &lifecyclev1alpha2.KeptnAppVersionList{},
+			previous: &lifecyclev1alpha2.KeptnApp{},
+			clientObject: &lifecyclev1alpha2.KeptnApp{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "appName-previousVersion",
 					Namespace: "namespace",
 				},
 			},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:      "appName-version",
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
@@ -284,30 +284,30 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 		},
 		{
 			name:     "previous version - object found but no endtime",
-			list:     &lifecyclev1alpha1.KeptnAppVersionList{},
-			previous: &lifecyclev1alpha1.KeptnAppVersion{},
-			clientObject: &lifecyclev1alpha1.KeptnAppVersion{
+			list:     &lifecyclev1alpha2.KeptnAppVersionList{},
+			previous: &lifecyclev1alpha2.KeptnAppVersion{},
+			clientObject: &lifecyclev1alpha2.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "appName-previousVersion",
 					Namespace: "namespace",
 				},
-				Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 						Version: "previousVersion",
 					},
 					AppName:         "appName",
 					PreviousVersion: "",
 				},
 			},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:      "appName-version",
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
@@ -321,40 +321,40 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 		},
 		{
 			name:     "previous version - object found with endtime",
-			list:     &lifecyclev1alpha1.KeptnAppVersionList{},
-			previous: &lifecyclev1alpha1.KeptnAppVersion{},
-			clientObject: &lifecyclev1alpha1.KeptnAppVersion{
+			list:     &lifecyclev1alpha2.KeptnAppVersionList{},
+			previous: &lifecyclev1alpha2.KeptnAppVersion{},
+			clientObject: &lifecyclev1alpha2.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "appName-previousVersion",
 					Namespace: "namespace",
 				},
-				Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 						Version: "previousVersion",
 					},
 					AppName:         "appName",
 					PreviousVersion: "",
 				},
-				Status: lifecyclev1alpha1.KeptnAppVersionStatus{
+				Status: lifecyclev1alpha2.KeptnAppVersionStatus{
 					EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
 					StartTime: metav1.Time{Time: metav1.Now().Time},
 				},
 			},
-			clientObjects: &lifecyclev1alpha1.KeptnAppVersionList{
-				Items: []lifecyclev1alpha1.KeptnAppVersion{
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:      "appName-version",
 							Namespace: "namespace",
 						},
-						Spec: lifecyclev1alpha1.KeptnAppVersionSpec{
-							KeptnAppSpec: lifecyclev1alpha1.KeptnAppSpec{
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
 								Version: "version",
 							},
 							AppName:         "appName",
 							PreviousVersion: "previousVersion",
 						},
-						Status: lifecyclev1alpha1.KeptnAppVersionStatus{
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
 							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
 							StartTime: metav1.Time{Time: metav1.Now().Time},
 						},
@@ -385,7 +385,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := lifecyclev1alpha1.AddToScheme(scheme.Scheme)
+			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
 			res, err := GetDeploymentInterval(context.TODO(), client, tt.list, tt.previous)

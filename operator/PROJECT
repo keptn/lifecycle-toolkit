@@ -84,4 +84,84 @@ resources:
   kind: KeptnEvaluation
   path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnTaskDefinition
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnTask
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnApp
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnWorkload
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnWorkloadInstance
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnAppVersion
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluationDefinition
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluationProvider
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluation
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
 version: "3"

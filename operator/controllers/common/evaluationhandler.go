@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -35,14 +35,14 @@ type EvaluationCreateAttributes struct {
 	CheckType            apicommon.CheckType
 }
 
-func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha1.EvaluationStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha2.EvaluationStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
 	}
 
 	var evaluations []string
-	var statuses []klcv1alpha1.EvaluationStatus
+	var statuses []klcv1alpha2.EvaluationStatus
 
 	switch evaluationCreateAttributes.CheckType {
 	case apicommon.PreDeploymentEvaluationCheckType:
@@ -56,7 +56,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
-	var newStatus []klcv1alpha1.EvaluationStatus
+	var newStatus []klcv1alpha2.EvaluationStatus
 	for _, evaluationName := range evaluations {
 		var oldstatus apicommon.KeptnState
 		for _, ts := range statuses {
@@ -66,7 +66,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		}
 
 		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
-		evaluation := &klcv1alpha1.KeptnEvaluation{}
+		evaluation := &klcv1alpha2.KeptnEvaluation{}
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
@@ -164,7 +164,7 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 	return newEvaluation.Name, nil
 }
 
-func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha1.KeptnEvaluation, spanTrace trace.Span, piWrapper *interfaces.PhaseItemWrapper) {
+func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha2.KeptnEvaluation, spanTrace trace.Span, piWrapper *interfaces.PhaseItemWrapper) {
 	k8sEventMessage := "evaluation failed"
 	for k, v := range evaluation.Status.EvaluationStatus {
 		if v.Status == apicommon.StateFailed {

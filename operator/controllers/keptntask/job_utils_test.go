@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -27,7 +27,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	fakeRecorder := &record.FakeRecorder{}
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, namespace, cmName)
@@ -90,7 +90,7 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 
 	fakeRecorder := &record.FakeRecorder{}
 
-	err := klcv1alpha1.AddToScheme(fakeClient.Scheme())
+	err := klcv1alpha2.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
 	job.Status.Failed = 1
@@ -146,13 +146,13 @@ func makeJob(name, namespace string) *batchv1.Job {
 	}
 }
 
-func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha1.KeptnTask {
-	return &klcv1alpha1.KeptnTask{
+func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha2.KeptnTask {
+	return &klcv1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
+		Spec: klcv1alpha2.KeptnTaskSpec{
 			Workload:       "my-workload",
 			AppName:        "my-app",
 			AppVersion:     "0.1.0",
@@ -161,19 +161,19 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha1.Ke
 	}
 }
 
-func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *klcv1alpha1.KeptnTaskDefinition {
-	return &klcv1alpha1.KeptnTaskDefinition{
+func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *klcv1alpha2.KeptnTaskDefinition {
+	return &klcv1alpha2.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha1.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha1.FunctionSpec{
-				ConfigMapReference: klcv1alpha1.ConfigMapReference{
+		Spec: klcv1alpha2.KeptnTaskDefinitionSpec{
+			Function: klcv1alpha2.FunctionSpec{
+				ConfigMapReference: klcv1alpha2.ConfigMapReference{
 					Name: configMapName,
 				},
-				Parameters:       klcv1alpha1.TaskParameters{Inline: map[string]string{"foo": "bar"}},
-				SecureParameters: klcv1alpha1.SecureParameters{Secret: "my-secret"},
+				Parameters:       klcv1alpha2.TaskParameters{Inline: map[string]string{"foo": "bar"}},
+				SecureParameters: klcv1alpha2.SecureParameters{Secret: "my-secret"},
 			},
 		},
 	}

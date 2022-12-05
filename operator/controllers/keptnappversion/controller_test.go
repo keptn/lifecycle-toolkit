@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces/fake"
@@ -85,7 +85,7 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	//setting up fakeclient CRD data
 
-	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha1.KeptnAppVersionStatus{Status: apicommon.StatePending})
+	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha2.KeptnAppVersionStatus{Status: apicommon.StatePending})
 	require.Nil(t, err)
 	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
 	require.Nil(t, err)
@@ -120,19 +120,19 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 }
 
-func createFinishedAppVersionStatus() lfcv1alpha1.KeptnAppVersionStatus {
-	return lfcv1alpha1.KeptnAppVersionStatus{
+func createFinishedAppVersionStatus() lfcv1alpha2.KeptnAppVersionStatus {
+	return lfcv1alpha2.KeptnAppVersionStatus{
 		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
 		PreDeploymentStatus:                apicommon.StateSucceeded,
 		PostDeploymentStatus:               apicommon.StateSucceeded,
 		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
 		PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
-		PreDeploymentTaskStatus:            []lfcv1alpha1.TaskStatus{{Status: apicommon.StateSucceeded}},
-		PostDeploymentTaskStatus:           []lfcv1alpha1.TaskStatus{{Status: apicommon.StateSucceeded}},
-		PreDeploymentEvaluationTaskStatus:  []lfcv1alpha1.EvaluationStatus{{Status: apicommon.StateSucceeded}},
-		PostDeploymentEvaluationTaskStatus: []lfcv1alpha1.EvaluationStatus{{Status: apicommon.StateSucceeded}},
+		PreDeploymentTaskStatus:            []lfcv1alpha2.TaskStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentTaskStatus:           []lfcv1alpha2.TaskStatus{{Status: apicommon.StateSucceeded}},
+		PreDeploymentEvaluationTaskStatus:  []lfcv1alpha2.EvaluationStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentEvaluationTaskStatus: []lfcv1alpha2.EvaluationStatus{{Status: apicommon.StateSucceeded}},
 		WorkloadOverallStatus:              apicommon.StateSucceeded,
-		WorkloadStatus:                     []lfcv1alpha1.WorkloadStatus{{Status: apicommon.StateSucceeded}},
+		WorkloadStatus:                     []lfcv1alpha2.WorkloadStatus{{Status: apicommon.StateSucceeded}},
 		Status:                             apicommon.StateSucceeded,
 	}
 }
@@ -200,7 +200,7 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 	r := setupReconcilerWithMeters(t)
 	type args struct {
 		ctx        context.Context
-		appVersion *lfcv1alpha1.KeptnAppVersion
+		appVersion *lfcv1alpha2.KeptnAppVersion
 	}
 	tests := []struct {
 		name    string
@@ -211,7 +211,7 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 		{name: "Current trace ctx should be != than app trace context",
 			args: args{
 				ctx:        context.WithValue(context.TODO(), CONTEXTID, 1),
-				appVersion: &lfcv1alpha1.KeptnAppVersion{},
+				appVersion: &lfcv1alpha2.KeptnAppVersion{},
 			},
 			baseCtx: context.WithValue(context.TODO(), CONTEXTID, 1),
 			appCtx:  context.TODO(),

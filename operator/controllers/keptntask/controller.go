@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -57,7 +57,7 @@ type KeptnTaskReconciler struct {
 
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling KeptnTask")
-	task := &klcv1alpha1.KeptnTask{}
+	task := &klcv1alpha2.KeptnTask{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
@@ -79,7 +79,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	task.SetStartTime()
 
-	defer func(task *klcv1alpha1.KeptnTask) {
+	defer func(task *klcv1alpha2.KeptnTask) {
 		err := r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not update status")
@@ -136,12 +136,12 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1alpha1.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha2.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Owns(&batchv1.Job{}).
 		Complete(r)
 }
 
-func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha1.KeptnTask, namespace string) (bool, error) {
+func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha2.KeptnTask, namespace string) (bool, error) {
 	jobList := &batchv1.JobList{}
 
 	jobLabels := client.MatchingLabels{}

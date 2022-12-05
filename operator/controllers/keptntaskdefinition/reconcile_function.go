@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -15,14 +15,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, req ctrl.Request, definition *klcv1alpha1.KeptnTaskDefinition) error {
-	if definition.Spec.Function.Inline != (klcv1alpha1.Inline{}) {
+func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, req ctrl.Request, definition *klcv1alpha2.KeptnTaskDefinition) error {
+	if definition.Spec.Function.Inline != (klcv1alpha2.Inline{}) {
 		err := r.reconcileFunctionInline(ctx, req, definition)
 		if err != nil {
 			return err
 		}
 	}
-	if definition.Spec.Function.ConfigMapReference != (klcv1alpha1.ConfigMapReference{}) {
+	if definition.Spec.Function.ConfigMapReference != (klcv1alpha2.ConfigMapReference{}) {
 		err := r.reconcileFunctionConfigMap(ctx, req, definition)
 		if err != nil {
 			return err
@@ -31,7 +31,7 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, r
 	return nil
 }
 
-func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Context, req ctrl.Request, definition *klcv1alpha1.KeptnTaskDefinition) error {
+func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Context, req ctrl.Request, definition *klcv1alpha2.KeptnTaskDefinition) error {
 	cmIsNew := false
 	functionSpec := definition.Spec.Function
 	functionName := "keptnfn-" + definition.Name
@@ -88,7 +88,7 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Cont
 	return nil
 }
 
-func (r *KeptnTaskDefinitionReconciler) reconcileFunctionConfigMap(ctx context.Context, req ctrl.Request, definition *klcv1alpha1.KeptnTaskDefinition) error {
+func (r *KeptnTaskDefinitionReconciler) reconcileFunctionConfigMap(ctx context.Context, req ctrl.Request, definition *klcv1alpha2.KeptnTaskDefinition) error {
 	if definition.Spec.Function.ConfigMapReference.Name != definition.Status.Function.ConfigMap {
 		definition.Status.Function.ConfigMap = definition.Spec.Function.ConfigMapReference.Name
 		err := r.Client.Status().Update(ctx, definition)

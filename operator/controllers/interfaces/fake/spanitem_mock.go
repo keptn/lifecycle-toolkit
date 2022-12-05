@@ -11,28 +11,28 @@ import (
 
 // SpanItemMock is a mock implementation of common.SpanItem.
 //
-// 	func TestSomethingThatUsesSpanItem(t *testing.T) {
+//	func TestSomethingThatUsesSpanItem(t *testing.T) {
 //
-// 		// make and configure a mocked common.SpanItem
-// 		mockedSpanItem := &SpanItemMock{
-// 			GetSpanKeyFunc: func(phase string) string {
-// 				panic("mock out the GetSpanKey method")
-// 			},
-// 			GetSpanNameFunc: func(phase string) string {
-// 				panic("mock out the GetSpanName method")
-// 			},
-// 			SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier)  {
-// 				panic("mock out the SetPhaseTraceID method")
-// 			},
-// 			SetSpanAttributesFunc: func(span trace.Span)  {
-// 				panic("mock out the SetSpanAttributes method")
-// 			},
-// 		}
+//		// make and configure a mocked common.SpanItem
+//		mockedSpanItem := &SpanItemMock{
+//			GetSpanKeyFunc: func(phase string) string {
+//				panic("mock out the GetSpanKey method")
+//			},
+//			GetSpanNameFunc: func(phase string) string {
+//				panic("mock out the GetSpanName method")
+//			},
+//			SetPhaseTraceIDFunc: func(phase string, carrier propagation.MapCarrier)  {
+//				panic("mock out the SetPhaseTraceID method")
+//			},
+//			SetSpanAttributesFunc: func(span trace.Span)  {
+//				panic("mock out the SetSpanAttributes method")
+//			},
+//		}
 //
-// 		// use mockedSpanItem in code that requires common.SpanItem
-// 		// and then make assertions.
+//		// use mockedSpanItem in code that requires common.SpanItem
+//		// and then make assertions.
 //
-// 	}
+//	}
 type SpanItemMock struct {
 	// GetSpanKeyFunc mocks the GetSpanKey method.
 	GetSpanKeyFunc func(phase string) string
@@ -95,7 +95,8 @@ func (mock *SpanItemMock) GetSpanKey(phase string) string {
 
 // GetSpanKeyCalls gets all the calls that were made to GetSpanKey.
 // Check the length with:
-//     len(mockedSpanItem.GetSpanKeyCalls())
+//
+//	len(mockedSpanItem.GetSpanKeyCalls())
 func (mock *SpanItemMock) GetSpanKeyCalls() []struct {
 	Phase string
 } {
@@ -126,7 +127,8 @@ func (mock *SpanItemMock) GetSpanName(phase string) string {
 
 // GetSpanNameCalls gets all the calls that were made to GetSpanName.
 // Check the length with:
-//     len(mockedSpanItem.GetSpanNameCalls())
+//
+//	len(mockedSpanItem.GetSpanNameCalls())
 func (mock *SpanItemMock) GetSpanNameCalls() []struct {
 	Phase string
 } {
@@ -159,7 +161,8 @@ func (mock *SpanItemMock) SetPhaseTraceID(phase string, carrier propagation.MapC
 
 // SetPhaseTraceIDCalls gets all the calls that were made to SetPhaseTraceID.
 // Check the length with:
-//     len(mockedSpanItem.SetPhaseTraceIDCalls())
+//
+//	len(mockedSpanItem.SetPhaseTraceIDCalls())
 func (mock *SpanItemMock) SetPhaseTraceIDCalls() []struct {
 	Phase   string
 	Carrier propagation.MapCarrier
@@ -192,7 +195,8 @@ func (mock *SpanItemMock) SetSpanAttributes(span trace.Span) {
 
 // SetSpanAttributesCalls gets all the calls that were made to SetSpanAttributes.
 // Check the length with:
-//     len(mockedSpanItem.SetSpanAttributesCalls())
+//
+//	len(mockedSpanItem.SetSpanAttributesCalls())
 func (mock *SpanItemMock) SetSpanAttributesCalls() []struct {
 	Span trace.Span
 } {

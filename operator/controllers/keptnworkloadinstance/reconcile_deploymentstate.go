@@ -3,8 +3,8 @@ package keptnworkloadinstance
 import (
 	"context"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -12,7 +12,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) (apicommon.KeptnState, error) {
 	var isRunning bool
 	var err error
 
@@ -45,7 +45,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 	return workloadInstance.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha2.ResourceReference, namespace string) (bool, error) {
 	rep := appsv1.ReplicaSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
 	if err != nil {
@@ -54,7 +54,7 @@ func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Contex
 	return *rep.Spec.Replicas == rep.Status.AvailableReplicas, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1alpha2.ResourceReference, namespace string) (bool, error) {
 	daemonSet := &appsv1.DaemonSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, daemonSet)
 	if err != nil {
@@ -63,7 +63,7 @@ func (r *KeptnWorkloadInstanceReconciler) isDaemonSetRunning(ctx context.Context
 	return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, resource klcv1alpha2.ResourceReference, namespace string) (bool, error) {
 	podList := &corev1.PodList{}
 	if err := r.Client.List(ctx, podList, client.InNamespace(namespace)); err != nil {
 		return false, err
@@ -79,7 +79,7 @@ func (r *KeptnWorkloadInstanceReconciler) isPodRunning(ctx context.Context, reso
 	return false, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1alpha1.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1alpha2.ResourceReference, namespace string) (bool, error) {
 	sts := appsv1.StatefulSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
 	if err != nil {

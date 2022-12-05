@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
@@ -70,7 +70,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	r.Log.Info("Searching for Keptn App Version")
 
-	appVersion := &klcv1alpha1.KeptnAppVersion{}
+	appVersion := &klcv1alpha2.KeptnAppVersion{}
 	err := r.Get(ctx, req.NamespacedName, appVersion)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -194,7 +194,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	return ctrl.Result{}, nil
 }
 
-func setupSpansContexts(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVersion, r *KeptnAppVersionReconciler) (context.Context, context.Context, trace.Span, func()) {
+func setupSpansContexts(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, r *KeptnAppVersionReconciler) (context.Context, context.Context, trace.Span, func()) {
 	appVersion.SetStartTime()
 
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
@@ -221,6 +221,6 @@ func setupSpansContexts(ctx context.Context, appVersion *klcv1alpha1.KeptnAppVer
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha1.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha2.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }

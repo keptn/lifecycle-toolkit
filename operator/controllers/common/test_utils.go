@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -14,31 +14,31 @@ import (
 )
 
 func AddApp(c client.Client, name string) error {
-	app := &lfcv1alpha1.KeptnApp{
+	app := &lfcv1alpha2.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha1.KeptnAppSpec{
+		Spec: lfcv1alpha2.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1alpha1.KeptnAppStatus{},
+		Status: lfcv1alpha2.KeptnAppStatus{},
 	}
 	return c.Create(context.TODO(), app)
 
 }
 
-func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha1.KeptnWorkloadRef, status lfcv1alpha1.KeptnAppVersionStatus) error {
+func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha2.KeptnWorkloadRef, status lfcv1alpha2.KeptnAppVersionStatus) error {
 	appVersionName := fmt.Sprintf("%s-%s", appName, version)
-	app := &lfcv1alpha1.KeptnAppVersion{
+	app := &lfcv1alpha2.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      appVersionName,
 			Namespace: namespace,
 		},
-		Spec: lfcv1alpha1.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1alpha1.KeptnAppSpec{
+		Spec: lfcv1alpha2.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1alpha2.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
 			},
@@ -53,14 +53,14 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 }
 
 func AddWorkloadInstance(c client.Client, name string, namespace string) error {
-	wi := &lfcv1alpha1.KeptnWorkloadInstance{
+	wi := &lfcv1alpha2.KeptnWorkloadInstance{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: lfcv1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: lfcv1alpha1.KeptnWorkloadSpec{
+		Spec: lfcv1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: lfcv1alpha2.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
 			},
@@ -68,7 +68,7 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: lfcv1alpha1.KeptnWorkloadInstanceStatus{
+		Status: lfcv1alpha2.KeptnWorkloadInstanceStatus{
 			DeploymentStatus:                   apicommon.StateSucceeded,
 			PreDeploymentStatus:                apicommon.StateSucceeded,
 			PostDeploymentStatus:               apicommon.StateSucceeded,

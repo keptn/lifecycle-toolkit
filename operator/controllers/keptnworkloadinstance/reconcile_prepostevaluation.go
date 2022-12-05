@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha1.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,

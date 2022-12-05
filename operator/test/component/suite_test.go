@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	klcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
@@ -84,7 +84,7 @@ var _ = BeforeSuite(func() {
 	Expect(cfg).NotTo(BeNil())
 
 	//+kubebuilder:scaffold:scheme
-	err = klcv1alpha1.AddToScheme(scheme.Scheme)
+	err = klcv1alpha2.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})

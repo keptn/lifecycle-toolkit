@@ -115,3 +115,5 @@ make port-forward-grafana
 Now, you should be able to see it in the [Grafana UI](http://localhost:3000/d/wlo2MpIVk/keptn-lifecycle-toolkit-metrics) under `Dashboards > General`.
 
 ![](./assets/grafana_dashboard.png)
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

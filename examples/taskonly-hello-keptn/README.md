@@ -23,3 +23,5 @@ This example shows how to define an inline function and pass over parameters to 
 NAME                            APPLICATION   WORKLOAD      VERSION   JOB NAME                           STATUS
 hello-developer                 my-app        my-workload   1.0       klc-my-app-my-workload-1.0-57692   Succeeded
 ```
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

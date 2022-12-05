@@ -71,13 +71,15 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, handler framework.WaitingPod, pod *corev1.Pod) {
 	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(sMgr.dynamicClient, 0, pod.GetNamespace(), nil)
 
-	informer := factory.ForResource(workloadInstanceResource)
+	informer := factory.ForResource(workloadInstanceResource).Informer()
+	stopCh := make(chan struct{})
+	factory.Start(stopCh)
+	factory.WaitForCacheSync(stopCh)
 
-	sMgr.startWatching(ctx, informer.Informer(), pod, handler)
+	sMgr.startWatching(ctx, informer, pod, handler, stopCh)
 }
 
-func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIndexInformer, pod *corev1.Pod, handler framework.WaitingPod) {
-	stopCh := make(chan struct{})
+func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIndexInformer, pod *corev1.Pod, handler framework.WaitingPod, stopCh chan struct{}) {
 	workloadInstanceName := getCRDName(pod)
 
 	checkWorkloadInstance := func(obj interface{}) {
@@ -114,19 +116,8 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 			}
 		}
 	}
-	handlers := cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			checkWorkloadInstance(obj)
-		},
-		UpdateFunc: func(oldObj, obj interface{}) {
-			checkWorkloadInstance(obj)
-		},
-		DeleteFunc: func(obj interface{}) {
-			klog.Info("received delete event!")
-		},
-	}
+	handlers := sMgr.createHandler(checkWorkloadInstance)
 	s.AddEventHandler(handlers)
-	s.Run(stopCh)
 }
 
 func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unstructured, pod *corev1.Pod) (context.Context, trace.Span) {
@@ -145,6 +136,19 @@ func (sMgr *WorkloadManager) unbindSpan(pod *corev1.Pod) {
 	delete(sMgr.bindCRDSpan, name)
 }
 
+func (sMgr *WorkloadManager) createHandler(checkFunc func(obj interface{})) cache.ResourceEventHandlerFuncs {
+	return cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			checkFunc(obj)
+		},
+		UpdateFunc: func(oldObj, obj interface{}) {
+			checkFunc(obj)
+		},
+		DeleteFunc: func(obj interface{}) {
+			klog.Info("received delete event!")
+		},
+	}
+}
 func getCRDName(pod *corev1.Pod) string {
 	application, _ := getLabelOrAnnotation(pod, AppAnnotation, K8sRecommendedAppAnnotations)
 	workloadInstance, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)

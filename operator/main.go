@@ -345,10 +345,12 @@ func main() {
 		Tracer:   otel.Tracer("keptn/operator/evaluation"),
 		Meters:   meters,
 	}
+
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
 	}
+
 	if err = (&lifecyclev1alpha2.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)

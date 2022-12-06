@@ -1,6 +1,7 @@
 package v1alpha2_test
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
@@ -10,12 +11,12 @@ import (
 )
 
 func TestKeptnWorkload(t *testing.T) {
-	workload := &KeptnWorkload{
+	workload := &v1alpha2.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
-		Spec: KeptnWorkloadSpec{
+		Spec: v1alpha2.KeptnWorkloadSpec{
 			Version: "version",
 			AppName: "app",
 		},
@@ -25,14 +26,14 @@ func TestKeptnWorkload(t *testing.T) {
 	require.Equal(t, "workload-version", workloadInstanceName)
 
 	workloadInstance := workload.GenerateWorkloadInstance("prev", map[string]string{})
-	require.Equal(t, KeptnWorkloadInstance{
+	require.Equal(t, v1alpha2.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Name:        "workload-version",
 			Namespace:   "namespace",
 		},
-		Spec: KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: KeptnWorkloadSpec{
+		Spec: v1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: v1alpha2.KeptnWorkloadSpec{
 				Version: "version",
 				AppName: "app",
 			},

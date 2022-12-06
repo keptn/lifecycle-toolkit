@@ -1,6 +1,7 @@
 package v1alpha1_test
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"testing"
 	"time"
 
@@ -13,40 +14,40 @@ import (
 )
 
 func TestKeptnAppVersion(t *testing.T) {
-	app := &KeptnAppVersion{
+	app := &v1alpha1.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
 		},
-		Status: KeptnAppVersionStatus{
+		Status: v1alpha1.KeptnAppVersionStatus{
 			PreDeploymentStatus:            common.StateFailed,
 			PreDeploymentEvaluationStatus:  common.StateFailed,
 			PostDeploymentStatus:           common.StateFailed,
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			WorkloadOverallStatus:          common.StateFailed,
 			Status:                         common.StateFailed,
-			PreDeploymentTaskStatus: []TaskStatus{
+			PreDeploymentTaskStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "defname",
 					Status:             common.StateFailed,
 					TaskName:           "taskname",
 				},
 			},
-			PostDeploymentTaskStatus: []TaskStatus{
+			PostDeploymentTaskStatus: []v1alpha1.TaskStatus{
 				{
 					TaskDefinitionName: "defname2",
 					Status:             common.StateFailed,
 					TaskName:           "taskname2",
 				},
 			},
-			PreDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PreDeploymentEvaluationTaskStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "defname3",
 					Status:                   common.StateFailed,
 					EvaluationName:           "taskname3",
 				},
 			},
-			PostDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PostDeploymentEvaluationTaskStatus: []v1alpha1.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "defname4",
 					Status:                   common.StateFailed,
@@ -55,8 +56,8 @@ func TestKeptnAppVersion(t *testing.T) {
 			},
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
 		},
-		Spec: KeptnAppVersionSpec{
-			KeptnAppSpec: KeptnAppSpec{
+		Spec: v1alpha1.KeptnAppVersionSpec{
+			KeptnAppSpec: v1alpha1.KeptnAppSpec{
 				PreDeploymentTasks:        []string{"task1", "task2"},
 				PostDeploymentTasks:       []string{"task3", "task4"},
 				PreDeploymentEvaluations:  []string{"task5", "task6"},
@@ -124,7 +125,7 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.Equal(t, []string{"task5", "task6"}, app.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, app.GetPostDeploymentEvaluations())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []v1alpha1.TaskStatus{
 		{
 			TaskDefinitionName: "defname",
 			Status:             common.StateFailed,
@@ -132,7 +133,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		},
 	}, app.GetPreDeploymentTaskStatus())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []v1alpha1.TaskStatus{
 		{
 			TaskDefinitionName: "defname2",
 			Status:             common.StateFailed,
@@ -140,7 +141,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		},
 	}, app.GetPostDeploymentTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []v1alpha1.EvaluationStatus{
 		{
 			EvaluationDefinitionName: "defname3",
 			Status:                   common.StateFailed,
@@ -148,7 +149,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		},
 	}, app.GetPreDeploymentEvaluationTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []v1alpha1.EvaluationStatus{
 		{
 			EvaluationDefinitionName: "defname4",
 			Status:                   common.StateFailed,
@@ -179,17 +180,17 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.Equal(t, "trace1.appname.version.phase", app.GetSpanKey("phase"))
 
 	task := app.GenerateTask("taskdef", common.PostDeploymentCheckType)
-	require.Equal(t, KeptnTaskSpec{
+	require.Equal(t, v1alpha1.KeptnTaskSpec{
 		AppVersion:       app.GetVersion(),
 		AppName:          app.GetParentName(),
 		TaskDefinition:   "taskdef",
-		Parameters:       TaskParameters{},
-		SecureParameters: SecureParameters{},
+		Parameters:       v1alpha1.TaskParameters{},
+		SecureParameters: v1alpha1.SecureParameters{},
 		Type:             common.PostDeploymentCheckType,
 	}, task.Spec)
 
 	evaluation := app.GenerateEvaluation("taskdef", common.PostDeploymentCheckType)
-	require.Equal(t, KeptnEvaluationSpec{
+	require.Equal(t, v1alpha1.KeptnEvaluationSpec{
 		AppVersion:           app.GetVersion(),
 		AppName:              app.GetParentName(),
 		EvaluationDefinition: "taskdef",
@@ -210,7 +211,7 @@ func TestKeptnAppVersion(t *testing.T) {
 
 func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 	type fields struct {
-		Spec KeptnAppVersionSpec
+		Spec v1alpha1.KeptnAppVersionSpec
 	}
 	type args struct {
 		workloadName string
@@ -224,7 +225,7 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 		{
 			name: "",
 			fields: fields{
-				Spec: KeptnAppVersionSpec{AppName: "my-app"},
+				Spec: v1alpha1.KeptnAppVersionSpec{AppName: "my-app"},
 			},
 			args: args{
 				workloadName: "my-workload",
@@ -234,7 +235,7 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v := KeptnAppVersion{
+			v := v1alpha1.KeptnAppVersion{
 				Spec: tt.fields.Spec,
 			}
 			if got := v.GetWorkloadNameOfApp(tt.args.workloadName); got != tt.want {
@@ -245,8 +246,8 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 }
 
 func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
-	app := KeptnAppVersion{
-		Status: KeptnAppVersionStatus{
+	app := v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
 			PreDeploymentStatus:            common.StatePending,
 			PreDeploymentEvaluationStatus:  common.StatePending,
 			PostDeploymentStatus:           common.StatePending,
@@ -257,15 +258,15 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 	}
 
 	tests := []struct {
-		app   KeptnAppVersion
+		app   v1alpha1.KeptnAppVersion
 		phase common.KeptnPhaseType
-		want  KeptnAppVersion
+		want  v1alpha1.KeptnAppVersion
 	}{
 		{
 			app:   app,
 			phase: common.PhaseAppPostEvaluation,
-			want: KeptnAppVersion{
-				Status: KeptnAppVersionStatus{
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
@@ -278,8 +279,8 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		{
 			app:   app,
 			phase: common.PhaseAppPreEvaluation,
-			want: KeptnAppVersion{
-				Status: KeptnAppVersionStatus{
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateCancelled,
@@ -292,8 +293,8 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 		{
 			app:   app,
 			phase: common.PhaseWorkloadDeployment,
-			want: KeptnAppVersion{
-				Status: KeptnAppVersionStatus{
+			want: v1alpha1.KeptnAppVersion{
+				Status: v1alpha1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateCancelled,
@@ -314,16 +315,16 @@ func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 }
 
 func TestKeptnAppVersion_SetPhaseTraceID(t *testing.T) {
-	app := KeptnAppVersion{
-		Status: KeptnAppVersionStatus{},
+	app := v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{},
 	}
 
 	app.SetPhaseTraceID(common.PhaseAppDeployment.ShortName, propagation.MapCarrier{
 		"name3": "trace3",
 	})
 
-	require.Equal(t, KeptnAppVersion{
-		Status: KeptnAppVersionStatus{
+	require.Equal(t, v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -336,8 +337,8 @@ func TestKeptnAppVersion_SetPhaseTraceID(t *testing.T) {
 		"name2": "trace2",
 	})
 
-	require.Equal(t, KeptnAppVersion{
-		Status: KeptnAppVersionStatus{
+	require.Equal(t, v1alpha1.KeptnAppVersion{
+		Status: v1alpha1.KeptnAppVersionStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -351,8 +352,8 @@ func TestKeptnAppVersion_SetPhaseTraceID(t *testing.T) {
 }
 
 func TestKeptnAppVersionList(t *testing.T) {
-	list := KeptnAppVersionList{
-		Items: []KeptnAppVersion{
+	list := v1alpha1.KeptnAppVersionList{
+		Items: []v1alpha1.KeptnAppVersion{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

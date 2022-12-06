@@ -1,6 +1,7 @@
 package v1alpha2_test
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
@@ -10,31 +11,31 @@ import (
 )
 
 func TestKeptnTask(t *testing.T) {
-	task := &KeptnTask{
+	task := &v1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
 		},
-		Spec: KeptnTaskSpec{
+		Spec: v1alpha2.KeptnTaskSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: KeptnTaskStatus{
+		Status: v1alpha2.KeptnTaskStatus{
 			Status: common.StateFailed,
 		},
 	}
 
 	task.SetPhaseTraceID("", nil)
-	require.Equal(t, KeptnTask{
+	require.Equal(t, v1alpha2.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
 		},
-		Spec: KeptnTaskSpec{
+		Spec: v1alpha2.KeptnTaskSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: KeptnTaskStatus{
+		Status: v1alpha2.KeptnTaskStatus{
 			Status: common.StateFailed,
 		},
 	}, *task)
@@ -98,8 +99,8 @@ func TestKeptnTask(t *testing.T) {
 }
 
 func TestKeptnTaskList(t *testing.T) {
-	list := KeptnTaskList{
-		Items: []KeptnTask{
+	list := v1alpha2.KeptnTaskList{
+		Items: []v1alpha2.KeptnTask{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

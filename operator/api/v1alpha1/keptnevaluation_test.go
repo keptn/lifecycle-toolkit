@@ -1,40 +1,40 @@
 package v1alpha1_test
 
 import (
-	"testing"
-
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"testing"
 )
 
 func TestKeptnEvaluation(t *testing.T) {
-	evaluation := &KeptnEvaluation{
+	evaluation := &v1alpha1.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "evaluation",
 		},
-		Spec: KeptnEvaluationSpec{
+		Spec: v1alpha1.KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: KeptnEvaluationStatus{
+		Status: v1alpha1.KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
 		},
 	}
 
 	evaluation.SetPhaseTraceID("", nil)
-	require.Equal(t, KeptnEvaluation{
+	require.Equal(t, v1alpha1.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "evaluation",
 		},
-		Spec: KeptnEvaluationSpec{
+		Spec: v1alpha1.KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: KeptnEvaluationStatus{
+		Status: v1alpha1.KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
 		},
 	}, *evaluation)
@@ -70,8 +70,8 @@ func TestKeptnEvaluation(t *testing.T) {
 		common.EvaluationStatus.String(string(common.StateFailed)),
 	}, evaluation.GetMetricsAttributes())
 
-	evaluation.AddEvaluationStatus(Objective{Name: "objName"})
-	require.Equal(t, EvaluationStatusItem{
+	evaluation.AddEvaluationStatus(v1alpha1.Objective{Name: "objName"})
+	require.Equal(t, v1alpha1.EvaluationStatusItem{
 		Status: common.StatePending,
 	}, evaluation.Status.EvaluationStatus["objName"])
 
@@ -87,8 +87,8 @@ func TestKeptnEvaluation(t *testing.T) {
 }
 
 func TestKeptnEvaluationList(t *testing.T) {
-	list := KeptnEvaluationList{
-		Items: []KeptnEvaluation{
+	list := v1alpha1.KeptnEvaluationList{
+		Items: []v1alpha1.KeptnEvaluation{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

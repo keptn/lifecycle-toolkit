@@ -1,6 +1,7 @@
 package v1alpha2_test
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"testing"
 	"time"
 
@@ -13,40 +14,40 @@ import (
 )
 
 func TestKeptnWorkloadInstance(t *testing.T) {
-	workload := &KeptnWorkloadInstance{
+	workload := &v1alpha2.KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
-		Status: KeptnWorkloadInstanceStatus{
+		Status: v1alpha2.KeptnWorkloadInstanceStatus{
 			PreDeploymentStatus:            common.StateFailed,
 			PreDeploymentEvaluationStatus:  common.StateFailed,
 			PostDeploymentStatus:           common.StateFailed,
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			DeploymentStatus:               common.StateFailed,
 			Status:                         common.StateFailed,
-			PreDeploymentTaskStatus: []TaskStatus{
+			PreDeploymentTaskStatus: []v1alpha2.TaskStatus{
 				{
 					TaskDefinitionName: "defname",
 					Status:             common.StateFailed,
 					TaskName:           "taskname",
 				},
 			},
-			PostDeploymentTaskStatus: []TaskStatus{
+			PostDeploymentTaskStatus: []v1alpha2.TaskStatus{
 				{
 					TaskDefinitionName: "defname2",
 					Status:             common.StateFailed,
 					TaskName:           "taskname2",
 				},
 			},
-			PreDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PreDeploymentEvaluationTaskStatus: []v1alpha2.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "defname3",
 					Status:                   common.StateFailed,
 					EvaluationName:           "taskname3",
 				},
 			},
-			PostDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PostDeploymentEvaluationTaskStatus: []v1alpha2.EvaluationStatus{
 				{
 					EvaluationDefinitionName: "defname4",
 					Status:                   common.StateFailed,
@@ -55,8 +56,8 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 			},
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
 		},
-		Spec: KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: KeptnWorkloadSpec{
+		Spec: v1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: v1alpha2.KeptnWorkloadSpec{
 				PreDeploymentTasks:        []string{"task1", "task2"},
 				PostDeploymentTasks:       []string{"task3", "task4"},
 				PreDeploymentEvaluations:  []string{"task5", "task6"},
@@ -128,7 +129,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	require.Equal(t, []string{"task5", "task6"}, workload.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, workload.GetPostDeploymentEvaluations())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []v1alpha2.TaskStatus{
 		{
 			TaskDefinitionName: "defname",
 			Status:             common.StateFailed,
@@ -136,7 +137,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentTaskStatus())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []v1alpha2.TaskStatus{
 		{
 			TaskDefinitionName: "defname2",
 			Status:             common.StateFailed,
@@ -144,7 +145,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 	}, workload.GetPostDeploymentTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []v1alpha2.EvaluationStatus{
 		{
 			EvaluationDefinitionName: "defname3",
 			Status:                   common.StateFailed,
@@ -152,7 +153,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentEvaluationTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []v1alpha2.EvaluationStatus{
 		{
 			EvaluationDefinitionName: "defname4",
 			Status:                   common.StateFailed,
@@ -183,18 +184,18 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	require.Equal(t, "trace1.workloadname.version.phase", workload.GetSpanKey("phase"))
 
 	task := workload.GenerateTask("taskdef", common.PostDeploymentCheckType)
-	require.Equal(t, KeptnTaskSpec{
+	require.Equal(t, v1alpha2.KeptnTaskSpec{
 		AppName:          workload.GetAppName(),
 		WorkloadVersion:  workload.GetVersion(),
 		Workload:         workload.GetParentName(),
 		TaskDefinition:   "taskdef",
-		Parameters:       TaskParameters{},
-		SecureParameters: SecureParameters{},
+		Parameters:       v1alpha2.TaskParameters{},
+		SecureParameters: v1alpha2.SecureParameters{},
 		Type:             common.PostDeploymentCheckType,
 	}, task.Spec)
 
 	evaluation := workload.GenerateEvaluation("taskdef", common.PostDeploymentCheckType)
-	require.Equal(t, KeptnEvaluationSpec{
+	require.Equal(t, v1alpha2.KeptnEvaluationSpec{
 		AppName:              workload.GetAppName(),
 		WorkloadVersion:      workload.GetVersion(),
 		Workload:             workload.GetParentName(),
@@ -218,8 +219,8 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 }
 
 func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
-	workloadInstance := KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+	workloadInstance := v1alpha2.KeptnWorkloadInstance{
+		Status: v1alpha2.KeptnWorkloadInstanceStatus{
 			PreDeploymentStatus:            common.StatePending,
 			PreDeploymentEvaluationStatus:  common.StatePending,
 			PostDeploymentStatus:           common.StatePending,
@@ -230,15 +231,15 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 	}
 
 	tests := []struct {
-		workloadInstance KeptnWorkloadInstance
+		workloadInstance v1alpha2.KeptnWorkloadInstance
 		phase            common.KeptnPhaseType
-		want             KeptnWorkloadInstance
+		want             v1alpha2.KeptnWorkloadInstance
 	}{
 		{
 			workloadInstance: workloadInstance,
 			phase:            common.PhaseWorkloadPostEvaluation,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			want: v1alpha2.KeptnWorkloadInstance{
+				Status: v1alpha2.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
@@ -251,8 +252,8 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 		{
 			workloadInstance: workloadInstance,
 			phase:            common.PhaseAppPreEvaluation,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			want: v1alpha2.KeptnWorkloadInstance{
+				Status: v1alpha2.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            common.StateCancelled,
 					PreDeploymentEvaluationStatus:  common.StateCancelled,
 					PostDeploymentStatus:           common.StateCancelled,
@@ -265,8 +266,8 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 		{
 			workloadInstance: workloadInstance,
 			phase:            common.PhaseWorkloadPreEvaluation,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			want: v1alpha2.KeptnWorkloadInstance{
+				Status: v1alpha2.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateCancelled,
@@ -287,16 +288,16 @@ func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 }
 
 func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
-	app := KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{},
+	app := v1alpha2.KeptnWorkloadInstance{
+		Status: v1alpha2.KeptnWorkloadInstanceStatus{},
 	}
 
 	app.SetPhaseTraceID(common.PhaseAppDeployment.ShortName, propagation.MapCarrier{
 		"name3": "trace3",
 	})
 
-	require.Equal(t, KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+	require.Equal(t, v1alpha2.KeptnWorkloadInstance{
+		Status: v1alpha2.KeptnWorkloadInstanceStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -309,8 +310,8 @@ func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
 		"name2": "trace2",
 	})
 
-	require.Equal(t, KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+	require.Equal(t, v1alpha2.KeptnWorkloadInstance{
+		Status: v1alpha2.KeptnWorkloadInstanceStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -324,8 +325,8 @@ func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
 }
 
 func TestKeptnWorkloadInstanceList(t *testing.T) {
-	list := KeptnWorkloadInstanceList{
-		Items: []KeptnWorkloadInstance{
+	list := v1alpha2.KeptnWorkloadInstanceList{
+		Items: []v1alpha2.KeptnWorkloadInstance{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

@@ -1,7 +1,6 @@
-package v1alpha2_test
+package v1alpha2
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
@@ -11,31 +10,31 @@ import (
 )
 
 func TestKeptnEvaluation(t *testing.T) {
-	evaluation := &v1alpha2.KeptnEvaluation{
+	evaluation := &KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "evaluation",
 		},
-		Spec: v1alpha2.KeptnEvaluationSpec{
+		Spec: KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: v1alpha2.KeptnEvaluationStatus{
+		Status: KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
 		},
 	}
 
 	evaluation.SetPhaseTraceID("", nil)
-	require.Equal(t, v1alpha2.KeptnEvaluation{
+	require.Equal(t, KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "evaluation",
 		},
-		Spec: v1alpha2.KeptnEvaluationSpec{
+		Spec: KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       common.PostDeploymentCheckType,
 		},
-		Status: v1alpha2.KeptnEvaluationStatus{
+		Status: KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
 		},
 	}, *evaluation)
@@ -71,8 +70,8 @@ func TestKeptnEvaluation(t *testing.T) {
 		common.EvaluationStatus.String(string(common.StateFailed)),
 	}, evaluation.GetMetricsAttributes())
 
-	evaluation.AddEvaluationStatus(v1alpha2.Objective{Name: "objName"})
-	require.Equal(t, v1alpha2.EvaluationStatusItem{
+	evaluation.AddEvaluationStatus(Objective{Name: "objName"})
+	require.Equal(t, EvaluationStatusItem{
 		Status: common.StatePending,
 	}, evaluation.Status.EvaluationStatus["objName"])
 
@@ -88,8 +87,8 @@ func TestKeptnEvaluation(t *testing.T) {
 }
 
 func TestKeptnEvaluationList(t *testing.T) {
-	list := v1alpha2.KeptnEvaluationList{
-		Items: []v1alpha2.KeptnEvaluation{
+	list := KeptnEvaluationList{
+		Items: []KeptnEvaluation{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

@@ -1,10 +1,11 @@
 package v1alpha1
 
 import (
+	"testing"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"github.com/stretchr/testify/require"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnApp_ConvertFrom(t *testing.T) {

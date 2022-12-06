@@ -18,16 +18,13 @@ package v1alpha2
 
 import (
 	ctrl "sigs.k8s.io/controller-runtime"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 // log is for logging in this package.
-var keptnapplog = logf.Log.WithName("keptnapp-resource")
+//var keptnapplog = logf.Log.WithName("keptnapp-resource")
 
 func (r *KeptnApp) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
 		Complete()
 }
-
-// TODO: fill in webhook stuff from  kubebuilder book

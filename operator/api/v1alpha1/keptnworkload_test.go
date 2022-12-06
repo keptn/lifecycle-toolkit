@@ -1,21 +1,21 @@
-package v1alpha1_test
+package v1alpha1
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	"testing"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestKeptnWorkload(t *testing.T) {
-	workload := &v1alpha1.KeptnWorkload{
+	workload := &KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
-		Spec: v1alpha1.KeptnWorkloadSpec{
+		Spec: KeptnWorkloadSpec{
 			Version: "version",
 			AppName: "app",
 		},
@@ -25,14 +25,14 @@ func TestKeptnWorkload(t *testing.T) {
 	require.Equal(t, "workload-version", workloadInstanceName)
 
 	workloadInstance := workload.GenerateWorkloadInstance("prev", map[string]string{})
-	require.Equal(t, v1alpha1.KeptnWorkloadInstance{
+	require.Equal(t, KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Name:        "workload-version",
 			Namespace:   "namespace",
 		},
-		Spec: v1alpha1.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: v1alpha1.KeptnWorkloadSpec{
+		Spec: KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: KeptnWorkloadSpec{
 				Version: "version",
 				AppName: "app",
 			},

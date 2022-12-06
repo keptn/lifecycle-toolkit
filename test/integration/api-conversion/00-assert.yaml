@@ -1,0 +1,5 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnApp
+spec:
+  version: "1.2.3"
+  revision: "1"

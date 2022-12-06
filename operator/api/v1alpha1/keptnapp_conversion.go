@@ -5,7 +5,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts this the src v1alpha1.KeptnApp to the hub version (v1alpha2.KeptnApp)
+// ConvertTo converts the src v1alpha1.KeptnApp to the hub version (v1alpha2.KeptnApp)
 func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1alpha2.KeptnApp)
 

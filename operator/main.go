@@ -349,11 +349,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&lifecyclev1alpha1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
-		os.Exit(1)
-	}
-
 	if err = (&lifecyclev1alpha2.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)

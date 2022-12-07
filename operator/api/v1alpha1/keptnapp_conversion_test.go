@@ -64,10 +64,6 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 			},
 			wantErr: false,
 			wantObj: &KeptnApp{
-				TypeMeta: v1.TypeMeta{
-					Kind:       "KeptnApp",
-					APIVersion: "lifecycle.keptn.sh/v1alpha2",
-				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
@@ -139,7 +135,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 			src: &KeptnApp{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnApp",
-					APIVersion: "lifecycle.keptn.sh/v1alpha2",
+					APIVersion: "lifecycle.keptn.sh/v1alpha1",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
@@ -182,10 +178,6 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 			},
 			wantErr: false,
 			wantObj: &v1alpha2.KeptnApp{
-				TypeMeta: v1.TypeMeta{
-					Kind:       "KeptnApp",
-					APIVersion: "lifecycle.keptn.sh/v1alpha2",
-				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",

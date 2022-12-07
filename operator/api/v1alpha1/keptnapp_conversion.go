@@ -10,6 +10,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1alpha2.KeptnApp)
 
 	// Copy equal stuff to new object
+	// DO NOT COPY TypeMeta
 	dst.ObjectMeta = src.ObjectMeta
 
 	dst.Spec.Version = src.Spec.Version
@@ -37,6 +38,7 @@ func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
 	src := srcRaw.(*v1alpha2.KeptnApp)
 
 	// Copy equal stuff to new object
+	// DO NOT COPY TypeMeta
 	dst.ObjectMeta = src.ObjectMeta
 
 	dst.Spec.Version = src.Spec.Version

@@ -1,13 +1,19 @@
 package v1alpha1
 
 import (
+	"fmt"
+
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
 // ConvertTo converts the src v1alpha1.KeptnApp to the hub version (v1alpha2.KeptnApp)
 func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
-	dst := dstRaw.(*v1alpha2.KeptnApp)
+	dst, ok := dstRaw.(*v1alpha2.KeptnApp)
+
+	if !ok {
+		return fmt.Errorf("cannot cast KeptnApp to v1alpha2. Got type %T", dstRaw)
+	}
 
 	// Copy equal stuff to new object
 	// DO NOT COPY TypeMeta
@@ -35,7 +41,11 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 
 // ConvertFrom converts from the hub version (v1alpha2.KeptnApp) to this version (v1alpha1.KeptnApp)
 func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
-	src := srcRaw.(*v1alpha2.KeptnApp)
+	src, ok := srcRaw.(*v1alpha2.KeptnApp)
+
+	if !ok {
+		return fmt.Errorf("cannot cast KeptnApp to v1alpha1. Got type %T", srcRaw)
+	}
 
 	// Copy equal stuff to new object
 	// DO NOT COPY TypeMeta

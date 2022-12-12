@@ -20,9 +20,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-// log is for logging in this package.
-//var keptnapplog = logf.Log.WithName("keptnapp-resource")
-
 func (r *KeptnApp) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).

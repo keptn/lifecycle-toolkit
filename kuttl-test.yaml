@@ -3,4 +3,4 @@ kind: TestSuite
 crdDir: ./operator/config/crd/bases
 testDirs:
   - ./test/integration/
-timeout: 150
+timeout: 300

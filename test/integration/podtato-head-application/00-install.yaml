@@ -88,8 +88,6 @@ spec:
       labels:
         component: podtato-head-hat
         keptn.sh/pre-deployment-tasks: check-entry-service
-        keptn.sh/pre-deployment-evaluations: my-prometheus-definition1
-        keptn.sh/post-deployment-evaluations: my-prometheus-definition1
       annotations:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat

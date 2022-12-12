@@ -11,7 +11,7 @@ status:
   status: Succeeded
   workloadOverallStatus: Succeeded
 ---
-piVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnWorkloadInstance
 metadata:
   name: podtato-head-podtato-head-entry-0.1.0

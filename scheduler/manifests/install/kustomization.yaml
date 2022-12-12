@@ -13,11 +13,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: image
-  newName: ghcr.io/keptn/scheduler
+  newName: ghcr.keptn.sh/keptn/scheduler
   newTag: "202211041667586936"
 - name: klfc-scheduler
   newName: docker.io/thschue/scheduler
   newTag: "202211021667386780"
 - name: scheduler
-  newName: docker.io/thschue/scheduler
-  newTag: "202211071667824605"
+  newName: mowies/scheduler
+  newTag: 0.5.0-next.13

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -206,7 +207,10 @@ func Test_getSpan_unbindSpan(t *testing.T) {
 		},
 	}
 
-	r := NewWorkloadManager(nil)
+	r := &WorkloadManager{
+		bindCRDSpan: make(map[string]trace.Span, 100),
+		Tracer:      trace.NewNoopTracerProvider().Tracer("trace"),
+	}
 
 	_, span := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
 

@@ -57,32 +57,45 @@ type WorkloadManager struct {
 	dynamicClient dynamic.Interface
 	Tracer        trace.Tracer
 	bindCRDSpan   map[string]trace.Span
+	handler       framework.Handle
 }
 
-func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
+func NewWorkloadManager(handler framework.Handle) (*WorkloadManager, error) {
+	client, err := newClient(handler)
 	sMgr := &WorkloadManager{
-		dynamicClient: d,
+		dynamicClient: client,
 		Tracer:        otel.Tracer("keptn/scheduler"),
 		bindCRDSpan:   make(map[string]trace.Span, 100),
+		handler:       handler,
 	}
-	return sMgr
+	return sMgr, err
 }
 
-func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, handler framework.WaitingPod, pod *corev1.Pod) {
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(sMgr.dynamicClient, 0, pod.GetNamespace(), nil)
+func newClient(handle framework.Handle) (dynamic.Interface, error) {
+	config := handle.KubeConfig()
 
-	informer := factory.ForResource(workloadInstanceResource).Informer()
-	stopCh := make(chan struct{})
-	factory.Start(stopCh)
-	factory.WaitForCacheSync(stopCh)
+	dynClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
 
-	sMgr.startWatching(ctx, informer, pod, handler, stopCh)
+	return dynClient, nil
 }
 
-func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIndexInformer, pod *corev1.Pod, handler framework.WaitingPod, stopCh chan struct{}) {
+func (sMgr *WorkloadManager) ObserveWorkloadForPod(ctx context.Context, pod *corev1.Pod) {
+	// TODO investigate how long the defaultRSync interval should be
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(sMgr.dynamicClient, 10, pod.GetNamespace(), nil)
+
+	sMgr.startWatching(ctx, factory, pod)
+}
+
+func (sMgr *WorkloadManager) startWatching(ctx context.Context, factory dynamicinformer.DynamicSharedInformerFactory, pod *corev1.Pod) {
 	workloadInstanceName := getCRDName(pod)
 
+	stopCh := make(chan struct{})
+
 	checkWorkloadInstance := func(obj interface{}) {
+
 		unstructuredWI := obj.(*unstructured.Unstructured)
 
 		if unstructuredWI.GetName() != workloadInstanceName {
@@ -96,17 +109,21 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 			klog.Errorf("[Keptn Permit Plugin] cannot fetch workloadInstance crd %s preDeploymentStatus: %s", unstructuredWI, err.Error())
 			return
 		}
+		waitingPodHandler := sMgr.handler.GetWaitingPod(pod.UID)
+		if waitingPodHandler == nil {
+			return
+		}
 		klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", unstructuredWI, found, phase)
 		if found {
 			span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 			switch KeptnState(phase) {
 			case StateFailed, StateCancelled:
-				handler.Reject(PluginName, "Pre Deployment Check failed")
+				waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
 				span.End()
 				sMgr.unbindSpan(pod)
 				stopCh <- struct{}{}
 			case StateSucceeded:
-				handler.Allow(PluginName)
+				waitingPodHandler.Allow(PluginName)
 				span.End()
 				sMgr.unbindSpan(pod)
 				stopCh <- struct{}{}
@@ -117,7 +134,11 @@ func (sMgr *WorkloadManager) startWatching(ctx context.Context, s cache.SharedIn
 		}
 	}
 	handlers := sMgr.createHandler(checkWorkloadInstance)
-	s.AddEventHandler(handlers)
+
+	informer := factory.ForResource(workloadInstanceResource).Informer()
+	informer.AddEventHandler(handlers)
+	factory.Start(stopCh)
+	factory.WaitForCacheSync(stopCh)
 }
 
 func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unstructured, pod *corev1.Pod) (context.Context, trace.Span) {

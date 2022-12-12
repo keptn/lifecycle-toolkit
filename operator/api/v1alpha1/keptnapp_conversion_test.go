@@ -6,6 +6,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
 func TestKeptnApp_ConvertFrom(t *testing.T) {
@@ -235,5 +236,36 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 				require.Equal(t, tt.wantObj, &dst, "Object was not converted correctly")
 			}
 		})
+	}
+}
+
+func TestKeptnApp_ConvertFrom_Errorcase(t *testing.T) {
+	// A random different object is used here to simulate a different API version
+	testObj := v2.ExternalJob{}
+
+	dst := &KeptnApp{
+		TypeMeta:   v1.TypeMeta{},
+		ObjectMeta: v1.ObjectMeta{},
+		Spec:       KeptnAppSpec{},
+		Status:     KeptnAppStatus{},
+	}
+
+	if err := dst.ConvertFrom(&testObj); err == nil {
+		t.Errorf("ConvertFrom() error = %v", err)
+	} else {
+		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha1")
+	}
+}
+
+func TestKeptnApp_ConvertTo_Errorcase(t *testing.T) {
+	testObj := KeptnApp{}
+
+	// A random different object is used here to simulate a different API version
+	dst := v2.ExternalJob{}
+
+	if err := testObj.ConvertTo(&dst); err == nil {
+		t.Errorf("ConvertTo() error = %v", err)
+	} else {
+		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha2")
 	}
 }

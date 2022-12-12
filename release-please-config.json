@@ -11,6 +11,8 @@
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
+        "operator/chart/Chart.yaml",
+        "operator/chart/values.yaml",
         "examples/argo/Makefile",
         "examples/observability/Makefile"
       ],

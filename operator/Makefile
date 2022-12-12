@@ -86,9 +86,9 @@ test: manifests fmt vet generate envtest ## Run tests.
 	go test ./api/... -v -coverprofile cover-api.out
 	go test ./controllers/... -v -coverprofile cover-pkg.out
 	go test ./webhooks/... -v -coverprofile cover-main.out
-	sed -i '/mode: set/d' cover-api.out
-	sed -i '/mode: set/d' cover-pkg.out
-	sed -i '/mode: set/d' cover-main.out
+	sed -i '/mode: set/d' "cover-api.out"
+	sed -i '/mode: set/d' "cover-pkg.out"
+	sed -i '/mode: set/d' "cover-main.out"
 	echo "mode: set" > cover.out
 	cat cover-main.out cover-pkg.out cover-api.out >> cover.out
 	rm cover-pkg.out cover-main.out cover-api.out

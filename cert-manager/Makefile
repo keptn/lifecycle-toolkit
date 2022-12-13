@@ -1,6 +1,15 @@
 
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
+# RELEASE_REGISTRY is the container registry to push
+# into.
+RELEASE_REGISTRY?=ghcr.io/keptn
+RELEASE_TIME=$(shell date +%Y%m%d%s)
+BUILD_TIME=$(shell date -u "+%F_%T")
+RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
+TAG?=latest
+RELEASE_IMAGE:=keptn-cert-operator:$(TAG)
+
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.25.0
 
@@ -19,6 +28,11 @@ SHELL = /usr/bin/env bash -o pipefail
 .PHONY: all
 all: build
 
+
+#### developer build   ####
+.PHONY: clean
+clean:
+	rm -rf ./bin
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
@@ -150,3 +164,26 @@ $(CONTROLLER_GEN): $(LOCALBIN)
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+.PHONY: release-local
+release-local: release-local.amd64 release-local.arm64
+	for arch in $(ARCHS); do \
+			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
+		for arch in $(ARCHS); do \
+			DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
+
+release-local.amd64: clean
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 \
+		--platform linux/amd64 \
+		--target debug \
+		.
+	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)

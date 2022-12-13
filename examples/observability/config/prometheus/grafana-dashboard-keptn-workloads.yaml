@@ -39,7 +39,8 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "thresholds"
+                "fixedColor": "green",
+                "mode": "fixed"
               },
               "mappings": [],
               "thresholds": {
@@ -48,10 +49,6 @@ data:
                   {
                     "color": "green",
                     "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
                   }
                 ]
               }

@@ -116,6 +116,7 @@ spec:
                   type: string
                 type: array
               revision:
+                default: "1"
                 type: string
               version:
                 type: string

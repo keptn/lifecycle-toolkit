@@ -190,6 +190,10 @@ jobs:
     needs: [prepare_ci_run, test, component_tests, integration_tests, e2e_tests, performance_tests]
     if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true' # only run on push to main/maintenance branches
     runs-on: ubuntu-22.04
+    env:
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+      BUILD_TIME: ${{ needs.prepare_ci_run.outputs.BUILD_TIME }}
+      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
     strategy:
       matrix:
         config:

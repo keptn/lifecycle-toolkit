@@ -10,6 +10,8 @@ RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*
 TAG?=latest
 RELEASE_IMAGE:=keptn-cert-operator:$(TAG)
 
+ARCHS = amd64 arm64
+
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.25.0
 
@@ -187,3 +189,25 @@ release-local.amd64: clean
 		--target debug \
 		.
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+.PHONY: release-local.arm64
+release-local.arm64: clean
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
+		--platform linux/arm64 \
+		--target debug \
+		.
+	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+.PHONY: push-local
+push-local:
+	if [[ "${ARCH}" == "amd64" ]]; then \
+		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 ;\
+	elif [[ "${ARCH}" == "arm64" ]]; then \
+		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
+	fi
+	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)

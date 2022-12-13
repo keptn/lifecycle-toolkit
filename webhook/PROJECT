@@ -1,0 +1,16 @@
+domain: keptn.sh
+layout:
+- go.kubebuilder.io/v3
+projectName: webhook
+repo: keptn.sh/keptnwebhook
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: webhook
+  kind: Keptnwebhook
+  path: keptn.sh/keptnwebhook/api/v1alpha1
+  version: v1alpha1
+version: "3"

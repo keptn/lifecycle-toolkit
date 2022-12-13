@@ -18,16 +18,18 @@ package keptnwebhookcontroller
 
 import (
 	"context"
-	"github.com/go-logr/logr"
-	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"reflect"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
+	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
+	appsv1 "k8s.io/api/apps/v1"
+	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	"keptn.sh/keptnwebhook/eventfilter"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
@@ -36,6 +38,8 @@ const (
 	SuccessDuration              = 3 * time.Hour
 	secretPostfix                = "-certs"
 	errorCertificatesSecretEmpty = "certificates secret is empty"
+	crdName                      = "keptnwebhookcertificates.lifecycle.keptn.sh"
+	ns                           = "keptn-lifecycle-toolkit-system"
 )
 
 // KeptnWebhookCertificateReconciler reconciles a KeptnWebhookCertificate object
@@ -44,12 +48,15 @@ type KeptnWebhookCertificateReconciler struct {
 	Client        client.Client
 	Scheme        *runtime.Scheme
 	ApiReader     client.Reader
-	namespace     string
 	CancelMgrFunc context.CancelFunc
 	Log           logr.Logger
 }
 
-// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,resourceNames=klc-mutating-webhook-configuration,verbs=get;list;watch
+//+kubebuilder:rbac:groups=webhook.keptn.sh,resources=keptnwebhooks,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=webhook.keptn.sh,resources=keptnwebhooks/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=webhook.keptn.sh,resources=keptnwebhooks/finalizers,verbs=update
+
+// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,verbs=get;list;watch
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -64,24 +71,27 @@ type KeptnWebhookCertificateReconciler struct {
 func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("reconciling webhook certificates",
 		"namespace", request.Namespace, "name", request.Name)
-	r.namespace = request.Namespace
+
 	r.ctx = ctx
 
 	mutatingWebhookConfiguration, err := r.getMutatingWebhookConfiguration()
 	if err != nil {
-		// Generation must not be skipped because webhook startup routine listens for the secret
-		// See cmd/operator/manager.go and cmd/operator/watcher.go
-		r.Log.Info("could not find mutating webhook configuration, this is normal when deployed using OLM")
+		r.Log.Error(err, "could not find mutating webhook configuration")
+	}
+
+	crd, err := r.getCRDConfiguration()
+	if err != nil {
+		r.Log.Error(err, "could not find CRD")
 	}
 
 	certSecret := newCertificateSecret()
 
-	err = certSecret.setSecretFromReader(r.ctx, r.ApiReader, r.namespace, r.Log)
+	err = certSecret.setSecretFromReader(r.ctx, r.ApiReader, ns, r.Log)
 	if err != nil {
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
-	err = certSecret.validateCertificates(r.namespace)
+	err = certSecret.validateCertificates(ns)
 	if err != nil {
 		return reconcile.Result{}, errors.WithStack(err)
 	}
@@ -89,9 +99,11 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	mutatingWebhookConfigs := getClientConfigsFromMutatingWebhook(mutatingWebhookConfiguration)
 
 	areMutatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(mutatingWebhookConfigs)
+	isCRDConversionConfigValid := certSecret.isCRDConversionValid(crd.Spec.Conversion)
 
 	if certSecret.isRecent() &&
-		areMutatingWebhookConfigsValid {
+		areMutatingWebhookConfigsValid &&
+		isCRDConversionConfigValid {
 		r.Log.Info("secret for certificates up to date, skipping update")
 		r.cancelMgr()
 		return reconcile.Result{RequeueAfter: SuccessDuration}, nil
@@ -111,6 +123,11 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
+	err = r.updateCRDConfiguration(crdName, bundle)
+	if err != nil {
+		return reconcile.Result{}, errors.WithStack(err)
+	}
+
 	r.cancelMgr()
 	return reconcile.Result{RequeueAfter: SuccessDuration}, nil
 }
@@ -118,8 +135,10 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&lifecyclev1alpha1.KeptnWebhookCertificate{}).
+		For(&appsv1.Deployment{}).
+		WithEventFilter(eventfilter.ForObjectNameAndNamespace(DeploymentName, ns)).
 		Complete(r)
+
 }
 
 func (r *KeptnWebhookCertificateReconciler) cancelMgr() {
@@ -133,7 +152,7 @@ func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
 	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
 	err := r.ApiReader.Get(r.ctx, client.ObjectKey{
-		Name: webhooks.DeploymentName,
+		Name: DeploymentName,
 	}, &mutatingWebhook)
 	if err != nil {
 		return nil, err
@@ -159,4 +178,37 @@ func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(bundle []
 		return err
 	}
 	return nil
+}
+
+func (r *KeptnWebhookCertificateReconciler) updateCRDConfiguration(crdName string, bundle []byte) error {
+	var crd apiv1.CustomResourceDefinition
+	if err := r.ApiReader.Get(r.ctx, types.NamespacedName{Name: crdName}, &crd); err != nil {
+		return err
+	}
+
+	if !hasConversionWebhook(crd) {
+		r.Log.Info("no conversion webhook config, no cert will be provided")
+		return nil
+	}
+
+	// update crd
+	crd.Spec.Conversion.Webhook.ClientConfig.CABundle = bundle
+	if err := r.Client.Update(r.ctx, &crd); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *KeptnWebhookCertificateReconciler) getCRDConfiguration() (
+	*apiv1.CustomResourceDefinition, error) {
+	var crd apiv1.CustomResourceDefinition
+	if err := r.ApiReader.Get(r.ctx, types.NamespacedName{Name: crdName}, &crd); err != nil {
+		return nil, err
+	}
+
+	return &crd, nil
+}
+
+func hasConversionWebhook(crd apiv1.CustomResourceDefinition) bool {
+	return crd.Spec.Conversion != nil && crd.Spec.Conversion.Webhook != nil && crd.Spec.Conversion.Webhook.ClientConfig != nil
 }

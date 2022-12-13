@@ -11,7 +11,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/kubeobjects"
+	"github.com/keptn/lifecycle-toolkit/webhook/kubeobjects"
 )
 
 var serialNumberLimit = new(big.Int).Lsh(big.NewInt(1), 128)

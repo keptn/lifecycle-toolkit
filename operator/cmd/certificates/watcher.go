@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-toolkit/operator/kubeobjects"
+	kubeobjects2 "keptn.sh/keptnwebhook/kubeobjects"
+
 	"os"
 	"path/filepath"
 	"time"
 
-	certificates "github.com/keptn/lifecycle-toolkit/operator/controllers/keptnwebhookcontroller"
 	"github.com/spf13/afero"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -69,12 +70,12 @@ func (watcher *CertificateWatcher) updateCertificatesFromSecret() (bool, error) 
 		}
 	}
 
-	for _, filename := range []string{certificates.ServerCert, certificates.ServerKey} {
+	for _, filename := range []string{keptnwebhookcontroller.ServerCert, keptnwebhookcontroller.ServerKey} {
 		if _, err = watcher.ensureCertificateFile(secret, filename); err != nil {
 			return false, err
 		}
 	}
-	isValid, err := kubeobjects.ValidateCertificateExpiration(secret.Data[certificates.ServerCert], certificateRenewalInterval, time.Now())
+	isValid, err := kubeobjects2.ValidateCertificateExpiration(secret.Data[keptnwebhookcontroller.ServerCert], certificateRenewalInterval, time.Now())
 	if err != nil {
 		return false, err
 	} else if !isValid {

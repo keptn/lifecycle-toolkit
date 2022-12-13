@@ -19,8 +19,6 @@ rules:
   - watch
 - apiGroups:
   - admissionregistration.k8s.io
-  resourceNames:
-  - klc-mutating-webhook-configuration
   resources:
   - mutatingwebhookconfigurations
   verbs:
@@ -63,6 +61,18 @@ rules:
   - create
   - get
   - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
   - update
   - watch
 - apiGroups:
@@ -257,6 +267,32 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - keptntasks/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnwebhookcertificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnwebhookcertificates/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnwebhookcertificates/status
   verbs:
   - get
   - patch

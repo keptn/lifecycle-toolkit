@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnwebhookcontroller"
 	"go.opentelemetry.io/otel/propagation"
 
 	"log"
@@ -349,7 +350,17 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
-
+	webhookCertReconciler := &keptnwebhookcontroller.KeptnWebhookCertificateReconciler{
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		ApiReader:     mgr.GetAPIReader(),
+		CancelMgrFunc: nil,
+		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
+	}
+	if err = (webhookCertReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnWebhookCert")
+		os.Exit(1)
+	}
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),

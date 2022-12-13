@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-definition1

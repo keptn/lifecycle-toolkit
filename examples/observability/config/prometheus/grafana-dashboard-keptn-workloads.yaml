@@ -171,20 +171,16 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "thresholds"
+                "fixedColor": "red",
+                "mode": "fixed"
               },
               "mappings": [],
-              "noValue": "0",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
                     "color": "red",
-                    "value": 80
+                    "value": null
                   }
                 ]
               }

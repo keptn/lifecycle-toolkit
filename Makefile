@@ -34,10 +34,6 @@ build-deploy-scheduler:
 	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
 
-.PHONY: deploy-cert-manager
-deploy-cert-manager:
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
 
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-operator build-deploy-scheduler
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml

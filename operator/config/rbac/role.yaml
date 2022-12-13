@@ -6,26 +6,6 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
   - apps
   resources:
   - daemonsets
@@ -267,32 +247,6 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - keptntasks/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnwebhookcertificates
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnwebhookcertificates/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnwebhookcertificates/status
   verbs:
   - get
   - patch

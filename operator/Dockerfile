@@ -23,6 +23,7 @@ COPY cmd/ cmd/
 COPY api/ api/
 COPY controllers/ controllers/
 COPY webhooks/ webhooks/
+COPY fake/     fake/
 
 
 # Build

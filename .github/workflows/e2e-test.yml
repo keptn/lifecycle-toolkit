@@ -48,6 +48,7 @@ jobs:
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: cert-manager-logs
           path: ${{ matrix.config.folder }}/cert-manager-logs.txt

@@ -47,6 +47,7 @@ jobs:
           kubectl logs -n keptn-lifecycle-toolkit-system deployments/klc-controller-manager > controller-logs.txt
 
       - name: Upload logs as artifact
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: controller-logs

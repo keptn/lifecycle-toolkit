@@ -30,7 +30,8 @@ import (
 
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
-	Version                   string             `json:"version"`
+	Version string `json:"version"`
+	// +kubebuilder:default:=1
 	Revision                  string             `json:"revision,omitempty"`
 	Workloads                 []KeptnWorkloadRef `json:"workloads,omitempty"`
 	PreDeploymentTasks        []string           `json:"preDeploymentTasks,omitempty"`

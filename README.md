@@ -211,6 +211,7 @@ name: podtato-head
 namespace: podtato-kubectl
 spec:
 version: "1.3"
+revision: "1"
 workloads:
 - name: podtato-head-left-arm
 version: 0.1.0

@@ -3,14 +3,15 @@ package certificates
 import (
 	"bytes"
 	"context"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
-
-	"github.com/go-logr/logr"
-	kubeobjects2 "keptn.sh/keptnwebhook/kubeobjects"
 
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/go-logr/logr"
 
 	"github.com/spf13/afero"
 	corev1 "k8s.io/api/core/v1"
@@ -20,7 +21,11 @@ import (
 )
 
 // TODO: refactor code below to be testable and also tested
-const certificateRenewalInterval = 6 * time.Hour
+const (
+	certificateRenewalInterval = 6 * time.Hour
+	ServerKey                  = "tls.key"
+	ServerCert                 = "tls.crt"
+)
 
 type CertificateWatcher struct {
 	apiReader             client.Reader
@@ -70,12 +75,12 @@ func (watcher *CertificateWatcher) updateCertificatesFromSecret() (bool, error) 
 		}
 	}
 
-	for _, filename := range []string{keptnwebhookcontroller.ServerCert, keptnwebhookcontroller.ServerKey} {
+	for _, filename := range []string{ServerCert, ServerKey} {
 		if _, err = watcher.ensureCertificateFile(secret, filename); err != nil {
 			return false, err
 		}
 	}
-	isValid, err := kubeobjects2.ValidateCertificateExpiration(secret.Data[keptnwebhookcontroller.ServerCert], certificateRenewalInterval, time.Now())
+	isValid, err := ValidateCertificateExpiration(secret.Data[ServerCert], certificateRenewalInterval, time.Now())
 	if err != nil {
 		return false, err
 	} else if !isValid {
@@ -114,4 +119,18 @@ func (watcher *CertificateWatcher) WaitForCertificates() {
 		break
 	}
 	go watcher.watchForCertificatesSecret()
+}
+
+func ValidateCertificateExpiration(certData []byte, renewalThreshold time.Duration, now time.Time) (bool, error) {
+	if block, _ := pem.Decode(certData); block == nil {
+		//log.Info("failed to parse certificate", "error", "can't decode PEM file")
+		return false, nil
+	} else if cert, err := x509.ParseCertificate(block.Bytes); err != nil {
+		//log.Info("failed to parse certificate", "error", err)
+		return false, err
+	} else if now.After(cert.NotAfter.Add(-renewalThreshold)) {
+		//log.Info("certificate is outdated, waiting for new ones", "Valid until", cert.NotAfter.UTC())
+		return false, nil
+	}
+	return true, nil
 }

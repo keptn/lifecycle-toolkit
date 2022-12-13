@@ -2,11 +2,12 @@ package manager
 
 import (
 	"context"
+	"testing"
+
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/operator/fake"
 	"k8s.io/apimachinery/pkg/runtime"
-	"testing"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/config/v1alpha1"

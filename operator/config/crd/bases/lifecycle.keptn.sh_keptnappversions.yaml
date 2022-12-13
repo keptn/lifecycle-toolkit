@@ -313,7 +313,7 @@ spec:
               previousVersion:
                 type: string
               revision:
-                default: 1
+                default: "1"
                 type: string
               traceId:
                 additionalProperties:

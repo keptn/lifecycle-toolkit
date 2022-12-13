@@ -23,7 +23,7 @@ COPY cmd/ cmd/
 COPY api/ api/
 COPY controllers/ controllers/
 COPY webhooks/ webhooks/
-COPY ../webhook/kubeobjects/ kubeobjects/
+
 
 # Build
 RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \

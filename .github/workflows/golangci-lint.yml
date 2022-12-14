@@ -9,8 +9,9 @@ on:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
 env:
+  # renovate: datasource=github-releases depName=golangci/golangci-lint
   GOLANGCI_LINT_VERSION: "v1.50.1"
-  GO_VERSION: "1.19"
+  GO_VERSION: "~1.19"
 jobs:
   golangci-lint:
     name: golangci-lint

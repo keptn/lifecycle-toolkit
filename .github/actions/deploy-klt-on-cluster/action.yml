@@ -10,7 +10,7 @@ inputs:
    k3s-version:
      required: false
      description: "Version of k3s that should be used"
-     # renovate: datasource=github-releases depName=k3d-io/k3d
+     # renovate: datasource=github-releases depName=k3s-io/k3s
      default: "rancher/k3s:v1.24.8-k3s1"
    functions_runtime_tag:
      description: "Tag for the functions runner image"

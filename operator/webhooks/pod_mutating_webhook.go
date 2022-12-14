@@ -429,6 +429,9 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			Name:        a.getWorkloadName(pod),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
+			OwnerReferences: []metav1.OwnerReference{
+				ownerRef,
+			},
 		},
 		Spec: klcv1alpha2.KeptnWorkloadSpec{
 			AppName:                   applicationName,
@@ -492,6 +495,7 @@ func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) meta
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name
+				reference.APIVersion = owner.APIVersion
 			}
 		}
 	}

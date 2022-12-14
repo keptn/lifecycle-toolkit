@@ -7,6 +7,11 @@ inputs:
    k3d-version:
      required: true
      description: "Version of k3d that should be used"
+   k3s-version:
+     required: false
+     description: "Version of k3s that should be used"
+     # renovate: datasource=github-releases depName=k3d-io/k3d
+     default: "rancher/k3s:v1.24.8-k3s1"
    functions_runtime_tag:
      description: "Tag for the functions runner image"
      required: true
@@ -35,6 +40,7 @@ runs:
         --agents 1
         --no-lb
         --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
+        --image "${{ inputs.k3s-version }}"
 
   - name: Import images in k3d
     shell: bash

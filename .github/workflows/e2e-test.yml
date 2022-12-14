@@ -35,3 +35,13 @@ jobs:
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}
         run: make e2e-test
+
+      - name: Create reports
+        working-directory: ./
+        run: ./create_reports.sh
+
+      - name: Upload cluster snapshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-tests-snapshot
+          path: logs.zip

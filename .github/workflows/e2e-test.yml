@@ -39,16 +39,3 @@ jobs:
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}
         run: make e2e-test
-
-      - name: Generate logs
-        working-directory: ${{ matrix.config.folder }}
-        if: always()
-        run: |
-          kubectl logs -n cert-manager deployments/cert-manager-webhook > cert-manager-logs.txt
-
-      - name: Upload logs as artifact
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cert-manager-logs
-          path: ${{ matrix.config.folder }}/cert-manager-logs.txt

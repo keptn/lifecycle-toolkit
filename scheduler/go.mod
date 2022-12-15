@@ -12,10 +12,10 @@ require (
 	go.opentelemetry.io/otel/sdk v0.20.0
 	go.opentelemetry.io/otel/trace v0.20.0
 	google.golang.org/grpc v1.51.0
-	k8s.io/api v0.25.4
-	k8s.io/apimachinery v0.25.4
+	k8s.io/api v0.25.5
+	k8s.io/apimachinery v0.25.5
 	k8s.io/apiserver v0.25.4
-	k8s.io/client-go v0.25.4
+	k8s.io/client-go v0.25.5
 	k8s.io/component-base v0.25.4
 	k8s.io/klog/v2 v2.80.1
 	k8s.io/kubernetes v1.25.4
@@ -87,12 +87,12 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
-	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/net v0.3.1-0.20221206200815-1e63c2f08a10 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/term v0.3.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220502173005-c8bf987b8c21 // indirect
@@ -127,7 +127,7 @@ replace (
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.25.4
 	k8s.io/code-generator => k8s.io/code-generator v0.25.4
 	k8s.io/component-base => k8s.io/component-base v0.25.4
-	k8s.io/component-helpers => k8s.io/component-helpers v0.25.4
+	k8s.io/component-helpers => k8s.io/component-helpers v0.25.5
 	k8s.io/controller-manager => k8s.io/controller-manager v0.25.4
 	k8s.io/cri-api => k8s.io/cri-api v0.25.4
 	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.25.4

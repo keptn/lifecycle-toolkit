@@ -1,22 +1,22 @@
 #!/bin/bash
 
 ignore="--ignore-not-found"
-logsDir="logs"
 
 createResourceReport () {
-    namespace=$1
-    resource=$2
-    withLogs=$3
+    path=$1
+    namespace=$2
+    resource=$3
+    withLogs=$4
 
-    mkdir -p "$logsDir/$namespace/$resource"
+    mkdir -p "$path/$resource"
 
-    kubectl get "$resource" -n "$namespace" "$ignore" > "$logsDir/$namespace/$resource/list-$resource.txt"
+    kubectl get "$resource" -n "$namespace" "$ignore" > "$path/$resource/list-$resource.txt"
 
     for r in $(kubectl get "$resource" -n "$namespace" "$ignore" -o jsonpath='{.items[*].metadata.name}'); do
-        kubectl describe "$resource/$r" -n "$namespace" > "$logsDir/$namespace/$resource/$r-describe.txt"
+        kubectl describe "$resource/$r" -n "$namespace" > "$path/$resource/$r-describe.txt"
 
         if $withLogs ; then
-        kubectl logs "$resource/$r" --all-containers=true -n "$namespace" > "$logsDir/$namespace/$resource/$r-logs.txt"
+        kubectl logs "$resource/$r" --all-containers=true -n "$namespace" > "$path/$resource/$r-logs.txt"
         fi
     done
 }

@@ -22,6 +22,12 @@
     "**/test/**",
     "**/tests/**"
   ],
+  "hostRules": [
+    {
+      "matchHost": "ghcr.keptn.sh",
+      "enabled": false
+    }
+  ],
   "packageRules": [
     {
       "matchManagers": ["gomod"],
@@ -34,13 +40,6 @@
     {
       "matchManagers": ["dockerfile"],
       "addLabels": ["docker"]
-    },
-    {
-      "matchManagers": ["kustomize"],
-      "excludePackageNames": [
-        "ghcr.keptn.sh/keptn/keptn-lifecycle-operator",
-        "ghcr.keptn.sh/keptn/scheduler"
-      ]
     },
     {
       "matchPackageNames": ["kubernetes-sigs/kustomize"],

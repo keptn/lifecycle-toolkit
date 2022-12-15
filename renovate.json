@@ -51,10 +51,7 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": [
-        "(^|\\/)Makefile$",
-        "(^|\\/).*\\.ya?ml$"
-      ],
+      "fileMatch": ["(^|\\/)Makefile$"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?\\??= ?(?<currentValue>.+?)?\\s"
       ]

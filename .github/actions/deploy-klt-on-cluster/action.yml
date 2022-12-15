@@ -15,7 +15,7 @@ inputs:
      required: false
      description: "Kubernetes that should be used"
      # renovate: datasource=github-releases depName=kubernetes/kubernetes
-     default: "v1.26.0"
+     default: "v1.25.3"
    functions_runtime_tag:
      description: "Tag for the functions runner image"
      required: true

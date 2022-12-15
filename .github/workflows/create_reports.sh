@@ -45,9 +45,3 @@ for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}
     
 done
 
-# Zip up the log files
-zip -r logs.zip $logsDir/* -q
-
-# Cleanup
-rm -rf $logsDir
-

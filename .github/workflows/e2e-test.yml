@@ -36,12 +36,12 @@ jobs:
         working-directory: ${{ matrix.config.folder }}
         run: make e2e-test
 
-      - name: Create reports
+      - name: Create reports ${{ matrix.config.name }}
         working-directory: ./.github/workflows
         run: ./create_reports.sh
 
-      - name: Upload cluster snapshot
+      - name: Upload ${{ matrix.config.name }} cluster snapshot 
         uses: actions/upload-artifact@v3
         with:
-          name: e2e-tests-snapshot
-          path: .github/workflows/logs.zip
+          name: e2e-tests-snapshot-${{ matrix.config.name }}
+          path: .github/workflows/logs

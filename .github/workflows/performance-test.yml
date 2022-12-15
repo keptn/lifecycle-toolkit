@@ -29,3 +29,13 @@ jobs:
       working-directory: operator
       run: |
         make performance-test
+    
+    - name: Create reports
+      working-directory: ./.github/workflows
+      run: ./create_reports.sh
+
+    - name: Upload cluster snapshot 
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-tests-snapshot
+        path: .github/workflows/logs

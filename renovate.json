@@ -28,6 +28,10 @@
       "enabled": false
     }
   ],
+  "ignoreDeps": [
+    "ghcr.keptn.sh/keptn/keptn-lifecycle-operator",
+    "ghcr.keptn.sh/keptn/scheduler"
+  ],
   "packageRules": [
     {
       "matchManagers": ["gomod"],

@@ -2,16 +2,20 @@ name: "Deploy Keptn Lifecycle Toolkit on GH cluster"
 description: "Creates a Kind cluster and deploys Keptn Lifecycle Toolkit"
 inputs:
    cert-manager-version:
-     required: true
-     description: "Version of cert-manager that should be deployed"
-   k3d-version:
-     required: true
-     description: "Version of k3d that should be used"
-   k3s-version:
      required: false
-     description: "Version of k3s that should be used"
-     # renovate: datasource=github-releases depName=k3s-io/k3s
-     default: "rancher/k3s:v1.24.8-k3s1"
+     description: "Version of cert-manager that should be deployed"
+     # renovate: datasource=github-releases depName=cert-manager/cert-manager
+     default: "v1.10.0"
+   kind-version:
+     required: false
+     description: "Version of kind that should be used"
+     # renovate: datasource=github-releases depName=kubernetes-sigs/kind
+     default: "v0.17.0"
+   k8s-version:
+     required: false
+     description: "Kubernetes that should be used"
+     # renovate: datasource=github-releases depName=kubernetes/kubernetes
+     default: "v1.26.0"
    functions_runtime_tag:
      description: "Tag for the functions runner image"
      required: true
@@ -31,16 +35,13 @@ runs:
     with:
       path: ~/download/artifacts
 
-  - name: "Create single k3d Cluster"
-    uses: AbsaOSS/k3d-action@v2
+  - name: "Create single kind Cluster"
+    uses: helm/kind-action@v1.5.0
     with:
-      cluster-name: test-cluster
-      k3d-version: ${{ inputs.k3d-version }}
-      args: >-
-        --agents 1
-        --no-lb
-        --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-        --image "${{ inputs.k3s-version }}"
+      cluster_name: test-cluster
+      version: ${{ inputs.kind-version }}
+      node_image: "kindest/node:${{ inputs.k8s-version }}"
+      kubectl_version: ${{ inputs.k8s-version }}
 
   - name: Import images in k3d
     shell: bash
@@ -49,7 +50,7 @@ runs:
       for image in $(ls | grep image.tar);
       do
         echo "Importing image: $image"
-        k3d image import $image/$image -c test-cluster
+        kind load image-archive $image/$image -n test-cluster
       done
   
   - name: Install cert-manager

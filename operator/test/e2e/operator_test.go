@@ -70,7 +70,7 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 					return err
 				}).Should(Succeed())
 
-				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
+				Expect(newPod.Status.Phase).To(Equal(apiv1.PodRunning))
 
 			})
 

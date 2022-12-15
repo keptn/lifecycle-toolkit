@@ -39,7 +39,7 @@ jobs:
       - name: Create reports ${{ matrix.config.name }}
         if: always()
         working-directory: ./.github/scripts
-        run: ./create_reports.sh
+        run: ./create_reports-toolkit.sh
 
       - name: Upload ${{ matrix.config.name }} cluster logs
         if: always()

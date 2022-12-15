@@ -33,7 +33,7 @@ jobs:
     - name: Create reports
       if: always()
       working-directory: ./.github/scripts
-      run: ./create_reports.sh
+      run: ./create_reports-toolkit.sh
 
     - name: Upload cluster logs
       if: always()

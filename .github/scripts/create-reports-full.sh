@@ -3,7 +3,7 @@
 logsDir="logs"
 
 # shellcheck source=report_utils.sh
-source report_utils.sh
+source report-utils.sh
 
 # Go through each namespace in the cluster
 for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}'); do
@@ -25,4 +25,3 @@ for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnWorkloadInstance" false
     
 done
-

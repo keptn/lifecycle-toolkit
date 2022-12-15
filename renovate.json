@@ -36,17 +36,23 @@
       "addLabels": ["docker"]
     },
     {
+      "matchManagers": ["kustomize"],
+      "excludePackageNames": [
+        "ghcr.keptn.sh/keptn/keptn-lifecycle-operator",
+        "ghcr.keptn.sh/keptn/scheduler"
+      ]
+    },
+    {
       "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>.*)$"
     },
     {
-      "matchPackageNames": [
+      "excludePackageNames": [
         "docker.io/thschue/keptn-lifecycle-operator",
         "docker.io/thschue/scheduler",
         "docker.io/annadreal/keptn-lifecycle-operator",
         "docker.io/annadreal/kube-scheduler"
-      ],
-      "enabled": false
+      ]
     }
   ],
   "regexManagers": [

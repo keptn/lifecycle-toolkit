@@ -53,7 +53,7 @@
     {
       "fileMatch": [
         "(^|\\/)Makefile$",
-        "(^|\\/)\\.ya?ml$"
+        "^\\.github\\/.*\\/.*\\.ya?ml$"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?\\??= ?(?<currentValue>.+?)?\\s"

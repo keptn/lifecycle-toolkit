@@ -204,13 +204,14 @@ An App contains information about all workloads and checks associated with an ap
 It will use the following structure for the specification of the pre/post deployment and pre/post evaluations checks that should be executed at app level:
 
 ```
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnApp
 metadata:
 name: podtato-head
 namespace: podtato-kubectl
 spec:
 version: "1.3"
+revision: "1"
 workloads:
 - name: podtato-head-left-arm
 version: 0.1.0
@@ -252,7 +253,7 @@ A task definition can be configured in three different ways:
 An inline task definition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: deployment-hello
@@ -269,7 +270,7 @@ A further example, is available [here](./examples/taskonly-hello-keptn/inline/ta
 To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
@@ -285,7 +286,7 @@ Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
@@ -321,7 +322,7 @@ as part of pre- and post-analysis phases of a workload or application.
 A Keptn evaluation definition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
@@ -344,7 +345,7 @@ pre- and post-analysis phases of a workload or application.
 A Keptn evaluation provider looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationProvider
 metadata:
   name: prometheus

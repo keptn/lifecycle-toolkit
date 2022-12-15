@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTask
 metadata:
   name: hello-developer-upstream

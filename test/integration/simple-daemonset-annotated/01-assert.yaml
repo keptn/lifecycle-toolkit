@@ -14,7 +14,7 @@ status:
   deploymentStatus: Succeeded
   postDeploymentEvaluationStatus: Succeeded
   postDeploymentStatus: Succeeded
-  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeededvcx
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded

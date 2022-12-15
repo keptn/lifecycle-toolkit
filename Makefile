@@ -14,6 +14,10 @@ ARCH?=amd64
 integration-test:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
 
+.PHONY: integration-test-local #this tests should run on a real cluster!
+integration-test-local:
+	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
+
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests

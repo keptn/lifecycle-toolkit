@@ -19,6 +19,10 @@ inputs:
    functions_runtime_tag:
      description: "Tag for the functions runner image"
      required: true
+   cluster-name:
+     required: false
+     description: "Name of the kind cluster"
+     default: "test-cluster"
 
 runs:
   using: "composite"
@@ -38,7 +42,7 @@ runs:
   - name: "Create single kind Cluster"
     uses: helm/kind-action@v1.5.0
     with:
-      cluster_name: test-cluster
+      cluster_name: ${{ inputs.cluster-name }}
       version: ${{ inputs.kind-version }}
       node_image: "kindest/node:${{ inputs.k8s-version }}"
       kubectl_version: ${{ inputs.k8s-version }}
@@ -50,7 +54,7 @@ runs:
       for image in $(ls | grep image.tar);
       do
         echo "Importing image: $image"
-        kind load image-archive $image/$image -n test-cluster
+        kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
       done
   
   - name: Install cert-manager

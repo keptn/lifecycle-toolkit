@@ -10,9 +10,13 @@ TAG := $(TAG)
 RELEASE_REGISTRY?=ghcr.io/keptn
 ARCH?=amd64
 
-.PHONY: integration-test #this tests should run on a real cluster!
+.PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
+
+.PHONY: integration-test-local #these tests should run on a real cluster!
+integration-test-local:
+	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

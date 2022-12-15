@@ -4,4 +4,3 @@ crdDir: ./operator/config/crd/bases
 testDirs:
   - ./test/integration/
 timeout: 300
-skipDelete: true

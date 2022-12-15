@@ -36,3 +36,15 @@ jobs:
       - name: Run Integration Tests
         working-directory: .
         run: make integration-test
+      
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-integration-tests
+          path: .github/scripts/logs

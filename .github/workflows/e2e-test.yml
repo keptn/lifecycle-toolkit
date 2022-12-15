@@ -37,11 +37,13 @@ jobs:
         run: make e2e-test
 
       - name: Create reports ${{ matrix.config.name }}
-        working-directory: ./.github/workflows
+        if: always()
+        working-directory: ./.github/scripts
         run: ./create_reports.sh
 
-      - name: Upload ${{ matrix.config.name }} cluster snapshot 
+      - name: Upload ${{ matrix.config.name }} cluster snapshot
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: e2e-tests-snapshot-${{ matrix.config.name }}
-          path: .github/workflows/logs
+          path: .github/scripts/logs

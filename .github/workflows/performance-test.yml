@@ -31,11 +31,13 @@ jobs:
         make performance-test
     
     - name: Create reports
-      working-directory: ./.github/workflows
+      if: always()
+      working-directory: ./.github/scripts
       run: ./create_reports.sh
 
-    - name: Upload cluster snapshot 
+    - name: Upload cluster snapshot
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: performance-tests-snapshot
-        path: .github/workflows/logs
+        path: .github/scripts/logs

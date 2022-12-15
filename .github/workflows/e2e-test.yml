@@ -41,9 +41,9 @@ jobs:
         working-directory: ./.github/scripts
         run: ./create_reports.sh
 
-      - name: Upload ${{ matrix.config.name }} cluster snapshot
+      - name: Upload ${{ matrix.config.name }} cluster logs
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: e2e-tests-snapshot-${{ matrix.config.name }}
+          name: logs-e2e-tests-${{ matrix.config.name }}
           path: .github/scripts/logs

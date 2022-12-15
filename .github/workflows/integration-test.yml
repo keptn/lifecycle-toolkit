@@ -42,9 +42,9 @@ jobs:
         working-directory: ./.github/scripts
         run: ./create_reports.sh
 
-      - name: Upload cluster snapshot
+      - name: Upload cluster logs
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: integration-tests-snapshot
+          name: logs-integration-tests
           path: .github/scripts/logs

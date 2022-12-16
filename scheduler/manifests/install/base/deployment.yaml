@@ -16,6 +16,7 @@ spec:
         component: scheduler
     spec:
       serviceAccountName: keptn-scheduler
+      automountServiceAccountToken: false
       containers:
         - command:
             - /bin/kube-scheduler
@@ -37,10 +38,23 @@ spec:
               port: 10259
               scheme: HTTPS
           resources:
+            limits:
+              cpu: '300m'
+              memory: '40Mi'
             requests:
               cpu: '100m'
+              memory: '20Mi'
           securityContext:
+            readOnlyRootFilesystem: true
             privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - "ALL"
           volumeMounts:
             - name: scheduler-config
               mountPath: /etc/kubernetes

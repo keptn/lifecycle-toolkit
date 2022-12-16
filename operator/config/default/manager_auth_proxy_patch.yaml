@@ -11,7 +11,12 @@ spec:
       containers:
       - name: kube-rbac-proxy
         securityContext:
+          readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
               - "ALL"
@@ -21,6 +26,10 @@ spec:
         - "--upstream=http://127.0.0.1:8080/"
         - "--logtostderr=true"
         - "--v=0"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
         ports:
         - containerPort: 8443
           protocol: TCP

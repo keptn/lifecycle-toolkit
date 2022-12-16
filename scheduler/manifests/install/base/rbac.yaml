@@ -59,9 +59,6 @@ rules:
   - apiGroups: ["storage.k8s.io"]
     resources: ["csinodes", "storageclasses" , "csidrivers" , "csistoragecapacities"]
     verbs: ["get", "list", "watch"]
-  - apiGroups: ["topology.node.k8s.io"]
-    resources: ["noderesourcetopologies"]
-    verbs: ["*"]
   # resources need to be updated with the scheduler plugins used
   - apiGroups: ["scheduling.sigs.k8s.io"]
     resources: ["podgroups", "elasticquotas"]

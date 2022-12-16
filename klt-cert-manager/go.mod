@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-toolkit/cert-manager
+module github.com/keptn/lifecycle-toolkit/klt-cert-manager
 
 go 1.19
 

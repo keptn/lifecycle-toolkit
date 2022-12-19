@@ -122,7 +122,7 @@ func assertResourceUpdated(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnApp
 func getAppVersion(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnAppVersion {
 	appvName := types.NamespacedName{
 		Namespace: instance.Namespace,
-		Name:      instance.Name + "-" + instance.Spec.Version,
+		Name:      fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation),
 	}
 
 	appVersion := &klcv1alpha2.KeptnAppVersion{}
@@ -142,7 +142,7 @@ func assertAppSpan(instance *klcv1alpha2.KeptnApp, spanRecorder *sdktest.SpanRec
 		return len(spans) >= 3
 	}, "10s").Should(BeTrue())
 
-	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s", instance.Name, instance.Spec.Version)))
+	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 
@@ -158,11 +158,13 @@ func assertAppSpan(instance *klcv1alpha2.KeptnApp, spanRecorder *sdktest.SpanRec
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha2.KeptnApp {
 	instance := &klcv1alpha2.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
+			Name:       name,
+			Namespace:  namespace,
+			Generation: 1,
 		},
 		Spec: klcv1alpha2.KeptnAppSpec{
-			Version: version,
+			Version:  version,
+			Revision: 1,
 			Workloads: []klcv1alpha2.KeptnWorkloadRef{
 				{
 					Name:    "app-wname",

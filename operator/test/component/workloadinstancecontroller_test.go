@@ -295,7 +295,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
-			It("should be cancelled when pre-eval checks failed", func() {
+			It("should be deprecated when pre-eval checks failed", func() {
 				evaluation := &klcv1alpha2.KeptnEvaluation{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "pre-eval-eval-def",
@@ -372,7 +372,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, wi)
 				Expect(err).To(BeNil())
 
-				By("Ensuring all phases after pre-eval checks are cancelled")
+				By("Ensuring all phases after pre-eval checks are deprecated")
 				wiNameObj := types.NamespacedName{
 					Namespace: wi.Namespace,
 					Name:      wi.Name,
@@ -384,9 +384,9 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi).To(Not(BeNil()))
 					g.Expect(wi.Status.PreDeploymentStatus).To(BeEquivalentTo(apicommon.StateSucceeded))
 					g.Expect(wi.Status.PreDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateFailed))
-					g.Expect(wi.Status.DeploymentStatus).To(BeEquivalentTo(apicommon.StateCancelled))
-					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(apicommon.StateCancelled))
-					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateCancelled))
+					g.Expect(wi.Status.DeploymentStatus).To(BeEquivalentTo(apicommon.StateDeprecated))
+					g.Expect(wi.Status.PostDeploymentStatus).To(BeEquivalentTo(apicommon.StateDeprecated))
+					g.Expect(wi.Status.PostDeploymentEvaluationStatus).To(BeEquivalentTo(apicommon.StateDeprecated))
 					g.Expect(wi.Status.Status).To(BeEquivalentTo(apicommon.StateFailed))
 				}, "30s").Should(Succeed())
 
@@ -426,13 +426,15 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 func createAppVersionInCluster(name string, namespace string, version string) *klcv1alpha2.KeptnAppVersion {
 	instance := &klcv1alpha2.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
+			Name:       name,
+			Namespace:  namespace,
+			Generation: 1,
 		},
 		Spec: klcv1alpha2.KeptnAppVersionSpec{
 			AppName: name,
 			KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
-				Version: version,
+				Version:  version,
+				Revision: 1,
 				Workloads: []klcv1alpha2.KeptnWorkloadRef{
 					{
 						Name:    "wname",

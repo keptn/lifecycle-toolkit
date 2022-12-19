@@ -273,6 +273,8 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha2.KeptnAppVersion{}, err
 	}
 
+	apps.RemoveDeprecated()
+
 	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
 		r.Log.Error(err, "could not look up KeptnAppVersion for WorkloadInstance")

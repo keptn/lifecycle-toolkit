@@ -17,11 +17,13 @@ func AddApp(c client.Client, name string) error {
 	app := &lfcv1alpha2.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: "default",
+			Name:       name,
+			Namespace:  "default",
+			Generation: 1,
 		},
 		Spec: lfcv1alpha2.KeptnAppSpec{
-			Version: "1.0.0",
+			Version:  "1.0.0",
+			Revision: 1,
 		},
 		Status: lfcv1alpha2.KeptnAppStatus{},
 	}
@@ -34,13 +36,15 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 	app := &lfcv1alpha2.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      appVersionName,
-			Namespace: namespace,
+			Name:       appVersionName,
+			Namespace:  namespace,
+			Generation: 1,
 		},
 		Spec: lfcv1alpha2.KeptnAppVersionSpec{
 			KeptnAppSpec: lfcv1alpha2.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
+				Revision:  1,
 			},
 			AppName: appName,
 			TraceId: map[string]string{

@@ -2,6 +2,7 @@ package keptnapp
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -27,11 +28,13 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	app := &lfcv1alpha2.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-app",
-			Namespace: "default",
+			Name:       "my-app",
+			Namespace:  "default",
+			Generation: 1,
 		},
 		Spec: lfcv1alpha2.KeptnAppSpec{
-			Version: "1.0.0",
+			Version:  "1.0.0",
+			Revision: 1,
 		},
 		Status: lfcv1alpha2.KeptnAppStatus{},
 	}
@@ -43,8 +46,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	}
 	t.Log("Verifying created app")
 	assert.Equal(t, appVersion.Namespace, app.Namespace)
-	assert.Equal(t, appVersion.Name, app.Name+"-"+app.Spec.Version)
-
+	assert.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%d", app.Name, app.Spec.Version, app.Generation))
 }
 
 func TestKeptnAppReconciler_reconcile(t *testing.T) {
@@ -117,11 +119,11 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	}
 
 	// check correct traces
-	assert.Equal(t, len(tracer.StartCalls()), 4)
+	assert.Equal(t, len(tracer.StartCalls()), 6)
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")
-	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0")
+	assert.Equal(t, tracer.StartCalls()[2].SpanName, "myapp-1.0.0-1")
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")

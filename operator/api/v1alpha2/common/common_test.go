@@ -25,7 +25,7 @@ func TestKeptnState_IsCompleted(t *testing.T) {
 			Want:  true,
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  true,
 		},
 	}
@@ -78,7 +78,7 @@ func TestKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
-func TestKeptnState_IsCancelled(t *testing.T) {
+func TestKeptnState_IsDeprecated(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool
@@ -88,13 +88,13 @@ func TestKeptnState_IsCancelled(t *testing.T) {
 			Want:  false,
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, tt.State.IsCancelled(), tt.Want)
+			require.Equal(t, tt.State.IsDeprecated(), tt.Want)
 		})
 	}
 }
@@ -151,7 +151,7 @@ func Test_UpdateStatusSummary(t *testing.T) {
 			Want:  StatusSummary{0, 0, 0, 0, 0, 1, 0},
 		},
 		{
-			State: StateCancelled,
+			State: StateDeprecated,
 			Want:  StatusSummary{0, 0, 0, 0, 0, 0, 1},
 		},
 	}
@@ -179,7 +179,7 @@ func Test_GeOverallState(t *testing.T) {
 			Want:    StateFailed,
 		},
 		{
-			Name:    "cancelled",
+			Name:    "deprecated",
 			Summary: StatusSummary{0, 0, 0, 0, 0, 0, 1},
 			Want:    StateFailed,
 		},

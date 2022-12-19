@@ -19,9 +19,11 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel"
@@ -113,6 +115,9 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
+		if err := r.handleGenerationBump(ctx, app); err != nil {
+			return ctrl.Result{Requeue: true}, nil
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -161,4 +166,41 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	return &appVersion, err
+}
+
+func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
+	if app.Generation != 1 {
+		if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
+			r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", app.GetAppVersionName())
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha2.KeptnApp) error {
+	var resultErr error
+	resultErr = nil
+	for i := int(app.Generation); i > 0; i-- {
+		deprecatedAppVersion := &klcv1alpha2.KeptnAppVersion{}
+		err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
+		if errors.IsNotFound(err) {
+			continue
+		}
+
+		if err != nil {
+			r.Log.Error(err, "AppVersion not found")
+			resultErr = err
+			continue
+		}
+
+		deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
+		if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
+			r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
+			resultErr = err
+			continue
+		}
+		break
+	}
+	return resultErr
 }

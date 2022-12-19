@@ -119,7 +119,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	}
 
 	// check correct traces
-	assert.Equal(t, len(tracer.StartCalls()), 6)
+	assert.Equal(t, len(tracer.StartCalls()), 4)
 	// case 1 reconcile and create app ver
 	assert.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app")
 	assert.Equal(t, tracer.StartCalls()[1].SpanName, "create_app_version")

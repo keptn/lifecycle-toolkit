@@ -315,7 +315,6 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
 					DeploymentStatus:               common.StateDeprecated,
 					Status:                         common.StateDeprecated,
-					CurrentPhase:                   string(common.StateDeprecated),
 				},
 			},
 		},

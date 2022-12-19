@@ -116,8 +116,8 @@ spec:
                   type: string
                 type: array
               revision:
-                default: "1"
-                type: string
+                default: 1
+                type: integer
               version:
                 type: string
               workloads:

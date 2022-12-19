@@ -387,7 +387,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "builder",
-          "expr": "sum by(job) (keptn_evaluation_count{job=\"otel-collector\"})",
+          "expr": "sum by(job) (keptn_evaluation_count_total{job=\"otel-collector\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

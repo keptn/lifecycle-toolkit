@@ -85,7 +85,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "keptn_app_count{keptn_deployment_app_status=\"Succeeded\", keptn_deployment_app_name=\"$Application\"}",
+            "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Succeeded\", keptn_deployment_app_name=\"$Application\"}",
             "format": "table",
             "legendFormat": "__auto",
             "range": true,
@@ -234,7 +234,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "builder",
-            "expr": "keptn_app_count{keptn_deployment_app_status=\"Failed\", keptn_deployment_app_name=\"$Application\"}",
+            "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Failed\", keptn_deployment_app_name=\"$Application\"}",
             "format": "table",
             "legendFormat": "__auto",
             "range": true,

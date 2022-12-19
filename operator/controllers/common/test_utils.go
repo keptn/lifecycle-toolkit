@@ -10,6 +10,7 @@ import (
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -28,7 +29,14 @@ func AddApp(c client.Client, name string) error {
 		Status: lfcv1alpha2.KeptnAppStatus{},
 	}
 	return c.Create(context.TODO(), app)
+}
 
+func UpdateApp(c client.Client, name string, revision int) error {
+	app := &lfcv1alpha2.KeptnApp{}
+	c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
+	app.Spec.Revision = revision
+	app.Generation = int64(revision)
+	return c.Update(context.TODO(), app)
 }
 
 func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha2.KeptnWorkloadRef, status lfcv1alpha2.KeptnAppVersionStatus) error {

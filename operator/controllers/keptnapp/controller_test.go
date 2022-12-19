@@ -98,7 +98,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	require.Nil(t, err)
 	err = controllercommon.AddApp(r.Client, "myfinishedapp")
 	require.Nil(t, err)
-	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, lfcv1alpha2.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0-1", nil, lfcv1alpha2.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
 	require.Nil(t, err)
 
 	for _, tt := range tests {
@@ -127,6 +127,43 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	//case 2 creates no span because notfound
 	//case 3 reconcile finished crd
 	assert.Equal(t, tracer.StartCalls()[3].SpanName, "reconcile_app")
+}
+
+func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
+	r, eventChannel, _ := setupReconciler(t)
+
+	err := controllercommon.AddApp(r.Client, "myapp")
+	require.Nil(t, err)
+
+	_, err = r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp",
+		},
+	})
+
+	require.Nil(t, err)
+
+	event := <-eventChannel
+	assert.Matches(t, event, `Normal AppVersionCreated Created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-1`)
+
+	err = controllercommon.UpdateApp(r.Client, "myapp", 2)
+	require.Nil(t, err)
+
+	_, err = r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp",
+		},
+	})
+
+	require.Nil(t, err)
+
+	event = <-eventChannel
+	assert.Matches(t, event, `Normal AppVersionCreated Created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-2`)
+
+	event = <-eventChannel
+	assert.Matches(t, event, `Normal AppVersionDeprecated Deprecated KeptnAppVersions for KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-2`)
 }
 
 func setupReconciler(t *testing.T) (*KeptnAppReconciler, chan string, *interfacesfake.ITracerMock) {

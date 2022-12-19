@@ -170,15 +170,17 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 
 func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
 	if app.Generation != 1 {
-		if err := r.cancelDeprecatedAppVersions(ctx, *app); err != nil {
+		if err := r.cancelDeprecatedAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", app.GetAppVersionName())
+			r.Recorder.Event(app, "Warning", "AppVersionNotDeprecated", fmt.Sprintf("Could not deprecate KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
 			return err
 		}
+		r.Recorder.Event(app, "Normal", "AppVersionDeprecated", fmt.Sprintf("Deprecated KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
 	}
 	return nil
 }
 
-func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha2.KeptnApp) error {
+func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
 	var resultErr error
 	resultErr = nil
 	for i := int(app.Generation) - 1; i > 0; i-- {

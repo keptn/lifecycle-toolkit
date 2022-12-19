@@ -181,7 +181,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha2.KeptnApp) error {
 	var resultErr error
 	resultErr = nil
-	for i := int(app.Generation); i > 0; i-- {
+	for i := int(app.Generation) - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha2.KeptnAppVersion{}
 		err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
 		if errors.IsNotFound(err) {

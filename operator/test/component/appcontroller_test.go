@@ -3,10 +3,10 @@ package component
 import (
 	"fmt"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"

@@ -38,8 +38,6 @@ type KeptnWorkloadSpec struct {
 	PreDeploymentEvaluations  []string          `json:"preDeploymentEvaluations,omitempty"`
 	PostDeploymentEvaluations []string          `json:"postDeploymentEvaluations,omitempty"`
 	ResourceReference         ResourceReference `json:"resourceReference"`
-	// +kubebuilder:default:=1
-	AppGeneration int64 `json:"appGeneration,omitempty"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload

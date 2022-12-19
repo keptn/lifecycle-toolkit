@@ -31,7 +31,6 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
@@ -175,14 +174,6 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 			r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", app.GetAppVersionName())
 			return err
 		}
-		if err := r.deleteWorkloadInstancesOfApp(ctx, *app); err != nil {
-			r.Log.Error(err, "could not delete WIs for appVersion %s", app.GetAppVersionName())
-			return err
-		}
-		if err := r.bumpRevisionOfWorkloadForApp(ctx, *app); err != nil {
-			r.Log.Error(err, "could not bump workload revision for appVersion %s", app.GetAppVersionName())
-			return err
-		}
 	}
 	return nil
 }
@@ -190,7 +181,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app klcv1alpha1.KeptnApp) error {
 	var resultErr error
 	resultErr = nil
-	for i := 1; i < int(app.Generation); i++ {
+	for i := int(app.Generation); i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha1.KeptnAppVersion{}
 		err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion)
 		if errors.IsNotFound(err) {
@@ -209,70 +200,7 @@ func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, ap
 			resultErr = err
 			continue
 		}
+		break
 	}
 	return resultErr
-}
-
-func (r *KeptnAppReconciler) deleteWorkloadInstancesOfApp(ctx context.Context, app klcv1alpha1.KeptnApp) error {
-	var resultErr error
-	resultErr = nil
-
-	//delete only if workloads of deprecated appVersion are failed or are stuck -> its current phase is AppDeploy
-	previousAppVersion := r.getPreviousAppVersion(ctx, app)
-	if previousAppVersion.Status.CurrentPhase != common.PhaseAppDeployment.ShortName {
-		return resultErr
-	}
-
-	for _, w := range app.Spec.Workloads {
-		bak := v1.DeletePropagationBackground
-		wi := &klcv1alpha1.KeptnWorkloadInstance{
-			ObjectMeta: v1.ObjectMeta{
-				Name:      app.Name + "-" + w.Name + "-" + w.Version,
-				Namespace: app.Namespace,
-			},
-		}
-		if err := r.Client.Delete(ctx, wi, &client.DeleteOptions{PropagationPolicy: &bak}); err != nil {
-			r.Log.Error(err, "could not delete WI %s", wi.Name)
-			resultErr = err
-			continue
-		}
-	}
-
-	return resultErr
-}
-
-func (r *KeptnAppReconciler) bumpRevisionOfWorkloadForApp(ctx context.Context, app klcv1alpha1.KeptnApp) error {
-	var resultErr error
-	resultErr = nil
-
-	for _, w := range app.Spec.Workloads {
-		workload := &klcv1alpha1.KeptnWorkload{}
-		if err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + w.Name}, workload); err != nil {
-			r.Log.Error(err, "could not get workload %s", workload.Name)
-			resultErr = err
-			continue
-		}
-
-		workload.Spec.AppGeneration = app.Generation
-
-		if err := r.Client.Update(ctx, workload); err != nil {
-			r.Log.Error(err, "could not update workload %s", workload.Name)
-			resultErr = err
-			continue
-		}
-
-	}
-
-	return resultErr
-}
-
-func (r *KeptnAppReconciler) getPreviousAppVersion(ctx context.Context, app klcv1alpha1.KeptnApp) *klcv1alpha1.KeptnAppVersion {
-	appVersion := &klcv1alpha1.KeptnAppVersion{}
-	for i := app.Generation - 1; i > 0; i-- {
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: fmt.Sprintf("%s-%s-%d", app.Name, app.Spec.Version, i)}, appVersion)
-		if err == nil && appVersion != nil {
-			return appVersion
-		}
-	}
-	return &klcv1alpha1.KeptnAppVersion{}
 }

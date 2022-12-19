@@ -73,10 +73,6 @@ spec:
             properties:
               app:
                 type: string
-              appGeneration:
-                default: 1
-                format: int64
-                type: integer
               postDeploymentEvaluations:
                 items:
                   type: string

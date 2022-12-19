@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/fake"
 )
 

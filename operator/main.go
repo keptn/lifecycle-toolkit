@@ -20,6 +20,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+
+	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"go.opentelemetry.io/otel/propagation"
+
 	"log"
 	"net/http"
 	"os"
@@ -29,7 +35,6 @@ import (
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
@@ -37,29 +42,32 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
-	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"go.opentelemetry.io/otel"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
+	// to ensure that exec-entrypoint and run can make use of them.
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
+
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
+
 	//+kubebuilder:scaffold:imports
 )
 
@@ -80,6 +88,8 @@ func init() {
 
 type envConfig struct {
 	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
+	PodNamespace     string `envconfig:"POD_NAMESPACE" default:""`
+	PodName          string `envconfig:"POD_NAME" default:""`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -95,7 +105,7 @@ func main() {
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 
-	// OTEL SETUP
+	// OTEL SET UP
 	// The exporter embeds a default OpenTelemetry Reader and
 	// implements prometheus.Collector, allowing it to be used as
 	// both a Reader and Collector.
@@ -193,11 +203,11 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
+
 	opts := zap.Options{
 		Development: true,
 	}
 	opts.BindFlags(flag.CommandLine)
-	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
@@ -244,15 +254,6 @@ func main() {
 
 	spanHandler := &controllercommon.SpanHandler{}
 
-	if !disableWebhook {
-		mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{
-			Handler: &webhooks.PodMutatingWebhook{
-				Client:   mgr.GetClient(),
-				Tracer:   otel.Tracer("keptn/webhook"),
-				Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
-				Log:      ctrl.Log.WithName("Mutating Webhook"),
-			}})
-	}
 	taskReconciler := &keptntask.KeptnTaskReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
@@ -451,13 +452,31 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+	if !disableWebhook {
+		setupLog.Info("waiting for certificate:  ")
+		webhookBuilder := webhook.NewWebhookBuilder().
+			SetNamespace(env.PodNamespace).
+			SetPodName(env.PodName).
+			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
 
-	setupLog.Info("starting manager")
-	setupLog.Info("Keptn lifecycle operator is alive")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		setupLog.Error(err, "problem running manager")
-		os.Exit(1)
+		setupLog.Info("starting webhook and manager")
+		if err1 := webhookBuilder.Run(mgr); err1 != nil {
+			setupLog.Error(err, "problem running manager")
+			os.Exit(1)
+		}
+
 	}
+
+	if disableWebhook {
+		flag.Parse()
+		setupLog.Info("starting manager")
+		setupLog.Info("Keptn lifecycle operator is alive")
+		if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+			setupLog.Error(err, "problem running manager")
+			os.Exit(1)
+		}
+	}
+
 }
 
 func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, error) {
@@ -486,7 +505,7 @@ func getOTelTracerProviderOptions(env envConfig) ([]trace.TracerProviderOption, 
 
 func newStdOutExporter() (trace.SpanExporter, error) {
 	return stdouttrace.New(
-		// Use human readable output.
+		// Use human-readable output.
 		stdouttrace.WithPrettyPrint(),
 		// Do not print timestamps for the demo.
 		stdouttrace.WithoutTimestamps(),

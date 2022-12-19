@@ -6,6 +6,16 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resourceNames:
+  - klc-controller-manager-certs
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - apps
   resources:
   - daemonsets
@@ -41,6 +51,18 @@ rules:
   - create
   - get
   - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
   - update
   - watch
 - apiGroups:

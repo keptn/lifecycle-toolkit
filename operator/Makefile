@@ -108,7 +108,7 @@ e2e-test: manifests generate envtest ## Run tests.
 ##@ Build
 .PHONY: build
 build: generate ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X common.gitCommit=$(HASH) -X common.buildTime=$(BUILD_TIME) -X common.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.

@@ -6,7 +6,6 @@ require (
 	github.com/go-logr/logr v1.2.3
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.13
-	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo/v2 v2.6.1
 	github.com/onsi/gomega v1.24.2
 	github.com/prometheus/client_golang v1.14.0

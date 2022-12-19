@@ -13,6 +13,7 @@ var ErrInvalidOperator = fmt.Errorf("invalid operator")
 var ErrCannotMarshalParams = fmt.Errorf("could not marshal parameters")
 var ErrUnsupportedWorkloadInstanceResourceReference = fmt.Errorf("unsupported Resource Reference")
 
+var ErrCannotRetrieveConfigMsg = "could not retrieve KeptnConfig: %w"
 var ErrCannotRetrieveInstancesMsg = "could not retrieve instances: %w"
 var ErrCannotFetchAppMsg = "could not retrieve KeptnApp: %w"
 var ErrCannotFetchAppVersionMsg = "could not retrieve KeptnappVersion: %w"

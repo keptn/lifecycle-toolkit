@@ -23,7 +23,7 @@ cleanup-manifests:
 	rm -rf manifests
 
 .PHONY: build-deploy-operator
-build-deploy-operator: deploy-cert-manager
+build-deploy-operator:
 	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
@@ -38,10 +38,15 @@ build-deploy-scheduler:
 	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
 
-.PHONY: deploy-cert-manager
-deploy-cert-manager:
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
+.PHONY: build-deploy-certmanager
+build-deploy-certmanager:
+	$(MAKE) -C klc-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C klc-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C klc-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -f klc-cert-manager/config/rendered/release.yaml
+
+
 
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-deploy-operator build-deploy-scheduler
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
+build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-scheduler

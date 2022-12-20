@@ -33,8 +33,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 			Generation: 1,
 		},
 		Spec: lfcv1alpha2.KeptnAppSpec{
-			Version:  "1.0.0",
-			Revision: 1,
+			Version: "1.0.0",
 		},
 		Status: lfcv1alpha2.KeptnAppStatus{},
 	}

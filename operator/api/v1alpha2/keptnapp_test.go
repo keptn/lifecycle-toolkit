@@ -12,8 +12,9 @@ import (
 func TestKeptnApp(t *testing.T) {
 	app := &KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "app",
-			Namespace: "namespace",
+			Name:       "app",
+			Namespace:  "namespace",
+			Generation: 1,
 		},
 		Spec: KeptnAppSpec{
 			Version: "version",
@@ -21,13 +22,13 @@ func TestKeptnApp(t *testing.T) {
 	}
 
 	appVersionName := app.GetAppVersionName()
-	require.Equal(t, "app-version-0", appVersionName)
+	require.Equal(t, "app-version-1", appVersionName)
 
 	appVersion := app.GenerateAppVersion("prev", map[string]string{})
 	require.Equal(t, KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
-			Name:        "app-version-0",
+			Name:        "app-version-1",
 			Namespace:   "namespace",
 		},
 		Spec: KeptnAppVersionSpec{

@@ -23,8 +23,7 @@ func AddApp(c client.Client, name string) error {
 			Generation: 1,
 		},
 		Spec: lfcv1alpha2.KeptnAppSpec{
-			Version:  "1.0.0",
-			Revision: 1,
+			Version: "1.0.0",
 		},
 		Status: lfcv1alpha2.KeptnAppStatus{},
 	}
@@ -52,7 +51,6 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 			KeptnAppSpec: lfcv1alpha2.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
-				Revision:  1,
 			},
 			AppName: appName,
 			TraceId: map[string]string{

@@ -428,11 +428,14 @@ func TestKeptnAppVersionList(t *testing.T) {
 		},
 	}
 
+	// fetch the list items
 	got := list.GetItems()
 	require.Len(t, got, 2)
 
+	// remove deprecated items from the list
 	list.RemoveDeprecated()
 
+	// check that deprecated items are not present in the list anymore
 	got = list.GetItems()
 	require.Len(t, got, 1)
 }

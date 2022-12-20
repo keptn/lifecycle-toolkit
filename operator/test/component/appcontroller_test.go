@@ -163,8 +163,7 @@ func createInstanceInCluster(name string, namespace string, version string) *klc
 			Generation: 1,
 		},
 		Spec: klcv1alpha2.KeptnAppSpec{
-			Version:  version,
-			Revision: 1,
+			Version: version,
 			Workloads: []klcv1alpha2.KeptnWorkloadRef{
 				{
 					Name:    "app-wname",

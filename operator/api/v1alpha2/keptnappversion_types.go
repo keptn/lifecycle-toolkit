@@ -373,33 +373,33 @@ func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
 }
 
 func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
-	// no need to cancel anything when post-eval tasks fail
+	// no need to deprecate anything when post-eval tasks fail
 	if phase == common.PhaseAppPostEvaluation {
 		return
 	}
-	//cancel post evaluation when post tasks failed
+	// deprecate post evaluation when post tasks failed
 	if phase == common.PhaseAppPostDeployment {
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
-	//cancel post evaluation and tasks when app deployment failed
+	// deprecate post evaluation and tasks when app deployment failed
 	if phase == common.PhaseAppDeployment {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 	}
-	//cancel app deployment, post tasks and evaluations if app pre-eval failed
+	// deprecate app deployment, post tasks and evaluations if app pre-eval failed
 	if phase == common.PhaseAppPreEvaluation {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
 	}
-	//cancel pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
+	// deprecate pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
 	if phase == common.PhaseAppPreDeployment {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
 		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
 	}
-	// cancell completely everything
+	// deprecate completely everything
 	if phase == common.PhaseDeprecated {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated

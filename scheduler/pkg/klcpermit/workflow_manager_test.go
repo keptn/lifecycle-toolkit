@@ -207,21 +207,6 @@ func Test_getSpan_unbindSpan(t *testing.T) {
 		},
 	}
 
-	r := &WorkloadManager{
-		bindCRDSpan: make(map[string]trace.Span, 100),
-		Tracer:      trace.NewNoopTracerProvider().Tracer("trace"),
-	}
-
-	_, span := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
-
-	require.NotNil(t, span)
-	require.Len(t, r.bindCRDSpan, 1)
-
-	_, span2 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
-
-	require.Equal(t, span, span2)
-	require.Len(t, r.bindCRDSpan, 1)
-
 	pod2 := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Labels: map[string]string{
@@ -232,29 +217,52 @@ func Test_getSpan_unbindSpan(t *testing.T) {
 		},
 	}
 
+	r := &WorkloadManager{
+		bindCRDSpan: make(map[string]trace.Span, 100),
+		Tracer:      trace.NewNoopTracerProvider().Tracer("trace"),
+	}
+
+	// create span for first pod
+	_, span := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
+
+	require.NotNil(t, span)
+	require.Len(t, r.bindCRDSpan, 1)
+
+	// fetch the created span for first pod
+	_, span2 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
+
+	require.Equal(t, span, span2)
+	require.Len(t, r.bindCRDSpan, 1)
+
+	// create another span for second pod
 	_, span3 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod2)
 
 	require.NotNil(t, span3)
 	require.Len(t, r.bindCRDSpan, 2)
 
+	// fetch the created span for second pod
 	_, span4 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod2)
 
 	require.Equal(t, span3, span4)
 	require.Len(t, r.bindCRDSpan, 2)
 
+	// fetch the created span for first pod
 	_, span5 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
 
 	require.Equal(t, span, span5)
 	require.Len(t, r.bindCRDSpan, 2)
 
+	// remove the created span for first pod
 	r.unbindSpan(pod)
 	require.Len(t, r.bindCRDSpan, 1)
 
+	// fetch the span for second pod
 	_, span6 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod2)
 
 	require.Equal(t, span3, span6)
 	require.Len(t, r.bindCRDSpan, 1)
 
+	// re-create span for first pod
 	_, span7 := r.getSpan(context.TODO(), &unstructured.Unstructured{}, pod)
 
 	require.Equal(t, span, span7)

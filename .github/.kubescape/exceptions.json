@@ -1,0 +1,24 @@
+[
+    {
+      "name": "ignore-cluster-role-can-get-secrets",
+      "policyType": "postureExceptionPolicy",
+      "actions": [
+        "alertOnly"
+      ],
+      "resources": [
+        {
+          "designatorType": "Attributes",
+          "attributes": {
+            "kind": "ServiceAccount",
+            "name": "klc-controller-manager"
+          }
+        }
+      ],
+      "posturePolicies": [
+          {
+              "controlID": "C-0015" 
+          }
+      ]
+    }
+  ]
+  

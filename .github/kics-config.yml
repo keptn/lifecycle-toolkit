@@ -1,0 +1,14 @@
+exclude-queries:
+  # query IDs can be found here: https://docs.kics.io/latest/queries/all-queries/
+  # The queries below are excluded because they are not relevant or not needed for Keptn
+exclude-results:
+  # Result similarity IDs corresponding to nats-box helm test pod that can't be adjusted
+  # Similarity IDs can be found in the JSON result file of kics
+  - 76f0ba03bcaf9f6e0ff8660beaebff55f74f1d89e38b6831c2b7b468a3dc764b  # RBAC Roles with Read Secrets Permissions
+  - f88463cc96ec0165f0c1d83c279ff2658b8a8bd8adb2aaaf79f64a230df88504  # RBAC Roles with Read Secrets Permissions
+no-color: false
+no-progress: true
+preview-lines: 5
+silent: false
+verbose: true
+disable-full-descriptions: false

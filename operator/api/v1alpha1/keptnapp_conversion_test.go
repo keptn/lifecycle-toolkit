@@ -5,7 +5,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	"github.com/stretchr/testify/require"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
@@ -35,7 +35,7 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 				},
 				Spec: v1alpha2.KeptnAppSpec{
 					Version:  "1.2.3",
-					Revision: "1",
+					Revision: 1,
 					Workloads: []v1alpha2.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
@@ -191,7 +191,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 				},
 				Spec: v1alpha2.KeptnAppSpec{
 					Version:  "1.2.3",
-					Revision: "1",
+					Revision: 1,
 					Workloads: []v1alpha2.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",

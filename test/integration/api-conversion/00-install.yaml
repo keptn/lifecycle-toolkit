@@ -11,4 +11,4 @@ metadata:
   name: "some-klt-app2"
 spec:
   version: "1.2.3"
-  revision: "123"
+  revision: 123

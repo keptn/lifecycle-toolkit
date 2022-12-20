@@ -4,7 +4,7 @@
 package fake
 
 import (
-	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -12,108 +12,108 @@ import (
 	"time"
 )
 
-// PhaseItemMock is a mock implementation of common.PhaseItem.
+// PhaseItemMock is a mock implementation of interfaces.PhaseItem.
 //
-//	func TestSomethingThatUsesPhaseItem(t *testing.T) {
+// 	func TestSomethingThatUsesPhaseItem(t *testing.T) {
 //
-//		// make and configure a mocked common.PhaseItem
-//		mockedPhaseItem := &PhaseItemMock{
-//			CancelRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType)  {
-//				panic("mock out the CancelRemainingPhases method")
-//			},
-//			CompleteFunc: func()  {
-//				panic("mock out the Complete method")
-//			},
-//			GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnEvaluation {
-//				panic("mock out the GenerateEvaluation method")
-//			},
-//			GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnTask {
-//				panic("mock out the GenerateTask method")
-//			},
-//			GetAppNameFunc: func() string {
-//				panic("mock out the GetAppName method")
-//			},
-//			GetCurrentPhaseFunc: func() string {
-//				panic("mock out the GetCurrentPhase method")
-//			},
-//			GetEndTimeFunc: func() time.Time {
-//				panic("mock out the GetEndTime method")
-//			},
-//			GetNamespaceFunc: func() string {
-//				panic("mock out the GetNamespace method")
-//			},
-//			GetParentNameFunc: func() string {
-//				panic("mock out the GetParentName method")
-//			},
-//			GetPostDeploymentEvaluationTaskStatusFunc: func() []lfcv1alpha2.EvaluationStatus {
-//				panic("mock out the GetPostDeploymentEvaluationTaskStatus method")
-//			},
-//			GetPostDeploymentEvaluationsFunc: func() []string {
-//				panic("mock out the GetPostDeploymentEvaluations method")
-//			},
-//			GetPostDeploymentTaskStatusFunc: func() []lfcv1alpha2.TaskStatus {
-//				panic("mock out the GetPostDeploymentTaskStatus method")
-//			},
-//			GetPostDeploymentTasksFunc: func() []string {
-//				panic("mock out the GetPostDeploymentTasks method")
-//			},
-//			GetPreDeploymentEvaluationTaskStatusFunc: func() []lfcv1alpha2.EvaluationStatus {
-//				panic("mock out the GetPreDeploymentEvaluationTaskStatus method")
-//			},
-//			GetPreDeploymentEvaluationsFunc: func() []string {
-//				panic("mock out the GetPreDeploymentEvaluations method")
-//			},
-//			GetPreDeploymentTaskStatusFunc: func() []lfcv1alpha2.TaskStatus {
-//				panic("mock out the GetPreDeploymentTaskStatus method")
-//			},
-//			GetPreDeploymentTasksFunc: func() []string {
-//				panic("mock out the GetPreDeploymentTasks method")
-//			},
-//			GetPreviousVersionFunc: func() string {
-//				panic("mock out the GetPreviousVersion method")
-//			},
-//			GetSpanAttributesFunc: func() []attribute.KeyValue {
-//				panic("mock out the GetSpanAttributes method")
-//			},
-//			GetStartTimeFunc: func() time.Time {
-//				panic("mock out the GetStartTime method")
-//			},
-//			GetStateFunc: func() apicommon.KeptnState {
-//				panic("mock out the GetState method")
-//			},
-//			GetVersionFunc: func() string {
-//				panic("mock out the GetVersion method")
-//			},
-//			IsEndTimeSetFunc: func() bool {
-//				panic("mock out the IsEndTimeSet method")
-//			},
-//			SetCurrentPhaseFunc: func(s string)  {
-//				panic("mock out the SetCurrentPhase method")
-//			},
-//			SetSpanAttributesFunc: func(span trace.Span)  {
-//				panic("mock out the SetSpanAttributes method")
-//			},
-//			SetStateFunc: func(keptnState apicommon.KeptnState)  {
-//				panic("mock out the SetState method")
-//			},
-//		}
+// 		// make and configure a mocked interfaces.PhaseItem
+// 		mockedPhaseItem := &PhaseItemMock{
+// 			CompleteFunc: func()  {
+// 				panic("mock out the Complete method")
+// 			},
+// 			DeprecateRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType)  {
+// 				panic("mock out the DeprecateRemainingPhases method")
+// 			},
+// 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnEvaluation {
+// 				panic("mock out the GenerateEvaluation method")
+// 			},
+// 			GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnTask {
+// 				panic("mock out the GenerateTask method")
+// 			},
+// 			GetAppNameFunc: func() string {
+// 				panic("mock out the GetAppName method")
+// 			},
+// 			GetCurrentPhaseFunc: func() string {
+// 				panic("mock out the GetCurrentPhase method")
+// 			},
+// 			GetEndTimeFunc: func() time.Time {
+// 				panic("mock out the GetEndTime method")
+// 			},
+// 			GetNamespaceFunc: func() string {
+// 				panic("mock out the GetNamespace method")
+// 			},
+// 			GetParentNameFunc: func() string {
+// 				panic("mock out the GetParentName method")
+// 			},
+// 			GetPostDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.EvaluationStatus {
+// 				panic("mock out the GetPostDeploymentEvaluationTaskStatus method")
+// 			},
+// 			GetPostDeploymentEvaluationsFunc: func() []string {
+// 				panic("mock out the GetPostDeploymentEvaluations method")
+// 			},
+// 			GetPostDeploymentTaskStatusFunc: func() []klcv1alpha2.TaskStatus {
+// 				panic("mock out the GetPostDeploymentTaskStatus method")
+// 			},
+// 			GetPostDeploymentTasksFunc: func() []string {
+// 				panic("mock out the GetPostDeploymentTasks method")
+// 			},
+// 			GetPreDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.EvaluationStatus {
+// 				panic("mock out the GetPreDeploymentEvaluationTaskStatus method")
+// 			},
+// 			GetPreDeploymentEvaluationsFunc: func() []string {
+// 				panic("mock out the GetPreDeploymentEvaluations method")
+// 			},
+// 			GetPreDeploymentTaskStatusFunc: func() []klcv1alpha2.TaskStatus {
+// 				panic("mock out the GetPreDeploymentTaskStatus method")
+// 			},
+// 			GetPreDeploymentTasksFunc: func() []string {
+// 				panic("mock out the GetPreDeploymentTasks method")
+// 			},
+// 			GetPreviousVersionFunc: func() string {
+// 				panic("mock out the GetPreviousVersion method")
+// 			},
+// 			GetSpanAttributesFunc: func() []attribute.KeyValue {
+// 				panic("mock out the GetSpanAttributes method")
+// 			},
+// 			GetStartTimeFunc: func() time.Time {
+// 				panic("mock out the GetStartTime method")
+// 			},
+// 			GetStateFunc: func() apicommon.KeptnState {
+// 				panic("mock out the GetState method")
+// 			},
+// 			GetVersionFunc: func() string {
+// 				panic("mock out the GetVersion method")
+// 			},
+// 			IsEndTimeSetFunc: func() bool {
+// 				panic("mock out the IsEndTimeSet method")
+// 			},
+// 			SetCurrentPhaseFunc: func(s string)  {
+// 				panic("mock out the SetCurrentPhase method")
+// 			},
+// 			SetSpanAttributesFunc: func(span trace.Span)  {
+// 				panic("mock out the SetSpanAttributes method")
+// 			},
+// 			SetStateFunc: func(keptnState apicommon.KeptnState)  {
+// 				panic("mock out the SetState method")
+// 			},
+// 		}
 //
-//		// use mockedPhaseItem in code that requires common.PhaseItem
-//		// and then make assertions.
+// 		// use mockedPhaseItem in code that requires interfaces.PhaseItem
+// 		// and then make assertions.
 //
-//	}
+// 	}
 type PhaseItemMock struct {
-	// CancelRemainingPhasesFunc mocks the CancelRemainingPhases method.
-	CancelRemainingPhasesFunc func(phase apicommon.KeptnPhaseType)
-
 	// CompleteFunc mocks the Complete method.
 	CompleteFunc func()
 
+	// DeprecateRemainingPhasesFunc mocks the DeprecateRemainingPhases method.
+	DeprecateRemainingPhasesFunc func(phase apicommon.KeptnPhaseType)
+
 	// GenerateEvaluationFunc mocks the GenerateEvaluation method.
-	GenerateEvaluationFunc func(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnEvaluation
+	GenerateEvaluationFunc func(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnEvaluation
 
 	// GenerateTaskFunc mocks the GenerateTask method.
-	GenerateTaskFunc func(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnTask
+	GenerateTaskFunc func(taskDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnTask
 
 	// GetAppNameFunc mocks the GetAppName method.
 	GetAppNameFunc func() string
@@ -131,25 +131,25 @@ type PhaseItemMock struct {
 	GetParentNameFunc func() string
 
 	// GetPostDeploymentEvaluationTaskStatusFunc mocks the GetPostDeploymentEvaluationTaskStatus method.
-	GetPostDeploymentEvaluationTaskStatusFunc func() []lfcv1alpha2.EvaluationStatus
+	GetPostDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.EvaluationStatus
 
 	// GetPostDeploymentEvaluationsFunc mocks the GetPostDeploymentEvaluations method.
 	GetPostDeploymentEvaluationsFunc func() []string
 
 	// GetPostDeploymentTaskStatusFunc mocks the GetPostDeploymentTaskStatus method.
-	GetPostDeploymentTaskStatusFunc func() []lfcv1alpha2.TaskStatus
+	GetPostDeploymentTaskStatusFunc func() []klcv1alpha2.TaskStatus
 
 	// GetPostDeploymentTasksFunc mocks the GetPostDeploymentTasks method.
 	GetPostDeploymentTasksFunc func() []string
 
 	// GetPreDeploymentEvaluationTaskStatusFunc mocks the GetPreDeploymentEvaluationTaskStatus method.
-	GetPreDeploymentEvaluationTaskStatusFunc func() []lfcv1alpha2.EvaluationStatus
+	GetPreDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.EvaluationStatus
 
 	// GetPreDeploymentEvaluationsFunc mocks the GetPreDeploymentEvaluations method.
 	GetPreDeploymentEvaluationsFunc func() []string
 
 	// GetPreDeploymentTaskStatusFunc mocks the GetPreDeploymentTaskStatus method.
-	GetPreDeploymentTaskStatusFunc func() []lfcv1alpha2.TaskStatus
+	GetPreDeploymentTaskStatusFunc func() []klcv1alpha2.TaskStatus
 
 	// GetPreDeploymentTasksFunc mocks the GetPreDeploymentTasks method.
 	GetPreDeploymentTasksFunc func() []string
@@ -183,13 +183,13 @@ type PhaseItemMock struct {
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// CancelRemainingPhases holds details about calls to the CancelRemainingPhases method.
-		CancelRemainingPhases []struct {
-			// Phase is the phase argument value.
-			Phase apicommon.KeptnPhaseType
-		}
 		// Complete holds details about calls to the Complete method.
 		Complete []struct {
+		}
+		// DeprecateRemainingPhases holds details about calls to the DeprecateRemainingPhases method.
+		DeprecateRemainingPhases []struct {
+			// Phase is the phase argument value.
+			Phase apicommon.KeptnPhaseType
 		}
 		// GenerateEvaluation holds details about calls to the GenerateEvaluation method.
 		GenerateEvaluation []struct {
@@ -278,8 +278,8 @@ type PhaseItemMock struct {
 			KeptnState apicommon.KeptnState
 		}
 	}
-	lockCancelRemainingPhases                 sync.RWMutex
 	lockComplete                              sync.RWMutex
+	lockDeprecateRemainingPhases              sync.RWMutex
 	lockGenerateEvaluation                    sync.RWMutex
 	lockGenerateTask                          sync.RWMutex
 	lockGetAppName                            sync.RWMutex
@@ -306,38 +306,6 @@ type PhaseItemMock struct {
 	lockSetState                              sync.RWMutex
 }
 
-// CancelRemainingPhases calls CancelRemainingPhasesFunc.
-func (mock *PhaseItemMock) CancelRemainingPhases(phase apicommon.KeptnPhaseType) {
-	if mock.CancelRemainingPhasesFunc == nil {
-		panic("PhaseItemMock.CancelRemainingPhasesFunc: method is nil but PhaseItem.CancelRemainingPhases was just called")
-	}
-	callInfo := struct {
-		Phase apicommon.KeptnPhaseType
-	}{
-		Phase: phase,
-	}
-	mock.lockCancelRemainingPhases.Lock()
-	mock.calls.CancelRemainingPhases = append(mock.calls.CancelRemainingPhases, callInfo)
-	mock.lockCancelRemainingPhases.Unlock()
-	mock.CancelRemainingPhasesFunc(phase)
-}
-
-// CancelRemainingPhasesCalls gets all the calls that were made to CancelRemainingPhases.
-// Check the length with:
-//
-//	len(mockedPhaseItem.CancelRemainingPhasesCalls())
-func (mock *PhaseItemMock) CancelRemainingPhasesCalls() []struct {
-	Phase apicommon.KeptnPhaseType
-} {
-	var calls []struct {
-		Phase apicommon.KeptnPhaseType
-	}
-	mock.lockCancelRemainingPhases.RLock()
-	calls = mock.calls.CancelRemainingPhases
-	mock.lockCancelRemainingPhases.RUnlock()
-	return calls
-}
-
 // Complete calls CompleteFunc.
 func (mock *PhaseItemMock) Complete() {
 	if mock.CompleteFunc == nil {
@@ -353,8 +321,7 @@ func (mock *PhaseItemMock) Complete() {
 
 // CompleteCalls gets all the calls that were made to Complete.
 // Check the length with:
-//
-//	len(mockedPhaseItem.CompleteCalls())
+//     len(mockedPhaseItem.CompleteCalls())
 func (mock *PhaseItemMock) CompleteCalls() []struct {
 } {
 	var calls []struct {
@@ -365,8 +332,39 @@ func (mock *PhaseItemMock) CompleteCalls() []struct {
 	return calls
 }
 
+// DeprecateRemainingPhases calls DeprecateRemainingPhasesFunc.
+func (mock *PhaseItemMock) DeprecateRemainingPhases(phase apicommon.KeptnPhaseType) {
+	if mock.DeprecateRemainingPhasesFunc == nil {
+		panic("PhaseItemMock.DeprecateRemainingPhasesFunc: method is nil but PhaseItem.DeprecateRemainingPhases was just called")
+	}
+	callInfo := struct {
+		Phase apicommon.KeptnPhaseType
+	}{
+		Phase: phase,
+	}
+	mock.lockDeprecateRemainingPhases.Lock()
+	mock.calls.DeprecateRemainingPhases = append(mock.calls.DeprecateRemainingPhases, callInfo)
+	mock.lockDeprecateRemainingPhases.Unlock()
+	mock.DeprecateRemainingPhasesFunc(phase)
+}
+
+// DeprecateRemainingPhasesCalls gets all the calls that were made to DeprecateRemainingPhases.
+// Check the length with:
+//     len(mockedPhaseItem.DeprecateRemainingPhasesCalls())
+func (mock *PhaseItemMock) DeprecateRemainingPhasesCalls() []struct {
+	Phase apicommon.KeptnPhaseType
+} {
+	var calls []struct {
+		Phase apicommon.KeptnPhaseType
+	}
+	mock.lockDeprecateRemainingPhases.RLock()
+	calls = mock.calls.DeprecateRemainingPhases
+	mock.lockDeprecateRemainingPhases.RUnlock()
+	return calls
+}
+
 // GenerateEvaluation calls GenerateEvaluationFunc.
-func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnEvaluation {
+func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnEvaluation {
 	if mock.GenerateEvaluationFunc == nil {
 		panic("PhaseItemMock.GenerateEvaluationFunc: method is nil but PhaseItem.GenerateEvaluation was just called")
 	}
@@ -385,8 +383,7 @@ func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, check
 
 // GenerateEvaluationCalls gets all the calls that were made to GenerateEvaluation.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GenerateEvaluationCalls())
+//     len(mockedPhaseItem.GenerateEvaluationCalls())
 func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 	EvaluationDefinition string
 	CheckType            apicommon.CheckType
@@ -402,7 +399,7 @@ func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 }
 
 // GenerateTask calls GenerateTaskFunc.
-func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicommon.CheckType) lfcv1alpha2.KeptnTask {
+func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnTask {
 	if mock.GenerateTaskFunc == nil {
 		panic("PhaseItemMock.GenerateTaskFunc: method is nil but PhaseItem.GenerateTask was just called")
 	}
@@ -421,8 +418,7 @@ func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicomm
 
 // GenerateTaskCalls gets all the calls that were made to GenerateTask.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GenerateTaskCalls())
+//     len(mockedPhaseItem.GenerateTaskCalls())
 func (mock *PhaseItemMock) GenerateTaskCalls() []struct {
 	TaskDefinition string
 	CheckType      apicommon.CheckType
@@ -452,8 +448,7 @@ func (mock *PhaseItemMock) GetAppName() string {
 
 // GetAppNameCalls gets all the calls that were made to GetAppName.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetAppNameCalls())
+//     len(mockedPhaseItem.GetAppNameCalls())
 func (mock *PhaseItemMock) GetAppNameCalls() []struct {
 } {
 	var calls []struct {
@@ -479,8 +474,7 @@ func (mock *PhaseItemMock) GetCurrentPhase() string {
 
 // GetCurrentPhaseCalls gets all the calls that were made to GetCurrentPhase.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetCurrentPhaseCalls())
+//     len(mockedPhaseItem.GetCurrentPhaseCalls())
 func (mock *PhaseItemMock) GetCurrentPhaseCalls() []struct {
 } {
 	var calls []struct {
@@ -506,8 +500,7 @@ func (mock *PhaseItemMock) GetEndTime() time.Time {
 
 // GetEndTimeCalls gets all the calls that were made to GetEndTime.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetEndTimeCalls())
+//     len(mockedPhaseItem.GetEndTimeCalls())
 func (mock *PhaseItemMock) GetEndTimeCalls() []struct {
 } {
 	var calls []struct {
@@ -533,8 +526,7 @@ func (mock *PhaseItemMock) GetNamespace() string {
 
 // GetNamespaceCalls gets all the calls that were made to GetNamespace.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetNamespaceCalls())
+//     len(mockedPhaseItem.GetNamespaceCalls())
 func (mock *PhaseItemMock) GetNamespaceCalls() []struct {
 } {
 	var calls []struct {
@@ -560,8 +552,7 @@ func (mock *PhaseItemMock) GetParentName() string {
 
 // GetParentNameCalls gets all the calls that were made to GetParentName.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetParentNameCalls())
+//     len(mockedPhaseItem.GetParentNameCalls())
 func (mock *PhaseItemMock) GetParentNameCalls() []struct {
 } {
 	var calls []struct {
@@ -573,7 +564,7 @@ func (mock *PhaseItemMock) GetParentNameCalls() []struct {
 }
 
 // GetPostDeploymentEvaluationTaskStatus calls GetPostDeploymentEvaluationTaskStatusFunc.
-func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatus() []lfcv1alpha2.EvaluationStatus {
+func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
 	if mock.GetPostDeploymentEvaluationTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPostDeploymentEvaluationTaskStatusFunc: method is nil but PhaseItem.GetPostDeploymentEvaluationTaskStatus was just called")
 	}
@@ -587,8 +578,7 @@ func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatus() []lfcv1alpha2
 
 // GetPostDeploymentEvaluationTaskStatusCalls gets all the calls that were made to GetPostDeploymentEvaluationTaskStatus.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPostDeploymentEvaluationTaskStatusCalls())
+//     len(mockedPhaseItem.GetPostDeploymentEvaluationTaskStatusCalls())
 func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatusCalls() []struct {
 } {
 	var calls []struct {
@@ -614,8 +604,7 @@ func (mock *PhaseItemMock) GetPostDeploymentEvaluations() []string {
 
 // GetPostDeploymentEvaluationsCalls gets all the calls that were made to GetPostDeploymentEvaluations.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPostDeploymentEvaluationsCalls())
+//     len(mockedPhaseItem.GetPostDeploymentEvaluationsCalls())
 func (mock *PhaseItemMock) GetPostDeploymentEvaluationsCalls() []struct {
 } {
 	var calls []struct {
@@ -627,7 +616,7 @@ func (mock *PhaseItemMock) GetPostDeploymentEvaluationsCalls() []struct {
 }
 
 // GetPostDeploymentTaskStatus calls GetPostDeploymentTaskStatusFunc.
-func (mock *PhaseItemMock) GetPostDeploymentTaskStatus() []lfcv1alpha2.TaskStatus {
+func (mock *PhaseItemMock) GetPostDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
 	if mock.GetPostDeploymentTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPostDeploymentTaskStatusFunc: method is nil but PhaseItem.GetPostDeploymentTaskStatus was just called")
 	}
@@ -641,8 +630,7 @@ func (mock *PhaseItemMock) GetPostDeploymentTaskStatus() []lfcv1alpha2.TaskStatu
 
 // GetPostDeploymentTaskStatusCalls gets all the calls that were made to GetPostDeploymentTaskStatus.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPostDeploymentTaskStatusCalls())
+//     len(mockedPhaseItem.GetPostDeploymentTaskStatusCalls())
 func (mock *PhaseItemMock) GetPostDeploymentTaskStatusCalls() []struct {
 } {
 	var calls []struct {
@@ -668,8 +656,7 @@ func (mock *PhaseItemMock) GetPostDeploymentTasks() []string {
 
 // GetPostDeploymentTasksCalls gets all the calls that were made to GetPostDeploymentTasks.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPostDeploymentTasksCalls())
+//     len(mockedPhaseItem.GetPostDeploymentTasksCalls())
 func (mock *PhaseItemMock) GetPostDeploymentTasksCalls() []struct {
 } {
 	var calls []struct {
@@ -681,7 +668,7 @@ func (mock *PhaseItemMock) GetPostDeploymentTasksCalls() []struct {
 }
 
 // GetPreDeploymentEvaluationTaskStatus calls GetPreDeploymentEvaluationTaskStatusFunc.
-func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatus() []lfcv1alpha2.EvaluationStatus {
+func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
 	if mock.GetPreDeploymentEvaluationTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPreDeploymentEvaluationTaskStatusFunc: method is nil but PhaseItem.GetPreDeploymentEvaluationTaskStatus was just called")
 	}
@@ -695,8 +682,7 @@ func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatus() []lfcv1alpha2.
 
 // GetPreDeploymentEvaluationTaskStatusCalls gets all the calls that were made to GetPreDeploymentEvaluationTaskStatus.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPreDeploymentEvaluationTaskStatusCalls())
+//     len(mockedPhaseItem.GetPreDeploymentEvaluationTaskStatusCalls())
 func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatusCalls() []struct {
 } {
 	var calls []struct {
@@ -722,8 +708,7 @@ func (mock *PhaseItemMock) GetPreDeploymentEvaluations() []string {
 
 // GetPreDeploymentEvaluationsCalls gets all the calls that were made to GetPreDeploymentEvaluations.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPreDeploymentEvaluationsCalls())
+//     len(mockedPhaseItem.GetPreDeploymentEvaluationsCalls())
 func (mock *PhaseItemMock) GetPreDeploymentEvaluationsCalls() []struct {
 } {
 	var calls []struct {
@@ -735,7 +720,7 @@ func (mock *PhaseItemMock) GetPreDeploymentEvaluationsCalls() []struct {
 }
 
 // GetPreDeploymentTaskStatus calls GetPreDeploymentTaskStatusFunc.
-func (mock *PhaseItemMock) GetPreDeploymentTaskStatus() []lfcv1alpha2.TaskStatus {
+func (mock *PhaseItemMock) GetPreDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
 	if mock.GetPreDeploymentTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPreDeploymentTaskStatusFunc: method is nil but PhaseItem.GetPreDeploymentTaskStatus was just called")
 	}
@@ -749,8 +734,7 @@ func (mock *PhaseItemMock) GetPreDeploymentTaskStatus() []lfcv1alpha2.TaskStatus
 
 // GetPreDeploymentTaskStatusCalls gets all the calls that were made to GetPreDeploymentTaskStatus.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPreDeploymentTaskStatusCalls())
+//     len(mockedPhaseItem.GetPreDeploymentTaskStatusCalls())
 func (mock *PhaseItemMock) GetPreDeploymentTaskStatusCalls() []struct {
 } {
 	var calls []struct {
@@ -776,8 +760,7 @@ func (mock *PhaseItemMock) GetPreDeploymentTasks() []string {
 
 // GetPreDeploymentTasksCalls gets all the calls that were made to GetPreDeploymentTasks.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPreDeploymentTasksCalls())
+//     len(mockedPhaseItem.GetPreDeploymentTasksCalls())
 func (mock *PhaseItemMock) GetPreDeploymentTasksCalls() []struct {
 } {
 	var calls []struct {
@@ -803,8 +786,7 @@ func (mock *PhaseItemMock) GetPreviousVersion() string {
 
 // GetPreviousVersionCalls gets all the calls that were made to GetPreviousVersion.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetPreviousVersionCalls())
+//     len(mockedPhaseItem.GetPreviousVersionCalls())
 func (mock *PhaseItemMock) GetPreviousVersionCalls() []struct {
 } {
 	var calls []struct {
@@ -830,8 +812,7 @@ func (mock *PhaseItemMock) GetSpanAttributes() []attribute.KeyValue {
 
 // GetSpanAttributesCalls gets all the calls that were made to GetSpanAttributes.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetSpanAttributesCalls())
+//     len(mockedPhaseItem.GetSpanAttributesCalls())
 func (mock *PhaseItemMock) GetSpanAttributesCalls() []struct {
 } {
 	var calls []struct {
@@ -857,8 +838,7 @@ func (mock *PhaseItemMock) GetStartTime() time.Time {
 
 // GetStartTimeCalls gets all the calls that were made to GetStartTime.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetStartTimeCalls())
+//     len(mockedPhaseItem.GetStartTimeCalls())
 func (mock *PhaseItemMock) GetStartTimeCalls() []struct {
 } {
 	var calls []struct {
@@ -884,8 +864,7 @@ func (mock *PhaseItemMock) GetState() apicommon.KeptnState {
 
 // GetStateCalls gets all the calls that were made to GetState.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetStateCalls())
+//     len(mockedPhaseItem.GetStateCalls())
 func (mock *PhaseItemMock) GetStateCalls() []struct {
 } {
 	var calls []struct {
@@ -911,8 +890,7 @@ func (mock *PhaseItemMock) GetVersion() string {
 
 // GetVersionCalls gets all the calls that were made to GetVersion.
 // Check the length with:
-//
-//	len(mockedPhaseItem.GetVersionCalls())
+//     len(mockedPhaseItem.GetVersionCalls())
 func (mock *PhaseItemMock) GetVersionCalls() []struct {
 } {
 	var calls []struct {
@@ -938,8 +916,7 @@ func (mock *PhaseItemMock) IsEndTimeSet() bool {
 
 // IsEndTimeSetCalls gets all the calls that were made to IsEndTimeSet.
 // Check the length with:
-//
-//	len(mockedPhaseItem.IsEndTimeSetCalls())
+//     len(mockedPhaseItem.IsEndTimeSetCalls())
 func (mock *PhaseItemMock) IsEndTimeSetCalls() []struct {
 } {
 	var calls []struct {
@@ -968,8 +945,7 @@ func (mock *PhaseItemMock) SetCurrentPhase(s string) {
 
 // SetCurrentPhaseCalls gets all the calls that were made to SetCurrentPhase.
 // Check the length with:
-//
-//	len(mockedPhaseItem.SetCurrentPhaseCalls())
+//     len(mockedPhaseItem.SetCurrentPhaseCalls())
 func (mock *PhaseItemMock) SetCurrentPhaseCalls() []struct {
 	S string
 } {
@@ -1000,8 +976,7 @@ func (mock *PhaseItemMock) SetSpanAttributes(span trace.Span) {
 
 // SetSpanAttributesCalls gets all the calls that were made to SetSpanAttributes.
 // Check the length with:
-//
-//	len(mockedPhaseItem.SetSpanAttributesCalls())
+//     len(mockedPhaseItem.SetSpanAttributesCalls())
 func (mock *PhaseItemMock) SetSpanAttributesCalls() []struct {
 	Span trace.Span
 } {
@@ -1032,8 +1007,7 @@ func (mock *PhaseItemMock) SetState(keptnState apicommon.KeptnState) {
 
 // SetStateCalls gets all the calls that were made to SetState.
 // Check the length with:
-//
-//	len(mockedPhaseItem.SetStateCalls())
+//     len(mockedPhaseItem.SetStateCalls())
 func (mock *PhaseItemMock) SetStateCalls() []struct {
 	KeptnState apicommon.KeptnState
 } {

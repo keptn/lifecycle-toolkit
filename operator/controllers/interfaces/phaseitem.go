@@ -40,7 +40,7 @@ type PhaseItem interface {
 	GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnEvaluation
 	GetSpanAttributes() []attribute.KeyValue
 	SetSpanAttributes(span trace.Span)
-	CancelRemainingPhases(phase apicommon.KeptnPhaseType)
+	DeprecateRemainingPhases(phase apicommon.KeptnPhaseType)
 }
 
 type PhaseItemWrapper struct {
@@ -155,6 +155,6 @@ func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 	return pw.Obj.GetSpanAttributes()
 }
 
-func (pw PhaseItemWrapper) CancelRemainingPhases(phase apicommon.KeptnPhaseType) {
-	pw.Obj.CancelRemainingPhases(phase)
+func (pw PhaseItemWrapper) DeprecateRemainingPhases(phase apicommon.KeptnPhaseType) {
+	pw.Obj.DeprecateRemainingPhases(phase)
 }

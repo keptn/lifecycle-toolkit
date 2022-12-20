@@ -40,7 +40,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
-	if oldStatus.IsCancelled() {
+	if oldStatus.IsDeprecated() {
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
 	piWrapper.SetCurrentPhase(phase.ShortName)
@@ -83,7 +83,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 				r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, reconcileObject.GetName())
 			}
 			RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
-			piWrapper.CancelRemainingPhases(phase)
+			piWrapper.DeprecateRemainingPhases(phase)
 			return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 		}
 

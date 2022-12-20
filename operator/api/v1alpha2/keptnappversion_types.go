@@ -389,7 +389,7 @@ func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) 
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
 		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
 	}
-	// cancell completely everything
+	// cancel completely everything
 	if phase == common.PhaseDeprecated {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated

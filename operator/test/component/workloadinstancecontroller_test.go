@@ -295,7 +295,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
-			It("should be Deprecated when pre-eval checks failed", func() {
+			It("should be deprecated when pre-eval checks failed", func() {
 				evaluation := &klcv1alpha2.KeptnEvaluation{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "pre-eval-eval-def",
@@ -372,7 +372,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, wi)
 				Expect(err).To(BeNil())
 
-				By("Ensuring all phases after pre-eval checks are Deprecated")
+				By("Ensuring all phases after pre-eval checks are deprecated")
 				wiNameObj := types.NamespacedName{
 					Namespace: wi.Namespace,
 					Name:      wi.Name,

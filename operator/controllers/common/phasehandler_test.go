@@ -31,7 +31,7 @@ func TestPhaseHandler(t *testing.T) {
 		endTimeSet     bool
 	}{
 		{
-			name: "Deprecated",
+			name: "deprecated",
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 			},

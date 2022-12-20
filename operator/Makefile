@@ -95,7 +95,7 @@ test: manifests fmt vet generate envtest ## Run tests.
 
 .PHONY: component-test
 component-test: manifests generate envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/... -v -timeout 30m -coverprofile cover.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/... -v -timeout 30m -coverprofile cover.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/..."
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.

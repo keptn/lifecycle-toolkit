@@ -1,5 +1,5 @@
-apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
-kind: ControllerManagerConfig
+apiVersion: options.keptn.sh/v1alpha1
+kind: Options
 health:
   healthProbeBindAddress: :8081
 metrics:
@@ -9,6 +9,10 @@ webhook:
 leaderElection:
   leaderElect: true
   resourceName: 6b866dd9.keptn.sh
+otelCollectorUrl: ""
+disableWebhook: false
+functionsRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.4.1 #x-release-please-version
+
 # leaderElectionReleaseOnCancel defines if the leader should step down volume
 # when the Manager ends. This requires the binary to immediately end when the
 # Manager is stopped, otherwise, this setting is unsafe. Setting this significantly

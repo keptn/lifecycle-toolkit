@@ -34,7 +34,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Status.CurrentVersion = src.Status.CurrentVersion
 
 	// Set sensible defaults for new fields
-	dst.Spec.Revision = "1"
+	dst.Spec.Revision = 1
 
 	return nil
 }

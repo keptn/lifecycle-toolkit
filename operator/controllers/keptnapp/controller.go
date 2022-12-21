@@ -202,8 +202,6 @@ func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, ap
 			resultErr = err
 			continue
 		}
-		// we can cut the loop if we found the previous non-deprecated revision of the KeptnAppVersion and deprecated it
-		break
 	}
 	return resultErr
 }

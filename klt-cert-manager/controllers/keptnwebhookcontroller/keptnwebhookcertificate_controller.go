@@ -80,10 +80,9 @@ func (r *KeptnWebhookCertificateReconciler) cancelMgr() {
 func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
 	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
-	err := r.ApiReader.Get(r.ctx, client.ObjectKey{
-		Name: Webhookconfig,
-	}, &mutatingWebhook)
-	if err != nil {
+	if err := r.ApiReader.Get(r.ctx, client.ObjectKey{
+		    Name: Webhookconfig,
+	    }, &mutatingWebhook); err != nil {
 		return nil, err
 	}
 

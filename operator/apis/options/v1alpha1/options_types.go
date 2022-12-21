@@ -53,12 +53,18 @@ type Options struct {
 	// ControllerManagerConfigurationSpec returns the configurations for controllers
 	cfg.ControllerManagerConfigurationSpec `json:",inline"`
 
+	// +kubebuilder:default:=""
 	// OTelCollectorUrl can be used to send Open Telemetry metrics to an external collector
 	OTelCollectorUrl string `json:"otelCollectorUrl,omitempty"`
 
+	// +kubebuilder:default:="false"
 	// DisableWebhook determines whether the pod mutating webhook should be set up to enable all features powered
 	// by KLT
 	DisableWebhook bool `json:"disableWebhook,omitEmpty"`
+
+	// x-release-please-start-version
+	// +kubebuilder:default:="ghcr.keptn.sh/keptn/functions-runtime:v0.4.1"
+	// x-release-please-end
 
 	// FunctionsRunnerImage can be used to customize the runner image and version that is used to run
 	// Pre- and Post-Deployment Tasks

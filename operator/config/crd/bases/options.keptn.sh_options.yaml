@@ -56,10 +56,12 @@ spec:
                 type: object
             type: object
           disableWebhook:
+            default: "false"
             description: DisableWebhook determines whether the pod mutating webhook
               should be set up to enable all features powered by KLT
             type: boolean
           functionsRunnerImage:
+            default: ghcr.keptn.sh/keptn/functions-runtime:v0.4.1
             description: FunctionsRunnerImage can be used to customize the runner
               image and version that is used to run Pre- and Post-Deployment Tasks
             type: string
@@ -150,6 +152,7 @@ spec:
                 type: string
             type: object
           otelCollectorUrl:
+            default: ""
             description: OTelCollectorUrl can be used to send Open Telemetry metrics
               to an external collector
             type: string

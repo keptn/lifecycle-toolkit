@@ -199,7 +199,7 @@ jobs:
   create_issue:
     name: Create GitHub Issue
     runs-on: ubuntu-22.04
-    needs: [ security-scans, govulncheck ]
+    needs: [ security-scans, govulncheck, trivy ]
     if: failure()
     steps:
       - name: Formulate bug issue

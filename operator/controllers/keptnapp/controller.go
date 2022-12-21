@@ -170,8 +170,8 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 
 func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
 	if app.Generation != 1 {
-		if err := r.cancelDeprecatedAppVersions(ctx, app); err != nil {
-			r.Log.Error(err, "could not cancel deprecated appVersions for appVersion %s", app.GetAppVersionName())
+		if err := r.deprecateAppVersions(ctx, app); err != nil {
+			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
 			r.Recorder.Event(app, "Warning", "AppVersionNotDeprecated", fmt.Sprintf("Could not deprecate KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
 			return err
 		}
@@ -180,7 +180,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	return nil
 }
 
-func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
+func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
 	var resultErr error
 	resultErr = nil
 	for i := int(app.Generation) - 1; i > 0; i-- {
@@ -196,11 +196,13 @@ func (r *KeptnAppReconciler) cancelDeprecatedAppVersions(ctx context.Context, ap
 			continue
 		}
 
-		deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
-		if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
-			r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
-			resultErr = err
-			continue
+		if !deprecatedAppVersion.Status.Status.IsDeprecated() {
+			deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
+			if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
+				r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
+				resultErr = err
+				continue
+			}
 		}
 	}
 	return resultErr

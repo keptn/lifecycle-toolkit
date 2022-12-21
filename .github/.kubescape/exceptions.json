@@ -26,6 +26,14 @@
       "actions": [
         "alertOnly"
       ],
+      "resources": [
+        {
+          "designatorType": "Attributes",
+          "attributes": {
+            "kind": ".*"
+          }
+        }
+      ],
       "posturePolicies": [
           {
               "controlID": "C-0034" 
@@ -33,10 +41,18 @@
       ]
     },
     {
-      "name": "ignore-access-container-service",
+      "name": "ignore-access-container-service-account",
       "policyType": "postureExceptionPolicy",
       "actions": [
         "alertOnly"
+      ],
+      "resources": [
+        {
+          "designatorType": "Attributes",
+          "attributes": {
+            "kind": ".*"
+          }
+        }
       ],
       "posturePolicies": [
           {

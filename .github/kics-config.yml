@@ -7,6 +7,7 @@ exclude-results:
   # Similarity IDs can be found in the JSON result file of kics
   - 76f0ba03bcaf9f6e0ff8660beaebff55f74f1d89e38b6831c2b7b468a3dc764b  # RBAC Roles with Read Secrets Permissions
   - f88463cc96ec0165f0c1d83c279ff2658b8a8bd8adb2aaaf79f64a230df88504  # RBAC Roles with Read Secrets Permissions
+  - c4886e7b8193614214e9626539430632e8d90cb58499932a82c924266c05d118  # RBAC Roles with Read Secrets Permissions
   - 00d587d8e63760f6a5d45ede024de5c793cb9e018ba78e4d9e50b8d671f79ba4  # Readiness Probe not configured for kube-rbac-proxy
 
 no-color: false

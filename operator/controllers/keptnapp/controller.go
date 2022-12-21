@@ -190,10 +190,7 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 				r.Log.Error(err, "Could not get KeptnAppVersion")
 				resultErr = err
 			}
-			continue
-		}
-
-		if !deprecatedAppVersion.Status.Status.IsDeprecated() {
+		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {
 			deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
 			if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
 				r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)

@@ -27,10 +27,8 @@ jobs:
               -H "Authorization: token $GITHUB_TOKEN" \
               "api.github.com/repos/${{ github.repository }}/actions/workflows/CI.yaml/runs?branch=main" | \
             jq '[.workflow_runs[] | select(
-              (.head_commit != null) and (.head_commit.author.name | endswith("[bot]") | not ) and ( .conclusion == "success" ) 
+              (.head_commit != null) and ( .conclusion == "success" ) 
             )][0] | .id')
-          # here we skip BOT PRs because they don't build artifacts
-          # Secrets are not there in the builds so there is no artifact pushed and retagged
           echo "Run ID that will be used to download artifacts from: $RUN_ID"
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
@@ -176,7 +174,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        artifacts: # The resource-service was excluded for this check, because a workaround would be needed to install the right version of libgit2-dev
+        artifacts:
           - "operator"
           - "scheduler"
 

@@ -133,7 +133,7 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
-					PreDeploymentStatus: apicommon.StateSucceeded,
+					PreDeploymentStatus: apicommon.StateFailed,
 					PreDeploymentTaskStatus: []v1alpha2.TaskStatus{
 						{
 							TaskDefinitionName: "task-def",

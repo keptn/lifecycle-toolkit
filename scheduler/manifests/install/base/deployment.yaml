@@ -16,7 +16,6 @@ spec:
         component: scheduler
     spec:
       serviceAccountName: keptn-scheduler
-      automountServiceAccountToken: false
       containers:
         - command:
             - /bin/kube-scheduler
@@ -59,9 +58,6 @@ spec:
             - name: scheduler-config
               mountPath: /etc/kubernetes
               readOnly: true
-            - name: service-account-token
-              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-              readOnly: true
 
       hostNetwork: false
       hostPID: false
@@ -69,10 +65,4 @@ spec:
         - name: scheduler-config
           configMap:
             name: scheduler-config
-        - name: service-account-token
-          projected:
-            sources:
-              - serviceAccountToken:
-                  path: token
-                  audience: scheduler
 

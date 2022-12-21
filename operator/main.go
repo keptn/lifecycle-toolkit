@@ -519,6 +519,7 @@ func newOTelExporter(env envConfig) (trace.SpanExporter, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to collector at %s: %w", env.OTelCollectorURL, err)
 	}
+
 	traceExporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithGRPCConn(conn))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create trace exporter: %w", err)

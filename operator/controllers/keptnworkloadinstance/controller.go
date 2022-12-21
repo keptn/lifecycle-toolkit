@@ -273,7 +273,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha2.KeptnAppVersion{}, err
 	}
 
-	// due to efectivity reasons deprecated KeptnAppVersions are removed from the list, as there is
+	// due to effectivity reasons deprecated KeptnAppVersions are removed from the list, as there is
 	// no point in iterating through them in the next steps
 	apps.RemoveDeprecated()
 

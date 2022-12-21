@@ -30,7 +30,7 @@ func AddApp(c client.Client, name string) error {
 	return c.Create(context.TODO(), app)
 }
 
-func UpdateApp(c client.Client, name string, revision int) error {
+func UpdateAppRevision(c client.Client, name string, revision uint) error {
 	app := &lfcv1alpha2.KeptnApp{}
 	c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
 	app.Spec.Revision = revision

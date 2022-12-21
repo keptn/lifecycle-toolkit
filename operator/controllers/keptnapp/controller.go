@@ -181,22 +181,22 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 }
 
 func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
-	var resultErr error
-	resultErr = nil
+	var lastResultErr error
+	lastResultErr = nil
 	for i := int(app.Generation) - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha2.KeptnAppVersion{}
 		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.Itoa(i)}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {
-				r.Log.Error(err, "Could not get KeptnAppVersion")
-				resultErr = err
+				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+strconv.Itoa(i)))
+				lastResultErr = err
 			}
 		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {
 			deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
 			if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
 				r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
-				resultErr = err
+				lastResultErr = err
 			}
 		}
 	}
-	return resultErr
+	return lastResultErr
 }

@@ -146,7 +146,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	event := <-eventChannel
 	assert.Matches(t, event, `Normal AppVersionCreated Created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-1`)
 
-	err = controllercommon.UpdateApp(r.Client, "myapp", 2)
+	err = controllercommon.UpdateAppRevision(r.Client, "myapp", 2)
 	require.Nil(t, err)
 
 	_, err = r.Reconcile(context.TODO(), ctrl.Request{

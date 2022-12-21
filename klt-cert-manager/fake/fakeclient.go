@@ -20,5 +20,4 @@ func setupSchemes() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme.Scheme))
 	utilruntime.Must(corev1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(apiv1.AddToScheme(scheme.Scheme))
-
 }

@@ -3,6 +3,7 @@ package webhook
 import (
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/fake"
 	cmdManager "github.com/keptn/lifecycle-toolkit/operator/cmd/manager"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -33,8 +34,11 @@ func TestCreateOptions(t *testing.T) {
 		provider := NewWebhookManagerProvider("certs-dir", "key-file", "cert-file")
 		expectedWebhookServer := &webhook.Server{}
 
-		mgr := &cmdManager.MockManager{}
-		mgr.On("GetWebhookServer").Return(expectedWebhookServer)
+		mgr := &fake.MockManager{
+			GetWebhookServerFunc: func() *webhook.Server {
+				return expectedWebhookServer
+			},
+		}
 
 		provider.SetupWebhookServer(mgr)
 

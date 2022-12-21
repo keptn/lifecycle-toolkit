@@ -3,8 +3,7 @@ package webhook
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	cmdManager "github.com/keptn/lifecycle-toolkit/operator/cmd/manager"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/fake"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,13 +14,13 @@ func TestWebhookCommandBuilder(t *testing.T) {
 
 		assert.NotNil(t, builder)
 
-		expectedProvider := &config.MockProvider{}
+		expectedProvider := &fake.MockProvider{}
 		builder = builder.SetConfigProvider(expectedProvider)
 
 		assert.Equal(t, expectedProvider, builder.configProvider)
 	})
 	t.Run("set manager provider", func(t *testing.T) {
-		expectedProvider := &cmdManager.MockProvider{}
+		expectedProvider := &fake.MockWebhookManager{}
 		builder := NewWebhookBuilder().SetManagerProvider(expectedProvider)
 
 		assert.Equal(t, expectedProvider, builder.managerProvider)

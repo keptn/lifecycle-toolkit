@@ -11,7 +11,6 @@ leaderElection:
   resourceName: 6b866dd9.keptn.sh
 otelCollectorUrl: ""
 disableWebhook: false
-functionsRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.4.1 #x-release-please-version
 
 # leaderElectionReleaseOnCancel defines if the leader should step down volume
 # when the Manager ends. This requires the binary to immediately end when the

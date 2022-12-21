@@ -60,11 +60,6 @@ spec:
             description: DisableWebhook determines whether the pod mutating webhook
               should be set up to enable all features powered by KLT
             type: boolean
-          functionsRunnerImage:
-            default: ghcr.keptn.sh/keptn/functions-runtime:v0.4.1
-            description: FunctionsRunnerImage can be used to customize the runner
-              image and version that is used to run Pre- and Post-Deployment Tasks
-            type: string
           gracefulShutDown:
             description: GracefulShutdownTimeout is the duration given to runnable
               to stop before the manager actually returns on stop. To disable graceful

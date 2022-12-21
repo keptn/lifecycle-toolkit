@@ -43,6 +43,9 @@ spec:
         image: controller:latest
         name: manager
         imagePullPolicy: Always
+        env:
+        - name: FUNCTION_RUNNER_IMAGE
+          value: ghcr.keptn.sh/keptn/functions-runtime:v0.4.1 #x-release-please-version
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
@@ -52,7 +55,7 @@ spec:
             type: RuntimeDefault
           capabilities:
             drop:
-              - "ALL"
+            - "ALL"
         livenessProbe:
           httpGet:
             path: /healthz

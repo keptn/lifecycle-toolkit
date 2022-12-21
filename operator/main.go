@@ -82,10 +82,6 @@ func init() {
 	//+kubebuilder:scaffold:scheme
 }
 
-type envConfig struct {
-	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
-}
-
 func main() {
 	var configFile string
 	flag.StringVar(&configFile, "config", "",

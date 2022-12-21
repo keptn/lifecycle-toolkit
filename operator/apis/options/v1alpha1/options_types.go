@@ -57,7 +57,7 @@ type Options struct {
 	// OTelCollectorUrl can be used to send Open Telemetry metrics to an external collector
 	OTelCollectorUrl string `json:"otelCollectorUrl,omitempty"`
 
-	// +kubebuilder:default:="false"
+	// +kubebuilder:default:=false
 	// DisableWebhook determines whether the pod mutating webhook should be set up to enable all features powered
 	// by KLT
 	DisableWebhook bool `json:"disableWebhook,omitEmpty"`

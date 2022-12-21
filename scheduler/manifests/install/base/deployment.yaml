@@ -59,9 +59,20 @@ spec:
             - name: scheduler-config
               mountPath: /etc/kubernetes
               readOnly: true
+            - name: service-account-token
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
+
       hostNetwork: false
       hostPID: false
       volumes:
         - name: scheduler-config
           configMap:
             name: scheduler-config
+        - name: service-account-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  audience: scheduler
+

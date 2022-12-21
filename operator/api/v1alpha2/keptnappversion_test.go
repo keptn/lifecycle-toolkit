@@ -413,15 +413,29 @@ func TestKeptnAppVersionList(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",
 				},
+				Status: KeptnAppVersionStatus{
+					Status: common.StateSucceeded,
+				},
 			},
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj2",
 				},
+				Status: KeptnAppVersionStatus{
+					Status: common.StateDeprecated,
+				},
 			},
 		},
 	}
 
+	// fetch the list items
 	got := list.GetItems()
 	require.Len(t, got, 2)
+
+	// remove deprecated items from the list
+	list.RemoveDeprecated()
+
+	// check that deprecated items are not present in the list anymore
+	got = list.GetItems()
+	require.Len(t, got, 1)
 }

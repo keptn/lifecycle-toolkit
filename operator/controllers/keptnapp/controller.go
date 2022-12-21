@@ -19,9 +19,11 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
 	"go.opentelemetry.io/otel"
@@ -113,6 +115,9 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
+		if err := r.handleGenerationBump(ctx, app); err != nil {
+			return ctrl.Result{Requeue: true}, nil
+		}
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
@@ -161,4 +166,37 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	return &appVersion, err
+}
+
+func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
+	if app.Generation != 1 {
+		if err := r.deprecateAppVersions(ctx, app); err != nil {
+			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
+			r.Recorder.Event(app, "Warning", "AppVersionNotDeprecated", fmt.Sprintf("Could not deprecate KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
+			return err
+		}
+		r.Recorder.Event(app, "Normal", "AppVersionDeprecated", fmt.Sprintf("Deprecated KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
+	}
+	return nil
+}
+
+func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv1alpha2.KeptnApp) error {
+	var lastResultErr error
+	lastResultErr = nil
+	for i := app.Generation - 1; i > 0; i-- {
+		deprecatedAppVersion := &klcv1alpha2.KeptnAppVersion{}
+		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.FormatInt(i, 10)}, deprecatedAppVersion); err != nil {
+			if !errors.IsNotFound(err) {
+				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+strconv.FormatInt(i, 10)))
+				lastResultErr = err
+			}
+		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {
+			deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
+			if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
+				r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
+				lastResultErr = err
+			}
+		}
+	}
+	return lastResultErr
 }

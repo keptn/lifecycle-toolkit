@@ -291,6 +291,252 @@ func makeDaemonSet(name string, namespace string, wanted int32, available int32)
 
 }
 
+func Test_getAppVersionForWorkloadInstance(t *testing.T) {
+	tests := []struct {
+		name           string
+		wli            *klcv1alpha2.KeptnWorkloadInstance
+		list           *klcv1alpha2.KeptnAppVersionList
+		wantFound      bool
+		wantAppVersion klcv1alpha2.KeptnAppVersion
+		wantErr        bool
+	}{
+		{
+			name: "no appVersions",
+			wli: &klcv1alpha2.KeptnWorkloadInstance{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-workloadinstance",
+					Namespace: "default",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+						AppName: "my-app",
+						Version: "1.0",
+					},
+					WorkloadName: "my-app-my-workload",
+				},
+			},
+			list:           &klcv1alpha2.KeptnAppVersionList{},
+			wantFound:      false,
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
+			wantErr:        false,
+		},
+		{
+			name: "appVersion found",
+			wli: &klcv1alpha2.KeptnWorkloadInstance{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-workloadinstance",
+					Namespace: "default",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+						AppName: "my-app",
+						Version: "1.0",
+					},
+					WorkloadName: "my-app-my-workload",
+				},
+			},
+			list: &klcv1alpha2.KeptnAppVersionList{
+				Items: []klcv1alpha2.KeptnAppVersion{
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "1.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+					},
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app2",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "2.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+					},
+				},
+			},
+			wantFound: true,
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:            "my-app2",
+					Namespace:       "default",
+					ResourceVersion: "999",
+				},
+				Spec: klcv1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+						Version: "2.0",
+						Workloads: []klcv1alpha2.KeptnWorkloadRef{
+							{
+								Name:    "my-workload",
+								Version: "1.0",
+							},
+						},
+					},
+					AppName: "my-app",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "appVersion deprecated",
+			wli: &klcv1alpha2.KeptnWorkloadInstance{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-workloadinstance",
+					Namespace: "default",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+						AppName: "my-app",
+						Version: "1.0",
+					},
+					WorkloadName: "my-app-my-workload",
+				},
+			},
+			list: &klcv1alpha2.KeptnAppVersionList{
+				Items: []klcv1alpha2.KeptnAppVersion{
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "1.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+						Status: klcv1alpha2.KeptnAppVersionStatus{
+							Status: apicommon.StateDeprecated,
+						},
+					},
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app2",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "2.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+						Status: klcv1alpha2.KeptnAppVersionStatus{
+							Status: apicommon.StateDeprecated,
+						},
+					},
+				},
+			},
+			wantFound:      false,
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
+			wantErr:        false,
+		},
+		{
+			name: "no workload for appversion",
+			wli: &klcv1alpha2.KeptnWorkloadInstance{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-workloadinstance3",
+					Namespace: "default",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+						AppName: "my-app333",
+						Version: "1.0.0",
+					},
+					WorkloadName: "my-app-my-workload",
+				},
+			},
+			list: &klcv1alpha2.KeptnAppVersionList{
+				Items: []klcv1alpha2.KeptnAppVersion{
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "1.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+					},
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      "my-app2",
+							Namespace: "default",
+						},
+						Spec: klcv1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+								Version: "2.0",
+								Workloads: []klcv1alpha2.KeptnWorkloadRef{
+									{
+										Name:    "my-workload",
+										Version: "1.0",
+									},
+								},
+							},
+							AppName: "my-app",
+						},
+					},
+				},
+			},
+			wantFound:      false,
+			wantAppVersion: klcv1alpha2.KeptnAppVersion{},
+			wantErr:        false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			klcv1alpha2.AddToScheme(scheme.Scheme)
+			r := &KeptnWorkloadInstanceReconciler{
+				Client: k8sfake.NewClientBuilder().WithLists(tt.list).Build(),
+			}
+			found, gotAppVersion, err := r.getAppVersionForWorkloadInstance(context.TODO(), tt.wli)
+			require.Equal(t, tt.wantErr, err != nil)
+			require.Equal(t, tt.wantFound, found)
+			require.Equal(t, tt.wantAppVersion, gotAppVersion)
+		})
+	}
+}
+
 func Test_getLatestAppVersion(t *testing.T) {
 	type args struct {
 		apps *klcv1alpha2.KeptnAppVersionList

@@ -104,11 +104,21 @@ type KeptnAppVersionList struct {
 }
 
 func (a KeptnAppVersionList) GetItems() []client.Object {
-	var b []client.Object
+	b := make([]client.Object, 0, len(a.Items))
 	for _, i := range a.Items {
 		b = append(b, &i)
 	}
 	return b
+}
+
+func (a *KeptnAppVersionList) RemoveDeprecated() {
+	b := make([]KeptnAppVersion, 0, len(a.Items))
+	for _, i := range a.Items {
+		if i.Status.Status != common.StateDeprecated {
+			b = append(b, i)
+		}
+	}
+	a.Items = b
 }
 
 func init() {

@@ -426,8 +426,9 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 func createAppVersionInCluster(name string, namespace string, version string) *klcv1alpha2.KeptnAppVersion {
 	instance := &klcv1alpha2.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
+			Name:       name,
+			Namespace:  namespace,
+			Generation: 1,
 		},
 		Spec: klcv1alpha2.KeptnAppVersionSpec{
 			AppName: name,

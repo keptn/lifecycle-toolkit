@@ -6,6 +6,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
+//go:generate moq -pkg fake -skip-ensure -out ../fake/provider_mock.go . Provider:MockProvider
 type Provider interface {
 	GetConfig() (*rest.Config, error)
 }

@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 
 	"os"
@@ -51,43 +52,43 @@ func (watcher *CertificateWatcher) watchForCertificatesSecret() {
 	for {
 		<-time.After(certificateRenewalInterval)
 		watcher.Log.Info("checking for new certificates")
-		if updated, err := watcher.updateCertificatesFromSecret(); err != nil {
-			watcher.Log.Info("failed to update certificates", "error", err)
-		} else if updated {
+		if err := watcher.updateCertificatesFromSecret(); err != nil {
+			watcher.Log.Error(err, "failed to update certificates")
+		} else {
 			watcher.Log.Info("updated certificate successfully")
 		}
 	}
 }
 
-func (watcher *CertificateWatcher) updateCertificatesFromSecret() (bool, error) {
+func (watcher *CertificateWatcher) updateCertificatesFromSecret() error {
 	var secret corev1.Secret
 
 	err := watcher.apiReader.Get(context.TODO(),
 		client.ObjectKey{Name: watcher.certificateSecretName, Namespace: watcher.namespace}, &secret)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	watcher.Log.Info("checking dir", "watcher.certificateDirectory ", watcher.certificateDirectory)
 	if _, err = watcher.fs.Stat(watcher.certificateDirectory); os.IsNotExist(err) {
 		err = watcher.fs.MkdirAll(watcher.certificateDirectory, 0755)
 		if err != nil {
-			return false, fmt.Errorf("could not create cert directory: %s", err)
+			return fmt.Errorf("could not create cert directory: %w", err)
 		}
 	}
 
 	for _, filename := range []string{ServerCert, ServerKey} {
 		if _, err = watcher.ensureCertificateFile(secret, filename); err != nil {
-			return false, err
+			return err
 		}
 	}
 	isValid, err := watcher.ValidateCertificateExpiration(secret.Data[ServerCert], certificateRenewalInterval, time.Now())
 	if err != nil {
-		return false, err
+		return err
 	} else if !isValid {
-		return false, fmt.Errorf("certificate is outdated")
+		return fmt.Errorf("certificate is outdated")
 	}
-	return true, nil
+	return nil
 }
 
 func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, filename string) (bool, error) {
@@ -106,13 +107,12 @@ func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, f
 
 func (watcher *CertificateWatcher) WaitForCertificates() {
 	for threshold := time.Now().Add(5 * time.Minute); time.Now().Before(threshold); {
-		_, err := watcher.updateCertificatesFromSecret()
 
-		if err != nil {
+		if err := watcher.updateCertificatesFromSecret(); err != nil {
 			if k8serrors.IsNotFound(err) {
 				watcher.Log.Info("waiting for certificate secret to be available.")
 			} else {
-				watcher.Log.Info("failed to update certificates", "error", err)
+				watcher.Log.Error(err, "failed to update certificates")
 			}
 			time.Sleep(10 * time.Second)
 			continue
@@ -124,10 +124,10 @@ func (watcher *CertificateWatcher) WaitForCertificates() {
 
 func (watcher *CertificateWatcher) ValidateCertificateExpiration(certData []byte, renewalThreshold time.Duration, now time.Time) (bool, error) {
 	if block, _ := pem.Decode(certData); block == nil {
-		watcher.Log.Info("failed to parse certificate", "error", "can't decode PEM file")
+		watcher.Log.Error(errors.New("can't decode PEM file"), "failed to parse certificate")
 		return false, nil
 	} else if cert, err := x509.ParseCertificate(block.Bytes); err != nil {
-		watcher.Log.Info("failed to parse certificate", "error", err)
+		watcher.Log.Error(err, "failed to parse certificate")
 		return false, err
 	} else if now.After(cert.NotAfter.Add(-renewalThreshold)) {
 		watcher.Log.Info("certificate is outdated, waiting for new ones", "Valid until", cert.NotAfter.UTC())

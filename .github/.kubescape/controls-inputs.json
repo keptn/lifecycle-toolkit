@@ -2,6 +2,7 @@
   "imageRepositoryAllowList": [
     "ecr.*amazonaws.com",
     ".*.gcr.io",
+    "*.ghcr.io",
     ".*azurecr.io",
     "docker.io"
   ],

@@ -39,11 +39,11 @@ const (
 	StateFailed      KeptnState = "Failed"
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
-	StateDeprecated  KeptnState = "Deprecated"
+	StateCancelled   KeptnState = "Cancelled"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
+	return k == StateSucceeded || k == StateFailed || k == StateCancelled
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -54,8 +54,8 @@ func (k KeptnState) IsFailed() bool {
 	return k == StateFailed
 }
 
-func (k KeptnState) IsDeprecated() bool {
-	return k == StateDeprecated
+func (k KeptnState) IsCancelled() bool {
+	return k == StateCancelled
 }
 
 func (k KeptnState) IsPending() bool {
@@ -69,15 +69,15 @@ type StatusSummary struct {
 	Succeeded   int
 	Pending     int
 	Unknown     int
-	Deprecated  int
+	Cancelled   int
 }
 
 func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary {
 	switch status {
 	case StateFailed:
 		summary.Failed++
-	case StateDeprecated:
-		summary.Deprecated++
+	case StateCancelled:
+		summary.Cancelled++
 	case StateSucceeded:
 		summary.Succeeded++
 	case StateProgressing:
@@ -91,11 +91,11 @@ func UpdateStatusSummary(status KeptnState, summary StatusSummary) StatusSummary
 }
 
 func (s StatusSummary) GetTotalCount() int {
-	return s.Failed + s.Succeeded + s.Progressing + s.Pending + s.Unknown + s.Deprecated
+	return s.Failed + s.Succeeded + s.Progressing + s.Pending + s.Unknown + s.Cancelled
 }
 
 func GetOverallState(s StatusSummary) KeptnState {
-	if s.Failed > 0 || s.Deprecated > 0 {
+	if s.Failed > 0 || s.Cancelled > 0 {
 		return StateFailed
 	}
 	if s.Progressing > 0 {

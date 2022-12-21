@@ -25,7 +25,7 @@ var phases = []KeptnPhaseType{
 	PhaseAppPostEvaluation,
 	PhaseAppDeployment,
 	PhaseCompleted,
-	PhaseDeprecated,
+	PhaseCancelled,
 }
 
 func (p KeptnPhaseType) IsEvaluation() bool {
@@ -82,7 +82,7 @@ var (
 	PhaseReconcileEvaluation    = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
 	PhaseCreateEvaluation       = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "Create Evaluation"}
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
-	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
+	PhaseCancelled              = KeptnPhaseType{LongName: "Cancelled", ShortName: "Cancelled"}
 )
 
 type PhaseTraceID map[string]propagation.MapCarrier

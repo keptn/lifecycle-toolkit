@@ -19,6 +19,30 @@
               "controlID": "C-0015" 
           }
       ]
+    },
+    {
+      "name": "ignore-auto-mounting-of-service-account-tokens",
+      "policyType": "postureExceptionPolicy",
+      "actions": [
+        "alertOnly"
+      ],
+      "posturePolicies": [
+          {
+              "controlID": "C-0034" 
+          }
+      ]
+    },
+    {
+      "name": "ignore-access-container-service",
+      "policyType": "postureExceptionPolicy",
+      "actions": [
+        "alertOnly"
+      ],
+      "posturePolicies": [
+          {
+              "controlID": "C-0053" 
+          }
+      ]
     }
   ]
   

@@ -4,7 +4,8 @@
     ".*.gcr.io",
     "*.ghcr.io",
     ".*azurecr.io",
-    "docker.io"
+    "docker.io",
+    "ghcr.keptn.sh"
   ],
   "max_critical_vulnerabilities": [
     "5"

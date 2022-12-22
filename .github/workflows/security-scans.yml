@@ -37,7 +37,7 @@ jobs:
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
-          github_token: ${{secrets.GITHUB_TOKEN}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: CI.yaml
           run_id: ${{ steps.last_run_id.outputs.RUN_ID }}
           # directory where to extract artifacts to
@@ -70,7 +70,8 @@ jobs:
         include:
           - tool: "kics"
           - tool: "kubeconform"
-            version: "v0.4.13"
+            # renovate: datasource=github-releases depName=yannh/kubeconform
+            version: "v0.5.0"
           - tool: "kubescape"
             kubescape-framework: "nsa"
           - tool: "kubescape"
@@ -174,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        artifacts:
+        artifact:
           - "operator"
           - "scheduler"
 
@@ -191,7 +192,7 @@ jobs:
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
 
       - name: Check for vulnerabilities
-        working-directory: ./${{ matrix.artifacts }}
+        working-directory: ./${{ matrix.artifact }}
         run: govulncheck ./...
 
   create_issue:

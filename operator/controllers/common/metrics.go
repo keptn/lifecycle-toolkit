@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/errors"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"

@@ -6,7 +6,7 @@ import (
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {

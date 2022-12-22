@@ -24,7 +24,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/errors"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"

@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common/fake"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"

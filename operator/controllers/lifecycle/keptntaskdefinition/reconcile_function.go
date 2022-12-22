@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/errors"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

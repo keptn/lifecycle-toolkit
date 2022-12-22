@@ -168,12 +168,4 @@ resources:
   kind: KeptnEvaluation
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2
   version: v1alpha2
-- api:
-    crdVersion: v1
-    namespaced: true
-  domain: keptn.sh
-  group: options
-  kind: Options
-  path: github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1
-  version: v1alpha1
 version: "3"

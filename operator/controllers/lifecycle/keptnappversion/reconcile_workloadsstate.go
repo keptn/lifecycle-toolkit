@@ -5,7 +5,7 @@ import (
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 )

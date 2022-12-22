@@ -3,7 +3,7 @@ package interfaces
 import (
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )

@@ -8,7 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common/fake"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	admissionv1 "k8s.io/api/admission/v1"

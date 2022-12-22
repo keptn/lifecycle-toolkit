@@ -9,8 +9,8 @@ import (
 
 	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common/fake"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"

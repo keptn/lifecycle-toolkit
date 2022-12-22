@@ -7,8 +7,8 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common/fake"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/errors"
+	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

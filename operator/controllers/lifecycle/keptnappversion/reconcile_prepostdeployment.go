@@ -6,7 +6,7 @@ import (
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
 func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {

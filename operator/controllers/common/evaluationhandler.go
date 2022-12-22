@@ -35,6 +35,7 @@ type EvaluationCreateAttributes struct {
 	CheckType            apicommon.CheckType
 }
 
+//nolint:gocognit
 func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha2.EvaluationStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {

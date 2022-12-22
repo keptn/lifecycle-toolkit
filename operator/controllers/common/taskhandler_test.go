@@ -121,6 +121,7 @@ func TestTaskHandler(t *testing.T) {
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
 		},
+		//nolint:dupl
 		{
 			name: "failed task",
 			object: &v1alpha2.KeptnAppVersion{
@@ -169,6 +170,7 @@ func TestTaskHandler(t *testing.T) {
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
 		},
+		//nolint:dupl
 		{
 			name: "succeeded task",
 			object: &v1alpha2.KeptnAppVersion{

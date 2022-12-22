@@ -398,6 +398,7 @@ func (w KeptnWorkloadInstance) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(w.GetSpanAttributes()...)
 }
 
+//nolint:dupl
 func (w *KeptnWorkloadInstance) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
 	// no need to deprecate anything when post-eval tasks fail
 	if phase == common.PhaseWorkloadPostEvaluation {

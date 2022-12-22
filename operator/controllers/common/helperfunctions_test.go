@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+//nolint:dupl
 func Test_GetTaskStatus(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -63,6 +64,7 @@ func Test_GetTaskStatus(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func Test_GetEvaluationStatus(t *testing.T) {
 	tests := []struct {
 		name     string

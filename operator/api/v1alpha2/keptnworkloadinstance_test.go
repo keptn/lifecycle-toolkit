@@ -217,6 +217,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	}, workload.GetSpanAttributes())
 }
 
+//nolint:dupl
 func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 	workloadInstance := KeptnWorkloadInstance{
 		Status: KeptnWorkloadInstanceStatus{

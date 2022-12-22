@@ -284,6 +284,7 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 	return fmt.Sprint(h.Sum32())
 }
 
+//nolint:dupl
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
@@ -338,6 +339,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	return nil
 }
 
+//nolint:dupl
 func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))

@@ -525,7 +525,8 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			klcv1alpha2.AddToScheme(scheme.Scheme)
+			err := klcv1alpha2.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			r := &KeptnWorkloadInstanceReconciler{
 				Client: k8sfake.NewClientBuilder().WithLists(tt.list).Build(),
 			}

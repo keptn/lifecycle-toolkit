@@ -32,7 +32,10 @@ func AddApp(c client.Client, name string) error {
 
 func UpdateAppRevision(c client.Client, name string, revision uint) error {
 	app := &lfcv1alpha2.KeptnApp{}
-	c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
+	err := c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
+	if err != nil {
+		return err
+	}
 	app.Spec.Revision = revision
 	app.Generation = int64(revision)
 	return c.Update(context.TODO(), app)

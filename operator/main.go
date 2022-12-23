@@ -56,6 +56,7 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 
+	//nolint:gci
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -85,7 +86,7 @@ type envConfig struct {
 	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
-//nolint:funlen
+//nolint:funlen,gocongnit
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {

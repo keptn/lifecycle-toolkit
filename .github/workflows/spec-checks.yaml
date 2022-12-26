@@ -1,0 +1,46 @@
+name: spec-checks
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'spec/**'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'spec/**'
+defaults:
+  run:
+    shell: bash
+jobs:
+  run_checks:
+    name: Check Specs
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Install tooling
+        run: |
+          cd spec/
+          npm i
+      - name: Run TOC generation
+        run: |
+          FILES=`find . -type f -name '*.md' -not -path './.github/*' -not -path './node_modules/*' | sort`
+          for f in $(FILES); do
+            if grep -q '<!-- tocstop -->' $$f; then
+              echo "Checking TOC for ${f}";
+              npx markdown-toc --no-first-h1 --no-stripHeadingTags -i ${f} || exit 1;
+            else
+              echo Skipping ${f};
+            fi;
+          done
+      - name: Check TOC
+        run: git diff --exit-code '*.md' || (echo "Table of Contents is out of date. Please update the following files: $(git diff --name-status --exit-code)" && exit 1)
+      - name: Linting Markdowns
+        run: |
+          FILES=`find . -type f -name '*.md' -not -path './.github/*' -not -path './node_modules/*' | sort`
+          for f in $(ALL_DOCS); do
+            echo "Checking links for ${f}";
+            npx markdownlint-cli markdownlint ${f} || exit 1;
+          done

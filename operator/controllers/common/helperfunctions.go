@@ -42,10 +42,10 @@ func GetAppVersionName(namespace string, appName string, version string) types.N
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
 }
 
-func GetOldStatus(statuses []klcv1alpha2.ItemStatus, DefinitionName string) apicommon.KeptnState {
+func GetOldStatus(statuses []klcv1alpha2.ItemStatus, definitionName string) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {
-		if ts.DefinitionName == DefinitionName {
+		if ts.DefinitionName == definitionName {
 			oldstatus = ts.Status
 		}
 	}

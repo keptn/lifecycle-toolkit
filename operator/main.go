@@ -85,7 +85,7 @@ type envConfig struct {
 	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
-//nolint:funlen,gocognit
+//nolint:funlen,gocognit,gocyclo
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {

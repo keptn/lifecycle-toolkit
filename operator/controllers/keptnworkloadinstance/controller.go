@@ -71,6 +71,8 @@ type KeptnWorkloadInstanceReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
+//
+//nolint:funlen
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for Keptn Workload Instance")
 
@@ -227,13 +229,18 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// WorkloadInstance is completed at this place
+
+	return r.finishKeptnWorkloadInstanceReconcile(ctx, workloadInstance, spanWorkloadTrace, span, phase)
+}
+
+func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, spanWorkloadTrace trace.Span, span trace.Span, phase apicommon.KeptnPhaseType) (ctrl.Result, error) {
 	if !workloadInstance.IsEndTimeSet() {
 		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		workloadInstance.Status.Status = apicommon.StateSucceeded
 		workloadInstance.SetEndTime()
 	}
 
-	err = r.Client.Status().Update(ctx, workloadInstance)
+	err := r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err

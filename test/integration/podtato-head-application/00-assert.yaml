@@ -22,7 +22,7 @@ status:
   postDeploymentStatus: Succeeded
   postDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: post-deployment-hello
+      definitionName: post-deployment-hello
   preDeploymentEvaluationStatus: Succeeded
   preDeploymentStatus: Succeeded
   status: Succeeded
@@ -40,7 +40,7 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: check-entry-service
+      definitionName: check-entry-service
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -56,7 +56,7 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: check-entry-service
+      definitionName: check-entry-service
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -72,7 +72,7 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: check-entry-service
+      definitionName: check-entry-service
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -88,7 +88,7 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: check-entry-service
+      definitionName: check-entry-service
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -104,5 +104,5 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: check-entry-service
+      definitionName: check-entry-service
   status: Succeeded

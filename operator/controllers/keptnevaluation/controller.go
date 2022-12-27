@@ -128,27 +128,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{Requeue: false}, err2
 		}
 
-		r.Log.Info("Metric Provider selected: " + evaluationDefinition.Spec.Source)
-
-		statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
-		newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
-
-		if evaluation.Status.EvaluationStatus == nil {
-			evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
-		}
-
-		for _, query := range evaluationDefinition.Spec.Objectives {
-			newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider, evaluationProvider)
-		}
-
-		evaluation.Status.RetryCount++
-		evaluation.Status.EvaluationStatus = newStatus
-		if apicommon.GetOverallState(statusSummary) == apicommon.StateSucceeded {
-			evaluation.Status.OverallStatus = apicommon.StateSucceeded
-		} else {
-			evaluation.Status.OverallStatus = apicommon.StateProgressing
-		}
-
+		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition, provider, evaluationProvider)
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
@@ -172,6 +152,29 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	return ctrl.Result{}, err
 
+}
+
+func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.KeptnEvaluation {
+	statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
+	newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
+
+	if evaluation.Status.EvaluationStatus == nil {
+		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
+	}
+
+	for _, query := range evaluationDefinition.Spec.Objectives {
+		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider, evaluationProvider)
+	}
+
+	evaluation.Status.RetryCount++
+	evaluation.Status.EvaluationStatus = newStatus
+	if apicommon.GetOverallState(statusSummary) == apicommon.StateSucceeded {
+		evaluation.Status.OverallStatus = apicommon.StateSucceeded
+	} else {
+		evaluation.Status.OverallStatus = apicommon.StateProgressing
+	}
+
+	return evaluation
 }
 
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {

@@ -46,29 +46,14 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		LongName:  "Reconcile Tasks",
 	}
 
-	var tasks []string
-	var statuses []klcv1alpha2.TaskStatus
-
-	switch taskCreateAttributes.CheckType {
-	case apicommon.PreDeploymentCheckType:
-		tasks = piWrapper.GetPreDeploymentTasks()
-		statuses = piWrapper.GetPreDeploymentTaskStatus()
-	case apicommon.PostDeploymentCheckType:
-		tasks = piWrapper.GetPostDeploymentTasks()
-		statuses = piWrapper.GetPostDeploymentTaskStatus()
-	}
+	tasks, statuses := r.setupTasks(taskCreateAttributes, piWrapper)
 
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha2.TaskStatus
 	for _, taskDefinitionName := range tasks {
-		var oldstatus apicommon.KeptnState
-		for _, ts := range statuses {
-			if ts.TaskDefinitionName == taskDefinitionName {
-				oldstatus = ts.Status
-			}
-		}
+		oldstatus := getOldStatusOfTasks(statuses, taskDefinitionName)
 
 		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha2.KeptnTask{}
@@ -173,4 +158,30 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 
 func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha2.KeptnTask, spanTrace trace.Span) {
 	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
+}
+
+func (r TaskHandler) setupTasks(taskCreateAttributes TaskCreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.TaskStatus) {
+	var tasks []string
+	var statuses []klcv1alpha2.TaskStatus
+
+	switch taskCreateAttributes.CheckType {
+	case apicommon.PreDeploymentCheckType:
+		tasks = piWrapper.GetPreDeploymentTasks()
+		statuses = piWrapper.GetPreDeploymentTaskStatus()
+	case apicommon.PostDeploymentCheckType:
+		tasks = piWrapper.GetPostDeploymentTasks()
+		statuses = piWrapper.GetPostDeploymentTaskStatus()
+	}
+	return tasks, statuses
+}
+
+func getOldStatusOfTasks(statuses []klcv1alpha2.TaskStatus, taskDefinitionName string) apicommon.KeptnState {
+	var oldstatus apicommon.KeptnState
+	for _, ts := range statuses {
+		if ts.TaskDefinitionName == taskDefinitionName {
+			oldstatus = ts.Status
+		}
+	}
+
+	return oldstatus
 }

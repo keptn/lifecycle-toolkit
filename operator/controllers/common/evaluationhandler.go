@@ -49,7 +49,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	// Check current state of the PrePostEvaluationTasks
 	var newStatus []klcv1alpha2.EvaluationStatus
 	for _, evaluationName := range evaluations {
-		oldstatus := getOldStatus(statuses, evaluationName)
+		oldstatus := getOldStatusOfEvaluations(statuses, evaluationName)
 		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha2.KeptnEvaluation{}
 		evaluationExists := false
@@ -203,7 +203,7 @@ func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWr
 	}
 }
 
-func getOldStatus(statuses []klcv1alpha2.EvaluationStatus, evaluationName string) apicommon.KeptnState {
+func getOldStatusOfEvaluations(statuses []klcv1alpha2.EvaluationStatus, evaluationName string) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {
 		if ts.EvaluationDefinitionName == evaluationName {

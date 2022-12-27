@@ -29,14 +29,8 @@ type EvaluationHandler struct {
 	SpanHandler ISpanHandler
 }
 
-type EvaluationCreateAttributes struct {
-	SpanName             string
-	EvaluationDefinition string
-	CheckType            apicommon.CheckType
-}
-
 //nolint:gocognit,gocyclo
-func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha2.EvaluationStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -47,9 +41,9 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
-	var newStatus []klcv1alpha2.EvaluationStatus
+	var newStatus []klcv1alpha2.ItemStatus
 	for _, evaluationName := range evaluations {
-		oldstatus := getOldStatusOfEvaluations(statuses, evaluationName)
+		oldstatus := GetOldStatus(statuses, evaluationName)
 		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha2.KeptnEvaluation{}
 		evaluationExists := false
@@ -65,10 +59,10 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		}
 
 		// Check if Evaluation is already created
-		if evaluationStatus.EvaluationName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: piWrapper.GetNamespace()}, evaluation)
+		if evaluationStatus.Name != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.Name, Namespace: piWrapper.GetNamespace()}, evaluation)
 			if err != nil && errors.IsNotFound(err) {
-				evaluationStatus.EvaluationName = ""
+				evaluationStatus.Name = ""
 			} else if err != nil {
 				return nil, summary, err
 			}
@@ -111,7 +105,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	return newStatus, summary, nil
 }
 
-func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) (string, error) {
+func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -119,7 +113,7 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 
 	phase := apicommon.PhaseCreateEvaluation
 
-	newEvaluation := piWrapper.GenerateEvaluation(evaluationCreateAttributes.EvaluationDefinition, evaluationCreateAttributes.CheckType)
+	newEvaluation := piWrapper.GenerateEvaluation(evaluationCreateAttributes.Definition, evaluationCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newEvaluation, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -147,9 +141,9 @@ func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha2.K
 	RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "Failed", k8sEventMessage, piWrapper.GetVersion())
 }
 
-func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes EvaluationCreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.EvaluationStatus) {
+func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.ItemStatus) {
 	var evaluations []string
-	var statuses []klcv1alpha2.EvaluationStatus
+	var statuses []klcv1alpha2.ItemStatus
 
 	switch evaluationCreateAttributes.CheckType {
 	case apicommon.PreDeploymentEvaluationCheckType:
@@ -162,13 +156,13 @@ func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes Evaluatio
 	return evaluations, statuses
 }
 
-func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes EvaluationCreateAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1alpha2.KeptnEvaluation, evaluationStatus *klcv1alpha2.EvaluationStatus) error {
-	evaluationCreateAttributes.EvaluationDefinition = evaluationName
+func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1alpha2.KeptnEvaluation, evaluationStatus *klcv1alpha2.ItemStatus) error {
+	evaluationCreateAttributes.Definition = evaluationName
 	evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
 	if err != nil {
 		return err
 	}
-	evaluationStatus.EvaluationName = evaluationName
+	evaluationStatus.Name = evaluationName
 	evaluationStatus.SetStartTime()
 	_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
 	if err != nil {
@@ -178,7 +172,7 @@ func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseC
 	return nil
 }
 
-func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1alpha2.KeptnEvaluation, evaluationStatus *klcv1alpha2.EvaluationStatus) {
+func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1alpha2.KeptnEvaluation, evaluationStatus *klcv1alpha2.ItemStatus) {
 	_, spanEvaluationTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
@@ -201,15 +195,4 @@ func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWr
 		}
 		evaluationStatus.SetEndTime()
 	}
-}
-
-func getOldStatusOfEvaluations(statuses []klcv1alpha2.EvaluationStatus, evaluationName string) apicommon.KeptnState {
-	var oldstatus apicommon.KeptnState
-	for _, ts := range statuses {
-		if ts.EvaluationDefinitionName == evaluationName {
-			oldstatus = ts.Status
-		}
-	}
-
-	return oldstatus
 }

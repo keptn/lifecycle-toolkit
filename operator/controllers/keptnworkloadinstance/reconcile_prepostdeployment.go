@@ -20,7 +20,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 		SpanHandler: r.SpanHandler,
 	}
 
-	taskCreateAttributes := controllercommon.TaskCreateAttributes{
+	taskCreateAttributes := controllercommon.CreateAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadTaskSpanName, checkType),
 		CheckType: checkType,
 	}

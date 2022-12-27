@@ -25,32 +25,32 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			DeploymentStatus:               common.StateFailed,
 			Status:                         common.StateFailed,
-			PreDeploymentTaskStatus: []TaskStatus{
+			PreDeploymentTaskStatus: []ItemStatus{
 				{
-					TaskDefinitionName: "defname",
-					Status:             common.StateFailed,
-					TaskName:           "taskname",
+					DefinitionName: "defname",
+					Status:         common.StateFailed,
+					Name:           "taskname",
 				},
 			},
-			PostDeploymentTaskStatus: []TaskStatus{
+			PostDeploymentTaskStatus: []ItemStatus{
 				{
-					TaskDefinitionName: "defname2",
-					Status:             common.StateFailed,
-					TaskName:           "taskname2",
+					DefinitionName: "defname2",
+					Status:         common.StateFailed,
+					Name:           "taskname2",
 				},
 			},
-			PreDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PreDeploymentEvaluationTaskStatus: []ItemStatus{
 				{
-					EvaluationDefinitionName: "defname3",
-					Status:                   common.StateFailed,
-					EvaluationName:           "taskname3",
+					DefinitionName: "defname3",
+					Status:         common.StateFailed,
+					Name:           "taskname3",
 				},
 			},
-			PostDeploymentEvaluationTaskStatus: []EvaluationStatus{
+			PostDeploymentEvaluationTaskStatus: []ItemStatus{
 				{
-					EvaluationDefinitionName: "defname4",
-					Status:                   common.StateFailed,
-					EvaluationName:           "taskname4",
+					DefinitionName: "defname4",
+					Status:         common.StateFailed,
+					Name:           "taskname4",
 				},
 			},
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
@@ -128,35 +128,35 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	require.Equal(t, []string{"task5", "task6"}, workload.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, workload.GetPostDeploymentEvaluations())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []ItemStatus{
 		{
-			TaskDefinitionName: "defname",
-			Status:             common.StateFailed,
-			TaskName:           "taskname",
+			DefinitionName: "defname",
+			Status:         common.StateFailed,
+			Name:           "taskname",
 		},
 	}, workload.GetPreDeploymentTaskStatus())
 
-	require.Equal(t, []TaskStatus{
+	require.Equal(t, []ItemStatus{
 		{
-			TaskDefinitionName: "defname2",
-			Status:             common.StateFailed,
-			TaskName:           "taskname2",
+			DefinitionName: "defname2",
+			Status:         common.StateFailed,
+			Name:           "taskname2",
 		},
 	}, workload.GetPostDeploymentTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []ItemStatus{
 		{
-			EvaluationDefinitionName: "defname3",
-			Status:                   common.StateFailed,
-			EvaluationName:           "taskname3",
+			DefinitionName: "defname3",
+			Status:         common.StateFailed,
+			Name:           "taskname3",
 		},
 	}, workload.GetPreDeploymentEvaluationTaskStatus())
 
-	require.Equal(t, []EvaluationStatus{
+	require.Equal(t, []ItemStatus{
 		{
-			EvaluationDefinitionName: "defname4",
-			Status:                   common.StateFailed,
-			EvaluationName:           "taskname4",
+			DefinitionName: "defname4",
+			Status:         common.StateFailed,
+			Name:           "taskname4",
 		},
 	}, workload.GetPostDeploymentEvaluationTaskStatus())
 

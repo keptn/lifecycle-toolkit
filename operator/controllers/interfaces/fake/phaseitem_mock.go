@@ -45,25 +45,25 @@ import (
 // 			GetParentNameFunc: func() string {
 // 				panic("mock out the GetParentName method")
 // 			},
-// 			GetPostDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.EvaluationStatus {
+// 			GetPostDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.ItemStatus {
 // 				panic("mock out the GetPostDeploymentEvaluationTaskStatus method")
 // 			},
 // 			GetPostDeploymentEvaluationsFunc: func() []string {
 // 				panic("mock out the GetPostDeploymentEvaluations method")
 // 			},
-// 			GetPostDeploymentTaskStatusFunc: func() []klcv1alpha2.TaskStatus {
+// 			GetPostDeploymentTaskStatusFunc: func() []klcv1alpha2.ItemStatus {
 // 				panic("mock out the GetPostDeploymentTaskStatus method")
 // 			},
 // 			GetPostDeploymentTasksFunc: func() []string {
 // 				panic("mock out the GetPostDeploymentTasks method")
 // 			},
-// 			GetPreDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.EvaluationStatus {
+// 			GetPreDeploymentEvaluationTaskStatusFunc: func() []klcv1alpha2.ItemStatus {
 // 				panic("mock out the GetPreDeploymentEvaluationTaskStatus method")
 // 			},
 // 			GetPreDeploymentEvaluationsFunc: func() []string {
 // 				panic("mock out the GetPreDeploymentEvaluations method")
 // 			},
-// 			GetPreDeploymentTaskStatusFunc: func() []klcv1alpha2.TaskStatus {
+// 			GetPreDeploymentTaskStatusFunc: func() []klcv1alpha2.ItemStatus {
 // 				panic("mock out the GetPreDeploymentTaskStatus method")
 // 			},
 // 			GetPreDeploymentTasksFunc: func() []string {
@@ -131,25 +131,25 @@ type PhaseItemMock struct {
 	GetParentNameFunc func() string
 
 	// GetPostDeploymentEvaluationTaskStatusFunc mocks the GetPostDeploymentEvaluationTaskStatus method.
-	GetPostDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.EvaluationStatus
+	GetPostDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.ItemStatus
 
 	// GetPostDeploymentEvaluationsFunc mocks the GetPostDeploymentEvaluations method.
 	GetPostDeploymentEvaluationsFunc func() []string
 
 	// GetPostDeploymentTaskStatusFunc mocks the GetPostDeploymentTaskStatus method.
-	GetPostDeploymentTaskStatusFunc func() []klcv1alpha2.TaskStatus
+	GetPostDeploymentTaskStatusFunc func() []klcv1alpha2.ItemStatus
 
 	// GetPostDeploymentTasksFunc mocks the GetPostDeploymentTasks method.
 	GetPostDeploymentTasksFunc func() []string
 
 	// GetPreDeploymentEvaluationTaskStatusFunc mocks the GetPreDeploymentEvaluationTaskStatus method.
-	GetPreDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.EvaluationStatus
+	GetPreDeploymentEvaluationTaskStatusFunc func() []klcv1alpha2.ItemStatus
 
 	// GetPreDeploymentEvaluationsFunc mocks the GetPreDeploymentEvaluations method.
 	GetPreDeploymentEvaluationsFunc func() []string
 
 	// GetPreDeploymentTaskStatusFunc mocks the GetPreDeploymentTaskStatus method.
-	GetPreDeploymentTaskStatusFunc func() []klcv1alpha2.TaskStatus
+	GetPreDeploymentTaskStatusFunc func() []klcv1alpha2.ItemStatus
 
 	// GetPreDeploymentTasksFunc mocks the GetPreDeploymentTasks method.
 	GetPreDeploymentTasksFunc func() []string
@@ -564,7 +564,7 @@ func (mock *PhaseItemMock) GetParentNameCalls() []struct {
 }
 
 // GetPostDeploymentEvaluationTaskStatus calls GetPostDeploymentEvaluationTaskStatusFunc.
-func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
+func (mock *PhaseItemMock) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus {
 	if mock.GetPostDeploymentEvaluationTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPostDeploymentEvaluationTaskStatusFunc: method is nil but PhaseItem.GetPostDeploymentEvaluationTaskStatus was just called")
 	}
@@ -616,7 +616,7 @@ func (mock *PhaseItemMock) GetPostDeploymentEvaluationsCalls() []struct {
 }
 
 // GetPostDeploymentTaskStatus calls GetPostDeploymentTaskStatusFunc.
-func (mock *PhaseItemMock) GetPostDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
+func (mock *PhaseItemMock) GetPostDeploymentTaskStatus() []klcv1alpha2.ItemStatus {
 	if mock.GetPostDeploymentTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPostDeploymentTaskStatusFunc: method is nil but PhaseItem.GetPostDeploymentTaskStatus was just called")
 	}
@@ -668,7 +668,7 @@ func (mock *PhaseItemMock) GetPostDeploymentTasksCalls() []struct {
 }
 
 // GetPreDeploymentEvaluationTaskStatus calls GetPreDeploymentEvaluationTaskStatusFunc.
-func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
+func (mock *PhaseItemMock) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus {
 	if mock.GetPreDeploymentEvaluationTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPreDeploymentEvaluationTaskStatusFunc: method is nil but PhaseItem.GetPreDeploymentEvaluationTaskStatus was just called")
 	}
@@ -720,7 +720,7 @@ func (mock *PhaseItemMock) GetPreDeploymentEvaluationsCalls() []struct {
 }
 
 // GetPreDeploymentTaskStatus calls GetPreDeploymentTaskStatusFunc.
-func (mock *PhaseItemMock) GetPreDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
+func (mock *PhaseItemMock) GetPreDeploymentTaskStatus() []klcv1alpha2.ItemStatus {
 	if mock.GetPreDeploymentTaskStatusFunc == nil {
 		panic("PhaseItemMock.GetPreDeploymentTaskStatusFunc: method is nil but PhaseItem.GetPreDeploymentTaskStatus was just called")
 	}

@@ -6,32 +6,49 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha2.TaskStatus) klcv1alpha2.TaskStatus {
+type CreateAttributes struct {
+	SpanName   string
+	Definition string
+	CheckType  apicommon.CheckType
+}
+
+func GetTaskStatus(taskName string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
+		if status.DefinitionName == taskName {
 			return status
 		}
 	}
-	return klcv1alpha2.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             apicommon.StatePending,
-		TaskName:           "",
+	return klcv1alpha2.ItemStatus{
+		DefinitionName: taskName,
+		Status:         apicommon.StatePending,
+		Name:           "",
 	}
 }
 
-func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha2.EvaluationStatus) klcv1alpha2.EvaluationStatus {
+func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
-		if status.EvaluationDefinitionName == evaluationName {
+		if status.DefinitionName == evaluationName {
 			return status
 		}
 	}
-	return klcv1alpha2.EvaluationStatus{
-		EvaluationDefinitionName: evaluationName,
-		Status:                   apicommon.StatePending,
-		EvaluationName:           "",
+	return klcv1alpha2.ItemStatus{
+		DefinitionName: evaluationName,
+		Status:         apicommon.StatePending,
+		Name:           "",
 	}
 }
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
+}
+
+func GetOldStatus(statuses []klcv1alpha2.ItemStatus, DefinitionName string) apicommon.KeptnState {
+	var oldstatus apicommon.KeptnState
+	for _, ts := range statuses {
+		if ts.DefinitionName == DefinitionName {
+			oldstatus = ts.Status
+		}
+	}
+
+	return oldstatus
 }

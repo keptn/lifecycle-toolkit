@@ -369,12 +369,12 @@ spec:
               postDeploymentEvaluationTaskStatus:
                 items:
                   properties:
+                    definitionName:
+                      type: string
                     endTime:
                       format: date-time
                       type: string
-                    evaluationDefinitionName:
-                      type: string
-                    evaluationName:
+                    name:
                       type: string
                     startTime:
                       format: date-time
@@ -390,18 +390,18 @@ spec:
               postDeploymentTaskStatus:
                 items:
                   properties:
+                    definitionName:
+                      type: string
                     endTime:
                       format: date-time
+                      type: string
+                    name:
                       type: string
                     startTime:
                       format: date-time
                       type: string
                     status:
                       default: Pending
-                      type: string
-                    taskDefinitionName:
-                      type: string
-                    taskName:
                       type: string
                   type: object
                 type: array
@@ -411,12 +411,12 @@ spec:
               preDeploymentEvaluationTaskStatus:
                 items:
                   properties:
+                    definitionName:
+                      type: string
                     endTime:
                       format: date-time
                       type: string
-                    evaluationDefinitionName:
-                      type: string
-                    evaluationName:
+                    name:
                       type: string
                     startTime:
                       format: date-time
@@ -432,18 +432,18 @@ spec:
               preDeploymentTaskStatus:
                 items:
                   properties:
+                    definitionName:
+                      type: string
                     endTime:
                       format: date-time
+                      type: string
+                    name:
                       type: string
                     startTime:
                       format: date-time
                       type: string
                     status:
                       default: Pending
-                      type: string
-                    taskDefinitionName:
-                      type: string
-                    taskName:
                       type: string
                   type: object
                 type: array

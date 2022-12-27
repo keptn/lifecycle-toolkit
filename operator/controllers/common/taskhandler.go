@@ -29,13 +29,8 @@ type TaskHandler struct {
 	SpanHandler ISpanHandler
 }
 
-type TaskCreateAttributes struct {
-	SpanName       string
-	TaskDefinition string
-	CheckType      apicommon.CheckType
-}
-
-func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha2.TaskStatus, apicommon.StatusSummary, error) {
+//nolint:gocognit,gocyclo
+func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -51,10 +46,9 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha2.TaskStatus
+	var newStatus []klcv1alpha2.ItemStatus
 	for _, taskDefinitionName := range tasks {
-		oldstatus := getOldStatusOfTasks(statuses, taskDefinitionName)
-
+		oldstatus := GetOldStatus(statuses, taskDefinitionName)
 		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha2.KeptnTask{}
 		taskExists := false
@@ -70,10 +64,10 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		}
 
 		// Check if Task is already created
-		if taskStatus.TaskName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: piWrapper.GetNamespace()}, task)
+		if taskStatus.Name != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.Name, Namespace: piWrapper.GetNamespace()}, task)
 			if err != nil && errors.IsNotFound(err) {
-				taskStatus.TaskName = ""
+				taskStatus.Name = ""
 			} else if err != nil {
 				return nil, summary, err
 			}
@@ -82,39 +76,26 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 
 		// Create new Task if it does not exist
 		if !taskExists {
-			taskCreateAttributes.TaskDefinition = taskDefinitionName
-			taskName, err := r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+			err := r.handleTaskNotExists(
+				ctx,
+				phaseCtx,
+				taskCreateAttributes,
+				taskDefinitionName,
+				piWrapper,
+				reconcileObject,
+				task,
+				&taskStatus,
+			)
 			if err != nil {
 				return nil, summary, err
 			}
-			taskStatus.TaskName = taskName
-			taskStatus.SetStartTime()
-			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
-			if err != nil {
-				r.Log.Error(err, "could not get span")
-			}
 		} else {
-			_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
-			if err != nil {
-				r.Log.Error(err, "could not get span")
-			}
-			// Update state of Task if it is already created
-			taskStatus.Status = task.Status.Status
-			if taskStatus.Status.IsCompleted() {
-				if taskStatus.Status.IsSucceeded() {
-					spanTaskTrace.AddEvent(task.Name + " has finished")
-					spanTaskTrace.SetStatus(codes.Ok, "Finished")
-				} else {
-					spanTaskTrace.AddEvent(task.Name + " has failed")
-					r.setTaskFailureEvents(task, spanTaskTrace)
-					spanTaskTrace.SetStatus(codes.Error, "Failed")
-				}
-				spanTaskTrace.End()
-				if err := r.SpanHandler.UnbindSpan(task, ""); err != nil {
-					r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, task.Name)
-				}
-				taskStatus.SetEndTime()
-			}
+			r.handleTaskExists(
+				phaseCtx,
+				piWrapper,
+				task,
+				&taskStatus,
+			)
 		}
 		// Update state of the Check
 		newStatus = append(newStatus, taskStatus)
@@ -129,7 +110,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	return newStatus, summary, nil
 }
 
-func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) (string, error) {
+func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -140,7 +121,7 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 		LongName:  "Keptn Task Create",
 	}
 
-	newTask := piWrapper.GenerateTask(taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
+	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -160,9 +141,9 @@ func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha2.KeptnTask, spanTrace
 	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
 }
 
-func (r TaskHandler) setupTasks(taskCreateAttributes TaskCreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.TaskStatus) {
+func (r TaskHandler) setupTasks(taskCreateAttributes CreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.ItemStatus) {
 	var tasks []string
-	var statuses []klcv1alpha2.TaskStatus
+	var statuses []klcv1alpha2.ItemStatus
 
 	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
@@ -175,13 +156,42 @@ func (r TaskHandler) setupTasks(taskCreateAttributes TaskCreateAttributes, piWra
 	return tasks, statuses
 }
 
-func getOldStatusOfTasks(statuses []klcv1alpha2.TaskStatus, taskDefinitionName string) apicommon.KeptnState {
-	var oldstatus apicommon.KeptnState
-	for _, ts := range statuses {
-		if ts.TaskDefinitionName == taskDefinitionName {
-			oldstatus = ts.Status
-		}
+func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha2.KeptnTask, taskStatus *klcv1alpha2.ItemStatus) error {
+	taskCreateAttributes.Definition = taskName
+	taskName, err := r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+	if err != nil {
+		return err
+	}
+	taskStatus.Name = taskName
+	taskStatus.SetStartTime()
+	_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
+	if err != nil {
+		r.Log.Error(err, "could not get span")
 	}
 
-	return oldstatus
+	return nil
+}
+
+func (r TaskHandler) handleTaskExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, task *klcv1alpha2.KeptnTask, taskStatus *klcv1alpha2.ItemStatus) {
+	_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
+	if err != nil {
+		r.Log.Error(err, "could not get span")
+	}
+	// Update state of Task if it is already created
+	taskStatus.Status = task.Status.Status
+	if taskStatus.Status.IsCompleted() {
+		if taskStatus.Status.IsSucceeded() {
+			spanTaskTrace.AddEvent(task.Name + " has finished")
+			spanTaskTrace.SetStatus(codes.Ok, "Finished")
+		} else {
+			spanTaskTrace.AddEvent(task.Name + " has failed")
+			r.setTaskFailureEvents(task, spanTaskTrace)
+			spanTaskTrace.SetStatus(codes.Error, "Failed")
+		}
+		spanTaskTrace.End()
+		if err := r.SpanHandler.UnbindSpan(task, ""); err != nil {
+			r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, task.Name)
+		}
+		taskStatus.SetEndTime()
+	}
 }

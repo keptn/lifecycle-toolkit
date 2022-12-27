@@ -30,12 +30,12 @@ type PhaseItem interface {
 	GetAppName() string
 	GetPreDeploymentTasks() []string
 	GetPostDeploymentTasks() []string
-	GetPreDeploymentTaskStatus() []klcv1alpha2.TaskStatus
-	GetPostDeploymentTaskStatus() []klcv1alpha2.TaskStatus
+	GetPreDeploymentTaskStatus() []klcv1alpha2.ItemStatus
+	GetPostDeploymentTaskStatus() []klcv1alpha2.ItemStatus
 	GetPreDeploymentEvaluations() []string
 	GetPostDeploymentEvaluations() []string
-	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus
-	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus
+	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus
+	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus
 	GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnTask
 	GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha2.KeptnEvaluation
 	GetSpanAttributes() []attribute.KeyValue
@@ -115,11 +115,11 @@ func (pw PhaseItemWrapper) GetPostDeploymentTasks() []string {
 	return pw.Obj.GetPostDeploymentTasks()
 }
 
-func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
+func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []klcv1alpha2.ItemStatus {
 	return pw.Obj.GetPreDeploymentTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1alpha2.TaskStatus {
+func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1alpha2.ItemStatus {
 	return pw.Obj.GetPostDeploymentTaskStatus()
 }
 
@@ -131,11 +131,11 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluations() []string {
 	return pw.Obj.GetPostDeploymentEvaluations()
 }
 
-func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus {
 	return pw.Obj.GetPreDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.EvaluationStatus {
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha2.ItemStatus {
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 

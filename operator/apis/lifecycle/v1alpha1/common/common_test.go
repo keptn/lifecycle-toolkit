@@ -78,7 +78,7 @@ func TestKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
-func TestKeptnState_IsDeprecated(t *testing.T) {
+func TestKeptnState_IsCancelled(t *testing.T) {
 	tests := []struct {
 		State KeptnState
 		Want  bool
@@ -179,7 +179,7 @@ func Test_GeOverallState(t *testing.T) {
 			Want:    StateFailed,
 		},
 		{
-			Name:    "deprecated",
+			Name:    "cancelled",
 			Summary: StatusSummary{0, 0, 0, 0, 0, 0, 1},
 			Want:    StateFailed,
 		},

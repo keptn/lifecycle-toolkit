@@ -179,7 +179,7 @@ func Test_GeOverallState(t *testing.T) {
 			Want:    StateFailed,
 		},
 		{
-			Name:    "Deprecated",
+			Name:    "deprecated",
 			Summary: StatusSummary{0, 0, 0, 0, 0, 0, 1},
 			Want:    StateFailed,
 		},

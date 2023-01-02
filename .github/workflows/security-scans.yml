@@ -1,0 +1,227 @@
+name: "Security Scans"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1' # run tests at 1 AM (UTC), every monday (1)
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GO_VERSION: "~1.19"
+
+jobs:
+  prepare-security-scans:
+    name: "Prepare Security Scans"
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Find latest successful run ID
+        id: last_run_id
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_ID=$(\
+            curl -sL \
+              -H 'Accept: application/vnd.github.v3+json' \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              "api.github.com/repos/${{ github.repository }}/actions/workflows/CI.yaml/runs?branch=main" | \
+            jq '[.workflow_runs[] | select(
+              (.head_commit != null) and ( .conclusion == "success" ) 
+            )][0] | .id')
+          echo "Run ID that will be used to download artifacts from: $RUN_ID"
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts from last successful build of main branch
+        uses: dawidd6/action-download-artifact@v2.24.2
+        id: download_artifacts_push
+        with:
+          # Download last successful artifact from a CI build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: CI.yaml
+          run_id: ${{ steps.last_run_id.outputs.RUN_ID }}
+          # directory where to extract artifacts to
+          path: ./dist
+
+      - name: Upload manifests
+        uses: actions/upload-artifact@v3
+        with:
+          name: manifests
+          path: |
+            ./dist/keptn-lifecycle-operator-manifest/
+            ./dist/scheduler-manifest/
+
+      - name: Upload images
+        uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: |
+            ./dist/functions-runtime-image.tar/
+            ./dist/keptn-lifecycle-operator-image.tar/
+            ./dist/scheduler-image.tar/
+            
+  security-scans:
+    name: "Security Scans"
+    needs: prepare-security-scans
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - tool: "kics"
+          - tool: "kubeconform"
+            # renovate: datasource=github-releases depName=yannh/kubeconform
+            version: "v0.5.0"
+          - tool: "kubescape"
+            kubescape-framework: "nsa"
+          - tool: "kubescape"
+            kubescape-framework: "mitre"
+          - tool: "kubescape"
+            kubescape-framework: "ARMOBest"
+    steps:
+      - name: Set up Go
+        if: matrix.tool == 'kubeconform'
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Download manifest files
+        id: download_manifests
+        uses: actions/download-artifact@v3
+        with:
+          name: manifests
+          path: scans
+
+      - name: KICS Scan
+        if: matrix.tool == 'kics'
+        uses: Checkmarx/kics-github-action@v1.6
+        with:
+          path: scans
+          config_path: .github/kics-config.yml
+          fail_on: high,medium
+          output_formats: json,sarif
+
+      - name: Upload KICS results
+        if: always() && matrix.tool == 'kics'
+        uses: actions/upload-artifact@v3
+        with:
+          name: kics-results
+          path: results.json
+
+      - name: Kubeconform Scan
+        if: matrix.tool == 'kubeconform'
+        run: |
+          echo "::group::Kubeconform installation"
+          go install github.com/yannh/kubeconform/cmd/kubeconform@${{ matrix.version }}
+          echo "::endgroup::"
+          
+          cd operator/config/default
+          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
+          cd ../crd && kustomize build ./ > /tmp/crds.yaml
+          cd ../../../scheduler/manifests/install && kustomize build ./ > /tmp/scheduler-manifest.yaml
+
+          curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
+          mkdir -p /tmp/schema && cd /tmp/schema
+          python3 ../openapi2jsonschema.py ../crds.yaml
+          cd .. && echo "---" >> operator-manifest.yaml && cat operator-manifest.yaml scheduler-manifest.yaml > manifest.yaml
+          kubeconform -schema-location default -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -summary manifest.yaml
+
+      - name: Kubescape Scan
+        if: matrix.tool == 'kubescape'
+        env:
+          FAILURE_PERCENTAGE: 10
+        run: |
+          echo "::group::Kubescape installation"
+          curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+          echo "::endgroup::"
+          # Docs on how to configure exceptions: https://hub.armosec.io/docs/exceptions
+          kubescape scan framework ${{ matrix.kubescape-framework }} -v -t ${{ env.FAILURE_PERCENTAGE }} --exceptions ./.github/.kubescape/exceptions.json --controls-config ./.github/.kubescape/controls-inputs.json scans --enable-color
+          
+  trivy:
+    name: Trivy
+    runs-on: ubuntu-22.04
+    needs: prepare-security-scans
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - "functions-runtime"
+          - "keptn-lifecycle-operator"
+          - "scheduler"
+    steps:
+      - name: Download images
+        id: download_images
+        uses: actions/download-artifact@v3
+        with:
+          name: images
+          path: images
+
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.8.0
+        with:
+          input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+  govulncheck:
+    name: Govulncheck
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        artifact:
+          - "operator"
+          - "scheduler"
+
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Check for vulnerabilities
+        working-directory: ./${{ matrix.artifact }}
+        run: govulncheck ./...
+
+  create_issue:
+    name: Create GitHub Issue
+    runs-on: ubuntu-22.04
+    needs: [ security-scans, govulncheck, trivy ]
+    if: failure()
+    steps:
+      - name: Formulate bug issue
+        id: formulate_bug_issue
+        run: |
+          # create a markdown file that contains details about the error
+          echo "---" > security-scan-failure.md
+          echo "title: 'Security Scan failed'" >> security-scan-failure.md
+          echo "labels: 'security'" >> security-scan-failure.md
+          echo "---" >> security-scan-failure.md
+          echo "" >> security-scan-failure.md
+          echo "* Link to run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> security-scan-failure.md
+          if [[ $GITHUB_EVENT_NAME == 'schedule' ]]; then
+            echo "* Triggered by: Scheduled build" >> security-scan-failure.md
+          else
+            echo "* Triggered by: @$GITHUB_ACTOR" >> security-scan-failure.md
+          fi
+          echo "" >> security-scan-failure.md
+          echo "Note: This issue was auto-generated from [security-scan.yml](.github/workflows/security-scan.yml)" >> security-scan-failure.md
+
+      - name: Create issue if versions differ
+        uses: JasonEtco/create-an-issue@v2.8.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: security-scan-failure.md

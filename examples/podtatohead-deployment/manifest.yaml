@@ -23,6 +23,7 @@ spec:
         component: podtato-head-entry
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.6.0
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:
@@ -38,6 +39,8 @@ spec:
         env:
         - name: PODTATO_PORT
           value: "9000"
+        - name: SOME_ENV
+          value: "hello"
 ---
 apiVersion: v1
 kind: Service

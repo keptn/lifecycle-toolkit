@@ -273,9 +273,12 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha2.KeptnAppVersion{}, err
 	}
 
+	r.Log.Info("found apps", "len", len(apps.Items), "workloadinstance", wli.Name)
 	// due to effectivity reasons deprecated KeptnAppVersions are removed from the list, as there is
 	// no point in iterating through them in the next steps
 	apps.RemoveDeprecated()
+
+	r.Log.Info("found non-deprecated apps", "len", len(apps.Items), "workloadinstance", wli.Name)
 
 	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
@@ -296,12 +299,15 @@ func getLatestAppVersion(apps *klcv1alpha2.KeptnAppVersionList, wli *klcv1alpha2
 
 	workloadFound := false
 	for _, app := range apps.Items {
+		fmt.Println(fmt.Sprintf("app: %s, wli.appName: %s", app.Name, wli.Spec.AppName))
 		if app.Spec.AppName == wli.Spec.AppName {
 			for _, appWorkload := range app.Spec.Workloads {
+				fmt.Println(fmt.Sprintf("app.WorkloadVersion: %s, wli.version: %s, app.workload: %s, wli.spec.workloadName: %s", appWorkload.Version, wli.Spec.Version, app.GetWorkloadNameOfApp(appWorkload.Name), wli.Spec.WorkloadName))
 				if appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName {
 					workloadFound = true
 					newVersion, err := version.NewVersion(app.Spec.Version)
 					if err != nil {
+						fmt.Println("error when determining version: %s", err.Error())
 						return false, klcv1alpha2.KeptnAppVersion{}, err
 					}
 					if newVersion.GreaterThan(oldVersion) {

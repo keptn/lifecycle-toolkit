@@ -1,0 +1,8 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnAppCreationRequest
+metadata:
+  name: keptnappcreationrequest-sample
+  namespace: podtato-kubectl
+spec:
+  appName: "my-app"
+  discoveryDeadlineSeconds: 10

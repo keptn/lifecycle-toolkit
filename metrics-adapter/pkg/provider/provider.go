@@ -4,21 +4,17 @@ import (
 	"context"
 	"fmt"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
-	"go.etcd.io/etcd/client/v2"
-	"os"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
-	"time"
-
 	apimeta "k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/api/resource"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
-
+	"os"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider/helpers"
 )
@@ -34,13 +30,20 @@ type keptnMetricsProvider struct {
 	client    dynamic.Interface
 	mapper    apimeta.RESTMapper
 	k8sClient ctrlclient.Client
+	scheme    *runtime.Scheme
 
 	// just increment values when they're requested
 	values map[provider.CustomMetricInfo]int64
 }
 
-func NewProvider(client dynamic.Interface, mapper apimeta.RESTMapper, k8sClient client.Client) provider.CustomMetricsProvider {
-	cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{})
+func NewProvider(client dynamic.Interface, mapper apimeta.RESTMapper) provider.CustomMetricsProvider {
+	scheme := runtime.NewScheme()
+	if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
+		fmt.Println("failed to add metrics to scheme: " + err.Error())
+	}
+
+	cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
+
 	if err != nil {
 		fmt.Println("failed to create client")
 		os.Exit(1)
@@ -51,43 +54,37 @@ func NewProvider(client dynamic.Interface, mapper apimeta.RESTMapper, k8sClient 
 		mapper:    mapper,
 		values:    make(map[provider.CustomMetricInfo]int64),
 		k8sClient: cl,
+		scheme:    scheme,
 	}
 }
 
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
+	fmt.Println("listAllMetrics")
 	list := metricsv1alpha1.MetricList{}
-
+	var customMetrics []provider.CustomMetricInfo
 	err := p.k8sClient.List(context.Background(), &list)
 	if err != nil {
-		fmt.Println("failed to list metrics")
+		fmt.Println("failed to list metrics" + err.Error())
 	}
 
-	fmt.Println("found metrics: ", list.Items)
-
-	return []provider.CustomMetricInfo{
-		// these are mostly arbitrary examples
-		{
-			GroupResource: schema.GroupResource{Group: "", Resource: "pods"},
-			Metric:        "packets-per-second",
-			Namespaced:    true,
-		},
-		{
-			GroupResource: schema.GroupResource{Group: "", Resource: "services"},
-			Metric:        "connections-per-second",
-			Namespaced:    true,
-		},
-		{
-			GroupResource: schema.GroupResource{Group: "", Resource: "namespaces"},
-			Metric:        "work-queue-length",
-			Namespaced:    false,
-		},
+	for _, metric := range list.Items {
+		customMetrics = append(customMetrics, provider.CustomMetricInfo{
+			GroupResource: schema.GroupResource{
+				Group:    "metrics.keptn.sh",
+				Resource: "metrics",
+			},
+			Metric:     metric.Name,
+			Namespaced: true,
+		})
 	}
+	return customMetrics
 }
 
 // valueFor fetches a value from the fake list and increments it.
 func (p *keptnMetricsProvider) valueFor(info provider.CustomMetricInfo) (int64, error) {
 	// normalize the value so that you treat plural resources and singular
 	// resources the same (e.g. pods vs pod)
+	fmt.Println("valueFor " + info.String())
 	info, _, err := info.Normalized(p.mapper)
 	if err != nil {
 		return 0, err
@@ -103,7 +100,19 @@ func (p *keptnMetricsProvider) valueFor(info provider.CustomMetricInfo) (int64, 
 // metricFor constructs a result for a single metric value.
 func (p *keptnMetricsProvider) metricFor(value int64, name types.NamespacedName, info provider.CustomMetricInfo) (*custom_metrics.MetricValue, error) {
 	// construct a reference referring to the described object
+	fmt.Println("metricFor " + info.String())
 	objRef, err := helpers.ReferenceFor(p.mapper, name, info)
+	if err != nil {
+		return nil, err
+	}
+
+	metric := &metricsv1alpha1.Metric{}
+	err = p.k8sClient.Get(context.Background(), name, metric)
+	if err != nil {
+		return nil, err
+	}
+
+	metricValue, err := resource.ParseQuantity(metric.Status.Value)
 	if err != nil {
 		return nil, err
 	}
@@ -114,8 +123,8 @@ func (p *keptnMetricsProvider) metricFor(value int64, name types.NamespacedName,
 			Name: info.Metric,
 		},
 		// you'll want to use the actual timestamp in a real adapter
-		Timestamp: metav1.Time{time.Now()},
-		Value:     *resource.NewMilliQuantity(value*100, resource.DecimalSI),
+		Timestamp: metric.Status.LastUpdated,
+		Value:     metricValue,
 	}, nil
 }
 

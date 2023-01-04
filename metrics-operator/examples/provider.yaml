@@ -1,0 +1,9 @@
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: Provider
+metadata:
+  name: dynatrace
+spec:
+  targetServer: "<target>"
+  secretKeyRef:
+    name: dynatrace
+    key: DT_TOKEN

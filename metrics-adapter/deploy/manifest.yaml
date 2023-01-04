@@ -51,7 +51,7 @@ spec:
       serviceAccountName: keptn-metrics-apiserver
       containers:
         - name: keptn-metrics-apiserver
-          image: thschue/keptn-metrics-adapter:0.0.1-5-amd64
+          image: thschue/keptn-metrics-adapter:0.0.1-16-amd64
           imagePullPolicy: IfNotPresent
           command:
             - /bin/adapter
@@ -169,6 +169,13 @@ rules:
       - namespaces
       - pods
       - services
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - "metrics.keptn.sh"
+    resources:
+      - "metrics"
     verbs:
       - get
       - list

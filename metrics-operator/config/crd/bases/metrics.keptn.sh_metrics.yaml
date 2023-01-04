@@ -15,7 +15,17 @@ spec:
     singular: metric
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.source
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: Metric is the Schema for the metrics API

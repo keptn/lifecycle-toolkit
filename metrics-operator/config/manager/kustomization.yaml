@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: thschue/keptn-metrics-operator
-  newTag: 0.0.1-2-amd64
+  newTag: 0.0.1-16-amd64

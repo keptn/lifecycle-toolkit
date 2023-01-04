@@ -29,7 +29,6 @@ RUN go mod download
 
 COPY cmd cmd
 COPY pkg pkg
-COPY metrics-operator metrics-operator
 
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
     -X main.gitCommit=${GIT_HASH} \

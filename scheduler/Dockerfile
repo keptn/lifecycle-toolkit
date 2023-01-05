@@ -7,8 +7,7 @@ WORKDIR /scheduler
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY cmd cmd
-COPY pkg pkg
+COPY ./ ./
 
 ARG SCHEDULER_COMPATIBLE_K8S_VERSION
 ARG RELEASE_VERSION

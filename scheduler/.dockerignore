@@ -3,3 +3,11 @@
 bin/
 testbin/
 hack/tools/bin/*
+config/
+manifests/
+test/
+.gitignore
+.dockerignore
+Makefile
+README.md
+Dockerfile

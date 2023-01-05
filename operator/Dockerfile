@@ -8,11 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the go source
-COPY main.go main.go
-COPY hack/ hack/
-COPY api/ api/
-COPY controllers/ controllers/
-COPY webhooks/ webhooks/
+COPY ./ ./
 
 ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION

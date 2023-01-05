@@ -1,4 +1,3 @@
-# Build the manager binary
 FROM --platform=$BUILDPLATFORM golang:1.19.4-alpine3.16 as builder
 
 ENV CGO_ENABLED=0

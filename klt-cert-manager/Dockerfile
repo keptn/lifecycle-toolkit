@@ -1,29 +1,25 @@
 # Build the manager binary
 FROM --platform=$BUILDPLATFORM golang:1.19.4-alpine3.16 as builder
 
-ARG CONTROLLER_TOOLS_VERSION=v0.9.2
-ARG GIT_HASH
-ARG RELEASE_VERSION
-ARG BUILD_TIME
-ARG TARGETOS
-ARG TARGETARCH
-
 ENV CGO_ENABLED=0
 
 WORKDIR /workspace
-RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 # Copy the Go Modules manifests
 COPY go.mod go.sum ./
 RUN go mod download
 
-
 # Copy the go source
-COPY main.go ./
-COPY controllers/ controllers/
-COPY eventfilter/ eventfilter/
-COPY fake/ fake/
+COPY ./ ./
 
+ARG CONTROLLER_TOOLS_VERSION=v0.9.2
+RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
+
+ARG GIT_HASH
+ARG RELEASE_VERSION
+ARG BUILD_TIME
+ARG TARGETOS
+ARG TARGETARCH
 
 # Build
 RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && \

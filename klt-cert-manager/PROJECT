@@ -8,5 +8,5 @@ resources:
   domain: keptn.sh
   group: klt-cert-manager
   kind: Deployment
-  version: v1alpha2
+  version: v1alpha1
 version: "3"

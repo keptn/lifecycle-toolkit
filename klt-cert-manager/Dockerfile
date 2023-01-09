@@ -20,8 +20,8 @@ RUN go mod download
 
 # Copy the go source
 COPY main.go ./
-COPY ../klc-cert-manager/controllers controllers/
-COPY eventfilter eventfilter/
+COPY controllers/ controllers/
+COPY eventfilter/ eventfilter/
 COPY fake/ fake/
 
 
@@ -50,7 +50,7 @@ ENTRYPOINT ["/manager"]
 
 FROM gcr.io/distroless/base-debian11:nonroot as production
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/klt-cert-manager" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Lifecycle Certificate Manager" \
     org.opencontainers.image.vendor="Keptn" \

@@ -39,7 +39,7 @@ func (dst *KeptnEvaluationProvider) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, ErrCastFrom)
+		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnEvaluationProviderErr)
 	}
 
 	// Copy equal stuff to new object

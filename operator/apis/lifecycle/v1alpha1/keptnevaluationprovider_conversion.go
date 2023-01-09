@@ -14,7 +14,7 @@ func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnEvaluationProviderErr)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnEvaluationProvider)
 	}
 
 	// Copy equal stuff to new object
@@ -39,7 +39,7 @@ func (dst *KeptnEvaluationProvider) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnEvaluationProviderErr)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnEvaluationProvider)
 	}
 
 	// Copy equal stuff to new object

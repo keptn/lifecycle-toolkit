@@ -32,7 +32,7 @@ const MaxWorkloadNameLength = 25
 const MaxTaskNameLength = 25
 const MaxVersionLength = 12
 
-var CannotCastKeptnEvaluationProviderErr = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
+var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
 
 type KeptnState string
 

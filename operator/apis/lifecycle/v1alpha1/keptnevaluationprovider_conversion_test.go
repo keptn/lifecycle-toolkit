@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 	"testing"
@@ -169,7 +170,7 @@ func TestKeptnEvalProvider_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, ErrCastFrom)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnEvaluationProvider)
 	}
 }
 
@@ -182,6 +183,6 @@ func TestKeptnEvalProvider_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, ErrCastTo)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnEvaluationProvider)
 	}
 }

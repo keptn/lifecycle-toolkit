@@ -3,7 +3,7 @@ kind: Provider
 metadata:
   name: dynatrace
 spec:
-  targetServer: "<target>"
+  targetServer: "https://hrr45329.dev.dynatracelabs.com"
   secretKeyRef:
     name: dynatrace
     key: DT_TOKEN

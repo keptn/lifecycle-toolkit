@@ -1,0 +1,23 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: main
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podtato-head-entry 
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Object
+    object:
+      metric:
+        name: aggregated-data 
+      describedObject:
+        kind: Metric
+        name: aggregated-data
+        apiVersion: metrics.keptn.sh/v1alpha1 
+      target:
+        type: Value
+        value: 865k

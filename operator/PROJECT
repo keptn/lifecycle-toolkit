@@ -167,4 +167,13 @@ resources:
   kind: KeptnEvaluation
   path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
   version: v1alpha2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnAppCreationRequest
+  path: github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2
+  version: v1alpha2
 version: "3"

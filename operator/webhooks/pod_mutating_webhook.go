@@ -101,18 +101,18 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
-		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
+		_, err := a.isAppAnnotationPresent(pod)
 		if err != nil {
 			span.SetStatus(codes.Error, InvalidAnnotationMessage)
 			return admission.Errored(http.StatusBadRequest, err)
 		}
-		if !isAppAnnotationPresent {
-			if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
-				logger.Error(err, "Could not handle App")
-				span.SetStatus(codes.Error, err.Error())
-				return admission.Errored(http.StatusBadRequest, err)
-			}
+
+		if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
+			logger.Error(err, "Could not handle App")
+			span.SetStatus(codes.Error, err.Error())
+			return admission.Errored(http.StatusBadRequest, err)
 		}
+
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 
 		logger.Info("Attributes from annotations set")
@@ -343,26 +343,22 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	newApp := a.generateApp(ctx, pod, namespace)
+	newAppCreationRequest := a.generateAppCreationRequest(ctx, pod, namespace)
 
-	newApp.SetSpanAttributes(span)
-
-	logger.Info("Searching for app")
-
-	app := &klcv1alpha2.KeptnApp{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
+	appCreationRequest := &klcv1alpha2.KeptnAppCreationRequest{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
 	if errors.IsNotFound(err) {
-		logger.Info("Creating app", "app", app.Name)
-		app = newApp
-		err = a.Client.Create(ctx, app)
+		logger.Info("Creating app creation request", "appCreationRequest", appCreationRequest.Name)
+		appCreationRequest = newAppCreationRequest
+		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
 			logger.Error(err, "Could not create App")
-			a.Recorder.Event(app, "Warning", "AppNotCreated", fmt.Sprintf("Could not create KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+			a.Recorder.Event(appCreationRequest, "Warning", "AppNotCreated", fmt.Sprintf("Could not create KeptnAppCreationRequest / Namespace: %s, Name: %s ", appCreationRequest.Namespace, appCreationRequest.Name))
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.Recorder.Event(app, "Normal", "AppCreated", fmt.Sprintf("KeptnApp created / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+		a.Recorder.Event(appCreationRequest, "Normal", "AppCreated", fmt.Sprintf("KeptnAppCreationRequest created / Namespace: %s, Name: %s ", appCreationRequest.Namespace, appCreationRequest.Name))
 		return nil
 	}
 
@@ -371,23 +367,23 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		return fmt.Errorf("could not fetch App"+": %+v", err)
 	}
 
-	if reflect.DeepEqual(app.Spec, newApp.Spec) {
+	if reflect.DeepEqual(appCreationRequest.Spec, newAppCreationRequest.Spec) {
 		logger.Info("Pod not changed, not updating anything")
 		return nil
 	}
 
 	logger.Info("Pod changed, updating app")
-	app.Spec = newApp.Spec
+	appCreationRequest.Spec = newAppCreationRequest.Spec
 
-	err = a.Client.Update(ctx, app)
+	err = a.Client.Update(ctx, appCreationRequest)
 	if err != nil {
 		logger.Error(err, "Could not update App")
-		a.Recorder.Event(app, "Warning", "AppNotUpdated", fmt.Sprintf("Could not update KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+		a.Recorder.Event(appCreationRequest, "Warning", "AppNotUpdated", fmt.Sprintf("Could not update KeptnAppCreationRequest / Namespace: %s, Name: %s ", appCreationRequest.Namespace, appCreationRequest.Name))
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	a.Recorder.Event(app, "Normal", "AppUpdated", fmt.Sprintf("KeptnApp updated / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+	a.Recorder.Event(appCreationRequest, "Normal", "AppUpdated", fmt.Sprintf("KeptnAppCreationRequest updated / Namespace: %s, Name: %s ", appCreationRequest.Namespace, appCreationRequest.Name))
 
 	return nil
 }
@@ -441,6 +437,26 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
 			PostDeploymentEvaluations: postDeploymentEvaluation,
+		},
+	}
+}
+
+func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha2.KeptnAppCreationRequest {
+	appName := a.getAppName(pod)
+
+	// create TraceContext
+	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
+	traceContextCarrier := propagation.MapCarrier{}
+	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
+
+	return &klcv1alpha2.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        appName,
+			Namespace:   namespace,
+			Annotations: traceContextCarrier,
+		},
+		Spec: klcv1alpha2.KeptnAppCreationRequestSpec{
+			AppName: appName,
 		},
 	}
 }

@@ -160,11 +160,6 @@ jobs:
           name: ${{ matrix.config.name }}-manifest-test
           path: ${{ matrix.config.folder }}/config/rendered/release.yaml
 
-      - name: Generate SBOM
-        uses: anchore/sbom-action@v0
-        with:
-          output-file: ./sbom-${{ matrix.config.name }}.spdx.json
-
   component_tests:
     name: Component Tests
     needs: prepare_ci_run

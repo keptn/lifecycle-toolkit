@@ -100,6 +100,19 @@ jobs:
           COSIGN_EXPERIMENTAL: 1
         run: cosign sign ${{ env.IMAGE_TAG }}
 
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0.13.1
+        with:
+          image: ${{ env.IMAGE_TAG }}
+          artifact-name: sbom-${{ matrix.config.name }}
+          output-file: ./sbom-${{ matrix.config.name }}.spdx.json
+
+      - name: Attach SBOM to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: ./sbom-${{ matrix.config.name }}.spdx.json
+
   release-manifests:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:

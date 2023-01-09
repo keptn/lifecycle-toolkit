@@ -53,6 +53,7 @@
     {
       "fileMatch": [
         "(^|\\/)Makefile$",
+        "(^|\\/)Dockerfile",
         "(^|\\/).*\\.ya?ml$"
       ],
       "matchStrings": [

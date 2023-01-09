@@ -169,7 +169,7 @@ func TestKeptnEvalProvider_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnEvaluationProvider to v1alpha1")
+		require.ErrorIs(t, err, ErrCastFrom)
 	}
 }
 
@@ -182,6 +182,6 @@ func TestKeptnEvalProvider_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnEvaluationProvider to v1alpha2")
+		require.ErrorIs(t, err, ErrCastTo)
 	}
 }

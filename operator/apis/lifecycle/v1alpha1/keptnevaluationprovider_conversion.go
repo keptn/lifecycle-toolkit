@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"errors"
 	"fmt"
 	corev1 "k8s.io/api/core/v1"
 
@@ -8,12 +9,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha1.KeptnApp to the hub version (v1alpha2.KeptnApp)
+var ErrCastTo = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
+var ErrCastFrom = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha1")
+
+// ConvertTo converts the src v1alpha1.KeptnEvaluationProvider to the hub version (v1alpha2.KeptnEvaluationProvider)
 func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnEvaluationProvider to v1alpha2. Got type %T", dstRaw)
+		return fmt.Errorf("type %T %w", dstRaw, ErrCastTo)
 	}
 
 	// Copy equal stuff to new object
@@ -38,7 +42,7 @@ func (dst *KeptnEvaluationProvider) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnEvaluationProvider to v1alpha1. Got type %T", srcRaw)
+		return fmt.Errorf("type %T %w", srcRaw, ErrCastFrom)
 	}
 
 	// Copy equal stuff to new object

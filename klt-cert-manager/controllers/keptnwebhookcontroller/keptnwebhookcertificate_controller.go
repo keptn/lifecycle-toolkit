@@ -2,14 +2,14 @@ package keptnwebhookcontroller
 
 import (
 	"context"
-	"time"
+	"fmt"
+	"reflect"
 
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/eventfilter"
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
-	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -119,8 +119,8 @@ func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
 	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
 	if err := r.ApiReader.Get(r.ctx, client.ObjectKey{
-		    Name: Webhookconfig,
-	    }, &mutatingWebhook); err != nil {
+		Name: Webhookconfig,
+	}, &mutatingWebhook); err != nil {
 		return nil, err
 	}
 

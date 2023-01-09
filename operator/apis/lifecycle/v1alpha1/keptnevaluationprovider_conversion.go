@@ -37,7 +37,7 @@ func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha2.KeptnApp) to this version (v1alpha1.KeptnApp)
+// ConvertFrom converts from the hub version (v1alpha2.KeptnEvaluationProvider) to this version (v1alpha1.KeptnEvaluationProvider)
 func (dst *KeptnEvaluationProvider) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnEvaluationProvider)
 

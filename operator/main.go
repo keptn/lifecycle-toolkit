@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
@@ -38,6 +39,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
+
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -55,6 +57,17 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+
+	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1"
+	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnapp"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnappversion"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnevaluation"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntask"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptntaskdefinition"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkload"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/keptnworkloadinstance"
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -346,6 +359,10 @@ func main() {
 
 	if err = (&lifecyclev1alpha2.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
+		os.Exit(1)
+	}
+	if err = (&lifecyclev1alpha2.KeptnEvaluationProvider{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnEvaluationProvider")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

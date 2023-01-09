@@ -5,7 +5,7 @@ import (
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )

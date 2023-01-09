@@ -3,7 +3,12 @@ package v1alpha1
 import (
 	"testing"
 
+<<<<<<< HEAD:operator/apis/lifecycle/v1alpha1/keptnapp_conversion_test.go
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+=======
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+>>>>>>> normalize err messages:operator/api/v1alpha1/keptnapp_conversion_test.go
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
@@ -253,7 +258,7 @@ func TestKeptnApp_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha1")
+		require.ErrorIs(t, err, common.CannotCastKeptnAppErr)
 	}
 }
 
@@ -266,6 +271,6 @@ func TestKeptnApp_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha2")
+		require.ErrorIs(t, err, common.CannotCastKeptnAppErr)
 	}
 }

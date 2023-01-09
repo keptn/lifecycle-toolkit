@@ -527,7 +527,7 @@ func TestKeptnWorkloadInstance_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnWorkloadInstance to v1alpha2")
+		require.ErrorIs(t, err, common.CannotCastKeptnWorkloadInstanceErr)
 	}
 }
 
@@ -540,6 +540,6 @@ func TestKeptnWorkloadInstance_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnWorkloadInstance to v1alpha2")
+		require.ErrorIs(t, err, common.CannotCastKeptnWorkloadInstanceErr)
 	}
 }

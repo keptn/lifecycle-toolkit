@@ -15,7 +15,7 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnAppVersion)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnAppVersion to v1alpha2. Got type %T", dstRaw)
+		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnAppVersionErr)
 	}
 
 	// Copy equal stuff to new object
@@ -33,8 +33,6 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
 	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
 	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
-	// Set sensible defaults for new fields
-	dst.Spec.Revision = 1
 
 	dst.Spec.AppName = src.Spec.AppName
 	dst.Spec.PreviousVersion = src.Spec.PreviousVersion
@@ -62,6 +60,9 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	}
 
 	dst.Status.CurrentPhase = src.Status.CurrentPhase
+
+	// Set sensible defaults for new fields
+	dst.Spec.Revision = 1
 
 	// Convert changed fields
 	for _, item := range src.Status.PreDeploymentTaskStatus {
@@ -124,7 +125,7 @@ func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnAppVersion)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnAppVersion to v1alpha2. Got type %T", srcRaw)
+		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnAppVersionErr)
 	}
 
 	// Copy equal stuff to new object

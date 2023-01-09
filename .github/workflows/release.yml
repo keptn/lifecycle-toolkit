@@ -92,8 +92,8 @@ jobs:
             SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          cache-from: type=gha, scope=${{ github.workflow }}
-          cache-to: type=gha, scope=${{ github.workflow }}
+          cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
+          cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Sign container images
         env:

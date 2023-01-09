@@ -3,9 +3,9 @@ package v1alpha1
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

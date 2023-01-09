@@ -3,12 +3,8 @@ package v1alpha1
 import (
 	"fmt"
 
-<<<<<<< HEAD:operator/apis/lifecycle/v1alpha1/keptnapp_conversion.go
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-=======
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
->>>>>>> normalize err messages:operator/api/v1alpha1/keptnapp_conversion.go
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 

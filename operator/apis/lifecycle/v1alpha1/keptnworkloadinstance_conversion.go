@@ -3,40 +3,39 @@ package v1alpha1
 import (
 	"fmt"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"go.opentelemetry.io/otel/propagation"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha1.KeptnAppVersion to the hub version (v1alpha2.KeptnAppVersion)
-func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
-	dst, ok := dstRaw.(*v1alpha2.KeptnAppVersion)
+// ConvertTo converts the src v1alpha1.KeptnWorkloadInstance to the hub version (v1alpha2.KeptnWorkloadInstance)
+func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
+	dst, ok := dstRaw.(*v1alpha2.KeptnWorkloadInstance)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnAppVersionErr)
+		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnWorkloadInstanceErr)
 	}
 
 	// Copy equal stuff to new object
 	// DO NOT COPY TypeMeta
 	dst.ObjectMeta = src.ObjectMeta
 
+	dst.Spec.AppName = src.Spec.AppName
 	dst.Spec.Version = src.Spec.Version
-	for _, srcWl := range src.Spec.Workloads {
-		dst.Spec.Workloads = append(dst.Spec.Workloads, v1alpha2.KeptnWorkloadRef{
-			Name:    srcWl.Name,
-			Version: srcWl.Version,
-		})
-	}
 	dst.Spec.PreDeploymentTasks = src.Spec.PreDeploymentTasks
 	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
 	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
 	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
+	dst.Spec.ResourceReference = v1alpha2.ResourceReference{
+		UID:  src.Spec.ResourceReference.UID,
+		Kind: src.Spec.ResourceReference.Kind,
+		Name: src.Spec.ResourceReference.Name,
+	}
 
-	dst.Spec.AppName = src.Spec.AppName
+	dst.Spec.WorkloadName = src.Spec.WorkloadName
 	dst.Spec.PreviousVersion = src.Spec.PreviousVersion
-
 	dst.Spec.TraceId = make(map[string]string, len(src.Spec.TraceId))
 	for k, v := range src.Spec.TraceId {
 		dst.Spec.TraceId[k] = v
@@ -46,23 +45,10 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Status.PostDeploymentStatus = v1alpha2common.KeptnState(src.Status.PostDeploymentStatus)
 	dst.Status.PreDeploymentEvaluationStatus = v1alpha2common.KeptnState(src.Status.PreDeploymentEvaluationStatus)
 	dst.Status.PostDeploymentEvaluationStatus = v1alpha2common.KeptnState(src.Status.PostDeploymentEvaluationStatus)
-	dst.Status.WorkloadOverallStatus = v1alpha2common.KeptnState(src.Status.WorkloadOverallStatus)
+	dst.Status.DeploymentStatus = v1alpha2common.KeptnState(src.Status.DeploymentStatus)
 	dst.Status.Status = v1alpha2common.KeptnState(src.Status.Status)
 
-	for _, srcWls := range src.Status.WorkloadStatus {
-		dst.Status.WorkloadStatus = append(dst.Status.WorkloadStatus, v1alpha2.WorkloadStatus{
-			Workload: v1alpha2.KeptnWorkloadRef{
-				Name:    srcWls.Workload.Name,
-				Version: srcWls.Workload.Version,
-			},
-			Status: v1alpha2common.KeptnState(srcWls.Status),
-		})
-	}
-
 	dst.Status.CurrentPhase = src.Status.CurrentPhase
-
-	// Set sensible defaults for new fields
-	dst.Spec.Revision = 1
 
 	// Convert changed fields
 	for _, item := range src.Status.PreDeploymentTaskStatus {
@@ -120,33 +106,32 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha2.KeptnAppVersion) to this version (v1alpha1.KeptnAppVersion)
-func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
-	src, ok := srcRaw.(*v1alpha2.KeptnAppVersion)
+// ConvertFrom converts from the hub version (v1alpha2.KeptnWorkloadInstance) to this version (v1alpha1.KeptnWorkloadInstance)
+func (dst *KeptnWorkloadInstance) ConvertFrom(srcRaw conversion.Hub) error {
+	src, ok := srcRaw.(*v1alpha2.KeptnWorkloadInstance)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnAppVersionErr)
+		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnWorkloadInstanceErr)
 	}
 
 	// Copy equal stuff to new object
 	// DO NOT COPY TypeMeta
 	dst.ObjectMeta = src.ObjectMeta
 
+	dst.Spec.AppName = src.Spec.AppName
 	dst.Spec.Version = src.Spec.Version
-	for _, srcWl := range src.Spec.Workloads {
-		dst.Spec.Workloads = append(dst.Spec.Workloads, KeptnWorkloadRef{
-			Name:    srcWl.Name,
-			Version: srcWl.Version,
-		})
-	}
 	dst.Spec.PreDeploymentTasks = src.Spec.PreDeploymentTasks
 	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
 	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
 	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
+	dst.Spec.ResourceReference = ResourceReference{
+		UID:  src.Spec.ResourceReference.UID,
+		Kind: src.Spec.ResourceReference.Kind,
+		Name: src.Spec.ResourceReference.Name,
+	}
 
-	dst.Spec.AppName = src.Spec.AppName
+	dst.Spec.WorkloadName = src.Spec.WorkloadName
 	dst.Spec.PreviousVersion = src.Spec.PreviousVersion
-
 	dst.Spec.TraceId = make(map[string]string, len(src.Spec.TraceId))
 	for k, v := range src.Spec.TraceId {
 		dst.Spec.TraceId[k] = v
@@ -156,18 +141,8 @@ func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Status.PostDeploymentStatus = common.KeptnState(src.Status.PostDeploymentStatus)
 	dst.Status.PreDeploymentEvaluationStatus = common.KeptnState(src.Status.PreDeploymentEvaluationStatus)
 	dst.Status.PostDeploymentEvaluationStatus = common.KeptnState(src.Status.PostDeploymentEvaluationStatus)
-	dst.Status.WorkloadOverallStatus = common.KeptnState(src.Status.WorkloadOverallStatus)
+	dst.Status.DeploymentStatus = common.KeptnState(src.Status.DeploymentStatus)
 	dst.Status.Status = common.KeptnState(src.Status.Status)
-
-	for _, srcWls := range src.Status.WorkloadStatus {
-		dst.Status.WorkloadStatus = append(dst.Status.WorkloadStatus, WorkloadStatus{
-			Workload: KeptnWorkloadRef{
-				Name:    srcWls.Workload.Name,
-				Version: srcWls.Workload.Version,
-			},
-			Status: common.KeptnState(srcWls.Status),
-		})
-	}
 
 	dst.Status.CurrentPhase = src.Status.CurrentPhase
 

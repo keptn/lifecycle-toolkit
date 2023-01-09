@@ -3,12 +3,8 @@ package v1alpha1
 import (
 	"testing"
 
-<<<<<<< HEAD:operator/apis/lifecycle/v1alpha1/keptnapp_conversion_test.go
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-=======
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
->>>>>>> normalize err messages:operator/api/v1alpha1/keptnapp_conversion_test.go
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"

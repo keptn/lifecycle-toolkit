@@ -165,7 +165,6 @@ func (cs *Certs) generateRootCerts(domain string, now time.Time) error {
 
 func (cs *Certs) generateServerCerts(domain string, now time.Time) error {
 	// Generate server keys
-	//log.Info("generating server certificate")
 	privateKey, err := cs.generatePrivateKey(ServerKey)
 	if err != nil {
 		return err

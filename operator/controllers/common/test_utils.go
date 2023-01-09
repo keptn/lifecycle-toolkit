@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"

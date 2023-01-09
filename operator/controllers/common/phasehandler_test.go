@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

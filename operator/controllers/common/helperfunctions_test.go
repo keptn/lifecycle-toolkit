@@ -3,8 +3,8 @@ package common
 import (
 	"testing"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/types"
 )

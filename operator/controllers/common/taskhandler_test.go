@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"

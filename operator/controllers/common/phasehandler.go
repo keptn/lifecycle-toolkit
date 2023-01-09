@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/interfaces"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/client-go/tools/record"

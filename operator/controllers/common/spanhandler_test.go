@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"sigs.k8s.io/controller-runtime/pkg/client"

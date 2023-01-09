@@ -1,0 +1,11 @@
+# Ignore build and test binaries.
+bin/
+.gitignore
+PROJECT
+README.md
+kubebuilder
+Makefile
+.dockerignore
+test/
+config/
+Dockerfile

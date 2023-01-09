@@ -1,23 +1,20 @@
 package v1alpha1
 
 import (
-	"errors"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
 
-	"github.com/keptn/lifecycle-toolkit/operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
-
-var ErrCastTo = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
-var ErrCastFrom = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha1")
 
 // ConvertTo converts the src v1alpha1.KeptnEvaluationProvider to the hub version (v1alpha2.KeptnEvaluationProvider)
 func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnEvaluationProvider)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, ErrCastTo)
+		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnEvaluationProviderErr)
 	}
 
 	// Copy equal stuff to new object

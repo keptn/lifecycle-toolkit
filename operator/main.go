@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
@@ -39,7 +38,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
-
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"

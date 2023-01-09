@@ -124,7 +124,7 @@ func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnAppVersion)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnAppVersion to v1alpha1. Got type %T", srcRaw)
+		return fmt.Errorf("cannot cast KeptnAppVersion to v1alpha2. Got type %T", srcRaw)
 	}
 
 	// Copy equal stuff to new object

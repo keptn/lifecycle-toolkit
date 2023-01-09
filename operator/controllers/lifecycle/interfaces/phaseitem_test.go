@@ -77,10 +77,10 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentTasksFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentTaskStatusFunc: func() []v1alpha2.TaskStatus {
+		GetPreDeploymentTaskStatusFunc: func() []v1alpha2.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentTaskStatusFunc: func() []v1alpha2.TaskStatus {
+		GetPostDeploymentTaskStatusFunc: func() []v1alpha2.ItemStatus {
 			return nil
 		},
 		GetPreDeploymentEvaluationsFunc: func() []string {
@@ -89,10 +89,10 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationsFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.EvaluationStatus {
+		GetPreDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.EvaluationStatus {
+		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.ItemStatus {
 			return nil
 		},
 		GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) v1alpha2.KeptnTask {

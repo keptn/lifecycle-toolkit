@@ -45,34 +45,25 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus               common.KeptnState  `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus            []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []EvaluationStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []EvaluationStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	StartTime                          metav1.Time        `json:"startTime,omitempty"`
-	EndTime                            metav1.Time        `json:"endTime,omitempty"`
-	CurrentPhase                       string             `json:"currentPhase,omitempty"`
+	PostDeploymentStatus               common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	PreDeploymentTaskStatus            []ItemStatus      `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []ItemStatus      `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []ItemStatus      `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []ItemStatus      `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	StartTime                          metav1.Time       `json:"startTime,omitempty"`
+	EndTime                            metav1.Time       `json:"endTime,omitempty"`
+	CurrentPhase                       string            `json:"currentPhase,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
-type TaskStatus struct {
-	TaskDefinitionName string `json:"taskDefinitionName,omitempty"`
+type ItemStatus struct {
+	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
-	TaskName  string            `json:"taskName,omitempty"`
+	Name      string            `json:"name,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
-}
-
-type EvaluationStatus struct {
-	EvaluationDefinitionName string `json:"evaluationDefinitionName,omitempty"`
-	// +kubebuilder:default:=Pending
-	Status         common.KeptnState `json:"status,omitempty"`
-	EvaluationName string            `json:"evaluationName,omitempty"`
-	StartTime      metav1.Time       `json:"startTime,omitempty"`
-	EndTime        metav1.Time       `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -190,25 +181,13 @@ func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
 	return !i.Status.EndTime.IsZero()
 }
 
-func (i *TaskStatus) SetStartTime() {
+func (i *ItemStatus) SetStartTime() {
 	if i.StartTime.IsZero() {
 		i.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *TaskStatus) SetEndTime() {
-	if i.EndTime.IsZero() {
-		i.EndTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (i *EvaluationStatus) SetStartTime() {
-	if i.StartTime.IsZero() {
-		i.StartTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (i *EvaluationStatus) SetEndTime() {
+func (i *ItemStatus) SetEndTime() {
 	if i.EndTime.IsZero() {
 		i.EndTime = metav1.NewTime(time.Now().UTC())
 	}

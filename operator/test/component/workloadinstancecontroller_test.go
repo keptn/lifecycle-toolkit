@@ -360,11 +360,11 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					PostDeploymentEvaluationStatus: apicommon.StatePending,
 					CurrentPhase:                   apicommon.PhaseWorkloadPreEvaluation.ShortName,
 					Status:                         apicommon.StateProgressing,
-					PreDeploymentEvaluationTaskStatus: []klcv1alpha2.EvaluationStatus{
+					PreDeploymentEvaluationTaskStatus: []klcv1alpha2.ItemStatus{
 						{
-							EvaluationName:           "pre-eval-eval-def",
-							Status:                   apicommon.StateProgressing,
-							EvaluationDefinitionName: "eval-def",
+							Name:           "pre-eval-eval-def",
+							Status:         apicommon.StateProgressing,
+							DefinitionName: "eval-def",
 						},
 					},
 				}

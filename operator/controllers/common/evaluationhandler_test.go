@@ -25,7 +25,7 @@ func TestEvaluationHandler(t *testing.T) {
 		name            string
 		object          client.Object
 		createAttr      EvaluationCreateAttributes
-		wantStatus      []v1alpha2.EvaluationStatus
+		wantStatus      []v1alpha2.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		evalObj         v1alpha2.KeptnEvaluation
 		wantErr         error
@@ -53,7 +53,7 @@ func TestEvaluationHandler(t *testing.T) {
 				EvaluationDefinition: "",
 				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus:      []v1alpha2.EvaluationStatus(nil),
+			wantStatus:      []v1alpha2.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
@@ -74,11 +74,11 @@ func TestEvaluationHandler(t *testing.T) {
 				EvaluationDefinition: "eval-def",
 				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.EvaluationStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					EvaluationDefinitionName: "eval-def",
-					Status:                   apicommon.StatePending,
-					EvaluationName:           "pre-eval-eval-def-",
+					DefinitionName: "eval-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-eval-eval-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
@@ -96,11 +96,11 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.EvaluationStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
 						{
-							EvaluationDefinitionName: "eval-def",
-							Status:                   apicommon.StateSucceeded,
-							EvaluationName:           "pre-eval-eval-def-",
+							DefinitionName: "eval-def",
+							Status:         apicommon.StateSucceeded,
+							Name:           "pre-eval-eval-def-",
 						},
 					},
 				},
@@ -111,11 +111,11 @@ func TestEvaluationHandler(t *testing.T) {
 				EvaluationDefinition: "eval-def",
 				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.EvaluationStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					EvaluationDefinitionName: "eval-def",
-					Status:                   apicommon.StateSucceeded,
-					EvaluationName:           "pre-eval-eval-def-",
+					DefinitionName: "eval-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "pre-eval-eval-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
@@ -136,11 +136,11 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.EvaluationStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
 						{
-							EvaluationDefinitionName: "eval-def",
-							Status:                   apicommon.StateProgressing,
-							EvaluationName:           "pre-eval-eval-def-",
+							DefinitionName: "eval-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "pre-eval-eval-def-",
 						},
 					},
 				},
@@ -166,11 +166,11 @@ func TestEvaluationHandler(t *testing.T) {
 				EvaluationDefinition: "eval-def",
 				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.EvaluationStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					EvaluationDefinitionName: "eval-def",
-					Status:                   apicommon.StateFailed,
-					EvaluationName:           "pre-eval-eval-def-",
+					DefinitionName: "eval-def",
+					Status:         apicommon.StateFailed,
+					Name:           "pre-eval-eval-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Failed: 1},
@@ -194,11 +194,11 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.EvaluationStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
 						{
-							EvaluationDefinitionName: "eval-def",
-							Status:                   apicommon.StateProgressing,
-							EvaluationName:           "pre-eval-eval-def-",
+							DefinitionName: "eval-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "pre-eval-eval-def-",
 						},
 					},
 				},
@@ -217,11 +217,11 @@ func TestEvaluationHandler(t *testing.T) {
 				EvaluationDefinition: "eval-def",
 				CheckType:            apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.EvaluationStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					EvaluationDefinitionName: "eval-def",
-					Status:                   apicommon.StateSucceeded,
-					EvaluationName:           "pre-eval-eval-def-",
+					DefinitionName: "eval-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "pre-eval-eval-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
@@ -258,8 +258,8 @@ func TestEvaluationHandler(t *testing.T) {
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
 				for j, item := range status {
-					require.Equal(t, tt.wantStatus[j].EvaluationDefinitionName, item.EvaluationDefinitionName)
-					require.True(t, strings.Contains(item.EvaluationName, tt.wantStatus[j].EvaluationName))
+					require.Equal(t, tt.wantStatus[j].DefinitionName, item.DefinitionName)
+					require.True(t, strings.Contains(item.Name, tt.wantStatus[j].Name))
 					require.Equal(t, tt.wantStatus[j].Status, item.Status)
 				}
 			} else {

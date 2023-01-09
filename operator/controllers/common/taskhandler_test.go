@@ -24,7 +24,7 @@ func TestTaskHandler(t *testing.T) {
 		name            string
 		object          client.Object
 		createAttr      TaskCreateAttributes
-		wantStatus      []v1alpha2.TaskStatus
+		wantStatus      []v1alpha2.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		taskObj         v1alpha2.KeptnTask
 		wantErr         error
@@ -51,7 +51,7 @@ func TestTaskHandler(t *testing.T) {
 				TaskDefinition: "",
 				CheckType:      apicommon.PreDeploymentCheckType,
 			},
-			wantStatus:      []v1alpha2.TaskStatus(nil),
+			wantStatus:      []v1alpha2.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
@@ -72,11 +72,11 @@ func TestTaskHandler(t *testing.T) {
 				TaskDefinition: "task-def",
 				CheckType:      apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1alpha2.TaskStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					TaskDefinitionName: "task-def",
-					Status:             apicommon.StatePending,
-					TaskName:           "pre-task-def-",
+					DefinitionName: "task-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-task-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
@@ -94,11 +94,11 @@ func TestTaskHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1alpha2.TaskStatus{
+					PreDeploymentTaskStatus: []v1alpha2.ItemStatus{
 						{
-							TaskDefinitionName: "task-def",
-							Status:             apicommon.StateSucceeded,
-							TaskName:           "pre-task-def-",
+							DefinitionName: "task-def",
+							Status:         apicommon.StateSucceeded,
+							Name:           "pre-task-def-",
 						},
 					},
 				},
@@ -109,11 +109,11 @@ func TestTaskHandler(t *testing.T) {
 				TaskDefinition: "task-def",
 				CheckType:      apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1alpha2.TaskStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					TaskDefinitionName: "task-def",
-					Status:             apicommon.StateSucceeded,
-					TaskName:           "pre-task-def-",
+					DefinitionName: "task-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "pre-task-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
@@ -134,11 +134,11 @@ func TestTaskHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1alpha2.TaskStatus{
+					PreDeploymentTaskStatus: []v1alpha2.ItemStatus{
 						{
-							TaskDefinitionName: "task-def",
-							Status:             apicommon.StateProgressing,
-							TaskName:           "pre-task-def-",
+							DefinitionName: "task-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "pre-task-def-",
 						},
 					},
 				},
@@ -157,11 +157,11 @@ func TestTaskHandler(t *testing.T) {
 				TaskDefinition: "task-def",
 				CheckType:      apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1alpha2.TaskStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					TaskDefinitionName: "task-def",
-					Status:             apicommon.StateFailed,
-					TaskName:           "pre-task-def-",
+					DefinitionName: "task-def",
+					Status:         apicommon.StateFailed,
+					Name:           "pre-task-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Failed: 1},
@@ -182,11 +182,11 @@ func TestTaskHandler(t *testing.T) {
 				},
 				Status: v1alpha2.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1alpha2.TaskStatus{
+					PreDeploymentTaskStatus: []v1alpha2.ItemStatus{
 						{
-							TaskDefinitionName: "task-def",
-							Status:             apicommon.StateProgressing,
-							TaskName:           "pre-task-def-",
+							DefinitionName: "task-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "pre-task-def-",
 						},
 					},
 				},
@@ -205,11 +205,11 @@ func TestTaskHandler(t *testing.T) {
 				TaskDefinition: "task-def",
 				CheckType:      apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1alpha2.TaskStatus{
+			wantStatus: []v1alpha2.ItemStatus{
 				{
-					TaskDefinitionName: "task-def",
-					Status:             apicommon.StateSucceeded,
-					TaskName:           "pre-task-def-",
+					DefinitionName: "task-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "pre-task-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
@@ -242,8 +242,8 @@ func TestTaskHandler(t *testing.T) {
 			status, summary, err := handler.ReconcileTasks(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
 				for j, item := range status {
-					require.Equal(t, tt.wantStatus[j].TaskDefinitionName, item.TaskDefinitionName)
-					require.True(t, strings.Contains(item.TaskName, tt.wantStatus[j].TaskName))
+					require.Equal(t, tt.wantStatus[j].DefinitionName, item.DefinitionName)
+					require.True(t, strings.Contains(item.Name, tt.wantStatus[j].Name))
 					require.Equal(t, tt.wantStatus[j].Status, item.Status)
 				}
 			} else {

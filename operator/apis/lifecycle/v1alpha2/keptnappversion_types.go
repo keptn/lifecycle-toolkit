@@ -54,10 +54,10 @@ type KeptnAppVersionStatus struct {
 	WorkloadOverallStatus              common.KeptnState   `json:"workloadOverallStatus,omitempty"`
 	WorkloadStatus                     []WorkloadStatus    `json:"workloadStatus,omitempty"`
 	CurrentPhase                       string              `json:"currentPhase,omitempty"`
-	PreDeploymentTaskStatus            []TaskStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []TaskStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []EvaluationStatus  `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []EvaluationStatus  `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
 	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
@@ -254,11 +254,11 @@ func (a KeptnAppVersion) GetPostDeploymentTasks() []string {
 	return a.Spec.PostDeploymentTasks
 }
 
-func (a KeptnAppVersion) GetPreDeploymentTaskStatus() []TaskStatus {
+func (a KeptnAppVersion) GetPreDeploymentTaskStatus() []ItemStatus {
 	return a.Status.PreDeploymentTaskStatus
 }
 
-func (a KeptnAppVersion) GetPostDeploymentTaskStatus() []TaskStatus {
+func (a KeptnAppVersion) GetPostDeploymentTaskStatus() []ItemStatus {
 	return a.Status.PostDeploymentTaskStatus
 }
 
@@ -270,11 +270,11 @@ func (a KeptnAppVersion) GetPostDeploymentEvaluations() []string {
 	return a.Spec.PostDeploymentEvaluations
 }
 
-func (a KeptnAppVersion) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
+func (a KeptnAppVersion) GetPreDeploymentEvaluationTaskStatus() []ItemStatus {
 	return a.Status.PreDeploymentEvaluationTaskStatus
 }
 
-func (a KeptnAppVersion) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
+func (a KeptnAppVersion) GetPostDeploymentEvaluationTaskStatus() []ItemStatus {
 	return a.Status.PostDeploymentEvaluationTaskStatus
 }
 

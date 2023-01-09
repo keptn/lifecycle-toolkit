@@ -35,14 +35,14 @@ type EvaluationCreateAttributes struct {
 	CheckType            apicommon.CheckType
 }
 
-func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha2.EvaluationStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes EvaluationCreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
 	}
 
 	var evaluations []string
-	var statuses []klcv1alpha2.EvaluationStatus
+	var statuses []klcv1alpha2.ItemStatus
 
 	switch evaluationCreateAttributes.CheckType {
 	case apicommon.PreDeploymentEvaluationCheckType:
@@ -56,16 +56,16 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	var summary apicommon.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
-	var newStatus []klcv1alpha2.EvaluationStatus
+	var newStatus []klcv1alpha2.ItemStatus
 	for _, evaluationName := range evaluations {
 		var oldstatus apicommon.KeptnState
 		for _, ts := range statuses {
-			if ts.EvaluationDefinitionName == evaluationName {
+			if ts.DefinitionName == evaluationName {
 				oldstatus = ts.Status
 			}
 		}
 
-		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
+		evaluationStatus := GetItemStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha2.KeptnEvaluation{}
 		evaluationExists := false
 
@@ -80,10 +80,10 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		}
 
 		// Check if Evaluation is already created
-		if evaluationStatus.EvaluationName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: piWrapper.GetNamespace()}, evaluation)
+		if evaluationStatus.Name != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.Name, Namespace: piWrapper.GetNamespace()}, evaluation)
 			if err != nil && errors.IsNotFound(err) {
-				evaluationStatus.EvaluationName = ""
+				evaluationStatus.Name = ""
 			} else if err != nil {
 				return nil, summary, err
 			}
@@ -97,7 +97,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 			if err != nil {
 				return nil, summary, err
 			}
-			evaluationStatus.EvaluationName = evaluationName
+			evaluationStatus.Name = evaluationName
 			evaluationStatus.SetStartTime()
 			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
 			if err != nil {

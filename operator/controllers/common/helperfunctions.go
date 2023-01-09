@@ -6,29 +6,16 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-func GetTaskStatus(taskName string, instanceStatus []klcv1alpha2.TaskStatus) klcv1alpha2.TaskStatus {
+func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
+		if status.DefinitionName == name {
 			return status
 		}
 	}
-	return klcv1alpha2.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             apicommon.StatePending,
-		TaskName:           "",
-	}
-}
-
-func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha2.EvaluationStatus) klcv1alpha2.EvaluationStatus {
-	for _, status := range instanceStatus {
-		if status.EvaluationDefinitionName == evaluationName {
-			return status
-		}
-	}
-	return klcv1alpha2.EvaluationStatus{
-		EvaluationDefinitionName: evaluationName,
-		Status:                   apicommon.StatePending,
-		EvaluationName:           "",
+	return klcv1alpha2.ItemStatus{
+		DefinitionName: name,
+		Status:         apicommon.StatePending,
+		Name:           "",
 	}
 }
 

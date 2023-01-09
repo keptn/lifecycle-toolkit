@@ -360,11 +360,13 @@ spec:
                 items:
                   properties:
                     definitionName:
+                      description: name of EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
+                      description: name of Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -381,11 +383,13 @@ spec:
                 items:
                   properties:
                     definitionName:
+                      description: name of EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
+                      description: name of Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -402,11 +406,13 @@ spec:
                 items:
                   properties:
                     definitionName:
+                      description: name of EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
+                      description: name of Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -423,11 +429,13 @@ spec:
                 items:
                   properties:
                     definitionName:
+                      description: name of EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
+                      description: name of Evaluation/Task
                       type: string
                     startTime:
                       format: date-time

@@ -353,6 +353,14 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnEvaluationProvider")
 		os.Exit(1)
 	}
+	if err = (&lifecyclev1alpha2.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
+		os.Exit(1)
+	}
+	if err = (&lifecyclev1alpha2.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	err = meter.RegisterCallback(

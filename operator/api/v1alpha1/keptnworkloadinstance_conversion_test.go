@@ -527,7 +527,7 @@ func TestKeptnWorkloadInstance_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnWorkloadInstance to v1alpha1")
+		require.Contains(t, err.Error(), "cannot cast KeptnWorkloadInstance to v1alpha2")
 	}
 }
 

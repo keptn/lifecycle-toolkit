@@ -167,6 +167,10 @@ jobs:
           name: ${{ matrix.config.name }}-manifest-test
           path: ${{ matrix.config.folder }}/config/rendered/release.yaml
 
+      - run: |
+          ls -la
+          pwd
+
   component_tests:
     name: Component Tests
     needs: prepare_ci_run
@@ -216,6 +220,13 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+
+    - name: Cache build tools
+      id: cache-build-tools
+      uses: actions/cache@v3
+      with:
+        path: ./bin
+        key: build-tools-${{ github.ref_name }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2

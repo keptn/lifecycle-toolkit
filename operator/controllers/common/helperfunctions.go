@@ -6,6 +6,12 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+type CreateAttributes struct {
+	SpanName   string
+	Definition string
+	CheckType  apicommon.CheckType
+}
+
 func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {
@@ -21,4 +27,15 @@ func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1al
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
+}
+
+func GetOldStatus(statuses []klcv1alpha2.ItemStatus, definitionName string) apicommon.KeptnState {
+	var oldstatus apicommon.KeptnState
+	for _, ts := range statuses {
+		if ts.DefinitionName == definitionName {
+			oldstatus = ts.Status
+		}
+	}
+
+	return oldstatus
 }

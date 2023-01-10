@@ -66,6 +66,8 @@ type KeptnAppVersionReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
+//
+//nolint:gocyclo
 func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	r.Log.Info("Searching for Keptn App Version")
@@ -168,12 +170,17 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	// AppVersion is completed at this place
 
+	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
+}
+
+func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
+
 	if !appVersion.IsEndTimeSet() {
 		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
 
-	err = r.Client.Status().Update(ctx, appVersion)
+	err := r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
 	}

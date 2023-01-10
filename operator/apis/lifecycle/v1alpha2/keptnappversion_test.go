@@ -244,6 +244,7 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 	app := KeptnAppVersion{
 		Status: KeptnAppVersionStatus{

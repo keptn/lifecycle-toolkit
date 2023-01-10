@@ -360,13 +360,13 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: name of EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
-                      description: name of Evaluation/Task
+                      description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -383,13 +383,13 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: name of EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
-                      description: name of Evaluation/Task
+                      description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -406,13 +406,13 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: name of EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
-                      description: name of Evaluation/Task
+                      description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
                       format: date-time
@@ -429,13 +429,13 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: name of EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
                       format: date-time
                       type: string
                     name:
-                      description: name of Evaluation/Task
+                      description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
                       format: date-time

@@ -1,3 +1,4 @@
+//nolint:dupl
 package keptnappversion
 
 import (
@@ -19,7 +20,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Conte
 		SpanHandler: r.SpanHandler,
 	}
 
-	taskCreateAttributes := controllercommon.TaskCreateAttributes{
+	taskCreateAttributes := controllercommon.CreateAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateAppTaskSpanName, checkType),
 		CheckType: checkType,
 	}

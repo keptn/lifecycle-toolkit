@@ -1,14 +1,14 @@
 package v1alpha1
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
-	corev1 "k8s.io/api/core/v1"
-	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/stretchr/testify/require"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
 func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {

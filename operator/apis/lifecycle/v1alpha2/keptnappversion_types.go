@@ -372,6 +372,7 @@ func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
 	return fmt.Sprintf("%s-%s", v.Spec.AppName, workloadName)
 }
 
+//nolint:dupl
 func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
 	// no need to deprecate anything when post-eval tasks fail
 	if phase == common.PhaseAppPostEvaluation {

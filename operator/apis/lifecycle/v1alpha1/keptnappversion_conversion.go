@@ -11,6 +11,8 @@ import (
 )
 
 // ConvertTo converts the src v1alpha1.KeptnAppVersion to the hub version (v1alpha2.KeptnAppVersion)
+//
+//nolint:gocyclo
 func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnAppVersion)
 
@@ -121,6 +123,8 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 }
 
 // ConvertFrom converts from the hub version (v1alpha2.KeptnAppVersion) to this version (v1alpha1.KeptnAppVersion)
+//
+//nolint:gocyclo
 func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnAppVersion)
 

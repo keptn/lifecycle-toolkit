@@ -3,7 +3,6 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"strings"
 	"testing"
 
@@ -12,6 +11,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
@@ -601,7 +601,8 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			klcv1alpha2.AddToScheme(scheme.Scheme)
+			err := klcv1alpha2.AddToScheme(scheme.Scheme)
+			require.Nil(t, err)
 			r := &KeptnWorkloadInstanceReconciler{
 				Client: k8sfake.NewClientBuilder().WithLists(tt.list).Build(),
 			}

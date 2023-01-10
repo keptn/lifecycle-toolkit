@@ -32,3 +32,6 @@ manifests/
 /examples/observability/assets/backups/
 
 /dashboards/grafana/output/
+
+## Kubebuilder
+**/kubebuilder

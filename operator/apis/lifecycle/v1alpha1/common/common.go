@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 
@@ -30,6 +31,8 @@ const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25
 const MaxTaskNameLength = 25
 const MaxVersionLength = 12
+
+var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
 
 type KeptnState string
 

@@ -38,9 +38,9 @@ type Certs struct {
 	rootPublicCert *x509.Certificate
 }
 
-// ValidateCerts checks for certificates and keys on cs.SrcData and renews them if needed. The existing (or new)
+// Validate checks for certificates and keys on cs.SrcData and renews them if needed. The existing (or new)
 // certificates will be stored on cs.Data.
-func (cs *Certs) ValidateCerts() error {
+func (cs *Certs) Validate() error {
 	cs.Data = map[string][]byte{}
 	if cs.SrcData != nil {
 		for k, v := range cs.SrcData {

@@ -23,14 +23,17 @@ type certificateSecret struct {
 	secret          *corev1.Secret
 	certificates    *Certs
 	existsInCluster bool
+	clt             client.Client
 }
 
-func newCertificateSecret() *certificateSecret {
-	return &certificateSecret{}
+func newCertificateSecret(clt client.Client) *certificateSecret {
+	return &certificateSecret{
+		clt: clt,
+	}
 }
 
-func (certSecret *certificateSecret) setSecretFromReader(ctx context.Context, apiReader client.Reader, namespace string, log logr.Logger) error {
-	query := kubeutils.NewSecretQuery(ctx, nil, apiReader, log)
+func (certSecret *certificateSecret) setSecretFromReader(ctx context.Context, namespace string, log logr.Logger) error {
+	query := kubeutils.NewSecretQuery(ctx, nil, certSecret.clt, log)
 	secret, err := query.Get(types.NamespacedName{Name: buildSecretName(), Namespace: namespace})
 
 	if k8serrors.IsNotFound(err) {
@@ -58,13 +61,13 @@ func (certSecret *certificateSecret) isRecent() bool {
 	return true
 }
 
-func (certSecret *certificateSecret) validateCertificates(namespace string) error {
+func (certSecret *certificateSecret) setCertificates(namespace string) error {
 	certs := Certs{
 		Domain:  getDomain(namespace),
 		SrcData: certSecret.secret.Data,
 		Now:     time.Now(),
 	}
-	if err := certs.ValidateCerts(); err != nil {
+	if err := certs.Validate(); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -94,7 +97,7 @@ func (certSecret *certificateSecret) isBundleValid(bundle []byte) bool {
 	return len(bundle) != 0 && bytes.Equal(bundle, certSecret.certificates.Data[RootCert])
 }
 
-func (certSecret *certificateSecret) createOrUpdateIfNecessary(ctx context.Context, clt client.Client) error {
+func (certSecret *certificateSecret) createOrUpdateIfNecessary(ctx context.Context) error {
 	if certSecret.isRecent() && certSecret.existsInCluster {
 		return nil
 	}
@@ -103,9 +106,9 @@ func (certSecret *certificateSecret) createOrUpdateIfNecessary(ctx context.Conte
 
 	certSecret.secret.Data = certSecret.certificates.Data
 	if certSecret.existsInCluster {
-		err = clt.Update(ctx, certSecret.secret)
+		err = certSecret.clt.Update(ctx, certSecret.secret)
 	} else {
-		err = clt.Create(ctx, certSecret.secret)
+		err = certSecret.clt.Create(ctx, certSecret.secret)
 	}
 
 	return errors.WithStack(err)
@@ -133,7 +136,7 @@ func (certSecret *certificateSecret) areCRDConversionsValid(crds *apiv1.CustomRe
 }
 
 func (certSecret *certificateSecret) isCRDConversionValid(conversion *apiv1.CustomResourceConversion) bool {
-	if conversion.Strategy == "None" || conversion.Webhook == nil {
+	if conversion.Strategy == apiv1.NoneConverter || conversion.Webhook == nil {
 		return true
 	}
 	return certSecret.isBundleValid(conversion.Webhook.ClientConfig.CABundle)

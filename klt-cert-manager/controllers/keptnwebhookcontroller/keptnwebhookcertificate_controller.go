@@ -23,7 +23,6 @@ type KeptnWebhookCertificateReconciler struct {
 	ctx           context.Context
 	Client        client.Client
 	Scheme        *runtime.Scheme
-	ApiReader     client.Reader
 	CancelMgrFunc context.CancelFunc
 	Log           logr.Logger
 }
@@ -55,15 +54,17 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 		r.Log.Error(err, "could not find CRDs")
 	}
 
-	certSecret := newCertificateSecret()
+	certSecret := newCertificateSecret(r.Client)
 
-	err = certSecret.setSecretFromReader(r.ctx, r.ApiReader, namespace, r.Log)
+	err = certSecret.setSecretFromReader(r.ctx, namespace, r.Log)
 	if err != nil {
+		r.Log.Error(err, "could not get secret")
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
-	err = certSecret.validateCertificates(namespace)
+	err = certSecret.setCertificates(namespace)
 	if err != nil {
+		r.Log.Error(err, "could not validate certificate")
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
@@ -71,14 +72,15 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 
 	areMutatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(mutatingWebhookConfigs)
 	areCRDConversionsConfigValid := certSecret.areCRDConversionsValid(crds)
+	isCertSecretRecent := certSecret.isRecent()
 
-	if certSecret.isRecent() && areMutatingWebhookConfigsValid && areCRDConversionsConfigValid {
+	if isCertSecretRecent && areMutatingWebhookConfigsValid && areCRDConversionsConfigValid {
 		r.Log.Info("secret for certificates up to date, skipping update")
 		r.cancelMgr()
 		return reconcile.Result{RequeueAfter: SuccessDuration}, nil
 	}
 
-	if err = certSecret.createOrUpdateIfNecessary(r.ctx, r.Client); err != nil {
+	if err = certSecret.createOrUpdateIfNecessary(r.ctx); err != nil {
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
@@ -118,7 +120,7 @@ func (r *KeptnWebhookCertificateReconciler) cancelMgr() {
 func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
 	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
-	if err := r.ApiReader.Get(r.ctx, client.ObjectKey{
+	if err := r.Client.Get(r.ctx, client.ObjectKey{
 		Name: Webhookconfig,
 	}, &mutatingWebhook); err != nil {
 		return nil, err
@@ -175,12 +177,12 @@ func (r *KeptnWebhookCertificateReconciler) updateCRDsConfiguration(crds *apiv1.
 
 func (r *KeptnWebhookCertificateReconciler) updateCRDConfiguration(crdName string, bundle []byte) error {
 	var crd apiv1.CustomResourceDefinition
-	if err := r.ApiReader.Get(r.ctx, types.NamespacedName{Name: crdName}, &crd); err != nil {
+	if err := r.Client.Get(r.ctx, types.NamespacedName{Name: crdName}, &crd); err != nil {
 		return err
 	}
 
 	if !hasConversionWebhook(crd) {
-		r.Log.Info("no conversion webhook config for", crdName, "no cert will be provided")
+		r.Log.Info(fmt.Sprintf("no conversion webhook config for %s, no cert will be provided", crdName))
 		return nil
 	}
 

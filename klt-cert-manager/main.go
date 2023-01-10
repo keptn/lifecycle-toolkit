@@ -78,7 +78,6 @@ func main() {
 	if err = (&keptnwebhookcontroller.KeptnWebhookCertificateReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		ApiReader:     mgr.GetAPIReader(),
 		CancelMgrFunc: nil,
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
 	}).SetupWithManager(mgr); err != nil {

@@ -167,10 +167,10 @@ func TestReconcile(t *testing.T) {
 	})
 	t.Run(`update crd successfully with up-to-date secret`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3)
-		cs := newCertificateSecret()
-		_ = cs.setSecretFromReader(context.TODO(), fakeClient, namespace, testr.New(t))
-		_ = cs.validateCertificates(namespace)
-		_ = cs.createOrUpdateIfNecessary(context.TODO(), fakeClient)
+		cs := newCertificateSecret(fakeClient)
+		_ = cs.setSecretFromReader(context.TODO(), namespace, testr.New(t))
+		_ = cs.setCertificates(namespace)
+		_ = cs.createOrUpdateIfNecessary(context.TODO())
 
 		controller, request := prepareController(t, fakeClient)
 		result, err := controller.Reconcile(context.TODO(), request)
@@ -296,7 +296,7 @@ func createValidTestCertData(_ *testing.T) map[string][]byte {
 		Domain: testDomain,
 		Now:    time.Now(),
 	}
-	_ = cert.ValidateCerts()
+	_ = cert.Validate()
 	return cert.Data
 }
 
@@ -312,10 +312,9 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := &KeptnWebhookCertificateReconciler{
-		ctx:       context.TODO(),
-		Client:    clt,
-		ApiReader: clt,
-		Log:       testr.New(t),
+		ctx:    context.TODO(),
+		Client: clt,
+		Log:    testr.New(t),
 	}
 
 	request := reconcile.Request{

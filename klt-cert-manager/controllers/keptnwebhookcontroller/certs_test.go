@@ -18,7 +18,7 @@ func TestCertsValidation(t *testing.T) {
 		Now:    now,
 	}
 
-	require.NoError(t, firstCerts.ValidateCerts())
+	require.NoError(t, firstCerts.Validate())
 	require.Equal(t, len(firstCerts.Data), 5)
 	requireValidCerts(t, domain, now.Add(5*time.Minute), firstCerts.Data[RootCert], firstCerts.Data[ServerCert])
 
@@ -26,7 +26,7 @@ func TestCertsValidation(t *testing.T) {
 		newTime := now.Add(5 * time.Minute)
 
 		newCerts := Certs{Domain: domain, SrcData: firstCerts.Data, Now: newTime}
-		require.NoError(t, newCerts.ValidateCerts())
+		require.NoError(t, newCerts.Validate())
 		requireValidCerts(t, domain, newTime, newCerts.Data[RootCert], newCerts.Data[ServerCert])
 
 		// No changes should have been applied.
@@ -41,7 +41,7 @@ func TestCertsValidation(t *testing.T) {
 		newTime := now.Add((6*24 + 22) * time.Hour) // 6d22h
 
 		newCerts := Certs{Domain: domain, SrcData: firstCerts.Data, Now: newTime}
-		require.NoError(t, newCerts.ValidateCerts())
+		require.NoError(t, newCerts.Validate())
 		requireValidCerts(t, domain, newTime, newCerts.Data[RootCert], newCerts.Data[ServerCert])
 
 		// Server certificates should have been updated.
@@ -56,7 +56,7 @@ func TestCertsValidation(t *testing.T) {
 		newTime := now.Add((364*24 + 22) * time.Hour) // 364d22h
 
 		newCerts := Certs{Domain: domain, SrcData: firstCerts.Data, Now: newTime}
-		require.NoError(t, newCerts.ValidateCerts())
+		require.NoError(t, newCerts.Validate())
 		requireValidCerts(t, domain, newTime, newCerts.Data[RootCert], newCerts.Data[ServerCert])
 
 		// Server certificates should have been updated.

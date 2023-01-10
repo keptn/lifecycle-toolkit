@@ -14,7 +14,7 @@ spec:
   version: "1.2.3"
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha2
-Kind: KeptnAppVersion
+kind: KeptnAppVersion
 metadata:
   name: "some-klt-app-version-1"
 spec:
@@ -36,7 +36,7 @@ spec:
       version: 0.2.7
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
-Kind: KeptnAppVersion
+kind: KeptnAppVersion
 metadata:
   name: "some-klt-app-version-2"
 spec:

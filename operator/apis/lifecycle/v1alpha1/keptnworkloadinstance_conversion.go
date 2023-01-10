@@ -15,7 +15,7 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnWorkloadInstance)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnWorkloadInstanceErr)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnWorkloadInstance)
 	}
 
 	// Copy equal stuff to new object
@@ -111,7 +111,7 @@ func (dst *KeptnWorkloadInstance) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnWorkloadInstance)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnWorkloadInstanceErr)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnWorkloadInstance)
 	}
 
 	// Copy equal stuff to new object

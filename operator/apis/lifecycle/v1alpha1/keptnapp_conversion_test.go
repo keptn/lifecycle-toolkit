@@ -254,7 +254,7 @@ func TestKeptnApp_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, common.CannotCastKeptnAppErr)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnApp)
 	}
 }
 
@@ -267,6 +267,6 @@ func TestKeptnApp_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, common.CannotCastKeptnAppErr)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnApp)
 	}
 }

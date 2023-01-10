@@ -13,7 +13,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnApp)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnAppErr)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnApp)
 	}
 
 	// Copy equal stuff to new object
@@ -45,7 +45,7 @@ func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnApp)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnAppErr)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnApp)
 	}
 
 	// Copy equal stuff to new object

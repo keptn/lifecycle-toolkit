@@ -15,7 +15,7 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnAppVersion)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.CannotCastKeptnAppVersionErr)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnAppVersion)
 	}
 
 	// Copy equal stuff to new object
@@ -125,7 +125,7 @@ func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnAppVersion)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.CannotCastKeptnAppVersionErr)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnAppVersion)
 	}
 
 	// Copy equal stuff to new object

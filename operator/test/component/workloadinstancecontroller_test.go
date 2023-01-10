@@ -352,7 +352,12 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err = k8sClient.Create(context.TODO(), wi)
 				Expect(err).To(BeNil())
 
-				wi.Status = klcv1alpha2.KeptnWorkloadInstanceStatus{
+				wi2 := &klcv1alpha2.KeptnWorkloadInstance{}
+				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: wi.Namespace, Name: wi.Name}, wi2)
+				Expect(err).To(BeNil())
+				Expect(wi2).To(Not(BeNil()))
+
+				wi2.Status = klcv1alpha2.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            apicommon.StateSucceeded,
 					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
 					DeploymentStatus:               apicommon.StatePending,
@@ -369,12 +374,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					},
 				}
 
-				wi2 := &klcv1alpha2.KeptnWorkloadInstance{}
-				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: wi.Namespace, Name: wi.Name}, wi2)
-				Expect(err).To(BeNil())
-				Expect(wi2).To(BeNil())
-
-				err = k8sClient.Status().Update(ctx, wi)
+				err = k8sClient.Status().Update(ctx, wi2)
 				Expect(err).To(BeNil())
 
 				By("Ensuring all phases after pre-eval checks are deprecated")

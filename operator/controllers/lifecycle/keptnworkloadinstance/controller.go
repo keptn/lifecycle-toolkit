@@ -93,7 +93,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
 	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
 
 	workloadInstance.SetSpanAttributes(span)
 

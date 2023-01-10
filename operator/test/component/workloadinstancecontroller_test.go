@@ -369,6 +369,11 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					},
 				}
 
+				wi2 := &klcv1alpha2.KeptnWorkloadInstance{}
+				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: wi.Namespace, Name: wi.Name}, wi2)
+				Expect(err).To(BeNil())
+				Expect(wi2).To(BeNil())
+
 				err = k8sClient.Status().Update(ctx, wi)
 				Expect(err).To(BeNil())
 

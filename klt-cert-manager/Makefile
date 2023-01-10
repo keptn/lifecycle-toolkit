@@ -1,4 +1,6 @@
 
+# Image URL to use all building/pushing image targets
+IMG ?= klc-certmanager:latest
 # RELEASE_REGISTRY is the container registry to push into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
@@ -7,6 +9,10 @@ RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*
 RELEASE_IMAGE:=keptn-cert-operator:$(TAG)
 
 ARCHS = amd64 arm64
+COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
+BUILDENVVAR=CGO_ENABLED=0
+
+VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.25.0
@@ -110,9 +116,9 @@ ENVTEST ?= $(LOCALBIN)/setup-envtest
 ## Tool Versions
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION ?= v4.5.7
+KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION ?= v0.9.2
+CONTROLLER_TOOLS_VERSION?=v0.10.0
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize

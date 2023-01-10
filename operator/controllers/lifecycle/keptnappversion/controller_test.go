@@ -30,7 +30,7 @@ const CONTEXTID contextID = "start"
 // this test checks if the chain of reconcile events is correct
 func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
-	r, eventChannel, tracer, _ := setupReconciler(t)
+	r, eventChannel, tracer, _ := setupReconciler()
 
 	tests := []struct {
 		name       string
@@ -137,7 +137,7 @@ func createFinishedAppVersionStatus() lfcv1alpha2.KeptnAppVersionStatus {
 	}
 }
 
-func setupReconcilerWithMeters(t *testing.T) *KeptnAppVersionReconciler {
+func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -157,7 +157,7 @@ func setupReconcilerWithMeters(t *testing.T) *KeptnAppVersionReconciler {
 	return r
 }
 
-func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *interfacesfake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler() (*KeptnAppVersionReconciler, chan string, *interfacesfake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -178,10 +178,8 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *in
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
 	}
 
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("Reconcile() error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
 		Client:      fakeClient,
@@ -197,7 +195,7 @@ func setupReconciler(t *testing.T) (*KeptnAppVersionReconciler, chan string, *in
 
 func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 
-	r := setupReconcilerWithMeters(t)
+	r := setupReconcilerWithMeters()
 	type args struct {
 		ctx        context.Context
 		appVersion *lfcv1alpha2.KeptnAppVersion

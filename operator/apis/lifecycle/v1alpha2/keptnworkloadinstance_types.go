@@ -68,7 +68,7 @@ type ItemStatus struct {
 	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
-	// name of Evaluation/Task
+	// Name is the name of the Evaluation/Task
 	Name      string      `json:"name,omitempty"`
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	EndTime   metav1.Time `json:"endTime,omitempty"`

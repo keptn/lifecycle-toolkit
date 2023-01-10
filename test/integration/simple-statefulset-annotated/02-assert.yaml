@@ -12,5 +12,5 @@ status:
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
     - status: Succeeded
-      taskDefinitionName: pre-deployment-hello
+      definitionName: pre-deployment-hello
   status: Succeeded

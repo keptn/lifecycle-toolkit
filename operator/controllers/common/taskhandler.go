@@ -35,7 +35,7 @@ type TaskCreateAttributes struct {
 	CheckType      apicommon.CheckType
 }
 
-func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha2.TaskStatus, apicommon.StatusSummary, error) {
+func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes TaskCreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -47,7 +47,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	}
 
 	var tasks []string
-	var statuses []klcv1alpha2.TaskStatus
+	var statuses []klcv1alpha2.ItemStatus
 
 	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
@@ -61,16 +61,16 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha2.TaskStatus
+	var newStatus []klcv1alpha2.ItemStatus
 	for _, taskDefinitionName := range tasks {
 		var oldstatus apicommon.KeptnState
 		for _, ts := range statuses {
-			if ts.TaskDefinitionName == taskDefinitionName {
+			if ts.DefinitionName == taskDefinitionName {
 				oldstatus = ts.Status
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
+		taskStatus := GetItemStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha2.KeptnTask{}
 		taskExists := false
 
@@ -85,10 +85,10 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		}
 
 		// Check if Task is already created
-		if taskStatus.TaskName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: piWrapper.GetNamespace()}, task)
+		if taskStatus.Name != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.Name, Namespace: piWrapper.GetNamespace()}, task)
 			if err != nil && errors.IsNotFound(err) {
-				taskStatus.TaskName = ""
+				taskStatus.Name = ""
 			} else if err != nil {
 				return nil, summary, err
 			}
@@ -102,7 +102,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 			if err != nil {
 				return nil, summary, err
 			}
-			taskStatus.TaskName = taskName
+			taskStatus.Name = taskName
 			taskStatus.SetStartTime()
 			_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
 			if err != nil {

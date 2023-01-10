@@ -133,6 +133,9 @@ resources:
   kind: KeptnWorkloadInstance
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2
   version: v1alpha2
+  webhooks:
+    conversion: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true
@@ -142,6 +145,9 @@ resources:
   kind: KeptnAppVersion
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2
   version: v1alpha2
+  webhooks:
+    conversion: true
+    webhookVersion: v1
 - api:
     crdVersion: v1
     namespaced: true

@@ -51,10 +51,10 @@ type KeptnWorkloadInstanceStatus struct {
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
 	PostDeploymentStatus               common.KeptnState   `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus            []TaskStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []TaskStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []EvaluationStatus  `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []EvaluationStatus  `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
+	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
 	StartTime                          metav1.Time         `json:"startTime,omitempty"`
 	EndTime                            metav1.Time         `json:"endTime,omitempty"`
 	CurrentPhase                       string              `json:"currentPhase,omitempty"`
@@ -63,22 +63,15 @@ type KeptnWorkloadInstanceStatus struct {
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
-type TaskStatus struct {
-	TaskDefinitionName string `json:"taskDefinitionName,omitempty"`
+type ItemStatus struct {
+	// DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
-	Status    common.KeptnState `json:"status,omitempty"`
-	TaskName  string            `json:"taskName,omitempty"`
-	StartTime metav1.Time       `json:"startTime,omitempty"`
-	EndTime   metav1.Time       `json:"endTime,omitempty"`
-}
-
-type EvaluationStatus struct {
-	EvaluationDefinitionName string `json:"evaluationDefinitionName,omitempty"`
-	// +kubebuilder:default:=Pending
-	Status         common.KeptnState `json:"status,omitempty"`
-	EvaluationName string            `json:"evaluationName,omitempty"`
-	StartTime      metav1.Time       `json:"startTime,omitempty"`
-	EndTime        metav1.Time       `json:"endTime,omitempty"`
+	Status common.KeptnState `json:"status,omitempty"`
+	// Name is the name of the Evaluation/Task
+	Name      string      `json:"name,omitempty"`
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	EndTime   metav1.Time `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -217,25 +210,13 @@ func (w *KeptnWorkloadInstance) Complete() {
 	w.SetEndTime()
 }
 
-func (t *TaskStatus) SetStartTime() {
-	if t.StartTime.IsZero() {
-		t.StartTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (t *TaskStatus) SetEndTime() {
-	if t.EndTime.IsZero() {
-		t.EndTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (e *EvaluationStatus) SetStartTime() {
+func (e *ItemStatus) SetStartTime() {
 	if e.StartTime.IsZero() {
 		e.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (e *EvaluationStatus) SetEndTime() {
+func (e *ItemStatus) SetEndTime() {
 	if e.EndTime.IsZero() {
 		e.EndTime = metav1.NewTime(time.Now().UTC())
 	}
@@ -281,11 +262,11 @@ func (w KeptnWorkloadInstance) GetPostDeploymentTasks() []string {
 	return w.Spec.PostDeploymentTasks
 }
 
-func (w KeptnWorkloadInstance) GetPreDeploymentTaskStatus() []TaskStatus {
+func (w KeptnWorkloadInstance) GetPreDeploymentTaskStatus() []ItemStatus {
 	return w.Status.PreDeploymentTaskStatus
 }
 
-func (w KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []TaskStatus {
+func (w KeptnWorkloadInstance) GetPostDeploymentTaskStatus() []ItemStatus {
 	return w.Status.PostDeploymentTaskStatus
 }
 
@@ -297,11 +278,11 @@ func (w KeptnWorkloadInstance) GetPostDeploymentEvaluations() []string {
 	return w.Spec.PostDeploymentEvaluations
 }
 
-func (w KeptnWorkloadInstance) GetPreDeploymentEvaluationTaskStatus() []EvaluationStatus {
+func (w KeptnWorkloadInstance) GetPreDeploymentEvaluationTaskStatus() []ItemStatus {
 	return w.Status.PreDeploymentEvaluationTaskStatus
 }
 
-func (w KeptnWorkloadInstance) GetPostDeploymentEvaluationTaskStatus() []EvaluationStatus {
+func (w KeptnWorkloadInstance) GetPostDeploymentEvaluationTaskStatus() []ItemStatus {
 	return w.Status.PostDeploymentEvaluationTaskStatus
 }
 

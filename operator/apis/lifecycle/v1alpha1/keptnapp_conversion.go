@@ -3,6 +3,7 @@ package v1alpha1
 import (
 	"fmt"
 
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
@@ -12,7 +13,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1alpha2.KeptnApp)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnApp to v1alpha2. Got type %T", dstRaw)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnApp)
 	}
 
 	// Copy equal stuff to new object
@@ -44,7 +45,7 @@ func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1alpha2.KeptnApp)
 
 	if !ok {
-		return fmt.Errorf("cannot cast KeptnApp to v1alpha1. Got type %T", srcRaw)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnApp)
 	}
 
 	// Copy equal stuff to new object

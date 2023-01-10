@@ -3,6 +3,7 @@ package v1alpha1
 import (
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -253,7 +254,7 @@ func TestKeptnApp_ConvertFrom_Errorcase(t *testing.T) {
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha1")
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnApp)
 	}
 }
 
@@ -266,6 +267,6 @@ func TestKeptnApp_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.Contains(t, err.Error(), "cannot cast KeptnApp to v1alpha2")
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnApp)
 	}
 }

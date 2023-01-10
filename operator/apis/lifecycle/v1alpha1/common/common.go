@@ -33,6 +33,9 @@ const MaxTaskNameLength = 25
 const MaxVersionLength = 12
 
 var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot be cast KeptnEvaluationProvider to v1alpha2")
+var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1alpha2")
+var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha2")
+var ErrCannotCastKeptnWorkloadInstance = errors.New("cannot cast KeptnWorkloadInstance to v1alpha2")
 
 type KeptnState string
 

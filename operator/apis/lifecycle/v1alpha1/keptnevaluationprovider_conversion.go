@@ -2,6 +2,7 @@ package v1alpha1
 
 import (
 	"fmt"
+
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	corev1 "k8s.io/api/core/v1"
 

@@ -29,6 +29,7 @@ type EvaluationHandler struct {
 	SpanHandler ISpanHandler
 }
 
+//nolint:gocognit
 func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {

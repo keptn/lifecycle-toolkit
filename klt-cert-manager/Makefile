@@ -110,7 +110,7 @@ ENVTEST ?= $(LOCALBIN)/setup-envtest
 ## Tool Versions
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION ?= v3.8.7
+KUSTOMIZE_VERSION ?= v3.8.10
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 CONTROLLER_TOOLS_VERSION ?= v0.9.2
 

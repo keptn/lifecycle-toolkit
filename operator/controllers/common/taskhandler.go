@@ -29,7 +29,7 @@ type TaskHandler struct {
 	SpanHandler ISpanHandler
 }
 
-//nolint:gocognit
+//nolint:gocognit,gocyclo
 func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {

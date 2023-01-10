@@ -128,55 +128,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			return ctrl.Result{Requeue: false}, err2
 		}
 
-		r.Log.Info("Metric Provider selected: " + evaluationDefinition.Spec.Source)
-
-		statusSummary := apicommon.StatusSummary{}
-		statusSummary.Total = len(evaluationDefinition.Spec.Objectives)
-		newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
-
-		if evaluation.Status.EvaluationStatus == nil {
-			evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
-		}
-
-		for _, query := range evaluationDefinition.Spec.Objectives {
-			if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
-				evaluation.AddEvaluationStatus(query)
-			}
-			if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
-				statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
-				newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
-				continue
-			}
-			// resolving the SLI value
-			value, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
-			statusItem := &klcv1alpha2.EvaluationStatusItem{
-				Value:  value,
-				Status: apicommon.StateFailed,
-			}
-			if err != nil {
-				statusItem.Message = err.Error()
-				statusItem.Status = apicommon.StateFailed
-			}
-			// Evaluating SLO
-			check, err := checkValue(query, statusItem)
-			if err != nil {
-				statusItem.Message = err.Error()
-				r.Log.Error(err, "Could not check query result")
-			}
-			if check {
-				statusItem.Status = apicommon.StateSucceeded
-			}
-			statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
-			newStatus[query.Name] = *statusItem
-		}
-
-		evaluation.Status.RetryCount++
-		evaluation.Status.EvaluationStatus = newStatus
-		if apicommon.GetOverallState(statusSummary) == apicommon.StateSucceeded {
-			evaluation.Status.OverallStatus = apicommon.StateSucceeded
-		} else {
-			evaluation.Status.OverallStatus = apicommon.StateProgressing
-		}
+		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition, provider, evaluationProvider)
 
 	}
 
@@ -201,6 +153,63 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	return ctrl.Result{}, err
 
+}
+
+func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.KeptnEvaluation {
+	statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
+	newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
+
+	if evaluation.Status.EvaluationStatus == nil {
+		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
+	}
+
+	for _, query := range evaluationDefinition.Spec.Objectives {
+		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider, evaluationProvider)
+	}
+
+	evaluation.Status.RetryCount++
+	evaluation.Status.EvaluationStatus = newStatus
+	if apicommon.GetOverallState(statusSummary) == apicommon.StateSucceeded {
+		evaluation.Status.OverallStatus = apicommon.StateSucceeded
+	} else {
+		evaluation.Status.OverallStatus = apicommon.StateProgressing
+	}
+
+	return evaluation
+}
+
+func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
+	if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
+		evaluation.AddEvaluationStatus(query)
+	}
+	if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
+		statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
+		newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
+		return newStatus, statusSummary
+	}
+	// resolving the SLI value
+	value, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
+	statusItem := &klcv1alpha2.EvaluationStatusItem{
+		Value:  value,
+		Status: apicommon.StateFailed,
+	}
+	if err != nil {
+		statusItem.Message = err.Error()
+		statusItem.Status = apicommon.StateFailed
+	}
+	// Evaluating SLO
+	check, err := checkValue(query, statusItem)
+	if err != nil {
+		statusItem.Message = err.Error()
+		r.Log.Error(err, "Could not check query result")
+	}
+	if check {
+		statusItem.Status = apicommon.StateSucceeded
+	}
+	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
+	newStatus[query.Name] = *statusItem
+
+	return newStatus, statusSummary
 }
 
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {

@@ -19,7 +19,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 		SpanHandler: r.SpanHandler,
 	}
 
-	evaluationCreateAttributes := controllercommon.EvaluationCreateAttributes{
+	evaluationCreateAttributes := controllercommon.CreateAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,
 	}

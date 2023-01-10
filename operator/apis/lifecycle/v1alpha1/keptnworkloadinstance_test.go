@@ -12,6 +12,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+//nolint:dupl
 func TestKeptnWorkloadInstance(t *testing.T) {
 	workload := &KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{

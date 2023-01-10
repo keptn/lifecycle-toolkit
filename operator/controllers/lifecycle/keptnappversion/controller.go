@@ -168,12 +168,17 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	// AppVersion is completed at this place
 
+	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
+}
+
+func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
+
 	if !appVersion.IsEndTimeSet() {
 		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
 
-	err = r.Client.Status().Update(ctx, appVersion)
+	err := r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
 	}

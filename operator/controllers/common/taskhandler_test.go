@@ -23,7 +23,7 @@ func TestTaskHandler(t *testing.T) {
 	tests := []struct {
 		name            string
 		object          client.Object
-		createAttr      TaskCreateAttributes
+		createAttr      CreateAttributes
 		wantStatus      []v1alpha2.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		taskObj         v1alpha2.KeptnTask
@@ -35,7 +35,7 @@ func TestTaskHandler(t *testing.T) {
 			name:            "cannot unwrap object",
 			object:          &v1alpha2.KeptnTask{},
 			taskObj:         v1alpha2.KeptnTask{},
-			createAttr:      TaskCreateAttributes{},
+			createAttr:      CreateAttributes{},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
@@ -46,10 +46,10 @@ func TestTaskHandler(t *testing.T) {
 			name:    "no tasks",
 			object:  &v1alpha2.KeptnAppVersion{},
 			taskObj: v1alpha2.KeptnTask{},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				TaskDefinition: "",
-				CheckType:      apicommon.PreDeploymentCheckType,
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				Definition: "",
+				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus:      []v1alpha2.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
@@ -67,10 +67,10 @@ func TestTaskHandler(t *testing.T) {
 				},
 			},
 			taskObj: v1alpha2.KeptnTask{},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				TaskDefinition: "task-def",
-				CheckType:      apicommon.PreDeploymentCheckType,
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				Definition: "task-def",
+				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha2.ItemStatus{
 				{
@@ -104,10 +104,10 @@ func TestTaskHandler(t *testing.T) {
 				},
 			},
 			taskObj: v1alpha2.KeptnTask{},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				TaskDefinition: "task-def",
-				CheckType:      apicommon.PreDeploymentCheckType,
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				Definition: "task-def",
+				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha2.ItemStatus{
 				{
@@ -152,10 +152,10 @@ func TestTaskHandler(t *testing.T) {
 					Status: apicommon.StateFailed,
 				},
 			},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				TaskDefinition: "task-def",
-				CheckType:      apicommon.PreDeploymentCheckType,
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				Definition: "task-def",
+				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha2.ItemStatus{
 				{
@@ -200,10 +200,10 @@ func TestTaskHandler(t *testing.T) {
 					Status: apicommon.StateSucceeded,
 				},
 			},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				TaskDefinition: "task-def",
-				CheckType:      apicommon.PreDeploymentCheckType,
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				Definition: "task-def",
+				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha2.ItemStatus{
 				{
@@ -261,14 +261,14 @@ func TestTaskHandler_createTask(t *testing.T) {
 	tests := []struct {
 		name       string
 		object     client.Object
-		createAttr TaskCreateAttributes
+		createAttr CreateAttributes
 		wantName   string
 		wantErr    error
 	}{
 		{
 			name:       "cannot unwrap object",
 			object:     &v1alpha2.KeptnEvaluation{},
-			createAttr: TaskCreateAttributes{},
+			createAttr: CreateAttributes{},
 			wantName:   "",
 			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
@@ -284,10 +284,10 @@ func TestTaskHandler_createTask(t *testing.T) {
 					},
 				},
 			},
-			createAttr: TaskCreateAttributes{
-				SpanName:       "",
-				CheckType:      apicommon.PreDeploymentCheckType,
-				TaskDefinition: "task-def",
+			createAttr: CreateAttributes{
+				SpanName:   "",
+				CheckType:  apicommon.PreDeploymentCheckType,
+				Definition: "task-def",
 			},
 			wantName: "pre-task-def-",
 			wantErr:  nil,

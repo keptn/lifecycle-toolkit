@@ -296,11 +296,7 @@ func createValidTestCertData(_ *testing.T) map[string][]byte {
 		Domain: testDomain,
 		Now:    time.Now(),
 	}
-<<<<<<< HEAD
 	_ = cert.Validate()
-=======
-	_ = cert.ValidateCerts()
->>>>>>> 757fc37 (feat: added logic for cert handling)
 	return cert.Data
 }
 

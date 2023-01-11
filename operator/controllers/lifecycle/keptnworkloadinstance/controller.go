@@ -27,6 +27,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -91,7 +92,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
 	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
 
 	workloadInstance.SetSpanAttributes(span)
 
@@ -141,8 +141,17 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		SpanHandler: r.SpanHandler,
 	}
 
+	client := openfeature.NewClient("klt")
+
+	appDeployTraceEnabled, err := client.StringValue(context.TODO(), "spanVerbosityLevel", "", openfeature.NewEvaluationContext("spanVerbosityLevel", map[string]interface{}{
+		"namespace": "prod",
+	}))
+	if err != nil {
+		r.Log.Error(err, "Could not get otel-collector-url from OpenFeature")
+	}
+
 	// set the App trace id if not already set
-	if len(workloadInstance.Spec.TraceId) < 1 {
+	if len(workloadInstance.Spec.TraceId) < 1 && appDeployTraceEnabled == "debug" {
 		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
 		if appDeploymentTraceID != nil {
 			workloadInstance.Spec.TraceId = appDeploymentTraceID

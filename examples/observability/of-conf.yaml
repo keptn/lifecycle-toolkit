@@ -1,0 +1,28 @@
+apiVersion: core.openfeature.dev/v1alpha2
+kind: FeatureFlagConfiguration
+metadata:
+  name: klt-config
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    control-plane: controller-manager
+spec:
+  featureFlagSpec:
+    flags:
+      spanVerbosityLevel:
+        variants:
+          debug: "debug"
+          info: "info"
+        defaultVariant: debug
+        state: ENABLED
+        targeting:
+          if:
+          - "$ref": namespaceRule
+          - debug
+          - info
+    "$evaluators":
+      namespaceRule:
+        in:
+        - "dev"
+        - var:
+          - namespace
+  

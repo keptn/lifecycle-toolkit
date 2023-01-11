@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: metrics-operator-system
+  name: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14,7 +14,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -28,7 +28,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,7 +36,7 @@ metadata:
   labels:
     app: keptn-metrics-apiserver
   name: keptn-metrics-apiserver
-  namespace: metrics-operator-system
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   replicas: 1
   selector:
@@ -82,19 +82,19 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: keptn-metrics-apiserver
-  namespace: metrics-operator-system
+  namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: keptn-metrics-apiserver
-  namespace: metrics-operator-system
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   ports:
     - name: https
@@ -113,7 +113,7 @@ metadata:
 spec:
   service:
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
   group: custom.metrics.k8s.io
   version: v1beta1
   insecureSkipTLSVerify: true
@@ -127,7 +127,7 @@ metadata:
 spec:
   service:
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
   group: custom.metrics.k8s.io
   version: v1beta2
   insecureSkipTLSVerify: true
@@ -141,7 +141,7 @@ metadata:
 spec:
   service:
     name: keptn-metrics-apiserver
-    namespace: metrics-operator-system
+    namespace: keptn-lifecycle-toolkit-system
   group: external.metrics.k8s.io
   version: v1beta1
   insecureSkipTLSVerify: true

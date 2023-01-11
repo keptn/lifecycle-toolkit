@@ -1,0 +1,6 @@
+
+podtato-head/
+prom-secret
+kubeconfig.yaml
+remediation_trigger.json
+examples/

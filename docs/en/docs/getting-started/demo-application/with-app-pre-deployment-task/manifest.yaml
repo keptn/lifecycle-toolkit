@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-arm
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-arm
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/version: "0.1.2"

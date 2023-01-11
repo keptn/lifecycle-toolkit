@@ -33,10 +33,10 @@ patchesStrategicMerge:
 #- patches/cainjection_in_keptntasks.yaml
 # - patches/cainjection_in_keptnapps.yaml
 #- patches/cainjection_in_keptnworkloads.yaml
-- patches/cainjection_in_keptnworkloadinstances.yaml
-- patches/cainjection_in_keptnappversions.yaml
+#- patches/cainjection_in_keptnworkloadinstances.yaml
+#- patches/cainjection_in_keptnappversions.yaml
 #- patches/cainjection_in_keptnevaluationdefinitions.yaml
-- patches/cainjection_in_keptnevaluationproviders.yaml
+#- patches/cainjection_in_keptnevaluationproviders.yaml
 #- patches/cainjection_in_keptnevaluations.yaml
 #+kubebuilder:scaffold:crdkustomizecainjectionpatch
 

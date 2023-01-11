@@ -2,13 +2,16 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/gorilla/mux"
 	keptnprovider "github.com/keptn/lifecycle-toolkit/metrics-adapter/pkg/provider"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/component-base/logs"
 	"k8s.io/klog/v2"
@@ -43,7 +46,6 @@ func main() {
 	defer logs.FlushLogs()
 
 	go serveMetrics()
-
 	go recordMetrics()
 
 	fmt.Println("Starting Keptn Metrics Adapter")
@@ -84,11 +86,15 @@ func (a *KeptnAdapter) makeProviderOrDie() provider.CustomMetricsProvider {
 }
 
 func serveMetrics() {
+
 	klog.Infof("serving metrics at localhost:9999/metrics")
 
+	router := mux.NewRouter()
+	router.Path("/metrics").Handler(promhttp.Handler())
+	router.Path("/api/v1/metrics/{namespace}/{metric}").HandlerFunc(returnMetric)
 	http.Handle("/metrics", promhttp.Handler())
 
-	err := http.ListenAndServe(":9999", nil)
+	err := http.ListenAndServe(":9999", router)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return
@@ -132,4 +138,32 @@ func recordMetrics() {
 
 func CleanUpString(s string) string {
 	return strings.Join(strings.FieldsFunc(s, func(r rune) bool { return !unicode.IsLetter(r) && !unicode.IsDigit(r) }), "_")
+}
+
+func returnMetric(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	namespace := vars["namespace"]
+	metric := vars["metric"]
+
+	scheme := runtime.NewScheme()
+	if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
+		fmt.Println("failed to add metrics to scheme: " + err.Error())
+	}
+	cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
+	if err != nil {
+		fmt.Println("failed to create client")
+		os.Exit(1)
+	}
+	metricObj := metricsv1alpha1.Metric{}
+	err = cl.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
+	if err != nil {
+		fmt.Println("failed to list metrics" + err.Error())
+	}
+
+	data := map[string]string{
+		"namespace": namespace,
+		"metric":    metric,
+		"value":     metricObj.Status.Value,
+	}
+	json.NewEncoder(w).Encode(data)
 }

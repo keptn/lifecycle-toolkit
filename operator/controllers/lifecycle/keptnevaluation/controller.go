@@ -66,8 +66,6 @@ type KeptnEvaluationReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-//
-//nolint:gocyclo
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	r.Log.Info("Reconciling KeptnEvaluation")
@@ -83,25 +81,11 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{}, nil
 	}
 
-	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	ctx, span := r.Tracer.Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.setupEvaluationSpans(ctx, evaluation)
 	defer span.End()
 
-	evaluation.SetSpanAttributes(span)
-
-	evaluation.SetStartTime()
-
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
-		r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
-		err := controllererrors.ErrRetryCountExceeded
-		span.SetStatus(codes.Error, err.Error())
-		evaluation.Status.OverallStatus = apicommon.StateFailed
-		err2 := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
-		if err2 != nil {
-			r.Log.Error(err2, "failed to update finished evaluation metrics")
-		}
+		r.handleEvaluationExceededRetries(ctx, evaluation, span)
 		return ctrl.Result{}, nil
 	}
 
@@ -135,18 +119,10 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
-		err := r.Client.Status().Update(ctx, evaluation)
-		if err != nil {
-			r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
-			span.SetStatus(codes.Error, err.Error())
+		if err := r.handleEvaluationIncomplete(ctx, evaluation, span); err != nil {
 			return ctrl.Result{Requeue: true}, err
 		}
-
-		r.recordEvent("Normal", evaluation, "NotFinished", "has not finished")
-
 		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval.Duration}, nil
-
 	}
 
 	r.Log.Info("Finished Reconciling KeptnEvaluation")
@@ -155,6 +131,40 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	return ctrl.Result{}, err
 
+}
+
+func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation) (context.Context, trace.Span) {
+	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+	ctx, span := r.Tracer.Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
+	evaluation.SetSpanAttributes(span)
+	evaluation.SetStartTime()
+
+	return ctx, span
+}
+
+func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {
+	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
+	err := r.Client.Status().Update(ctx, evaluation)
+	if err != nil {
+		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	r.recordEvent("Normal", evaluation, "NotFinished", "has not finished")
+	return nil
+}
+
+func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) {
+	r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
+	err := controllererrors.ErrRetryCountExceeded
+	span.SetStatus(codes.Error, err.Error())
+	evaluation.Status.OverallStatus = apicommon.StateFailed
+	err2 := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
+	if err2 != nil {
+		r.Log.Error(err2, "failed to update finished evaluation metrics")
+	}
 }
 
 func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.KeptnEvaluation {

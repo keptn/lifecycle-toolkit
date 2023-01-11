@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	keptnprovider "github.com/keptn/lifecycle-toolkit/metrics-adapter/pkg/provider"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"k8s.io/klog/v2"
+	"net/http"
 	"os"
 
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -23,6 +25,8 @@ type KeptnAdapter struct {
 func main() {
 	logs.InitLogs()
 	defer logs.FlushLogs()
+
+	go serveMetrics()
 
 	fmt.Println("Starting Keptn Metrics Adapter")
 	// initialize the flags, with one custom flag for the message
@@ -59,4 +63,15 @@ func (a *KeptnAdapter) makeProviderOrDie() provider.CustomMetricsProvider {
 	}
 
 	return keptnprovider.NewProvider(client, mapper)
+}
+
+func serveMetrics() {
+	klog.Infof("serving metrics at localhost:9999/metrics")
+
+	http.Handle("/metrics", promhttp.Handler())
+	err := http.ListenAndServe(":9999", nil)
+	if err != nil {
+		fmt.Printf("error serving http: %v", err)
+		return
+	}
 }

@@ -20,4 +20,4 @@ spec:
         apiVersion: metrics.keptn.sh/v1alpha1 
       target:
         type: Value
-        value: 865k
+        value: 10k

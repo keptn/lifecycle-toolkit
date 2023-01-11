@@ -72,7 +72,7 @@ type KeptnWorkloadInstanceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 //
-// funlen,gocognit,gocyclo
+//nolint:gocyclo
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for Keptn Workload Instance")
 
@@ -88,15 +88,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
-	//setup otel
-	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
-
-	workloadInstance.SetSpanAttributes(span)
-
-	workloadInstance.SetStartTime()
+	ctx, span := r.setupSpansContexts(ctx, workloadInstance)
 
 	defer func(span trace.Span, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
 		if workloadInstance.IsEndTimeSet() {
@@ -108,51 +100,17 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}(span, workloadInstance)
 
 	//Wait for pre-evaluation checks of App
-	phase := apicommon.PhaseAppPreEvaluation
-
-	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
-	} else if !found {
-		span.SetStatus(codes.Error, "app could not be found")
-		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
-		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
+	if reconcile, err := r.checkPreEvaluationStatusOfApp(ctx, workloadInstance, span); reconcile {
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
-
-	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
-	if !appPreEvalStatus.IsSucceeded() {
-		if appPreEvalStatus.IsFailed() {
-			controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
-			return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
-		}
-		controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
-		return ctrl.Result{Requeue: true, RequeueAfter: 20 * time.Second}, nil
-	}
-
-	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
 
 	//Wait for pre-deployment checks of Workload
-	phase = apicommon.PhaseWorkloadPreDeployment
+	phase := apicommon.PhaseWorkloadPreDeployment
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
 		Log:         r.Log,
 		SpanHandler: r.SpanHandler,
-	}
-
-	// set the App trace id if not already set
-	if len(workloadInstance.Spec.TraceId) < 1 {
-		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
-		if appDeploymentTraceID != nil {
-			workloadInstance.Spec.TraceId = appDeploymentTraceID
-		} else {
-			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
-		}
-		if err := r.Update(ctx, workloadInstance); err != nil {
-			return ctrl.Result{}, err
-		}
 	}
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
@@ -228,7 +186,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// WorkloadInstance is completed at this place
-
 	return r.finishKeptnWorkloadInstanceReconcile(ctx, workloadInstance, spanWorkloadTrace, span, phase)
 }
 
@@ -269,6 +226,60 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha2.KeptnWorkloadInstance{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
+}
+
+func (r *KeptnWorkloadInstanceReconciler) handleUnfinishedAppPreTasks(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
+	if appPreEvalStatus.IsFailed() {
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
+	}
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
+}
+
+func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) (context.Context, trace.Span) {
+	//setup otel
+	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
+	workloadInstance.SetSpanAttributes(span)
+	workloadInstance.SetStartTime()
+
+	return ctx, span
+}
+
+func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, span trace.Span) (bool, error) {
+	phase := apicommon.PhaseAppPreEvaluation
+	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
+		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
+	} else if !found {
+		span.SetStatus(codes.Error, "app could not be found")
+		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
+		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
+	}
+
+	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
+	if !appPreEvalStatus.IsSucceeded() {
+		r.handleUnfinishedAppPreTasks(appPreEvalStatus, phase, workloadInstance)
+		return true, nil
+	}
+
+	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
+
+	// set the App trace id if not already set
+	if len(workloadInstance.Spec.TraceId) < 1 {
+		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
+		if appDeploymentTraceID != nil {
+			workloadInstance.Spec.TraceId = appDeploymentTraceID
+		} else {
+			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
+		}
+		if err := r.Update(ctx, workloadInstance); err != nil {
+			return true, err
+		}
+	}
+	return false, nil
 }
 
 func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha2.KeptnWorkloadInstance) (bool, klcv1alpha2.KeptnAppVersion, error) {

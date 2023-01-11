@@ -88,21 +88,16 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
-	ctx, span := r.setupSpansContexts(ctx, workloadInstance)
-
-	defer func(span trace.Span, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
-		if workloadInstance.IsEndTimeSet() {
-			r.Log.Info("Increasing deployment count")
-			attrs := workloadInstance.GetMetricsAttributes()
-			r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
-		}
-		span.End()
-	}(span, workloadInstance)
+	ctx, span, endSpan := r.setupSpansContexts(ctx, workloadInstance)
+	defer endSpan(span, workloadInstance)
 
 	//Wait for pre-evaluation checks of App
 	if reconcile, err := r.checkPreEvaluationStatusOfApp(ctx, workloadInstance, span); reconcile {
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
+
+	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
+	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
 	//Wait for pre-deployment checks of Workload
 	phase := apicommon.PhaseWorkloadPreDeployment
@@ -112,9 +107,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		Log:         r.Log,
 		SpanHandler: r.SpanHandler,
 	}
-
-	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
-	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
 	// this will be the parent span for all phases of the WorkloadInstance
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, "")
@@ -235,15 +227,25 @@ func (r *KeptnWorkloadInstanceReconciler) handleUnfinishedAppPreTasks(appPreEval
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 }
 
-func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) (context.Context, trace.Span) {
-	//setup otel
-	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
-	workloadInstance.SetSpanAttributes(span)
+func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) (context.Context, trace.Span, func(span trace.Span, workloadInstance *klcv1alpha2.KeptnWorkloadInstance)) {
 	workloadInstance.SetStartTime()
 
-	return ctx, span
+	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
+	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
+
+	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
+
+	endFunc := func(span trace.Span, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
+		if workloadInstance.IsEndTimeSet() {
+			r.Log.Info("Increasing deployment count")
+			attrs := workloadInstance.GetMetricsAttributes()
+			r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+		}
+		span.End()
+	}
+
+	workloadInstance.SetSpanAttributes(span)
+	return ctx, span, endFunc
 }
 
 func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, span trace.Span) (bool, error) {

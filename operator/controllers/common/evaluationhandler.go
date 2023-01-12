@@ -43,7 +43,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	// Check current state of the PrePostEvaluationTasks
 	var newStatus []klcv1alpha2.ItemStatus
 	for _, evaluationName := range evaluations {
-		oldstatus := GetOldStatus(statuses, evaluationName)
+		oldstatus := GetOldStatus(evaluationName, statuses)
 
 		evaluationStatus := GetItemStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha2.KeptnEvaluation{}

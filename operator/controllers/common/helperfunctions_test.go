@@ -157,7 +157,7 @@ func Test_GetOldStatus(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, GetOldStatus(tt.statuses, tt.definitionName), tt.want)
+			require.Equal(t, GetOldStatus(tt.definitionName, tt.statuses), tt.want)
 		})
 	}
 }

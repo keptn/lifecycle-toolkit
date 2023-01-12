@@ -220,7 +220,7 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 		Complete(r)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) handleUnfinishedAppPreTasks(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
+func (r *KeptnWorkloadInstanceReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
 	if appPreEvalStatus.IsFailed() {
 		controllercommon.RecordEvent(r.Recorder, phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
 	}
@@ -263,7 +263,7 @@ func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx cont
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
-		r.handleUnfinishedAppPreTasks(appPreEvalStatus, phase, workloadInstance)
+		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadInstance)
 		return true, nil
 	}
 

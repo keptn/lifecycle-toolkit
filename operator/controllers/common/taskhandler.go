@@ -48,7 +48,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	// Check current state of the PrePostDeploymentTasks
 	var newStatus []klcv1alpha2.ItemStatus
 	for _, taskDefinitionName := range tasks {
-		oldstatus := GetOldStatus(statuses, taskDefinitionName)
+		oldstatus := GetOldStatus(taskDefinitionName, statuses)
 
 		taskStatus := GetItemStatus(taskDefinitionName, statuses)
 		task := &klcv1alpha2.KeptnTask{}

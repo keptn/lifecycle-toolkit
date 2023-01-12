@@ -12,6 +12,7 @@ type CreateAttributes struct {
 	CheckType  apicommon.CheckType
 }
 
+// retrieves the state of the task/evaluation, if it does not exists, it creates a default one
 func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {
@@ -29,10 +30,11 @@ func GetAppVersionName(namespace string, appName string, version string) types.N
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
 }
 
-func GetOldStatus(statuses []klcv1alpha2.ItemStatus, definitionName string) apicommon.KeptnState {
+// retrieves the state of the task/evaluation
+func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {
-		if ts.DefinitionName == definitionName {
+		if ts.DefinitionName == name {
 			oldstatus = ts.Status
 		}
 	}

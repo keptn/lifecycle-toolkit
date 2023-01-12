@@ -22,6 +22,8 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -101,10 +103,10 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			r.Log.Error(err, "could not create Workload Instance")
 			span.SetStatus(codes.Error, err.Error())
-			r.Recorder.Event(workload, "Warning", "WorkloadInstanceNotCreated", fmt.Sprintf("Could not create KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, "WorkloadInstanceNotCreated", "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 			return ctrl.Result{}, err
 		}
-		r.Recorder.Event(workload, "Normal", "WorkloadInstanceCreated", fmt.Sprintf("Created KeptnWorkloadInstance / Namespace: %s, Name: %s ", workloadInstance.Namespace, workloadInstance.Name))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateWorklodInstance, "Normal", workloadInstance, "WorkloadInstanceCreated", "created KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 		workload.Status.CurrentVersion = workload.Spec.Version
 		if err := r.Client.Status().Update(ctx, workload); err != nil {
 			r.Log.Error(err, "could not update Current Version of Workload")

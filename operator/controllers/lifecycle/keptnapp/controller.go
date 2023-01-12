@@ -24,6 +24,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
@@ -105,10 +106,10 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err != nil {
 			r.Log.Error(err, "could not create AppVersion")
 			span.SetStatus(codes.Error, err.Error())
-			r.Recorder.Event(app, "Warning", "AppVersionNotCreated", fmt.Sprintf("Could not create KeptnAppVersion / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+			controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Warning", appVersion, "AppVersionNotCreated", "Could not create KeptnAppVersion", appVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
-		r.Recorder.Event(app, "Normal", "AppVersionCreated", fmt.Sprintf("Created KeptnAppVersion / Namespace: %s, Name: %s ", appVersion.Namespace, appVersion.Name))
+		controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Normal", appVersion, "AppVersionCreated", "created KeptnAppVersion", appVersion.Spec.Version)
 
 		app.Status.CurrentVersion = app.Spec.Version
 		if err := r.Client.Status().Update(ctx, app); err != nil {
@@ -172,10 +173,10 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
-			r.Recorder.Event(app, "Warning", "AppVersionNotDeprecated", fmt.Sprintf("Could not deprecate KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
+			controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Warning", app, "AppVersionNotDeprecated", fmt.Sprintf("could not deprecate KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 			return err
 		}
-		r.Recorder.Event(app, "Normal", "AppVersionDeprecated", fmt.Sprintf("Deprecated KeptnAppVersions for KeptnAppVersion / Namespace: %s, Name: %s ", app.Namespace, app.GetAppVersionName()))
+		controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Normal", app, "AppVersionDeprecated", fmt.Sprintf("deprecated KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 	}
 	return nil
 }

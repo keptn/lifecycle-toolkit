@@ -24,6 +24,14 @@ var phases = []KeptnPhaseType{
 	PhaseAppPreEvaluation,
 	PhaseAppPostEvaluation,
 	PhaseAppDeployment,
+	PhaseReconcileEvaluation,
+	PhaseReconcileTask,
+	PhaseCreateEvaluation,
+	PhaseCreateTask,
+	PhaseCreateApp,
+	PhaseCreateWorkload,
+	PhaseCreateWorklodInstance,
+	PhaseCreateAppVersion,
 	PhaseCompleted,
 	PhaseDeprecated,
 }
@@ -80,7 +88,13 @@ var (
 	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
 	PhaseReconcileEvaluation    = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
-	PhaseCreateEvaluation       = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "Create Evaluation"}
+	PhaseReconcileTask          = KeptnPhaseType{LongName: "Reconcile Task", ShortName: "ReconcileTask"}
+	PhaseCreateEvaluation       = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "CreateEvaluation"}
+	PhaseCreateTask             = KeptnPhaseType{LongName: "Create Task", ShortName: "CreateTask"}
+	PhaseCreateApp              = KeptnPhaseType{LongName: "Create App", ShortName: "CreateApp"}
+	PhaseCreateWorkload         = KeptnPhaseType{LongName: "Create Workload", ShortName: "CreateWorkload"}
+	PhaseCreateWorklodInstance  = KeptnPhaseType{LongName: "Create WorkloadInstance", ShortName: "CreateWorkloadInstance"}
+	PhaseCreateAppVersion       = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
 )

@@ -41,10 +41,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		return nil, apicommon.StatusSummary{}, err
 	}
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "ReconcileTasks",
-		LongName:  "Reconcile Tasks",
-	}
+	phase := apicommon.PhaseReconcileTask
 
 	var tasks []string
 	var statuses []klcv1alpha2.ItemStatus
@@ -150,10 +147,7 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 		return "", err
 	}
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "KeptnTaskCreate",
-		LongName:  "Keptn Task Create",
-	}
+	phase := apicommon.PhaseCreateTask
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.TaskDefinition, taskCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)

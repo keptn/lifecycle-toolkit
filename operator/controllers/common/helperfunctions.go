@@ -62,7 +62,7 @@ func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, 
 		annotations["appVersion"] = app.Spec.Version
 	} else if appVersion, ok := reconcileObject.(*klcv1alpha2.KeptnAppVersion); ok {
 		annotations["appName"] = appVersion.Spec.AppName
-		annotations["appVersion"] = app.Spec.Version
+		annotations["appVersion"] = appVersion.Spec.Version
 		annotations["appVersionName"] = appVersion.Name
 	} else if workload, ok := reconcileObject.(*klcv1alpha2.KeptnWorkload); ok {
 		annotations["appName"] = workload.Spec.AppName
@@ -91,7 +91,7 @@ func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, 
 
 	annotationsObject := reconcileObject.GetAnnotations()
 	if val, ok := annotationsObject["traceparent"]; ok {
-		annotations["traceId"] = val
+		annotations["traceparent"] = val
 	}
 
 	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s %s", phase.ShortName, shortReason), msg)

@@ -1,0 +1,20 @@
+---
+global:
+  writeToFile: true
+  metricsDirectory: collected-metrics
+  prometheusURL: http://localhost:9090
+
+jobs:
+  - name: keptn-apps
+    jobIterations: 1
+    qps: 4
+    burst: 4
+    namespacedIterations: true
+    namespace: keptn-apps
+    podWait: false
+    cleanup: true
+    waitFor: []
+    waitWhenFinished: true
+    objects:
+      - objectTemplate: ./assets/templates/app.yaml
+        replicas: 5

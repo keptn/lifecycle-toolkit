@@ -419,3 +419,11 @@ func (a *KeptnAppVersion) SetPhaseTraceID(phase string, carrier propagation.MapC
 	}
 	a.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }
+
+func (a KeptnAppVersion) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":        a.Spec.AppName,
+		"appVersion":     a.Spec.Version,
+		"appVersionName": a.Name,
+	}
+}

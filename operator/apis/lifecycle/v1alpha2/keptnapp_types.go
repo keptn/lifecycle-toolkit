@@ -106,3 +106,10 @@ func (a KeptnApp) GetSpanAttributes() []attribute.KeyValue {
 		common.AppVersion.String(a.Spec.Version),
 	}
 }
+
+func (a KeptnApp) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":    a.Name,
+		"appVersion": a.Spec.Version,
+	}
+}

@@ -206,6 +206,12 @@ func TestKeptnAppVersion(t *testing.T) {
 		common.AppVersion.String("version"),
 		common.AppNamespace.String("namespace"),
 	}, app.GetSpanAttributes())
+
+	require.Equal(t, map[string]string{
+		"appName":        "appname",
+		"appVersion":     "version",
+		"appVersionName": "app",
+	}, app.GetEventAnnotations())
 }
 
 func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {

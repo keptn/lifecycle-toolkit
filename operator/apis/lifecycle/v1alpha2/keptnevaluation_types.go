@@ -189,3 +189,14 @@ func (e KeptnEvaluation) GetSpanKey(phase string) string {
 func (e KeptnEvaluation) GetSpanName(phase string) string {
 	return e.Name
 }
+
+func (e KeptnEvaluation) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":                  e.Spec.AppName,
+		"appVersion":               e.Spec.AppVersion,
+		"workloadName":             e.Spec.Workload,
+		"workloadVersion":          e.Spec.WorkloadVersion,
+		"evaluationName":           e.Name,
+		"evaluationDefinitionName": e.Spec.EvaluationDefinition,
+	}
+}

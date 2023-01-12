@@ -46,4 +46,10 @@ func TestKeptnWorkload(t *testing.T) {
 		common.WorkloadName.String("workload"),
 		common.WorkloadVersion.String("version"),
 	}, workload.GetSpanAttributes())
+
+	require.Equal(t, map[string]string{
+		"appName":         "app",
+		"workloadName":    "workload",
+		"workloadVersion": "version",
+	}, workload.GetEventAnnotations())
 }

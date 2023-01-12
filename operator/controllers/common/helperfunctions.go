@@ -5,6 +5,8 @@ import (
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
+	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -69,36 +71,10 @@ func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseTyp
 		"name":      reconcileObject.GetName(),
 		"phase":     phase.ShortName,
 	}
-	if app, ok := reconcileObject.(*klcv1alpha2.KeptnApp); ok {
-		annotations["appName"] = app.Name
-		annotations["appVersion"] = app.Spec.Version
-	} else if appVersion, ok := reconcileObject.(*klcv1alpha2.KeptnAppVersion); ok {
-		annotations["appName"] = appVersion.Spec.AppName
-		annotations["appVersion"] = appVersion.Spec.Version
-		annotations["appVersionName"] = appVersion.Name
-	} else if workload, ok := reconcileObject.(*klcv1alpha2.KeptnWorkload); ok {
-		annotations["appName"] = workload.Spec.AppName
-		annotations["workloadName"] = workload.Name
-		annotations["workloadVersion"] = workload.Spec.Version
-	} else if workloadInstance, ok := reconcileObject.(*klcv1alpha2.KeptnWorkloadInstance); ok {
-		annotations["appName"] = workloadInstance.Spec.AppName
-		annotations["workloadName"] = workloadInstance.Spec.WorkloadName
-		annotations["workloadVersion"] = workloadInstance.Spec.Version
-		annotations["workloadInstanceName"] = workloadInstance.Name
-	} else if task, ok := reconcileObject.(*klcv1alpha2.KeptnTask); ok {
-		annotations["appName"] = task.Spec.AppName
-		annotations["appVersion"] = task.Spec.AppVersion
-		annotations["workloadName"] = task.Spec.Workload
-		annotations["workloadVersion"] = task.Spec.WorkloadVersion
-		annotations["taskName"] = task.Name
-		annotations["taskDefinitionName"] = task.Spec.TaskDefinition
-	} else if evaluation, ok := reconcileObject.(*klcv1alpha2.KeptnEvaluation); ok {
-		annotations["appName"] = evaluation.Spec.AppName
-		annotations["appVersion"] = evaluation.Spec.AppVersion
-		annotations["workloadName"] = evaluation.Spec.Workload
-		annotations["workloadVersion"] = evaluation.Spec.WorkloadVersion
-		annotations["evaluationName"] = evaluation.Name
-		annotations["evaluationDefinitionName"] = evaluation.Spec.EvaluationDefinition
+
+	piWrapper, err := interfaces.NewEventObjectWrapperFromClientObject(reconcileObject)
+	if err == nil {
+		maps.Copy(annotations, piWrapper.GetEventAnnotations())
 	}
 
 	annotationsObject := reconcileObject.GetAnnotations()

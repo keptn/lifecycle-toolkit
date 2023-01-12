@@ -6,7 +6,9 @@ import (
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/stretchr/testify/require"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func Test_GetItemStatus(t *testing.T) {
@@ -158,6 +160,236 @@ func Test_GetOldStatus(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.Equal(t, GetOldStatus(tt.definitionName, tt.statuses), tt.want)
+		})
+	}
+}
+
+func Test_setEventMessage(t *testing.T) {
+	tests := []struct {
+		name    string
+		version string
+		want    string
+	}{
+		{
+			name:    "version empty",
+			version: "",
+			want:    "App Deployment longReason / Namespace: namespace, Name: app",
+		},
+		{
+			name:    "version set",
+			version: "1.0.0",
+			want:    "App Deployment longReason / Namespace: namespace, Name: app, Version: 1.0.0",
+		},
+	}
+
+	appVersion := &klcv1alpha2.KeptnAppVersion{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      "app",
+			Namespace: "namespace",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, setEventMessage(apicommon.PhaseAppDeployment, appVersion, "longReason", tt.version), tt.want)
+		})
+	}
+}
+
+func Test_setAnnotations(t *testing.T) {
+	tests := []struct {
+		name   string
+		object client.Object
+		want   map[string]string
+	}{
+		{
+			name:   "nil object",
+			object: nil,
+			want:   nil,
+		},
+		{
+			name:   "empty object",
+			object: &klcv1alpha2.KeptnEvaluationDefinition{},
+			want:   nil,
+		},
+		{
+			name: "unknown object",
+			object: &klcv1alpha2.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "def",
+					Namespace: "namespace",
+				},
+			},
+			want: map[string]string{
+				"namespace": "namespace",
+				"name":      "def",
+				"phase":     "AppDeploy",
+			},
+		},
+		{
+			name: "object with traceparent",
+			object: &klcv1alpha2.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "def",
+					Namespace: "namespace",
+					Annotations: map[string]string{
+						"traceparent": "23232333",
+					},
+				},
+			},
+			want: map[string]string{
+				"namespace":   "namespace",
+				"name":        "def",
+				"phase":       "AppDeploy",
+				"traceparent": "23232333",
+			},
+		},
+		{
+			name: "KeptnApp",
+			object: &klcv1alpha2.KeptnApp{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "app",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnAppSpec{
+					Version: "1.0.0",
+				},
+			},
+			want: map[string]string{
+				"namespace":  "namespace",
+				"name":       "app",
+				"phase":      "AppDeploy",
+				"appName":    "app",
+				"appVersion": "1.0.0",
+			},
+		},
+		{
+			name: "KeptnAppVersion",
+			object: &klcv1alpha2.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "appVersion",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnAppVersionSpec{
+					AppName: "app",
+					KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+						Version: "1.0.0",
+					},
+				},
+			},
+			want: map[string]string{
+				"namespace":      "namespace",
+				"name":           "appVersion",
+				"phase":          "AppDeploy",
+				"appName":        "app",
+				"appVersion":     "1.0.0",
+				"appVersionName": "appVersion",
+			},
+		},
+		{
+			name: "KeptnWorkload",
+			object: &klcv1alpha2.KeptnWorkload{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "workload",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadSpec{
+					AppName: "app",
+					Version: "1.0.0",
+				},
+			},
+			want: map[string]string{
+				"namespace":       "namespace",
+				"name":            "workload",
+				"phase":           "AppDeploy",
+				"appName":         "app",
+				"workloadVersion": "1.0.0",
+				"workloadName":    "workload",
+			},
+		},
+		{
+			name: "KeptnWorkloadInstance",
+			object: &klcv1alpha2.KeptnWorkloadInstance{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "workloadInstance",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+						AppName: "app",
+						Version: "1.0.0",
+					},
+					WorkloadName: "workload",
+				},
+			},
+			want: map[string]string{
+				"namespace":            "namespace",
+				"name":                 "workloadInstance",
+				"phase":                "AppDeploy",
+				"appName":              "app",
+				"workloadVersion":      "1.0.0",
+				"workloadName":         "workload",
+				"workloadInstanceName": "workloadInstance",
+			},
+		},
+		{
+			name: "KeptnTask",
+			object: &klcv1alpha2.KeptnTask{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "task",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnTaskSpec{
+					AppName:         "app",
+					AppVersion:      "1.0.0",
+					Workload:        "workload",
+					WorkloadVersion: "2.0.0",
+					TaskDefinition:  "def",
+				},
+			},
+			want: map[string]string{
+				"namespace":          "namespace",
+				"name":               "task",
+				"phase":              "AppDeploy",
+				"appName":            "app",
+				"appVersion":         "1.0.0",
+				"workloadName":       "workload",
+				"workloadVersion":    "2.0.0",
+				"taskDefinitionName": "def",
+				"taskName":           "task",
+			},
+		},
+		{
+			name: "KeptnEvaluation",
+			object: &klcv1alpha2.KeptnEvaluation{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "eval",
+					Namespace: "namespace",
+				},
+				Spec: klcv1alpha2.KeptnEvaluationSpec{
+					AppName:              "app",
+					AppVersion:           "1.0.0",
+					Workload:             "workload",
+					WorkloadVersion:      "2.0.0",
+					EvaluationDefinition: "def",
+				},
+			},
+			want: map[string]string{
+				"namespace":                "namespace",
+				"name":                     "eval",
+				"phase":                    "AppDeploy",
+				"appName":                  "app",
+				"appVersion":               "1.0.0",
+				"workloadName":             "workload",
+				"workloadVersion":          "2.0.0",
+				"evaluationDefinitionName": "def",
+				"evaluationName":           "eval",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, setAnnotations(tt.object, apicommon.PhaseAppDeployment), tt.want)
 		})
 	}
 }

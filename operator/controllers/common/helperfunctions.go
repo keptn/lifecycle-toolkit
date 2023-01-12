@@ -46,12 +46,24 @@ func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.Kept
 	return oldstatus
 }
 
+// RecordEvent creates k8s Event and adds it to Eventqueue
 func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
-	msg := fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s ", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version)
-	if version == "" {
-		msg = fmt.Sprintf("%s %s / Namespace: %s, Name: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName())
-	}
+	msg := setEventMessage(phase, reconcileObject, longReason, version)
+	annotations := setAnnotations(reconcileObject, phase)
+	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s %s", phase.ShortName, shortReason), msg)
+}
 
+func setEventMessage(phase apicommon.KeptnPhaseType, reconcileObject client.Object, longReason string, version string) string {
+	if version == "" {
+		return fmt.Sprintf("%s %s / Namespace: %s, Name: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName())
+	}
+	return fmt.Sprintf("%s %s / Namespace: %s, Name: %s, Version: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version)
+}
+
+func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseType) map[string]string {
+	if reconcileObject == nil || reconcileObject.GetName() == "" || reconcileObject.GetNamespace() == "" {
+		return nil
+	}
 	annotations := map[string]string{
 		"namespace": reconcileObject.GetNamespace(),
 		"name":      reconcileObject.GetName(),
@@ -66,7 +78,7 @@ func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, 
 		annotations["appVersionName"] = appVersion.Name
 	} else if workload, ok := reconcileObject.(*klcv1alpha2.KeptnWorkload); ok {
 		annotations["appName"] = workload.Spec.AppName
-		annotations["workloadName"] = workload.Spec.AppName
+		annotations["workloadName"] = workload.Name
 		annotations["workloadVersion"] = workload.Spec.Version
 	} else if workloadInstance, ok := reconcileObject.(*klcv1alpha2.KeptnWorkloadInstance); ok {
 		annotations["appName"] = workloadInstance.Spec.AppName
@@ -94,5 +106,5 @@ func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, 
 		annotations["traceparent"] = val
 	}
 
-	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s %s", phase.ShortName, shortReason), msg)
+	return annotations
 }

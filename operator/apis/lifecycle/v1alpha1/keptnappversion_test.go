@@ -12,6 +12,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+//nolint:dupl
 func TestKeptnAppVersion(t *testing.T) {
 	app := &KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
@@ -244,6 +245,7 @@ func TestKeptnAppVersion_GetWorkloadNameOfApp(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestKeptnAppVersion_CancelRemainingPhases(t *testing.T) {
 	app := KeptnAppVersion{
 		Status: KeptnAppVersionStatus{

@@ -46,6 +46,8 @@ const InvalidAnnotationMessage = "Invalid annotations"
 var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
+//
+//nolint:gocyclo
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
 
 	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
@@ -284,6 +286,7 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 	return fmt.Sprint(h.Sum32())
 }
 
+//nolint:dupl
 func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
@@ -338,6 +341,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	return nil
 }
 
+//nolint:dupl
 func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))

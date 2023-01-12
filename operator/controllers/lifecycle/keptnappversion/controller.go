@@ -66,6 +66,8 @@ type KeptnAppVersionReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
+//
+//nolint:gocyclo
 func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	r.Log.Info("Searching for Keptn App Version")
@@ -81,12 +83,10 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionMsg, err)
 	}
 
-	ctx, ctxAppTrace, span, endSpan := setupSpansContexts(ctx, appVersion, r)
-
+	ctx, ctxAppTrace, span, endSpan := r.setupSpansContexts(ctx, appVersion)
 	defer endSpan()
 
 	phase := apicommon.PhaseAppPreDeployment
-
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -168,12 +168,17 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	// AppVersion is completed at this place
 
+	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
+}
+
+func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
+
 	if !appVersion.IsEndTimeSet() {
 		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
 
-	err = r.Client.Status().Update(ctx, appVersion)
+	err := r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
 	}
@@ -194,7 +199,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	return ctrl.Result{}, nil
 }
 
-func setupSpansContexts(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion, r *KeptnAppVersionReconciler) (context.Context, context.Context, trace.Span, func()) {
+func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion) (context.Context, context.Context, trace.Span, func()) {
 	appVersion.SetStartTime()
 
 	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)

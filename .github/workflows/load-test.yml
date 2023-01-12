@@ -41,7 +41,6 @@ jobs:
 
       - name: Download kube-burner
         run: |
-          curl -fL https://github.com/kudobuilder/kuttl/releases/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64 -o kubectl-kuttl
           curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz kube-burner
           chmod +x kube-burner
           mv kube-burner /usr/local/bin

@@ -3,9 +3,10 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"strings"
 	"testing"
+
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
@@ -865,8 +866,8 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 				},
 			},
 			events: []string{
-				"AppPreDeployEvaluationsFinishedSuccess",
-				"WorkloadPostDeployEvaluationsFinished",
+				"AppPreDeployEvaluations FinishedSuccess",
+				"WorkloadPostDeployEvaluations Finished",
 			},
 			wantErr: false,
 			fields: fields{

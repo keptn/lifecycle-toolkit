@@ -229,7 +229,7 @@ func TestEvaluationHandler(t *testing.T) {
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
 			events: []string{
-				"ReconcileEvaluationSucceeded",
+				"ReconcileEvaluation Succeeded",
 			},
 		},
 	}

@@ -15,6 +15,7 @@ jobs:
     cleanup: true
     waitFor: []
     waitWhenFinished: true
+    preLoadImages: false
     objects:
-      - objectTemplate: ./assets/templates/app.yaml
+      - objectTemplate: ./test/load/assets/templates/app.yaml
         replicas: 5

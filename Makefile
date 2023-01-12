@@ -18,6 +18,10 @@ integration-test:
 integration-test-local:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
+.PHONY: load-test
+load-test:
+	kube-burner help
+
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests

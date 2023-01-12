@@ -30,7 +30,7 @@ func GetAppVersionName(namespace string, appName string, version string) types.N
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
 }
 
-// retrieves the state of the task/evaluation
+// GetOldStatus retrieves the state of the task/evaluation
 func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {

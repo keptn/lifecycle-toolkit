@@ -12,6 +12,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+//nolint:dupl
 func TestKeptnWorkloadInstance(t *testing.T) {
 	workload := &KeptnWorkloadInstance{
 		ObjectMeta: metav1.ObjectMeta{
@@ -217,6 +218,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	}, workload.GetSpanAttributes())
 }
 
+//nolint:dupl
 func TestKeptnWorkloadInstance_CancelRemainingPhases(t *testing.T) {
 	workloadInstance := KeptnWorkloadInstance{
 		Status: KeptnWorkloadInstanceStatus{

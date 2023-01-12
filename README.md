@@ -1,6 +1,6 @@
 # Keptn Lifecycle Toolkit
 
-![build](https://img.shields.io/github/workflow/status/keptn/lifecycle-toolkit/CI)
+![build](https://img.shields.io/github/actions/workflow/status/keptn/lifecycle-toolkit/CI.yaml?branch=main)
 ![Codecov](https://img.shields.io/codecov/c/github/keptn/lifecycle-toolkit?token=KPGfrBb2sA)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=operator%2Fgo.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
@@ -36,7 +36,7 @@ When *cert-manager* is installed, you can run
 <!---x-release-please-start-version-->
 
 ```
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.4.1/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->

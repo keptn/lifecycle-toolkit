@@ -114,3 +114,50 @@ func Test_GetAppVersionName(t *testing.T) {
 		})
 	}
 }
+
+func Test_GetOldStatus(t *testing.T) {
+	tests := []struct {
+		statuses       []klcv1alpha2.ItemStatus
+		definitionName string
+		want           apicommon.KeptnState
+	}{
+		{
+			statuses:       []klcv1alpha2.ItemStatus{},
+			definitionName: "",
+			want:           "",
+		},
+		{
+			statuses:       []klcv1alpha2.ItemStatus{},
+			definitionName: "defName",
+			want:           "",
+		},
+		{
+			statuses: []klcv1alpha2.ItemStatus{
+				{
+					DefinitionName: "defName",
+					Status:         apicommon.StateFailed,
+					Name:           "name",
+				},
+			},
+			definitionName: "defNameNon",
+			want:           "",
+		},
+		{
+			statuses: []klcv1alpha2.ItemStatus{
+				{
+					DefinitionName: "defName",
+					Status:         apicommon.StateFailed,
+					Name:           "name",
+				},
+			},
+			definitionName: "defName",
+			want:           apicommon.StateFailed,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, GetOldStatus(tt.definitionName, tt.statuses), tt.want)
+		})
+	}
+}

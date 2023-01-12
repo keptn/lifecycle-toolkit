@@ -41,41 +41,16 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 
 func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask, definition *klcv1alpha2.KeptnTaskDefinition) (string, error) {
 	params, hasParent, err := r.parseFunctionTaskDefinition(definition)
-	var parentJobParams FunctionExecutionParams
 	if err != nil {
 		return "", err
 	}
 	if hasParent {
-		parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
-		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-			return "", err
-		}
-		parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
-		if err != nil {
-			return "", err
-		}
-		err = mergo.Merge(&params, parentJobParams)
-		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		if err := r.handleParent(ctx, req, task, definition, params); err != nil {
 			return "", err
 		}
 	}
 
-	taskContext := klcv1alpha2.TaskContext{}
-
-	if task.Spec.Workload != "" {
-		taskContext.WorkloadName = task.Spec.Workload
-		taskContext.WorkloadVersion = task.Spec.WorkloadVersion
-		taskContext.ObjectType = "Workload"
-
-	} else {
-		taskContext.ObjectType = "Application"
-		taskContext.AppVersion = task.Spec.AppVersion
-	}
-	taskContext.AppName = task.Spec.AppName
-
-	params.Context = taskContext
+	params.Context = setupTaskContext(task)
 
 	if len(task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, task.Spec.Parameters.Inline)
@@ -129,4 +104,40 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 		return job, err
 	}
 	return job, nil
+}
+
+func setupTaskContext(task *klcv1alpha2.KeptnTask) klcv1alpha2.TaskContext {
+	taskContext := klcv1alpha2.TaskContext{}
+
+	if task.Spec.Workload != "" {
+		taskContext.WorkloadName = task.Spec.Workload
+		taskContext.WorkloadVersion = task.Spec.WorkloadVersion
+		taskContext.ObjectType = "Workload"
+
+	} else {
+		taskContext.ObjectType = "Application"
+		taskContext.AppVersion = task.Spec.AppVersion
+	}
+	taskContext.AppName = task.Spec.AppName
+
+	return taskContext
+}
+
+func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask, definition *klcv1alpha2.KeptnTaskDefinition, params FunctionExecutionParams) error {
+	var parentJobParams FunctionExecutionParams
+	parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
+	if err != nil {
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+			return "", err
+		}
+		parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
+		if err != nil {
+			return "", err
+		}
+		err = mergo.Merge(&params, parentJobParams)
+		if err != nil {
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+			return "", err
+	}
+	return nil
 }

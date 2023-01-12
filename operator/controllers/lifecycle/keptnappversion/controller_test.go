@@ -220,7 +220,7 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx, ctxAppTrace, _, _ := setupSpansContexts(tt.args.ctx, tt.args.appVersion, r)
+			ctx, ctxAppTrace, _, _ := r.setupSpansContexts(tt.args.ctx, tt.args.appVersion)
 			if !reflect.DeepEqual(ctx, tt.baseCtx) {
 				t.Errorf("setupSpansContexts() got: %v as baseCtx, wanted: %v", ctx, tt.baseCtx)
 			}

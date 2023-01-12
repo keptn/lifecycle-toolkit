@@ -10,6 +10,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+type CreateAttributes struct {
+	SpanName   string
+	Definition string
+	CheckType  apicommon.CheckType
+}
+
+// GetItemStatus retrieves the state of the task/evaluation, if it does not exists, it creates a default one
 func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {
@@ -25,6 +32,18 @@ func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1al
 
 func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
 	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
+}
+
+// GetOldStatus retrieves the state of the task/evaluation
+func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.KeptnState {
+	var oldstatus apicommon.KeptnState
+	for _, ts := range statuses {
+		if ts.DefinitionName == name {
+			oldstatus = ts.Status
+		}
+	}
+
+	return oldstatus
 }
 
 func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {

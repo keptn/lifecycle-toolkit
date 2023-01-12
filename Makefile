@@ -22,7 +22,7 @@ integration-test-local:
 load-test:
 	kubectl port-forward -n monitoring svc/prometheus-k8s 9090 &
 	sleep 10 # TODO make this reliable and not as dumb as that
-	kube-burner init -c #test/load/cfg.yml --metrics-profile test/load/metrics.yml
+	kube-burner init #-c test/load/cfg.yml --metrics-profile test/load/metrics.yml
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

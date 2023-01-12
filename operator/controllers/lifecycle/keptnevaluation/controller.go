@@ -147,28 +147,19 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileErrored", "could not update status", "")
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
-		err := r.Client.Status().Update(ctx, evaluation)
-		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileErrored", "could not update status", "")
-			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true}, err
-		}
+	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "NotFinished", "has not finished", "")
 
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "NotFinished", "has not finished", "")
-
-	r.recordEvent("Normal", evaluation, "NotFinished", "has not finished")
 	return nil
+
 }
 
 func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) {
-  controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded", "")
+	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded", "")
 	err := controllererrors.ErrRetryCountExceeded
 	span.SetStatus(codes.Error, err.Error())
 	evaluation.Status.OverallStatus = apicommon.StateFailed
@@ -181,7 +172,6 @@ func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.
 func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.KeptnEvaluation {
 	statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
 	newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
-
 
 	if evaluation.Status.EvaluationStatus == nil {
 		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)

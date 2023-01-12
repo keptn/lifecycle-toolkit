@@ -128,16 +128,16 @@ func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request
 	parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
 	if err != nil {
 		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-			return "", err
-		}
-		parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
-		if err != nil {
-			return "", err
-		}
-		err = mergo.Merge(&params, parentJobParams)
-		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-			return "", err
+		return err
+	}
+	parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
+	if err != nil {
+		return err
+	}
+	err = mergo.Merge(&params, parentJobParams)
+	if err != nil {
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		return err
 	}
 	return nil
 }

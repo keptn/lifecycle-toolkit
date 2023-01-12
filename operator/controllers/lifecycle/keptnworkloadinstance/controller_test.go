@@ -6,8 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"

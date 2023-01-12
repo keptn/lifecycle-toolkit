@@ -12,7 +12,7 @@ type CreateAttributes struct {
 	CheckType  apicommon.CheckType
 }
 
-// retrieves the state of the task/evaluation, if it does not exists, it creates a default one
+// GetItemStatus retrieves the state of the task/evaluation, if it does not exists, it creates a default one
 func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {

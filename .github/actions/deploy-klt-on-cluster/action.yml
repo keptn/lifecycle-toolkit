@@ -55,7 +55,6 @@ runs:
   - name: Install lifecycle-toolkit
     shell: bash
     run: |
-      sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-cert-manager-manifest-test/release.yaml
       sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
       sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
       kubectl apply -f ~/download/artifacts/keptn-cert-manager-manifest-test

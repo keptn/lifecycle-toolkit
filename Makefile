@@ -22,7 +22,7 @@ integration-test-local:
 load-test:
 	kubectl apply -f ./test/load/assets/kube-burner-config.yaml
 	kubectl apply -f ./test/load/assets/loadtest.yaml
-	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=3m job/loadtest
+	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=15m job/loadtest
 	kubectl logs -n keptn-lifecycle-toolkit-system job/loadtest -c loadtest
 	#kubectl port-forward -n monitoring svc/prometheus-k8s 9090 &
 	#sleep 10 # TODO make this reliable and not as dumb as that

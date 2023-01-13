@@ -17,13 +17,13 @@ type EventObjectWrapper struct {
 }
 
 func NewEventObjectWrapperFromClientObject(object client.Object) (*EventObjectWrapper, error) {
-	amo, ok := object.(EventObject)
+	eo, ok := object.(EventObject)
 	if !ok {
 		return nil, errors.ErrCannotWrapToEventObject
 	}
-	return &EventObjectWrapper{Obj: amo}, nil
+	return &EventObjectWrapper{Obj: eo}, nil
 }
 
-func (amo EventObjectWrapper) GetEventAnnotations() map[string]string {
-	return amo.Obj.GetEventAnnotations()
+func (eo EventObjectWrapper) GetEventAnnotations() map[string]string {
+	return eo.Obj.GetEventAnnotations()
 }

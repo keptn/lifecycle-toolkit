@@ -173,12 +173,12 @@ func Test_setEventMessage(t *testing.T) {
 		{
 			name:    "version empty",
 			version: "",
-			want:    "App Deployment longReason / Namespace: namespace, Name: app",
+			want:    "App Deployment: longReason / Namespace: namespace, Name: app",
 		},
 		{
 			name:    "version set",
 			version: "1.0.0",
-			want:    "App Deployment longReason / Namespace: namespace, Name: app, Version: 1.0.0",
+			want:    "App Deployment: longReason / Namespace: namespace, Name: app, Version: 1.0.0",
 		},
 	}
 

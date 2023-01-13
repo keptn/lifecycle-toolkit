@@ -20,9 +20,13 @@ integration-test-local:
 
 .PHONY: load-test
 load-test:
-	kubectl port-forward -n monitoring svc/prometheus-k8s 9090 &
-	sleep 10 # TODO make this reliable and not as dumb as that
-	kube-burner init #-c test/load/cfg.yml --metrics-profile test/load/metrics.yml
+	kubectl apply -f ./test/load/kube-burner-config.yaml
+	kubectl apply -f ./test/load/loadtest.yaml
+	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=3m job/loadtest
+	kubectl logs -n keptn-lifecycle-toolkit-system job/loadtest -c loadtest
+	#kubectl port-forward -n monitoring svc/prometheus-k8s 9090 &
+	#sleep 10 # TODO make this reliable and not as dumb as that
+	#kube-burner init #-c test/load/cfg.yml --metrics-profile test/load/metrics.yml
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

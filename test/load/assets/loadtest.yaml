@@ -1,0 +1,350 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: loadtest
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  template:
+    spec:
+      serviceAccountName: kube-burner
+      volumes:
+        - name: kube-burner-config
+          configMap:
+            name: kube-burner-config
+        - name: kube-burner-templates
+          configMap:
+            name: kube-burner-templates
+      containers:
+      - image: quay.io/cloud-bulldozer/kube-burner:v1.2
+        name: loadtest
+        command:
+          - "sh"
+          - "-c"
+          - "kube-burner init -c /config/config.yml --metrics-profile /config/metric-profile.yml"
+        volumeMounts:
+          - mountPath: /config
+            name: kube-burner-config
+        resources: {}
+      restartPolicy: Never
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-burner
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-burner
+subjects:
+  - kind: ServiceAccount
+    name: kube-burner
+    namespace: keptn-lifecycle-toolkit-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-burner-role
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-burner-role
+rules:
+  - verbs:
+      - create
+      - patch
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - events
+  - verbs:
+      - get
+      - list
+      - watch
+      - delete
+    apiGroups:
+      - ''
+    resources:
+      - namespaces
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - pods
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapp
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcreationrequests
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcreationrequests/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcreationrequests/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapps
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapps/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapps/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversion
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversion/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversion/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversions
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversions/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappversions/status
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationdefinitions
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationproviders
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluations
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluations/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluations/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntaskdefinitions
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntaskdefinitions/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntaskdefinitions/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntasks
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntasks/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntasks/status
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkload
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloadinstances
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloadinstances/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloadinstances/status
+  - verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloads
+  - verbs:
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloads/finalizers
+  - verbs:
+      - get
+      - patch
+      - update
+    apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloads/status
+
+

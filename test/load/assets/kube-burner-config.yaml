@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-burner-config
+  namespace: keptn-lifecycle-toolkit-system
+data:
+  config.yml: |
+    ---
+    global:
+      writeToFile: true
+      metricsDirectory: collected-metrics
+      prometheusURL: http://prometheus-k8s.monitoring:9090
+
+    jobs:
+      - name: keptn-apps
+        jobIterations: 1
+        qps: 4
+        burst: 4
+        namespacedIterations: true
+        namespace: keptn-apps
+        podWait: false
+        cleanup: true
+        waitFor: []
+        waitWhenFinished: true
+        preLoadImages: false
+        objects:
+          - objectTemplate: /config/templates.yaml
+            replicas: 5
+  metric-profile.yml: |
+    - query: container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}
+      metricName: MemoryUsage
+
+    - query: rate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system"}[1m])
+      metricName: CPUUsage
+
+    - query: sum by(job) (rate(apiserver_request_total{job="apiserver"}[1m]))
+      metricName: APIServerRequests
+  templates.yaml: |-
+    apiVersion: lifecycle.keptn.sh/v1alpha2
+    kind: KeptnApp
+    metadata:
+      name: podtato-head-{{.Replica}}
+    spec:
+      version: "1.3"
+      revision: 1
+      workloads:
+        - name: podtato-head-left-arm
+          version: 0.2.7
+        - name: podtato-head-left-leg
+          version: 0.2.7
+        - name: podtato-head-entry
+          version: 0.2.7
+        - name: podtato-head-right-arm
+          version: 0.1.0
+        - name: podtato-head-right-leg
+          version: 0.2.7
+        - name: podtato-head-hat
+          version: 0.1.0
+      postDeploymentTasks:
+        - post-deployment-hello

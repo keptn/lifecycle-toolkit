@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-releases depName=cert-manager/cert-manager
-CERT_MANAGER_VERSION ?= v1.10.1
+CERT_MANAGER_VERSION ?= v1.11.0
 TAG ?= "$(shell date +%Y%m%d%s)"
 TAG := $(TAG)
 

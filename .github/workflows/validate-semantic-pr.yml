@@ -33,7 +33,6 @@ jobs:
             test
             deps
           scopes: |
-            scheduler
             operator
             functions-runtime
             dashboards

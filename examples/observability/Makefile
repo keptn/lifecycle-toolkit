@@ -51,8 +51,6 @@ install:undeploy-podtatohead
 	@echo "----------------------------------"
 	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager
 	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-toolkit-system
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler --watch
 
 
 	@echo ""

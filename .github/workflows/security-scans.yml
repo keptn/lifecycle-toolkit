@@ -49,7 +49,6 @@ jobs:
           name: manifests
           path: |
             ./dist/keptn-lifecycle-operator-manifest/
-            ./dist/scheduler-manifest/
 
       - name: Upload images
         uses: actions/upload-artifact@v3
@@ -58,7 +57,6 @@ jobs:
           path: |
             ./dist/functions-runtime-image.tar/
             ./dist/keptn-lifecycle-operator-image.tar/
-            ./dist/scheduler-image.tar/
             
   security-scans:
     name: "Security Scans"
@@ -124,12 +122,11 @@ jobs:
           cd operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
-          cd ../../../scheduler/manifests/install && kustomize build ./ > /tmp/scheduler-manifest.yaml
 
           curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
-          cd .. && echo "---" >> operator-manifest.yaml && cat operator-manifest.yaml scheduler-manifest.yaml > manifest.yaml
+          cd .. && echo "---" >> operator-manifest.yaml && cat operator-manifest.yaml > manifest.yaml
           kubeconform -schema-location default -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -summary manifest.yaml
 
       - name: Kubescape Scan
@@ -153,7 +150,6 @@ jobs:
         image:
           - "functions-runtime"
           - "keptn-lifecycle-operator"
-          - "scheduler"
     steps:
       - name: Download images
         id: download_images
@@ -177,7 +173,6 @@ jobs:
       matrix:
         artifact:
           - "operator"
-          - "scheduler"
 
     steps:
       - name: Set up Go 1.x

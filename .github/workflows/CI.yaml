@@ -13,7 +13,6 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.9.2"
   ENVTEST_K8S_VERSION: "1.24.2"
-  SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
   run:
     shell: bash
@@ -66,8 +65,6 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "keptn-cert-manager"
             folder: "klt-cert-manager/"
     steps:
@@ -105,8 +102,6 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
           - name: "keptn-cert-manager"
@@ -132,7 +127,6 @@ jobs:
             RELEASE_VERSION=dev-${{ env.DATETIME }}
             BUILD_TIME=${{ env.BUILD_TIME }}
             CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
-            SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
           builder: ${{ steps.buildx.outputs.name }}
           push: false
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
@@ -204,8 +198,6 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
           - name: "keptn-cert-manager"
@@ -240,7 +232,6 @@ jobs:
           RELEASE_VERSION=dev-${{ env.DATETIME }}
           BUILD_TIME=${{ env.BUILD_TIME }}
           CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
-          SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
         builder: ${{ steps.buildx.outputs.name }}
         push: true
         cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}

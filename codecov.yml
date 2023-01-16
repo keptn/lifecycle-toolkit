@@ -28,10 +28,6 @@ flags:
     paths:
       - operator/
     carryforward: true
-  scheduler:
-    paths:
-      - scheduler/
-    carryforward: true
   component-tests:
     paths:
       - operator/

@@ -3,11 +3,12 @@ package webhook
 import (
 	"testing"
 
+	"k8s.io/client-go/kubernetes/scheme"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
+
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/fake"
 	cmdManager "github.com/keptn/lifecycle-toolkit/operator/cmd/manager"
 	"github.com/stretchr/testify/assert"
-	"k8s.io/client-go/kubernetes/scheme"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
 func TestCreateOptions(t *testing.T) {

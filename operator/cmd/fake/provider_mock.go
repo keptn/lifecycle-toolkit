@@ -4,8 +4,9 @@
 package fake
 
 import (
-	"k8s.io/client-go/rest"
 	"sync"
+
+	"k8s.io/client-go/rest"
 )
 
 // MockProvider is a mock implementation of config.Provider.

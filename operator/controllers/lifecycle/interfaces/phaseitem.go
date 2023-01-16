@@ -11,7 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// PhaseItem represents an object which has reconcile phases
+// PhaseItem represents an object which has reconciled phases
 //
 //go:generate moq -pkg fake --skip-ensure -out ./fake/phaseitem_mock.go . PhaseItem
 type PhaseItem interface {

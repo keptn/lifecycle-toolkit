@@ -5,7 +5,7 @@ package fake
 
 import (
 	"context"
-	"github.com/go-logr/logr"
+
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
@@ -18,6 +18,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sync"
+
+	"github.com/go-logr/logr"
 )
 
 // MockManager is a mock implementation of manager.IManager.

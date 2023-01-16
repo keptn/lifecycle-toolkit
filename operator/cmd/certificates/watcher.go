@@ -11,12 +11,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/go-logr/logr"
-	"github.com/spf13/afero"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+
+	"github.com/go-logr/logr"
+	"github.com/spf13/afero"
 )
 
 // TODO: refactor code below to be testable and also tested

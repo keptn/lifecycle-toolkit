@@ -12,7 +12,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
-Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/functions-runtime/) for more information about the runtime.
+Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime) for more information about the runtime.
 In the future, we also intend to support other runtimes, especially running a container image directly.
 
 A task definition can be configured in three different ways:

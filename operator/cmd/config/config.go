@@ -1,10 +1,9 @@
 package config
 
 import (
+	"github.com/pkg/errors"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-
-	"github.com/pkg/errors"
 )
 
 //go:generate moq -pkg fake -skip-ensure -out ../fake/provider_mock.go . Provider:MockProvider

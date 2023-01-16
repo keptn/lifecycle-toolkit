@@ -141,6 +141,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
+	// pre-evaluation checks done at this moment, we can remove the gate
+	if err := controllercommon.RemoveGates(ctx, r.Client, workloadInstance); err != nil {
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+	}
+
 	//Wait for deployment of Workload
 	phase = apicommon.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {

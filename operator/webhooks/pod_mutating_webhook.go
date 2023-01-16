@@ -100,7 +100,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if podIsAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
-		pod.Spec.SchedulerName = "keptn-scheduler"
+		pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
+			{
+				Name: "gated-klt",
+			},
+		}
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
 		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)

@@ -3,17 +3,16 @@ package webhook
 import (
 	"flag"
 
-	"go.opentelemetry.io/otel"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
-
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/certificates"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/config"
 	cmdManager "github.com/keptn/lifecycle-toolkit/operator/cmd/manager"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
 const (

@@ -20,21 +20,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
-
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"go.opentelemetry.io/otel/propagation"
-
 	"github.com/kelseyhightower/envconfig"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
@@ -42,15 +39,14 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
-
-	"go.opentelemetry.io/otel"
-
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
@@ -60,10 +56,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"

@@ -12,7 +12,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
-Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
+Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/functions-runtime/) for more information about the runtime.
 In the future, we also intend to support other runtimes, especially running a container image directly.
 
 A task definition can be configured in three different ways:
@@ -35,10 +35,27 @@ spec:
         console.log("Deployment Task has been executed");
 ```
 
-In the code section, it is possible to define a full-fletched Deno script.
-A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
+In the code section, it is possible to define a full-fletched Deno script. An example for that would be:
 
-To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-inline
+spec:
+  function:
+    inline:
+      code: |
+        let text = Deno.env.get("DATA");
+        let data;
+        let name;
+        data = JSON.parse(text);
+        
+        name = data.name
+        console.log("Hello, " + name + " new");
+```
+
+The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
@@ -50,8 +67,6 @@ spec:
     httpRef:
       url: <url>
 ```
-
-An example is available [here](./examples/taskonly-hello-keptn/http/taskdefinition.yaml).
 
 Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.

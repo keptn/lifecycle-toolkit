@@ -64,6 +64,7 @@ make restart-lifecycle-toolkit
 ## The Demo Application
 For this demonstration, we use a slightly modified version of [the PodTatoHead](https://github.com/podtato-head/podtato-head).
 
+<!-- markdown-link-check-disable-next-line -->
 ![img.png](assets/podtatohead.png)
 
 Over time, we will evolve this application from a simple manifest to a Keptn-managed application. We will install it first with kubectl and add pre- as well as post-deployment tasks. For this, we will check if the entry service is available before the other ones get scheduled. Afterwards, we will add evaluations to ensure that our infrastructure is in a good shape before we deploy the application. Finally, we will evolve to a GitOps driven deployment and will notify an external webhook service when the deployment has finished.
@@ -118,6 +119,7 @@ make port-forward-grafana
  
 In your browser (http://localhost:3000, Log in with the user 'admin' and the password 'admin'), you can open the Dashboard `Keptn Applications` and see the current state of the application which should be similar to the following:
 
+<!-- markdown-link-check-disable-next-line -->
 ![grafana.png](assets/grafana.png)
 
 In this screen you get the following information:
@@ -128,6 +130,7 @@ In this screen you get the following information:
 
 After some time (~60 seconds), you should see one more failed deployment in your dashboard. You can click on the link to the trace and see the reason for the failure:
 
+<!-- markdown-link-check-disable-next-line -->
 ![trace-failed.png](assets/trace-failed.png)
 
 In this case, we see the name of the failed pre-deployment evaluation and the reason for the failure. In this case, the minimum amount of CPUs is not met. This is a problem we can solve by changing the treshold in the evaluation file.

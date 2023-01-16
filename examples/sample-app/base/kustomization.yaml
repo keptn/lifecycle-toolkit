@@ -1,0 +1,5 @@
+resources:
+  - app.yaml
+  - manifest.yaml
+  - app-post-deploy.yaml
+  - provider.yaml

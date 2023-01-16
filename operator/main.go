@@ -21,17 +21,15 @@ import (
 	"flag"
 	"fmt"
 
-	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"go.opentelemetry.io/otel/propagation"
-	corev1 "k8s.io/api/core/v1"
-	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"go.opentelemetry.io/otel/propagation"
 
 	"github.com/kelseyhightower/envconfig"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
@@ -82,8 +80,6 @@ var (
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-	utilruntime.Must(corev1.AddToScheme(scheme))
-	utilruntime.Must(apiv1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme

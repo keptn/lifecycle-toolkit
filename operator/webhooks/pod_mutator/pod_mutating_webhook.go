@@ -500,6 +500,7 @@ func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) meta
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name
+				reference.APIVersion = owner.APIVersion
 			}
 		}
 	}

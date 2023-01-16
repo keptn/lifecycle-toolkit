@@ -247,19 +247,21 @@ func Test_setAnnotations(t *testing.T) {
 			name: "KeptnApp",
 			object: &klcv1alpha2.KeptnApp{
 				ObjectMeta: v1.ObjectMeta{
-					Name:      "app",
-					Namespace: "namespace",
+					Name:       "app",
+					Namespace:  "namespace",
+					Generation: 1,
 				},
 				Spec: klcv1alpha2.KeptnAppSpec{
 					Version: "1.0.0",
 				},
 			},
 			want: map[string]string{
-				"namespace":  "namespace",
-				"name":       "app",
-				"phase":      "AppDeploy",
-				"appName":    "app",
-				"appVersion": "1.0.0",
+				"namespace":   "namespace",
+				"name":        "app",
+				"phase":       "AppDeploy",
+				"appName":     "app",
+				"appVersion":  "1.0.0",
+				"appRevision": "1",
 			},
 		},
 		{

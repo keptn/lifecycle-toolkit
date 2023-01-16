@@ -52,7 +52,7 @@ func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.Kept
 func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
 	msg := setEventMessage(phase, reconcileObject, longReason, version)
 	annotations := setAnnotations(reconcileObject, phase)
-	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s-%s", phase.ShortName, shortReason), msg)
+	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), msg)
 }
 
 func setEventMessage(phase apicommon.KeptnPhaseType, reconcileObject client.Object, longReason string, version string) string {

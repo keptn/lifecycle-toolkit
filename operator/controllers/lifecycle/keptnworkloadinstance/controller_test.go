@@ -866,8 +866,8 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 				},
 			},
 			events: []string{
-				"AppPreDeployEvaluations-FinishedSuccess",
-				"WorkloadPostDeployEvaluations-Finished",
+				"AppPreDeployEvaluationsFinishedSuccess",
+				"WorkloadPostDeployEvaluationsFinished",
 			},
 			wantErr: false,
 			fields: fields{

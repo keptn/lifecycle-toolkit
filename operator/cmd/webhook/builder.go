@@ -4,6 +4,7 @@ import (
 	"flag"
 
 	"go.opentelemetry.io/otel"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
@@ -13,7 +14,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/pkg/errors"
-	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 const (

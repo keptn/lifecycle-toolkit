@@ -1,6 +1,6 @@
 # Sample Application
 
-This demonstration is based on the [Observability Example](../observability) and should do the following:
+This example should demonstrate the capabilities of the lifecycle toolkit as illustrated here:
 
 ![img.png](assets/big-picture.png)
 

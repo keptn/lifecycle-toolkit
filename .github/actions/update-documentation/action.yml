@@ -79,7 +79,7 @@ runs:
         --klt-docs doc-repo \
         --klt-repo ${{ inputs.klt-repo }} \
         --klt-examples ${{ inputs.examples-repo }} \
-        --update-main=${{ inputs.main-version }}
+        --update-main
 
   - name: Commit changes
     uses: EndBug/add-and-commit@v9

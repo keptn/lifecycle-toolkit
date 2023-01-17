@@ -150,7 +150,7 @@ jobs:
   update-docs:
     name: Update Documentation
     needs:
-    - release-please
+      - release-please
     if: needs.release-please.outputs.releases_created == 'true'
     runs-on: ubuntu-22.04
     steps:

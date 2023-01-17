@@ -66,6 +66,41 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 }
 
 func AddWorkloadInstance(c client.Client, name string, namespace string) error {
+	// pod := &corev1.Pod{
+	// 	ObjectMeta: metav1.ObjectMeta{
+	// 		Name:      "pod1",
+	// 		Namespace: "default",
+	// 		Annotations: map[string]string{
+	// 			apicommon.AppAnnotation:      "some-app",
+	// 			apicommon.WorkloadAnnotation: "some-app-some-workload",
+	// 		},
+	// 	},
+	// 	Spec: corev1.PodSpec{
+	// 		Containers: []corev1.Container{
+	// 			{
+	// 				Name:  "nginx",
+	// 				Image: "nginx:1.14.2",
+	// 				Ports: []corev1.ContainerPort{
+	// 					{
+	// 						ContainerPort: 80,
+	// 					},
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// }
+
+	// err := c.Create(context.TODO(), pod)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// pod2 := &corev1.Pod{}
+	// err = c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: pod.Name}, pod2)
+	// if err != nil {
+	// 	return err
+	// }
+
 	wi := &lfcv1alpha2.KeptnWorkloadInstance{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
@@ -76,6 +111,11 @@ func AddWorkloadInstance(c client.Client, name string, namespace string) error {
 			KeptnWorkloadSpec: lfcv1alpha2.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
+				// ResourceReference: lfcv1alpha2.ResourceReference{
+				// 	Kind: "Pod",
+				// 	UID:  pod2.UID,
+				// 	Name: pod2.Name,
+				// },
 			},
 			WorkloadName:    "some-app-some-workload",
 			PreviousVersion: "",

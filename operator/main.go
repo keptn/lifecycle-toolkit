@@ -456,9 +456,7 @@ func main() {
 			os.Exit(1)
 		}
 
-	}
-
-	if disableWebhook {
+	} else {
 		flag.Parse()
 		setupLog.Info("starting manager")
 		setupLog.Info("Keptn lifecycle operator is alive")

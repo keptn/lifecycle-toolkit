@@ -46,8 +46,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		pause := imageutils.GetPauseImageName()
 		var (
-			pod              *apiv1.Pod
-			workloadinstance *testv1alpha2.KeptnWorkloadInstance
+			pod *apiv1.Pod
 		)
 		BeforeEach(func() {
 			DeferCleanup(func() {
@@ -86,7 +85,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			})
 
 			It(" should be scheduled when workload instance pre-evaluation checks are done", func() {
-				checkWorkload(workloadinstance, "myapp-myworkload-1.0.0", *pod, "Succeeded")
+				checkWorkload("myapp-myworkload-1.0.0", *pod, "Succeeded")
 			})
 		})
 	})
@@ -136,8 +135,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		pause := imageutils.GetPauseImageName()
 		var (
-			pod              *apiv1.Pod
-			workloadinstance *testv1alpha2.KeptnWorkloadInstance
+			pod *apiv1.Pod
 		)
 		BeforeEach(func() {
 			DeferCleanup(func() {
@@ -177,7 +175,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 			It(" should be scheduled when workload instance pre-evaluation checks are done", func() {
 
-				checkWorkload(workloadinstance, "mylabeledapp-myworkload-1.0.1", *pod, "Succeeded")
+				checkWorkload("mylabeledapp-myworkload-1.0.1", *pod, "Succeeded")
 			})
 
 		})
@@ -192,8 +190,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		pause := imageutils.GetPauseImageName()
 		var (
-			pod              *apiv1.Pod
-			workloadinstance *testv1alpha2.KeptnWorkloadInstance
+			pod *apiv1.Pod
 		)
 		BeforeEach(func() {
 			DeferCleanup(func() {
@@ -220,15 +217,15 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 		Context("a new Pod", func() {
 
 			It(" should NOT be scheduled when workload instance pre-evaluation checks fails", func() {
-				checkWorkload(workloadinstance, "mylabeledapp-myworkload-1.0.2", *pod, "Failed")
+				checkWorkload("mylabeledapp-myworkload-1.0.2", *pod, "Failed")
 			})
 		})
 
 	})
 })
 
-func checkWorkload(workloadinstance *testv1alpha2.KeptnWorkloadInstance, workloadname string, pod apiv1.Pod, status common2.KeptnState) {
-	workloadinstance = initWorkloadInstance(workloadname)
+func checkWorkload(workloadname string, pod apiv1.Pod, status common2.KeptnState) {
+	workloadinstance := initWorkloadInstance(workloadname)
 
 	err := k8sClient.Create(ctx, workloadinstance)
 	Expect(ignoreAlreadyExists(err)).To(BeNil())

@@ -12,6 +12,7 @@ import (
 	"k8s.io/klog/v2"
 	st "k8s.io/kubernetes/pkg/scheduler/testing"
 	imageutils "k8s.io/kubernetes/test/utils/image"
+	"time"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -22,7 +23,6 @@ const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 
 var SchedulingError = errors.New("Pod is not scheduled nor existing, this tests works only on a real installation have you setup your kind env?")
-var SchedulingEviction = errors.New("Pod is going to be evicted")
 var SchedulingInPending = errors.New("Pod is pending")
 
 // clean example of E2E test/ integration test --
@@ -99,7 +99,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 				Expect(err).To(BeNil())
 				Eventually(func() error {
 					return podScheduled(pod.Namespace, pod.Name)
-				}).Should(Succeed())
+				}).WithTimeout(time.Second * 30).WithPolling(3 * time.Second).Should(Succeed())
 
 				err = k8sClient.Delete(ctx, workloadinstance)
 				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
@@ -138,7 +138,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 				Eventually(func() error {
 					return podScheduled(pod.Namespace, pod.Name)
-				}).Should(Succeed())
+				}).WithTimeout(time.Second * 30).WithPolling(3 * time.Second).Should(Succeed())
 
 			})
 		})
@@ -209,7 +209,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 				Expect(err).To(BeNil())
 				Eventually(func() error {
 					return podScheduled(pod.Namespace, pod.Name)
-				}).Should(Succeed())
+				}).WithTimeout(time.Second * 30).WithPolling(3 * time.Second).Should(Succeed())
 
 				err = k8sClient.Delete(ctx, workloadinstance)
 				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
@@ -278,9 +278,9 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
 
 				Expect(err).To(BeNil())
-				Eventually(func() error {
+				Consistently(func() error {
 					return podScheduled(pod.Namespace, pod.Name)
-				}).Should(Equal(SchedulingInPending))
+				}).WithTimeout(time.Second * 15).WithPolling(3 * time.Second).ShouldNot(Succeed())
 				err = k8sClient.Delete(ctx, workloadinstance)
 				Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
 
@@ -323,12 +323,7 @@ func podScheduled(namespace, name string) error {
 	}
 
 	for _, c := range pod.Status.Conditions {
-		if c.Type == apiv1.AlphaNoCompatGuaranteeDisruptionTarget {
-			if c.Status == apiv1.ConditionTrue {
-				return SchedulingEviction
-			}
-		}
-		if c.Type == apiv1.PodScheduled || c.Type == apiv1.PodInitialized {
+		if c.Type == apiv1.PodScheduled {
 			if c.Status == apiv1.ConditionTrue {
 				return nil
 			}

@@ -1,5 +1,4 @@
-# This patch add annotation to admission webhook config and
-# the variables $(CERTIFICATE_NAMESPACE) and $(CERTIFICATE_NAME) will be substituted by kustomize.
+# This patch adds excluded namespaces
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -23,10 +22,3 @@ webhooks:
             - "keptn-lifecycle-toolkit-system"
             - "observability"
             - "monitoring"
-#---
-#apiVersion: admissionregistration.k8s.io/v1
-#kind: ValidatingWebhookConfiguration
-#metadata:
-#  name: validating-webhook-configuration
-#  annotations:
-#    cert-manager.io/inject-ca-from: $(CERTIFICATE_NAMESPACE)/$(CERTIFICATE_NAME)

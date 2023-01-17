@@ -1,6 +1,6 @@
 DOCREPO := github.com/keptn-sandbox/lifecycle-toolkit-docs
 TMPDIR := $(CURDIR)/tmp
-VOLUMES := -v $(TMPDIR)/lifecycle-toolkit-docs:/src -v $(TMPDIR)/lifecycle-toolkit-tmp/public:/target -v $(CURDIR)/en:/src/content/en
+VOLUMES := -v $(TMPDIR)/lifecycle-toolkit-docs:/src -v $(CURDIR)/content/docs:/src/content/en/docs
 # renovate: datasource=docker depName=klakegg/hugo
 IMAGE := klakegg/hugo:0.105.0-ext
 

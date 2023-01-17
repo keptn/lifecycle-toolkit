@@ -57,7 +57,7 @@ runs:
       fetch-depth: 0
 
   - name: Install dependencies
-    run: pip install -r .github/scripts/doc_update/requirements.txt
+    run: pip install -r .github/actions/update-documentation/scripts/doc_update/requirements.txt
     shell: bash
 
   - name: Update documentation

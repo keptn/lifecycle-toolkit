@@ -57,12 +57,12 @@ runs:
       fetch-depth: 0
 
   - name: Install dependencies
-    run: pip install -r .github/actions/update-documentation/scripts/doc_update/requirements.txt
+    run: pip install -r .github/actions/update-documentation/scripts/requirements.txt
     shell: bash
 
   - name: Update documentation
     shell: bash
-    run: python .github/actions/update-documentation/scripts/doc_update/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }} --update-main=${{ inputs.main-version }}
+    run: python .github/actions/update-documentation/scripts/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }} --update-main=${{ inputs.main-version }}
 
   - name: Commit changes
     uses: EndBug/add-and-commit@v9

@@ -1,4 +1,4 @@
-name: "Update Keptn Lifecycle Toolkit Documentation and Examples"
+name: "Update KLT Docs/Examples"
 description: "Update Keptn Lifecycle Toolkit Documentation and Examples"
 inputs:
    version:
@@ -48,7 +48,7 @@ runs:
 
   - name: Check out examples
     uses: actions/checkout@v3
-    if: ${{ inputs.update-main == 'true' }}
+    if: inputs.update-main == 'true'
     with:
       repository: ${{ inputs.examples-repo }}
       path: example-repo

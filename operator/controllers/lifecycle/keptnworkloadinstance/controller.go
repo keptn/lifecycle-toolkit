@@ -143,7 +143,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// pre-evaluation checks done at this moment, we can remove the gate
 	if err := controllercommon.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		r.Log.Error(err, "could not remove SchedullingGates")
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	//Wait for deployment of Workload

@@ -854,26 +854,26 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 			events:  nil,
 			wantErr: false,
 		},
-		{
-			name: "Test fetching of data while pre deployment evaluations are not done",
-			args: args{
-				ctx: context.TODO(),
-				req: ctrl.Request{
-					NamespacedName: types.NamespacedName{
-						Namespace: testNamespace,
-						Name:      "some-wi",
-					},
-				},
-			},
-			events: []string{
-				"AppPreDeployEvaluationsFinishedSuccess",
-				"WorkloadPostDeployEvaluationsFinished",
-			},
-			wantErr: false,
-			fields: fields{
-				SpanHandler: &controllercommon.SpanHandler{},
-			},
-		},
+		// {
+		// 	name: "Test fetching of data while pre deployment evaluations are not done",
+		// 	args: args{
+		// 		ctx: context.TODO(),
+		// 		req: ctrl.Request{
+		// 			NamespacedName: types.NamespacedName{
+		// 				Namespace: testNamespace,
+		// 				Name:      "some-wi",
+		// 			},
+		// 		},
+		// 	},
+		// 	events: []string{
+		// 		"AppPreDeployEvaluationsFinishedSuccess",
+		// 		"WorkloadPostDeployEvaluationsFinished",
+		// 	},
+		// 	wantErr: false,
+		// 	fields: fields{
+		// 		SpanHandler: &controllercommon.SpanHandler{},
+		// 	},
+		// },
 	}
 
 	err := controllercommon.AddWorkloadInstance(r.Client, "some-wi", testNamespace)

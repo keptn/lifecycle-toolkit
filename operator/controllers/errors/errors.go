@@ -6,6 +6,7 @@ var ErrCannotWrapToPhaseItem = fmt.Errorf("provided object does not implement Ph
 var ErrCannotWrapToListItem = fmt.Errorf("provided object does not implement ListItem interface")
 var ErrCannotWrapToMetricsObject = fmt.Errorf("provided object does not implement MetricsObject interface")
 var ErrCannotWrapToActiveMetricsObject = fmt.Errorf("provided object does not implement ActiveMetricsObject interface")
+var ErrCannotWrapToEventObject = fmt.Errorf("provided object does not implement EventObject interface")
 var ErrCannotWrapToSpanItem = fmt.Errorf("provided object does not implement SpanItem interface")
 var ErrRetryCountExceeded = fmt.Errorf("retryCount for evaluation exceeded")
 var ErrNoValues = fmt.Errorf("no values")

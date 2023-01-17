@@ -15,9 +15,10 @@ func TestKeptnEvaluation(t *testing.T) {
 			Name: "evaluation",
 		},
 		Spec: KeptnEvaluationSpec{
-			AppName:    "app",
-			AppVersion: "appversion",
-			Type:       common.PostDeploymentCheckType,
+			AppName:              "app",
+			AppVersion:           "appversion",
+			Type:                 common.PostDeploymentCheckType,
+			EvaluationDefinition: "def",
 		},
 		Status: KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
@@ -30,9 +31,10 @@ func TestKeptnEvaluation(t *testing.T) {
 			Name: "evaluation",
 		},
 		Spec: KeptnEvaluationSpec{
-			AppName:    "app",
-			AppVersion: "appversion",
-			Type:       common.PostDeploymentCheckType,
+			AppName:              "app",
+			AppVersion:           "appversion",
+			Type:                 common.PostDeploymentCheckType,
+			EvaluationDefinition: "def",
 		},
 		Status: KeptnEvaluationStatus{
 			OverallStatus: common.StateFailed,
@@ -84,6 +86,14 @@ func TestKeptnEvaluation(t *testing.T) {
 		common.EvaluationType.String(string(common.PostDeploymentCheckType)),
 	}, evaluation.GetSpanAttributes())
 
+	require.Equal(t, map[string]string{
+		"appName":                  "app",
+		"appVersion":               "appversion",
+		"workloadName":             "",
+		"workloadVersion":          "",
+		"evaluationName":           "evaluation",
+		"evaluationDefinitionName": "def",
+	}, evaluation.GetEventAnnotations())
 }
 
 func TestKeptnEvaluationList(t *testing.T) {

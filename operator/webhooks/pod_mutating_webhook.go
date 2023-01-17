@@ -13,6 +13,7 @@ import (
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/semconv"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -306,12 +307,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			a.Recorder.Event(workload, "Warning", "WorkloadNotCreated", fmt.Sprintf("Could not create KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
+			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.Recorder.Event(workload, "Normal", "WorkloadCreated", fmt.Sprintf("KeptnWorkload created / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
+		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
 		return nil
 	}
 
@@ -331,12 +332,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		a.Recorder.Event(workload, "Warning", "WorkloadNotUpdated", fmt.Sprintf("Could not update KeptnWorkload / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
+		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	a.Recorder.Event(workload, "Normal", "WorkloadUpdated", fmt.Sprintf("KeptnWorkload updated / Namespace: %s, Name: %s ", workload.Namespace, workload.Name))
+	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
 
 	return nil
 }
@@ -361,12 +362,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		err = a.Client.Create(ctx, app)
 		if err != nil {
 			logger.Error(err, "Could not create App")
-			a.Recorder.Event(app, "Warning", "AppNotCreated", fmt.Sprintf("Could not create KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", app, "AppNotCreated", "could not create KeptnApp", app.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.Recorder.Event(app, "Normal", "AppCreated", fmt.Sprintf("KeptnApp created / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", app, "AppCreated", "created KeptnApp", app.Spec.Version)
 		return nil
 	}
 
@@ -386,12 +387,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 	err = a.Client.Update(ctx, app)
 	if err != nil {
 		logger.Error(err, "Could not update App")
-		a.Recorder.Event(app, "Warning", "AppNotUpdated", fmt.Sprintf("Could not update KeptnApp / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", app, "AppNotUpdated", "could not update KeptnApp", app.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	a.Recorder.Event(app, "Normal", "AppUpdated", fmt.Sprintf("KeptnApp updated / Namespace: %s, Name: %s ", app.Namespace, app.Name))
+	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", app, "AppUpdated", "updated KeptnApp", app.Spec.Version)
 
 	return nil
 }

@@ -36,10 +36,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		return nil, apicommon.StatusSummary{}, err
 	}
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "ReconcileTasks",
-		LongName:  "Reconcile Tasks",
-	}
+	phase := apicommon.PhaseReconcileTask
 
 	tasks, statuses := r.setupTasks(taskCreateAttributes, piWrapper)
 
@@ -111,16 +108,14 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	return newStatus, summary, nil
 }
 
+//nolint:dupl
 func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
 	}
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "KeptnTaskCreate",
-		LongName:  "Keptn Task Create",
-	}
+	phase := apicommon.PhaseCreateTask
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)

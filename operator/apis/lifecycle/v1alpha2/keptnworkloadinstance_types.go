@@ -427,3 +427,12 @@ func (w *KeptnWorkloadInstance) SetPhaseTraceID(phase string, carrier propagatio
 	}
 	w.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }
+
+func (w KeptnWorkloadInstance) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":              w.Spec.AppName,
+		"workloadName":         w.Spec.WorkloadName,
+		"workloadVersion":      w.Spec.Version,
+		"workloadInstanceName": w.Name,
+	}
+}

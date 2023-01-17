@@ -15,9 +15,10 @@ func TestKeptnTask(t *testing.T) {
 			Name: "task",
 		},
 		Spec: KeptnTaskSpec{
-			AppName:    "app",
-			AppVersion: "appversion",
-			Type:       common.PostDeploymentCheckType,
+			AppName:        "app",
+			AppVersion:     "appversion",
+			Type:           common.PostDeploymentCheckType,
+			TaskDefinition: "def",
 		},
 		Status: KeptnTaskStatus{
 			Status: common.StateFailed,
@@ -30,9 +31,10 @@ func TestKeptnTask(t *testing.T) {
 			Name: "task",
 		},
 		Spec: KeptnTaskSpec{
-			AppName:    "app",
-			AppVersion: "appversion",
-			Type:       common.PostDeploymentCheckType,
+			AppName:        "app",
+			AppVersion:     "appversion",
+			Type:           common.PostDeploymentCheckType,
+			TaskDefinition: "def",
 		},
 		Status: KeptnTaskStatus{
 			Status: common.StateFailed,
@@ -94,6 +96,15 @@ func TestKeptnTask(t *testing.T) {
 		common.TaskName.String("task"),
 		common.TaskType.String(string(common.PostDeploymentCheckType)),
 	}, task.GetSpanAttributes())
+
+	require.Equal(t, map[string]string{
+		"appName":            "app",
+		"appVersion":         "appversion",
+		"workloadName":       "workload",
+		"workloadVersion":    "workloadversion",
+		"taskName":           "task",
+		"taskDefinitionName": "def",
+	}, task.GetEventAnnotations())
 
 }
 

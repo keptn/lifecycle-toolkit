@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
@@ -104,5 +105,13 @@ func (a KeptnApp) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(a.Name),
 		common.AppVersion.String(a.Spec.Version),
+	}
+}
+
+func (a KeptnApp) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":     a.Name,
+		"appVersion":  a.Spec.Version,
+		"appRevision": strconv.FormatInt(a.Generation, 10),
 	}
 }

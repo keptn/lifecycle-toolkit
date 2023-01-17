@@ -6,6 +6,8 @@ import (
 	"reflect"
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -62,19 +64,19 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Cont
 	if cmIsNew {
 		err := r.Client.Create(ctx, &functionCm)
 		if err != nil {
-			r.Recorder.Event(definition, "Warning", "ConfigMapNotCreated", fmt.Sprintf("Could not create configmap / Namespace: %s, Name: %s ", functionCm.Namespace, functionCm.Name))
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", &functionCm, "ConfigMapNotCreated", "could not create configmap", "")
 			return err
 		}
-		r.Recorder.Event(definition, "Normal", "ConfigMapCreated", fmt.Sprintf("Created configmap / Namespace: %s, Name: %s ", functionCm.Namespace, functionCm.Name))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", &functionCm, "ConfigMapCreated", "created configmap", "")
 
 	} else {
 		if !reflect.DeepEqual(cm, functionCm) {
 			err := r.Client.Update(ctx, &functionCm)
 			if err != nil {
-				r.Recorder.Event(definition, "Warning", "ConfigMapNotUpdated", fmt.Sprintf("Could not update configmap / Namespace: %s, Name: %s ", functionCm.Namespace, functionCm.Name))
+				controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", &functionCm, "ConfigMapNotUpdated", "uould not update configmap", "")
 				return err
 			}
-			r.Recorder.Event(definition, "Normal", "ConfigMapUpdated", fmt.Sprintf("Updated configmap / Namespace: %s, Name: %s ", functionCm.Namespace, functionCm.Name))
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", &functionCm, "ConfigMapUpdated", "updated configmap", "")
 		}
 	}
 

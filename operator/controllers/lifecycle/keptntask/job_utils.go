@@ -8,6 +8,7 @@ import (
 	"github.com/imdario/mergo"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -17,7 +18,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	jobName := ""
 	definition, err := r.getTaskDefinition(ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
-		r.Recorder.Event(task, "Warning", "TaskDefinitionNotFound", fmt.Sprintf("Could not find KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 
@@ -54,7 +55,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	if len(task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, task.Spec.Parameters.Inline)
 		if err != nil {
-			r.Recorder.Event(task, "Warning", "TaskDefinitionMergeFailure", fmt.Sprintf("Could not merge KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 			return "", err
 		}
 	}
@@ -70,11 +71,11 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	err = r.Client.Create(ctx, job)
 	if err != nil {
 		r.Log.Error(err, "could not create job")
-		r.Recorder.Event(task, "Warning", "JobNotCreated", fmt.Sprintf("Could not create Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "JobNotCreated", fmt.Sprintf("could not create Job: %s ", task.Name), "")
 		return job.Name, err
 	}
 
-	r.Recorder.Event(task, "Normal", "JobCreated", fmt.Sprintf("Created Job / Namespace: %s, Name: %s ", task.Namespace, task.Name))
+	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", task, "JobCreated", fmt.Sprintf("created Job: %s ", task.Name), "")
 	return job.Name, nil
 }
 
@@ -82,7 +83,7 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil {
 		task.Status.JobName = ""
-		r.Recorder.Event(task, "Warning", "JobReferenceRemoved", fmt.Sprintf("Removed Job Reference as Job could not be found / Namespace: %s, TaskName: %s ", task.Namespace, task.Name))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", task, "JobReferenceRemoved", "removed Job Reference as Job could not be found", "")
 		err = r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not remove job reference for: "+task.Name)
@@ -126,7 +127,7 @@ func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request
 	var parentJobParams FunctionExecutionParams
 	parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
 	if err != nil {
-		r.Recorder.Event(task, "Warning", "TaskDefinitionNotFound", fmt.Sprintf("Could not find KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 	parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
@@ -135,7 +136,7 @@ func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request
 	}
 	err = mergo.Merge(&params, parentJobParams)
 	if err != nil {
-		r.Recorder.Event(task, "Warning", "TaskDefinitionMergeFailure", fmt.Sprintf("Could not merge KeptnTaskDefinition / Namespace: %s, Name: %s ", task.Namespace, task.Spec.TaskDefinition))
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 	return nil

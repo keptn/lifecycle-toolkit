@@ -197,3 +197,14 @@ func (t KeptnTask) GetSpanKey(phase string) string {
 func (t KeptnTask) GetSpanName(phase string) string {
 	return t.Name
 }
+
+func (t KeptnTask) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":            t.Spec.AppName,
+		"appVersion":         t.Spec.AppVersion,
+		"workloadName":       t.Spec.Workload,
+		"workloadVersion":    t.Spec.WorkloadVersion,
+		"taskName":           t.Name,
+		"taskDefinitionName": t.Spec.TaskDefinition,
+	}
+}

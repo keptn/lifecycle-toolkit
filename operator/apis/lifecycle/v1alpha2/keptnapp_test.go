@@ -44,4 +44,10 @@ func TestKeptnApp(t *testing.T) {
 		common.AppName.String("app"),
 		common.AppVersion.String("version"),
 	}, app.GetSpanAttributes())
+
+	require.Equal(t, map[string]string{
+		"appName":     "app",
+		"appVersion":  "version",
+		"appRevision": "1",
+	}, app.GetEventAnnotations())
 }

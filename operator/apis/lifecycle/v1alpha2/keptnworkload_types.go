@@ -102,10 +102,18 @@ func (w KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceCon
 	}
 }
 
-func (i KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {
+func (w KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(i.Spec.AppName),
-		common.WorkloadName.String(i.Name),
-		common.WorkloadVersion.String(i.Spec.Version),
+		common.AppName.String(w.Spec.AppName),
+		common.WorkloadName.String(w.Name),
+		common.WorkloadVersion.String(w.Spec.Version),
+	}
+}
+
+func (w KeptnWorkload) GetEventAnnotations() map[string]string {
+	return map[string]string{
+		"appName":         w.Spec.AppName,
+		"workloadName":    w.Name,
+		"workloadVersion": w.Spec.Version,
 	}
 }

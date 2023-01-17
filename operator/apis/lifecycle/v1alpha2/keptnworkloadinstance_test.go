@@ -215,6 +215,13 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		common.WorkloadVersion.String("version"),
 		common.WorkloadNamespace.String("namespace"),
 	}, workload.GetSpanAttributes())
+
+	require.Equal(t, map[string]string{
+		"appName":              "appname",
+		"workloadName":         "workloadname",
+		"workloadVersion":      "version",
+		"workloadInstanceName": "workload",
+	}, workload.GetEventAnnotations())
 }
 
 //nolint:dupl

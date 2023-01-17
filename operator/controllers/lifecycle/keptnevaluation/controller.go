@@ -18,12 +18,12 @@ package keptnevaluation
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	providers "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation/providers"
 	"go.opentelemetry.io/otel"
@@ -108,7 +108,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		// load the provider
 		provider, err2 := providers.NewProvider(evaluationDefinition.Spec.Source, r.Log, r.Client)
 		if err2 != nil {
-			r.recordEvent("Error", evaluation, "ProviderNotFound", "evaluation provider was not found")
+			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Error", evaluation, "ProviderNotFound", "evaluation provider was not found", "")
 			r.Log.Error(err2, "Failed to get the correct Metric Provider")
 			span.SetStatus(codes.Error, err2.Error())
 			return ctrl.Result{Requeue: false}, err2
@@ -147,17 +147,19 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileErrored", "could not update status", "")
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	r.recordEvent("Normal", evaluation, "NotFinished", "has not finished")
+	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "NotFinished", "has not finished", "")
+
 	return nil
+
 }
 
 func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) {
-	r.recordEvent("Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded")
+	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded", "")
 	err := controllererrors.ErrRetryCountExceeded
 	span.SetStatus(codes.Error, err.Error())
 	evaluation.Status.OverallStatus = apicommon.StateFailed
@@ -230,7 +232,7 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.recordEvent("Warning", evaluation, "ReconcileErrored", "could not update status")
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileErrored", "could not update status", "")
 		return err
 	}
 
@@ -268,8 +270,4 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 		return nil, nil, err
 	}
 	return evaluationDefinition, evaluationProvider, nil
-}
-
-func (r *KeptnEvaluationReconciler) recordEvent(eventType string, evaluation *klcv1alpha2.KeptnEvaluation, shortReason string, longReason string) {
-	r.Recorder.Event(evaluation, eventType, shortReason, fmt.Sprintf("%s / Namespace: %s, Name: %s, WorkloadVersion: %s ", longReason, evaluation.Namespace, evaluation.Name, evaluation.Spec.WorkloadVersion))
 }

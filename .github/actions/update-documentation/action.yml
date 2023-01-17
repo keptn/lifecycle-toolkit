@@ -40,20 +40,20 @@ runs:
   - name: Check out documentation
     uses: actions/checkout@v3
     with:
-      repository: inputs.doc-repo
-      path: doc-repo
-      ref: main
-      token: inputs.token
+      repository: ${{ inputs.doc-repo }}
+      path: "doc-repo"
+      ref: "main"
+      token: ${{ inputs.token }}
       fetch-depth: 0
 
   - name: Check out examples
     uses: actions/checkout@v3
     if: inputs.update-main == 'true'
     with:
-      repository: inputs.examples-repo
-      path: example-repo
-      ref: main
-      token: inputs.token
+      repository: ${{ inputs.examples-repo }}
+      path: "example-repo"
+      ref: "main"
+      token: ${{ inputs.token }}
       fetch-depth: 0
 
   - name: Install dependencies
@@ -61,22 +61,17 @@ runs:
     shell: bash
 
   - name: Update documentation
-    run: python .github/actions/update-documentation/scripts/doc_update/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }} --update-main
     shell: bash
-    if : inputs.main-version == 'true'
-
-  - run: python .github/actions/update-documentation/scripts/doc_update/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }}
-    shell: bash
-    if: inputs.main-version != 'true'
+    run: python .github/actions/update-documentation/scripts/doc_update/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }} --update-main=${{ inputs.main-version }}
 
   - name: Commit changes
     uses: EndBug/add-and-commit@v9
     with:
-      author_name: Keptn Sandbox Bot
-      author_email: keptn@keptn.sh
-      cwd: doc-repo
+      author_name: "Keptn Sandbox Bot"
+      author_email: "keptn@keptn.sh"
+      cwd: "doc-repo"
       message: "Update documentation for version ${{ inputs.version }}"
-      new_branch: inputs.target-branch
+      new_branch: ${{ inputs.target-branch }}
 
   - name: Commit changes to examples
     uses: EndBug/add-and-commit@v9
@@ -85,4 +80,4 @@ runs:
       author_email: keptn@keptn.sh
       cwd: examples-repo
       message: "Update examples for version ${{ inputs.version }}"
-      new_branch: inputs.target-branch
+      new_branch: ${{ inputs.target-branch }}

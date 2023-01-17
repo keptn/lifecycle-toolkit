@@ -36,7 +36,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 Then you can access the UI using http://localhost:8080.
 
 ## Installing the Demo Application
-To install the demo application, you can use the following command (apply [this manifest](https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/argo/config/app.yaml)):
+To install the demo application, you can use the following command (apply [this manifest](https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/argo/config/app.yaml)):
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/keptn-sandbox/lifecycle-toolkit-examples/main/support/argo/config/app.yaml
 ```

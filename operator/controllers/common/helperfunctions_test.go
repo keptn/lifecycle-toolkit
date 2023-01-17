@@ -220,9 +220,10 @@ func Test_setAnnotations(t *testing.T) {
 				},
 			},
 			want: map[string]string{
-				"namespace": "namespace",
-				"name":      "def",
-				"phase":     "AppDeploy",
+				"namespace":   "namespace",
+				"name":        "def",
+				"phase":       "AppDeploy",
+				"traceparent": "",
 			},
 		},
 		{
@@ -262,6 +263,7 @@ func Test_setAnnotations(t *testing.T) {
 				"appName":     "app",
 				"appVersion":  "1.0.0",
 				"appRevision": "1",
+				"traceparent": "",
 			},
 		},
 		{
@@ -285,6 +287,7 @@ func Test_setAnnotations(t *testing.T) {
 				"appName":        "app",
 				"appVersion":     "1.0.0",
 				"appVersionName": "appVersion",
+				"traceparent":    "",
 			},
 		},
 		{
@@ -306,6 +309,7 @@ func Test_setAnnotations(t *testing.T) {
 				"appName":         "app",
 				"workloadVersion": "1.0.0",
 				"workloadName":    "workload",
+				"traceparent":     "",
 			},
 		},
 		{
@@ -331,6 +335,7 @@ func Test_setAnnotations(t *testing.T) {
 				"workloadVersion":      "1.0.0",
 				"workloadName":         "workload",
 				"workloadInstanceName": "workloadInstance",
+				"traceparent":          "",
 			},
 		},
 		{
@@ -358,6 +363,7 @@ func Test_setAnnotations(t *testing.T) {
 				"workloadVersion":    "2.0.0",
 				"taskDefinitionName": "def",
 				"taskName":           "task",
+				"traceparent":        "",
 			},
 		},
 		{
@@ -385,6 +391,7 @@ func Test_setAnnotations(t *testing.T) {
 				"workloadVersion":          "2.0.0",
 				"evaluationDefinitionName": "def",
 				"evaluationName":           "eval",
+				"traceparent":              "",
 			},
 		},
 	}

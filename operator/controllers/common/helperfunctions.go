@@ -78,9 +78,7 @@ func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseTyp
 	}
 
 	annotationsObject := reconcileObject.GetAnnotations()
-	if val, ok := annotationsObject["traceparent"]; ok {
-		annotations["traceparent"] = val
-	}
+	annotations["traceparent"] = annotationsObject["traceparent"]
 
 	return annotations
 }

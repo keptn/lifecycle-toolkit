@@ -1,4 +1,4 @@
 
 # Ignore autogen patch file for webhooks
 manager_webhook_patch.yaml
-*cainjectionpatch.yaml
+webhookcainjection_patch.yaml

@@ -15,7 +15,7 @@ inputs:
      required: false
      description: "Kubernetes that should be used"
      # renovate: datasource=github-releases depName=kubernetes/kubernetes
-     default: "v1.25.3"
+     default: "v1.26.0"
    functions_runtime_tag:
      description: "Tag for the functions runner image"
      required: true
@@ -23,6 +23,10 @@ inputs:
      required: false
      description: "Name of the kind cluster"
      default: "test-cluster"
+   cluster-config:
+     required: false
+     description: "Config of the kind cluster"
+     default: "../workflows/kind-config.yaml"
 
 runs:
   using: "composite"
@@ -46,6 +50,7 @@ runs:
       version: ${{ inputs.kind-version }}
       node_image: "kindest/node:${{ inputs.k8s-version }}"
       kubectl_version: ${{ inputs.k8s-version }}
+      config: ${{ inputs.cluster-config }}
 
   - name: Import images in k3d
     shell: bash

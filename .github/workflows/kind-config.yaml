@@ -1,0 +1,7 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+featureGates:
+  # any feature gate can be enabled here with "Name": true
+  # or disabled here with "Name": false
+  # not all feature gates are tested, however
+  "PodSchedulingReadiness": true

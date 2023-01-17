@@ -26,7 +26,7 @@ inputs:
    cluster-config:
      required: false
      description: "Config of the kind cluster"
-     default: "../../workflows/kind-config.yaml"
+     default: "~/test/integration/kind-cluster-config.yaml"
 
 runs:
   using: "composite"

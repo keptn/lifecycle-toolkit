@@ -1,0 +1,6 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+featureGates:
+  # due to the absence of scheduler, we need to enable the PodScheduling feature
+  # to be able to block the pods until the pre tasks/evals are finished
+  "PodSchedulingReadiness": true

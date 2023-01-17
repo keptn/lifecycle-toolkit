@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 
+	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
@@ -47,23 +48,20 @@ func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.Kept
 	return oldstatus
 }
 
-func RemoveGates(ctx context.Context, c client.Client, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) error {
+func RemoveGates(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) error {
 	switch workloadInstance.Spec.ResourceReference.Kind {
 	case "Pod":
-		pod := &v1.Pod{}
-		err := c.Get(ctx, types.NamespacedName{Namespace: workloadInstance.Namespace, Name: workloadInstance.Spec.ResourceReference.Name}, pod)
-		if err != nil {
-			return err
-		}
-		return removePodGates(ctx, c, pod)
+		return removePodGates(ctx, c, log, workloadInstance.Spec.ResourceReference.Name, workloadInstance.Namespace)
 	case "ReplicaSet", "StatefulSet", "DaemonSet":
-		podList, err := getPodsOfOwner(ctx, c, workloadInstance.Spec.ResourceReference.UID, workloadInstance.Spec.ResourceReference.Kind, workloadInstance.Namespace)
+		podList, err := getPodsOfOwner(ctx, c, log, workloadInstance.Spec.ResourceReference.UID, workloadInstance.Spec.ResourceReference.Kind, workloadInstance.Namespace)
 		if err != nil {
+			log.Error(err, "cannot get pods")
 			return err
 		}
 		for _, pod := range podList {
-			err := removePodGates(ctx, c, &pod)
+			err := removePodGates(ctx, c, log, pod, workloadInstance.Namespace)
 			if err != nil {
+				log.Error(err, "cannot remove gates from pod")
 				return err
 			}
 		}
@@ -74,24 +72,35 @@ func RemoveGates(ctx context.Context, c client.Client, workloadInstance *klcv1al
 	return nil
 }
 
-func removePodGates(ctx context.Context, c client.Client, pod *v1.Pod) error {
+func removePodGates(ctx context.Context, c client.Client, log logr.Logger, podName string, podNamespace string) error {
+	pod := &v1.Pod{}
+	err := c.Get(ctx, types.NamespacedName{Namespace: podNamespace, Name: podName}, pod)
+	if err != nil {
+		log.Error(err, "cannot remove gates from pod - inner")
+		return err
+	}
+	if len(pod.Annotations) == 0 {
+		pod.Annotations = make(map[string]string)
+	}
+	pod.Annotations[apicommon.SchedullingGateRemoved] = "true"
 	pod.Spec.SchedulingGates = nil
 	return c.Update(ctx, pod)
 }
 
-func getPodsOfOwner(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind string, namespace string) ([]v1.Pod, error) {
+func getPodsOfOwner(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind string, namespace string) ([]string, error) {
 	pods := &v1.PodList{}
 	err := c.List(ctx, pods, client.InNamespace(namespace))
 	if err != nil {
+		log.Error(err, "cannot list pods - inner")
 		return nil, err
 	}
 
-	var resultPods []v1.Pod
+	var resultPods []string
 
 	for _, pod := range pods.Items {
 		for _, owner := range pod.OwnerReferences {
 			if owner.Kind == ownerKind && owner.UID == ownerUID {
-				resultPods = append(resultPods, pod)
+				resultPods = append(resultPods, pod.Name)
 				break
 			}
 		}

@@ -59,7 +59,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
 //+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
-//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;update
 //+kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets;daemonsets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -142,7 +142,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// pre-evaluation checks done at this moment, we can remove the gate
-	if err := controllercommon.RemoveGates(ctx, r.Client, workloadInstance); err != nil {
+	if err := controllercommon.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 

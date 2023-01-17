@@ -21,6 +21,6 @@ jobs:
           config-file: '.github/mlc_config.json'
           use-verbose-mode: true
           use-quiet-mode: true
-          folder-path: 'examples'
+          folder-path: 'examples,docs'
           file-path: 'README.md'
 

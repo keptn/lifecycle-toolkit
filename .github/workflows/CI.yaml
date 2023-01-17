@@ -276,6 +276,6 @@ jobs:
         uses: ./.github/actions/update-documentation
         if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
         with:
-          version: "next"
+          version: "dev"
           klt-repo: ${{ github.workspace }}
           token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}

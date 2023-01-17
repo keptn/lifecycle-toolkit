@@ -61,8 +61,25 @@ runs:
     shell: bash
 
   - name: Update documentation
+    if: inputs.main-version != 'true'
     shell: bash
-    run: python .github/actions/update-documentation/scripts/update_docs.py --version ${{ inputs.version }} --klt-docs doc-repo --klt-repo ${{ inputs.klt-repo }} --klt-examples ${{ inputs.examples-repo }} --update-main=${{ inputs.main-version }}
+    run: |
+      python .github/actions/update-documentation/scripts/update_docs.py \
+        --version ${{ inputs.version }} \
+        --klt-docs doc-repo \
+        --klt-repo ${{ inputs.klt-repo }} \
+        --klt-examples ${{ inputs.examples-repo }}
+
+  - name: Update documentation
+    if: inputs.main-version == 'true'
+    shell: bash
+    run: |
+      python .github/actions/update-documentation/scripts/update_docs.py \
+        --version ${{ inputs.version }} \
+        --klt-docs doc-repo \
+        --klt-repo ${{ inputs.klt-repo }} \
+        --klt-examples ${{ inputs.examples-repo }} \
+        --update-main
 
   - name: Commit changes
     uses: EndBug/add-and-commit@v9

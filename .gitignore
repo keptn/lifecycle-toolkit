@@ -35,3 +35,4 @@ manifests/
 
 ## Kubebuilder
 **/kubebuilder
+/docs/tmp/

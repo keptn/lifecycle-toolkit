@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  resource.customizations.health.lifecycle.keptn.sh_KeptnAppVersion: |
+    hs = {}
+    hs.status = "Progressing"
+    hs.message = "KeptnAppVersion is progressing"
+    if obj.status.status == "Succeeded" then
+      hs.status = "Healthy"
+      hs.message = "KeptnAppVersion is healthy"
+    end
+    if obj.status.status == "Failed" then
+      hs.status = "Degraded"
+      hs.message = "KeptnAppVersion is degraded"
+    end
+    return hs
+    
+  resource.customizations.health.lifecycle.keptn.sh_KeptnWorkloadInstance: |
+    hs = {}
+    hs.status = "Progressing"
+    hs.message = "KeptnWorkloadInstance is progressing"
+    if obj.status.status == "Succeeded" then
+      hs.status = "Healthy"
+      hs.message = "KeptnWorkloadInstance is healthy"
+    end
+    if obj.status.status == "Failed" then
+      hs.status = "Degraded"
+      hs.message = "KeptnWorkloadInstance is degraded"
+    end
+    return hs
+
+  resource.customizations.health.lifecycle.keptn.sh_KeptnTask: |
+    hs = {}
+    hs.status = "Progressing"
+    hs.message = "KeptnTask is progressing"
+    if obj.status.status == "Succeeded" then
+      hs.status = "Healthy"
+      hs.message = "KeptnTask is healthy"
+    end
+    if obj.status.status == "Failed" then
+      hs.status = "Degraded"
+      hs.message = "KeptnTask is degraded"
+    end
+    return hs
+
+  resource.customizations.health.lifecycle.keptn.sh_KeptnEvaluation: |
+    hs = {}
+    hs.status = "Progressing"
+    hs.message = "KeptnEvaluation is progressing"
+    if obj.status.overallStatus == "Succeeded" then
+      hs.status = "Healthy"
+      hs.message = "KeptnEvaluation is healthy"
+    end
+    if obj.status.overallStatus == "Failed" then
+      hs.status = "Degraded"
+      hs.message = "KeptnEvaluation is degraded"
+    end
+    return hs

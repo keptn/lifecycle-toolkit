@@ -30,7 +30,6 @@ var SchedulingError = errors.New("Pod is not scheduled nor existing, this tests 
 var SchedulingInPending = errors.New("Pod is pending")
 
 // clean example of E2E test/ integration test --
-
 var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 	BeforeAll(func() {
 		wg.Add(1) //this tells the suite that all test have finished

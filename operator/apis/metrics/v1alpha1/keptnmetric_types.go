@@ -39,7 +39,7 @@ type KeptnMetricStatus struct {
 	Value string `json:"value"`
 	// RawValue represents the resulting value in raw format
 	RawValue []byte `json:"rawValue"`
-	// LastUpdated represents the time when the status data were updated
+	// LastUpdated represents the time when the status data was last updated
 	LastUpdated metav1.Time `json:"lastUpdated"`
 }
 

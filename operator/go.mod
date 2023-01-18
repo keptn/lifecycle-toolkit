@@ -29,7 +29,7 @@ require (
 
 require (
 	github.com/magiconair/properties v1.8.7
-	golang.org/x/exp v0.0.0-20230111222715-75897c7a292a
+	golang.org/x/exp v0.0.0-20230116083435-1de6713980de
 	k8s.io/apiserver v0.25.5
 )
 

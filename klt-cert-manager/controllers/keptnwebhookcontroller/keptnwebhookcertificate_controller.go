@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -27,11 +28,13 @@ type KeptnWebhookCertificateReconciler struct {
 	Log           logr.Logger
 }
 
-// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resourceNames=klc-mutating-webhook-configuration,resources=mutatingwebhookconfigurations,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups="",resourceNames=klc-controller-manager-certs,resources=secrets,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups="",resources=secrets,verbs=create
-// +kubebuilder:rbac:groups="apps", resources=deployments,verbs=get;list;watch;
+//clusterrole
+// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,verbs=get;list;watch;update;patch;
 // +kubebuilder:rbac:groups="apiextensions.k8s.io",resources=customresourcedefinitions,verbs=get;list;watch;update;patch;
+// +kubebuilder:rbac:groups="apps",resources=deployments,verbs=get;list;watch;
+
+//role
+// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -106,6 +109,7 @@ func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) e
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
 		WithEventFilter(eventfilter.ForObjectNameAndNamespace(DeploymentName, namespace)).
+		Owns(&corev1.Secret{}).
 		Complete(r)
 
 }

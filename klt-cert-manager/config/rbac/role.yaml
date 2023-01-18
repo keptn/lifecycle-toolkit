@@ -6,34 +6,10 @@ metadata:
   name: cert-manager-role
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resourceNames:
-  - klc-controller-manager-certs
-  resources:
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
   - admissionregistration.k8s.io
-  resourceNames:
-  - klc-mutating-webhook-configuration
   resources:
   - mutatingwebhookconfigurations
   verbs:
-  - create
-  - delete
   - get
   - list
   - patch
@@ -56,4 +32,24 @@ rules:
   verbs:
   - get
   - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: cert-manager-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
   - watch

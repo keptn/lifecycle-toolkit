@@ -6,7 +6,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-RELEASE_IMAGE:=keptn-cert-operator:$(TAG)
+RELEASE_IMAGE:=keptn-cert-manager:$(TAG)
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -58,7 +58,7 @@ help: ## Display this help.
 
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
-	$(CONTROLLER_GEN) rbac:roleName=klc-cert-manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	$(CONTROLLER_GEN) rbac:roleName=cert-manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.

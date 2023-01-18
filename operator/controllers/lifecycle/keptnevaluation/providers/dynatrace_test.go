@@ -112,10 +112,8 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 		require.Equal(t, 1, len(r.Header["Authorization"]))
 	}))
 	defer svr.Close()
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
@@ -154,10 +152,8 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	fakeClient, err := fake.NewClient(apiToken)
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient(apiToken)
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
@@ -188,10 +184,8 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
@@ -216,10 +210,8 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
@@ -260,10 +252,8 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	fakeClient, err := fake.NewClient(apiToken)
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient(apiToken)
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
@@ -306,10 +296,8 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	fakeClient, err := fake.NewClient(apiToken)
-	if err != nil {
-		t.Errorf("error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient(apiToken)
+
 	kdp := KeptnDynatraceProvider{
 		httpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),

@@ -1,4 +1,4 @@
-package webhooks
+package pod_mutator
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	fakeclient "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	admissionv1 "k8s.io/api/admission/v1"
@@ -553,11 +553,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient, err := fake.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
-
-	if err != nil {
-		t.Errorf("Error when creating objects in fake client %v", err)
-	}
+	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	type fields struct {
 		Client   client.Client

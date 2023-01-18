@@ -1,76 +1,65 @@
 name: "Deploy Keptn Lifecycle Toolkit on GH cluster"
 description: "Creates a Kind cluster and deploys Keptn Lifecycle Toolkit"
 inputs:
-   cert-manager-version:
-     required: false
-     description: "Version of cert-manager that should be deployed"
-     # renovate: datasource=github-releases depName=cert-manager/cert-manager
-     default: "v1.10.0"
-   kind-version:
-     required: false
-     description: "Version of kind that should be used"
-     # renovate: datasource=github-releases depName=kubernetes-sigs/kind
-     default: "v0.17.0"
-   k8s-version:
-     required: false
-     description: "Kubernetes that should be used"
-     # renovate: datasource=github-releases depName=kubernetes/kubernetes
-     default: "v1.25.3"
-   functions_runtime_tag:
-     description: "Tag for the functions runner image"
-     required: true
-   cluster-name:
-     required: false
-     description: "Name of the kind cluster"
-     default: "test-cluster"
+  kind-version:
+    required: false
+    description: "Version of kind that should be used"
+    # renovate: datasource=github-releases depName=kubernetes-sigs/kind
+    default: "v0.17.0"
+  k8s-version:
+    required: false
+    description: "Kubernetes that should be used"
+    # renovate: datasource=github-releases depName=kubernetes/kubernetes
+    default: "v1.25.3"
+  functions_runtime_tag:
+    description: "Tag for the functions runner image"
+    required: true
+  cluster-name:
+    required: false
+    description: "Name of the kind cluster"
+    default: "test-cluster"
 
 runs:
   using: "composite"
   steps:
-  - name: Set up Go 1.x
-    uses: actions/setup-go@v3
-    with:
-      go-version: ${{ env.GO_VERSION }}
-      cache: true
-      cache-dependency-path: '**/go.sum'
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ env.GO_VERSION }}
+        cache: true
+        cache-dependency-path: '**/go.sum'
 
-  - name: Download manifests
-    uses: actions/download-artifact@v3
-    with:
-      path: ~/download/artifacts
+    - name: Download manifests
+      uses: actions/download-artifact@v3
+      with:
+        path: ~/download/artifacts
 
-  - name: "Create single kind Cluster"
-    uses: helm/kind-action@v1.5.0
-    with:
-      cluster_name: ${{ inputs.cluster-name }}
-      version: ${{ inputs.kind-version }}
-      node_image: "kindest/node:${{ inputs.k8s-version }}"
-      kubectl_version: ${{ inputs.k8s-version }}
+    - name: "Create single kind Cluster"
+      uses: helm/kind-action@v1.5.0
+      with:
+        cluster_name: ${{ inputs.cluster-name }}
+        version: ${{ inputs.kind-version }}
+        node_image: "kindest/node:${{ inputs.k8s-version }}"
+        kubectl_version: ${{ inputs.k8s-version }}
 
-  - name: Import images in k3d
-    shell: bash
-    run: |
-      cd ~/download/artifacts
-      for image in $(ls | grep image.tar);
-      do
-        echo "Importing image: $image"
-        kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
-      done
-  
-  - name: Install cert-manager
-    shell: bash
-    run: |
-      kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${{ inputs.cert-manager-version }}/cert-manager.yaml
-      kubectl rollout status deployment cert-manager-cainjector -n cert-manager -w
-      kubectl rollout status deployment cert-manager-webhook -n cert-manager -w
-      kubectl rollout status deployment cert-manager -n cert-manager -w
-    
-  - name: Install lifecycle-toolkit
-    shell: bash
-    run: |
-      sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
-      sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
-      kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest-test
-      kubectl apply -f ~/download/artifacts/scheduler-manifest-test
-      kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
-      kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
+    - name: Import images in k3d
+      shell: bash
+      run: |
+        cd ~/download/artifacts
+        for image in $(ls | grep image.tar);
+        do
+          echo "Importing image: $image"
+          kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
+        done
+
+    - name: Install lifecycle-toolkit
+      shell: bash
+      run: |
+        sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
+        sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
+        kubectl apply -f ~/download/artifacts/keptn-cert-manager-manifest-test
+        kubectl rollout status deployment klt-cert-manager -n keptn-lifecycle-toolkit-system -w
+        kubectl apply -f ~/download/artifacts/keptn-lifecycle-operator-manifest-test
+        kubectl apply -f ~/download/artifacts/scheduler-manifest-test
+        kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
+        kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w

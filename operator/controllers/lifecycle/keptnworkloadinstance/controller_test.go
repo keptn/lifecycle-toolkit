@@ -827,7 +827,7 @@ func Test_getLatestAppVersion(t *testing.T) {
 
 func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 	testNamespace := "some-ns"
-	r, eventChannel, _ := setupReconciler(t)
+	r, eventChannel, _ := setupReconciler()
 
 	type fields struct {
 		Client      client.Client
@@ -929,7 +929,7 @@ func TestKeptnWorkloadInstanceReconciler_Reconcile(t *testing.T) {
 	}
 }
 
-func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan string, *interfacesfake.ITracerMock) {
+func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *interfacesfake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -941,10 +941,7 @@ func setupReconciler(t *testing.T) (*KeptnWorkloadInstanceReconciler, chan strin
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	fakeClient, err := fake.NewClient()
-	if err != nil {
-		t.Errorf("Reconcile() error when setting up fake client %v", err)
-	}
+	fakeClient := fake.NewClient()
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnWorkloadInstanceReconciler{
 		Client:      fakeClient,

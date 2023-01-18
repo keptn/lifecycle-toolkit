@@ -309,3 +309,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/status
+  verbs:
+  - get
+  - patch
+  - update

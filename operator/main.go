@@ -40,7 +40,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
-	metricscontrollers "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
+	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -337,11 +337,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&metricscontrollers.KeptnMetricReconciler{
+	metricsReconciler := &keptnmetric.KeptnMetricReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}

@@ -55,7 +55,6 @@ runs:
 
     - name: Check out examples
       uses: actions/checkout@v3
-      if: inputs.update-main == 'true'
       with:
         repository: ${{ inputs.examples-repo }}
         path: ${{ inputs.examples-repo-path }}
@@ -88,15 +87,15 @@ runs:
           --klt-examples ${{ inputs.examples-repo-path }} \
           --update-main
 
-#    - name: Commit changes to docs repo
-#      uses: EndBug/add-and-commit@v9
-#      with:
-#        committer_name: "Keptn Sandbox Bot"
-#        committer_email: "keptn-sandbox@keptn.sh"
-#        commit: "--signoff"
-#        cwd: ${{ inputs.doc-repo-path }}
-#        message: "docs: update documentation for version ${{ inputs.version }}"
-#        new_branch: ${{ inputs.target-branch }}
+    - name: Commit changes to docs repo
+      uses: EndBug/add-and-commit@v9
+      with:
+        committer_name: "Keptn Sandbox Bot"
+        committer_email: "keptn-sandbox@keptn.sh"
+        commit: "--signoff"
+        cwd: ${{ inputs.doc-repo-path }}
+        message: "docs: update documentation for version ${{ inputs.version }}"
+        new_branch: ${{ inputs.target-branch }}
 
     - name: Commit changes to examples repo
       uses: EndBug/add-and-commit@v9

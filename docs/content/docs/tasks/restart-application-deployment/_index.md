@@ -88,7 +88,7 @@ spec:
               value: "9000"
 ```
 
-In this example, the `KeptnApp` executes a pre deployment check which clearly fails, and will therefore not be able to proceed with the deployment.
+In this example, the `KeptnApp` executes a pre-deployment check which clearly fails due to the `pre-deployment-check` task, and will therefore not be able to proceed with the deployment.
 
 After applying this manifest, you can inspect the status of the created `KeptnAppVersion`:
 

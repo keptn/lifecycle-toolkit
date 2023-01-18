@@ -9,7 +9,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 ## Restart an Application Deployment
 
-During the deployment of a `KeptnApp`, it might be that the deployment fails due to an unsuccessful pre-deployment evaluation or pre-deployment check.
+During the deployment of a `KeptnApp`, it might be that the deployment fails due to an unsuccessful pre-deployment evaluation or pre-deployment task.
 This could happen because of, e.g., a misconfigured target value of a `KeptnEvaluationDefinition`, or a wrong URL being checked in a pre deployment check.
 
 To retry a `KeptnApp` deployment without incrementing the version of the `KeptnApp`, we introduced the concept of **revisions** for a `KeptnAppVersion`. This means that

@@ -25,8 +25,8 @@ import (
 
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
-	// Source represents the provider name
-	Source string `json:"source"`
+	// Provider represents the provider object
+	Provider ProviderRef `json:"provider"`
 	// Query represents the query to be run
 	Query string `json:"query"`
 	// FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric
@@ -41,6 +41,12 @@ type KeptnMetricStatus struct {
 	RawValue []byte `json:"rawValue"`
 	// LastUpdated represents the time when the status data was last updated
 	LastUpdated metav1.Time `json:"lastUpdated"`
+}
+
+// ProviderRef represents the provider object
+type ProviderRef struct {
+	// Name of the provider
+	Name string `json:"name"`
 }
 
 //+kubebuilder:object:root=true

@@ -49,16 +49,22 @@ spec:
                 description: FetchIntervalSeconds represents the update frequency
                   in seconds that is used to update the metric
                 type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
               query:
                 description: Query represents the query to be run
                 type: string
-              source:
-                description: Source represents the provider name
-                type: string
             required:
             - fetchIntervalSeconds
+            - provider
             - query
-            - source
             type: object
           status:
             description: KeptnMetricStatus defines the observed state of KeptnMetric

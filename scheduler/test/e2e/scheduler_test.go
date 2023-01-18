@@ -7,6 +7,7 @@ import (
 	common2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	types2 "github.com/onsi/gomega/types"
 	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,7 +29,6 @@ const KeptnScheduler = "keptn-scheduler"
 var SchedulingError = errors.New("Pod is not scheduled nor existing, this tests works only on a real installation have you setup your kind env?")
 var SchedulingInPending = errors.New("Pod is pending")
 
-// clean example of E2E test/ integration test --
 var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 	BeforeAll(func() {
 		wg.Add(1) //this tells the suite that all test have finished
@@ -53,13 +53,13 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			*pod = initPod(*pod, annotations, nil, KeptnScheduler)
 		})
 
-		Context("a new Pod", func() {
+		Context("a new Pod ", func() {
 
-			It(" should stay pending if no workload instance is available", func() {
+			It("should stay pending if no workload instance is available", func() {
 				checkPending(pod)
 			})
 
-			It(" should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
 				checkWorkload("myapp-myworkload-1.0.0", *pod, "Succeeded")
 			})
 		})
@@ -75,14 +75,10 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			*pod = initPod(*pod, nil, nil, "default")
 		})
 
-		Context("a new Pod", func() {
+		Context("a new Pod ", func() {
 
-			It(" should be immediately scheduled", func() {
-
-				Eventually(func() error {
-					return podScheduled(pod.Namespace, pod.Name)
-				}).WithTimeout(time.Second * 20).WithPolling(3 * time.Second).Should(Succeed())
-
+			It("should be immediately scheduled", func() {
+				assertScheduled(*pod).Should(Succeed())
 			})
 		})
 	})
@@ -101,6 +97,7 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		pod1 := &apiv1.Pod{}
 		pod2 := &apiv1.Pod{}
+
 		BeforeEach(func() {
 			DeferCleanup(func() {
 				err := k8sClient.Delete(ctx, pod1)
@@ -112,15 +109,15 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 			*pod2 = initPod(*pod2, nil, labels2, KeptnScheduler)
 		})
 
-		Context("a new Pod", func() {
-			It(" should stay pending if no workload instance is available", func() {
+		Context("a new Pod ", func() {
+			It("should stay pending if no workload instance is available", func() {
 				checkPending(pod1)
 			})
-			It(" should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.1", *pod1, "Succeeded")
 			})
 
-			It(" should NOT be scheduled when workload instance pre-evaluation checks fails", func() {
+			It("should NOT be scheduled when workload instance pre-evaluation checks fails", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.2", *pod2, "Failed")
 			})
 		})
@@ -132,13 +129,13 @@ func initPod(pod apiv1.Pod, annotations map[string]string, labels map[string]str
 
 	//create a test Pod
 	name := names.SimpleNameGenerator.GenerateName("my-testpod-")
-	pause := imageutils.GetPauseImageName()
+	pauseImg := imageutils.GetPauseImageName()
 	pod = *WithContainer(st.MakePod().
 		Namespace("default").
 		Name(name).
 		Req(map[apiv1.ResourceName]string{apiv1.ResourceMemory: "5"}).
 		ZeroTerminationGracePeriod().
-		Obj(), pause)
+		Obj(), pauseImg)
 	if annotations != nil {
 		pod.Annotations = annotations
 	}
@@ -180,9 +177,7 @@ func checkWorkload(workloadname string, pod apiv1.Pod, status common2.KeptnState
 	err = k8sClient.Status().Update(ctx, workloadinstance)
 
 	Expect(err).To(BeNil())
-	assertion := Eventually(func() error {
-		return podScheduled(pod.Namespace, pod.Name)
-	}).WithTimeout(time.Second * 20).WithPolling(3 * time.Second)
+	assertion := assertScheduled(pod)
 
 	if status == "Failed" {
 		assertion.ShouldNot(Succeed())
@@ -192,6 +187,12 @@ func checkWorkload(workloadname string, pod apiv1.Pod, status common2.KeptnState
 
 	err = k8sClient.Delete(ctx, workloadinstance)
 	Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+}
+
+func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
+	return Eventually(func() error {
+		return podScheduled(pod.Namespace, pod.Name)
+	}).WithTimeout(time.Second * 60).WithPolling(3 * time.Second)
 }
 
 func initWorkloadInstance(name string) *testv1alpha2.KeptnWorkloadInstance {
@@ -217,7 +218,7 @@ func podScheduled(namespace, name string) error {
 	pod := apiv1.Pod{}
 	err := k8sClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, &pod)
 	if err != nil {
-		// This could be a connection error we want to retry.
+		// This could be a connection error, we want to retry.
 		GinkgoLogr.Error(err, "Failed to get", "pod", klog.KRef(namespace, name))
 		return err
 	}

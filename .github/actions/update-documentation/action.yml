@@ -91,8 +91,8 @@ runs:
     - name: Commit changes to docs repo
       uses: EndBug/add-and-commit@v9
       with:
-        committer_name: "Keptn Sandbox Bot"
-        committer_email: "keptn-sandbox@keptn.sh"
+        author_name: "Keptn Sandbox Bot"
+        author_email: "keptn-sandbox@keptn.sh"
         commit: "--signoff"
         cwd: ${{ inputs.doc-repo-path }}
         message: "docs: update documentation for version ${{ inputs.version }}"

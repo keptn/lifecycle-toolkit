@@ -6,35 +6,32 @@ require (
 	github.com/go-logr/logr v1.2.3
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.13
+	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/magiconair/properties v1.8.7
+	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/ginkgo/v2 v2.7.0
 	github.com/onsi/gomega v1.24.2
+	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/prometheus/common v0.39.0
+	github.com/spf13/afero v1.6.0
 	github.com/stretchr/testify v1.8.1
 	go.opentelemetry.io/otel v1.11.2
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
+	go.opentelemetry.io/otel/exporters/prometheus v0.34.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
 	go.opentelemetry.io/otel/metric v0.34.0
 	go.opentelemetry.io/otel/sdk v1.11.2
 	go.opentelemetry.io/otel/sdk/metric v0.34.0
 	go.opentelemetry.io/otel/trace v1.11.2
-	k8s.io/api v0.25.5
-	k8s.io/apimachinery v0.25.5
-	k8s.io/client-go v0.25.5
-	sigs.k8s.io/controller-runtime v0.13.1
-)
-
-require (
-	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo v1.16.5
-	github.com/pkg/errors v0.9.1
-	github.com/spf13/afero v1.6.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
-	go.opentelemetry.io/otel/exporters/prometheus v0.34.0
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
 	golang.org/x/exp v0.0.0-20230116083435-1de6713980de
 	google.golang.org/grpc v1.51.0
+	k8s.io/api v0.25.5
 	k8s.io/apiextensions-apiserver v0.25.5
+	k8s.io/apimachinery v0.25.5
 	k8s.io/apiserver v0.25.5
+	k8s.io/client-go v0.25.5
+	sigs.k8s.io/controller-runtime v0.13.1
 )
 
 require (

@@ -25,15 +25,21 @@ import (
 
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
-	Source               string `json:"source"`
-	Query                string `json:"query"`
-	FetchIntervalSeconds uint   `json:"fetchIntervalSeconds"`
+	// Source represents the provider name
+	Source string `json:"source"`
+	// Query represents the query to be run
+	Query string `json:"query"`
+	// FetchIntervalSeconds represents the length of the inteval for fetching data
+	FetchIntervalSeconds uint `json:"fetchIntervalSeconds"`
 }
 
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
-	Value       string      `json:"value"`
-	RawValue    []byte      `json:"rawValue"`
+	// Value represents the resulting value
+	Value string `json:"value"`
+	// RawValue represents the resulting value in raw format
+	RawValue []byte `json:"rawValue"`
+	// LastUpdated represents the time when the status data were updated
 	LastUpdated metav1.Time `json:"lastUpdated"`
 }
 

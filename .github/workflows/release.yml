@@ -163,3 +163,4 @@ jobs:
           version: ${{ needs.release-please.outputs.tag_name }}
           klt-repo: ${{ github.workspace }}
           token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
+          update-main: true

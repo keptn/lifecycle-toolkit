@@ -95,7 +95,7 @@ runs:
         committer_email: "keptn-sandbox@keptn.sh"
         commit: "--signoff"
         cwd: ${{ inputs.doc-repo-path }}
-        message: "Update documentation for version ${{ inputs.version }}"
+        message: "docs: update documentation for version ${{ inputs.version }}"
         new_branch: ${{ inputs.target-branch }}
 
     - name: Commit changes to examples
@@ -105,5 +105,5 @@ runs:
         committer_email: "keptn-sandbox@keptn.sh"
         commit: "--signoff"
         cwd: ${{ inputs.examples-repo-path }}
-        message: "Update examples for version ${{ inputs.version }}"
+        message: "docs: update examples for version ${{ inputs.version }}"
         new_branch: ${{ inputs.target-branch }}

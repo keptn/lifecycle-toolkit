@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -29,6 +30,7 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 		Spec:   klcv1alpha2.KeptnEvaluationProviderSpec{},
 		Status: klcv1alpha2.KeptnEvaluationProviderStatus{},
 	}
+
 	client := fake.NewClient(&provider)
 	r := &KeptnMetricReconciler{
 		Client: client,
@@ -61,12 +63,12 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Spec: metricsv1alpha1.KeptnMetricSpec{
 			Provider:             metricsv1alpha1.ProviderRef{},
 			Query:                "",
-			FetchIntervalSeconds: 10,
+			FetchIntervalSeconds: 1,
 		},
 		Status: metricsv1alpha1.KeptnMetricStatus{
 			Value:       "12",
 			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-10 * time.Second)},
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
 		},
 	}
 	metric2 := &metricsv1alpha1.KeptnMetric{
@@ -77,12 +79,12 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Spec: metricsv1alpha1.KeptnMetricSpec{
 			Provider:             metricsv1alpha1.ProviderRef{},
 			Query:                "",
-			FetchIntervalSeconds: 10,
+			FetchIntervalSeconds: 1,
 		},
 		Status: metricsv1alpha1.KeptnMetricStatus{
 			Value:       "12",
 			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now()},
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
 		},
 	}
 
@@ -101,19 +103,47 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Status: metricsv1alpha1.KeptnMetricStatus{
 			Value:       "12",
 			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now()},
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
+	metric4 := &metricsv1alpha1.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric4",
+			Namespace: "default",
+		},
+		Spec: metricsv1alpha1.KeptnMetricSpec{
+			Provider: metricsv1alpha1.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+		},
+		Status: metricsv1alpha1.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
 		},
 	}
 
 	provider := &klcv1alpha2.KeptnEvaluationProvider{
 		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
+		Spec:       klcv1alpha2.KeptnEvaluationProviderSpec{},
+		Status:     klcv1alpha2.KeptnEvaluationProviderStatus{},
+	}
+
+	supportedprov := &klcv1alpha2.KeptnEvaluationProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "prometheus",
+			Namespace: "default",
+		},
 		Spec: klcv1alpha2.KeptnEvaluationProviderSpec{
-			TargetServer: "localhost",
+			TargetServer: "http://keptn.sh",
 		},
 		Status: klcv1alpha2.KeptnEvaluationProviderStatus{},
 	}
 
-	client := fake.NewClient(metric, metric2, metric3, provider)
+	client := fake.NewClient(metric, metric2, metric3, metric4, provider, supportedprov)
 
 	r := &KeptnMetricReconciler{
 		Client: client,
@@ -126,55 +156,66 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		ctx     context.Context
 		req     controllerruntime.Request
 		want    controllerruntime.Result
-		wantErr bool
+		wantErr error
 	}{
 		{
-			name: "metric not found",
+			name: "metric not found, ignoring",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "myunexistingmetric"},
 			},
-			want:    controllerruntime.Result{},
-			wantErr: false,
+			want: controllerruntime.Result{},
 		},
 
-		{
-			name: "metric exists, needs to fetch, provider not found",
-			ctx:  context.TODO(),
-			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
-			},
-			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: false,
-		},
 		{
 			name: "metric exists, not time to fetch",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric"},
 			},
-			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: false,
+			want: controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 		},
 
 		{
-			name: "metric exists, needs to fetch, provider found",
+			name: "metric exists, needs to fetch, provider not found ignoring",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
+			},
+			want: controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+		},
+
+		{
+			name: "metric exists, needs to fetch, provider unsupported",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
 			},
-			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: false,
+			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			wantErr: fmt.Errorf("provider myprov not supported"),
+		},
+
+		{
+			name: "metric exists, needs to fetch, prometheus supported, bad query",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
+			},
+			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			wantErr: fmt.Errorf("client_error: client error: 404"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
+			t.Log(tt.name)
 			got, err := r.Reconcile(tt.ctx, tt.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Reconcile() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if tt.wantErr != nil {
+				require.NotNil(t, err)
+				require.Contains(t, err.Error(), tt.wantErr.Error())
+			} else {
+				require.Nil(t, err)
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
 			}

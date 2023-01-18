@@ -47,19 +47,19 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
-		return "", []byte(nil), err
+		return "", nil, err
 	}
 
 	token, err := d.getDTApiToken(ctx, provider)
 	if err != nil {
-		return "", []byte(nil), err
+		return "", nil, err
 	}
 
 	req.Header.Set("Authorization", "Api-Token "+token)
 	res, err := d.httpClient.Do(req)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
-		return "", []byte(nil), err
+		return "", nil, err
 	}
 	defer func() {
 		err := res.Body.Close()
@@ -74,7 +74,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 	err = json.Unmarshal(b, &result)
 	if err != nil {
 		d.Log.Error(err, "Error while parsing response")
-		return "", []byte(nil), err
+		return "", nil, err
 	}
 
 	r := fmt.Sprintf("%f", d.getSingleValue(result))

@@ -30,7 +30,7 @@ inputs:
     default: "false"
   target-branch:
     description: "Target branch for the documentation"
-    default: "dev"
+    default: "main"
     required: true
   token:
     description: "Token to access the documentation repository"

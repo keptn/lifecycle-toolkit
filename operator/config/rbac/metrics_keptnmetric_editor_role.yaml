@@ -1,0 +1,24 @@
+# permissions for end users to edit keptnmetrics.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnmetric-editor-role
+rules:
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/status
+  verbs:
+  - get

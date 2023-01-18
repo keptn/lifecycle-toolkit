@@ -29,6 +29,7 @@ import (
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -39,6 +40,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
+	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -56,7 +58,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
@@ -75,6 +76,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
+	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -330,9 +332,18 @@ func main() {
 		Tracer:   otel.Tracer("keptn/operator/evaluation"),
 		Meters:   meters,
 	}
-
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
+		os.Exit(1)
+	}
+
+	metricsReconciler := &keptnmetric.KeptnMetricReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
+	}
+	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
 

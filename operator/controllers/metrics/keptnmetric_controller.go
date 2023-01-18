@@ -19,18 +19,19 @@ package metrics
 import (
 	"context"
 
+	"github.com/go-logr/logr"
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 )
 
 // KeptnMetricReconciler reconciles a KeptnMetric object
 type KeptnMetricReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
+	Log    logr.Logger
 }
 
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics,verbs=get;list;watch;create;update;patch;delete
@@ -47,9 +48,18 @@ type KeptnMetricReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	r.Log.Info("Reconciling Metric")
+	metric := &metricsv1alpha1.KeptnMetric{}
 
-	// TODO(user): your logic here
+	if err := r.Client.Get(ctx, req.NamespacedName, metric); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("Metric resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{}, nil
+		}
+		r.Log.Error(err, "Failed to get the Metric")
+		return ctrl.Result{}, nil
+	}
 
 	return ctrl.Result{}, nil
 }

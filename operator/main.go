@@ -331,9 +331,17 @@ func main() {
 		Tracer:   otel.Tracer("keptn/operator/evaluation"),
 		Meters:   meters,
 	}
-
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
+		os.Exit(1)
+	}
+
+	if err = (&metricscontrollers.KeptnMetricReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
 
@@ -351,13 +359,6 @@ func main() {
 	}
 	if err = (&lifecyclev1alpha2.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-	if err = (&metricscontrollers.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

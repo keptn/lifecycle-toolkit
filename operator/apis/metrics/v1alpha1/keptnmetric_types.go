@@ -33,7 +33,7 @@ type KeptnMetricSpec struct {
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
 	Value       string      `json:"value"`
-	RawValue    string      `json:"rawValue"`
+	RawValue    []byte      `json:"rawValue"`
 	LastUpdated metav1.Time `json:"lastUpdated"`
 }
 

@@ -63,6 +63,7 @@ spec:
                 format: date-time
                 type: string
               rawValue:
+                format: byte
                 type: string
               value:
                 type: string

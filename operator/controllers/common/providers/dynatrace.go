@@ -38,7 +38,7 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
-func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, error) {
+func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	qURL := provider.Spec.TargetServer + "/api/v2/metrics/query?metricSelector=" + objective.Query
 
 	d.Log.Info("Running query: " + qURL)
@@ -47,19 +47,19 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
-		return "", err
+		return "", []byte(nil), err
 	}
 
 	token, err := d.getDTApiToken(ctx, provider)
 	if err != nil {
-		return "", err
+		return "", []byte(nil), err
 	}
 
 	req.Header.Set("Authorization", "Api-Token "+token)
 	res, err := d.httpClient.Do(req)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
-		return "", err
+		return "", []byte(nil), err
 	}
 	defer func() {
 		err := res.Body.Close()
@@ -74,10 +74,11 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 	err = json.Unmarshal(b, &result)
 	if err != nil {
 		d.Log.Error(err, "Error while parsing response")
-		return "", err
+		return "", []byte(nil), err
 	}
 
-	return fmt.Sprintf("%f", d.getSingleValue(result)), nil
+	r := fmt.Sprintf("%f", d.getSingleValue(result))
+	return r, b, nil
 }
 
 func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float64 {

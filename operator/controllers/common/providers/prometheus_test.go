@@ -23,6 +23,7 @@ func Test_prometheus(t *testing.T) {
 		name      string
 		in        string
 		out       string
+		outraw    []byte
 		wantError bool
 	}{
 		{
@@ -35,6 +36,7 @@ func Test_prometheus(t *testing.T) {
 			name:      "warnings",
 			in:        promWarnPayload,
 			out:       "1",
+			outraw:    []byte("\"1\""),
 			wantError: false,
 		},
 		{
@@ -59,6 +61,7 @@ func Test_prometheus(t *testing.T) {
 			name:      "happy path",
 			in:        promPayload,
 			out:       "1",
+			outraw:    []byte("\"1\""),
 			wantError: false,
 		},
 	}
@@ -89,8 +92,9 @@ func Test_prometheus(t *testing.T) {
 					TargetServer: svr.URL,
 				},
 			}
-			r, e := kpp.EvaluateQuery(context.TODO(), obj, p)
+			r, raw, e := kpp.EvaluateQuery(context.TODO(), obj, p)
 			require.Equal(t, tt.out, r)
+			require.Equal(t, tt.outraw, raw)
 			if tt.wantError != (e != nil) {
 				t.Errorf("want error: %t, got: %v", tt.wantError, e)
 			}

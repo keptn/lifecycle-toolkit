@@ -18,7 +18,7 @@ type KeptnPrometheusProvider struct {
 	httpClient http.Client
 }
 
-func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, error) {
+func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
@@ -26,7 +26,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective k
 	r.Log.Info("Running query: /api/v1/query?query=" + objective.Query + "&time=" + queryTime.String())
 	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.httpClient})
 	if err != nil {
-		return "", err
+		return "", []byte(nil), err
 	}
 	api := prometheus.NewAPI(client)
 	result, w, err := api.Query(
@@ -37,7 +37,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective k
 	)
 
 	if err != nil {
-		return "", err
+		return "", []byte(nil), err
 	}
 
 	if len(w) != 0 {
@@ -47,18 +47,22 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective k
 	// check if we can cast the result to a vector, it might be another data struct which we can't process
 	resultVector, ok := result.(model.Vector)
 	if !ok {
-		return "", fmt.Errorf("could not cast result")
+		return "", []byte(nil), fmt.Errorf("could not cast result")
 	}
 
 	// We are only allowed to return one value, if not the query may be malformed
 	// we are using two different errors to give the user more information about the result
 	if len(resultVector) == 0 {
 		r.Log.Info("No values in query result")
-		return "", fmt.Errorf("no values in query result")
+		return "", []byte(nil), fmt.Errorf("no values in query result")
 	} else if len(resultVector) > 1 {
 		r.Log.Info("Too many values in the query result")
-		return "", fmt.Errorf("too many values in the query result")
+		return "", []byte(nil), fmt.Errorf("too many values in the query result")
 	}
 	value := resultVector[0].Value.String()
-	return value, nil
+	b, err := resultVector[0].Value.MarshalJSON()
+	if err != nil {
+		return value, []byte(nil), err
+	}
+	return value, b, nil
 }

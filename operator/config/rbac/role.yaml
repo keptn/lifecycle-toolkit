@@ -80,12 +80,6 @@ rules:
   - list
   - watch
 - apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - keptnapps
@@ -314,12 +308,8 @@ rules:
   resources:
   - keptnmetrics
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - metrics.keptn.sh
@@ -335,3 +325,25 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - providers
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: manager-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get

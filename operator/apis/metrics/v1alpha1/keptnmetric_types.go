@@ -29,7 +29,7 @@ type KeptnMetricSpec struct {
 	Source string `json:"source"`
 	// Query represents the query to be run
 	Query string `json:"query"`
-	// FetchIntervalSeconds represents the length of the inteval for fetching data
+	// FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric
 	FetchIntervalSeconds uint `json:"fetchIntervalSeconds"`
 }
 

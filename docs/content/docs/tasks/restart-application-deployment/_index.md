@@ -151,7 +151,7 @@ podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
 podtato-head-0.1.1-2   podtato-head   0.1.1     AppDeploy
 ```
 
-As you will see, the newly created revision `podtato-head-0.1.1-2` has made it beyond the preDeployment check phase and has reached its `AppDeployPhase`.
+As you will see, the newly created revision `podtato-head-0.1.1-2` has made it beyond the pre-deployment check phase and has reached its `AppDeployPhase`.
 
 You can also verify the execution of the `pre-deployment-check` by retrieving the list of `KeptnTasks` in the `restartable-apps` namespace:
 

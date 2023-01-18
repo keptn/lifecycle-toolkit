@@ -15,7 +15,7 @@ This could happen because of, e.g., a misconfigured target value of a `KeptnEval
 To retry a `KeptnApp` deployment without incrementing the version of the `KeptnApp`, we introduced the concept of **revisions** for a `KeptnAppVersion`. This means that
 whenever the spec of a `KeptnApp` changes, even though the version stays the same, the KLT Operator will create a new revision of the `KeptnAppVersion` referring to the `KeptnApp`.
 
-This way, when a `KeptnApp` failed due to a misconfigured pre deployment task, you can first fix the configuration of the `KeptnTaskDefinition`/`KeptnEvaluationDefinition`, then
+This way, when a `KeptnApp` failed due to a misconfigured pre-deployment check, you can first fix the configuration of the `KeptnTaskDefinition`/`KeptnEvaluationDefinition`, then
 increase the value of `spec.revision` of the `KeptnApp` and finally apply the updated `KeptnApp` manifest.
 This will result in a restart of the `KeptnApp`.
 Afterwards, all related `KeptnWorkloadInstances` will automatically refer to the newly

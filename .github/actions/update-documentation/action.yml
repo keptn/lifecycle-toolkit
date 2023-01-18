@@ -55,7 +55,7 @@ runs:
 
     - name: Check out examples
       uses: actions/checkout@v3
-      if: inputs.main-version == 'true'
+      if: inputs.update-main == 'true'
       with:
         repository: ${{ inputs.examples-repo }}
         path: ${{ inputs.examples-repo-path }}
@@ -68,7 +68,7 @@ runs:
       shell: bash
 
     - name: Update documentation
-      if: inputs.main-version != 'true'
+      if: inputs.update-main != 'true'
       shell: bash
       run: |
         python .github/actions/update-documentation/scripts/update_docs.py \
@@ -78,7 +78,7 @@ runs:
           --klt-examples ${{ inputs.examples-repo-path }}
 
     - name: Update documentation
-      if: inputs.main-version == 'true'
+      if: inputs.update-main == 'true'
       shell: bash
       run: |
         python .github/actions/update-documentation/scripts/update_docs.py \
@@ -100,7 +100,7 @@ runs:
 
     - name: Commit changes to examples repo
       uses: EndBug/add-and-commit@v9
-      if: inputs.main-version == 'true'
+      if: inputs.update-main == 'true'
       with:
         author_name: "Keptn Sandbox Bot"
         author_email: "keptn-sandbox@keptn.sh"

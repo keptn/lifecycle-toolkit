@@ -3,6 +3,7 @@ kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
 spec:
-  source: "provider"
+  provider:
+    name: "provider"
   query: "query"
   fetchIntervalSeconds: 5

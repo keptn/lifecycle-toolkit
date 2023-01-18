@@ -3,6 +3,7 @@ kind: KeptnMetric
 metadata:
   name: podtato-head
 spec:
-  source: "provider"
+  provider:
+    name: "provider"
   query: "query"
   fetchIntervalSeconds: 5

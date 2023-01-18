@@ -51,7 +51,7 @@ type ProviderRef struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.source`
+//+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
 //+kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
 //+kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
 

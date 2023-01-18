@@ -1,0 +1,8 @@
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: KeptnMetric
+metadata:
+  name: podtato-head
+spec:
+  source: "provider"
+  query: "query"
+  fetchIntervalSeconds: 5

@@ -29,6 +29,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.6.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
+	go.opentelemetry.io/otel/exporters/prometheus v0.34.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
 	golang.org/x/exp v0.0.0-20230116083435-1de6713980de
 	google.golang.org/grpc v1.51.0

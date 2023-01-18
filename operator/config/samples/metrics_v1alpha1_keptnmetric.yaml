@@ -3,4 +3,6 @@ kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
 spec:
-  # TODO(user): Add fields here
+  source: "provider"
+  query: "query"
+  fetchIntervalSeconds: 5

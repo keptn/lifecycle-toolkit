@@ -46,10 +46,14 @@ spec:
             description: KeptnMetricSpec defines the desired state of KeptnMetric
             properties:
               fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
                 type: integer
               query:
+                description: Query represents the query to be run
                 type: string
               source:
+                description: Source represents the provider name
                 type: string
             required:
             - fetchIntervalSeconds
@@ -60,12 +64,16 @@ spec:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
             properties:
               lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
                 format: date-time
                 type: string
               rawValue:
+                description: RawValue represents the resulting value in raw format
                 format: byte
                 type: string
               value:
+                description: Value represents the resulting value
                 type: string
             required:
             - lastUpdated

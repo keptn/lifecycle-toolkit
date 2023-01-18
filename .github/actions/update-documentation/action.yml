@@ -55,6 +55,7 @@ runs:
 
     - name: Check out examples
       uses: actions/checkout@v3
+      if: inputs.main-version != 'true'
       with:
         repository: ${{ inputs.examples-repo }}
         path: ${{ inputs.examples-repo-path }}
@@ -99,6 +100,7 @@ runs:
 
     - name: Commit changes to examples repo
       uses: EndBug/add-and-commit@v9
+      if: inputs.main-version != 'true'
       with:
         author_name: "Keptn Sandbox Bot"
         author_email: "keptn-sandbox@keptn.sh"

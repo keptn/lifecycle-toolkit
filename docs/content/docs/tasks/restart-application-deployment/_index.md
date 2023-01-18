@@ -1,6 +1,6 @@
 ---
 title: Restart an Application Deployment
-description: Learn how to restart an unsuccessful Keptn Application Deployment .
+description: Learn how to restart an unsuccessful Keptn Application Deployment.
 icon: concepts
 layout: quickstart
 weight: 20
@@ -9,14 +9,16 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 ## Restart an Application Deployment
 
-During the deployment of a `KeptnApp`, it might be that the deployment fails due to a unsuccessful pre-deployment evaluation or pre-deployment check.
-This might be because of, e.g., a misconfigured target value of a `KeptnEvaluationDefinition`, or of a wrong URL being checked in a pre deployment check.
+During the deployment of a `KeptnApp`, it might be that the deployment fails due to an unsuccessful pre-deployment evaluation or pre-deployment check.
+This could happen because of, e.g., a misconfigured target value of a `KeptnEvaluationDefinition`, or a wrong URL being checked in a pre deployment check.
 
-To retry an `KeptnApp` deployment without bumping up the version of the `KeptnApp`, we introduced the concept of **revisions** for a `KeptnAppVersion`. This means that
+To retry a `KeptnApp` deployment without incrementing the version of the `KeptnApp`, we introduced the concept of **revisions** for a `KeptnAppVersion`. This means that
 whenever the spec of a `KeptnApp` changes, even though the version stays the same, the KLT Operator will create a new revision of the `KeptnAppVersion` referring to the `KeptnApp`.
 
 This way, when a `KeptnApp` failed due to a misconfigured pre deployment task, you can first fix the configuration of the `KeptnTaskDefinition`/`KeptnEvaluationDefinition`, then
-increase the value of `spec.revision` of the `KeptnApp` and finally apply the updated `KeptnApp` manifest. Afterwards, all related `KeptnWorkloadInstances` will automatically refer to the newly
+increase the value of `spec.revision` of the `KeptnApp` and finally apply the updated `KeptnApp` manifest.
+This will result in a restart of the `KeptnApp`.
+Afterwards, all related `KeptnWorkloadInstances` will automatically refer to the newly
 created revision of the `KeptnAppVersion` to determine whether they are allowed to enter their respective deployment phase.
 
 To illustrate this, let's have a look at the following example:
@@ -96,9 +98,8 @@ NAME                   APPNAME        VERSION   PHASE
 podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
 ```
 
-You will notice that the `KeptnAppVersion` will stay in the `AppPreDeployTasks` phase for a while, due to the pre-check trying to be 
-executed until a certain failure threshold is reached. Eventually, you will find the `KeptnAppVersion`'s `PredeploymentPhase` to be in a `Failed` state,
-with the remaining phases being `Deprecated`.
+You will notice that the `KeptnAppVersion` will stay in the `AppPreDeployTasks` phase for a while, due to the pre-check trying to run until a certain failure threshold is reached.
+Eventually, you will find the `KeptnAppVersion`'s `PredeploymentPhase` to be in a `Failed` state, with the remaining phases being `Deprecated`.
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps -owide
@@ -106,8 +107,8 @@ NAME                   APPNAME        VERSION   PHASE               PREDEPLOYMEN
 podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks   Failed                Deprecated                      Deprecated              Deprecated             Deprecated
 ```
 
-Now, to fix the deployment of this application is to first fix the task that has failed earlier. To do so, edit the
-`pre-deployment-check` `KeptnTaskDefinition` to the following (`kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-deployment-check`):
+Now, to fix the deployment of this application, we first need to fix the task that has failed earlier.
+To do so, edit the `pre-deployment-check` `KeptnTaskDefinition` to the following (`kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-deployment-check`):
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
@@ -122,7 +123,7 @@ spec:
         console.error("Success")
 ```
 
-After we have done that, we can restart the deployment of our `KeptnApplication` by increasing the `spec.revision` field by one 
+After we have done that, we can restart the deployment of our `KeptnApplication` by incrementing the `spec.revision` field by one 
 (`kubectl -n restartable-apps edit keptnapps.lifecycle.keptn.sh podtato-head`):
 
 ```yaml
@@ -141,7 +142,7 @@ spec:
     - pre-deployment-check
 ```
 
-After those changes have been made, you'll notice a new revision of the `podtato-head` `KeptnAppVersion`: 
+After those changes have been made, you will notice a new revision of the `podtato-head` `KeptnAppVersion`: 
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps       
@@ -161,5 +162,5 @@ pre-pre-deployment-check-49827   podtato-head   0.1.1                           
 pre-pre-deployment-check-65056   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--57313   Succeeded
 ```
 
-You'll notice that for both the `KeptnAppVersions` and `KeptnTasks` the previous failed instances are still available, as this might be useful historical data to keep track of 
+You will notice that for both the `KeptnAppVersions` and `KeptnTasks` the previous failed instances are still available, as this might be useful historical data to keep track of 
 what went wrong during earlier deployment attempts.

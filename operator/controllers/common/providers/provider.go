@@ -11,26 +11,30 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const DynatraceProviderName = "dynatrace"
+const PrometheusProviderName = "prometheus"
+const KeptnMetricProviderName = "keptn-metric"
+
 // KeptnSLIProvider is the interface that describes the operations that an SLI provider must implement
 type KeptnSLIProvider interface {
 	EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error)
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
-func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
+func NewProvider(provider string, log logr.Logger, k8sClient client.Client, opts ...func(p KeptnSLIProvider)) (KeptnSLIProvider, error) {
 	switch strings.ToLower(provider) {
-	case "prometheus":
+	case PrometheusProviderName:
 		return &KeptnPrometheusProvider{
 			httpClient: http.Client{},
 			Log:        log,
 		}, nil
-	case "dynatrace":
+	case DynatraceProviderName:
 		return &KeptnDynatraceProvider{
 			httpClient: http.Client{},
 			Log:        log,
 			k8sClient:  k8sClient,
 		}, nil
-	case "keptn-metric":
+	case KeptnMetricProviderName:
 		return &KeptnMetricProvider{
 			Log:       log,
 			k8sClient: k8sClient,

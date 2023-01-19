@@ -31,6 +31,7 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
@@ -268,6 +269,16 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 		Namespace: namespacedDefinition.Namespace,
 		Name:      evaluationDefinition.Spec.Source,
 	}
+
+	if evaluationDefinition.Spec.Source == providers.KeptnMetricProviderName {
+		return evaluationDefinition, &klcv1alpha2.KeptnEvaluationProvider{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      providers.KeptnMetricProviderName,
+				Namespace: namespacedDefinition.Namespace,
+			},
+		}, nil
+	}
+
 	evaluationProvider := &klcv1alpha2.KeptnEvaluationProvider{}
 	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
 		return nil, nil, err

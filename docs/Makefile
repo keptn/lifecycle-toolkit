@@ -21,5 +21,5 @@ server:
 clean:
 	docker run --rm -it $(VOLUMES) $(IMAGE) --cleanDestinationDir
 
-htmltest:
+htmltest: clone build
 	docker run -v $(CURDIR):/test --rm wjdp/htmltest -s /test/tmp/lifecycle-toolkit-docs/public

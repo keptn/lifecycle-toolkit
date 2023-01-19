@@ -76,11 +76,7 @@ func (a *KeptnAdapter) makeProviderOrDie(ctx context.Context) provider.CustomMet
 		klog.Fatalf("unable to construct discovery REST mapper: %v", err)
 	}
 
-	p, err := keptnprovider.NewProvider(ctx, client, mapper)
-	if err != nil {
-		klog.Fatalf("unable to create metrics provider: %v", err)
-	}
-	return p
+	return keptnprovider.NewProvider(ctx, client, mapper)
 }
 
 func recordMetrics() {

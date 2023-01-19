@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-logr/logr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -22,7 +21,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
-	"os"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
@@ -45,16 +43,14 @@ type keptnMetricsProvider struct {
 	metrics CustomMetrics
 }
 
-func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.RESTMapper) (provider.CustomMetricsProvider, error) {
-	var err error
+func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.RESTMapper) provider.CustomMetricsProvider {
 	providerOnce.Do(func() {
 		scheme := runtime.NewScheme()
 
 		cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
 
 		if err != nil {
-			fmt.Println("failed to create client")
-			os.Exit(1)
+			klog.Fatalf("failed to create client: %v", err)
 		}
 
 		providerInstance = &keptnMetricsProvider{
@@ -68,10 +64,12 @@ func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.R
 			logger: ctrl.Log.WithName("provider"),
 		}
 
-		err = providerInstance.watchMetrics(ctx)
+		if err := providerInstance.watchMetrics(ctx); err != nil {
+			klog.Fatalf("failed to start informer: %v", err)
+		}
 	})
 
-	return providerInstance, err
+	return providerInstance
 }
 
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {

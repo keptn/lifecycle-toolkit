@@ -265,10 +265,6 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
 		return nil, nil, err
 	}
-	namespacedProvider := types.NamespacedName{
-		Namespace: namespacedDefinition.Namespace,
-		Name:      evaluationDefinition.Spec.Source,
-	}
 
 	if evaluationDefinition.Spec.Source == providers.KeptnMetricProviderName {
 		return evaluationDefinition, &klcv1alpha2.KeptnEvaluationProvider{
@@ -277,6 +273,11 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 				Namespace: namespacedDefinition.Namespace,
 			},
 		}, nil
+	}
+
+	namespacedProvider := types.NamespacedName{
+		Namespace: namespacedDefinition.Namespace,
+		Name:      evaluationDefinition.Spec.Source,
 	}
 
 	evaluationProvider := &klcv1alpha2.KeptnEvaluationProvider{}

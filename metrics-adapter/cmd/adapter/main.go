@@ -1,16 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	keptnprovider "github.com/keptn/lifecycle-toolkit/metrics-adapter/pkg/provider"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/dynamic/dynamicinformer"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/cache"
-	"log"
+	"os/signal"
+	"syscall"
 
 	//metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/metrics/v1alpha1"
 	"github.com/prometheus/client_golang/prometheus"
@@ -55,7 +51,10 @@ func main() {
 	cmd.Flags().AddGoFlagSet(flag.CommandLine)
 	cmd.Flags().Parse(os.Args)
 
-	prov := cmd.makeProviderOrDie()
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
+	defer cancel()
+
+	prov := cmd.makeProviderOrDie(ctx)
 
 	cmd.WithCustomMetrics(prov)
 	// you could also set up external metrics support,
@@ -69,7 +68,7 @@ func main() {
 	fmt.Println("Finishing Keptn Metrics Adapter")
 }
 
-func (a *KeptnAdapter) makeProviderOrDie() provider.CustomMetricsProvider {
+func (a *KeptnAdapter) makeProviderOrDie(ctx context.Context) provider.CustomMetricsProvider {
 	client, err := a.DynamicClient()
 	if err != nil {
 		klog.Fatalf("unable to construct dynamic client: %v", err)
@@ -80,59 +79,11 @@ func (a *KeptnAdapter) makeProviderOrDie() provider.CustomMetricsProvider {
 		klog.Fatalf("unable to construct discovery REST mapper: %v", err)
 	}
 
-	return keptnprovider.NewProvider(client, mapper)
-}
-
-func watchMetrics() {
-	stopCh := make(chan struct{})
-	// Create a new Kubernetes dynamic client
-	config, err := rest.InClusterConfig()
+	p, err := keptnprovider.NewProvider(ctx, client, mapper)
 	if err != nil {
-		log.Fatalf("Error creating client config: %v", err)
+		klog.Fatalf("unable to create metrics provider: %v", err)
 	}
-	client, err := dynamic.NewForConfig(config)
-	if err != nil {
-		log.Fatalf("Error creating client: %v", err)
-	}
-
-	// Define the resource we want to watch (e.g. pods)
-	resource := schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1alpha1", Resource: "keptnmetrics"}
-
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(client, 0, "keptn-lifecycle-toolkit-system", func(options *metav1.ListOptions) {})
-
-	informer := factory.ForResource(resource).Informer()
-
-	handlers := cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-
-		},
-		UpdateFunc: func(oldObj, obj interface{}) {
-
-		},
-		DeleteFunc: func(obj interface{}) {
-		},
-	}
-	informer.AddEventHandler(handlers)
-	informer.Run(stopCh)
-
-	// Watcher
-	// Set up a watcher for the resource
-	//watcher, err := client.Resource(resource).Watch(metav1.ListOptions{})
-	//if err != nil {
-	//	log.Fatalf("Error setting up watcher: %v", err)
-	//}
-	//
-	//// Loop through events
-	//for event := range watcher.ResultChan() {
-	//	switch event.Type {
-	//	case watch.Added:
-	//		log.Printf("Pod added: %v", event.Object)
-	//	case watch.Modified:
-	//		log.Printf("Pod modified: %v", event.Object)
-	//	case watch.Deleted:
-	//		log.Printf("Pod deleted: %v", event.Object)
-	//	}
-	//}
+	return p
 }
 
 func recordMetrics() {

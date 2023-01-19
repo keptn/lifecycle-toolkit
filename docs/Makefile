@@ -1,6 +1,6 @@
 DOCREPO := github.com/keptn-sandbox/lifecycle-toolkit-docs
 TMPDIR := $(CURDIR)/tmp
-VOLUMES := -v $(TMPDIR)/lifecycle-toolkit-docs:/src -v $(CURDIR)/content/docs:/src/content/en/docs
+VOLUMES := -v $(TMPDIR)/lifecycle-toolkit-docs:/src -v $(CURDIR)/content/en/docs:/src/content/en/docs
 # renovate: datasource=docker depName=klakegg/hugo
 HUGO_VERSION := 0.105.0-ext
 IMAGE := klakegg/hugo:$(HUGO_VERSION)
@@ -21,5 +21,5 @@ server:
 clean:
 	docker run --rm -it $(VOLUMES) $(IMAGE) --cleanDestinationDir
 
-htmltest:
-	docker run -v $(CURDIR):/test --rm wjdp/htmltest -s -c .htmltest.yml public
+htmltest: clone build
+	docker run -v $(CURDIR):/test --rm wjdp/htmltest -s /test/tmp/lifecycle-toolkit-docs/public

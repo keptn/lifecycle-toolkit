@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import os
-from dirsync import sync
-import yaml
 import argparse
+
+import yaml
+from dirsync import sync
 
 parser = argparse.ArgumentParser(description="Keptn Documentation Updater")
 parser.add_argument('--version', '-v', help='Keptn LT Version', default="development", required=True, dest='version')
@@ -24,7 +24,8 @@ if klt_docs == "" or klt_repo == "":
     exit(1)
 
 # Sync the docs from the KLT repo to the docs folder, sync main-version docs to the root
-sync(klt_repo + '/docs/content/docs', klt_docs + '/content/en/docs-' + version, 'sync', exclude=['^tmp', 'Makefile'], create=True)
+sync(klt_repo + '/docs/content/en/docs', klt_docs + '/content/en/docs-' + version, 'sync', exclude=['^tmp', 'Makefile'],
+     create=True)
 
 # Update the version in the docs
 with open(klt_docs + "/" + 'config.yaml', 'r') as f:

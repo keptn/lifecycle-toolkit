@@ -37,7 +37,7 @@ func (cm *CustomMetrics) Delete(metric provider.CustomMetricInfo) {
 func (cm *CustomMetrics) List() []provider.CustomMetricInfo {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
-	res := make([]provider.CustomMetricInfo, len(cm.metrics))
+	res := []provider.CustomMetricInfo{}
 	for metricInfo := range cm.metrics {
 		res = append(res, metricInfo)
 	}

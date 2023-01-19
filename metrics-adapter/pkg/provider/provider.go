@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic/dynamicinformer"
 	"k8s.io/client-go/tools/cache"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sync"
 	"time"
@@ -61,7 +62,10 @@ func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.R
 			mapper:    mapper,
 			k8sClient: cl,
 			scheme:    scheme,
-			logger:    ctrl.Log.WithName("provider"),
+			metrics: CustomMetrics{
+				metrics: map[provider.CustomMetricInfo]CustomMetricValue{},
+			},
+			logger: ctrl.Log.WithName("provider"),
 		}
 
 		err = providerInstance.watchMetrics(ctx)
@@ -71,42 +75,14 @@ func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.R
 }
 
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
+	klog.Info("ListAllMetrics()")
 	return p.metrics.List()
 }
 
-// metricFor constructs a result for a single metric value. TODO remove
-func (p *keptnMetricsProvider) metricFor(name types.NamespacedName, info provider.CustomMetricInfo) (*custom_metrics.MetricValue, error) {
-	// construct a reference referring to the described object
-	fmt.Println("metricFor " + info.String())
-	objRef, err := helpers.ReferenceFor(p.mapper, name, info)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO get metric value from p.metrics and attach DescribedObject: objRef,
-	//metric := &metricsv1alpha1.Metric{}
-	//err = p.k8sClient.Get(context.Background(), name, metric)
-	//if err != nil {
-	//return nil, err
-	//}
-
-	metricValue, err := resource.ParseQuantity("1.0") // metric.Status.Value
-	if err != nil {
-		return nil, err
-	}
-
-	return &custom_metrics.MetricValue{
-		DescribedObject: objRef,
-		Metric: custom_metrics.MetricIdentifier{
-			Name: info.Metric,
-		},
-		// you'll want to use the actual timestamp in a real adapter
-		//Timestamp: metric.Status.LastUpdated
-		Value: metricValue,
-	}, nil
-}
-
+// GetMetricByName retrieves a metric based on its name.
+// Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample
 func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.NamespacedName, info provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValue, error) {
+	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector)
 	val, err := p.metrics.Get(generateCustomMetricInfo(name.Name))
 	if err != nil {
 		return nil, err
@@ -114,41 +90,22 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 	return &val.Value, nil
 }
 
+// GetMetricBySelector retrieves a list of metrics based on the given selectors.
+// Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/*/*?labelSelector=<key>%3D<value>
 func (p *keptnMetricsProvider) GetMetricBySelector(_ context.Context, _ string, selector labels.Selector, _ provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
 
-	p.logger.Info("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector)
+	klog.InfoS("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector)
 
 	metricValues := p.metrics.GetValuesByLabel(selector)
 
-	res := make([]custom_metrics.MetricValue, len(metricValues))
-	for i, metricValue := range metricValues {
-		res[i] = metricValue.Value
+	res := []custom_metrics.MetricValue{}
+	for _, metricValue := range metricValues {
+		res = append(res, metricValue.Value)
 	}
 
 	return &custom_metrics.MetricValueList{
 		Items: res,
 	}, nil
-
-	/*
-		names, err := helpers.ListObjectNames(p.mapper, p.client, namespace, selector, info)
-		if err != nil {
-			return nil, err
-		}
-
-		res := make([]custom_metrics.MetricValue, len(names))
-		for i, name := range names {
-			metricValue, err := p.metrics.GetByLabel(generateCustomMetricInfo(name), metricSelector)
-			if err != nil {
-				p.logger.Error(err, "Could not get MetricValue", "metric", name)
-				continue
-			}
-			res[i] = metricValue.Value
-		}
-
-		return &custom_metrics.MetricValueList{
-			Items: res,
-		}, nil
-	*/
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
@@ -161,12 +118,15 @@ func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
 
 	handlers := cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
+			klog.InfoS("AddFunc", "obj", obj)
 			p.updateMetric(obj)
 		},
 		UpdateFunc: func(oldObj, obj interface{}) {
+			klog.InfoS("UpdateFunc", "obj", obj)
 			p.updateMetric(obj)
 		},
 		DeleteFunc: func(obj interface{}) {
+			klog.InfoS("DeleteFunc", "obj", obj)
 			unstructuredKeptnMetric := obj.(*unstructured.Unstructured)
 			p.metrics.Delete(generateCustomMetricInfo(unstructuredKeptnMetric.GetName()))
 		},
@@ -174,7 +134,9 @@ func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
 	if _, err := informer.AddEventHandler(handlers); err != nil {
 		return err
 	}
-	informer.Run(ctx.Done())
+	go func() {
+		informer.Run(ctx.Done())
+	}()
 	return nil
 }
 
@@ -188,31 +150,41 @@ func (p *keptnMetricsProvider) updateMetric(obj interface{}) {
 	if !found {
 		// set the value to 0.0 by default, and add the metric to the list of available metrics
 		value = "0.0"
-		p.logger.Info("No value available, defaulting to 0.0", "name", unstructuredKeptnMetric.GetName())
+		klog.InfoS("No value available, defaulting to 0.0", "name", unstructuredKeptnMetric.GetName())
 	}
 
 	metricValue, err := resource.ParseQuantity(value)
 	if err != nil {
-		p.logger.Error(err, "Could not parse metric", "name", unstructuredKeptnMetric.GetName())
+		klog.ErrorS(err, "Could not parse metric", "name", unstructuredKeptnMetric.GetName())
 		return
 	}
-
-	p.metrics.Update(generateCustomMetricInfo(unstructuredKeptnMetric.GetName()),
-		CustomMetricValue{
-			Value: custom_metrics.MetricValue{
-				Value:     metricValue,
-				Timestamp: metav1.Time{Time: time.Now().UTC()},
+	metricObj := CustomMetricValue{
+		Value: custom_metrics.MetricValue{
+			Metric: custom_metrics.MetricIdentifier{
+				Name:     unstructuredKeptnMetric.GetName(),
+				Selector: &metav1.LabelSelector{MatchLabels: unstructuredKeptnMetric.GetLabels()},
 			},
-			Labels: unstructuredKeptnMetric.GetLabels(),
+			Timestamp: metav1.Time{Time: time.Now().UTC()},
+			Value:     metricValue,
 		},
-	)
+		Labels: unstructuredKeptnMetric.GetLabels(),
+	}
+
+	objRef, err := helpers.ReferenceFor(p.mapper, types.NamespacedName{Namespace: unstructuredKeptnMetric.GetNamespace(), Name: unstructuredKeptnMetric.GetName()}, provider.CustomMetricInfo{})
+	if err != nil {
+		klog.ErrorS(err, "Could not determine owner reference for metric", "name", unstructuredKeptnMetric.GetName())
+	} else {
+		metricObj.Value.DescribedObject = objRef
+	}
+
+	p.metrics.Update(generateCustomMetricInfo(unstructuredKeptnMetric.GetName()), metricObj)
 }
 
 func generateCustomMetricInfo(name string) provider.CustomMetricInfo {
 	return provider.CustomMetricInfo{
 		GroupResource: schema.GroupResource{
 			Group:    "metrics.keptn.sh",
-			Resource: "metrics",
+			Resource: "keptnmetrics",
 		},
 		Metric:     name,
 		Namespaced: true,

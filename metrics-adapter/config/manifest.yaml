@@ -54,7 +54,7 @@ spec:
       serviceAccountName: keptn-metrics-apiserver
       containers:
         - name: keptn-metrics-apiserver
-          image: docker.io/bacherfl/keptn-metrics-adapter:0.0.1-amd64
+          image: docker.io/bacherfl/keptn-metrics-adapter:0.0.2-amd64
           imagePullPolicy: Always
           command:
             - /bin/adapter
@@ -171,6 +171,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

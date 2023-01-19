@@ -62,7 +62,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective k
 	value := resultVector[0].Value.String()
 	b, err := resultVector[0].Value.MarshalJSON()
 	if err != nil {
-		return value, nil, err
+		return "", nil, err
 	}
 	return value, b, nil
 }

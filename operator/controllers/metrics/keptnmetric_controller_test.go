@@ -222,3 +222,18 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		})
 	}
 }
+
+func Test_cupSize(t *testing.T) {
+	myVeryBigSlice := make([]byte, MB+1)
+	mySmallSlice := []byte("I am small")
+	myAtLimitSlice := make([]byte, MB)
+
+	res1 := cupSize(myVeryBigSlice)
+	res2 := cupSize(mySmallSlice)
+	res3 := cupSize(myAtLimitSlice)
+
+	require.Equal(t, len(res1), MB)
+	require.Equal(t, len(res2), len(mySmallSlice))
+	require.Equal(t, len(res3), MB)
+
+}

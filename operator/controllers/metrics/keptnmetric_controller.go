@@ -34,6 +34,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+const MB = 1 << (10 * 2)
+
 // KeptnMetricReconciler reconciles a KeptnMetric object
 type KeptnMetricReconciler struct {
 	client.Client
@@ -73,7 +75,8 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, nil
 	}
 
-	if time.Now().Before(metric.Status.LastUpdated.Add(time.Second * time.Duration(metric.Spec.FetchIntervalSeconds))) {
+	fetchTime := metric.Status.LastUpdated.Add(time.Second * time.Duration(metric.Spec.FetchIntervalSeconds))
+	if time.Now().Before(fetchTime) {
 		r.Log.Info("Metric has not been updated for the configured interval. Skipping")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
@@ -90,7 +93,6 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// load the provider
 	provider, err2 := providers.NewProvider(metric.Spec.Provider.Name, r.Log, r.Client)
 	if err2 != nil {
-		//r.recordEvent("Error", metric, "ProviderNotFound", "provider was not found")
 		r.Log.Error(err2, "Failed to get the correct Metric Provider")
 		return ctrl.Result{Requeue: false}, err2
 	}
@@ -101,12 +103,11 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 	value, rawValue, err := provider.EvaluateQuery(ctx, objective, *evaluationProvider)
 	if err != nil {
-		//r.recordEvent("Error", metric, "EvaluationFailed", "evaluation failed")
 		r.Log.Error(err, "Failed to evaluate the query")
 		return ctrl.Result{Requeue: false}, err
 	}
 	metric.Status.Value = value
-	metric.Status.RawValue = rawValue
+	metric.Status.RawValue = cupSize(rawValue)
 	metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
@@ -115,6 +116,13 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+}
+
+func cupSize(value []byte) []byte {
+	if len(value) > MB {
+		return value[:MB]
+	}
+	return value
 }
 
 // SetupWithManager sets up the controller with the Manager.

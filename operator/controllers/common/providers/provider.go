@@ -13,7 +13,7 @@ import (
 
 // KeptnSLIProvider is the interface that describes the operations that an SLI provider must implement
 type KeptnSLIProvider interface {
-	EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, error)
+	EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error)
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider

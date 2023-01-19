@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
@@ -133,7 +134,11 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	_, _ = kdp.EvaluateQuery(context.TODO(), obj, p)
+	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	require.True(t, errors.IsNotFound(e))
+	require.Equal(t, []byte(nil), raw)
+	require.Equal(t, "", r)
+
 }
 
 func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
@@ -173,8 +178,9 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	r, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.Equal(t, "", r)
+	require.Equal(t, []byte(nil), raw)
 	require.NotNil(t, e)
 }
 
@@ -199,7 +205,7 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	_, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.NotNil(t, e)
 	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the DT API token is missing"))
 }
@@ -231,9 +237,9 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	_, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "not found"))
+	require.True(t, errors.IsNotFound(e))
 }
 
 func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
@@ -275,7 +281,7 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 		},
 	}
 
-	_, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.NotNil(t, e)
 	require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
 }
@@ -317,7 +323,8 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	r, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.Nil(t, e)
+	require.Equal(t, []byte(dtpayload), raw)
 	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
 }

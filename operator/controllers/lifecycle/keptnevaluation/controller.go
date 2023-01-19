@@ -24,8 +24,8 @@ import (
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	providers "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation/providers"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -50,12 +50,15 @@ type KeptnEvaluationReconciler struct {
 	Tracer   trace.Tracer
 }
 
+//clusterrole
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluations/finalizers,verbs=update
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationproviders,verbs=get;list;watch
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationdefinitions,verbs=get;list;watch
-//+kubebuilder:rbac:groups=core,resources=secrets,verbs=get
+
+//role
+//+kubebuilder:rbac:groups=core,namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -202,7 +205,7 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
+	value, _, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
 	statusItem := &klcv1alpha2.EvaluationStatusItem{
 		Value:  value,
 		Status: apicommon.StateFailed,

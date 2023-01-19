@@ -40,7 +40,8 @@ process and export telemetry data. To install it, follow their [installation ins
 We also provide some more information about this in our [observability example](./examples/support/observability/).
 
 The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
-is handled automatically by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md). 
+is handled automatically by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md), versions up to 0.5.0 have a hard dependency on cert-manager.
+See [installation guideline](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/docs/snippets/tasks/install.md) for more info.
 
 ## Goals
 

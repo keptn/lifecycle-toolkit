@@ -78,8 +78,5 @@ func init() {
 }
 
 func (s KeptnMetric) IsStatusSet() bool {
-	if s.Status.Value != "" {
-		return true
-	}
-	return false
+	return s.Status.Value != ""
 }

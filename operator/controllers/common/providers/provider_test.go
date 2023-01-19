@@ -24,6 +24,11 @@ func TestFactory(t *testing.T) {
 			err:      false,
 		},
 		{
+			name:     "keptn-metric",
+			provider: &KeptnMetricProvider{},
+			err:      false,
+		},
+		{
 			name:     "invalid",
 			provider: nil,
 			err:      true,

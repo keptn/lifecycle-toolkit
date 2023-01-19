@@ -30,6 +30,11 @@ func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (Kep
 			Log:        log,
 			k8sClient:  k8sClient,
 		}, nil
+	case "keptn-metric":
+		return &KeptnMetricProvider{
+			Log:       log,
+			k8sClient: k8sClient,
+		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider)
 	}

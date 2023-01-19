@@ -76,3 +76,10 @@ type KeptnMetricList struct {
 func init() {
 	SchemeBuilder.Register(&KeptnMetric{}, &KeptnMetricList{})
 }
+
+func (s KeptnMetric) IsStatusSet() bool {
+	if s.Status.Value != "" {
+		return true
+	}
+	return false
+}

@@ -57,9 +57,6 @@ func main() {
 	prov := cmd.makeProviderOrDie(ctx)
 
 	cmd.WithCustomMetrics(prov)
-	// you could also set up external metrics support,
-	// if your provider supported it:
-	// cmd.WithExternalMetrics(provider)
 
 	klog.Infof(cmd.Message)
 	if err := cmd.Run(wait.NeverStop); err != nil {

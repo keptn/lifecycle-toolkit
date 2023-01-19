@@ -114,27 +114,41 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 	return &val.Value, nil
 }
 
-func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, namespace string, selector labels.Selector, info provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
+func (p *keptnMetricsProvider) GetMetricBySelector(_ context.Context, _ string, selector labels.Selector, _ provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
 
 	p.logger.Info("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector)
-	names, err := helpers.ListObjectNames(p.mapper, p.client, namespace, selector, info)
-	if err != nil {
-		return nil, err
-	}
 
-	res := make([]custom_metrics.MetricValue, len(names))
-	for i, name := range names {
-		metricValue, err := p.metrics.GetByLabel(generateCustomMetricInfo(name), metricSelector)
-		if err != nil {
-			p.logger.Error(err, "Could not get MetricValue", "metric", name)
-			continue
-		}
+	metricValues := p.metrics.GetValuesByLabel(selector)
+
+	res := make([]custom_metrics.MetricValue, len(metricValues))
+	for i, metricValue := range metricValues {
 		res[i] = metricValue.Value
 	}
 
 	return &custom_metrics.MetricValueList{
 		Items: res,
 	}, nil
+
+	/*
+		names, err := helpers.ListObjectNames(p.mapper, p.client, namespace, selector, info)
+		if err != nil {
+			return nil, err
+		}
+
+		res := make([]custom_metrics.MetricValue, len(names))
+		for i, name := range names {
+			metricValue, err := p.metrics.GetByLabel(generateCustomMetricInfo(name), metricSelector)
+			if err != nil {
+				p.logger.Error(err, "Could not get MetricValue", "metric", name)
+				continue
+			}
+			res[i] = metricValue.Value
+		}
+
+		return &custom_metrics.MetricValueList{
+			Items: res,
+		}, nil
+	*/
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {

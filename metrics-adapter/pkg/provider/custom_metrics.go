@@ -66,14 +66,15 @@ func (cm *CustomMetrics) Get(metricsInfo provider.CustomMetricInfo) (*CustomMetr
 	return &metric, nil
 }
 
-func (cm *CustomMetrics) GetByLabel(metricsInfo provider.CustomMetricInfo, selector labels.Selector) (*CustomMetricValue, error) {
+func (cm *CustomMetrics) GetValuesByLabel(selector labels.Selector) []CustomMetricValue {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
-	metric, ok := cm.metrics[metricsInfo]
-	if !ok {
-		return nil, ErrMetricNotFound
-	} else if !selector.Matches(labels.Set(metric.Labels)) {
-		return nil, ErrMetricNotFound
+
+	res := []CustomMetricValue{}
+	for _, value := range cm.metrics {
+		if selector.Matches(labels.Set(value.Labels)) {
+			res = append(res, value)
+		}
 	}
-	return &metric, nil
+	return res
 }

@@ -1,0 +1,222 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: keptn-metrics:system:auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: keptn-metrics-apiserver
+    namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: keptn-metrics-auth-reader
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+  - kind: ServiceAccount
+    name: keptn-metrics-apiserver
+    namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keptn-metrics-apiserver
+  name: keptn-metrics-apiserver
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keptn-metrics-apiserver
+  template:
+    metadata:
+      annotations:
+        openfeature.dev: "enabled"
+        openfeature.dev/featureflagconfiguration: "klt-metrics-config"
+      labels:
+        app: keptn-metrics-apiserver
+      name: keptn-metrics-apiserver
+    spec:
+      serviceAccountName: keptn-metrics-apiserver
+      containers:
+        - name: keptn-metrics-apiserver
+          image: docker.io/bacherfl/keptn-metrics-adapter:0.0.1-amd64
+          imagePullPolicy: Always
+          command:
+            - /bin/adapter
+          args:
+            - --secure-port=6443
+            - --v=10
+            - --cert-dir=/tmp/cert
+          ports:
+            - containerPort: 6443
+              name: https
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - mountPath: /tmp
+              name: temp-vol
+      volumes:
+        - name: temp-vol
+          emptyDir: {}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: keptn-metrics-resource-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: keptn-metrics-resource-reader
+subjects:
+  - kind: ServiceAccount
+    name: keptn-metrics-apiserver
+    namespace: keptn-lifecycle-toolkit-system
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: keptn-metrics-apiserver
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keptn-metrics-apiserver
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 6443
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: metrics
+      port: 9999
+      targetPort: 9999
+  selector:
+    app: keptn-metrics-apiserver
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.custom.metrics.k8s.io
+spec:
+  service:
+    name: keptn-metrics-apiserver
+    namespace: keptn-lifecycle-toolkit-system
+  group: custom.metrics.k8s.io
+  version: v1beta1
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta2.custom.metrics.k8s.io
+spec:
+  service:
+    name: keptn-metrics-apiserver
+    namespace: keptn-lifecycle-toolkit-system
+  group: custom.metrics.k8s.io
+  version: v1beta2
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 200
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptn-metrics-server-resources
+rules:
+  - apiGroups:
+      - custom.metrics.k8s.io
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptn-metrics-resource-reader
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+      - services
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - "metrics.keptn.sh"
+    resources:
+      - "keptnmetrics"
+    verbs:
+      - get
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: hpa-controller-keptn-metrics
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: keptn-metrics-server-resources
+subjects:
+  - kind: ServiceAccount
+    name: horizontal-pod-autoscaler
+    namespace: kube-system
+---
+## OpenFeature Feature Flag config
+apiVersion: core.openfeature.dev/v1alpha2
+kind: FeatureFlagConfiguration
+metadata:
+  name: klt-metrics-config
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    app: keptn-metrics-apiserver
+spec:
+  featureFlagSpec:
+    flags:
+      enable-metrics-server:
+        variants:
+          enabled: true
+          disabled: false
+        defaultVariant: enabled
+        state: ENABLED
+---
+## OpenFeature Feature Flag config
+apiVersion: core.openfeature.dev/v1alpha2
+kind: FeatureFlagConfiguration
+metadata:
+  name: klt-metrics-config-2
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    app: keptn-metrics-apiserver
+spec:
+  featureFlagSpec:
+    flags:
+      enable-metrics-server:
+        variants:
+          enabled: true
+          disabled: false
+        defaultVariant: enabled
+        state: ENABLED

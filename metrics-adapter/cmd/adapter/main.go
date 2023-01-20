@@ -67,10 +67,5 @@ func (a *KeptnAdapter) makeProviderOrDie(ctx context.Context) provider.CustomMet
 		klog.Fatalf("unable to construct dynamic client: %v", err)
 	}
 
-	mapper, err := a.RESTMapper()
-	if err != nil {
-		klog.Fatalf("unable to construct discovery REST mapper: %v", err)
-	}
-
-	return keptnprovider.NewProvider(ctx, client, mapper)
+	return keptnprovider.NewProvider(ctx, client)
 }

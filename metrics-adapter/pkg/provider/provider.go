@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	apimeta "k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -23,10 +22,11 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
-	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider/helpers"
 )
 
-const keptnNamespace = "keptn-lifecycle-toolkit-system"
+const kltNamespace = "keptn-lifecycle-toolkit-system"
+
+var keptnMetricGroupVersionResource = schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1alpha1", Resource: "keptnmetrics"}
 
 var providerInstance *keptnMetricsProvider
 
@@ -34,7 +34,6 @@ var providerOnce sync.Once
 
 type keptnMetricsProvider struct {
 	client    dynamic.Interface
-	mapper    apimeta.RESTMapper
 	k8sClient ctrlclient.Client
 	scheme    *runtime.Scheme
 	logger    logr.Logger
@@ -42,7 +41,7 @@ type keptnMetricsProvider struct {
 	metrics CustomMetrics
 }
 
-func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.RESTMapper) provider.CustomMetricsProvider {
+func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomMetricsProvider {
 	providerOnce.Do(func() {
 		scheme := runtime.NewScheme()
 
@@ -54,7 +53,6 @@ func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.R
 
 		providerInstance = &keptnMetricsProvider{
 			client:    client,
-			mapper:    mapper,
 			k8sClient: cl,
 			scheme:    scheme,
 			metrics: CustomMetrics{
@@ -105,12 +103,9 @@ func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
-	// Define the resource we want to watch (e.g. pods)
-	metricsResource := schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1alpha1", Resource: "keptnmetrics"}
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, kltNamespace, func(options *metav1.ListOptions) {})
 
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, keptnNamespace, func(options *metav1.ListOptions) {})
-
-	informer := factory.ForResource(metricsResource).Informer()
+	informer := factory.ForResource(keptnMetricGroupVersionResource).Informer()
 
 	handlers := cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -162,15 +157,14 @@ func (p *keptnMetricsProvider) updateMetric(obj interface{}) {
 			},
 			Timestamp: metav1.Time{Time: time.Now().UTC()},
 			Value:     metricValue,
+			DescribedObject: custom_metrics.ObjectReference{
+				APIVersion: keptnMetricGroupVersionResource.Group + "/" + keptnMetricGroupVersionResource.Version,
+				Kind:       "KeptnMetric",
+				Name:       unstructuredKeptnMetric.GetName(),
+				Namespace:  unstructuredKeptnMetric.GetNamespace(),
+			},
 		},
 		Labels: unstructuredKeptnMetric.GetLabels(),
-	}
-
-	objRef, err := helpers.ReferenceFor(p.mapper, types.NamespacedName{Namespace: unstructuredKeptnMetric.GetNamespace(), Name: unstructuredKeptnMetric.GetName()}, provider.CustomMetricInfo{})
-	if err != nil {
-		klog.ErrorS(err, "Could not determine owner reference for metric", "name", unstructuredKeptnMetric.GetName())
-	} else {
-		metricObj.Value.DescribedObject = objRef
 	}
 
 	p.metrics.Update(unstructuredKeptnMetric.GetName(), metricObj)

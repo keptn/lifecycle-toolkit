@@ -70,7 +70,6 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 }
 
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
-	klog.Info("ListAllMetrics()")
 	return p.metrics.List()
 }
 

@@ -147,7 +147,7 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: Webhookconfig,
+				Name: MutatingWebhookconfig,
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -216,7 +216,7 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	objs := []client.Object{
 		&admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: Webhookconfig,
+				Name: MutatingWebhookconfig,
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -354,7 +354,7 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	mutatingWebhookConfig := &admissionregistrationv1.MutatingWebhookConfiguration{}
 	err := clt.Get(context.TODO(), client.ObjectKey{
-		Name: Webhookconfig,
+		Name: MutatingWebhookconfig,
 	}, mutatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, mutatingWebhookConfig.Webhooks, 2)

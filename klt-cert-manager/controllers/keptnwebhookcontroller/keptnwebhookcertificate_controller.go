@@ -29,6 +29,7 @@ type KeptnWebhookCertificateReconciler struct {
 }
 
 //clusterrole
+// +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=validatingwebhookconfigurations,verbs=get;list;watch;update;patch;
 // +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,verbs=get;list;watch;update;patch;
 // +kubebuilder:rbac:groups="apiextensions.k8s.io",resources=customresourcedefinitions,verbs=get;list;watch;update;patch;
 // +kubebuilder:rbac:groups="apps",resources=deployments,verbs=get;list;watch;
@@ -49,6 +50,11 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	mutatingWebhookConfiguration, err := r.getMutatingWebhookConfiguration()
 	if err != nil {
 		r.Log.Error(err, "could not find mutating webhook configuration")
+	}
+
+	validatingWebhookConfiguration, err := r.getValidatingWebhookConfiguration()
+	if err != nil {
+		r.Log.Error(err, "could not find validating webhook configuration")
 	}
 
 	crds := &apiv1.CustomResourceDefinitionList{}
@@ -73,11 +79,14 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 
 	mutatingWebhookConfigs := getClientConfigsFromMutatingWebhook(mutatingWebhookConfiguration)
 
+	validatingWebhookConfigs := getClientConfigsFromValidatingWebhook(validatingWebhookConfiguration)
+
 	areMutatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(mutatingWebhookConfigs)
+	areValidatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(validatingWebhookConfigs)
 	areCRDConversionsConfigValid := certSecret.areCRDConversionsValid(crds)
 	isCertSecretRecent := certSecret.isRecent()
 
-	if isCertSecretRecent && areMutatingWebhookConfigsValid && areCRDConversionsConfigValid {
+	if isCertSecretRecent && areMutatingWebhookConfigsValid && areValidatingWebhookConfigsValid && areCRDConversionsConfigValid {
 		r.Log.Info("secret for certificates up to date, skipping update")
 		r.cancelMgr()
 		return reconcile.Result{RequeueAfter: SuccessDuration}, nil
@@ -93,6 +102,10 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	}
 
 	if err := r.updateClientConfigurations(bundle, mutatingWebhookConfigs, mutatingWebhookConfiguration); err != nil {
+		return reconcile.Result{}, errors.WithStack(err)
+	}
+
+	if err := r.updateClientConfigurations(bundle, validatingWebhookConfigs, validatingWebhookConfiguration); err != nil {
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
@@ -125,7 +138,7 @@ func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
 	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
 	if err := r.Client.Get(r.ctx, client.ObjectKey{
-		Name: Webhookconfig,
+		Name: MutatingWebhookconfig,
 	}, &mutatingWebhook); err != nil {
 		return nil, err
 	}
@@ -134,6 +147,21 @@ func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration() (
 		return nil, errors.New("mutating webhook configuration has no registered webhooks")
 	}
 	return &mutatingWebhook, nil
+}
+
+func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfiguration() (
+	*admissionregistrationv1.ValidatingWebhookConfiguration, error) {
+	var validatingWebhook admissionregistrationv1.ValidatingWebhookConfiguration
+	if err := r.Client.Get(r.ctx, client.ObjectKey{
+		Name: ValidatingWebhookconfig,
+	}, &validatingWebhook); err != nil {
+		return nil, err
+	}
+
+	if len(validatingWebhook.Webhooks) <= 0 {
+		return nil, errors.New("validating webhook configuration has no registered webhooks")
+	}
+	return &validatingWebhook, nil
 }
 
 func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(bundle []byte,

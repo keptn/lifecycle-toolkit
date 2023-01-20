@@ -44,9 +44,6 @@ spec:
       app: keptn-metrics-apiserver
   template:
     metadata:
-      annotations:
-        openfeature.dev: "enabled"
-        openfeature.dev/featureflagconfiguration: "klt-metrics-config"
       labels:
         app: keptn-metrics-apiserver
       name: keptn-metrics-apiserver
@@ -185,39 +182,3 @@ subjects:
   - kind: ServiceAccount
     name: horizontal-pod-autoscaler
     namespace: kube-system
----
-## OpenFeature Feature Flag config
-apiVersion: core.openfeature.dev/v1alpha2
-kind: FeatureFlagConfiguration
-metadata:
-  name: klt-metrics-config
-  namespace: keptn-lifecycle-toolkit-system
-  labels:
-    app: keptn-metrics-apiserver
-spec:
-  featureFlagSpec:
-    flags:
-      enable-metrics-server:
-        variants:
-          enabled: true
-          disabled: false
-        defaultVariant: enabled
-        state: ENABLED
----
-## OpenFeature Feature Flag config
-apiVersion: core.openfeature.dev/v1alpha2
-kind: FeatureFlagConfiguration
-metadata:
-  name: klt-metrics-config-2
-  namespace: keptn-lifecycle-toolkit-system
-  labels:
-    app: keptn-metrics-apiserver
-spec:
-  featureFlagSpec:
-    flags:
-      enable-metrics-server:
-        variants:
-          enabled: true
-          disabled: false
-        defaultVariant: enabled
-        state: ENABLED

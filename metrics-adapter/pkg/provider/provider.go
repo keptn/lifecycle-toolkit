@@ -2,25 +2,24 @@ package provider
 
 import (
 	"context"
-	"github.com/go-logr/logr"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/dynamic/dynamicinformer"
-	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sync"
 	"time"
 
-	//metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/api/metrics/v1alpha1"
+	"github.com/go-logr/logr"
 	apimeta "k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/dynamic/dynamicinformer"
+	"k8s.io/client-go/tools/cache"
+	"k8s.io/klog/v2"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
+	ctrl "sigs.k8s.io/controller-runtime"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
@@ -59,7 +58,7 @@ func NewProvider(ctx context.Context, client dynamic.Interface, mapper apimeta.R
 			k8sClient: cl,
 			scheme:    scheme,
 			metrics: CustomMetrics{
-				metrics: map[provider.CustomMetricInfo]CustomMetricValue{},
+				metrics: map[string]CustomMetricValue{},
 			},
 			logger: ctrl.Log.WithName("provider"),
 		}
@@ -80,8 +79,8 @@ func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
 // GetMetricByName retrieves a metric based on its name.
 // Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample
 func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.NamespacedName, info provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValue, error) {
-	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector)
-	val, err := p.metrics.Get(generateCustomMetricInfo(name.Name))
+	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector, "context", ctx)
+	val, err := p.metrics.Get(name.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -90,9 +89,8 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 
 // GetMetricBySelector retrieves a list of metrics based on the given selectors.
 // Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/*/*?labelSelector=<key>%3D<value>
-func (p *keptnMetricsProvider) GetMetricBySelector(_ context.Context, _ string, selector labels.Selector, _ provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
-
-	klog.InfoS("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector)
+func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string, selector labels.Selector, _ provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
+	klog.InfoS("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector, "context", ctx)
 
 	metricValues := p.metrics.GetValuesByLabel(selector)
 
@@ -126,7 +124,7 @@ func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
 		DeleteFunc: func(obj interface{}) {
 			klog.InfoS("DeleteFunc", "obj", obj)
 			unstructuredKeptnMetric := obj.(*unstructured.Unstructured)
-			p.metrics.Delete(generateCustomMetricInfo(unstructuredKeptnMetric.GetName()))
+			p.metrics.Delete(unstructuredKeptnMetric.GetName())
 		},
 	}
 	if _, err := informer.AddEventHandler(handlers); err != nil {
@@ -175,16 +173,5 @@ func (p *keptnMetricsProvider) updateMetric(obj interface{}) {
 		metricObj.Value.DescribedObject = objRef
 	}
 
-	p.metrics.Update(generateCustomMetricInfo(unstructuredKeptnMetric.GetName()), metricObj)
-}
-
-func generateCustomMetricInfo(name string) provider.CustomMetricInfo {
-	return provider.CustomMetricInfo{
-		GroupResource: schema.GroupResource{
-			Group:    "metrics.keptn.sh",
-			Resource: "keptnmetrics",
-		},
-		Metric:     name,
-		Namespaced: true,
-	}
+	p.metrics.Update(unstructuredKeptnMetric.GetName(), metricObj)
 }

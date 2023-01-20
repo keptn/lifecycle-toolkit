@@ -1,7 +1,7 @@
 
 ## Install version 0.6.0 and above
 
-Since version 0.6.0 you can install the Lifecycle Toolkit using the current release manifest:
+Since version 0.6.0, you can install the Lifecycle Toolkit using the current release manifest:
 <!---x-release-please-start-version-->
 ```
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml

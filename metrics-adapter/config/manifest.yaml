@@ -57,7 +57,7 @@ spec:
             - /bin/adapter
           args:
             - --secure-port=6443
-            - --v=10
+            - --v=0
             - --cert-dir=/tmp/cert
           ports:
             - containerPort: 6443

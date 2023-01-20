@@ -70,7 +70,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			evaluation           *klcv1alpha2.KeptnEvaluation
 		)
 		Context("With an existing EvaluationDefinition pointing to KeptnMetric", func() {
-			It("Should succeed, as it finds valid values in KeptnMetric", func() {
+			It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
 				By("Create EvaluationDefiniton")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
@@ -123,7 +123,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 				logErrorIfPresent(err)
 			})
 
-			It("Metric status does not exist", func() {
+			It("KeptnEvaluationController Metric status does not exist", func() {
 				By("Create EvaluationDefiniton")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
@@ -158,7 +158,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 				err := k8sClient.Delete(context.TODO(), metric)
 				logErrorIfPresent(err)
 			})
-			It("Metric does not exist", func() {
+			It("KeptnEvaluationController Metric does not exist", func() {
 				By("Create EvaluationDefiniton")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
@@ -186,7 +186,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 					}))
 				}, "30s").Should(Succeed())
 			})
-			It("Invalid provider", func() {
+			It("KeptnEvaluationController Invalid provider", func() {
 				By("Create EvaluationDefiniton")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, "invalid", "invalid")

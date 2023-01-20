@@ -8,7 +8,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 ### Keptn Cert Manager
 
-The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. Since version 0.6.0 the certificate creation
+The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. Since version 0.6.0, the certificate creation
 is handled automatically by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md).
 
 The certificate is created as a secret in the keptn-lifecycle-toolkit-system namespace with a renewal threshold of 12 hours. The Lifecycle Toolkit operator will be waiting for a valid certificate to be ready.

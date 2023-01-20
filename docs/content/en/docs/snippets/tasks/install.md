@@ -23,7 +23,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
 ```
 
-After that you can install the Lifecycle Toolkit <oldversion> with:
+After that, you can install the Lifecycle Toolkit <oldversion> with:
 
 ```
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/<oldversion>/manifest.yaml

@@ -9,7 +9,7 @@ kubectl wait --for=condition=Available deployment/klc-controller-manager -n kept
 ```
 <!---x-release-please-end-->
 
-Now, the Lifecycle Toolkit and its dependency is installed and ready to use.
+The Lifecycle Toolkit and its dependency are now installed and ready to use.
 
 ## Install version 0.5.0 and below
 

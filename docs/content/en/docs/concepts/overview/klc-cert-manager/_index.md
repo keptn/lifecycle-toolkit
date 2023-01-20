@@ -15,5 +15,5 @@ The certificate is created as a secret in the `keptn-lifecycle-toolkit-system` n
 The certificate will be mounted on an empty dir volume in the operator.
 
 #### FAQ
-In case of certificates left over from a older version it could happen that the webhook or the operator errors due to invalid certificate. To solve this it is enough to delete de certificate and restart the operator.
+In case of certificates left over from an older version, it could happen that the webhook or the operator errors due to an invalid certificate. It is enough to delete the certificate and restart the operator to solve this.
 

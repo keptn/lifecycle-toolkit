@@ -38,6 +38,7 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
+// EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	qURL := provider.Spec.TargetServer + "/api/v2/metrics/query?metricSelector=" + objective.Query
 

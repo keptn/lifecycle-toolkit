@@ -16,6 +16,7 @@ type KeptnMetricProvider struct {
 	k8sClient client.Client
 }
 
+// EvaluateQuery fetches the SLI values from KeptnMetric resource
 func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	metric := &metricsv1alpha1.KeptnMetric{}
 	if err := p.k8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: provider.Namespace}, metric); err != nil {
@@ -24,8 +25,8 @@ func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1
 	}
 
 	if !metric.IsStatusSet() {
-		err := fmt.Errorf("result of KeptnMetric evaluation not set, name: %s", metric.Name)
-		p.Log.Error(err, "Could not check KeptnMetric query result")
+		err := fmt.Errorf("empty value for: %s", metric.Name)
+		p.Log.Error(err, "KeptnMetric has no value")
 		return "", nil, err
 	}
 

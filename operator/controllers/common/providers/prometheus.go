@@ -18,6 +18,7 @@ type KeptnPrometheusProvider struct {
 	httpClient http.Client
 }
 
+// EvaluateQuery fetches the SLI values from prometheus provider
 func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()

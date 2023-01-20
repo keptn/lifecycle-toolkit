@@ -8,12 +8,21 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const DynatraceProviderName = "dynatrace"
 const PrometheusProviderName = "prometheus"
 const KeptnMetricProviderName = "keptn-metric"
+const KLTNamespace = "keptn-lifecycle-toolkit-system"
+
+var MetricDefaultProvider *klcv1alpha2.KeptnEvaluationProvider = &klcv1alpha2.KeptnEvaluationProvider{
+	ObjectMeta: metav1.ObjectMeta{
+		Name:      KeptnMetricProviderName,
+		Namespace: KLTNamespace,
+	},
+}
 
 // KeptnSLIProvider is the interface that describes the operations that an SLI provider must implement
 type KeptnSLIProvider interface {
@@ -21,7 +30,7 @@ type KeptnSLIProvider interface {
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
-func NewProvider(provider string, log logr.Logger, k8sClient client.Client, opts ...func(p KeptnSLIProvider)) (KeptnSLIProvider, error) {
+func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 	switch strings.ToLower(provider) {
 	case PrometheusProviderName:
 		return &KeptnPrometheusProvider{

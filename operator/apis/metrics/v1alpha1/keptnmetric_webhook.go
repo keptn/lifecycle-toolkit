@@ -29,9 +29,9 @@ import (
 // log is for logging in this package.
 var keptnmetriclog = logf.Log.WithName("keptnmetric-resource")
 
-func (r *KeptnMetric) SetupWebhookWithManager(mgr ctrl.Manager) error {
+func (s *KeptnMetric) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
-		For(r).
+		For(s).
 		Complete()
 }
 
@@ -40,29 +40,28 @@ func (r *KeptnMetric) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.Validator = &KeptnMetric{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnMetric) ValidateCreate() error {
-	keptnmetriclog.Info("validate create", "name", r.Name)
-
-	return r.validateKeptnMetric()
+func (s *KeptnMetric) ValidateCreate() error {
+	keptnmetriclog.Info("validate create", "name", s.Name)
+	return s.validateKeptnMetric()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnMetric) ValidateUpdate(old runtime.Object) error {
-	keptnmetriclog.Info("validate update", "name", r.Name)
-	return r.validateKeptnMetric()
+func (s *KeptnMetric) ValidateUpdate(old runtime.Object) error {
+	keptnmetriclog.Info("validate update", "name", s.Name)
+	return s.validateKeptnMetric()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnMetric) ValidateDelete() error {
-	keptnmetriclog.Info("validate delete", "name", r.Name)
+func (s *KeptnMetric) ValidateDelete() error {
+	keptnmetriclog.Info("validate delete", "name", s.Name)
 
 	return nil
 }
 
-func (r *KeptnMetric) validateKeptnMetric() error {
+func (s *KeptnMetric) validateKeptnMetric() error {
 	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
 	var err *field.Error
-	if err = r.validateProvider(); err != nil {
+	if err = s.validateProvider(); err != nil {
 		allErrs = append(allErrs, err)
 	}
 	if len(allErrs) == 0 {
@@ -71,18 +70,20 @@ func (r *KeptnMetric) validateKeptnMetric() error {
 
 	return apierrors.NewInvalid(
 		schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-		r.Name, allErrs)
+		s.Name, allErrs)
 }
 
-func (r *KeptnMetric) validateProvider() *field.Error {
+func (s *KeptnMetric) validateProvider() *field.Error {
 	// The field helpers from the kubernetes API machinery help us return nicely
 	// structured validation errors.
-	return validateProviderName(r.Spec.Provider.Name, field.NewPath("spec").Child("provider").Child("name"))
-}
-
-func validateProviderName(providerName string, fldPath *field.Path) *field.Error {
-	if err := checkAllowedProvider(providerName); err != nil {
-		return field.Invalid(fldPath, providerName, err.Error())
+	// we explicitly use spec.provider.name to make sure the error path corresponds
+	if err := s.checkAllowedProvider(s.Spec.Provider.Name); err != nil {
+		fieldErr := field.Invalid(
+			field.NewPath("spec").Child("provider").Child("name"),
+			s.Spec.Provider.Name,
+			err.Error(),
+		)
+		return fieldErr
 	}
 	return nil
 }

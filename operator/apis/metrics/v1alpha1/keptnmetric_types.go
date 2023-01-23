@@ -17,16 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/pkg/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-const KeptnMetricProviderName = "keptn-metric"
-
-var ErrForbiddenProvider = errors.New("Forbidden! KeptnMetrics should define a provider different from keptn-metric")
 
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
@@ -82,13 +78,13 @@ func init() {
 	SchemeBuilder.Register(&KeptnMetric{}, &KeptnMetricList{})
 }
 
-func (s KeptnMetric) IsStatusSet() bool {
+func (s *KeptnMetric) IsStatusSet() bool {
 	return s.Status.Value != ""
 }
 
-func checkAllowedProvider(provider string) error {
-	if provider == KeptnMetricProviderName {
-		return ErrForbiddenProvider
+func (s *KeptnMetric) checkAllowedProvider(provider string) error {
+	if provider == common.KeptnMetricProviderName {
+		return common.ErrForbiddenProvider
 	}
 	return nil
 }

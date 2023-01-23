@@ -1,43 +1,12 @@
 package v1alpha1
 
 import (
-	"reflect"
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1/common"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/validation/field"
 )
-
-func Test_validateProviderName(t *testing.T) {
-
-	tests := []struct {
-		name         string
-		providerName string
-		fldPath      *field.Path
-		want         *field.Error
-	}{
-		{
-			name:         "bad provider",
-			providerName: "keptn-metric",
-			fldPath:      nil,
-			want:         field.Invalid(nil, "keptn-metric", ErrForbiddenProvider.Error()),
-		},
-		{
-			name:         "good provider",
-			providerName: "prometheus",
-			fldPath:      nil,
-			want:         nil,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := validateProviderName(tt.providerName, tt.fldPath); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("validateProviderName() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestKeptnMetric_validateKeptnMetric(t *testing.T) {
 
@@ -48,8 +17,8 @@ func TestKeptnMetric_validateKeptnMetric(t *testing.T) {
 	}{
 		{
 			name:         "bad-provider",
-			providerName: KeptnMetricProviderName,
-			want:         ErrForbiddenProvider,
+			providerName: common.KeptnMetricProviderName,
+			want:         common.ErrForbiddenProvider,
 		},
 
 		{

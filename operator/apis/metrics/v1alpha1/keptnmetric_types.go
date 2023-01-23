@@ -82,7 +82,7 @@ func (s *KeptnMetric) IsStatusSet() bool {
 	return s.Status.Value != ""
 }
 
-func (s *KeptnMetric) checkAllowedProvider(provider string) error {
+func (s *KeptnMetric) IsProviderValid(provider string) bool {
 	if provider == common.KeptnMetricProviderName {
 		return common.ErrForbiddenProvider
 	}

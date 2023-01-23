@@ -26,7 +26,6 @@ try {
   let jsonResponse = await fetch(promtheusURL);
   let jsonData = await jsonResponse.json();
   value = jsonData.data.result[0].value[1];
-  //status = jsonData.status
 } catch (error) {
   console.error("Could not fetch ");
   Deno.exit(1);

@@ -84,9 +84,10 @@ func init() {
 }
 
 type envConfig struct {
-	OTelCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
-	PodNamespace     string `envconfig:"POD_NAMESPACE" default:""`
-	PodName          string `envconfig:"POD_NAME" default:""`
+	OTelCollectorURL   string `envconfig:"OTEL_COLLECTOR_URL" default:""`
+	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
+	PodName            string `envconfig:"POD_NAME" default:""`
+	ExposeKeptnMetrics string `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -215,7 +216,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx)
+	keptnserver.StartServerManager(ctx, env.ExposeKeptnMetrics)
 
 	// Enabling OTel
 	tpOptions, err := getOTelTracerProviderOptions(env)

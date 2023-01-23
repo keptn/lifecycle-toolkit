@@ -35,17 +35,19 @@ var instance *serverManager
 var smOnce sync.Once
 
 type serverManager struct {
-	server   *http.Server
-	ticker   *clock.Ticker
-	ofClient *openfeature.Client
+	server        *http.Server
+	ticker        *clock.Ticker
+	ofClient      *openfeature.Client
+	exposeMetrics string
 }
 
-func StartServerManager(ctx context.Context) {
+func StartServerManager(ctx context.Context, exposeMetrics string) {
 	smOnce.Do(func() {
 		metrics.gauges = make(map[string]prometheus.Gauge)
 		instance = &serverManager{
-			ticker:   clock.New().Ticker(10 * time.Second),
-			ofClient: openfeature.NewClient("klt"),
+			ticker:        clock.New().Ticker(10 * time.Second),
+			ofClient:      openfeature.NewClient("klt"),
+			exposeMetrics: exposeMetrics,
 		}
 		instance.Start(ctx)
 	})
@@ -89,7 +91,9 @@ func (m *serverManager) setup() error {
 	klog.Infof("Checking configuration of keptn-metrics server")
 
 	for i := 0; i < maxRetries; i++ {
-		serverEnabled, err = m.ofClient.BooleanValue(context.TODO(), "keptn.gms.expose", false, openfeature.EvaluationContext{})
+		serverEnabled, err = m.ofClient.BooleanValue(context.TODO(), "keptn.gms.expose", true, openfeature.NewEvaluationContext("keptn.gms.expose", map[string]interface{}{
+			"keptn-metrics": m.exposeMetrics,
+		}))
 		if err == nil {
 			break
 		}

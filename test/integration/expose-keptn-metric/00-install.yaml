@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: test
+        image: curlimages/curl:7.72.0
+        args:
+        - /bin/sh
+        - -ec
+        - |
+          RESULT=$(curl klc-controller-manager-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/metrics | grep -c sample)
+          if [ $RESULT -gt 0 ];then
+            exit 1
+          fi
+      restartPolicy: Never

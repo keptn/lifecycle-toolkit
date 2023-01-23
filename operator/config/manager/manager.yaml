@@ -24,7 +24,7 @@ spec:
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
         openfeature.dev: "enabled"
-        openfeature.dev/featureflagconfiguration: "klm-metrics-config"
+        openfeature.dev/featureflagconfiguration: "metrics-config"
       labels:
         control-plane: controller-manager
     spec:

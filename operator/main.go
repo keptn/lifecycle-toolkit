@@ -42,8 +42,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
-	flagd "github.com/open-feature/go-sdk-contrib/providers/flagd/pkg"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -87,7 +85,7 @@ type envConfig struct {
 	OTelCollectorURL   string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
 	PodName            string `envconfig:"POD_NAME" default:""`
-	ExposeKeptnMetrics string `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -208,11 +206,6 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-
-	// OpenFeature Setup
-	openfeature.SetProvider(flagd.NewProvider(
-		flagd.WithHost("localhost"),
-	))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

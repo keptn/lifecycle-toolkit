@@ -54,7 +54,7 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
-          - name: metrics
+          - name: keptn-metrics
             containerPort: 9999
             protocol: TCP
         imagePullPolicy: Always
@@ -130,12 +130,12 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1beta1.custom.metrics.k8s.io
+  name: v1beta1.custom.keptn-metrics.k8s.io
 spec:
   service:
     name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
-  group: custom.metrics.k8s.io
+  group: custom.keptn-metrics.k8s.io
   version: v1beta1
   insecureSkipTLSVerify: true
   groupPriorityMinimum: 100
@@ -144,12 +144,12 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1beta2.custom.metrics.k8s.io
+  name: v1beta2.custom.keptn-metrics.k8s.io
 spec:
   service:
     name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
-  group: custom.metrics.k8s.io
+  group: custom.keptn-metrics.k8s.io
   version: v1beta2
   insecureSkipTLSVerify: true
   groupPriorityMinimum: 100
@@ -158,12 +158,12 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1beta1.external.metrics.k8s.io
+  name: v1beta1.external.keptn-metrics.k8s.io
 spec:
   service:
     name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
-  group: external.metrics.k8s.io
+  group: external.keptn-metrics.k8s.io
   version: v1beta1
   insecureSkipTLSVerify: true
   groupPriorityMinimum: 100

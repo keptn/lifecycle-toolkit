@@ -86,7 +86,7 @@ func (m *serverManager) setup() error {
 	var serverEnabled bool
 	var err error
 
-	klog.Infof("Checking configuration of metrics server")
+	klog.Infof("Checking configuration of keptn-metrics server")
 
 	for i := 0; i < maxRetries; i++ {
 		serverEnabled, err = m.ofClient.BooleanValue(context.TODO(), "keptn.gms.expose", false, openfeature.EvaluationContext{})
@@ -101,7 +101,7 @@ func (m *serverManager) setup() error {
 		break
 	}
 
-	klog.Infof("Metrics server enabled: %v", serverEnabled)
+	klog.Infof("Keptn Metrics server enabled: %v", serverEnabled)
 
 	if serverEnabled && m.server == nil {
 		klog.Infof("serving metrics at localhost:9999/metrics")
@@ -120,13 +120,13 @@ func (m *serverManager) setup() error {
 		go func() {
 			err := m.server.ListenAndServe()
 			if err != nil {
-				klog.Errorf("could not start metrics server: %w", err)
+				klog.Errorf("could not start keptn-metrics server: %w", err)
 			}
 		}()
 
 	} else if !serverEnabled && m.server != nil {
 		if err := m.ShutDownServer(); err != nil {
-			return fmt.Errorf("could not shut down metrics server: %w", err)
+			return fmt.Errorf("could not shut down keptn-metrics server: %w", err)
 		}
 	}
 	return nil
@@ -139,7 +139,7 @@ func returnMetric(w http.ResponseWriter, r *http.Request) {
 
 	scheme := runtime.NewScheme()
 	if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
-		fmt.Println("failed to add metrics to scheme: " + err.Error())
+		fmt.Println("failed to add keptn-metrics to scheme: " + err.Error())
 	}
 	cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
 	if err != nil {
@@ -149,7 +149,7 @@ func returnMetric(w http.ResponseWriter, r *http.Request) {
 	metricObj := metricsv1alpha1.KeptnMetric{}
 	err = cl.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
 	if err != nil {
-		fmt.Println("failed to list metrics" + err.Error())
+		fmt.Println("failed to list keptn-metrics" + err.Error())
 	}
 
 	data := map[string]string{
@@ -169,7 +169,7 @@ func (m *serverManager) recordMetrics() {
 	go func() {
 		scheme := runtime.NewScheme()
 		if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
-			fmt.Println("failed to add metrics to scheme: " + err.Error())
+			fmt.Println("failed to add keptn-metrics to scheme: " + err.Error())
 		}
 
 		cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
@@ -185,7 +185,7 @@ func (m *serverManager) recordMetrics() {
 			list := metricsv1alpha1.KeptnMetricList{}
 			err := cl.List(context.Background(), &list)
 			if err != nil {
-				fmt.Println("failed to list metrics" + err.Error())
+				fmt.Println("failed to list keptn-metrics" + err.Error())
 			}
 			for _, metric := range list.Items {
 				normName := CleanUpString(metric.Name)

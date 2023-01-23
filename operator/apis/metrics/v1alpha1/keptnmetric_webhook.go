@@ -79,12 +79,11 @@ func (s *KeptnMetric) validateProvider() *field.Error {
 	// structured validation errors.
 	// we explicitly use spec.provider.name to make sure the error path corresponds
 	if !s.IsProviderValid(s.Spec.Provider.Name) {
-		fieldErr := field.Invalid(
+		return field.Invalid(
 			field.NewPath("spec").Child("provider").Child("name"),
 			s.Spec.Provider.Name,
 			common.ErrForbiddenProvider.Error(),
 		)
-		return fieldErr
 	}
 	return nil
 }

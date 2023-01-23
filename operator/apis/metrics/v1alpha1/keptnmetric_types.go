@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -77,6 +78,14 @@ func init() {
 	SchemeBuilder.Register(&KeptnMetric{}, &KeptnMetricList{})
 }
 
-func (s KeptnMetric) IsStatusSet() bool {
+func (s *KeptnMetric) IsStatusSet() bool {
 	return s.Status.Value != ""
+}
+
+// IsProviderValid verifies that the KeptnMetric provider is not of the type keptn-metric.
+// This is avoiding having the keptn metric controller constantly probing the API server for a KeptnMetric
+// without any action being performed on the metric.
+// The keptn-metric provider should be used only to declare an evaluation provider and not a metric provider.
+func (s *KeptnMetric) IsProviderValid(provider string) bool {
+	return provider != common.KeptnMetricProviderName
 }

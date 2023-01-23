@@ -7,3 +7,4 @@ spec:
     name: "provider"
   query: "query"
   fetchIntervalSeconds: 5
+

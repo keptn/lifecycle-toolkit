@@ -11,7 +11,8 @@ const (
 	DeploymentName             = "klc-controller-manager"
 	ServiceName                = "klc-webhook-service"
 	SuccessDuration            = 3 * time.Hour
-	Webhookconfig              = "klc-mutating-webhook-configuration"
+	MutatingWebhookconfig      = "klc-mutating-webhook-configuration"
+	ValidatingWebhookconfig    = "klc-validating-webhook-configuration"
 	secretPostfix              = "-certs"
 	crdGroup                   = "lifecycle.keptn.sh"
 	certificatesSecretEmptyErr = "certificates secret is empty"

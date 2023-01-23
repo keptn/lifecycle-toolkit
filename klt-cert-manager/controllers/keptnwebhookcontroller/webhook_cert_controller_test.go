@@ -147,9 +147,30 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: Webhookconfig,
+				Name: MutatingWebhookconfig,
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+			},
+		})
+
+		controller, request := prepareController(t, fakeClient)
+		result, err := controller.Reconcile(context.TODO(), request)
+
+		assert.NoError(t, err)
+		assert.NotNil(t, result)
+	})
+	t.Run(`reconcile successfully with validatingwebhookconfiguration`, func(t *testing.T) {
+		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.ValidatingWebhookConfiguration{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: ValidatingWebhookconfig,
+			},
+			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
 					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
 				},
@@ -196,8 +217,65 @@ func TestReconcile(t *testing.T) {
 		require.NoError(t, err)
 		assert.Empty(t, actualCrd.Spec.Conversion.Webhook)
 	})
+
+	t.Run(`update crd and webhooks successfully with up-to-date secret`, func(t *testing.T) {
+		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: MutatingWebhookconfig,
+			},
+			Webhooks: []admissionregistrationv1.MutatingWebhook{
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+			},
+		}, &admissionregistrationv1.ValidatingWebhookConfiguration{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: ValidatingWebhookconfig,
+			},
+			Webhooks: []admissionregistrationv1.ValidatingWebhook{
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+			},
+		})
+		cs := newCertificateSecret(fakeClient)
+		_ = cs.setSecretFromReader(context.TODO(), namespace, testr.New(t))
+		_ = cs.setCertificates(namespace)
+		_ = cs.createOrUpdateIfNecessary(context.TODO())
+
+		controller, request := prepareController(t, fakeClient)
+		result, err := controller.Reconcile(context.TODO(), request)
+		require.NoError(t, err)
+		assert.NotNil(t, result)
+
+		expectedBundle, err := cs.loadCombinedBundle()
+		require.NoError(t, err)
+		actualCrd := &apiv1.CustomResourceDefinition{}
+
+		// crd1 should get a new secret
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: crd1.Name}, actualCrd)
+		require.NoError(t, err)
+		assert.Equal(t, expectedBundle, actualCrd.Spec.Conversion.Webhook.ClientConfig.CABundle)
+
+		// crd2 is not a keptn resource and should not be touched
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: crd2.Name}, actualCrd)
+		require.NoError(t, err)
+		assert.Equal(t, crd2.Spec.Conversion.Webhook.ClientConfig.CABundle, actualCrd.Spec.Conversion.Webhook.ClientConfig.CABundle)
+
+		// crd 3 should not have a webhook conversion
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: crd3.Name}, actualCrd)
+		require.NoError(t, err)
+		assert.Empty(t, actualCrd.Spec.Conversion.Webhook)
+	})
+
 	// Generation must not be skipped because webhook startup routine listens for the secret
-	// See cmd/operator/manager.go and cmd/operator/watcher.go
+	// See cmd/webhook/manager.go and cmd/certificate/watcher.go
 	t.Run(`do not skip certificates generation if no configuration exists`, func(t *testing.T) {
 		fakeClient := fake.NewClient()
 		controller, request := prepareController(t, fakeClient)
@@ -216,11 +294,25 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	objs := []client.Object{
 		&admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: Webhookconfig,
+				Name: MutatingWebhookconfig,
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
 					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
+				},
+			},
+		},
+
+		&admissionregistrationv1.ValidatingWebhookConfiguration{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: ValidatingWebhookconfig,
+			},
+			Webhooks: []admissionregistrationv1.ValidatingWebhook{
+				{
+					ClientConfig: admissionregistrationv1.WebhookClientConfig{CABundle: []byte("myunmodifiedbundle")},
 				},
 				{
 					ClientConfig: admissionregistrationv1.WebhookClientConfig{},
@@ -354,10 +446,18 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	mutatingWebhookConfig := &admissionregistrationv1.MutatingWebhookConfiguration{}
 	err := clt.Get(context.TODO(), client.ObjectKey{
-		Name: Webhookconfig,
+		Name: MutatingWebhookconfig,
 	}, mutatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, mutatingWebhookConfig.Webhooks, 2)
 	testWebhookClientConfig(t, &mutatingWebhookConfig.Webhooks[0].ClientConfig, secret.Data, isUpdate)
+
+	validatingWebhookConfig := &admissionregistrationv1.ValidatingWebhookConfiguration{}
+	err = clt.Get(context.TODO(), client.ObjectKey{
+		Name: ValidatingWebhookconfig,
+	}, validatingWebhookConfig)
+	require.NoError(t, err)
+	assert.Len(t, validatingWebhookConfig.Webhooks, 2)
+	testWebhookClientConfig(t, &validatingWebhookConfig.Webhooks[0].ClientConfig, secret.Data, isUpdate)
 
 }

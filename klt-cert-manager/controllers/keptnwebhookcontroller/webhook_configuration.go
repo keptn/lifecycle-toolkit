@@ -13,3 +13,15 @@ func getClientConfigsFromMutatingWebhook(mutatingWebhookConfig *admissionregistr
 	}
 	return mutatingWebhookConfigs
 }
+
+func getClientConfigsFromValidatingWebhook(validatingWebhookConfig *admissionregistrationv1.ValidatingWebhookConfiguration) []*admissionregistrationv1.WebhookClientConfig {
+	if validatingWebhookConfig == nil {
+		return nil
+	}
+
+	mutatingWebhookConfigs := make([]*admissionregistrationv1.WebhookClientConfig, len(validatingWebhookConfig.Webhooks))
+	for i := range validatingWebhookConfig.Webhooks {
+		mutatingWebhookConfigs[i] = &validatingWebhookConfig.Webhooks[i].ClientConfig
+	}
+	return mutatingWebhookConfigs
+}

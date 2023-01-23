@@ -186,4 +186,7 @@ resources:
   kind: KeptnMetric
   path: github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1
   version: v1alpha1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 version: "3"

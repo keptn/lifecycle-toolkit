@@ -30,7 +30,7 @@ spec:
       initContainers:
       - name: init-myservice
         image: busybox:1.28
-        command: ['sh', '-c', 'sleep 30']
+        command: ['sh', '-c', 'sleep 10']
       containers:
       - name: server
         image: ghcr.io/podtato-head/entry:latest
@@ -77,7 +77,7 @@ spec:
         component: podtato-head-hat
         keptn.sh/pre-deployment-tasks: check-entry-service
         keptn.sh/pre-deployment-evaluations: my-prometheus-definition1
-        keptn.sh/post-deployment-evaluations: my-prometheus-definition1
+        keptn.sh/post-deployment-evaluations: my-prometheus-definition2
       annotations:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat

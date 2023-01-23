@@ -23,7 +23,7 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
-        openfeature.dev: "enabled"
+        openfeature.dev/enabled: "true"
         openfeature.dev/featureflagconfiguration: "metrics-config"
       labels:
         control-plane: controller-manager

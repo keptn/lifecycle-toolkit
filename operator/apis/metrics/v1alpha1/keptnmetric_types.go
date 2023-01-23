@@ -85,7 +85,7 @@ func (s *KeptnMetric) IsStatusSet() bool {
 // IsProviderValid verifies that the KeptnMetric provider is not of the type keptn-metric.
 // This is avoiding having the keptn metric controller constantly probing the API server for a KeptnMetric
 // without any action being performed on the metric.
-// The keptn-metric provider should be used only to declare an evaluation provider and not a metric providers.
+// The keptn-metric provider should be used only to declare an evaluation provider and not a metric provider.
 func (s *KeptnMetric) IsProviderValid(provider string) bool {
 	return provider != common.KeptnMetricProviderName
 }

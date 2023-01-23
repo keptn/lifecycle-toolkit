@@ -15,6 +15,9 @@ spec:
     port: 2222
     protocol: TCP
     targetPort: 2222
+  - name: custom-metrics
+    targetPort: 6443
+    port: 443
   - name: keptn-metrics
     protocol: TCP
     port: 9999

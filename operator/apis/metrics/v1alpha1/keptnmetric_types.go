@@ -83,8 +83,5 @@ func (s *KeptnMetric) IsStatusSet() bool {
 }
 
 func (s *KeptnMetric) IsProviderValid(provider string) bool {
-	if provider == common.KeptnMetricProviderName {
-		return common.ErrForbiddenProvider
-	}
-	return nil
+	return !(provider == common.KeptnMetricProviderName)
 }

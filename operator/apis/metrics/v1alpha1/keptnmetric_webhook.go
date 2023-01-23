@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1/common"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -77,11 +78,11 @@ func (s *KeptnMetric) validateProvider() *field.Error {
 	// The field helpers from the kubernetes API machinery help us return nicely
 	// structured validation errors.
 	// we explicitly use spec.provider.name to make sure the error path corresponds
-	if err := s.checkAllowedProvider(s.Spec.Provider.Name); err != nil {
+	if !s.IsProviderValid(s.Spec.Provider.Name) {
 		fieldErr := field.Invalid(
 			field.NewPath("spec").Child("provider").Child("name"),
 			s.Spec.Provider.Name,
-			err.Error(),
+			common.ErrForbiddenProvider.Error(),
 		)
 		return fieldErr
 	}

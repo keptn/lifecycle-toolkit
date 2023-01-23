@@ -157,7 +157,12 @@ func returnMetric(w http.ResponseWriter, r *http.Request) {
 		"metric":    metric,
 		"value":     metricObj.Status.Value,
 	}
-	json.NewEncoder(w).Encode(data)
+
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		fmt.Println("failed to encode data")
+		os.Exit(1)
+	}
 }
 
 func (m *serverManager) recordMetrics() {

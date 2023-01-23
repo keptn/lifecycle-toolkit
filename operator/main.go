@@ -213,7 +213,8 @@ func main() {
 		flagd.WithHost("localhost"),
 	))
 
-	ctx, _ := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	keptnserver.StartServerManager(ctx)
 
 	// Enabling OTel

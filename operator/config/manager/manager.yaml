@@ -116,7 +116,7 @@ metadata:
   name: metrics-config
   namespace: system
   labels:
-    control-plane: klm-controller-manager
+    control-plane: controller-manager
 spec:
   featureFlagSpec:
     flags:
@@ -133,7 +133,7 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
 spec:
   service:
-    name: klm-controller-manager-metrics-server
+    name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
   group: custom.metrics.k8s.io
   version: v1beta1
@@ -147,7 +147,7 @@ metadata:
   name: v1beta2.custom.metrics.k8s.io
 spec:
   service:
-    name: klm-controller-manager-metrics-server
+    name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
   group: custom.metrics.k8s.io
   version: v1beta2
@@ -161,7 +161,7 @@ metadata:
   name: v1beta1.external.metrics.k8s.io
 spec:
   service:
-    name: klm-controller-manager-metrics-server
+    name: controller-manager-metrics-server
     namespace: keptn-lifecycle-toolkit-system
   group: external.metrics.k8s.io
   version: v1beta1

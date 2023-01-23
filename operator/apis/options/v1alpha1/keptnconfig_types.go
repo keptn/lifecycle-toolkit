@@ -28,8 +28,8 @@ type KeptnConfigSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of KeptnConfig. Edit keptnconfig_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// OTelCollectorUrl can be used to set the Open Telemetry collector that the operator should use
+	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
 }
 
 // KeptnConfigStatus defines the observed state of KeptnConfig

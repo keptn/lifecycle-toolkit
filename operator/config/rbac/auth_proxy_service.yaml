@@ -15,5 +15,9 @@ spec:
     port: 2222
     protocol: TCP
     targetPort: 2222
+  - name: metrics
+    protocol: TCP
+    port: 9999
+    targetPort: 9999
   selector:
     control-plane: controller-manager

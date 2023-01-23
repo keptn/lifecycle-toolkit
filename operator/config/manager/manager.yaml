@@ -23,6 +23,8 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
+        openfeature.dev: "enabled"
+        openfeature.dev/featureflagconfiguration: "klm-metrics-config"
       labels:
         control-plane: controller-manager
     spec:
@@ -51,6 +53,9 @@ spec:
         ports:
           - containerPort: 9443
             name: webhook-server
+            protocol: TCP
+          - name: metrics
+            containerPort: 9999
             protocol: TCP
         imagePullPolicy: Always
         env:
@@ -103,3 +108,63 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
+---
+## OpenFeature Feature Flag config
+apiVersion: core.openfeature.dev/v1alpha2
+kind: FeatureFlagConfiguration
+metadata:
+  name: metrics-config
+  namespace: system
+  labels:
+    control-plane: klm-controller-manager
+spec:
+  featureFlagSpec:
+    flags:
+      keptn.gms.expose:
+        variants:
+          enabled: true
+          disabled: false
+        defaultVariant: enabled
+        state: ENABLED
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.custom.metrics.k8s.io
+spec:
+  service:
+    name: klm-controller-manager-metrics-server
+    namespace: keptn-lifecycle-toolkit-system
+  group: custom.metrics.k8s.io
+  version: v1beta1
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta2.custom.metrics.k8s.io
+spec:
+  service:
+    name: klm-controller-manager-metrics-server
+    namespace: keptn-lifecycle-toolkit-system
+  group: custom.metrics.k8s.io
+  version: v1beta2
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 200
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.external.metrics.k8s.io
+spec:
+  service:
+    name: klm-controller-manager-metrics-server
+    namespace: keptn-lifecycle-toolkit-system
+  group: external.metrics.k8s.io
+  version: v1beta1
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100

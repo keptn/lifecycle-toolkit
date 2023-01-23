@@ -41,6 +41,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
+	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
+	flagd "github.com/open-feature/go-sdk-contrib/providers/flagd/pkg"
+	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -204,6 +207,14 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	// OpenFeature Setup
+	openfeature.SetProvider(flagd.NewProvider(
+		flagd.WithHost("localhost"),
+	))
+
+	ctx, _ := context.WithCancel(context.Background())
+	keptnserver.StartServerManager(ctx)
 
 	// Enabling OTel
 	tpOptions, err := getOTelTracerProviderOptions(env)

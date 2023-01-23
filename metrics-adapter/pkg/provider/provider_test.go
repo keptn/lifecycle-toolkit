@@ -2,6 +2,9 @@ package provider
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -10,12 +13,9 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic/fake"
 	provider2 "sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
-	"testing"
-	"time"
 )
 
 func TestProvider(t *testing.T) {
-
 	metricObj1 := getSampleKeptnMetric("my-metric", map[string]interface{}{})
 
 	km := &unstructured.Unstructured{}

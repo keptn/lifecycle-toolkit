@@ -77,7 +77,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	fetchTime := metric.Status.LastUpdated.Add(time.Second * time.Duration(metric.Spec.FetchIntervalSeconds))
 	if time.Now().Before(fetchTime) {
-		diff := fetchTime.Sub(time.Now())
+		diff := time.Until(fetchTime)
 		r.Log.Info("Metric has not been updated for the configured interval. Skipping")
 		return ctrl.Result{Requeue: true, RequeueAfter: diff}, nil
 	}

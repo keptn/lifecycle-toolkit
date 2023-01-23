@@ -23,6 +23,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
@@ -32,6 +34,7 @@ import (
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
+	"github.com/keptn/lifecycle-toolkit/operator/cmd/metrics/adapter"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
@@ -198,6 +201,9 @@ func main() {
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()
+
+	// Start the custom metrics adapter
+	go startCustomMetricsAdapter()
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -570,4 +576,12 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
+}
+
+func startCustomMetricsAdapter() {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
+	defer cancel()
+
+	adapter := adapter.MetricsAdapter{}
+	adapter.RunAdapter(ctx)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+
 	kmprovider "github.com/keptn/lifecycle-toolkit/operator/cmd/metrics/adapter/provider"
 	"k8s.io/apiserver/pkg/server/options"
 	"k8s.io/component-base/logs"

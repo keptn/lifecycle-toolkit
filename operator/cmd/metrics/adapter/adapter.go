@@ -75,6 +75,6 @@ func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomM
 
 func addFlags() {
 	flag.IntVar(&port, FlagPort, 6443, "Port of the metrics adapter endpoint")
-	flag.StringVar(&certDir, FlagCertificateDirectory, "/tmp/metrics-adapter/certs", "Directory in which to look for certificates for the Metrics Adapter.")
+	flag.StringVar(&certDir, FlagCertificateDirectory, "/tmp/metrics-adapter/serving-certs", "Directory in which to look for certificates for the Metrics Adapter.")
 	flag.Parse()
 }

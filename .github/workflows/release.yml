@@ -124,14 +124,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache build tools operator
-        id: cache-build-tools
+        id: cache-build-tools-operator
         uses: actions/cache@v3
         with:
           path: ./operator/bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Cache build tools scheduler
-        id: cache-build-tools
+        id: cache-build-tools-scheduler
         uses: actions/cache@v3
         with:
           path: ./scheduler/bin

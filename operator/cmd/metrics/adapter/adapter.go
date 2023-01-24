@@ -20,18 +20,12 @@ const (
 )
 
 var (
-	port     int
-	certDir  string
-	certKey  string
-	certFile string
+	port    int
+	certDir string
 )
 
 type MetricsAdapter struct {
 	basecmd.AdapterBase
-	port     int
-	certDir  string
-	certKey  string
-	certFile string
 }
 
 // RunAdapter starts the Keptn Metrics adapter to provide KeptnMetrics via the Kubernetes Custom Metrics API.
@@ -83,7 +77,5 @@ func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomM
 func addFlags() {
 	flag.IntVar(&port, FlagPort, 6443, "Port of the metrics adapter endpoint")
 	flag.StringVar(&certDir, FlagCertificateDirectory, "/tmp/metrics-adapter/certs", "Directory in which to look for certificates for the Metrics Adapter.")
-	flag.StringVar(&certFile, FlagCertificateFileName, "", "File name for the public certificate of the Metrics Adapter.")
-	flag.StringVar(&certKey, FlagCertificateKeyFileName, "", "File name for the private key of the Metrics Adapter")
 	flag.Parse()
 }

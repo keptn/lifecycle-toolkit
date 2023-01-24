@@ -374,7 +374,9 @@ spec:
   fetchIntervalSeconds: 5
 ```
 
-To be able to use `KeptnMetric` as part of your evaluation, you need to add `keptn-metric` as your value for `.spec.source` in `KeptnEvaluationDefiniton`
+To be able to use `KeptnMetric` as part of your evaluation, you need to add `keptn-metric` as your value for `.spec.source` in `KeptnEvaluationDefiniton`. Further you need specify
+the `.spec.objectives[i].name` of `KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name` of `KeptnMetric` resource. The `.spec.objectives[i].query` parameter
+of `KeptnEvaluationDefiniton` will be ignored and `.spec.query` of `KeptnMetric` will be use instead as a query to fetch the data.
 
 ## Install a dev build
 

@@ -24,8 +24,7 @@ func TestProvider(t *testing.T) {
 	scheme := runtime.NewScheme()
 	fakeClient := fake.NewSimpleDynamicClient(scheme, km)
 
-	ctx, cancel := context.WithCancel(context.TODO())
-	provider := NewProvider(ctx, fakeClient)
+	provider := NewProvider(context.TODO(), fakeClient)
 
 	require.NotNil(t, provider)
 
@@ -119,8 +118,6 @@ func TestProvider(t *testing.T) {
 
 		return len(cmis) == 0
 	}, 10*time.Second, 100*time.Millisecond)
-
-	cancel()
 }
 
 func getSampleKeptnMetric(metricName string, labels map[string]interface{}) map[string]interface{} {

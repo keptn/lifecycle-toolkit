@@ -83,7 +83,7 @@ vet: ## Run go vet against code.
 
 .PHONY: test
 test: manifests fmt vet generate envtest ## Run tests.
-	go test ./cmd/adapter... -v -coverprofile cover-adapter.out
+	go test ./cmd/adapter/... -v -coverprofile cover-adapter.out
 	go test ./apis/... -v -coverprofile cover-apis.out
 	go test ./controllers/... -v -coverprofile cover-pkg.out
 	go test ./webhooks/... -v -coverprofile cover-main.out

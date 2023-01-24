@@ -20,7 +20,7 @@ metadata:
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
-    name: "dynatrace"
+    name: "<your-keptn-evaluation-provider>"
   query: "<your query>"
   fetchIntervalSeconds: 5
 ```

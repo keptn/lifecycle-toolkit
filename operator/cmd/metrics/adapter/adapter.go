@@ -14,10 +14,8 @@ import (
 )
 
 const (
-	FlagPort                   = "adapter-port"
-	FlagCertificateDirectory   = "adapter-certs-dir"
-	FlagCertificateFileName    = "adapter-cert"
-	FlagCertificateKeyFileName = "adapter-cert-key"
+	FlagPort                 = "adapter-port"
+	FlagCertificateDirectory = "adapter-certs-dir"
 )
 
 var (

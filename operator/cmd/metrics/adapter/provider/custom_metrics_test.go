@@ -11,7 +11,7 @@ import (
 )
 
 func TestCustomMetrics_Delete(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -29,7 +29,7 @@ func TestCustomMetrics_Delete(t *testing.T) {
 }
 
 func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -47,7 +47,7 @@ func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
 }
 
 func TestCustomMetrics_DeleteFromEmptyMetrics(t *testing.T) {
-	cm := CustomMetrics{}
+	cm := CustomMetricsCache{}
 
 	cm.Delete("my-metric")
 
@@ -55,7 +55,7 @@ func TestCustomMetrics_DeleteFromEmptyMetrics(t *testing.T) {
 }
 
 func TestCustomMetrics_Get(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -78,7 +78,7 @@ func TestCustomMetrics_Get(t *testing.T) {
 }
 
 func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -116,7 +116,7 @@ func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 }
 
 func TestCustomMetrics_List(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -153,7 +153,7 @@ func TestCustomMetrics_List(t *testing.T) {
 }
 
 func TestCustomMetrics_ListByLabelSelector(t *testing.T) {
-	cm := CustomMetrics{
+	cm := CustomMetricsCache{
 		metrics: map[string]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
@@ -186,7 +186,7 @@ func TestCustomMetrics_ListByLabelSelector(t *testing.T) {
 }
 
 func TestCustomMetrics_Update(t *testing.T) {
-	cm := CustomMetrics{}
+	cm := CustomMetricsCache{}
 
 	cm.Update("my-metric", CustomMetricValue{
 		Value: custom_metrics.MetricValue{

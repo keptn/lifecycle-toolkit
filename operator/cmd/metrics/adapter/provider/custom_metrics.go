@@ -17,29 +17,34 @@ type CustomMetricValue struct {
 	Labels map[string]string
 }
 
-type CustomMetrics struct {
+type CustomMetricsCache struct {
 	mtx     sync.RWMutex
 	metrics map[string]CustomMetricValue
 }
 
-func (cm *CustomMetrics) Update(metric string, metricValue CustomMetricValue) {
+// Update adds a new metricValue for the given metricName to the cache. If an item has already been present for the provided
+// metricName, the previous value will be replaced.
+func (cm *CustomMetricsCache) Update(metricName string, metricValue CustomMetricValue) {
 	cm.mtx.Lock()
 	defer cm.mtx.Unlock()
 	if cm.metrics == nil {
 		cm.metrics = map[string]CustomMetricValue{}
 	}
 
-	cm.metrics[metric] = metricValue
+	cm.metrics[metricName] = metricValue
 }
 
-func (cm *CustomMetrics) Delete(metric string) {
+// Delete will delete the value for the given metricName
+func (cm *CustomMetricsCache) Delete(metricName string) {
 	cm.mtx.Lock()
 	defer cm.mtx.Unlock()
 
-	delete(cm.metrics, metric)
+	delete(cm.metrics, metricName)
 }
 
-func (cm *CustomMetrics) List() []provider.CustomMetricInfo {
+// List returns a slice of provider.CustomMetricInfo objects containing all the available metrics
+// that are currently present in the cache
+func (cm *CustomMetricsCache) List() []provider.CustomMetricInfo {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
 	res := []provider.CustomMetricInfo{}
@@ -49,7 +54,9 @@ func (cm *CustomMetrics) List() []provider.CustomMetricInfo {
 	return res
 }
 
-func (cm *CustomMetrics) ListByLabelSelector(selector labels.Selector) []provider.CustomMetricInfo {
+// ListByLabelSelector returns a slice of provider.CustomMetricInfo objects containing all the available metrics
+// that are currently present in the cache and match with the provided labels
+func (cm *CustomMetricsCache) ListByLabelSelector(selector labels.Selector) []provider.CustomMetricInfo {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
 	res := []provider.CustomMetricInfo{}
@@ -61,17 +68,20 @@ func (cm *CustomMetrics) ListByLabelSelector(selector labels.Selector) []provide
 	return res
 }
 
-func (cm *CustomMetrics) Get(metricsInfo string) (*CustomMetricValue, error) {
+// Get returns the metric value for the given metric name
+func (cm *CustomMetricsCache) Get(metricName string) (*CustomMetricValue, error) {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
-	metric, ok := cm.metrics[metricsInfo]
+	metric, ok := cm.metrics[metricName]
 	if !ok {
 		return nil, ErrMetricNotFound
 	}
 	return &metric, nil
 }
 
-func (cm *CustomMetrics) GetValuesByLabel(selector labels.Selector) []CustomMetricValue {
+// GetValuesByLabel returns a slice of CustomMetricValue objects containing the values of all
+// available metrics that match with the given label
+func (cm *CustomMetricsCache) GetValuesByLabel(selector labels.Selector) []CustomMetricValue {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
 

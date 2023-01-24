@@ -38,7 +38,9 @@ type keptnMetricsProvider struct {
 	scheme    *runtime.Scheme
 	logger    logr.Logger
 
-	metrics CustomMetrics
+	// cache is being populated via the updates received by the provider's dynamic informer
+	// this way, we avoid sending a request to the Kubernetes API each time a custom metric value should be retrieved
+	cache CustomMetricsCache
 }
 
 func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomMetricsProvider {
@@ -55,7 +57,7 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 			client:    client,
 			k8sClient: cl,
 			scheme:    scheme,
-			metrics: CustomMetrics{
+			cache: CustomMetricsCache{
 				metrics: map[string]CustomMetricValue{},
 			},
 			logger: ctrl.Log.WithName("provider"),
@@ -70,14 +72,14 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 }
 
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
-	return p.metrics.List()
+	return p.cache.List()
 }
 
 // GetMetricByName retrieves a metric based on its name.
 // Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample
 func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.NamespacedName, info provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValue, error) {
 	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector, "context", ctx)
-	val, err := p.metrics.Get(name.Name)
+	val, err := p.cache.Get(name.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +91,7 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string, selector labels.Selector, _ provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValueList, error) {
 	klog.InfoS("GetMetricBySelector()", "selector", selector, "metricSelector", metricSelector, "context", ctx)
 
-	metricValues := p.metrics.GetValuesByLabel(selector)
+	metricValues := p.cache.GetValuesByLabel(selector)
 
 	res := []custom_metrics.MetricValue{}
 	for _, metricValue := range metricValues {
@@ -102,7 +104,7 @@ func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, kltNamespace, func(options *metav1.ListOptions) {})
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, kltNamespace, nil)
 
 	informer := factory.ForResource(keptnMetricGroupVersionResource).Informer()
 
@@ -118,7 +120,7 @@ func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
 		DeleteFunc: func(obj interface{}) {
 			klog.InfoS("DeleteFunc", "obj", obj)
 			unstructuredKeptnMetric := obj.(*unstructured.Unstructured)
-			p.metrics.Delete(unstructuredKeptnMetric.GetName())
+			p.cache.Delete(unstructuredKeptnMetric.GetName())
 		},
 	}
 	if _, err := informer.AddEventHandler(handlers); err != nil {
@@ -166,5 +168,5 @@ func (p *keptnMetricsProvider) updateMetric(obj interface{}) {
 		Labels: unstructuredKeptnMetric.GetLabels(),
 	}
 
-	p.metrics.Update(unstructuredKeptnMetric.GetName(), metricObj)
+	p.cache.Update(unstructuredKeptnMetric.GetName(), metricObj)
 }

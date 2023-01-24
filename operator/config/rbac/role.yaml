@@ -363,8 +363,9 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  creationTimestamp: null
   name: manager-role
-  namespace: system
+  namespace: keptn-lifecycle-toolkit-system
 rules:
 - apiGroups:
   - ""
@@ -372,13 +373,3 @@ rules:
   - secrets
   verbs:
   - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: keptn-metrics-server-resources
-rules:
-  - apiGroups:
-      - custom.metrics.k8s.io
-    resources: ["*"]
-    verbs: ["*"]

@@ -4,17 +4,43 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"os"
-
 	kmprovider "github.com/keptn/lifecycle-toolkit/operator/cmd/metrics/adapter/provider"
+	"k8s.io/apiserver/pkg/server/options"
 	"k8s.io/component-base/logs"
 	"k8s.io/klog/v2"
 	basecmd "sigs.k8s.io/custom-metrics-apiserver/pkg/cmd"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
+const (
+	FlagPort                   = "adapter-port"
+	FlagCertificateDirectory   = "adapter-certs-dir"
+	FlagCertificateFileName    = "adapter-cert"
+	FlagCertificateKeyFileName = "adapter-cert-key"
+)
+
+var (
+	port     int
+	certDir  string
+	certKey  string
+	certFile string
+)
+
 type MetricsAdapter struct {
 	basecmd.AdapterBase
+	port     int
+	certDir  string
+	certKey  string
+	certFile string
+}
+
+func NewMetricsAdapter(port int, certDir, certKey, certFile string) MetricsAdapter {
+	return MetricsAdapter{
+		port:     port,
+		certDir:  certDir,
+		certKey:  certKey,
+		certFile: certFile,
+	}
 }
 
 // RunAdapter starts the Keptn Metrics adapter to provide KeptnMetrics via the Kubernetes Custom Metrics API.
@@ -24,14 +50,24 @@ func (a *MetricsAdapter) RunAdapter(ctx context.Context) {
 	logs.InitLogs()
 	defer logs.FlushLogs()
 
+	addFlags()
+
 	fmt.Println("Starting Keptn Metrics Adapter")
 	// initialize the flags, with one custom flag for the message
 	cmd := &MetricsAdapter{}
 	// make sure you get the klog flags
 	logs.AddGoFlags(flag.CommandLine)
 	cmd.Flags().AddGoFlagSet(flag.CommandLine)
-	if err := cmd.Flags().Parse(os.Args); err != nil {
+	if err := cmd.Flags().Parse([]string{}); err != nil {
 		klog.Fatalf("Could not parse flags: %v", err)
+	}
+
+	cmd.CustomMetricsAdapterServerOptions.SecureServing.BindPort = port
+
+	// remove this again if it doesn't work this way
+	cmd.CustomMetricsAdapterServerOptions.SecureServing.ServerCert = options.GeneratableKeyCert{
+		PairName:      "apiserver",
+		CertDirectory: certDir,
 	}
 
 	prov := cmd.makeProviderOrDie(ctx)
@@ -51,4 +87,12 @@ func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomM
 	}
 
 	return kmprovider.NewProvider(ctx, client)
+}
+
+func addFlags() {
+	flag.IntVar(&port, FlagPort, 6443, "Port of the metrics adapter endpoint")
+	flag.StringVar(&certDir, FlagCertificateDirectory, "/tmp/metrics-adapter/certs", "Directory in which to look for certificates for the Metrics Adapter.")
+	flag.StringVar(&certFile, FlagCertificateFileName, "", "File name for the public certificate of the Metrics Adapter.")
+	flag.StringVar(&certKey, FlagCertificateKeyFileName, "", "File name for the private key of the Metrics Adapter")
+	flag.Parse()
 }

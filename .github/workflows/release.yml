@@ -123,6 +123,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Cache build tools operator
+        id: cache-build-tools
+        uses: actions/cache@v3
+        with:
+          path: ./operator/bin
+          key: build-tools-${{ github.ref_name }}
+
+      - name: Cache build tools scheduler
+        id: cache-build-tools
+        uses: actions/cache@v3
+        with:
+          path: ./scheduler/bin
+          key: build-tools-${{ github.ref_name }}
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:

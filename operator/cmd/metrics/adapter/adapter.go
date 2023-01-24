@@ -34,15 +34,6 @@ type MetricsAdapter struct {
 	certFile string
 }
 
-func NewMetricsAdapter(port int, certDir, certKey, certFile string) MetricsAdapter {
-	return MetricsAdapter{
-		port:     port,
-		certDir:  certDir,
-		certKey:  certKey,
-		certFile: certFile,
-	}
-}
-
 // RunAdapter starts the Keptn Metrics adapter to provide KeptnMetrics via the Kubernetes Custom Metrics API.
 // Runs until the given context is done.
 func (a *MetricsAdapter) RunAdapter(ctx context.Context) {

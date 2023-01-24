@@ -119,7 +119,7 @@ jobs:
         id: cache-build-tools
         uses: actions/cache@v3
         with:
-          path: ./${{ matrix.config.folder }}/bin
+          path: ./${{ matrix.config.folder }}bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Set up Docker Buildx
@@ -227,7 +227,7 @@ jobs:
         id: cache-build-tools
         uses: actions/cache@v3
         with:
-          path: ./${{ matrix.config.folder }}/bin
+          path: ./${{ matrix.config.folder }}bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Login to GitHub Container Registry

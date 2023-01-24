@@ -8,7 +8,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 ### Keptn Metric
-A `KeptnMetric` is a CRD used to define SLI provider with a query and to store metric data fetched from the provider. Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components. Furthermore, this allows using multiple observability platforms for different metrics.
+A `KeptnMetric` is a CRD representing a metric. The metric will be collected from the provider specified in the specs.provider.name field. The query is a string in the provider-specific query language, used to obtain a metric. Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components. Furthermore, this allows using multiple observability platforms for different metrics.
 
 A `KeptnMetric` looks like the following:
 

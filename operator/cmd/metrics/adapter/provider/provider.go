@@ -20,7 +20,6 @@ import (
 	"k8s.io/metrics/pkg/apis/custom_metrics"
 	ctrl "sigs.k8s.io/controller-runtime"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
@@ -47,16 +46,9 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 	providerOnce.Do(func() {
 		scheme := runtime.NewScheme()
 
-		cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
-
-		if err != nil {
-			klog.Fatalf("failed to create client: %v", err)
-		}
-
 		providerInstance = &keptnMetricsProvider{
-			client:    client,
-			k8sClient: cl,
-			scheme:    scheme,
+			client: client,
+			scheme: scheme,
 			cache: CustomMetricsCache{
 				metrics: map[string]CustomMetricValue{},
 			},

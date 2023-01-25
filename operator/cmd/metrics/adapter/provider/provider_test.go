@@ -28,8 +28,6 @@ func TestProvider(t *testing.T) {
 
 	require.NotNil(t, provider)
 
-	return // TODO remove again
-
 	// make sure that the informer picks up what is already there
 	cmis := []provider2.CustomMetricInfo{}
 	require.Eventually(t, func() bool {

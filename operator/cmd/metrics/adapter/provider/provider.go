@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/go-logr/logr"
+	"github.com/pkg/errors"
 	apierr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

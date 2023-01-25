@@ -69,6 +69,12 @@ help: ## Display this help.
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
+.PHONY: gen-crds
+gen-crds: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+	echo $(shell pwd)
+	$(CONTROLLER_GEN) crd paths="./..." output:crd:artifacts:config=../helm/chart/crds
+
+
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
@@ -133,7 +139,14 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 .PHONY: release-manifests
 release-manifests: manifests kustomize
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	echo "building default overlay"
 	$(KUSTOMIZE) build config/default > config/rendered/release.yaml
+
+.PHONY: release-helm-manifests
+ release-helm-manifests: manifests gen-crds kustomize
+	echo "building helm overlay"
+	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	$(KUSTOMIZE) build config/default/base > config/rendered/release.yaml
 
 .PHONY: deploy
 deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.

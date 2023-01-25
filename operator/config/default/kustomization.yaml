@@ -6,7 +6,7 @@ namespace: keptn-lifecycle-toolkit-system
 # "wordpress" becomes "alices-wordpress".
 # Note that it should also match with the prefix (text before '-') of the namespace
 # field above.
-namePrefix: klc-
+# namePrefix: klc-
 
 # Labels to add to all resources and selectors.
 #commonLabels:
@@ -14,43 +14,4 @@ namePrefix: klc-
 
 bases:
 - ../crd
-- ../rbac
-- ../manager
-# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
-# crd/kustomization.yaml
-- ../webhook
-- ../metrics
-# [CERTMANAGER] To enable cert-manager, uncomment all sections with 'CERTMANAGER'. 'WEBHOOK' components are required.
-# [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.
-#- ../prometheus
-
-patchesStrategicMerge:
-# Protect the /metrics endpoint by putting it behind auth.
-# If you want your controller-manager to expose the /metrics
-# endpoint w/o any authn/z, please comment the following line.
-- manager_auth_proxy_patch.yaml
-
-# Mount the controller config file for loading manager configurations
-# through a ComponentConfig type
-#- manager_config_patch.yaml
-
-# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
-# crd/kustomization.yaml
-# manager_webhook_patch.yaml
-
-- webhooknamespaces_patch.yaml
-
-# the following config is for teaching kustomize how to do var substitution
-vars:
-- name: SERVICE_NAMESPACE # namespace of the service
-  objref:
-    kind: Service
-    version: v1
-    name: webhook-service
-  fieldref:
-    fieldpath: metadata.namespace
-- name: SERVICE_NAME
-  objref:
-    kind: Service
-    version: v1
-    name: webhook-service
+- ./base

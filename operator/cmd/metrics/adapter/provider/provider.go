@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"sync"
 	"time"
 
@@ -71,6 +72,9 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector, "context", ctx)
 	val, err := p.cache.Get(name.Name)
 	if err != nil {
+		if errors.Is(err, ErrMetricNotFound) {
+			return nil, provider.NewMetricNotFoundForSelectorError(info.GroupResource, info.Metric, name.Name, metricSelector)
+		}
 		return nil, err
 	}
 	return &val.Value, nil

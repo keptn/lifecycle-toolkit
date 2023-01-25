@@ -20,6 +20,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+const KLTnamespace = "keptnlifecycle"
+
 var _ = Describe("KeptnEvaluationController", Ordered, func() {
 	var (
 		evaluationName           string
@@ -46,15 +48,16 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []interfaces.Controller{&keptnevaluation.KeptnEvaluationReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-evaluation-controller"),
-			Log:      GinkgoLogr,
-			Meters:   initKeptnMeters(),
-			Tracer:   tracer.Tracer("test-evaluation-tracer"),
+			Client:    k8sManager.GetClient(),
+			Scheme:    k8sManager.GetScheme(),
+			Recorder:  k8sManager.GetEventRecorderFor("test-evaluation-controller"),
+			Log:       GinkgoLogr,
+			Meters:    initKeptnMeters(),
+			Tracer:    tracer.Tracer("test-evaluation-tracer"),
+			Namespace: KLTnamespace,
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
-		ns = makeKLTDefaultNamespace(providers.KLTNamespace)
+		ns = makeKLTDefaultNamespace(KLTnamespace)
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
@@ -83,7 +86,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 				metric2 := &metricsv1alpha1.KeptnMetric{}
 				err := k8sClient.Get(context.TODO(), types.NamespacedName{
-					Namespace: providers.KLTNamespace,
+					Namespace: KLTnamespace,
 					Name:      metric.Name,
 				}, metric2)
 				Expect(err).To(BeNil())
@@ -252,7 +255,7 @@ func makeKeptnMetric(name string) *metricsv1alpha1.KeptnMetric {
 	metric := &metricsv1alpha1.KeptnMetric{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
-			Namespace: providers.KLTNamespace,
+			Namespace: KLTnamespace,
 		},
 		Spec: metricsv1alpha1.KeptnMetricSpec{
 			Provider: metricsv1alpha1.ProviderRef{

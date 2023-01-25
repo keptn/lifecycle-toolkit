@@ -19,10 +19,11 @@ import (
 )
 
 const (
-	testDomain         = ServiceName + "." + namespace + ".svc"
+	testDomain         = ServiceName + "." + testnamespace + ".svc"
 	expectedSecretName = DeploymentName + secretPostfix
 	strategyWebhook    = "webhook"
 	testBytes          = 123
+	testnamespace      = "keptn-ns"
 )
 
 func TestReconcileCertificate_Create(t *testing.T) {
@@ -35,7 +36,7 @@ func TestReconcileCertificate_Create(t *testing.T) {
 	assert.Equal(t, SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
-	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: namespace}, secret)
+	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
 	require.NoError(t, err)
 
 	assert.NotNil(t, secret.Data)
@@ -62,7 +63,7 @@ func TestReconcileCertificate_Update(t *testing.T) {
 	assert.Equal(t, SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
-	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: namespace}, secret)
+	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
 	require.NoError(t, err)
 
 	assert.NotNil(t, secret.Data)
@@ -89,7 +90,7 @@ func TestReconcileCertificate_ExistingSecretWithValidCertificate(t *testing.T) {
 	assert.Equal(t, SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
-	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: namespace}, secret)
+	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
 	require.NoError(t, err)
 
 	verifyCertificates(t, secret, clt, false)
@@ -189,8 +190,8 @@ func TestReconcile(t *testing.T) {
 	t.Run(`update crd successfully with up-to-date secret`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3)
 		cs := newCertificateSecret(fakeClient)
-		_ = cs.setSecretFromReader(context.TODO(), namespace, testr.New(t))
-		_ = cs.setCertificates(namespace)
+		_ = cs.setSecretFromReader(context.TODO(), testnamespace, testr.New(t))
+		_ = cs.setCertificates(testnamespace)
 		_ = cs.createOrUpdateIfNecessary(context.TODO())
 
 		controller, request := prepareController(t, fakeClient)
@@ -245,8 +246,8 @@ func TestReconcile(t *testing.T) {
 			},
 		})
 		cs := newCertificateSecret(fakeClient)
-		_ = cs.setSecretFromReader(context.TODO(), namespace, testr.New(t))
-		_ = cs.setCertificates(namespace)
+		_ = cs.setSecretFromReader(context.TODO(), testnamespace, testr.New(t))
+		_ = cs.setCertificates(testnamespace)
 		_ = cs.createOrUpdateIfNecessary(context.TODO())
 
 		controller, request := prepareController(t, fakeClient)
@@ -285,7 +286,7 @@ func TestReconcile(t *testing.T) {
 		assert.NotNil(t, result)
 
 		secret := &corev1.Secret{}
-		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: namespace}, secret)
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
 		assert.NoError(t, err)
 	})
 }
@@ -395,7 +396,7 @@ func createValidTestCertData(_ *testing.T) map[string][]byte {
 func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 	return &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: namespace,
+			Namespace: testnamespace,
 			Name:      expectedSecretName,
 		},
 		Data: certData,
@@ -404,14 +405,16 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := &KeptnWebhookCertificateReconciler{
-		Client: clt,
-		Log:    testr.New(t),
+
+		Client:    clt,
+		Log:       testr.New(t),
+		Namespace: testnamespace,
 	}
 
 	request := reconcile.Request{
 		NamespacedName: types.NamespacedName{
 			Name:      DeploymentName,
-			Namespace: namespace,
+			Namespace: testnamespace,
 		},
 	}
 
@@ -433,7 +436,7 @@ func testWebhookClientConfig(
 
 func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, isUpdate bool) {
 	cert := Certs{
-		Domain:  getDomain(namespace),
+		Domain:  getDomain(testnamespace),
 		Data:    secret.Data,
 		SrcData: secret.Data,
 		Now:     time.Now(),

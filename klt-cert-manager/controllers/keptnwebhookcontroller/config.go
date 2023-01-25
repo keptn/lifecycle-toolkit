@@ -17,7 +17,6 @@ const (
 	crdGroup                   = "lifecycle.keptn.sh"
 	certificatesSecretEmptyErr = "certificates secret is empty"
 	couldNotUpdateCRDErr       = "could not update crd config"
-	namespace                  = "keptn-lifecycle-toolkit-system"
 )
 
 var keptnCRD = schema.GroupVersionResource{Group: "lifecycle.keptn.sh"}

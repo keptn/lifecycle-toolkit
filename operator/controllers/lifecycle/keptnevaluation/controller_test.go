@@ -35,16 +35,16 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 		{
 			name: "keptn metrics",
 			namespacedDefinition: types.NamespacedName{
-				Namespace: providers.KLTNamespace,
+				Namespace: "klt-namespace",
 				Name:      "myKeptn",
 			},
 			wantDef:  metricEvalDef,
-			wantProv: providers.MetricDefaultProvider,
+			wantProv: providers.GetDefaultMetricProvider("klt-namespace"),
 		},
 		{
 			name: "DT metrics",
 			namespacedDefinition: types.NamespacedName{
-				Namespace: providers.KLTNamespace,
+				Namespace: "klt-namespace",
 				Name:      "myDT",
 			},
 			wantDef:  DTEvalDef,
@@ -54,7 +54,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 		{
 			name: "Prometheus metrics",
 			namespacedDefinition: types.NamespacedName{
-				Namespace: providers.KLTNamespace,
+				Namespace: "klt-namespace",
 				Name:      "myProm",
 			},
 			wantDef:  PromEvalDef,
@@ -64,7 +64,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 		{
 			name: "Unexisting Evaluation Def",
 			namespacedDefinition: types.NamespacedName{
-				Namespace: providers.KLTNamespace,
+				Namespace: "klt-namespace",
 				Name:      "whatever",
 			},
 			wantDef:  nil,
@@ -74,7 +74,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 		{
 			name: "Unexisting Provider",
 			namespacedDefinition: types.NamespacedName{
-				Namespace: providers.KLTNamespace,
+				Namespace: "klt-namespace",
 				Name:      "mydef",
 			},
 			wantDef:  nil,
@@ -109,7 +109,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition) {
 	metricEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 			Name:      "myKeptn",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
@@ -121,7 +121,7 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 
 	DTEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 			Name:      "myDT",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
@@ -133,7 +133,7 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 
 	PromEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 			Name:      "myProm",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
@@ -145,7 +145,7 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 
 	EvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 			Name:      "mdef",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
@@ -162,14 +162,14 @@ func setupProviders() (*klcv1alpha2.KeptnEvaluationProvider, *klcv1alpha2.KeptnE
 	DTProv := &klcv1alpha2.KeptnEvaluationProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.DynatraceProviderName,
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 		},
 	}
 
 	PromProv := &klcv1alpha2.KeptnEvaluationProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.PrometheusProviderName,
-			Namespace: providers.KLTNamespace,
+			Namespace: "klt-namespace",
 		},
 	}
 

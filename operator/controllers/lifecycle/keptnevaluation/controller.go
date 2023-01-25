@@ -43,11 +43,12 @@ import (
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
 type KeptnEvaluationReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Meters   apicommon.KeptnMeters
-	Tracer   trace.Tracer
+	Scheme    *runtime.Scheme
+	Recorder  record.EventRecorder
+	Log       logr.Logger
+	Meters    apicommon.KeptnMeters
+	Tracer    trace.Tracer
+	Namespace string
 }
 
 //clusterrole
@@ -266,7 +267,7 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 	}
 
 	if evaluationDefinition.Spec.Source == providers.KeptnMetricProviderName {
-		return evaluationDefinition, providers.MetricDefaultProvider, nil
+		return evaluationDefinition, providers.GetDefaultMetricProvider(r.Namespace), nil
 	}
 
 	namespacedProvider := types.NamespacedName{

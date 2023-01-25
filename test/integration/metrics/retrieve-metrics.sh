@@ -28,11 +28,3 @@ done
 
 echo "Retried ${RETRY_COUNT} times, but custom metric value did not meet the condition. Exiting..."
 exit 1
-
-# Retrieve the custom metric value
-METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/*/${METRIC_NAME}")
-
-# Print the custom metric value
-echo "Custom metric value for ${METRIC_NAME} in namespace ${NAMESPACE}: ${METRIC_VALUE}"
-
-kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/$NAMESPACE/keptnmetrics.metrics.sh/podtato-head/podtato-head" | jq .

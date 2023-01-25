@@ -19,7 +19,6 @@ import (
 	"k8s.io/klog/v2"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
 	ctrl "sigs.k8s.io/controller-runtime"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
@@ -32,10 +31,9 @@ var providerInstance *keptnMetricsProvider
 var providerOnce sync.Once
 
 type keptnMetricsProvider struct {
-	client    dynamic.Interface
-	k8sClient ctrlclient.Client
-	scheme    *runtime.Scheme
-	logger    logr.Logger
+	client dynamic.Interface
+	scheme *runtime.Scheme
+	logger logr.Logger
 
 	// cache is being populated via the updates received by the provider's dynamic informer
 	// this way, we avoid sending a request to the Kubernetes API each time a custom metric value should be retrieved

@@ -5,8 +5,6 @@ NAMESPACE="keptn-lifecycle-toolkit-system"
 RETRY_COUNT=3
 SLEEP_TIME=5
 
-kubectl proxy &
-
 for i in $(seq 1 $RETRY_COUNT); do
     # Retrieve the custom metric value
     METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/${METRIC_NAME}/${METRIC_NAME}")

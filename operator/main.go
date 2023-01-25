@@ -30,6 +30,7 @@ import (
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
+	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -41,6 +42,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
+	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -77,6 +79,7 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -344,6 +347,15 @@ func main() {
 	}
 	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
+		os.Exit(1)
+	}
+
+	configReconciler := &controlleroptions.KeptnConfigReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}
+	if err = (configReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)
 	}
 

@@ -9,19 +9,19 @@ import (
 
 // EventObjectMock is a mock implementation of interfaces.EventObject.
 //
-// 	func TestSomethingThatUsesEventObject(t *testing.T) {
+//	func TestSomethingThatUsesEventObject(t *testing.T) {
 //
-// 		// make and configure a mocked interfaces.EventObject
-// 		mockedEventObject := &EventObjectMock{
-// 			GetEventAnnotationsFunc: func() map[string]string {
-// 				panic("mock out the GetEventAnnotations method")
-// 			},
-// 		}
+//		// make and configure a mocked interfaces.EventObject
+//		mockedEventObject := &EventObjectMock{
+//			GetEventAnnotationsFunc: func() map[string]string {
+//				panic("mock out the GetEventAnnotations method")
+//			},
+//		}
 //
-// 		// use mockedEventObject in code that requires interfaces.EventObject
-// 		// and then make assertions.
+//		// use mockedEventObject in code that requires interfaces.EventObject
+//		// and then make assertions.
 //
-// 	}
+//	}
 type EventObjectMock struct {
 	// GetEventAnnotationsFunc mocks the GetEventAnnotations method.
 	GetEventAnnotationsFunc func() map[string]string
@@ -50,7 +50,8 @@ func (mock *EventObjectMock) GetEventAnnotations() map[string]string {
 
 // GetEventAnnotationsCalls gets all the calls that were made to GetEventAnnotations.
 // Check the length with:
-//     len(mockedEventObject.GetEventAnnotationsCalls())
+//
+//	len(mockedEventObject.GetEventAnnotationsCalls())
 func (mock *EventObjectMock) GetEventAnnotationsCalls() []struct {
 } {
 	var calls []struct {

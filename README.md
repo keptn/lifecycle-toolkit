@@ -370,7 +370,7 @@ metadata:
 spec:
   provider:
     name: "prometheus"
-  query: "query-1"
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
 ```
 

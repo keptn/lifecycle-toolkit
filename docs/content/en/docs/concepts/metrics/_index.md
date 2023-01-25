@@ -20,8 +20,8 @@ metadata:
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
-    name: "<your-keptn-evaluation-provider>"
-  query: "<your query>"
+    name: "<your-keptn-evaluation-provider-crd-name>"
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
 ```
 

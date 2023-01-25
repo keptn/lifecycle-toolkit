@@ -18,11 +18,9 @@ import (
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type Metrics struct {
@@ -39,26 +37,30 @@ type serverManager struct {
 	ticker        *clock.Ticker
 	ofClient      *openfeature.Client
 	exposeMetrics bool
+	k8sClient     client.Client
 }
 
-func StartServerManager(ctx context.Context, exposeMetrics bool) {
+// StartServerManager starts a server manager to expose metrics and runs until
+// the context is cancelled (i.e. an env variable gets changes and pod is restarted)
+func StartServerManager(ctx context.Context, exposeMetrics bool, client client.Client) {
 	smOnce.Do(func() {
 		metrics.gauges = make(map[string]prometheus.Gauge)
 		instance = &serverManager{
 			ticker:        clock.New().Ticker(10 * time.Second),
 			ofClient:      openfeature.NewClient("klt"),
 			exposeMetrics: exposeMetrics,
+			k8sClient:     client,
 		}
-		instance.Start(ctx)
+		instance.start(ctx)
 	})
 }
 
-func (m *serverManager) Start(ctx context.Context) {
+func (m *serverManager) start(ctx context.Context) {
 	go func() {
 		for {
 			select {
 			case <-ctx.Done():
-				if err := m.ShutDownServer(); err != nil {
+				if err := m.shutDownServer(); err != nil {
 					klog.Errorf("Error during server shutdown: %v", err)
 				}
 				return
@@ -71,7 +73,7 @@ func (m *serverManager) Start(ctx context.Context) {
 	}()
 }
 
-func (m *serverManager) ShutDownServer() error {
+func (m *serverManager) shutDownServer() error {
 	defer func() {
 		m.server = nil
 	}()
@@ -110,7 +112,7 @@ func (m *serverManager) setup() error {
 
 		router := mux.NewRouter()
 		router.Path("/metrics").Handler(promhttp.Handler())
-		router.Path("/api/v1/metrics/{namespace}/{metric}").HandlerFunc(returnMetric)
+		router.Path("/api/v1/metrics/{namespace}/{metric}").HandlerFunc(m.returnMetric)
 
 		m.server = &http.Server{
 			Addr:    ":9999",
@@ -127,29 +129,20 @@ func (m *serverManager) setup() error {
 		}()
 
 	} else if !serverEnabled && m.server != nil {
-		if err := m.ShutDownServer(); err != nil {
+		if err := m.shutDownServer(); err != nil {
 			return fmt.Errorf("could not shut down keptn-metrics server: %w", err)
 		}
 	}
 	return nil
 }
 
-func returnMetric(w http.ResponseWriter, r *http.Request) {
+func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	namespace := vars["namespace"]
 	metric := vars["metric"]
 
-	scheme := runtime.NewScheme()
-	if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
-		fmt.Println("failed to add keptn-metrics to scheme: " + err.Error())
-	}
-	cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
-	if err != nil {
-		fmt.Println("failed to create client")
-		os.Exit(1)
-	}
 	metricObj := metricsv1alpha1.KeptnMetric{}
-	err = cl.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
+	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
 	if err != nil {
 		fmt.Println("failed to list keptn-metrics" + err.Error())
 	}
@@ -169,28 +162,17 @@ func returnMetric(w http.ResponseWriter, r *http.Request) {
 
 func (m *serverManager) recordMetrics() {
 	go func() {
-		scheme := runtime.NewScheme()
-		if err := metricsv1alpha1.AddToScheme(scheme); err != nil {
-			fmt.Println("failed to add keptn-metrics to scheme: " + err.Error())
-		}
-
-		cl, err := ctrlclient.New(config.GetConfigOrDie(), ctrlclient.Options{Scheme: scheme})
-		if err != nil {
-			fmt.Println("failed to create client")
-			os.Exit(1)
-		}
-
 		for {
 			if m.server == nil {
 				return
 			}
 			list := metricsv1alpha1.KeptnMetricList{}
-			err := cl.List(context.Background(), &list)
+			err := m.k8sClient.List(context.Background(), &list)
 			if err != nil {
 				fmt.Println("failed to list keptn-metrics" + err.Error())
 			}
 			for _, metric := range list.Items {
-				normName := CleanUpString(metric.Name)
+				normName := normalizeMetricName(metric.Name)
 				if _, ok := metrics.gauges[normName]; !ok {
 					metrics.gauges[normName] = prometheus.NewGauge(prometheus.GaugeOpts{
 						Name: normName,
@@ -206,6 +188,12 @@ func (m *serverManager) recordMetrics() {
 	}()
 }
 
-func CleanUpString(s string) string {
-	return strings.Join(strings.FieldsFunc(s, func(r rune) bool { return !unicode.IsLetter(r) && !unicode.IsDigit(r) }), "_")
+// normalizeMetricName removes all characters from the name
+// of the metric that are not digits nor letters and
+// substitues them with underscore (_)
+func normalizeMetricName(s string) string {
+	return strings.Join(strings.FieldsFunc(s,
+		func(r rune) bool {
+			return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+		}), "_")
 }

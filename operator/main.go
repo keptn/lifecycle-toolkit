@@ -42,8 +42,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
-	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
+	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -210,27 +210,6 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	keptnserver.StartServerManager(ctx, env.ExposeKeptnMetrics)
-
-	// Enabling OTel
-	tpOptions, err := getOTelTracerProviderOptions(env)
-	if err != nil {
-		setupLog.Error(err, "unable to initialize OTel tracer options")
-	}
-
-	tp := trace.NewTracerProvider(tpOptions...)
-
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			setupLog.Error(err, "unable to shutdown  OTel exporter")
-			os.Exit(1)
-		}
-	}()
-	otel.SetTracerProvider(tp)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -254,6 +233,27 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	keptnserver.StartServerManager(ctx, env.ExposeKeptnMetrics, mgr.GetClient())
+
+	// Enabling OTel
+	tpOptions, err := getOTelTracerProviderOptions(env)
+	if err != nil {
+		setupLog.Error(err, "unable to initialize OTel tracer options")
+	}
+
+	tp := trace.NewTracerProvider(tpOptions...)
+
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			setupLog.Error(err, "unable to shutdown  OTel exporter")
+			os.Exit(1)
+		}
+	}()
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	spanHandler := &controllercommon.SpanHandler{}
 

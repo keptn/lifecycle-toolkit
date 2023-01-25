@@ -333,6 +333,32 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - options.keptn.sh
+  resources:
+  - keptnconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - options.keptn.sh
+  resources:
+  - keptnconfigs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - options.keptn.sh
+  resources:
+  - keptnconfigs/status
+  verbs:
+  - get
+  - patch
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

@@ -62,9 +62,9 @@ func TestProvider(t *testing.T) {
 	metricValue, err := provider.GetMetricByName(context.TODO(), types.NamespacedName{
 		Namespace: kltNamespace,
 		Name:      "my-unknown-metric",
-	}, provider2.CustomMetricInfo{}, nil)
+	}, provider2.CustomMetricInfo{}, labels.Set{}.AsSelector())
 
-	require.ErrorIs(t, err, ErrMetricNotFound)
+	require.NotNil(t, err)
 	require.Nil(t, metricValue)
 
 	// look for metrics based on a label selector

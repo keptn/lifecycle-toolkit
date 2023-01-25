@@ -3,10 +3,12 @@ package provider
 import (
 	"context"
 	"github.com/pkg/errors"
+	"net/http"
 	"sync"
 	"time"
 
 	"github.com/go-logr/logr"
+	apierr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -75,7 +77,12 @@ func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.N
 		if errors.Is(err, ErrMetricNotFound) {
 			return nil, provider.NewMetricNotFoundForSelectorError(info.GroupResource, info.Metric, name.Name, metricSelector)
 		}
-		return nil, err
+		return nil, &apierr.StatusError{ErrStatus: metav1.Status{
+			Status:  metav1.StatusFailure,
+			Code:    int32(http.StatusInternalServerError),
+			Reason:  metav1.StatusReasonInternalError,
+			Message: err.Error(),
+		}}
 	}
 	return &val.Value, nil
 }

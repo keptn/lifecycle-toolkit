@@ -44,6 +44,7 @@ import (
 	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
 	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
+	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -236,7 +237,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx, env.ExposeKeptnMetrics, mgr.GetClient())
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics)
 
 	// Enabling OTel
 	tpOptions, err := getOTelTracerProviderOptions(env)

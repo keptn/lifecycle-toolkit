@@ -43,6 +43,8 @@ type keptnMetricsProvider struct {
 	cache CustomMetricsCache
 }
 
+// NewProvider creates and starts a new keptnMetricsProvider. The provider will run until the given context is cancelled.
+// the client passed to this function will be used to set up a dynamic informer that listens for KeptnMetric CRDs and provides metric values that reflect their states.
 func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomMetricsProvider {
 	providerOnce.Do(func() {
 		scheme := runtime.NewScheme()
@@ -64,6 +66,7 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 	return providerInstance
 }
 
+// ListAllMetrics lists all available metrics
 func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
 	return p.cache.List()
 }

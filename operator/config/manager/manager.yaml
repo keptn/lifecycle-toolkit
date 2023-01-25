@@ -115,7 +115,7 @@ spec:
           - name: certs-dir
             mountPath: /tmp/k8s-webhook-server/serving-certs/
           - name: adapter-certs-dir
-            mountPath: /tmp/metrics-adapter/serving-certs #apiserver.local.config/certificates
+            mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
 

@@ -11,7 +11,8 @@ spec:
         - name: manager
           env:
             - name: OTEL_COLLECTOR_URL
-              value: "{{ .Values.otelCollector.URL }}"
+              value: "{{ .Values.otelCollector.url }}"
+
 
 ---
 apiVersion: apps/v1 #example patch for certmanager
@@ -41,4 +42,5 @@ spec:
         - name: keptn-scheduler
           env:
             - name: OTEL_COLLECTOR_URL
-              value: "{{ .Values.otelCollector.URL }}"
+              value: "{{ .Values.otelCollector.url }}"
+

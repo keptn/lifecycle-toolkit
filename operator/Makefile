@@ -70,7 +70,7 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
 .PHONY: gen-crds
-gen-crds: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+gen-crds: controller-gen ## Generate CustomResourceDefinition objects.
 	echo $(shell pwd)
 	$(CONTROLLER_GEN) crd paths="./..." output:crd:artifacts:config=../helm/chart/crds
 

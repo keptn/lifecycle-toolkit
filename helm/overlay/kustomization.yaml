@@ -1,5 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
-
+kind: Kustomization
 # import the default deployment as the base
 bases:
   - ../../operator/config/default/base
@@ -8,7 +8,6 @@ bases:
 # replace the default namespace with {{ include "chart.namespace" . }}
 # .Release.Namespace has not been used so that a custom _helpers.tpl file can maintain the expected behaviour of
 # helm install -n
-namespace: |-
-  {{ .Release.Namespace }}
+namespace: "{{ .Release.Namespace }}"
 patchesStrategicMerge:
   - patches/patch_deployment.yaml

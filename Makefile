@@ -6,8 +6,8 @@ TAG ?= "$(shell date +%Y%m%d%s)"
 TAG := $(TAG)
 
 # renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION?=v3.10.2
-CHART_VERSION=v0.5.0# x-release-please-version
+HELM_VERSION ?= v3.10.2
+CHART_VERSION = v0.5.0 # x-release-please-version
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
@@ -21,6 +21,8 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
+# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
+KUSTOMIZE_VERSION?=v4.5.7
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
@@ -47,14 +49,14 @@ release-helm-manifests: kustomize
 
 .PHONY: helm-package
 helm-package: build-release-manifests release-helm-manifests
-	cd ./helm && helm package --version $(CHART_VERSION) chart
+	cd ./helm && helm package ./chart
 	cd ./helm && mv keptn-lifecycle-toolkit-*.tgz ./chart/charts
 
 .PHONY: build-release-manifests
 build-release-manifests:
 	$(MAKE) -C operator generate
 	$(MAKE) -C klt-cert-manager generate
-	$(MAKE) -C operator  release-helm-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+	$(MAKE) -C operator release-helm-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 

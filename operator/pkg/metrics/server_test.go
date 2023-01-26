@@ -30,7 +30,8 @@ func TestMetricServer_happyPath(t *testing.T) {
 		},
 	}
 
-	metricsv1alpha1.AddToScheme(scheme.Scheme)
+	err := metricsv1alpha1.AddToScheme(scheme.Scheme)
+	require.Nil(t, err)
 	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(&metric).Build()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -42,17 +43,20 @@ func TestMetricServer_happyPath(t *testing.T) {
 	}, 10*time.Second, time.Second)
 
 	var resp *http.Response
-	var err error
 
 	require.Eventually(t, func() bool {
-		resp, err = http.Get("http://localhost:9999/metrics")
+		cli := &http.Client{}
+		req, err2 := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/metrics", nil)
+		require.Nil(t, err2)
+		resp, err = cli.Do(req)
 		return err == nil
 	}, 10*time.Second, time.Second)
 
 	defer resp.Body.Close()
 
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
+	_, err = buf.ReadFrom(resp.Body)
+	require.Nil(t, err)
 	newStr := buf.String()
 
 	require.Contains(t, newStr, "# TYPE sample_metric gauge")
@@ -65,7 +69,8 @@ func TestMetricServer_happyPath(t *testing.T) {
 }
 
 func TestMetricServer_disabledServer(t *testing.T) {
-	metricsv1alpha1.AddToScheme(scheme.Scheme)
+	err2 := metricsv1alpha1.AddToScheme(scheme.Scheme)
+	require.Nil(t, err2)
 	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -79,7 +84,10 @@ func TestMetricServer_disabledServer(t *testing.T) {
 	var err error
 
 	require.Eventually(t, func() bool {
-		_, err = http.Get("http://localhost:9999/metrics")
+		cli := &http.Client{}
+		req, err2 := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/metrics", nil)
+		require.Nil(t, err2)
+		_, err = cli.Do(req)
 		return err != nil
 	}, 30*time.Second, 3*time.Second)
 

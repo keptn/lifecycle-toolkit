@@ -1,5 +1,5 @@
 # klt-cert-manager
-The keptn certmanager makes sure that the webhooks in the Lifecycle Toolkit operator can obtain a valid certificate to access the kubernetes api server.
+The keptn certmanager ensures that the webhooks in the Lifecycle Toolkit operator can obtain a valid certificate to access the kubernetes api server.
 
 ## Description
 This klt-cert-manager operator is intended to be installed solely paired with the Lifecicle Toolkit operator. 

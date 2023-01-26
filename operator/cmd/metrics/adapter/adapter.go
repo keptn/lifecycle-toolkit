@@ -14,8 +14,9 @@ import (
 )
 
 const (
-	FlagPort                 = "adapter-port"
-	FlagCertificateDirectory = "adapter-certs-dir"
+	flagPort                   = "adapter-port"
+	flagCertificateDirectory   = "adapter-certs-dir"
+	defaultCertificatePairName = "apiserver"
 )
 
 var (
@@ -47,10 +48,8 @@ func (a *MetricsAdapter) RunAdapter(ctx context.Context) {
 	}
 
 	cmd.CustomMetricsAdapterServerOptions.SecureServing.BindPort = port
-
-	// remove this again if it doesn't work this way
 	cmd.CustomMetricsAdapterServerOptions.SecureServing.ServerCert = options.GeneratableKeyCert{
-		PairName:      "apiserver",
+		PairName:      defaultCertificatePairName,
 		CertDirectory: certDir,
 	}
 
@@ -74,7 +73,7 @@ func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomM
 }
 
 func addFlags() {
-	flag.IntVar(&port, FlagPort, 6443, "Port of the metrics adapter endpoint")
-	flag.StringVar(&certDir, FlagCertificateDirectory, "/tmp/metrics-adapter/serving-certs", "Directory in which to look for certificates for the Metrics Adapter.")
+	flag.IntVar(&port, flagPort, 6443, "Port of the metrics adapter endpoint")
+	flag.StringVar(&certDir, flagCertificateDirectory, "/tmp/metrics-adapter/serving-certs", "Directory in which to look for certificates for the Metrics Adapter.")
 	flag.Parse()
 }

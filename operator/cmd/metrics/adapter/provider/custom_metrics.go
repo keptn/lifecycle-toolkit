@@ -3,14 +3,11 @@ package provider
 import (
 	"sync"
 
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
-
-var ErrMetricNotFound = errors.New("no metric value found")
 
 type CustomMetricValue struct {
 	Value  custom_metrics.MetricValue
@@ -47,9 +44,12 @@ func (cm *CustomMetricsCache) Delete(metricName string) {
 func (cm *CustomMetricsCache) List() []provider.CustomMetricInfo {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
-	res := []provider.CustomMetricInfo{}
+	res := make([]provider.CustomMetricInfo, len(cm.metrics))
+
+	i := 0
 	for metricInfo := range cm.metrics {
-		res = append(res, generateCustomMetricInfo(metricInfo))
+		res[i] = generateCustomMetricInfo(metricInfo)
+		i++
 	}
 	return res
 }
@@ -97,8 +97,8 @@ func (cm *CustomMetricsCache) GetValuesByLabel(selector labels.Selector) []Custo
 func generateCustomMetricInfo(name string) provider.CustomMetricInfo {
 	return provider.CustomMetricInfo{
 		GroupResource: schema.GroupResource{
-			Group:    "metrics.keptn.sh",
-			Resource: "keptnmetrics",
+			Group:    metricsGroup,
+			Resource: metricsResource,
 		},
 		Metric:     name,
 		Namespaced: true,

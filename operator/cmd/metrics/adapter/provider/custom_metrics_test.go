@@ -146,8 +146,8 @@ func TestCustomMetrics_List(t *testing.T) {
 		require.NotEmpty(t, mi.Metric)
 		require.True(t, mi.Namespaced)
 		require.Equal(t, schema.GroupResource{
-			Group:    "metrics.keptn.sh",
-			Resource: "keptnmetrics",
+			Group:    metricsGroup,
+			Resource: metricsResource,
 		}, mi.GroupResource)
 	}
 }

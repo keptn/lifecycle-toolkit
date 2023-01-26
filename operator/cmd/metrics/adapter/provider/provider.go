@@ -97,9 +97,11 @@ func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string
 
 	metricValues := p.cache.GetValuesByLabel(selector)
 
-	res := []custom_metrics.MetricValue{}
+	res := make([]custom_metrics.MetricValue, len(metricValues))
+	i := 0
 	for _, metricValue := range metricValues {
-		res = append(res, metricValue.Value)
+		res[i] = metricValue.Value
+		i++
 	}
 
 	return &custom_metrics.MetricValueList{
@@ -144,9 +146,9 @@ func (p *keptnMetricsProvider) updateMetric(obj interface{}) {
 		return
 	}
 	if !found {
-		// set the value to 0.0 by default, and add the metric to the list of available metrics
-		value = "0.0"
-		klog.InfoS("No value available, defaulting to 0.0", "name", unstructuredKeptnMetric.GetName())
+		// set the value to defaultMetricsValue, and add the metric to the list of available metrics
+		value = defaultMetricsValue
+		klog.InfoS("No value available, using default value", "name", unstructuredKeptnMetric.GetName(), "defaultValue", defaultMetricsValue)
 	}
 
 	metricValue, err := resource.ParseQuantity(value)

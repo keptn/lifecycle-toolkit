@@ -97,14 +97,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace (
-	github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.1
-	google.golang.org/grpc => google.golang.org/grpc v1.51.0
-	k8s.io/api => k8s.io/api v0.25.5
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.5
-	k8s.io/apimachinery => k8s.io/apimachinery v0.25.6
-	k8s.io/apiserver => k8s.io/apiserver v0.25.5
-	k8s.io/client-go => k8s.io/client-go v0.25.5
-	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.13.1
-
-)
+replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.1

@@ -17,36 +17,36 @@ type SecretQuery struct {
 	kubeQuery
 }
 
-func NewSecretQuery(ctx context.Context, kubeClient client.Client, kubeReader client.Reader, log logr.Logger) SecretQuery {
+func NewSecretQuery(kubeClient client.Client, kubeReader client.Reader, log logr.Logger) SecretQuery {
 	return SecretQuery{
-		newKubeQuery(ctx, kubeClient, kubeReader, log),
+		newKubeQuery(kubeClient, kubeReader, log),
 	}
 }
 
-func (query SecretQuery) Get(objectKey client.ObjectKey) (corev1.Secret, error) {
+func (query SecretQuery) Get(ctx context.Context, objectKey client.ObjectKey) (corev1.Secret, error) {
 	var secret corev1.Secret
-	err := query.kubeReader.Get(query.ctx, objectKey, &secret)
+	err := query.kubeReader.Get(ctx, objectKey, &secret)
 
 	return secret, errors.WithStack(err)
 }
 
-func (query SecretQuery) Create(secret corev1.Secret) error {
+func (query SecretQuery) Create(ctx context.Context, secret corev1.Secret) error {
 	query.log.Info("creating secret", "name", secret.Name, "namespace", secret.Namespace)
 
-	return errors.WithStack(query.kubeClient.Create(query.ctx, &secret))
+	return errors.WithStack(query.kubeClient.Create(ctx, &secret))
 }
 
-func (query SecretQuery) Update(secret corev1.Secret) error {
+func (query SecretQuery) Update(ctx context.Context, secret corev1.Secret) error {
 	query.log.Info("updating secret", "name", secret.Name, "namespace", secret.Namespace)
 
-	return errors.WithStack(query.kubeClient.Update(query.ctx, &secret))
+	return errors.WithStack(query.kubeClient.Update(ctx, &secret))
 }
 
-func (query SecretQuery) CreateOrUpdate(secret corev1.Secret) error {
-	currentSecret, err := query.Get(types.NamespacedName{Name: secret.Name, Namespace: secret.Namespace})
+func (query SecretQuery) CreateOrUpdate(ctx context.Context, secret corev1.Secret) error {
+	currentSecret, err := query.Get(ctx, types.NamespacedName{Name: secret.Name, Namespace: secret.Namespace})
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			err = query.Create(secret)
+			err = query.Create(ctx, secret)
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -60,7 +60,7 @@ func (query SecretQuery) CreateOrUpdate(secret corev1.Secret) error {
 		return nil
 	}
 
-	err = query.Update(secret)
+	err = query.Update(ctx, secret)
 	if err != nil {
 		return errors.WithStack(err)
 	}

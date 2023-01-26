@@ -91,13 +91,8 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	ctx, span, endSpan := r.setupSpansContexts(ctx, workloadInstance)
 	defer endSpan(span, workloadInstance)
 
-	// Wait for pre-evaluation checks of App
-	// Only check if we have not begun with the first phase of the workload instance, to avoid retrieving the KeptnAppVersion
-	// in each reconciliation loop
-	if workloadInstance.GetCurrentPhase() == "" {
-		if requeue, err := r.checkPreEvaluationStatusOfApp(ctx, workloadInstance, span); requeue {
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
+	if requeue, err := r.checkPreEvaluationStatusOfApp(ctx, workloadInstance, span); requeue {
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
@@ -253,6 +248,12 @@ func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context
 }
 
 func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, span trace.Span) (bool, error) {
+	// Wait for pre-evaluation checks of App
+	// Only check if we have not begun with the first phase of the workload instance, to avoid retrieving the KeptnAppVersion
+	// in each reconciliation loop
+	if workloadInstance.GetCurrentPhase() == "" {
+		return false, nil
+	}
 	phase := apicommon.PhaseAppPreEvaluation
 	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
 	if err != nil {

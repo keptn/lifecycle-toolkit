@@ -69,11 +69,12 @@ import (
 )
 
 var (
-	scheme       = runtime.NewScheme()
-	setupLog     = ctrl.Log.WithName("setup")
-	gitCommit    string
-	buildTime    string
-	buildVersion string
+	scheme                     = runtime.NewScheme()
+	setupLog                   = ctrl.Log.WithName("setup")
+	metricServerTickerInterval = 10 * time.Second
+	gitCommit                  string
+	buildTime                  string
+	buildVersion               string
 )
 
 func init() {
@@ -237,7 +238,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics)
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	// Enabling OTel
 	tpOptions, err := getOTelTracerProviderOptions(env)

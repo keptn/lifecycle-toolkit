@@ -42,11 +42,11 @@ type serverManager struct {
 
 // StartServerManager starts a server manager to expose metrics and runs until
 // the context is cancelled (i.e. an env variable gets changes and pod is restarted)
-func StartServerManager(ctx context.Context, client client.Client, ofClient *openfeature.Client, exposeMetrics bool) {
+func StartServerManager(ctx context.Context, client client.Client, ofClient *openfeature.Client, exposeMetrics bool, interval time.Duration) {
 	smOnce.Do(func() {
 		metrics.gauges = make(map[string]prometheus.Gauge)
 		instance = &serverManager{
-			ticker:        clock.New().Ticker(10 * time.Second),
+			ticker:        clock.New().Ticker(interval),
 			ofClient:      ofClient,
 			exposeMetrics: exposeMetrics,
 			k8sClient:     client,

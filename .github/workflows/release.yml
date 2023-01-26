@@ -49,6 +49,8 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
+          - name: "klt-cert-manager"
+            folder: "klt-cert-manager/"
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -137,6 +139,13 @@ jobs:
           path: ./scheduler/bin
           key: build-tools-${{ github.ref_name }}
 
+      - name: Cache build tools cert-manager
+        id: cache-build-tools-klt-cert-manager
+        uses: actions/cache@v3
+        with:
+          path: ./klt-cert-manager/bin
+          key: build-tools-${{ github.ref_name }}
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -151,9 +160,12 @@ jobs:
           make release-manifests
           cd ../operator
           make controller-gen release-manifests
+          cd ../klt-cert-manager
+          make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
-          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml > manifest.yaml
+          echo "---" >> scheduler/config/rendered/release.yaml
+          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1

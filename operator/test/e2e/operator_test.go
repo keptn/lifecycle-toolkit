@@ -50,7 +50,7 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 					Containers: []apiv1.Container{
 						{
 							Name:  "mybusy",
-							Image: "busybox:1.28",
+							Image: "busybox:1.32.1",
 						},
 					},
 				},

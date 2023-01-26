@@ -14,6 +14,5 @@ is handled automatically by the [klt-cert-manager](https://github.com/keptn/life
 The certificate is created as a secret in the `keptn-lifecycle-toolkit-system` namespace with a renewal threshold of 12 hours. If it expires, the [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md) renews it. The Lifecycle Toolkit operator waits for a valid certificate to be ready.
 The certificate is mounted on an empty dir volume in the operator.
 
-#### FAQ
-In case of certificates left over from an older version, it could happen that the webhook or the operator errors due to an invalid certificate. It is enough to delete the certificate and restart the operator to solve this.
+When a certificate is left over from an older version, the webhook or the operator may generate errors because of an invalid certificate. ITo solve this, t delete the certificate and restart the operator.
 

@@ -354,6 +354,29 @@ spec:
   secretName: prometheusLoginCredentials
 ```
 
+### Keptn Metric
+A `KeptnMetric` is a CRD used to define SLI provider with a query and to store metric data fetched from the provider.
+Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
+Furthermore, this allows using multiple observability platforms for different metrics.
+
+A `KeptnMetric` looks like the following:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: KeptnMetric
+metadata:
+  name: keptnmetric-sample
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  provider:
+    name: "prometheus"
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
+  fetchIntervalSeconds: 5
+```
+
+To be able to use `KeptnMetric` as part of your evaluation, you need to add `keptn-metric` as your value for `.spec.source` in `KeptnEvaluationDefiniton`. Further you need specify
+the `.spec.objectives[i].name` of `KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name` of `KeptnMetric` resource. The `.spec.objectives[i].query` parameter
+of `KeptnEvaluationDefiniton` will be ignored and `.spec.query` of `KeptnMetric` will be use instead as a query to fetch the data.
 
 ## Install a dev build
 

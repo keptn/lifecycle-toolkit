@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: test
+        image: curlimages/curl:7.72.0
+        args:
+        - /bin/sh
+        - -ec
+        - |
+          curl -s klc-controller-manager-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/metrics > ~/out.txt
+          if grep -Fxq "# HELP keptnmetric_sample keptnmetric-sample" ~/out.txt
+          then
+            exit 1
+          fi
+      restartPolicy: Never

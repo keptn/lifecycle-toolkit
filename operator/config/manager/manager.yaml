@@ -23,6 +23,7 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
+        openfeature.dev/enabled: "true"
       labels:
         control-plane: controller-manager
     spec:
@@ -52,6 +53,9 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
+          - name: keptn-metrics
+            containerPort: 9999
+            protocol: TCP
         imagePullPolicy: Always
         env:
           - name: POD_NAMESPACE
@@ -64,6 +68,8 @@ spec:
                 fieldPath: metadata.name
           - name: OTEL_COLLECTOR_URL
             value: otel-collector:4317
+          - name: EXPOSE_KEPTN_METRICS
+            value: "true"
           - name: FUNCTION_RUNNER_IMAGE
             value: ghcr.keptn.sh/keptn/functions-runtime:v0.5.0 #x-release-please-version
         securityContext:
@@ -103,3 +109,4 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
+

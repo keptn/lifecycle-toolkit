@@ -1,8 +1,10 @@
 # klt-cert-manager
-// TODO(user): Add simple overview of use/purpose
+The keptn certmanager makes sure that the webhooks in the Lifecycle Toolkit operator can obtain a valid certificate to access the kubernetes api server.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+This klt-cert-manager operator is intended to be installed solely paired with the Lifecicle Toolkit operator. 
+The TLS certificate is mounted as a volume in the LT operator pod and is renewed every 12 hours or every time the LT operator deployment changes.
+
 
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
@@ -42,7 +44,6 @@ make undeploy
 ```
 
 ## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
 
 ### How it works
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)

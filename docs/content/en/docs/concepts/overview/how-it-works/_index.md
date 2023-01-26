@@ -1,5 +1,5 @@
 ---
-title: Keptn Certificate Manager
+title: How it works
 icon: concepts
 layout: quickstart
 weight: 5

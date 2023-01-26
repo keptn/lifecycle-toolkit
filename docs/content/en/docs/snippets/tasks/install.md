@@ -13,7 +13,7 @@ The Lifecycle Toolkit and its dependency are now installed and ready to use.
 
 ## Install version 0.5.0 and earlier
 
-You will need to install *cert-manager* first. Therefore, you can use:
+You must firt install *cert-manager* with the following commands:
 
 <!-- 
 [cert-manager](https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml)

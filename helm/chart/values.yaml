@@ -1,2 +1,2 @@
-OtelCollector:
-  URL: "otel-collector:4317"
+otelCollector:
+  url: "otel-collector:4317"

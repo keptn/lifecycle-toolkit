@@ -11,7 +11,7 @@ kubectl wait --for=condition=Available deployment/klc-controller-manager -n kept
 
 The Lifecycle Toolkit and its dependency are now installed and ready to use.
 
-## Install version 0.5.0 and below
+## Install version 0.5.0 and earlier
 
 You will need to install *cert-manager* first. Therefore, you can use:
 

@@ -43,7 +43,7 @@ http://localhost:9999/metrics
 `KeptnMetrics` that are located in the `keptn-lifecycle-toolkit-system` namespace can also be retrieved via the Kubernetes Custom Metrics API.
 This makes it possible to refer to these metrics via the Kubernetes *HorizontalPodAutoscaler*, as in the following example:
 
-```
+```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:

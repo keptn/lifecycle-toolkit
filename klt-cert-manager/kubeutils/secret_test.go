@@ -35,9 +35,9 @@ func testGetSecret(t *testing.T) {
 	}
 	fakeClient := fake.NewClient(&secret)
 
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	foundSecret, err := secretQuery.Get(client.ObjectKey{Name: testSecretName, Namespace: testNamespace})
+	foundSecret, err := secretQuery.Get(context.TODO(), client.ObjectKey{Name: testSecretName, Namespace: testNamespace})
 
 	assert.NoError(t, err)
 	assert.True(t, AreSecretsEqual(secret, foundSecret))
@@ -46,7 +46,7 @@ func testGetSecret(t *testing.T) {
 func testCreateSecret(t *testing.T) {
 	fakeClient := fake.NewClient()
 
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 	secret := corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testSecretName,
@@ -55,7 +55,7 @@ func testCreateSecret(t *testing.T) {
 		Data: map[string][]byte{testKey1: []byte(testSecretValue)},
 	}
 
-	err := secretQuery.Create(secret)
+	err := secretQuery.Create(context.TODO(), secret)
 
 	assert.NoError(t, err)
 
@@ -76,9 +76,9 @@ func testUpdateSecret(t *testing.T) {
 	}
 	fakeClient := fake.NewClient()
 
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.Update(secret)
+	err := secretQuery.Update(context.TODO(), secret)
 
 	assert.Error(t, err)
 
@@ -87,7 +87,7 @@ func testUpdateSecret(t *testing.T) {
 
 	secretQuery.kubeClient = fakeClient
 
-	err = secretQuery.Update(secret)
+	err = secretQuery.Update(context.TODO(), secret)
 
 	assert.NoError(t, err)
 
@@ -107,9 +107,9 @@ func testCreateOrUpdateSecret(t *testing.T) {
 		Data: map[string][]byte{testKey1: []byte(testSecretValue)},
 	}
 	fakeClient := fake.NewClient()
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.CreateOrUpdate(secret)
+	err := secretQuery.CreateOrUpdate(context.TODO(), secret)
 	assert.NoError(t, err)
 
 	var createdSecret corev1.Secret
@@ -129,7 +129,7 @@ func testCreateOrUpdateSecret(t *testing.T) {
 	}
 	secretQuery.kubeClient = fakeClient
 
-	err = secretQuery.CreateOrUpdate(secret)
+	err = secretQuery.CreateOrUpdate(context.TODO(), secret)
 
 	assert.NoError(t, err)
 
@@ -155,9 +155,9 @@ func testIdenticalSecretIsNotUpdated(t *testing.T) {
 	})
 
 	secret := createTestSecret(labels, data)
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.CreateOrUpdate(*secret)
+	err := secretQuery.CreateOrUpdate(context.TODO(), *secret)
 	assert.NoError(t, err)
 }
 
@@ -176,9 +176,9 @@ func testUpdateSecretWhenDataChanged(t *testing.T) {
 	})
 
 	secret := createTestSecret(labels, data)
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.CreateOrUpdate(*secret)
+	err := secretQuery.CreateOrUpdate(context.TODO(), *secret)
 	assert.NoError(t, err)
 
 	var updatedSecret corev1.Secret
@@ -203,9 +203,9 @@ func testUpdateSecretWhenLabelsChanged(t *testing.T) {
 	})
 
 	secret := createTestSecret(labels, data)
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.CreateOrUpdate(*secret)
+	err := secretQuery.CreateOrUpdate(context.TODO(), *secret)
 	assert.NoError(t, err)
 
 	var updatedSecret corev1.Secret
@@ -229,9 +229,9 @@ func testCreateSecretInTargetNamespace(t *testing.T) {
 	})
 
 	secret := createTestSecret(labels, data)
-	secretQuery := NewSecretQuery(context.TODO(), fakeClient, fakeClient, testr.New(t))
+	secretQuery := NewSecretQuery(fakeClient, fakeClient, testr.New(t))
 
-	err := secretQuery.CreateOrUpdate(*secret)
+	err := secretQuery.CreateOrUpdate(context.TODO(), *secret)
 
 	assert.NoError(t, err)
 

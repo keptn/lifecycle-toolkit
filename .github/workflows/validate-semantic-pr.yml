@@ -35,6 +35,7 @@ jobs:
           scopes: |
             scheduler
             operator
+            cert-manager
             functions-runtime
             dashboards
           # Configure that a scope must always be provided.

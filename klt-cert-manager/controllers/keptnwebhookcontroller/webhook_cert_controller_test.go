@@ -404,7 +404,6 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := &KeptnWebhookCertificateReconciler{
-		ctx:    context.TODO(),
 		Client: clt,
 		Log:    testr.New(t),
 	}

@@ -32,8 +32,8 @@ func newCertificateSecret(clt client.Client) *certificateSecret {
 }
 
 func (certSecret *certificateSecret) setSecretFromReader(ctx context.Context, namespace string, log logr.Logger) error {
-	query := kubeutils.NewSecretQuery(ctx, nil, certSecret.clt, log)
-	secret, err := query.Get(types.NamespacedName{Name: buildSecretName(), Namespace: namespace})
+	query := kubeutils.NewSecretQuery(nil, certSecret.clt, log)
+	secret, err := query.Get(ctx, types.NamespacedName{Name: buildSecretName(), Namespace: namespace})
 
 	if k8serrors.IsNotFound(err) {
 		certSecret.secret = kubeutils.NewSecret(buildSecretName(), namespace, map[string][]byte{})

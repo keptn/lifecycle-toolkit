@@ -64,6 +64,7 @@ func TestForObjectNameAndNamespace(t *testing.T) {
 	}))
 }
 
+//nolint:dupl
 func TestForNamespace(t *testing.T) {
 	deployment := &v1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -106,6 +107,7 @@ func TestForNamespace(t *testing.T) {
 	assert.True(t, isInNamespace(deployment, testNamespace2))
 }
 
+//nolint:dupl
 func TestForName(t *testing.T) {
 	deployment := &v1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{

@@ -24,6 +24,8 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
+          - name: "klt-cert-manager"
+            folder: "klt-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3

@@ -45,7 +45,7 @@ to install the latest release of the Lifecycle Toolkit.
 
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data. To install it, follow their [installation instructions](https://opentelemetry.io/docs/collector/getting-started/).
-We also provide some more information about this in our [observability example](./examples/observability/).
+We also provide some more information about this in our [observability example](./examples/support/observability/).
 
 ## Goals
 

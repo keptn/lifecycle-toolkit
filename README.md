@@ -97,7 +97,7 @@ is performed. If everything is fine, the deployment continues and afterward, a s
 the deployment and a pipeline to run performance tests is invoked. Otherwise, the deployment is kept in a pending state until
 the infrastructure is capable to accept deployments again.
 
-A more comprehensive example can be found in our [examples folder](./examples/podtatohead-deployment/) where we
+A more comprehensive example can be found in our [examples folder](./examples/sample-app/) where we
 use [Podtato-Head](https://github.com/podtato-head/podtato-head) to run some simple pre-deployment checks.
 
 To run the example, use the following commands:

@@ -47,12 +47,13 @@ This makes it possible to refer to these metrics via the Kubernetes *HorizontalP
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: php-apache
+  name: podtato-head-entry
+  namespace: podtato-kubectl
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: php-apache
+    name: podtato-head-entry
   minReplicas: 1
   maxReplicas: 10
   metrics:
@@ -64,10 +65,9 @@ spec:
         apiVersion: metrics.keptn.sh/v1alpha1
         kind: KeptnMetric
         name: keptnmetric-sample
-        namespace: "keptn-lifecycle-toolkit-system"
       target:
         type: Value
-        value: 10
+        value: "10"
 ```
 
 You can also use the `kubectl raw` command to retrieve the values of a `KeptnMetric`, as in the following example:

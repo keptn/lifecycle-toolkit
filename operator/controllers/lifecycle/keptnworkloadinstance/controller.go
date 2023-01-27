@@ -247,7 +247,7 @@ func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx cont
 	// Wait for pre-evaluation checks of App
 	// Only check if we have not begun with the first phase of the workload instance, to avoid retrieving the KeptnAppVersion
 	// in each reconciliation loop
-	if workloadInstance.GetCurrentPhase() == "" {
+	if workloadInstance.GetCurrentPhase() != "" {
 		return false, nil
 	}
 	phase := apicommon.PhaseAppPreEvaluation

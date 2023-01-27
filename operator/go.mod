@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.19
 
 require (
-	github.com/benbjohnson/clock v1.1.0
+	github.com/benbjohnson/clock v1.3.0
 	github.com/go-logr/logr v1.2.3
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/go-version v1.6.0

@@ -65,41 +65,6 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 	return c.Create(context.TODO(), app)
 }
 
-func AddWorkloadInstance(c client.Client, name string, namespace string) error {
-	wi := &lfcv1alpha2.KeptnWorkloadInstance{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
-		Spec: lfcv1alpha2.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: lfcv1alpha2.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: lfcv1alpha2.KeptnWorkloadInstanceStatus{
-			DeploymentStatus:                   apicommon.StateSucceeded,
-			PreDeploymentStatus:                apicommon.StateSucceeded,
-			PostDeploymentStatus:               apicommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
-			PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
-			CurrentPhase:                       apicommon.PhaseWorkloadPostEvaluation.ShortName,
-			PreDeploymentTaskStatus:            nil,
-			PostDeploymentTaskStatus:           nil,
-			PreDeploymentEvaluationTaskStatus:  nil,
-			PostDeploymentEvaluationTaskStatus: nil,
-			Status:                             apicommon.StateSucceeded,
-			StartTime:                          metav1.Time{},
-			EndTime:                            metav1.Time{},
-		},
-	}
-	return c.Create(context.TODO(), wi)
-}
-
 func InitAppMeters() apicommon.KeptnMeters {
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")

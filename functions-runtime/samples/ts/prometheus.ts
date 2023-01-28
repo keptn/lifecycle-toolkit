@@ -3,22 +3,26 @@ let data;
 if (text && text != "") {
   try {
     data = JSON.parse(text);
-    if ( !data.metrics || !data.url || !data.expected_value) {
+    if (!data.metrics || !data.url || !data.expected_value) {
       console.log("Missing mandatory arguments.");
-      printUsage()
+      printUsage();
     }
   } catch {
-    console.error("Error Parsing Json => ",text)
+    console.error("Error Parsing Json => ", text);
     Deno.exit(1);
   }
 } else {
   console.log("Missing mandatory enviornment variable DATA.");
-  printUsage()
+  printUsage();
 }
 
-function printUsage(){
-  console.log("Expecting environment variable DATA in this format => DATA='{ \"url\":\"<PROMETHEUS_URL>\", \"metrics\": \"<PROMETHEUS_QUERY>\", \"expected_value\": \"<EXPECTED_VALUE>\" }\' ")
-  console.log("Example: export DATA='{ \"url\":\"http://localhost:9090\", \"metrics\": \"up{service=\\\"kubernetes\\\"}\", \"expected_value\": \"1\" }\' ")
+function printUsage() {
+  console.log(
+    'Expecting environment variable DATA in this format => DATA=\'{ "url":"<PROMETHEUS_URL>", "metrics": "<PROMETHEUS_QUERY>", "expected_value": "<EXPECTED_VALUE>" }\' ',
+  );
+  console.log(
+    'Example: export DATA=\'{ "url":"http://localhost:9090", "metrics": "up{service=\\"kubernetes\\"}", "expected_value": "1" }\' ',
+  );
   Deno.exit(1);
 }
 

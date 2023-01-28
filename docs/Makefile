@@ -16,7 +16,7 @@ build:
 	docker run --rm -it $(VOLUMES) $(IMAGE) -D -v
 
 server:
-	docker run --rm -it $(VOLUMES) -p 1314:1313 $(IMAGE) server -D
+	docker run --rm -it $(VOLUMES) -p 1314:1314 $(IMAGE) server -D -p 1314
 
 clean:
 	docker run --rm -it $(VOLUMES) $(IMAGE) --cleanDestinationDir

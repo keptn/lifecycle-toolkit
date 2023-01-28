@@ -22,7 +22,7 @@ docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/m
 docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/slack.ts -e SECURE_DATA='{ "slack_hook":"hook/parts","text":"this is my test message" }' -it keptnsandbox/klc-runtime:${VERSION}
 ```
 
-### Docker with function and external secure data - prometheus
+### Docker with function and external data - prometheus
 ```
 docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' -it keptnsandbox/klc-runtime:${VERSION}
 ```

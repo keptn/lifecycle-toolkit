@@ -39,6 +39,8 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
         securityContext:
+          seccompProfile:
+            type: RuntimeDefault
           allowPrivilegeEscalation: false
           capabilities:
             drop:

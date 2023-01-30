@@ -170,6 +170,7 @@ jobs:
           - "functions-runtime"
           - "keptn-lifecycle-operator"
           - "scheduler"
+          - "klt-cert-manager"
     steps:
       - name: Download images
         id: download_images
@@ -194,6 +195,7 @@ jobs:
         artifact:
           - "operator"
           - "scheduler"
+          - "klt-cert-manager"
 
     steps:
       - name: Set up Go 1.x

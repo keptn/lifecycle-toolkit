@@ -7,12 +7,12 @@ WORKDIR /workspace
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the go source
-COPY ./ ./
-
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
+
+# Copy the go source
+COPY ./ ./
 
 ARG GIT_HASH
 ARG RELEASE_VERSION

@@ -261,7 +261,7 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'keptn-cert-manager'
+        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 

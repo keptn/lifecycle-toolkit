@@ -160,7 +160,7 @@ func main() {
 	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	// Enabling OTel
-	tpOptions, err := controllercommon.GetOTelTracerProviderOptions("")
+	tpOptions, _, err := controllercommon.GetOTelTracerProviderOptions("")
 	if err != nil {
 		setupLog.Error(err, "unable to initialize OTel tracer options")
 	}
@@ -281,6 +281,7 @@ func main() {
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log.WithName("KeptnConfig Controller"),
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
@@ -301,13 +302,6 @@ func main() {
 	}
 	if err = (&lifecyclev1alpha2.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-	if err = (&controlleroptions.KeptnConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)
 	}
 	if err = (&metricsv1alpha1.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {

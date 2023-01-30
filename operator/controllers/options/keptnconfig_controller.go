@@ -29,15 +29,15 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
-	Log    logr.Logger
+	Scheme          *runtime.Scheme
+	Log             logr.Logger
+	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
 }
 
 //+kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create;update;patch;delete
@@ -47,7 +47,7 @@ type KeptnConfigReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	r.Log.Info("Searching for KeptnConfig")
 
 	config := &optionsv1alpha1.KeptnConfig{}
 	err := r.Get(ctx, req.NamespacedName, config)
@@ -58,14 +58,38 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveConfigMsg, err)
 	}
 
-	r.Log.Info("Reconciling Keptn Config", "config", config.Name)
-
-	if err := controllercommon.GetOtelInstance().InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
-		r.Log.Error(err, "unable to initialize OTel tracer options")
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+	if r.LastAppliedSpec == nil {
+		r.Log.Info("initializing KeptnConfig since no config was there before")
+		r.initConfig()
 	}
 
+	result, err := r.reconcileOtelCollectorUrl(config)
+	if err != nil {
+		return result, err
+	}
+
+	r.LastAppliedSpec = &config.Spec
 	return ctrl.Result{}, nil
+}
+
+func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
+	r.Log.Info(fmt.Sprintf("reconciling Keptn Config: %s", config.Name))
+	otelConfig := controllercommon.GetOtelInstance()
+
+	// collector URL changed, so we need to re-initialize the exporter
+	if r.LastAppliedSpec.OTelCollectorUrl != config.Spec.OTelCollectorUrl {
+		if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
+			r.Log.Error(err, "unable to re-initialize OTel tracer options")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+	}
+	return ctrl.Result{}, nil
+}
+
+func (r *KeptnConfigReconciler) initConfig() {
+	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
+		OTelCollectorUrl: "",
+	}
 }
 
 // SetupWithManager sets up the controller with the Manager.

@@ -36,7 +36,8 @@ var (
 )
 
 type otelConfig struct {
-	tracerProvider *trace.TracerProvider
+	TracerProvider *trace.TracerProvider
+	OtelExporter   *trace.SpanExporter
 }
 
 // do not export this type to make it accessible only via the GetInstance method (i.e Singleton)
@@ -52,30 +53,32 @@ func GetOtelInstance() *otelConfig {
 }
 
 func (o *otelConfig) InitOtelCollector(otelCollectorUrl string) error {
-	tpOptions, err := GetOTelTracerProviderOptions(otelCollectorUrl)
+	tpOptions, otelExporter, err := GetOTelTracerProviderOptions(otelCollectorUrl)
 	if err != nil {
 		return err
 	}
 
-	o.tracerProvider = trace.NewTracerProvider(tpOptions...)
-	otel.SetTracerProvider(o.tracerProvider)
+	o.TracerProvider = trace.NewTracerProvider(tpOptions...)
+	otel.SetTracerProvider(o.TracerProvider)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	o.OtelExporter = &otelExporter
 	logger.Info("Successfully initialized OTel collector")
 	return nil
 }
 
 func (o *otelConfig) ShutDown() {
-	if err := o.tracerProvider.Shutdown(context.Background()); err != nil {
+	if err := o.TracerProvider.Shutdown(context.Background()); err != nil {
 		os.Exit(1)
 	}
 }
 
-func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProviderOption, error) {
+func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProviderOption, trace.SpanExporter, error) {
 	var tracerProviderOptions []trace.TracerProviderOption
+	var otelExporter trace.SpanExporter
 
 	stdOutExp, err := newStdOutExporter()
 	if err != nil {
-		return nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
+		return nil, nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
 	}
 	tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(stdOutExp))
 
@@ -85,14 +88,14 @@ func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProvid
 		if err != nil {
 			// log the error, but do not break if Jaeger exporter cannot be created
 			logger.Error(err, "Could not set up OTel exporter")
-			return nil, err
+			return nil, nil, err
 		} else if otelExporter != nil {
 			tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(otelExporter))
 		}
 	}
 	tracerProviderOptions = append(tracerProviderOptions, trace.WithResource(newResource()))
 
-	return tracerProviderOptions, nil
+	return tracerProviderOptions, otelExporter, nil
 }
 
 func newStdOutExporter() (trace.SpanExporter, error) {

@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= klt-certmanager:latest
+IMG ?= klt-cert-manager:latest
 # RELEASE_REGISTRY is the container registry to push into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)

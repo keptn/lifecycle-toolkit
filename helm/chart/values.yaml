@@ -1,0 +1,4 @@
+## @section OpenTelemetry
+otelCollector:
+  ## @param otelCollector.url Sets the URL for the open telemetry collector
+  url: "otel-collector:4317"

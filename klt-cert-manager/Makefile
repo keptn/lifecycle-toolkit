@@ -1,13 +1,13 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= klc-certmanager:latest
+IMG ?= klt-cert-manager:latest
 # RELEASE_REGISTRY is the container registry to push into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
 TAG?=latest
-RELEASE_IMAGE:=keptn-cert-manager:$(TAG)
+RELEASE_IMAGE:=klt-cert-manager:$(TAG)
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)

@@ -25,6 +25,7 @@ type KeptnWebhookCertificateReconciler struct {
 	Scheme        *runtime.Scheme
 	CancelMgrFunc context.CancelFunc
 	Log           logr.Logger
+	Namespace     string
 }
 
 //clusterrole
@@ -92,20 +93,20 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
-		WithEventFilter(eventfilter.ForObjectNameAndNamespace(DeploymentName, namespace)).
+		WithEventFilter(eventfilter.ForObjectNameAndNamespace(DeploymentName, r.Namespace)).
 		Owns(&corev1.Secret{}).
 		Complete(r)
 
 }
 
 func (r *KeptnWebhookCertificateReconciler) setCertificates(ctx context.Context, certSecret *certificateSecret) error {
-	err := certSecret.setSecretFromReader(ctx, namespace, r.Log)
+	err := certSecret.setSecretFromReader(ctx, r.Namespace, r.Log)
 	if err != nil {
 		r.Log.Error(err, "could not get secret")
 		return err
 	}
 
-	err = certSecret.setCertificates(namespace)
+	err = certSecret.setCertificates(r.Namespace)
 	if err != nil {
 		r.Log.Error(err, "could not validate certificate")
 		return err

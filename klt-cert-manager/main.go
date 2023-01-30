@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 
+	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -24,8 +26,6 @@ var (
 	setupLog = ctrl.Log.WithName("setup")
 )
 
-const ns = "keptn-lifecycle-toolkit-system"
-
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(corev1.AddToScheme(scheme))
@@ -33,7 +33,15 @@ func init() {
 	//+kubebuilder:scaffold:scheme
 }
 
+type envConfig struct {
+	KLTNamespace string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+}
+
 func main() {
+	var env envConfig
+	if err := envconfig.Process("", &env); err != nil {
+		log.Fatalf("Failed to process env var: %s", err)
+	}
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
@@ -52,7 +60,7 @@ func main() {
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
-		Namespace:              ns,
+		Namespace:              env.KLTNamespace,
 		MetricsBindAddress:     metricsAddr,
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
@@ -79,6 +87,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		CancelMgrFunc: nil,
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
+		Namespace:     env.KLTNamespace,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 		os.Exit(1)

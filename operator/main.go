@@ -342,12 +342,13 @@ func main() {
 	}
 
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnEvaluation Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnevaluation-controller"),
-		Tracer:   otel.Tracer("keptn/operator/evaluation"),
-		Meters:   meters,
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnEvaluation Controller"),
+		Recorder:  mgr.GetEventRecorderFor("keptnevaluation-controller"),
+		Tracer:    otel.Tracer("keptn/operator/evaluation"),
+		Meters:    meters,
+		Namespace: env.PodNamespace,
 	}
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")

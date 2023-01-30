@@ -26,7 +26,7 @@ func TestSetSecretFromReader(t *testing.T) {
 	t.Run(`fill with empty secret if secret does not exist`, func(t *testing.T) {
 		fakeclient := fake.NewClient()
 		certSecret := newCertificateSecret(fakeclient)
-		err := certSecret.setSecretFromReader(context.TODO(), namespace, testr.New(t))
+		err := certSecret.setSecretFromReader(context.TODO(), testnamespace, testr.New(t))
 
 		assert.NoError(t, err)
 		assert.False(t, certSecret.existsInCluster)
@@ -37,7 +37,7 @@ func TestSetSecretFromReader(t *testing.T) {
 		fakeclient := fake.NewClient(
 			createTestSecret(t, createInvalidTestCertData(t)))
 		certSecret := newCertificateSecret(fakeclient)
-		err := certSecret.setSecretFromReader(context.TODO(), namespace, testr.New(t))
+		err := certSecret.setSecretFromReader(context.TODO(), testnamespace, testr.New(t))
 
 		assert.NoError(t, err)
 		assert.True(t, certSecret.existsInCluster)
@@ -135,7 +135,7 @@ func TestCreateOrUpdateIfNecessary(t *testing.T) {
 		certSecret.secret = &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      buildSecretName(),
-				Namespace: namespace,
+				Namespace: testnamespace,
 			},
 		}
 		certSecret.certificates = &Certs{
@@ -147,7 +147,7 @@ func TestCreateOrUpdateIfNecessary(t *testing.T) {
 		assert.NoError(t, err)
 
 		newSecret := corev1.Secret{}
-		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: namespace}, &newSecret)
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: testnamespace}, &newSecret)
 
 		assert.NoError(t, err)
 		assert.NotNil(t, newSecret)
@@ -159,7 +159,7 @@ func TestCreateOrUpdateIfNecessary(t *testing.T) {
 		certSecret.secret = &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      buildSecretName(),
-				Namespace: namespace,
+				Namespace: testnamespace,
 			},
 		}
 		certSecret.certificates = &Certs{
@@ -171,7 +171,7 @@ func TestCreateOrUpdateIfNecessary(t *testing.T) {
 		require.NoError(t, err)
 
 		newSecret := corev1.Secret{}
-		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: namespace}, &newSecret)
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: testnamespace}, &newSecret)
 
 		require.NoError(t, err)
 		require.NotNil(t, newSecret)
@@ -184,7 +184,7 @@ func TestCreateOrUpdateIfNecessary(t *testing.T) {
 
 		assert.NoError(t, err)
 
-		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: namespace}, &newSecret)
+		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: buildSecretName(), Namespace: testnamespace}, &newSecret)
 
 		assert.NoError(t, err)
 		assert.NotNil(t, newSecret)

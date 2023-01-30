@@ -36,3 +36,100 @@ and access the metrics via your browser with:
 ```
 http://localhost:9999/metrics
 ```
+
+
+#### Accessing Metrics via the Kubernetes Custom Metrics API
+
+`KeptnMetrics` that are located in the `keptn-lifecycle-toolkit-system` namespace can also be retrieved via the Kubernetes Custom Metrics API.
+This makes it possible to refer to these metrics via the Kubernetes *HorizontalPodAutoscaler*, as in the following example:
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: podtato-head-entry
+  namespace: podtato-kubectl
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podtato-head-entry
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Object
+    object:
+      metric:
+        name: keptnmetric-sample
+      describedObject:
+        apiVersion: metrics.keptn.sh/v1alpha1
+        kind: KeptnMetric
+        name: keptnmetric-sample
+      target:
+        type: Value
+        value: "10"
+```
+
+You can also use the `kubectl raw` command to retrieve the values of a `KeptnMetric`, as in the following example:
+
+```shell
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kubectl/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample" | jq .
+
+{
+  "kind": "MetricValueList",
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "metadata": {},
+  "items": [
+    {
+      "describedObject": {
+        "kind": "KeptnMetric",
+        "namespace": "keptn-lifecycle-toolkit-system",
+        "name": "keptnmetric-sample",
+        "apiVersion": "metrics.keptn.sh/v1alpha1"
+      },
+      "metric": {
+        "name": "keptnmetric-sample",
+        "selector": {
+          "matchLabels": {
+            "app": "frontend"
+          }
+        }
+      },
+      "timestamp": "2023-01-25T09:26:15Z",
+      "value": "10"
+    }
+  ]
+}
+```
+
+You can also filter based on matching labels. So to e.g. retrieve all metrics that are labelled with `app=frontend`, you can use the following command:
+
+```shell
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kubectl/keptnmetrics.metrics.sh/*/*?labelSelector=app%3Dfrontend" | jq .
+
+{
+  "kind": "MetricValueList",
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "metadata": {},
+  "items": [
+    {
+      "describedObject": {
+        "kind": "KeptnMetric",
+        "namespace": "keptn-lifecycle-toolkit-system",
+        "name": "keptnmetric-sample",
+        "apiVersion": "metrics.keptn.sh/v1alpha1"
+      },
+      "metric": {
+        "name": "keptnmetric-sample",
+        "selector": {
+          "matchLabels": {
+            "app": "frontend"
+          }
+        }
+      },
+      "timestamp": "2023-01-25T09:26:15Z",
+      "value": "10"
+    }
+  ]
+}
+```

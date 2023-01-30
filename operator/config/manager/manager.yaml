@@ -63,6 +63,12 @@ spec:
           - name: keptn-metrics
             containerPort: 9999
             protocol: TCP
+          - name: custom-metrics
+            containerPort: 6443
+            protocol: TCP
+          - name: metrics
+            containerPort: 2222
+            protocol: TCP
         imagePullPolicy: Always
         env:
           - name: POD_NAMESPACE

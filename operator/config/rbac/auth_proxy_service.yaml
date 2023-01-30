@@ -14,13 +14,13 @@ spec:
   - name: metrics
     port: 2222
     protocol: TCP
-    targetPort: 2222
+    targetPort: metrics
   - name: custom-metrics
-    targetPort: 6443
+    targetPort: custom-metrics
     port: 443
   - name: keptn-metrics
     protocol: TCP
     port: 9999
-    targetPort: 9999
+    targetPort: keptn-metrics
   selector:
     control-plane: controller-manager

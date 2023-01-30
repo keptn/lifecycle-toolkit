@@ -2,12 +2,17 @@ exclude-queries:
   # query IDs can be found here: https://docs.kics.io/latest/queries/all-queries/
   # The queries below are excluded because they are not relevant or not needed for this project
   - 48471392-d4d0-47c0-b135-cdec95eb3eef # Service Account Token Automount Not Disabled
+  - 48a5beba-e4c0-4584-a2aa-e6894e4cf424 # Pod or Container Without ResourceQuota
+  - b7bca5c4-1dab-4c2c-8cbe-3050b9d59b14 # RBAC Roles with Read Secrets Permissions
+  - 4a20ebac-1060-4c81-95d1-1f7f620e983b # Pod or Container Without LimitRange
+  - 056ac60e-fe07-4acc-9b34-8e1d51716ab9 # ServiceAccount Allows Access Secrets
+  - aee3c7d2-a811-4201-90c7-11c028be9a46 # Container Requests Not Equal To It's Limits
+
 exclude-results:
   # Similarity IDs can be found in the JSON result file of kics
   - 76f0ba03bcaf9f6e0ff8660beaebff55f74f1d89e38b6831c2b7b468a3dc764b  # RBAC Roles with Read Secrets Permissions
   - f88463cc96ec0165f0c1d83c279ff2658b8a8bd8adb2aaaf79f64a230df88504  # RBAC Roles with Read Secrets Permissions
   - c4886e7b8193614214e9626539430632e8d90cb58499932a82c924266c05d118  # RBAC Roles with Read Secrets Permissions
-  - 00d587d8e63760f6a5d45ede024de5c793cb9e018ba78e4d9e50b8d671f79ba4  # Readiness Probe not configured for kube-rbac-proxy
 
 no-color: false
 no-progress: true

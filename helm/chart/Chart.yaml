@@ -1,6 +1,6 @@
 apiVersion: v2
 name: keptn-lifecycle-toolkit
-description: A Helm chart for Keptn Lifecycle Toolkit
+description: A Helm chart for Keptn Lifecycle Toolkit, a set of tools to enable cloud-native application lifecycle management
 
 type: application
 

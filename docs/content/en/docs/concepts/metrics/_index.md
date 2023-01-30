@@ -73,7 +73,7 @@ spec:
 You can also use the `kubectl raw` command to retrieve the values of a `KeptnMetric`, as in the following example:
 
 ```shell
-$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample" | jq .
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kubectl/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample" | jq .
 
 {
   "kind": "MetricValueList",
@@ -105,7 +105,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecy
 You can also filter based on matching labels. So to e.g. retrieve all metrics that are labelled with `app=frontend`, you can use the following command:
 
 ```shell
-$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/*/*?labelSelector=app%3Dfrontend" | jq .
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kubectl/keptnmetrics.metrics.sh/*/*?labelSelector=app%3Dfrontend" | jq .
 
 {
   "kind": "MetricValueList",

@@ -297,7 +297,7 @@ jobs:
           token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
 
   helm_charts_build:
-    name: Publish helm charts to dev repo
+    name: Publish helm chart changes to charts repo
     needs: [ prepare_ci_run, build_image ]
     runs-on: ubuntu-22.04
     env:
@@ -309,38 +309,36 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: "ghcr.io"
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Install Helm
-      uses: azure/setup-helm@v3
-
-    - name: Run chart-releaser
-      uses: helm/chart-releaser-action@v1.5.0
-      with:
-        charts_dir: charts
-        charts_repo_url: "https://github.com/odubajDT/helm-charts.git"
-      env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-    # - name: Create Pull Request
-    #   uses: peter-evans/create-pull-request@v4
+    # - name: Login to GitHub Container Registry
+    #   uses: docker/login-action@v2
     #   with:
-    #     token: ${{ secrets.KEPTN_BOT_TOKEN }}
-    #     commit-message: "build(deps): Update keptn/go-utils to ${{ env.GO_UTILS_TARGET }}"
-    #     committer: ${{ env.KEPTN_BOT_USER }}
-    #     author: ${{ env.KEPTN_BOT_USER }}
-    #     signoff: true
-    #     branch: patch/go_utils_${{ env.GO_UTILS_TARGET }}
-    #     delete-branch: true
-    #     base: master
-    #     labels: "area:go-utils,automated pr,dependencies"
-    #     title: "build(deps): Auto-update go-utils to latest version"
-    #     body: |
-    #       :robot: **This is an automated PR!** :robot:
+    #     registry: "ghcr.io"
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.GITHUB_TOKEN }}
 
-    #       This is an automatically created PR to change [keptn/go-utils](https://github.com/keptn/go-utils) to version ${{ env.GO_UTILS_TARGET }}.
+    # - name: Install Helm
+    #   uses: azure/setup-helm@v3
+
+    # - name: Run chart-releaser
+    #   uses: helm/chart-releaser-action@v1.5.0
+    #   with:
+    #     charts_dir: charts
+    #     charts_repo_url: "https://github.com/odubajDT/helm-charts.git"
+    #   env:
+    #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: helm/
+        commit-message: "test"
+        committer: odubajDT
+        author: odubajDT
+        signoff: true
+        branch: helm-test
+        delete-branch: true
+        base: main
+        title: "test helm repo"
+        body: |
+          :robot: **This is an automated PR for helm charts!** :robot:

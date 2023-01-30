@@ -1,4 +1,3 @@
 *.tgz
-rendered.yaml
-lifecycle.*
-metrics.*
+chart/templates/rendered.yaml
+chart/crds/*.yaml

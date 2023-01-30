@@ -28,10 +28,14 @@ func TestKeptnState_IsCompleted(t *testing.T) {
 			State: StateDeprecated,
 			Want:  true,
 		},
+		{
+			State: "Cancelled",
+			Want:  true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, tt.State.IsCompleted(), tt.Want)
+			require.Equal(t, tt.Want, tt.State.IsCompleted())
 		})
 	}
 }

@@ -68,7 +68,7 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -109,7 +109,7 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -215,7 +215,7 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     permissions:
       packages: write # Needed for pushing images to the registry

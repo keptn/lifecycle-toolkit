@@ -14,20 +14,20 @@ spec:
               value: "{{ .Values.otelCollector.url }}"
 
 
----
-apiVersion: apps/v1 #example patch for certmanager
-kind: Deployment
-metadata:
-  name: cert-manager
-  namespace: system
-spec:
-  template:
-    spec:
-      containers:
-        - name: manager
-          env:
-            - name: NEW_ENV_VAR
-              value: "{{ .Values.myNewEnvVar }}"
+#---
+#apiVersion: apps/v1 #example patch for certmanager
+#kind: Deployment
+#metadata:
+#  name: cert-manager
+#  namespace: system
+#spec:
+#  template:
+#    spec:
+#      containers:
+#        - name: manager
+#          env:
+#            - name: NEW_ENV_VAR
+#              value: "{{ .Values.myNewEnvVar }}"
 
 ---
 apiVersion: apps/v1

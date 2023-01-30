@@ -2,17 +2,19 @@
 
 # renovate: datasource=github-releases depName=cert-manager/cert-manager
 CERT_MANAGER_VERSION ?= v1.11.0
-TAG ?= "$(shell date +%Y%m%d%s)"
-TAG := $(TAG)
-
+# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
+KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.10.2
 CHART_VERSION = v0.5.0 # x-release-please-version
+
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 ARCH?=amd64
+TAG ?= "$(shell date +%Y%m%d%s)"
+TAG := $(TAG)
 
 ## Location to install dependencies to
 LOCALBIN ?= $(shell pwd)/bin
@@ -21,8 +23,7 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
-# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v4.5.7
+
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:

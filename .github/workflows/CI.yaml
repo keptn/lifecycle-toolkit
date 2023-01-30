@@ -295,3 +295,50 @@ jobs:
           version: "dev"
           klt-repo: ${{ github.workspace }}
           token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
+
+  helm_charts_build:
+    name: Publish helm charts to dev repo
+    needs: [ prepare_ci_run, build_image ]
+    runs-on: ubuntu-22.04
+    env:
+      BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+      BUILD_TIME: ${{ needs.prepare_ci_run.outputs.BUILD_TIME }}
+      GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: "ghcr.io"
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+
+    - name: Run chart-releaser
+      uses: helm/chart-releaser-action@v1.5.0
+      with:
+        charts_dir: charts
+        charts_repo_url: "https://github.com/odubajDT/helm-charts.git"
+
+    # - name: Create Pull Request
+    #   uses: peter-evans/create-pull-request@v4
+    #   with:
+    #     token: ${{ secrets.KEPTN_BOT_TOKEN }}
+    #     commit-message: "build(deps): Update keptn/go-utils to ${{ env.GO_UTILS_TARGET }}"
+    #     committer: ${{ env.KEPTN_BOT_USER }}
+    #     author: ${{ env.KEPTN_BOT_USER }}
+    #     signoff: true
+    #     branch: patch/go_utils_${{ env.GO_UTILS_TARGET }}
+    #     delete-branch: true
+    #     base: master
+    #     labels: "area:go-utils,automated pr,dependencies"
+    #     title: "build(deps): Auto-update go-utils to latest version"
+    #     body: |
+    #       :robot: **This is an automated PR!** :robot:
+
+    #       This is an automatically created PR to change [keptn/go-utils](https://github.com/keptn/go-utils) to version ${{ env.GO_UTILS_TARGET }}.

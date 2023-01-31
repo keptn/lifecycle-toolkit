@@ -30,6 +30,12 @@ func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (Kep
 			Log:        log,
 			k8sClient:  k8sClient,
 		}, nil
+	case DynatraceDQLProviderName:
+		return &KeptnDynatraceProvider{
+			httpClient: http.Client{},
+			Log:        log,
+			k8sClient:  k8sClient,
+		}, nil
 	case KeptnMetricProviderName:
 		return &KeptnMetricProvider{
 			Log:       log,

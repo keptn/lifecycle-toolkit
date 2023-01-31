@@ -1,4 +1,4 @@
-package providers
+package dynatrace
 
 import (
 	"context"
@@ -51,7 +51,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 		return "", nil, err
 	}
 
-	token, err := d.getDTApiToken(ctx, provider)
+	token, err := getDTApiToken(ctx, provider, d.k8sClient)
 	if err != nil {
 		return "", nil, err
 	}
@@ -102,12 +102,12 @@ func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float6
 	return sum / float64(count)
 }
 
-func (d *KeptnDynatraceProvider) getDTApiToken(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider) (string, error) {
+func getDTApiToken(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider, k8sClient client.Client) (string, error) {
 	if !provider.HasSecretDefined() {
 		return "", errors.New("the SecretKeyRef property with the DT API token is missing")
 	}
 	dtCredsSecret := &corev1.Secret{}
-	if err := d.k8sClient.Get(ctx, types.NamespacedName{Name: provider.Spec.SecretKeyRef.Name, Namespace: provider.Namespace}, dtCredsSecret); err != nil {
+	if err := k8sClient.Get(ctx, types.NamespacedName{Name: provider.Spec.SecretKeyRef.Name, Namespace: provider.Namespace}, dtCredsSecret); err != nil {
 		return "", err
 	}
 

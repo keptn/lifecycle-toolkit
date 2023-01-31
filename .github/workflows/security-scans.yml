@@ -27,7 +27,7 @@ jobs:
           if [[ "${{ github.event.inputs.branch }}" != "" ]]; then
             # branch was manually set by user -> probably a workflow_dispatch action
             BRANCH=${{ github.event.inputs.branch }}
-            echo "Using $BRANCH as target branch for integration tests"
+            echo "Using $BRANCH as target branch"
           else
             BRANCH='main'
           fi

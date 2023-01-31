@@ -2,7 +2,7 @@
 The Keptn certificate manager ensures that the webhooks in the Lifecycle Toolkit operator can obtain a valid certificate to access the Kubernetes API server.
 
 ## Description
-This `klt-cert-manager` operator should only be installed when paired with the Lifecycle Toolkit operator. 
+This `klt-cert-manager` operator should only be installed when paired with the Lifecycle Toolkit operator versions 0.6.0 or above. 
 The TLS certificate is mounted as a volume in the LT operator pod and is renewed every 12 hours or every time the LT operator deployment changes.
 
 

@@ -316,14 +316,17 @@ jobs:
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
+      if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
+      env:
+        GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
       with:
         token: ${{ secrets.PAT}}
         path: ./helm-charts-repository
-        commit-message: "test"
+        commit-message: "Helm Charts update"
         signoff: true
-        branch: helm-test
+        branch: helm-chart-update-${{ env.GIT_SHA }}
         delete-branch: true
         base: main
-        title: "test helm repo"
+        title: "Helm Charts update"
         body: |
-          :robot: **This is an automated PR for helm charts!** :robot:
+          :robot: **This is an automated PR for updating and relesing helm charts from keptn/lifecycle-toolkit repository!** :robot:

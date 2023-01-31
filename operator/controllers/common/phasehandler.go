@@ -35,7 +35,8 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
-	if oldStatus.IsDeprecated() {
+	// do not attempt to execute the current phase if the whole phase item is already in deprecated/failed state
+	if shouldAbortPhase(oldStatus) {
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
 	piWrapper.SetCurrentPhase(phase.ShortName)
@@ -75,6 +76,10 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
+}
+
+func shouldAbortPhase(oldStatus apicommon.KeptnState) bool {
+	return oldStatus.IsDeprecated() || oldStatus.IsFailed()
 }
 
 func (r PhaseHandler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *interfaces.PhaseItemWrapper, phase apicommon.KeptnPhaseType, reconcileObject client.Object, spanPhaseTrace trace.Span) (*PhaseResult, error) {

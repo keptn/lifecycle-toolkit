@@ -979,6 +979,75 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	}
 }
 
+func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *testing.T) {
+	r, eventChannel, _ := setupReconciler()
+
+	testNamespace := "some-ns"
+
+	wi := &klcv1alpha2.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "some-wi",
+			Namespace: testNamespace,
+		},
+		Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+				AppName: "some-app",
+				Version: "1.0.0",
+			},
+			WorkloadName:    "some-app-some-workload",
+			PreviousVersion: "",
+			TraceId:         nil,
+		},
+		Status: klcv1alpha2.KeptnWorkloadInstanceStatus{
+			CurrentPhase: apicommon.PhaseWorkloadPreDeployment.ShortName,
+			StartTime:    metav1.Time{},
+			EndTime:      metav1.Time{},
+		},
+	}
+
+	// simulate a KWI that has been cancelled due to a failed pre deployment check
+	wi.DeprecateRemainingPhases(apicommon.PhaseWorkloadPreDeployment)
+
+	err := r.Client.Create(context.TODO(), wi)
+
+	require.Nil(t, err)
+
+	err = controllercommon.AddAppVersion(
+		r.Client,
+		testNamespace,
+		"some-app",
+		"1.0.0",
+		[]klcv1alpha2.KeptnWorkloadRef{
+			{
+				Name:    "some-workload",
+				Version: "1.0.0",
+			},
+		},
+		klcv1alpha2.KeptnAppVersionStatus{
+			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+		},
+	)
+	require.Nil(t, err)
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: testNamespace,
+			Name:      "some-wi",
+		},
+	}
+
+	result, err := r.Reconcile(context.TODO(), req)
+
+	require.Nil(t, err)
+
+	// do not requeue since we were cancelled earlier
+	require.False(t, result.Requeue)
+
+	require.Empty(t, len(eventChannel))
+
+}
+
 func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *interfacesfake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{

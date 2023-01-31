@@ -40,10 +40,13 @@ const (
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
 	StateDeprecated  KeptnState = "Deprecated"
+	// StateCancelled represents state that was cancelled due to a previous step having failed.
+	// Deprecated: Use StateDeprecated instead. Should only be used in checks for backwards compatibility reasons
+	StateCancelled KeptnState = "Cancelled"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
+	return k == StateSucceeded || k == StateFailed || k == StateDeprecated || k == StateCancelled
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -55,7 +58,7 @@ func (k KeptnState) IsFailed() bool {
 }
 
 func (k KeptnState) IsDeprecated() bool {
-	return k == StateDeprecated
+	return k == StateDeprecated || k == StateCancelled
 }
 
 func (k KeptnState) IsPending() bool {

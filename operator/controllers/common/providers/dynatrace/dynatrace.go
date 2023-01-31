@@ -3,7 +3,6 @@ package dynatrace
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,8 +10,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -51,7 +48,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 		return "", nil, err
 	}
 
-	token, err := getDTApiToken(ctx, provider, d.k8sClient)
+	token, err := getDTSecret(ctx, provider, d.k8sClient)
 	if err != nil {
 		return "", nil, err
 	}
@@ -100,20 +97,4 @@ func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float6
 		return 0
 	}
 	return sum / float64(count)
-}
-
-func getDTApiToken(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider, k8sClient client.Client) (string, error) {
-	if !provider.HasSecretDefined() {
-		return "", errors.New("the SecretKeyRef property with the DT API token is missing")
-	}
-	dtCredsSecret := &corev1.Secret{}
-	if err := k8sClient.Get(ctx, types.NamespacedName{Name: provider.Spec.SecretKeyRef.Name, Namespace: provider.Namespace}, dtCredsSecret); err != nil {
-		return "", err
-	}
-
-	apiToken := dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
-	if len(apiToken) == 0 {
-		return "", fmt.Errorf("secret contains invalid key %s", provider.Spec.SecretKeyRef.Key)
-	}
-	return string(apiToken), nil
 }

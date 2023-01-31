@@ -25,11 +25,11 @@ func getDTSecret(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvid
 		return "", err
 	}
 
-	apiToken := dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
-	if len(apiToken) == 0 {
+	token := dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
+	if len(token) == 0 {
 		return "", fmt.Errorf("secret contains invalid key %s", provider.Spec.SecretKeyRef.Key)
 	}
-	return string(apiToken), nil
+	return string(token), nil
 }
 
 func validateOAuthSecret(token string) error {
@@ -49,3 +49,5 @@ func validateOAuthSecret(token string) error {
 	}
 	return nil
 }
+
+// consider a handle http client call func

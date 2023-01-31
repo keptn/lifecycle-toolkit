@@ -21,7 +21,7 @@ jobs:
     name: "Prepare Security Scans"
     runs-on: ubuntu-22.04
     steps:
-      - name: Determine Target Branch for Integration Tests
+      - name: Determine Target Branch
         id: determine_branch
         run: |
           if [[ "${{ github.event.inputs.branch }}" != "" ]]; then

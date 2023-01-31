@@ -24,7 +24,7 @@ docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/m
 
 ### Docker with function and external data - prometheus
 ```
-docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' -it keptnsandbox/klc-runtime:${VERSION}
+docker run -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' -it ghcr.keptn.sh/keptn/functions-runtime:${VERSION}
 ```
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

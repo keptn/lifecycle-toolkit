@@ -311,6 +311,9 @@ jobs:
         path: ./helm-charts-repository
         token: ${{ secrets.PAT }}
 
+    - name: Generate helm charts
+      run: make helm-package
+
     - name: Copy charts from klt to helm repo
       run: ./.github/scripts/copy-helm-charts.sh ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
 

@@ -240,7 +240,8 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
-		ClientDisableCacheFor: disableCacheFor,
+		ClientDisableCacheFor: disableCacheFor, // due to https://github.com/kubernetes-sigs/controller-runtime/issues/550
+		// We disable secret informer cache so that the operator won't need clusterrole list access to secrets
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

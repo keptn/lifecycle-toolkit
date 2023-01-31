@@ -56,12 +56,12 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8443
-            initialDelaySeconds: 15
+            initialDelaySeconds: 5
             periodSeconds: 20
           readinessProbe:
             tcpSocket:
               port: 8443
-            initialDelaySeconds: 15
+            initialDelaySeconds: 5
             periodSeconds: 20
         - name: manager
           args:

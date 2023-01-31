@@ -1,8 +1,7 @@
 name: "Security Scans"
 on:
   schedule:
-    - cron: '0 3 * * 1' # run tests at 1 AM (UTC), every monday (1) # run integration tests only when triggered manually
-
+    - cron: '0 3 * * 1' # run tests at 1 AM (UTC), every monday (1)
   workflow_dispatch:
     inputs:
       branch:

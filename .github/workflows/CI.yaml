@@ -298,6 +298,7 @@ jobs:
 
   helm_charts_build:
     name: Publish helm chart changes to charts repo
+    if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     needs: [ prepare_ci_run, build_image ]
     runs-on: ubuntu-22.04
     steps:
@@ -319,7 +320,6 @@ jobs:
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
-      if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
       env:
         GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
       with:

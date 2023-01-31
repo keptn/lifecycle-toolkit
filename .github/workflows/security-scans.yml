@@ -8,7 +8,7 @@ on:
       branch:
         description: 'Take CI build artifacts from branch (e.g., master, release-x.y.z)'
         required: true
-        default: 'master'
+        default: 'main'
 defaults:
   run:
     shell: bash

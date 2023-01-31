@@ -203,7 +203,7 @@ func main() {
 	go serveMetrics()
 
 	// Start the custom metrics adapter
-	go startCustomMetricsAdapter()
+	go startCustomMetricsAdapter(env.PodNamespace)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -579,10 +579,10 @@ func serveMetrics() {
 	}
 }
 
-func startCustomMetricsAdapter() {
+func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
 
-	adapter := adapter.MetricsAdapter{}
+	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	adapter.RunAdapter(ctx)
 }

@@ -79,7 +79,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 	// collector URL changed, so we need to re-initialize the exporter
 	if r.LastAppliedSpec.OTelCollectorUrl != config.Spec.OTelCollectorUrl {
 		if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
-			r.Log.Error(err, "unable to re-initialize OTel tracer options")
+			r.Log.Error(err, "unable to initialize OTel tracer options")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}

@@ -309,23 +309,9 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    # - name: Login to GitHub Container Registry
-    #   uses: docker/login-action@v2
-    #   with:
-    #     registry: "ghcr.io"
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GITHUB_TOKEN }}
-
-    # - name: Install Helm
-    #   uses: azure/setup-helm@v3
-
-    # - name: Run chart-releaser
-    #   uses: helm/chart-releaser-action@v1.5.0
-    #   with:
-    #     charts_dir: charts
-    #     charts_repo_url: "https://github.com/odubajDT/helm-charts.git"
-    #   env:
-    #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    # checkout 2x
+    # copy things
+    #create PR
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4

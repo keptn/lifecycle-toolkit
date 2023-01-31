@@ -25,8 +25,6 @@ import (
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
-const kltNamespace = "keptn-lifecycle-toolkit-system"
-
 var keptnMetricGroupVersionResource = schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1alpha1", Resource: "keptnmetrics"}
 
 var providerInstance *keptnMetricsProvider
@@ -34,9 +32,10 @@ var providerInstance *keptnMetricsProvider
 var providerOnce sync.Once
 
 type keptnMetricsProvider struct {
-	client dynamic.Interface
-	scheme *runtime.Scheme
-	logger logr.Logger
+	client       dynamic.Interface
+	scheme       *runtime.Scheme
+	logger       logr.Logger
+	KltNamespace string
 
 	// cache is being populated via the updates received by the provider's dynamic informer
 	// this way, we avoid sending a request to the Kubernetes API each time a custom metric value should be retrieved
@@ -45,7 +44,7 @@ type keptnMetricsProvider struct {
 
 // NewProvider creates and starts a new keptnMetricsProvider. The provider will run until the given context is cancelled.
 // the client passed to this function will be used to set up a dynamic informer that listens for KeptnMetric CRDs and provides metric values that reflect their states.
-func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomMetricsProvider {
+func NewProvider(ctx context.Context, client dynamic.Interface, namespace string) provider.CustomMetricsProvider {
 	providerOnce.Do(func() {
 		scheme := runtime.NewScheme()
 
@@ -55,7 +54,8 @@ func NewProvider(ctx context.Context, client dynamic.Interface) provider.CustomM
 			cache: CustomMetricsCache{
 				metrics: map[string]CustomMetricValue{},
 			},
-			logger: ctrl.Log.WithName("provider"),
+			logger:       ctrl.Log.WithName("provider"),
+			KltNamespace: namespace,
 		}
 
 		if err := providerInstance.watchMetrics(ctx); err != nil {
@@ -110,7 +110,7 @@ func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, kltNamespace, nil)
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, p.KltNamespace, nil)
 
 	informer := factory.ForResource(keptnMetricGroupVersionResource).Informer()
 

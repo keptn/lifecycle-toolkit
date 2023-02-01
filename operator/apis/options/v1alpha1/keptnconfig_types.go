@@ -30,6 +30,10 @@ type KeptnConfigSpec struct {
 
 	// OTelCollectorUrl can be used to set the Open Telemetry collector that the operator should use
 	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
+	// KeptnAppCreationRequestTimeout is used to set the interval in which automatic app discovery
+	// searches for workload to put into the same auto-generated KeptnApp
+	// +kubebuilder:default:=30
+	KeptnAppCreationRequestTimeout uint `json:"keptnAppCreationRequestTimeout,omitempty"`
 }
 
 // KeptnConfigStatus defines the observed state of KeptnConfig

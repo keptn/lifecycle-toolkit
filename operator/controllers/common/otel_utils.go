@@ -134,38 +134,38 @@ func newResource() *resource.Resource {
 func SetUpKeptnMeters(meter metric.Meter, mgr client.Client) {
 	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize active deployments OTel gauge")
 	}
 	taskActiveGauge, err := meter.AsyncInt64().Gauge("keptn.task.active", instrument.WithDescription("a simple counter of active Keptn Tasks"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize active tasks OTel gauge")
 	}
 	appActiveGauge, err := meter.AsyncInt64().Gauge("keptn.app.active", instrument.WithDescription("a simple counter of active Keptn Apps"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize active apps OTel gauge")
 	}
 	evaluationActiveGauge, err := meter.AsyncInt64().Gauge("keptn.evaluation.active", instrument.WithDescription("a simple counter of active Keptn Evaluations"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize active evaluations OTel gauge")
 	}
-	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
+	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between app deployments"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
-	}
-
-	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
-	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize app deployment interval OTel gauge")
 	}
 
-	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a gauge of the interval between deployments"))
+	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration of app deployments"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize app deployment duration OTel gauge")
 	}
 
-	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of deployments"))
+	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a gauge of the interval between workload deployments"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize workload deployment interval OTel gauge")
+	}
+
+	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of workload deployments"))
+	if err != nil {
+		logger.Error(err, "unable to initialize workload deployment duration OTel gauge")
 	}
 
 	err = meter.RegisterCallback(

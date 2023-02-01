@@ -77,5 +77,4 @@ runs:
       shell: bash
       run: |
         echo "Installing KLT using helm"
-        kubectl create namespace keptn-lifecycle-toolkit-system
-        helm install -n keptn-lifecycle-toolkit-system toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz --wait --timeout 14m
+        helm upgrade --install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz --debug --wait --timeout 1m

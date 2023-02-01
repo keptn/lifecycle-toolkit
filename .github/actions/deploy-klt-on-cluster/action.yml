@@ -18,7 +18,12 @@ inputs:
     required: false
     description: "Name of the kind cluster"
     default: "test-cluster"
-
+  helm-install:
+    required: false
+    type: boolean
+    description: "Install KLT via helm instead of manifest if true"
+    # renovate: datasource=github-releases depName=kubernetes-sigs/kind
+    default: false
 runs:
   using: "composite"
   steps:
@@ -52,9 +57,11 @@ runs:
           kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
         done
 
-    - name: Install lifecycle-toolkit
+    - name: Install lifecycle-toolkit with manifests
+      if: ${{ inputs.helm-install == 'false' }}
       shell: bash
       run: |
+        echo "Installing KLT using manifests"
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
         sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
         kubectl create namespace keptn-lifecycle-toolkit-system
@@ -64,3 +71,11 @@ runs:
         kubectl apply -f ~/download/artifacts/scheduler-manifest-test
         kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
         kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
+
+    - name: Install lifecycle-toolkit with helm
+      if: ${{ inputs.helm-install == 'true'  }}
+      shell: bash
+      run: |
+        echo "Installing KLT using helm"
+        kubectl create namespace keptn-lifecycle-toolkit-system
+        helm install -n keptn-lifecycle-toolkit-system toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz --wait --timeout 14m

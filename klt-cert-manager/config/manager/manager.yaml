@@ -26,8 +26,6 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        seccompProfile:
-           type: RuntimeDefault
       containers:
       - command:
         - /manager
@@ -41,10 +39,15 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
         securityContext:
+          seccompProfile:
+            type: RuntimeDefault
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           capabilities:
             drop:
               - "ALL"
+          runAsUser: 65532
+          runAsGroup: 65532
         livenessProbe:
           httpGet:
             path: /healthz

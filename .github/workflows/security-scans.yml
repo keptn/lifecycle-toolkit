@@ -1,9 +1,13 @@
 name: "Security Scans"
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 3 * * 1' # run tests at 1 AM (UTC), every monday (1)
-
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Take CI build artifacts from branch (e.g., master, release-x.y.z)'
+        required: true
+        default: 'main'
 defaults:
   run:
     shell: bash
@@ -16,16 +20,29 @@ jobs:
     name: "Prepare Security Scans"
     runs-on: ubuntu-22.04
     steps:
+      - name: Determine Target Branch
+        id: determine_branch
+        run: |
+          if [[ "${{ github.event.inputs.branch }}" != "" ]]; then
+            # branch was manually set by user -> probably a workflow_dispatch action
+            BRANCH=${{ github.event.inputs.branch }}
+            echo "Using $BRANCH as target branch"
+          else
+            BRANCH='main'
+          fi
+          echo "BRANCH=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
+
       - name: Find latest successful run ID
         id: last_run_id
         env:
+          BRANCH: ${{ steps.determine_branch.outputs.BRANCH }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RUN_ID=$(\
             curl -sL \
               -H 'Accept: application/vnd.github.v3+json' \
               -H "Authorization: token $GITHUB_TOKEN" \
-              "api.github.com/repos/${{ github.repository }}/actions/workflows/CI.yaml/runs?branch=main" | \
+              "api.github.com/repos/${{ github.repository }}/actions/workflows/CI.yaml/runs?branch=$BRANCH" | \
             jq '[.workflow_runs[] | select(
               (.head_commit != null) and ( .conclusion == "success" ) 
             )][0] | .id')
@@ -48,17 +65,15 @@ jobs:
         with:
           name: manifests
           path: |
-            ./dist/keptn-lifecycle-operator-manifest/
-            ./dist/scheduler-manifest/
+            ./dist/*-manifest/
+            ./dist/*-manifest-test/
 
       - name: Upload images
         uses: actions/upload-artifact@v3
         with:
           name: images
           path: |
-            ./dist/functions-runtime-image.tar/
-            ./dist/keptn-lifecycle-operator-image.tar/
-            ./dist/scheduler-image.tar/
+            ./dist/*-image.tar/
             
   security-scans:
     name: "Security Scans"
@@ -154,6 +169,7 @@ jobs:
           - "functions-runtime"
           - "keptn-lifecycle-operator"
           - "scheduler"
+          - "klt-cert-manager"
     steps:
       - name: Download images
         id: download_images
@@ -178,6 +194,7 @@ jobs:
         artifact:
           - "operator"
           - "scheduler"
+          - "klt-cert-manager"
 
     steps:
       - name: Set up Go 1.x

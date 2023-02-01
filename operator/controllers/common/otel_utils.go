@@ -204,7 +204,7 @@ func observeDuration(ctx context.Context, mgr client.Client, appDeploymentDurati
 
 }
 
-func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploymentIntervalGauge asyncfloat64.Gauge, workloadDeploymentIntervalGauge asyncfloat64.Gauge) error {
+func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploymentIntervalGauge asyncfloat64.Gauge, workloadDeploymentIntervalGauge asyncfloat64.Gauge) {
 	err := ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha2.KeptnAppVersionList{}, &lifecyclev1alpha2.KeptnWorkloadInstance{}, appDeploymentIntervalGauge)
 	if err != nil {
 		logger.Error(err, "unable to gather app deployment intervals")
@@ -214,7 +214,6 @@ func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploy
 	if err != nil {
 		logger.Error(err, "unable to gather workload deployment intervals")
 	}
-	return err
 }
 
 func observeActiveInstances(ctx context.Context, mgr client.Client, deploymentActiveGauge asyncint64.Gauge, appActiveGauge asyncint64.Gauge, taskActiveGauge asyncint64.Gauge, evaluationActiveGauge asyncint64.Gauge) {

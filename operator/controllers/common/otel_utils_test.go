@@ -111,8 +111,9 @@ func TestSetUpKeptnMeters(t *testing.T) {
 		mgr   client.Client
 	}
 	tests := []struct {
-		name string
-		args args
+		name              string
+		args              args
+		wantRegisterCalls int
 	}{
 		{
 			name: "Basic case",
@@ -120,6 +121,7 @@ func TestSetUpKeptnMeters(t *testing.T) {
 				meter: metric.NewNoopMeter(),
 				mgr:   nil,
 			},
+			wantRegisterCalls: 0,
 		},
 		{
 			name: "Error case",
@@ -127,11 +129,13 @@ func TestSetUpKeptnMeters(t *testing.T) {
 				meter: fakeMeter,
 				mgr:   nil,
 			},
+			wantRegisterCalls: 1,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			SetUpKeptnMeters(tt.args.meter, tt.args.mgr)
+			require.Equal(t, tt.wantRegisterCalls, len(fakeMeter.RegisterCallbackCalls()))
 		})
 	}
 }

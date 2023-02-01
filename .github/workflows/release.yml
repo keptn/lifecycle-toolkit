@@ -103,7 +103,7 @@ jobs:
         run: cosign sign ${{ env.IMAGE_TAG }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.13.1
+        uses: anchore/sbom-action@v0.13.3
         with:
           image: ${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}

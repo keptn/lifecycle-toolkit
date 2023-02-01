@@ -11,3 +11,9 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "0.5.0" # x-release-please-version
+
+sources:
+  - "https://github.com/keptn/lifecycle-toolkit"
+annotations:
+  artifacthub.io/links: |
+    - support: "https://github.com/keptn/lifecycle-toolkit/issues/new"

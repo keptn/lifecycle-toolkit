@@ -315,12 +315,6 @@ jobs:
     - name: Generate helm charts
       run: make helm-package
 
-    - name: Upload KLT helm charts archive
-      uses: actions/upload-artifact@v3
-      with:
-        name: kepn-lifecycle-toolkit.tgz
-        path: ./helm/chart/charts/*.tgz
-
     - name: Copy charts from klt to helm repo
       run: ./.github/scripts/copy-helm-charts.sh ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
 

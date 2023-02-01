@@ -239,35 +239,35 @@ func observeActiveInstances(ctx context.Context, mgr client.Client, deploymentAc
 func SetUpKeptnTaskMeters(meter metric.Meter) common.KeptnMeters {
 	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize deployment count OTel counter")
 	}
 	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize deployment duration OTel histogram")
 	}
 	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize task OTel counter")
 	}
 	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize task duration OTel histogram")
 	}
 	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize app OTel counter")
 	}
 	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize app duration OTel histogram")
 	}
 	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize evaluation OTel counter")
 	}
 	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
 	if err != nil {
-		logger.Error(err, "unable to start OTel")
+		logger.Error(err, "unable to initialize evaluation duration OTel histogram")
 	}
 
 	meters := common.KeptnMeters{

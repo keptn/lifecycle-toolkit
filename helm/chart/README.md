@@ -8,3 +8,4 @@ KLT introduces a more cloud-native approach for pre- and post-deployment, as wel
 | Name                | Description                                   | Value                 |
 | ------------------- | --------------------------------------------- | --------------------- |
 | `otelCollector.url` | Sets the URL for the open telemetry collector | `otel-collector:4317` |
+

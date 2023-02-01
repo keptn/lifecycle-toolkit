@@ -35,7 +35,7 @@ jobs:
           cp ./README.md ./README-old.md
           readme-generator --values=./values.yaml --readme=./README.md
           if ! cmp --quiet ./README-old.md ./README.md; then
-            echo "The Helm values have changes that are not reflected in the readme. Please use ./gh-actions-scripts/generate-helm-docs.sh to re-generate the docs."
+            echo "The Helm values have changes that are not reflected in the readme. Please use ./.github/scripts/generate-helm-docs.sh to re-generate the docs."
             echo ""
             echo "=========== Diff ==========="
             diff ./README-old.md ./README.md

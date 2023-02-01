@@ -166,13 +166,3 @@ func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
 }
-
-type GaugeValue struct {
-	Value      int64
-	Attributes []attribute.KeyValue
-}
-
-type GaugeFloatValue struct {
-	Value      float64
-	Attributes []attribute.KeyValue
-}

@@ -6,30 +6,34 @@ import (
 	"time"
 
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/attribute"
+	noop "go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func TestMetrics_GetDeploymentDuration(t *testing.T) {
+func TestMetrics_ObserveDeploymentDuration(t *testing.T) {
+
+	gauge, err := noop.NewNoopMeter().AsyncFloat64().Gauge("mine")
+	require.Nil(t, err)
+
 	tests := []struct {
 		name          string
 		clientObjects client.ObjectList
 		list          client.ObjectList
 		err           error
-		result        []apicommon.GaugeFloatValue
+		gauge         asyncfloat64.Gauge
 	}{
 		{
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha2.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
 			err:           controllererrors.ErrCannotWrapToListItem,
-			result:        nil,
+			gauge:         nil,
 		},
 		{
 			name: "no endtime set",
@@ -41,8 +45,8 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 					},
 				},
 			},
-			err:    nil,
-			result: []apicommon.GaugeFloatValue{},
+			err:   nil,
+			gauge: gauge,
 		},
 		{
 			name: "endtime set",
@@ -64,17 +68,8 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 					},
 				},
 			},
-			err: nil,
-			result: []apicommon.GaugeFloatValue{
-				{
-					Value: 5 * time.Second.Seconds(),
-					Attributes: []attribute.KeyValue{
-						apicommon.AppName.String("appName"),
-						apicommon.AppVersion.String("version"),
-						apicommon.AppPreviousVersion.String("previousVersion"),
-					},
-				},
-			},
+			err:   nil,
+			gauge: gauge,
 		},
 	}
 
@@ -83,28 +78,25 @@ func TestMetrics_GetDeploymentDuration(t *testing.T) {
 			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
-			res, err := GetDeploymentDuration(context.TODO(), client, tt.list)
+			err = ObserveDeploymentDuration(context.TODO(), client, tt.list, gauge)
 			require.ErrorIs(t, err, tt.err)
-			require.Equal(t, tt.result, res)
 		})
 
 	}
 }
 
-func TestMetrics_GetActiveInstances(t *testing.T) {
+func TestMetrics_ObserveActiveInstances(t *testing.T) {
 	tests := []struct {
 		name          string
 		clientObjects client.ObjectList
 		list          client.ObjectList
 		err           error
-		result        []apicommon.GaugeValue
 	}{
 		{
 			name:          "failed to create wrapper",
 			list:          &lifecyclev1alpha2.KeptnAppList{},
 			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
 			err:           controllererrors.ErrCannotWrapToListItem,
-			result:        nil,
 		},
 		{
 			name: "no endtime set - active instances",
@@ -127,16 +119,6 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 				},
 			},
 			err: nil,
-			result: []apicommon.GaugeValue{
-				{
-					Value: 1,
-					Attributes: []attribute.KeyValue{
-						apicommon.AppName.String("appName"),
-						apicommon.AppVersion.String("version"),
-						apicommon.AppNamespace.String("namespace"),
-					},
-				},
-			},
 		},
 		{
 			name: "endtime set - no active instances",
@@ -162,16 +144,6 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 				},
 			},
 			err: nil,
-			result: []apicommon.GaugeValue{
-				{
-					Value: 0,
-					Attributes: []attribute.KeyValue{
-						apicommon.AppName.String("appName"),
-						apicommon.AppVersion.String("version"),
-						apicommon.AppNamespace.String("namespace"),
-					},
-				},
-			},
 		},
 	}
 
@@ -180,15 +152,17 @@ func TestMetrics_GetActiveInstances(t *testing.T) {
 			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
-			res, err := GetActiveInstances(context.TODO(), client, tt.list)
+			gauge, err := noop.NewNoopMeter().AsyncInt64().Gauge("mine")
+			require.Nil(t, err)
+			err = ObserveActiveInstances(context.TODO(), client, tt.list, gauge)
 			require.ErrorIs(t, err, tt.err)
-			require.Equal(t, tt.result, res)
+
 		})
 
 	}
 }
 
-func TestMetrics_GetDeploymentInterval(t *testing.T) {
+func TestMetrics_ObserveDeploymentInterval(t *testing.T) {
 	tests := []struct {
 		name          string
 		clientObjects client.ObjectList
@@ -196,7 +170,6 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 		list          client.ObjectList
 		previous      client.Object
 		err           error
-		result        []apicommon.GaugeFloatValue
 	}{
 		{
 			name:          "failed to create wrapper",
@@ -204,7 +177,6 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 			clientObjects: &lifecyclev1alpha2.KeptnAppList{},
 			clientObject:  &lifecyclev1alpha2.KeptnApp{},
 			err:           controllererrors.ErrCannotWrapToListItem,
-			result:        nil,
 		},
 		{
 			name:         "no previous version",
@@ -226,8 +198,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    nil,
-			result: []apicommon.GaugeFloatValue{},
+			err: nil,
 		},
 		{
 			name:         "previous version - no previous object",
@@ -249,8 +220,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    nil,
-			result: nil,
+			err: nil,
 		},
 		{
 			name:     "previous version - object found but cannot unwrap",
@@ -279,8 +249,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    controllererrors.ErrCannotWrapToMetricsObject,
-			result: nil,
+			err: controllererrors.ErrCannotWrapToMetricsObject,
 		},
 		{
 			name:     "previous version - object found but no endtime",
@@ -316,8 +285,7 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 					},
 				},
 			},
-			err:    nil,
-			result: []apicommon.GaugeFloatValue{},
+			err: nil,
 		},
 		{
 			name:     "previous version - object found with endtime",
@@ -362,35 +330,19 @@ func TestMetrics_GetDeploymentInterval(t *testing.T) {
 				},
 			},
 			err: nil,
-			result: []apicommon.GaugeFloatValue{
-				{
-					Value: 5,
-					Attributes: []attribute.KeyValue{
-						apicommon.AppName.String("appName"),
-						apicommon.AppVersion.String("version"),
-						apicommon.AppPreviousVersion.String("previousVersion"),
-					},
-				},
-				{
-					Value: 5,
-					Attributes: []attribute.KeyValue{
-						apicommon.AppName.String("appName"),
-						apicommon.AppVersion.String("version"),
-						apicommon.AppPreviousVersion.String("previousVersion"),
-					},
-				},
-			},
 		},
 	}
+
+	gauge, err := noop.NewNoopMeter().AsyncFloat64().Gauge("mine")
+	require.Nil(t, err)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
-			res, err := GetDeploymentInterval(context.TODO(), client, tt.list, tt.previous)
+			err = ObserveDeploymentInterval(context.TODO(), client, tt.list, tt.previous, gauge)
 			require.ErrorIs(t, err, tt.err)
-			require.Equal(t, tt.result, res)
 		})
 
 	}

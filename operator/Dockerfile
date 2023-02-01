@@ -7,12 +7,12 @@ WORKDIR /workspace
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the go source
-COPY ./ ./
-
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 ARG CONTROLLER_TOOLS_VERSION=v0.9.2
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
+
+# Copy the go source
+COPY ./ ./
 
 ARG GIT_HASH
 ARG RELEASE_VERSION
@@ -25,9 +25,9 @@ RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && 
   GOOS=$TARGETOS GOARCH=$TARGETARCH \
   go build -ldflags "\
     -w \
-    -X main.gitCommit=${GIT_HASH} \
-    -X main.buildTime=${BUILD_TIME} \
-    -X main.buildVersion=${RELEASE_VERSION}" \
+    -X common.gitCommit=${GIT_HASH} \
+    -X common.buildTime=${BUILD_TIME} \
+    -X common.buildVersion=${RELEASE_VERSION}" \
     -o bin/manager main.go
 
 FROM gcr.io/distroless/base-debian11:debug-nonroot AS debug

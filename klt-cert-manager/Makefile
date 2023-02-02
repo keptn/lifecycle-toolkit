@@ -94,13 +94,13 @@ ifndef ignore-not-found
 endif
 
 .PHONY: deploy
-deploy: kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
-	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/default | kubectl apply -f -
+deploy: ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	cd config/manager && kustomize edit set image controller=${IMG}
+	kustomize build config/default | kubectl apply -f -
 
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
-	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
+	kustomize build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 ##@ Build Dependencies
 
@@ -184,6 +184,6 @@ push-local:
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
 .PHONY: release-manifests
-release-manifests: kustomize
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-	$(KUSTOMIZE) build config/default > config/rendered/release.yaml
+release-manifests:
+	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	kustomize build config/default > config/rendered/release.yaml

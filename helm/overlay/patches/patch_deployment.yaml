@@ -9,7 +9,8 @@ spec:
     spec:
       containers:
         - name: manager
-          imagePullPolicy: {{ .Values.deployment.imagePullPolicy | default "Always" }}
+          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+
           env:
             - name: OTEL_COLLECTOR_URL
               value: {{ .Values.otelCollector.url | default "otel-collector:4317" }}

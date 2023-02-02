@@ -9,10 +9,10 @@ spec:
     spec:
       containers:
         - name: manager
-          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy | default "Always" }}
           env:
             - name: OTEL_COLLECTOR_URL
-              value: "{{ .Values.otelCollector.url }}"
+              value: {{ .Values.otelCollector.url | default "otel-collector:4317" }}
 
 
 ---
@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: manager
-          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy | default "Always" }}
           env:
 #            - name: NEW_ENV_VAR
 #              value: "{{ .Values.myNewEnvVar }}"
@@ -42,8 +42,8 @@ spec:
     spec:
       containers:
         - name: keptn-scheduler
-          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy | default "Always" }}
           env:
             - name: OTEL_COLLECTOR_URL
-              value: "{{ .Values.otelCollector.url }}"
+              value: {{ .Values.otelCollector.url | default "otel-collector:4317" }}
 

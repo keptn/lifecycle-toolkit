@@ -332,4 +332,5 @@ jobs:
         base: main
         title: "Helm Charts update"
         body: |
-          :robot: **This is an automated PR for updating and relesing helm charts from keptn/lifecycle-toolkit repository!** :robot:
+          :robot: **This is an automated PR for updating and releasing Helm charts from keptn/lifecycle-toolkit!** :robot:
+

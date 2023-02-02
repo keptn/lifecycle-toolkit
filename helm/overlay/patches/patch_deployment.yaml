@@ -28,7 +28,8 @@ spec:
     spec:
       containers:
         - name: manager
-          imagePullPolicy: {{ .Values.deployment.imagePullPolicy | default "Always" }}
+          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+
           env:
 #            - name: NEW_ENV_VAR
 #              value: "{{ .Values.myNewEnvVar }}"

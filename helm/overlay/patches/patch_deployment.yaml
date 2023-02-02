@@ -13,7 +13,8 @@ spec:
 
           env:
             - name: OTEL_COLLECTOR_URL
-              value: {{ .Values.otelCollector.url | default "otel-collector:4317" }}
+              value: "{{ .Values.otelCollector.url }}"
+
 
 
 ---

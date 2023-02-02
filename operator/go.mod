@@ -10,7 +10,7 @@ require (
 	github.com/imdario/mergo v0.3.13
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.7.0
+	github.com/onsi/ginkgo/v2 v2.7.1
 	github.com/onsi/gomega v1.26.0
 	github.com/open-feature/go-sdk v1.1.0
 	github.com/pkg/errors v0.9.1
@@ -26,8 +26,8 @@ require (
 	go.opentelemetry.io/otel/sdk v1.11.2
 	go.opentelemetry.io/otel/sdk/metric v0.34.0
 	go.opentelemetry.io/otel/trace v1.11.2
-	golang.org/x/exp v0.0.0-20230126173853-a67bb567ff2e
-	google.golang.org/grpc v1.52.0
+	golang.org/x/exp v0.0.0-20230131160201-f062dba9d201
+	google.golang.org/grpc v1.52.3
 	k8s.io/api v0.26.1
 	k8s.io/apiextensions-apiserver v0.26.1
 	k8s.io/apimachinery v0.26.1
@@ -36,7 +36,7 @@ require (
 	k8s.io/component-base v0.26.1
 	k8s.io/klog/v2 v2.90.0
 	k8s.io/metrics v0.26.1
-	sigs.k8s.io/controller-runtime v0.14.1
+	sigs.k8s.io/controller-runtime v0.14.2
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 )
 
@@ -124,4 +124,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.1
+replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.4

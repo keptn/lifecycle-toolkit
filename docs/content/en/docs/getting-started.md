@@ -36,10 +36,10 @@ kubectl version --short
 
 The output should look like this. In this example, both client and server are at v1.24.0 so the Keptn Lifecycle Toolkit will work.
 
-{{% readfile file="snippets/tasks/k8s_version_output.md" markdown="true" %}}
+{{% readfile file="./snippets/tasks/k8s_version_output.md" markdown="true" %}}
 
 ## Install the Keptn Lifecycle Toolkit
-{{% readfile file="snippets/tasks/install.md" markdown="true" %}}
+{{% readfile file="./snippets/tasks/install.md" markdown="true" %}}
 
 ## Check out the Getting Started Repository
 For the further progress of this guide, we need a sample application as well as some helpers which makes it easier for your to set up your environment. These things can be found in our Getting Started repository which can be checked out as follows:

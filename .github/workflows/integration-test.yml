@@ -6,6 +6,10 @@ on:
         description: "Tag for the functions runner image"
         type: "string"
         required: true
+      helm-install:
+        description: "Decides wheter to install via helm"
+        type: "boolean"
+        default: false
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-tags depName=kudobuilder/kuttl
@@ -26,6 +30,7 @@ jobs:
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          helm-install:  ${{ inputs.helm-install }}
 
       - name: Download KUTTL
         run: |

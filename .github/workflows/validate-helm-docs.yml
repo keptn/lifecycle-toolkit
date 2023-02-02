@@ -30,7 +30,7 @@ jobs:
           npm install --location=global ./
           cd ..
 
-      - name: Execute diff
+      - name: Check Helm doc up to date
         run: |
           cd ./helm/chart/
           cp ./README.md ./README-old.md

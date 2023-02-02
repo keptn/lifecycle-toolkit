@@ -3,7 +3,7 @@ title = "Home"
 
 +++
 
-{{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation!!!!" image_anchor="top" height="half" color="primary" >}}
+{{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
 <div class="mx-auto">
 	<a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
 		Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>

@@ -70,6 +70,8 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
+          - name: "functions-runtime"
+            folder: "functions-runtime/"
           - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     steps:

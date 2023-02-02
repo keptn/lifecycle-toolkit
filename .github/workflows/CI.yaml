@@ -330,7 +330,7 @@ jobs:
         branch: helm-chart-update-${{ env.GIT_SHA }}
         delete-branch: true
         base: main
-        title: "Helm Charts update"
+        title: "Update KLT Helm chart"
         body: |
           :robot: **This is an automated PR for updating and releasing Helm charts from keptn/lifecycle-toolkit!** :robot:
 

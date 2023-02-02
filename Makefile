@@ -44,9 +44,9 @@ $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
 .PHONY: release-helm-manifests
-release-helm-manifests: kustomize
+release-helm-manifests:
 	echo "building helm overlay"
-	$(KUSTOMIZE) build ./helm/overlay > ./helm/chart/templates/rendered.yaml
+	kustomize build ./helm/overlay > ./helm/chart/templates/rendered.yaml
 
 .PHONY: helm-package
 helm-package: build-release-manifests release-helm-manifests

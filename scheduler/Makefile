@@ -99,9 +99,9 @@ $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
 .PHONY: release-manifests
-release-manifests: kustomize
-	cd manifests/install && $(KUSTOMIZE) edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-	$(KUSTOMIZE) build manifests/install > config/rendered/release.yaml
+release-manifests:
+	cd manifests/install && kustomize edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	kustomize build manifests/install > config/rendered/release.yaml
 
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)

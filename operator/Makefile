@@ -116,7 +116,7 @@ e2e-test: manifests generate envtest ## Run tests.
 ##@ Build
 .PHONY: build
 build: generate ## Build manager binary.
-	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X main.gitCommit=$(HASH) -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(TAG)' -o bin/manager main.go
+	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X common.gitCommit=$(HASH) -X common.buildTime=$(BUILD_TIME) -X common.buildVersion=$(TAG)' -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
@@ -129,33 +129,33 @@ ifndef ignore-not-found
 endif
 
 .PHONY: install
-install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
-	$(KUSTOMIZE) build config/crd | kubectl apply --server-side -f -
+install: manifests ## Install CRDs into the K8s cluster specified in ~/.kube/config.
+	kustomize build config/crd | kubectl apply --server-side -f -
 
 .PHONY: uninstall
-uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
-	$(KUSTOMIZE) build config/crd | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
+uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
+	kustomize build config/crd | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 .PHONY: release-manifests
-release-manifests: manifests kustomize
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+release-manifests: manifests
+	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	echo "building default overlay"
-	$(KUSTOMIZE) build config/default > config/rendered/release.yaml
+	kustomize build config/default > config/rendered/release.yaml
 
 .PHONY: release-helm-manifests
- release-helm-manifests: manifests gen-crds kustomize
+ release-helm-manifests: manifests gen-crds
 	echo "building helm overlay"
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-	$(KUSTOMIZE) build config/default/base > config/rendered/release.yaml
+	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	kustomize build config/default/base > config/rendered/release.yaml
 
 .PHONY: deploy
-deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
-	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/default | kubectl apply --server-side -f -
+deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	cd config/manager && kustomize edit set image controller=${IMG}
+	kustomize build config/default | kubectl apply --server-side -f -
 
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
-	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
+	kustomize build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 ##@ Build Dependencies
 

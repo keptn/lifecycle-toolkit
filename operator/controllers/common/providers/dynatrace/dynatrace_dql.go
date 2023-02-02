@@ -72,13 +72,13 @@ func (d *KeptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, objective
 	}
 	// parse result
 	if len(results.records) > 1 {
-		d.Log.Error(err, "More than a single result, the first one will be used")
+		d.Log.Info("More than a single result, the first one will be used")
 	}
 	if len(results.records) == 0 {
 		return "", nil, ErrInvalidResult
 	}
 	r := fmt.Sprintf("%f", results.records[0].value.avg)
-	b, err := json.Marshal(r)
+	b, err := json.Marshal(results)
 	if err != nil {
 		d.Log.Error(err, "Error marshaling DQL results")
 	}
@@ -98,8 +98,8 @@ func (d *KeptnDynatraceDQLProvider) doOAuth(ctx context.Context, provider klcv1a
 	if err != nil {
 		return jwt, err
 	}
-	if err2 := validateOAuthSecret(secret); err2 != nil {
-		return jwt, err2
+	if err := validateOAuthSecret(secret); err != nil {
+		return jwt, err
 	}
 	secretParts := strings.Split(secret, ".")
 	clientId := fmt.Sprintf("%s.%s", secretParts[0], secretParts[1])
@@ -219,6 +219,5 @@ func (d *KeptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, jwt 
 		d.Log.Error(err, "Error while parsing response")
 		return result, err
 	}
-	defer res.Body.Close()
 	return result, nil
 }

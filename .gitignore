@@ -38,3 +38,6 @@ manifests/
 ## Kubebuilder
 **/kubebuilder
 /docs/tmp/
+
+# Helm readme generator project
+readme-generator-for-helm/

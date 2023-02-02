@@ -13,6 +13,7 @@ import (
 
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the Dynatrace token is missing")
 var ErrOAuthTokenInvalid = errors.New("the Dynatrace token has an invalid format")
+var ErrInvalidResult = errors.New("the answer does not contain any data")
 
 const dtTokenPrefix = "dts08"
 

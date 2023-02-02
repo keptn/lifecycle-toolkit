@@ -18,14 +18,14 @@ require (
 	github.com/prometheus/common v0.39.0
 	github.com/spf13/afero v1.9.3
 	github.com/stretchr/testify v1.8.1
-	go.opentelemetry.io/otel v1.11.2
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
-	go.opentelemetry.io/otel/exporters/prometheus v0.34.0
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
-	go.opentelemetry.io/otel/metric v0.34.0
-	go.opentelemetry.io/otel/sdk v1.11.2
-	go.opentelemetry.io/otel/sdk/metric v0.34.0
-	go.opentelemetry.io/otel/trace v1.11.2
+	go.opentelemetry.io/otel v1.12.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.12.0
+	go.opentelemetry.io/otel/exporters/prometheus v0.35.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.12.0
+	go.opentelemetry.io/otel/metric v0.35.0
+	go.opentelemetry.io/otel/sdk v1.12.0
+	go.opentelemetry.io/otel/sdk/metric v0.35.0
+	go.opentelemetry.io/otel/trace v1.12.0
 	golang.org/x/exp v0.0.0-20230131160201-f062dba9d201
 	google.golang.org/grpc v1.52.3
 	k8s.io/api v0.26.1
@@ -96,8 +96,8 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.5 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.35.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.35.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.11.2 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.11.2 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.12.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.12.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect

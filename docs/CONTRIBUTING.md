@@ -95,7 +95,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
 1. Enter the following in a browser to view the website:
     ```
-    http://localhost:1313/
+    http://localhost:1314/
     ```
 
    **Caveat:** If you are working on multiple doc sets that build with Hugo,
@@ -103,6 +103,11 @@ Note that Hugo updates the rendered documentation each time you write the file.
    or you will run into some issues on port 1313.
 
 1. Use Ctrl+C to stop the local Hugo server when you are done.
+
+1. To restart the continuous build:
+
+   - Restart Docker-Desktop, if necessary
+   - Run `make server`
 
 ### Building markdown files without Hugo
 

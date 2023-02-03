@@ -15,7 +15,7 @@ import (
 
 type KeptnPrometheusProvider struct {
 	Log        logr.Logger
-	httpClient http.Client
+	HttpClient http.Client
 }
 
 // EvaluateQuery fetches the SLI values from prometheus provider
@@ -25,7 +25,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, objective k
 
 	queryTime := time.Now().UTC()
 	r.Log.Info("Running query: /api/v1/query?query=" + objective.Query + "&time=" + queryTime.String())
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.httpClient})
+	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
 	if err != nil {
 		return "", nil, err
 	}

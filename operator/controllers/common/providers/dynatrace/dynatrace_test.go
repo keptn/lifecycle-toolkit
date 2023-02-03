@@ -116,9 +116,9 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 	fakeClient := fake.NewClient()
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: query,
@@ -160,9 +160,9 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 	fakeClient := fake.NewClient(apiToken)
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: "myquery",
@@ -193,9 +193,9 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	fakeClient := fake.NewClient()
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: "myquery",
@@ -219,9 +219,9 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 	fakeClient := fake.NewClient()
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: "myquery",
@@ -261,9 +261,9 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 	fakeClient := fake.NewClient(apiToken)
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: "myquery",
@@ -305,9 +305,9 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	fakeClient := fake.NewClient(apiToken)
 
 	kdp := KeptnDynatraceProvider{
-		httpClient: http.Client{},
+		HttpClient: http.Client{},
 		Log:        ctrl.Log.WithName("testytest"),
-		k8sClient:  fakeClient,
+		K8sClient:  fakeClient,
 	}
 	obj := klcv1alpha2.Objective{
 		Query: "myquery",

@@ -15,8 +15,8 @@ import (
 
 type KeptnDynatraceProvider struct {
 	Log        logr.Logger
-	httpClient http.Client
-	k8sClient  client.Client
+	HttpClient http.Client
+	K8sClient  client.Client
 }
 
 type DynatraceResponse struct {
@@ -48,13 +48,13 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, objective kl
 		return "", nil, err
 	}
 
-	token, err := getDTSecret(ctx, provider, d.k8sClient)
+	token, err := getDTSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return "", nil, err
 	}
 
 	req.Header.Set("Authorization", "Api-Token "+token)
-	res, err := d.httpClient.Do(req)
+	res, err := d.HttpClient.Do(req)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
 		return "", nil, err

@@ -8,6 +8,9 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/dynatrace"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/keptnmetric"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/prometheus"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -20,26 +23,25 @@ type KeptnSLIProvider interface {
 func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 	switch strings.ToLower(provider) {
 	case PrometheusProviderName:
-		return &KeptnPrometheusProvider{
-			httpClient: http.Client{},
+		return &prometheus.KeptnPrometheusProvider{
+			HttpClient: http.Client{},
 			Log:        log,
 		}, nil
 	case DynatraceProviderName:
-		return &KeptnDynatraceProvider{
-			httpClient: http.Client{},
+		return &dynatrace.KeptnDynatraceProvider{
+			HttpClient: http.Client{},
 			Log:        log,
-			k8sClient:  k8sClient,
+			K8sClient:  k8sClient,
 		}, nil
 	case DynatraceDQLProviderName:
-		return &KeptnDynatraceProvider{
-			httpClient: http.Client{},
-			Log:        log,
-			k8sClient:  k8sClient,
-		}, nil
+		return dynatrace.NewKeptnDynatraceDQLProvider(
+			k8sClient,
+			dynatrace.WithLogger(log),
+		)
 	case KeptnMetricProviderName:
-		return &KeptnMetricProvider{
+		return &keptnmetric.KeptnMetricProvider{
 			Log:       log,
-			k8sClient: k8sClient,
+			K8sClient: k8sClient,
 		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider)

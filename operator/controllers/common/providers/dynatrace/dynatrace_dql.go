@@ -1,46 +1,42 @@
 package dynatrace
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	"io"
 	"net/http"
 	"net/url"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 	"time"
+
+	"github.com/go-logr/logr"
+	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	dtclient "github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/dynatrace/client"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type KeptnDynatraceDQLProvider struct {
-	Log        logr.Logger
-	httpClient http.Client
-	k8sClient  client.Client
-}
+type keptnDynatraceDQLProvider struct {
+	log       logr.Logger
+	k8sClient client.Client
 
-type DynatraceOAuthResponse struct {
-	accessToken string `json:"access_token"`
+	dtClient dtclient.DTAPIClient
 }
 
 type DynatraceDQLHandler struct {
-	requestToken string `json:"requestToken"`
+	RequestToken string `json:"requestToken"`
 }
 
 type DynatraceDQLResult struct {
-	state  string    `json:"state"`
-	result DQLResult `json:"result,omitempty"`
+	State  string    `json:"state"`
+	Result DQLResult `json:"result,omitempty"`
 }
 
 type DQLResult struct {
-	records []DQLRecord `json:"records"`
+	Records []DQLRecord `json:"records"`
 }
 
 type DQLRecord struct {
-	value DQLMetric `json:"value"`
+	Value DQLMetric `json:"value"`
 }
 
 type DQLMetric struct {
@@ -51,172 +47,147 @@ type DQLMetric struct {
 	max   float64 `json:"max"`
 }
 
+type KeptnDynatraceDQLProviderOption func(provider *keptnDynatraceDQLProvider)
+
+func WithDTAPIClient(dtApiClient dtclient.DTAPIClient) KeptnDynatraceDQLProviderOption {
+	return func(provider *keptnDynatraceDQLProvider) {
+		provider.dtClient = dtApiClient
+	}
+}
+
+func WithLogger(logger logr.Logger) KeptnDynatraceDQLProviderOption {
+	return func(provider *keptnDynatraceDQLProvider) {
+		provider.log = logger
+	}
+}
+
+func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatraceDQLProviderOption) (*keptnDynatraceDQLProvider, error) {
+	provider := &keptnDynatraceDQLProvider{
+		log:       logr.Logger{},
+		k8sClient: k8sClient,
+	}
+
+	for _, o := range opts {
+		o(provider)
+	}
+
+	return provider, nil
+}
+
 // EvaluateQuery fetches the SLI values from dynatrace provider
-func (d *KeptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
-	// auth
-	jwt, err := d.doOAuth(ctx, provider)
-	if err != nil {
-		return "", []byte{}, nil
+func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
+	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
+		return "", nil, err
 	}
 	// submit DQL
-	dqlHandler, err := d.postDQL(ctx, jwt, provider.Spec.TargetServer, objective.Query)
+	dqlHandler, err := d.postDQL(ctx, objective.Query)
 	if err != nil {
-		d.Log.Error(err, "Error while posting the DQL query: %s", objective.Query)
+		d.log.Error(err, "Error while posting the DQL query: %s", objective.Query)
 		return "", nil, err
 	}
 	// attend result
-	results, err := d.getDQL(ctx, jwt, provider.Spec.TargetServer, dqlHandler)
+	results, err := d.getDQL(ctx, *dqlHandler)
 	if err != nil {
-		d.Log.Error(err, "Error while waiting for DQL query: %s", dqlHandler)
+		d.log.Error(err, "Error while waiting for DQL query: %s", dqlHandler)
 		return "", nil, err
 	}
 	// parse result
-	if len(results.records) > 1 {
-		d.Log.Info("More than a single result, the first one will be used")
+	if len(results.Records) > 1 {
+		d.log.Info("More than a single result, the first one will be used")
 	}
-	if len(results.records) == 0 {
+	if len(results.Records) == 0 {
 		return "", nil, ErrInvalidResult
 	}
-	r := fmt.Sprintf("%f", results.records[0].value.avg)
+	r := fmt.Sprintf("%f", results.Records[0].Value.avg)
 	b, err := json.Marshal(results)
 	if err != nil {
-		d.Log.Error(err, "Error marshaling DQL results")
+		d.log.Error(err, "Error marshaling DQL results")
 	}
 	return r, b, nil
 }
 
-func (d *KeptnDynatraceDQLProvider) getScopes() string {
+func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider) error {
+	// try to initialize the DT API Client if it has not been set in the options
+	if d.dtClient == nil {
+		secret, err := getDTSecret(ctx, provider, d.k8sClient)
+		if err != nil {
+			return err
+		}
+		config, err := dtclient.NewAPIConfig(
+			provider.Spec.TargetServer,
+			secret,
+			dtclient.WithScopes(d.getScopes()),
+		)
+		if err != nil {
+			return err
+		}
+		d.dtClient = dtclient.NewAPIClient(*config, dtclient.WithLogger(d.log))
+	}
+	return nil
+}
+
+func (d *keptnDynatraceDQLProvider) getScopes() string {
 	return "storage:metrics:read environment:roles:viewer"
 }
 
-func (d *KeptnDynatraceDQLProvider) doOAuth(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider) (jwt DynatraceOAuthResponse, err error) {
-	d.Log.V(10).Info("OAuth login")
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
-	secret, err := getDTSecret(ctx, provider, d.k8sClient)
-	if err != nil {
-		return jwt, err
-	}
-	if err := validateOAuthSecret(secret); err != nil {
-		return jwt, err
-	}
-	secretParts := strings.Split(secret, ".")
-	clientId := fmt.Sprintf("%s.%s", secretParts[0], secretParts[1])
-	clientSecret := fmt.Sprintf("%s.%s", clientId, secretParts[2])
-	values := url.Values{}
-	values.Add("grant_type", "client_credentials")
-	values.Add("scope", d.getScopes())
-	values.Add("client_id", clientId)
-	values.Add("client_secret", clientSecret)
-	body := []byte(values.Encode())
-	authURL := "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
-	req, err := http.NewRequestWithContext(ctx, "POST", authURL, bytes.NewBuffer(body))
-	if err != nil {
-		return jwt, err
-	}
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	res, err := d.httpClient.Do(req)
-	if err != nil {
-		return jwt, err
-	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, "Could not close request body")
-		}
-	}()
-	// we ignore the error here because we fail later while unmarshalling
-	b, _ := io.ReadAll(res.Body)
-	err = json.Unmarshal(b, &jwt)
-	if err != nil {
-		return jwt, err
-	}
-	return jwt, nil
-}
-
-func (d *KeptnDynatraceDQLProvider) postDQL(ctx context.Context, jwt DynatraceOAuthResponse, server, query string) (dqlHandler DynatraceDQLHandler, err error) {
-	d.Log.V(10).Info("posting DQL")
+func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (*DynatraceDQLHandler, error) {
+	d.log.V(10).Info("posting DQL")
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	values := url.Values{}
 	values.Add("query", query)
 
-	api := fmt.Sprintf("%s/platform/storage/query/v0.7/query:execute?%s", server, values.Encode())
-	req, err := http.NewRequestWithContext(ctx, "POST", api, bytes.NewBuffer([]byte(`{}`)))
+	path := fmt.Sprintf("/platform/storage/query/v0.7/query:execute?%s", values.Encode())
+
+	b, err := d.dtClient.Do(ctx, path, http.MethodPost, []byte(`{}`))
 	if err != nil {
-		return dqlHandler, err
+		return nil, err
 	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", jwt.accessToken))
-	res, err := d.httpClient.Do(req)
-	if err != nil {
-		return dqlHandler, err
-	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, "Could not close request body")
-		}
-	}()
-	// we ignore the error here because we fail later while unmarshalling
-	b, _ := io.ReadAll(res.Body)
+
+	dqlHandler := &DynatraceDQLHandler{}
 	err = json.Unmarshal(b, &dqlHandler)
 	if err != nil {
-		return dqlHandler, err
+		return nil, err
 	}
 	return dqlHandler, nil
 }
 
-func (d *KeptnDynatraceDQLProvider) getDQL(ctx context.Context, jwt DynatraceOAuthResponse, server string, handler DynatraceDQLHandler) (*DQLResult, error) {
-	d.Log.V(10).Info("posting DQL")
+func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler DynatraceDQLHandler) (*DQLResult, error) {
+	d.log.V(10).Info("posting DQL")
 	for true {
-		r, err := d.retrieveDQLResults(ctx, jwt, server, handler)
+		r, err := d.retrieveDQLResults(ctx, handler)
 		if err != nil {
 			return &DQLResult{}, err
 		}
-		if r.state == "SUCCEEDED" {
-			return &r.result, nil
+		if r.State == "SUCCEEDED" {
+			return &r.Result, nil
 		}
-		d.Log.V(10).Info("DQL not finished, got: %s", r.state)
+		d.log.V(10).Info("DQL not finished, got: %s", r.State)
 		time.Sleep(5 * time.Second)
 	}
 	return nil, errors.New("something went wrong while waiting for the DQL to be finished")
 }
 
-func (d *KeptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, jwt DynatraceOAuthResponse, server string, handler DynatraceDQLHandler) (result DynatraceDQLResult, err error) {
-	d.Log.V(10).Info("Getting DQL")
+func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, handler DynatraceDQLHandler) (*DynatraceDQLResult, error) {
+	d.log.V(10).Info("Getting DQL")
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	values := url.Values{}
-	values.Add("request-token", handler.requestToken)
+	values.Add("request-token", handler.RequestToken)
 
-	api := fmt.Sprintf("%s/platform/storage/query/v0.7/query:poll?%s", server, values.Encode())
-	req, err := http.NewRequestWithContext(ctx, "GET", api, nil)
+	path := fmt.Sprintf("/platform/storage/query/v0.7/query:poll?%s", values.Encode())
+
+	b, err := d.dtClient.Do(ctx, path, http.MethodGet, nil)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return result, err
+		return nil, err
 	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", jwt.accessToken))
-	res, err := d.httpClient.Do(req)
-	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return result, err
-	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, "Could not close request body")
-		}
-	}()
-	// we ignore the error here because we fail later while unmarshalling
-	b, _ := io.ReadAll(res.Body)
+
+	result := &DynatraceDQLResult{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
-		d.Log.Error(err, "Error while parsing response")
+		d.log.Error(err, "Error while parsing response")
 		return result, err
 	}
 	return result, nil

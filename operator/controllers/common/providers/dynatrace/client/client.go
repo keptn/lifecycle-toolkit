@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"k8s.io/klog/v2"
 	"net/http"
 	"net/url"
 	"strings"
@@ -18,7 +19,7 @@ const defaultAuthURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
 const defaultScopes = "storage:metrics:read environment:roles:viewer"
 
 type OAuthResponse struct {
-	AccessToken string `json:"access_token"`
+	AccessToken string `json:"accessToken"`
 }
 
 type OAuthCredentials struct {
@@ -111,7 +112,7 @@ func WithHTTPClient(httpClient http.Client) APIClientOption {
 
 func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 	client := &apiClient{
-		Log:        logr.Logger{},
+		Log:        logr.New(klog.NewKlogr().GetSink()),
 		httpClient: http.Client{},
 		config:     config,
 	}

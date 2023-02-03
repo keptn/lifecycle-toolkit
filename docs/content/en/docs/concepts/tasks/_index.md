@@ -55,7 +55,7 @@ spec:
 ```
 A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
-To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2

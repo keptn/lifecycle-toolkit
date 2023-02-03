@@ -53,7 +53,6 @@ spec:
         name = data.name
         console.log("Hello, " + name + " new");
 ```
-A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
 The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
 

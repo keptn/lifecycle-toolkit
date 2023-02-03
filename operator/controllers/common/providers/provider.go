@@ -37,7 +37,7 @@ func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (Kep
 		return dynatrace.NewKeptnDynatraceDQLProvider(
 			k8sClient,
 			dynatrace.WithLogger(log),
-		)
+		), nil
 	case KeptnMetricProviderName:
 		return &keptnmetric.KeptnMetricProvider{
 			Log:       log,

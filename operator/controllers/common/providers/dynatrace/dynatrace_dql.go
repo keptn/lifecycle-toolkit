@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"k8s.io/klog/v2"
 	"net/http"
 	"net/url"
 	"time"
@@ -40,11 +41,11 @@ type DQLRecord struct {
 }
 
 type DQLMetric struct {
-	count int64   `json:"count"`
-	sum   float64 `json:"sum"`
-	min   float64 `json:"min"`
-	avg   float64 `json:"avg"`
-	max   float64 `json:"max"`
+	Count int64   `json:"count"`
+	Sum   float64 `json:"sum"`
+	Min   float64 `json:"min"`
+	Avg   float64 `json:"avg"`
+	Max   float64 `json:"max"`
 }
 
 type KeptnDynatraceDQLProviderOption func(provider *keptnDynatraceDQLProvider)
@@ -61,9 +62,9 @@ func WithLogger(logger logr.Logger) KeptnDynatraceDQLProviderOption {
 	}
 }
 
-func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatraceDQLProviderOption) (*keptnDynatraceDQLProvider, error) {
+func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatraceDQLProviderOption) *keptnDynatraceDQLProvider {
 	provider := &keptnDynatraceDQLProvider{
-		log:       logr.Logger{},
+		log:       logr.New(klog.NewKlogr().GetSink()),
 		k8sClient: k8sClient,
 	}
 
@@ -71,7 +72,7 @@ func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatrac
 		o(provider)
 	}
 
-	return provider, nil
+	return provider
 }
 
 // EvaluateQuery fetches the SLI values from dynatrace provider
@@ -98,7 +99,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, objective
 	if len(results.Records) == 0 {
 		return "", nil, ErrInvalidResult
 	}
-	r := fmt.Sprintf("%f", results.Records[0].Value.avg)
+	r := fmt.Sprintf("%f", results.Records[0].Value.Avg)
 	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
@@ -155,7 +156,7 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (
 
 func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler DynatraceDQLHandler) (*DQLResult, error) {
 	d.log.V(10).Info("posting DQL")
-	for true {
+	for {
 		r, err := d.retrieveDQLResults(ctx, handler)
 		if err != nil {
 			return &DQLResult{}, err

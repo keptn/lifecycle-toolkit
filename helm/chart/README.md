@@ -5,7 +5,8 @@ KLT introduces a more cloud-native approach for pre- and post-deployment, as wel
 
 ### OpenTelemetry
 
-| Name                | Description                                   | Value                 |
-| ------------------- | --------------------------------------------- | --------------------- |
-| `otelCollector.url` | Sets the URL for the open telemetry collector | `otel-collector:4317` |
+| Name                         | Description                                          | Value                 |
+| ---------------------------- | ---------------------------------------------------- | --------------------- |
+| `otelCollector.url`          | Sets the URL for the open telemetry collector        | `otel-collector:4317` |
+| `deployment.imagePullPolicy` | Sets the image pull policy for kubernetes deployment | `Always`              |
 

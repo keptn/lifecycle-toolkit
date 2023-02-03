@@ -9,23 +9,28 @@ spec:
     spec:
       containers:
         - name: manager
+          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"
 
 
-#---
-#apiVersion: apps/v1 #example patch for certmanager
-#kind: Deployment
-#metadata:
-#  name: cert-manager
-#  namespace: system
-#spec:
-#  template:
-#    spec:
-#      containers:
-#        - name: manager
-#          env:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+        - name: manager
+          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+
+          env:
 #            - name: NEW_ENV_VAR
 #              value: "{{ .Values.myNewEnvVar }}"
 
@@ -40,6 +45,8 @@ spec:
     spec:
       containers:
         - name: keptn-scheduler
+          imagePullPolicy: "{{ .Values.deployment.imagePullPolicy | default Always }}"
+
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"

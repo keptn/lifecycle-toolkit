@@ -18,7 +18,7 @@ const defaultAuthURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
 const defaultScopes = "storage:metrics:read environment:roles:viewer"
 
 type OAuthResponse struct {
-	accessToken string `json:"access_token"`
+	AccessToken string `json:"access_token"`
 }
 
 type OAuthCredentials struct {
@@ -187,6 +187,6 @@ func (client *apiClient) Auth(ctx context.Context) error {
 		return err
 	}
 
-	client.config.oAuthCredentials.accessToken = oauthResponse.accessToken
+	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken
 	return nil
 }

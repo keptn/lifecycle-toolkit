@@ -98,9 +98,10 @@ Note that Hugo updates the rendered documentation each time you write the file.
     http://localhost:1314/
     ```
 
-   **Caveat:** If you are working on multiple doc sets that build with Hugo,
-   be sure that you are serving only one of them at a time on your system
-   or you will run into some issues on port 1313.
+   **Note:** By default, Hugo serves the local docs on port 1313.
+   We have modified that port for the lifecycle-toolkit docs
+   to avoid conflicts with the keptn.github.io docs, which use
+   port 1313 for local builds.
 
 1. Use Ctrl+C to stop the local Hugo server when you are done.
 

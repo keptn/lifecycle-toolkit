@@ -3,6 +3,9 @@ title: Getting Started
 linktitle: Getting Started
 description: Learn how to use the Keptn Lifecycle Toolkit.
 weight: 15
+cascade:
+  github_subdir: "docs/content/en/docs"
+  path_base_for_github_subdir: "/content/en/docs-dev"
 ---
 
 The Keptn Lifecycle Toolkit makes your deployments observable, brings application-awareness to your Kubernetes cluster and helps you reliably delivering your application with:

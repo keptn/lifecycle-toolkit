@@ -1,4 +1,4 @@
-[---
+---
 title: Tasks
 description: Learn what Keptn Tasks are and how to use them
 icon: concepts
@@ -35,27 +35,10 @@ spec:
         console.log("Deployment Task has been executed");
 ```
 
-In the code section, it is possible to define a full-fletched Deno script. An example for that would be:
+In the code section, it is possible to define a full-fletched Deno script.
+A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-keptn-inline
-spec:
-  function:
-    inline:
-      code: |
-        let text = Deno.env.get("DATA");
-        let data;
-        let name;
-        data = JSON.parse(text);
-        
-        name = data.name
-        console.log("Hello, " + name + " new");
-```
-
-The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
@@ -67,6 +50,8 @@ spec:
     httpRef:
       url: <url>
 ```
+
+An example is available [here](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
 
 Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
@@ -100,4 +85,3 @@ Here, the `secret` value is the K8s secret name that will be mounted into the ru
 A Task is responsible for executing the TaskDefinition of a workload.
 The execution is done spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
-](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yam)

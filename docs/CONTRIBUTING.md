@@ -95,7 +95,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
 1. Enter the following in a browser to view the website:
     ```
-    http://localhost:1314/
+    http://localhost:1313/docs-dev/
     ```
 
    **Note:** By default, Hugo serves the local docs on port 1313.
@@ -108,6 +108,9 @@ Note that Hugo updates the rendered documentation each time you write the file.
 1. To restart the continuous build:
 
    - Restart Docker-Desktop, if necessary
+   - If changes have been made to the build tools:
+     - make clone
+     - make build
    - Run `make server`
 
 ### Building markdown files without Hugo
@@ -405,10 +408,27 @@ Each topical subdirectory contains:
   - An *assets* subdirectory where graphical files for that topic are stored.
 No *assets* subdirectory is present if the topic has no graphics.
 
-## Guidelines for working on documentation in development or already released documentation
+## Guidelines for working on documentation in development versus already released documentation
 
 [This material will be provided when we define the versioning scheme to use]
 
 **Documentation for new features**
 
+Most documentation changes should be made to the docs-dev branch,
+which means creating a PR in the `lifecycle-toolkit` repository
+under the `docs/content/en/docs` directory.
+You can view the local build as described above.
+We are releasing new versions of the software frequently
+so this makes new content available reasonably quickly.
+
 **Documentation for published docs**
+
+If a critical problem needs to be solved immediately,
+you can modify the documentation source in the sandbox.
+In this case, modify the files in the
+`keptn-sandbox/lifecycle-toolkit-docs` repository directly.
+You can view these changes locally on the `localhost:1314` port.
+
+Note that changes made to the docs in the sandbox
+will be overwritten so the same changes should be applied
+to the corresponding doc source in the `lifecycle-toolkit` documentation.

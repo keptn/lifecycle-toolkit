@@ -77,4 +77,5 @@ runs:
       shell: bash
       run: |
         echo "Installing KLT using helm"
+        kubectl delete crds --all -n keptn-lifecycle-toolkit-system
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz --set deployment.imagePullPolicy=Never --debug --wait --timeout 1m

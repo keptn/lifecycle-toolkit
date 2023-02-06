@@ -66,6 +66,7 @@ jobs:
           name: manifests
           path: |
             ./dist/*-manifest/
+            ./dist/*-manifest-test/
 
       - name: Upload images
         uses: actions/upload-artifact@v3

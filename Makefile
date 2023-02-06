@@ -49,9 +49,18 @@ release-helm-manifests:
 	kustomize build ./helm/overlay > ./helm/chart/templates/rendered.yaml
 
 .PHONY: helm-package
-helm-package: build-release-manifests release-helm-manifests
+helm-package: clean-helm-charts build-release-manifests release-helm-manifests clean-helm-yaml
 	cd ./helm && helm package ./chart
 	cd ./helm && mv keptn-lifecycle-toolkit-*.tgz ./chart/charts
+
+.PHONY: clean-helm-charts
+clean-helm-charts:
+	rm -r ./helm/chart/charts/keptn-lifecycle-toolkit-*.tgz
+
+.PHONY: clean-helm-yaml
+clean-helm-yaml:
+	sed -i "s/'{{/{{/g" ./helm/chart/templates/rendered.yaml
+	sed -i "s/}}'/}}/g" ./helm/chart/templates/rendered.yaml
 
 .PHONY: build-release-manifests
 build-release-manifests:

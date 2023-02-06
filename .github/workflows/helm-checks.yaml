@@ -130,7 +130,7 @@ jobs:
         run: |
           make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
           sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ./helm/chart/templates/rendered.yaml
-          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/templates/rendered.yaml        
+          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/templates/rendered.yaml        
           rm -r ./helm/chart/charts
 
       - name: Upload KLT helm charts archive

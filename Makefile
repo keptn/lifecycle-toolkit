@@ -55,7 +55,9 @@ helm-package: clean-helm-charts build-release-manifests release-helm-manifests c
 
 .PHONY: clean-helm-charts
 clean-helm-charts:
-	rm -r ./helm/chart/charts/keptn-lifecycle-toolkit-*.tgz -type f 2>/dev/null
+	@if test -f "/helm/chart/charts/keptn-lifecycle-toolkit-*.tgz" ; then \
+		rm "./helm/chart/charts/keptn-lifecycle-toolkit-*.tgz"; \
+	fi
 
 .PHONY: clean-helm-yaml
 clean-helm-yaml:

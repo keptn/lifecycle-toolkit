@@ -152,7 +152,7 @@ Perform the following steps to create a copy of this repository on your local ma
 1. Fork the Keptn repository:
 
      - Log into GitHub (or create a GitHub account and then log into it).
-     - Go to the [Keptn docs repository](https://github.com/keptn/keptn.github.io).
+     - Go to the [Keptn lifecycle-toolkit repository](https://github.com/keptn/lifecycle-toolkit).
      - Click the **Fork** button at the top of the screen.
      - Choose the user for the fork from the options you are given,
        usually your GitHub ID.
@@ -170,7 +170,7 @@ Perform the following steps to create a copy of this repository on your local ma
     to clone the forked repository to a directory on your local machine,
     pasting in the URl you saved in the previous step:
     ```
-    git clone https://github.com/<UserName>/keptn.github.io
+    git clone https://github.com/<UserName>/lifecycle-toolkit
     ```
     or
     ```
@@ -187,7 +187,7 @@ Perform the following steps to create a copy of this repository on your local ma
    - Type the following to associate `upstream` with your clone,
      pasting in the string for the main repo that you copied above.:
      ```
-     git remote add upstream https://github.com/keptn/keptn.github.io.git 
+     git remote add upstream https://github.com/keptn/lifecycle-toolkit.git 
      ```
 ### Create a new branch and make your changes
 
@@ -225,7 +225,7 @@ it is generally better to work on files in your local clone.
    git status
    ```
 
-3. Do the writing you want to do in your local branch, checking the formatted version at `localhost:1313`.
+3. Do the writing you want to do in your local branch, checking the formatted version at `localhost:1314/docs-dev`.
 
 4. When you have completed the writing you want to do, close all files in your branch and run `git status` to confirm that it correctly reflects the files you have modified, added, and deleted.
 
@@ -252,7 +252,7 @@ Git responds with an error message that gives you the full command line to use; 
      git push <need options/arguments>
      ```
 
-6. Create the PR by going to the [keptn.github.io](https://github.com/keptn/keptn.github.io) GitHub repository.
+6. Create the PR by going to the [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit) GitHub repository.
    - You should see a yellow shaded area that says something like:
      ```
      <GitID>:<branch> had recent pushes less than a minute ago
@@ -298,7 +298,7 @@ People can still review the content but can not merge the PR until you remove th
 
 Licensing is very important to open source projects. It helps ensure the software continues to be available under the terms that the author desired.
 
-Keptn uses [Apache License 2.0](https://github.com/keptn/keptn.github.io/blob/master/LICENSE) to strike a balance between open contributions and allowing you to use the software however you would like to.
+Keptn uses [Apache License 2.0](https://github.com/keptn/lifecycle-toolkit/blob/main/LICENSE) to strike a balance between open contributions and allowing you to use the software however you would like to.
 
 The license tells you what rights you have that are provided by the copyright holder. It is important that the contributor fully understands what rights they are licensing and agrees to them. Sometimes the copyright holder isn't the contributor, such as when the contributor is doing work on behalf of a company.
 
@@ -360,21 +360,25 @@ The DCO text can either be manually added to your commit body, or you can add ei
 - https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5
 - https://thesofproject.github.io/latest/contribute/contribute_guidelines.html
 
-## Source file structure [NOT YET UPDATED FOR KLT!]
+## Source file structure [Preliminary]
 
-The source files for the [Keptn Documentation](https://keptn.sh/docs/) are stored under the *content/docs* directory in the repository.
-The build strategy is to build everything except for the files/folders that are listed in the `ignoreFiles` array in the [config.toml](https://github.com/keptn/keptn.github.io/blob/master/config.toml) file.
+The source files for the [Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs) are stored under the *docs/content/en/docs* directory in the repository.
+The build strategy is to build everything except for:
+
+* The files/folders that are listed in the `ignoreFiles` array in the [config.toml](https://github.com/keptn/keptn.github.io/blob/master/config.toml) file
+* Files that include the `hidden: true` string in the file's metadata section
 
 The order in which the files are displayed is determined by the value of the `weight` field in the metadata section of *_index.md* and *index.md* files located throughout the directory tree.
 
-The metadata section of these files contains at least four fields.
-As an example, the metadata section for the *Concepts* section of the documentation is:
+The metadata section of these files contains at least three fields.
+As an example, the metadata section for the *Concepts* section of the documentation includes the following fields:
 
 ```
 title: Concepts
-description: Learn about the core concepts, use-cases, and architecture of Keptn.
-weight: 2
+description: Learn about underlying concepts of the keptn lifecycle toolkit.
 icon: concepts
+layout: quickstart
+weight: 50
 ```
 
 The meaning of these fields is:
@@ -382,9 +386,12 @@ The meaning of these fields is:
 * **title** -- title displayed for the section or file
 * **description** -- subtext displayed for the section or subsection
 * **weight** -- order in which section or subsection is desplayed relative to other sections and subsections at the same level.
-In this case, the weight of 2 means that this section is displayed after *Quick Start* (which has a weight of 1) and before *Roadmap* (which has a weight of 3).
-* **icon** -- determines the icon displayed next to titles in content listings.  Values used in the Keptn docs include `concepts`, `docs`, `setup`, `tasks`, `setup`, and `reference`.
-You can explore the various options used by comparing the doc output with the values used for this field.
+In this case, the weight of 50 means that this section is displayed
+after sections that have weights of 49 and lower
+and before sections that have weights of 51 and higher.
+If two files have the same weight,
+their order is determined alphabetically,
+but this is a bad practice.
 
 Some other fields are sometimes used in the metadata.
 

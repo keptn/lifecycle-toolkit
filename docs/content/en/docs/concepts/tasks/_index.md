@@ -92,7 +92,7 @@ spec:
 
 A context environment variable is available via `Deno.env.get("CONTEXT")`. It can be used like this:
 
-```
+```javascript
 let context = Deno.env.get("CONTEXT");
 
 if (contextdata.objectType == "Application") {
@@ -118,7 +118,7 @@ It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
 For example:
 
-```
+```yaml
 # kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 
 apiVersion: lifecycle.keptn.sh/v1alpha1
@@ -138,7 +138,7 @@ spec:
 
 This methodology supports multiple variables by creating a K8s secret with a JSON string:
 
-```
+```yaml
 # kubectl create secret generic my-secret \
 # --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
 

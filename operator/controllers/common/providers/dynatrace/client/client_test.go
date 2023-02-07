@@ -23,7 +23,7 @@ func TestAPIClient(t *testing.T) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
-			_, _ = writer.Write([]byte(`{"accessToken": "my-token"}`))
+			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
 			return
 		}
 		_, _ = writer.Write([]byte("success"))
@@ -47,7 +47,7 @@ func TestAPIClient(t *testing.T) {
 		serverURL: server.URL,
 		authURL:   server.URL + "/auth",
 		oAuthCredentials: OAuthCredentials{
-			clientID:     "dts08.XX",
+			clientID:     "dt0s08.XX",
 			clientSecret: mockSecret,
 			scopes:       "my-scopes",
 		},

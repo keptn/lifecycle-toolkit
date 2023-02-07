@@ -10,7 +10,7 @@ cascade:
 
 `kubectl create -f deployment.yaml` will "blindly" deploy workloads, but who needs to be notified that this deployment is about to happen? Is your infrastructure ready? Do your downstream services meet their SLOs? Can your infrastructure handle the deployment?
 
-After the deployment, beyond the standard k8s probes, how can you integrate with other tooling to automatically test the deployment? How do you know the deployment is meeting its SLOs? Has the deployment caused any issues downstream? Who needs to know that teh deployment was successful (or unsuccessful)?
+After the deployment, beyond the standard k8s probes, how can you integrate with other tooling to automatically test the deployment? How do you know the deployment is meeting its SLOs? Has the deployment caused any issues downstream? Who needs to know that the deployment was successful (or unsuccessful)?
 
 The Keptn Lifecycle Toolkit (KLT) "wraps" a standard Kubernetes deployment and provides both workload (single service) tests and SLO evaluations. Multiple workloads can also be logically grouped (and evaluated) as a single cohesive unit: a Keptn Application. In other words, an application is a collection of multiple workloads.
 

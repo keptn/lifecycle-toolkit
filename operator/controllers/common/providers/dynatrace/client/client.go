@@ -98,18 +98,21 @@ type apiClient struct {
 
 type APIClientOption func(client *apiClient)
 
+// WithLogger injects the given logger into an APIClient
 func WithLogger(logger logr.Logger) APIClientOption {
 	return func(client *apiClient) {
 		client.Log = logger
 	}
 }
 
+// WithHTTPClient injects the given HTTP client into an APIClient
 func WithHTTPClient(httpClient http.Client) APIClientOption {
 	return func(client *apiClient) {
 		client.httpClient = httpClient
 	}
 }
 
+// NewAPIClient creates and returns a new APIClient
 func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 	client := &apiClient{
 		Log:        logr.New(klog.NewKlogr().GetSink()),
@@ -124,8 +127,9 @@ func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 	return client
 }
 
+// Do sends and API request to the Dynatrace API and returns its result as a string containing the raw response payload
 func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, error) {
-	if err := client.Auth(ctx); err != nil {
+	if err := client.auth(ctx); err != nil {
 		return nil, err
 	}
 	api := fmt.Sprintf("%s%s", client.config.serverURL, path)
@@ -153,7 +157,7 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 	return b, nil
 }
 
-func (client *apiClient) Auth(ctx context.Context) error {
+func (client *apiClient) auth(ctx context.Context) error {
 	// return if we already have a token
 	if client.config.oAuthCredentials.accessToken != "" {
 		return nil

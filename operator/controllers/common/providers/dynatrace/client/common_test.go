@@ -14,7 +14,7 @@ func Test_validateOAuthSecret(t *testing.T) {
 	}{
 		{
 			name:   "good token",
-			input:  "dts08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+			input:  "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 			result: nil,
 		},
 		{
@@ -36,12 +36,9 @@ func Test_validateOAuthSecret(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			e := validateOAuthSecret(tt.input)
-			if tt.result != nil {
-				require.ErrorIs(t, e, tt.result)
-			} else {
-				require.Nil(t, tt.result)
-			}
+			err := validateOAuthSecret(tt.input)
+
+			require.ErrorIs(t, err, tt.result)
 		})
 
 	}

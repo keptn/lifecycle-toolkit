@@ -68,6 +68,7 @@ func WithLogger(logger logr.Logger) KeptnDynatraceDQLProviderOption {
 	}
 }
 
+// NewKeptnDynatraceDQLProvider creates and returns a new KeptnDynatraceDQLProvider
 func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatraceDQLProviderOption) *keptnDynatraceDQLProvider {
 	provider := &keptnDynatraceDQLProvider{
 		log:       logr.New(klog.NewKlogr().GetSink()),

@@ -8,6 +8,7 @@ import (
 )
 
 var ErrClientSecretInvalid = errors.New("the Dynatrace token has an invalid format")
+var ErrRequestFailed = errors.New("the API returned a response with a status outside of the 2xx range")
 
 const dtTokenPrefix = "dt0s08"
 

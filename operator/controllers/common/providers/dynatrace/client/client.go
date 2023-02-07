@@ -150,6 +150,9 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 			client.Log.Error(err, "Could not close request body")
 		}
 	}()
+	if isErrorStatus(res.StatusCode) {
+		return nil, ErrRequestFailed
+	}
 	b, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
@@ -184,6 +187,9 @@ func (client *apiClient) auth(ctx context.Context) error {
 			client.Log.Error(err, "Could not close request body")
 		}
 	}()
+	if isErrorStatus(res.StatusCode) {
+		return ErrRequestFailed
+	}
 	// we ignore the error here because we fail later while unmarshalling
 	oauthResponse := OAuthResponse{}
 	b, _ := io.ReadAll(res.Body)
@@ -194,4 +200,8 @@ func (client *apiClient) auth(ctx context.Context) error {
 
 	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken
 	return nil
+}
+
+func isErrorStatus(statusCode int) bool {
+	return statusCode < 200 || statusCode >= 300
 }

@@ -138,12 +138,12 @@ For this demonstration, we use a slightly modified version of
 Over time, we will evolve this application
 from a simple manifest to a Keptn-managed application:
 
-* We will first install it with **kubectl**
-  and add pre- as well as post-deployment tasks.
+* We install it with **kubectl**
+  then add pre- and post-deployment tasks.
   * For this, we check if the entry service is available
     before the other services are scheduled.
-  * We then add evaluations to ensure
-    that our infrastructure is in a good shape before we deploy the application.
+* We then add evaluations to ensure
+    that our infrastructure is in good shape before we deploy the application.
 * Finally, we evolve to a GitOps driven deployment
   and notify an external webhook service when the deployment has finished.
 
@@ -201,6 +201,7 @@ You can watch the state of the pods using:
 kubectl get pods -n podtato-kubectl
 ```
 
+
 Furthermore, you can port-forward the podtato-head service
 to your local machine and access the application via your browser:
 
@@ -208,8 +209,8 @@ to your local machine and access the application via your browser:
 make port-forward-grafana
 ```
  
-In your browser (http://localhost:3000,
-log in with the user 'admin' and the password 'admin').
+In your browser (http://localhost:3000),
+log in with the user `admin` and the password `admin`).
 You can open the Dashboard `Keptn Applications`
 and see the current state of the application,
 which should be similar to the following:

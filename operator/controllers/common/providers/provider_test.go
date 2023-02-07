@@ -4,6 +4,9 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/dynatrace"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/keptnmetric"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/prometheus"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,17 +18,17 @@ func TestFactory(t *testing.T) {
 	}{
 		{
 			name:     PrometheusProviderName,
-			provider: &KeptnPrometheusProvider{},
+			provider: &prometheus.KeptnPrometheusProvider{},
 			err:      false,
 		},
 		{
 			name:     DynatraceProviderName,
-			provider: &KeptnDynatraceProvider{},
+			provider: &dynatrace.KeptnDynatraceProvider{},
 			err:      false,
 		},
 		{
 			name:     KeptnMetricProviderName,
-			provider: &KeptnMetricProvider{},
+			provider: &keptnmetric.KeptnMetricProvider{},
 			err:      false,
 		},
 		{

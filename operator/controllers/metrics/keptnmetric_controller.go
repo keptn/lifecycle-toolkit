@@ -89,7 +89,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
 		r.Log.Error(err, "Failed to retrieve the provider")
-		return ctrl.Result{}, nil
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 	// load the provider
 	provider, err2 := providers.NewProvider(metric.Spec.Provider.Name, r.Log, r.Client)

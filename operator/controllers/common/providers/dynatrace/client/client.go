@@ -19,7 +19,7 @@ const defaultAuthURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
 const defaultScopes = "storage:metrics:read environment:roles:viewer"
 
 type OAuthResponse struct {
-	AccessToken string `json:"accessToken"`
+	AccessToken string `json:"access_token"`
 }
 
 type OAuthCredentials struct {
@@ -135,6 +135,7 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.config.oAuthCredentials.accessToken))
+
 	res, err := client.httpClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -145,7 +146,6 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 			client.Log.Error(err, "Could not close request body")
 		}
 	}()
-	// we ignore the error here because we fail later while unmarshalling
 	b, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err

@@ -88,13 +88,13 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, objective
 	// submit DQL
 	dqlHandler, err := d.postDQL(ctx, objective.Query)
 	if err != nil {
-		d.log.Error(err, "Error while posting the DQL query: %s", objective.Query)
+		d.log.Error(err, "Error while posting the DQL query", "query", objective.Query)
 		return "", nil, err
 	}
 	// attend result
 	results, err := d.getDQL(ctx, *dqlHandler)
 	if err != nil {
-		d.log.Error(err, "Error while waiting for DQL query: %s", dqlHandler)
+		d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
 		return "", nil, err
 	}
 	// parse result
@@ -154,7 +154,7 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (
 	dqlHandler := &DynatraceDQLHandler{}
 	err = json.Unmarshal(b, &dqlHandler)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
 	}
 	return dqlHandler, nil
 }
@@ -170,7 +170,7 @@ func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler Dynatrac
 		if r.State == "SUCCEEDED" {
 			return &r.Result, nil
 		}
-		d.log.V(10).Info("DQL not finished, got: %s", r.State)
+		d.log.V(10).Info("DQL not finished, got", "state", r.State)
 		<-d.clock.After(retryFetchInterval)
 	}
 	return nil, ErrDQLQueryTimeout

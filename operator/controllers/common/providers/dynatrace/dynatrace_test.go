@@ -207,7 +207,7 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	}
 	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the DT API token is missing"))
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 }
 
 func TestEvaluateQuery_SecretNotFound(t *testing.T) {

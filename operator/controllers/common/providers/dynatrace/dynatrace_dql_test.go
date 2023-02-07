@@ -18,7 +18,7 @@ import (
 
 const dqlRequestHandler = `{"requestToken": "my-token"}`
 
-const dqlPayload = "{\"state\":\"SUCCEEDED\",\"result\":{\"records\":[{\"value\":{\"count\":1,\"sum\":36.50,\"min\":36.78336878333334,\"avg\":36.78336878333334,\"max\":36.78336878333334},\"metric.key\":\"dt.containers.cpu.usage_user_milli_cores\",\"timeframe\":{\"start\":\"2023-01-31T09:11:00.000Z\",\"end\":\"2023-01-31T09:12:00.`00Z\"},\"Container\":\"frontend\",\"host.name\":\"default-pool-349eb8c6-gccf\",\"k8s.namespace.name\":\"hipstershop\",\"k8s.pod.uid\":\"632df64d-474c-4410-968d-666f639ad358\"}],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
+const dqlPayload = "{\"state\":\"SUCCEEDED\",\"result\":{\"records\":[{\"value\":{\"count\":1,\"sum\":36.50,\"min\":36.50,\"avg\":36.50,\"max\":36.50},\"metric.key\":\"dt.containers.cpu.usage_user_milli_cores\",\"timeframe\":{\"start\":\"2023-01-31T09:11:00.000Z\",\"end\":\"2023-01-31T09:12:00.`00Z\"},\"Container\":\"frontend\",\"host.name\":\"default-pool-349eb8c6-gccf\",\"k8s.namespace.name\":\"hipstershop\",\"k8s.pod.uid\":\"632df64d-474c-4410-968d-666f639ad358\"}],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
 const dqlPayloadNotFinished = "{\"state\":\"\",\"result\":{\"records\":[{\"value\":{\"count\":1,\"sum\":36.50,\"min\":36.78336878333334,\"avg\":36.50,\"max\":36.50},\"metric.key\":\"dt.containers.cpu.usage_user_milli_cores\",\"timeframe\":{\"start\":\"2023-01-31T09:11:00.000Z\",\"end\":\"2023-01-31T09:12:00.`00Z\"},\"Container\":\"frontend\",\"host.name\":\"default-pool-349eb8c6-gccf\",\"k8s.namespace.name\":\"hipstershop\",\"k8s.pod.uid\":\"632df64d-474c-4410-968d-666f639ad358\"}],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
 
 // TODO reactivate and use constants below
@@ -59,7 +59,7 @@ func TestGetDQL(t *testing.T) {
 
 	require.Nil(t, err)
 	require.NotEmpty(t, raw)
-	require.Equal(t, "36.50", result)
+	require.Equal(t, "36.500000", result)
 }
 
 func TestGetDQLTimeout(t *testing.T) {

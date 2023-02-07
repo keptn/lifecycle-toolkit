@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
@@ -27,7 +26,7 @@ func TestGetSecret_NoKeyDefined(t *testing.T) {
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the DT API token is missing"))
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }
 
@@ -46,7 +45,7 @@ func TestGetSecret_NoSecret(t *testing.T) {
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the DT API token is missing"))
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }
 
@@ -65,6 +64,6 @@ func TestGetSecret_NoTokenData(t *testing.T) {
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the DT API token is missing"))
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }

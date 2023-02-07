@@ -41,4 +41,4 @@ undeploy-podtatohead:
 
 .PHONY: uninstall
 uninstall: undeploy-podtatohead
-	make -C ../observability uninstall
+	make -C ../support/observability uninstall

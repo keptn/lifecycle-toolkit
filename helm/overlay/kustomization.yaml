@@ -11,3 +11,12 @@ bases:
 namespace: "{{ .Release.Namespace }}"
 patchesStrategicMerge:
   - patches/patch_deployment.yaml
+
+patches:
+  - patch: |
+      - op: replace
+        path: '/spec/template/spec/containers/0/imagePullPolicy'
+        value: "{{ .Values.deployment.imagePullPolicy}}"
+    target:
+      kind: Deployment
+      name: "(controller-manager|cert-manager|keptn-scheduler)"

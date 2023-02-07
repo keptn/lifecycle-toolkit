@@ -31,6 +31,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 20
           image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
+          imagePullPolicy: IfNotPresent
           args:
             - "--secure-listen-address=0.0.0.0:8443"
             - "--upstream=http://127.0.0.1:8080/"

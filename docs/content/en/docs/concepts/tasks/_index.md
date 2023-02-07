@@ -35,8 +35,7 @@ spec:
         console.log("Deployment Task has been executed");
 ```
 
-In the code section, it is possible to define a full-fletched Deno script. An example for that would be:
-
+In the code section, it is possible to define a full-fletched Deno script.
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
@@ -67,6 +66,8 @@ spec:
     httpRef:
       url: <url>
 ```
+
+An example is available [here](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
 
 Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.

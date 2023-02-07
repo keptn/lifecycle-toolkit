@@ -5,4 +5,4 @@ otelCollector:
 
 deployment:
   ## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
-  imagePullPolicy: "Always"
+  imagePullPolicy: Always

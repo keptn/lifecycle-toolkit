@@ -39,6 +39,12 @@ spec:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the operator should use
                 type: string
+              keptnAppCreationRequestTimeout:
+                default: 30
+                description: KeptnAppCreationRequestTimeout is used to set the interval
+                  in which automatic app discovery searches for workload to put into
+                  the same auto-generated KeptnApp
+                type: integer
             type: object
           status:
             description: KeptnConfigStatus defines the observed state of KeptnConfig

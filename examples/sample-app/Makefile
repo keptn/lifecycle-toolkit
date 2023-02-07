@@ -6,15 +6,15 @@ GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
 install:
-	make -C ../observability install
+	make -C ../support/observability install
 
 .PHONY: port-forward-jaeger
 port-forward-jaeger:
-	make -C ../observability port-forward-jaeger
+	make -C ../support/observability port-forward-jaeger
 
 .PHONY: port-forward-grafana
 port-forward-grafana:
-	make -C ../observability port-forward-grafana GRAFANA_PORT_FORWARD=$(GRAFANA_PORT_FORWARD)
+	make -C ../support/observability port-forward-grafana GRAFANA_PORT_FORWARD=$(GRAFANA_PORT_FORWARD)
 
 .PHONY: deploy-version-1
 deploy-version-1:
@@ -41,4 +41,4 @@ undeploy-podtatohead:
 
 .PHONY: uninstall
 uninstall: undeploy-podtatohead
-	make -C ../observability uninstall
+	make -C ../support/observability uninstall

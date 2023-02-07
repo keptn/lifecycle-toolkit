@@ -7,7 +7,7 @@ on:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.2"
+  CONTROLLER_TOOLS_VERSION: "v0.11.3"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -130,7 +130,7 @@ jobs:
         run: |
           make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
           sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ./helm/chart/templates/rendered.yaml
-          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/templates/rendered.yaml        
+          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/templates/rendered.yaml        
           rm -r ./helm/chart/charts
 
       - name: Upload KLT helm charts archive

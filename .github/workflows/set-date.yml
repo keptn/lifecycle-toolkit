@@ -4,7 +4,7 @@ on:
   issues:
     types: [closed]
 jobs:
-  track_issue:
+  set_date:
     runs-on: ubuntu-22.04
     steps:
       - name: Get project data
@@ -81,5 +81,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE --silen
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE --silent
             

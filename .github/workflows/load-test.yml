@@ -1,0 +1,59 @@
+name: Integration-Test
+on:
+  workflow_call:
+    inputs:
+      functions_runtime_tag:
+        description: "Tag for the functions runner image"
+        type: "string"
+        required: true
+env:
+  GO_VERSION: "~1.19"
+  # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
+  KUBE_BURNER_VERSION: "v1.2"
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-load-test:
+    name: Run load Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+
+      - name: Install Prometheus
+        working-directory: ./test/load
+        run: |
+          kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply --server-side -f assets/prometheus/setup
+          kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
+          kubectl apply -f assets/prometheus/
+          kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+          kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+          kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+      - name: Download kube-burner
+        run: |
+          curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner
+          chmod +x kube-burner
+          mv kube-burner /usr/local/bin
+      - name: Run load Tests
+        working-directory: .
+        run: make load-test
+
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-load-tests
+          path: .github/scripts/logs

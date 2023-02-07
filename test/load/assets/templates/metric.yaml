@@ -1,0 +1,10 @@
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: KeptnMetric
+metadata:
+  name: keptnmetric-load-test
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  provider:
+    name: "prometheus-load-test-provider"
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
+  fetchIntervalSeconds: 10

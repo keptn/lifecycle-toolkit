@@ -33,6 +33,13 @@ integration-test:
 integration-test-local:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
+.PHONY: load-test
+load-test:
+	kubectl apply -f ./test/load/assets/kube-burner-config.yaml
+	kubectl apply -f ./test/load/assets/loadtest.yaml
+	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=15m job/loadtest
+	kubectl logs -n keptn-lifecycle-toolkit-system job/loadtest -c loadtest
+
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests

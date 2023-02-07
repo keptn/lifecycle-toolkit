@@ -1,0 +1,8 @@
+- query: container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}
+  metricName: MemoryUsage
+
+- query: rate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system"}[1m])
+  metricName: CPUUsage
+
+- query: sum by(job) (rate(apiserver_request_total{job="apiserver"}[1m]))
+  metricName: APIServerRequests

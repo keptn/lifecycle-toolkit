@@ -13,6 +13,7 @@ import (
 
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the Dynatrace token is missing")
 var ErrInvalidResult = errors.New("the answer does not contain any data")
+var ErrDQLQueryTimeout = errors.New("timed out waiting for result of DQL query")
 
 func getDTSecret(ctx context.Context, provider klcv1alpha2.KeptnEvaluationProvider, k8sClient client.Client) (string, error) {
 	if !provider.HasSecretDefined() {

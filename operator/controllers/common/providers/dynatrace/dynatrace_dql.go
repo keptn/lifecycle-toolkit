@@ -3,24 +3,28 @@ package dynatrace
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"k8s.io/klog/v2"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	dtclient "github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/dynatrace/client"
+	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+const maxRetries = 5
+const retryFetchInterval = 10 * time.Second
 
 type keptnDynatraceDQLProvider struct {
 	log       logr.Logger
 	k8sClient client.Client
 
 	dtClient dtclient.DTAPIClient
+	clock    clock.Clock
 }
 
 type DynatraceDQLHandler struct {
@@ -66,6 +70,7 @@ func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatrac
 	provider := &keptnDynatraceDQLProvider{
 		log:       logr.New(klog.NewKlogr().GetSink()),
 		k8sClient: k8sClient,
+		clock:     clock.New(),
 	}
 
 	for _, o := range opts {
@@ -156,7 +161,8 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (
 
 func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler DynatraceDQLHandler) (*DQLResult, error) {
 	d.log.V(10).Info("posting DQL")
-	for {
+
+	for i := 0; i < maxRetries; i++ {
 		r, err := d.retrieveDQLResults(ctx, handler)
 		if err != nil {
 			return &DQLResult{}, err
@@ -165,9 +171,9 @@ func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler Dynatrac
 			return &r.Result, nil
 		}
 		d.log.V(10).Info("DQL not finished, got: %s", r.State)
-		time.Sleep(5 * time.Second)
+		<-d.clock.After(retryFetchInterval)
 	}
-	return nil, errors.New("something went wrong while waiting for the DQL to be finished")
+	return nil, ErrDQLQueryTimeout
 }
 
 func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, handler DynatraceDQLHandler) (*DynatraceDQLResult, error) {

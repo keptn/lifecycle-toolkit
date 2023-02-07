@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"k8s.io/klog/v2"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
+	"k8s.io/klog/v2"
 )
 
 const defaultAuthURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"

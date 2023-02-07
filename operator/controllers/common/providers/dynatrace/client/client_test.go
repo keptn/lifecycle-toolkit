@@ -2,12 +2,13 @@ package client
 
 import (
 	"context"
-	"github.com/go-logr/logr"
-	"github.com/stretchr/testify/require"
-	"k8s.io/klog/v2"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/go-logr/logr"
+	"github.com/stretchr/testify/require"
+	"k8s.io/klog/v2"
 )
 
 func TestNewConfigInvalidSecretFormat(t *testing.T) {

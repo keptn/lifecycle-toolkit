@@ -16,7 +16,7 @@ func validateOAuthSecret(token string) error {
 	// must have 2 dots
 	// third part (split by dot) must be 64 chars
 	if !strings.HasPrefix(token, dtTokenPrefix) {
-		return fmt.Errorf("secret %s does not start with required prefix: %w", dtTokenPrefix, ErrClientSecretInvalid)
+		return fmt.Errorf("secret does not start with required prefix %s: %w", dtTokenPrefix, ErrClientSecretInvalid)
 	}
 	split := strings.Split(token, ".")
 	if len(split) != 3 {

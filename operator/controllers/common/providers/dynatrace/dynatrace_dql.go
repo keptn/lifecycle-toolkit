@@ -19,6 +19,8 @@ import (
 const maxRetries = 5
 const retryFetchInterval = 10 * time.Second
 
+const dqlQuerySucceeded = "SUCCEEDED"
+
 type keptnDynatraceDQLProvider struct {
 	log       logr.Logger
 	k8sClient client.Client
@@ -167,7 +169,7 @@ func (d *keptnDynatraceDQLProvider) getDQL(ctx context.Context, handler Dynatrac
 		if err != nil {
 			return &DQLResult{}, err
 		}
-		if r.State == "SUCCEEDED" {
+		if r.State == dqlQuerySucceeded {
 			return &r.Result, nil
 		}
 		d.log.V(10).Info("DQL not finished, got", "state", r.State)

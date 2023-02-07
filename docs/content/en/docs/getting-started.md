@@ -8,14 +8,21 @@ cascade:
   path_base_for_github_subdir: "/content/en/docs-dev"
 ---
 
-The Keptn Lifecycle Toolkit makes your deployments observable, brings application-awareness to your Kubernetes cluster and helps you reliably deliver your application with:
+`kubectl create -f deployment.yaml` will "blindly" deploy workloads, but who needs to be notified that this deployment is about to happen? Is your infrastructure ready? Do your downstream services meet their SLOs? Can your infrastructure handle the deployment?
 
+After the deployment, beyond the standard k8s probes, how can you integrate with other tooling to automatically test the deployment? How do you know the deployment is meeting its SLOs? Has the deployment caused any issues downstream? Who needs to know that teh deployment was successful (or unsuccessful)?
+
+The Keptn Lifecycle Toolkit (KLT) "wraps" a standard Kubernetes deployment and provides both workload (single service) tests and SLO evaluations. Multiple workloads can also be logically grouped (and evaluated) as a single cohesive unit: a Keptn Application. In other words, an application is a collection of multiple workloads.
+
+The Keptn Lifecycle Toolkit is a tool and vendor-neutral mechanism - it does not depend on particular GitOps tooling - ArgoCD, Flux, Gitlab or others - KLT works with them all.
+
+The Keptn Lifecycle Toolkit emits signals at every stage (k8s events, OpenTelemetry metrics and traces) to ensure your deployments are observable.
+
+Available steps (applicable to both workload and application entities):
 * Pre-Deployment Tasks: e.g. checking for dependant services, checking if the cluster is ready for the deployment, etc.
 * Pre-Deployment Evaluations: e.g. evaluate metrics before your application gets deployed (e.g. layout of the cluster)
 * Post-Deployment Tasks: e.g. trigger a test, trigger a deployment to another cluster, etc.
 * Post-Deployment Evaluations: e.g. evaluate the deployment, evaluate the test results, etc.
-
-All of these things can be executed on a workload or on an application level, whereby an application is a collection of multiple workloads.
 
 ## What you will learn here
 * Use the Keptn Lifecycle Toolkit to control the deployment of your application

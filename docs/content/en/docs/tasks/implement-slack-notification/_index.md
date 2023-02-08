@@ -22,7 +22,8 @@ Once you create the webhook, you will get a URL similar to below example.
 ## Create slack-secret
 
 Create a `slack-secret.yaml` definition using the following command.
-This will create a kubernetes secret named `slack-secret.yaml` in the [base](./base) directory.
+This will create a kubernetes secret named `slack-secret.yaml` in the [base](./base) directory. Before running 
+this command change your current directory into `examples/sample-app`.
 
 ```bash
 kubectl create secret generic slack-secret --from-literal=SECURE_DATA='{"slack_hook":<YOUR_HOOK_SECRET>,"text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml

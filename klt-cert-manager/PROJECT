@@ -1,0 +1,12 @@
+domain: keptn.sh
+layout:
+- go.kubebuilder.io/v3
+projectName: klt-cert-manager
+repo: github.com/keptn/lifecycle-toolkit/klt-cert-manager
+resources:
+- controller: true
+  domain: keptn.sh
+  group: klt-cert-manager
+  kind: Deployment
+  version: v1alpha1
+version: "3"

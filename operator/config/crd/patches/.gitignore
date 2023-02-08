@@ -1,0 +1,4 @@
+
+# Ignore autogen patch file for crds
+cainjection_in_*.yaml
+cainjection_in_*_*.yaml

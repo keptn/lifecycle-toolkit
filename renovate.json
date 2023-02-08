@@ -1,0 +1,64 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":gitSignOff",
+    "schedule:nonOfficeHours",
+    ":semanticCommitTypeAll(deps)",
+    ":semanticCommitScope()",
+    "group:monorepos",
+    ":automergePatch"
+  ],
+  "addLabels": ["dependencies"],
+  "cloneSubmodules": true,
+  "prConcurrentLimit": 15,
+  "stabilityDays": 3,
+  "timezone": "Europe/Vienna",
+  "postUpdateOptions": [
+    "gomodTidy",
+    "gomodMassage"
+  ],
+  "ignorePaths": [
+    "**/test/**",
+    "**/tests/**"
+  ],
+  "ignoreDeps": [
+    "ghcr.keptn.sh/keptn/keptn-lifecycle-operator",
+    "ghcr.keptn.sh/keptn/scheduler",
+    "ghcr.keptn.sh/keptn/functions-runtime",
+    "docker.io/thschue/keptn-lifecycle-operator",
+    "docker.io/thschue/scheduler",
+    "docker.io/annadreal/keptn-lifecycle-operator",
+    "docker.io/annadreal/kube-scheduler"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "addLabels": ["go"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"]
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "addLabels": ["docker"]
+    },
+    {
+      "matchPackageNames": ["kubernetes-sigs/kustomize"],
+      "extractVersion": "^kustomize/(?<version>.*)$"
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "(^|\\/)Makefile$",
+        "(^|\\/)Dockerfile",
+        "(^|\\/).*\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(\\??=|\\: ?) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+
+# Ignore autogen patch file for webhooks
+base/manager_webhook_patch.yaml
+base/webhookcainjection_patch.yaml

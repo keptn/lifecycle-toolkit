@@ -1,0 +1,49 @@
+name: E2E-Test
+on:
+  workflow_call:
+    inputs:
+      functions_runtime_tag:
+        description: "Tag for the functions runner image"
+        type: "string"
+        required: true
+env:
+  GO_VERSION: "~1.19"
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-e2e-test:
+    name: Run E2E Tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - name: "keptn-lifecycle-operator"
+            folder: "operator/"
+          - name: "scheduler"
+            folder: "scheduler/"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+
+      - name: Run E2E Tests ${{ matrix.config.name }}
+        working-directory: ${{ matrix.config.folder }}
+        run: make e2e-test
+
+      - name: Create reports ${{ matrix.config.name }}
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-toolkit.sh
+
+      - name: Upload ${{ matrix.config.name }} cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-e2e-tests-${{ matrix.config.name }}
+          path: .github/scripts/logs

@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: scheduler
+  name: keptn-scheduler
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  selector:
+    matchLabels:
+      component: scheduler
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: scheduler
+    spec:
+      serviceAccountName: keptn-scheduler
+      containers:
+        - command:
+            - /bin/kube-scheduler
+            - --config=/etc/kubernetes/scheduler-config.yaml
+          image: scheduler:latest
+          imagePullPolicy: Always
+          env:
+            - name: OTEL_COLLECTOR_URL
+              value: otel-collector:4317
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 10259
+              scheme: HTTPS
+            initialDelaySeconds: 15
+          name: keptn-scheduler
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 10259
+              scheme: HTTPS
+          resources:
+            limits:
+              cpu: '300m'
+              memory: '100Mi'
+            requests:
+              cpu: '100m'
+              memory: '20Mi'
+          securityContext:
+            readOnlyRootFilesystem: true
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - "ALL"
+          volumeMounts:
+            - name: scheduler-config
+              mountPath: /etc/kubernetes
+              readOnly: true
+
+      hostNetwork: false
+      hostPID: false
+      volumes:
+        - name: scheduler-config
+          configMap:
+            name: scheduler-config
+

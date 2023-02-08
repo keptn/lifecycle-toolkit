@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnTaskDefinition
+metadata:
+  name: check-entry-service
+  namespace: podtato-kubectl
+spec:
+  function:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/http.ts
+    parameters:
+      map:
+        url: http://podtato-head-entry.podtato-kubectl.svc.cluster.local:9000

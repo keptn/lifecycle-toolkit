@@ -1,0 +1,22 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnWorkload
+metadata:
+  name: work-work
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnWorkloadInstance
+metadata:
+  name: work-work-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+  status: Succeeded

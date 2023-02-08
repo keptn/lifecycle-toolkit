@@ -1,0 +1,37 @@
+run:
+  timeout: 5m
+  go: '1.19'
+linters:
+  enable:
+    - gofmt         # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
+    - gci           # Gci controls golang package import order and makes it always deterministic.
+    - errorlint       # errorlint is a linter that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
+    - containedctx  # containedctx is a linter that detects struct contained context.Context field
+    - dogsled       # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
+    - nilnil        # Checks that there is no simultaneous return of nil error and an invalid value.
+    - noctx         # noctx finds sending http request without context.Context
+    - gocyclo       # measure cyclomatic complexity
+    - gocognit      # measure cognitive complexity
+    - funlen        # limit function length
+    - dupl          # Detect code duplication
+
+issues:
+  exclude-rules:
+    - linters:
+        - gci
+      text: '//+kubebuilder'
+    - linters:
+        - containedctx
+        - gocyclo
+        - gocognit
+        - funlen
+      path: _test\.go
+
+linters-settings:
+  gocyclo:
+    min-complexity: 10
+  gocognit:
+    min-complexity: 20
+  funlen:
+    lines: 120
+    statements: 120

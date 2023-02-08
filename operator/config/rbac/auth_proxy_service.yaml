@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: controller-manager-metrics-service
+  namespace: system
+spec:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  - name: custom-metrics
+    targetPort: custom-metrics
+    port: 443
+  - name: keptn-metrics
+    protocol: TCP
+    port: 9999
+    targetPort: keptn-metrics
+  selector:
+    control-plane: controller-manager

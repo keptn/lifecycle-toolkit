@@ -1,0 +1,12 @@
+##############################################################
+#
+# Lists the owners of this project
+#
+##############################################################
+#
+# Learn about CODEOWNERS file format:
+#  https://help.github.com/en/articles/about-code-owners
+#
+*   @thisthat @thschue @bacherfl
+/.github/ @thisthat @thschue @bacherfl @mowies @philipp-hinteregger
+/scheduler/ @thisthat @thschue @bacherfl @RealAnna

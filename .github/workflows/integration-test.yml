@@ -1,0 +1,55 @@
+name: Integration-Test
+on:
+  workflow_call:
+    inputs:
+      functions_runtime_tag:
+        description: "Tag for the functions runner image"
+        type: "string"
+        required: true
+      helm-install:
+        description: "Decides wheter to install via helm"
+        type: "boolean"
+        default: false
+env:
+  GO_VERSION: "~1.19"
+  # renovate: datasource=github-tags depName=kudobuilder/kuttl
+  KUTTL_VERSION: "v0.15.0"
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-integration-test:
+    name: Run Integration Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          helm-install:  ${{ inputs.helm-install }}
+
+      - name: Download KUTTL
+        run: |
+          curl -fL https://github.com/kudobuilder/kuttl/releases/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64 -o kubectl-kuttl
+          chmod +x kubectl-kuttl
+          mv kubectl-kuttl /usr/local/bin
+
+      - name: Run Integration Tests
+        working-directory: .
+        run: make integration-test
+      
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-integration-tests
+          path: .github/scripts/logs

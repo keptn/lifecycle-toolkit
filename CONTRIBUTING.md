@@ -1,4 +1,4 @@
-# Contributing at Lifecycle-toolkit
+# Contributing to Keptn Lifecycle Toolkit
 
 We are thrilled to have you join us as a contributor! The Lifecycle-toolkit is a community-driven project and we greatly value collaboration. There are various ways to contribute to the Lifecycle-toolkit, and all contributions are highly valued. Please explore the options below to learn more about how you can contribute.
 

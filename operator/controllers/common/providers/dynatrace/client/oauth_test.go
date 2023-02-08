@@ -1,8 +1,9 @@
 package client
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func Test_oAuthCredentials_getScopesAsString(t *testing.T) {

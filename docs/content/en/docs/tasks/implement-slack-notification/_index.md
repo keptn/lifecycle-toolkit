@@ -3,7 +3,7 @@ title: Implement Slack Notification
 description: Learn how to implement Slack notification as a post deployment task.
 icon: concepts
 layout: quickstart
-weight: 20
+weight: 24
 hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

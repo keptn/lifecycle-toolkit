@@ -22,7 +22,7 @@ Once you create the webhook, you will get a URL similar to below example.
 ## Create slack-secret
 
 Create a `slack-secret.yaml` definition using the following command.
-This will create a kubernetes secret named `slack-secret.yaml` in the [base](./base) directory. Before running 
+This will create a kubernetes secret named `slack-secret.yaml` in the `examples/sample-app/base` directory. Before running 
 this command change your current directory into `examples/sample-app`.
 
 ```bash

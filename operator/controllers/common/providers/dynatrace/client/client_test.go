@@ -36,20 +36,22 @@ func TestAPIClient(t *testing.T) {
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
-		WithScopes("my-scopes"),
+		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
 		WithAuthURL(server.URL+"/auth"),
 	)
 
 	require.Nil(t, err)
 	require.NotNil(t, config)
 
+	require.Equal(t, "storage:metrics:read environment:roles:viewer", config.oAuthCredentials.getScopesAsString())
+
 	expectedApiConfig := apiConfig{
 		serverURL: server.URL,
 		authURL:   server.URL + "/auth",
-		oAuthCredentials: OAuthCredentials{
+		oAuthCredentials: oAuthCredentials{
 			clientID:     "dt0s08.XX",
 			clientSecret: mockSecret,
-			scopes:       "my-scopes",
+			scopes:       []OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer},
 		},
 	}
 	require.Equal(t, expectedApiConfig, *config)
@@ -83,7 +85,6 @@ func TestAPIClientAuthError(t *testing.T) {
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
-		WithScopes("my-scopes"),
 		WithAuthURL(server.URL+"/auth"),
 	)
 
@@ -121,23 +122,11 @@ func TestAPIClientRequestError(t *testing.T) {
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
-		WithScopes("my-scopes"),
 		WithAuthURL(server.URL+"/auth"),
 	)
 
 	require.Nil(t, err)
 	require.NotNil(t, config)
-
-	expectedApiConfig := apiConfig{
-		serverURL: server.URL,
-		authURL:   server.URL + "/auth",
-		oAuthCredentials: OAuthCredentials{
-			clientID:     "dt0s08.XX",
-			clientSecret: mockSecret,
-			scopes:       "my-scopes",
-		},
-	}
-	require.Equal(t, expectedApiConfig, *config)
 
 	apiClient := NewAPIClient(
 		*config,

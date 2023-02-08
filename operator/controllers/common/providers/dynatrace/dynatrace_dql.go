@@ -125,7 +125,6 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 		config, err := dtclient.NewAPIConfig(
 			provider.Spec.TargetServer,
 			secret,
-			dtclient.WithScopes(d.getScopes()),
 		)
 		if err != nil {
 			return err
@@ -133,10 +132,6 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 		d.dtClient = dtclient.NewAPIClient(*config, dtclient.WithLogger(d.log))
 	}
 	return nil
-}
-
-func (d *keptnDynatraceDQLProvider) getScopes() string {
-	return "storage:metrics:read environment:roles:viewer"
 }
 
 func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (*DynatraceDQLHandler, error) {

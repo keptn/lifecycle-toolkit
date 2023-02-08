@@ -3,11 +3,9 @@ JAEGER_VERSION ?= v1.39.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
-# renovate: datasource=github-tags depName=cert-manager/cert-manager
-CERT_MANAGER_VERSION ?= v1.11.0
 
 .PHONY: install
-install: install-cert-manager install-observability install-argo
+install: install-observability install-argo
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
@@ -22,11 +20,6 @@ install-observability:
 .PHONY: install-argo
 install-argo:
 	make -C support/argo install
-
-.PHONY: install-cert-manager
-install-cert-manager:
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
-	kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=300s
 
 .PHONY: port-forward-jaeger
 port-forward-jaeger:

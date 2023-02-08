@@ -15,6 +15,8 @@ import (
 	provider2 "sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
+const kltNamespace = "my-namespace"
+
 func TestProvider(t *testing.T) {
 	metricObj1 := getSampleKeptnMetric("my-metric", map[string]interface{}{})
 
@@ -24,7 +26,7 @@ func TestProvider(t *testing.T) {
 	scheme := runtime.NewScheme()
 	fakeClient := fake.NewSimpleDynamicClient(scheme, km)
 
-	provider := NewProvider(context.TODO(), fakeClient)
+	provider := NewProvider(context.TODO(), fakeClient, kltNamespace)
 
 	require.NotNil(t, provider)
 

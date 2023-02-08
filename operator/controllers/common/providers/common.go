@@ -8,11 +8,12 @@ import (
 const DynatraceProviderName = "dynatrace"
 const PrometheusProviderName = "prometheus"
 const KeptnMetricProviderName = "keptn-metric"
-const KLTNamespace = "keptn-lifecycle-toolkit-system"
 
-var MetricDefaultProvider = &klcv1alpha2.KeptnEvaluationProvider{
-	ObjectMeta: metav1.ObjectMeta{
-		Name:      KeptnMetricProviderName,
-		Namespace: KLTNamespace,
-	},
+func GetDefaultMetricProvider(namespace string) *klcv1alpha2.KeptnEvaluationProvider {
+	return &klcv1alpha2.KeptnEvaluationProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      KeptnMetricProviderName,
+			Namespace: namespace,
+		},
+	}
 }

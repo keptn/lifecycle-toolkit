@@ -1,10 +1,4 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    control-plane: controller-manager
-  name: system
----
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,6 +57,12 @@ spec:
           - name: keptn-metrics
             containerPort: 9999
             protocol: TCP
+          - name: custom-metrics
+            containerPort: 6443
+            protocol: TCP
+          - name: metrics
+            containerPort: 2222
+            protocol: TCP
         imagePullPolicy: Always
         env:
           - name: POD_NAMESPACE
@@ -73,8 +73,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: OTEL_COLLECTOR_URL
-            value: otel-collector:4317
           - name: EXPOSE_KEPTN_METRICS
             value: "true"
           - name: FUNCTION_RUNNER_IMAGE
@@ -85,8 +83,8 @@ spec:
           privileged: false
           allowPrivilegeEscalation: false
           runAsNonRoot: true
-          runAsUser: 1001
-          runAsGroup: 1001
+          runAsUser: 65532
+          runAsGroup: 65532
           capabilities:
             drop:
               - "ALL"
@@ -118,4 +116,3 @@ spec:
             mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
-

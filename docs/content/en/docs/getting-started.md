@@ -3,16 +3,26 @@ title: Getting Started
 linktitle: Getting Started
 description: Learn how to use the Keptn Lifecycle Toolkit.
 weight: 15
+cascade:
+  github_subdir: "docs/content/en/docs"
+  path_base_for_github_subdir: "/content/en/docs-dev"
 ---
 
-The Keptn Lifecycle Toolkit makes your deployments observable, brings application-awareness to your Kubernetes cluster and helps you reliably delivering your application with:
+`kubectl create -f deployment.yaml` will "blindly" deploy workloads, but who needs to be notified that this deployment is about to happen? Is your infrastructure ready? Do your downstream services meet their SLOs? Can your infrastructure handle the deployment?
 
+After the deployment, beyond the standard k8s probes, how can you integrate with other tooling to automatically test the deployment? How do you know the deployment is meeting its SLOs? Has the deployment caused any issues downstream? Who needs to know that the deployment was successful (or unsuccessful)?
+
+The Keptn Lifecycle Toolkit (KLT) "wraps" a standard Kubernetes deployment and provides both workload (single service) tests and SLO evaluations. Multiple workloads can also be logically grouped (and evaluated) as a single cohesive unit: a Keptn Application. In other words, an application is a collection of multiple workloads.
+
+The Keptn Lifecycle Toolkit is a tool and vendor-neutral mechanism - it does not depend on particular GitOps tooling - ArgoCD, Flux, Gitlab or others - KLT works with them all.
+
+The Keptn Lifecycle Toolkit emits signals at every stage (k8s events, OpenTelemetry metrics and traces) to ensure your deployments are observable.
+
+Available steps (applicable to both workload and application entities):
 * Pre-Deployment Tasks: e.g. checking for dependant services, checking if the cluster is ready for the deployment, etc.
-* Pre-Deployment Evaluations: e.g. evaluate metrics before your application gets deployed (e.g. layout of the cluster
+* Pre-Deployment Evaluations: e.g. evaluate metrics before your application gets deployed (e.g. layout of the cluster)
 * Post-Deployment Tasks: e.g. trigger a test, trigger a deployment to another cluster, etc.
 * Post-Deployment Evaluations: e.g. evaluate the deployment, evaluate the test results, etc.
-
-All of these things can be executed on a workload or on an application level, whereby an application is a collection of multiple workloads.
 
 ## What you will learn here
 * Use the Keptn Lifecycle Toolkit to control the deployment of your application
@@ -28,7 +38,7 @@ All of these things can be executed on a workload or on an application level, wh
 
 ## Check Kubernetes Version
 
-Run the following and ensure both client and server version are greater than or equal to v1.24.
+Run the following and ensure both client and server versions are greater than or equal to v1.24.
 
 ```
 kubectl version --short
@@ -36,13 +46,13 @@ kubectl version --short
 
 The output should look like this. In this example, both client and server are at v1.24.0 so the Keptn Lifecycle Toolkit will work.
 
-{{% readfile file="snippets/tasks/k8s_version_output.md" markdown="true" %}}
+{{% readfile file="./snippets/tasks/k8s_version_output.md" markdown="true" %}}
 
 ## Install the Keptn Lifecycle Toolkit
-{{% readfile file="snippets/tasks/install.md" markdown="true" %}}
+{{% readfile file="./snippets/tasks/install.md" markdown="true" %}}
 
 ## Check out the Getting Started Repository
-For the further progress of this guide, we need a sample application as well as some helpers which makes it easier for your to set up your environment. These things can be found in our Getting Started repository which can be checked out as follows:
+For the further progress of this guide, we need a sample application as well as some helpers which make it easier for your to set up your environment. These things can be found in our Getting Started repository which can be checked out as follows:
 
 ```console
 git clone https://github.com/keptn-sandbox/lifecycle-toolkit-examples.git
@@ -50,7 +60,7 @@ cd lifecycle-toolkit-examples
 ```
 
 ## Install the required observability features
-The Keptn Lifecycle Toolkit emits OpenTelemetry data as standard but the toolkit does not come pre-bundled with Observability backend tooling. This is deliberate as it provides flexibility for you to bring your own Observability backend which consume this emitted data.
+The Keptn Lifecycle Toolkit emits OpenTelemetry data as standard but the toolkit does not come pre-bundled with Observability backend tooling. This is deliberate as it provides flexibility for you to bring your own Observability backend which consumes this emitted data.
 
 In order to use the observability features of the lifecycle toolkit, we need a monitoring and tracing backend.
 
@@ -67,7 +77,7 @@ For this demonstration, we use a slightly modified version of [the PodTatoHead](
 <!-- markdown-link-check-disable-next-line -->
 ![img.png](assets/podtatohead.png)
 
-Over time, we will evolve this application from a simple manifest to a Keptn-managed application. We will install it first with kubectl and add pre- as well as post-deployment tasks. For this, we will check if the entry service is available before the other ones get scheduled. Afterwards, we will add evaluations to ensure that our infrastructure is in a good shape before we deploy the application. Finally, we will evolve to a GitOps driven deployment and will notify an external webhook service when the deployment has finished.
+Over time, we will evolve this application from a simple manifest to a Keptn-managed application. We will install it first with kubectl and add pre- as well as post-deployment tasks. For this, we will check if the entry service is available before the other ones get scheduled. Afterward, we will add evaluations to ensure that our infrastructure is in a good shape before we deploy the application. Finally, we will evolve to a GitOps driven deployment and will notify an external webhook service when the deployment has finished.
 
 ## Install the Demo Application (Version 1)
 In the first version of the Demo application, the Keptn Lifecycle Toolkit evaluates metrics provided by prometheus and checks if a specified amount of CPUs is available before deploying the application

@@ -26,6 +26,7 @@ var (
 
 type MetricsAdapter struct {
 	basecmd.AdapterBase
+	KltNamespace string
 }
 
 // RunAdapter starts the Keptn Metrics adapter to provide KeptnMetrics via the Kubernetes Custom Metrics API.
@@ -69,7 +70,7 @@ func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomM
 		klog.Fatalf("unable to construct dynamic client: %v", err)
 	}
 
-	return kmprovider.NewProvider(ctx, client)
+	return kmprovider.NewProvider(ctx, client, a.KltNamespace)
 }
 
 func addFlags() {

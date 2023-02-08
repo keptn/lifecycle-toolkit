@@ -9,4 +9,4 @@ metadata:
     app.kubernetes.io/created-by: keptn-lifecycle-toolkit
   name: keptnconfig-sample
 spec:
-  # TODO(user): Add fields here
+  OTelCollectorUrl: 'otel-collector:4317'

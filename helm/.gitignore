@@ -1,0 +1,3 @@
+*.tgz
+chart/templates/rendered.yaml
+chart/crds/*.yaml

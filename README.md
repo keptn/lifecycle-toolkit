@@ -24,14 +24,6 @@ Click to watch it on YouTube:
 
 **Installation**
 
-The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
-is handled automatically by [cert-manager](https://cert-manager.io). To install **cert-manager**, execute the following command:
-
-```console
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
-```
-
-When *cert-manager* is installed, you can run
 
 <!---x-release-please-start-version-->
 
@@ -46,6 +38,10 @@ to install the latest release of the Lifecycle Toolkit.
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data. To install it, follow their [installation instructions](https://opentelemetry.io/docs/collector/getting-started/).
 We also provide some more information about this in our [observability example](./examples/support/observability/).
+
+The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod. The certificate creation
+is handled automatically by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md). Versions 0.5.0 and earlier have a hard dependency on the [cert-manager](https://cert-manager.io).
+See [installation guideline](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/docs/snippets/tasks/install.md) for more info.
 
 ## Goals
 

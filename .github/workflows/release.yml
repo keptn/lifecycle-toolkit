@@ -14,7 +14,7 @@ defaults:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.9.2"
+  CONTROLLER_TOOLS_VERSION: "v0.11.3"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 
 jobs:
@@ -79,7 +79,7 @@ jobs:
         uses: sigstore/cosign-installer@v2.8.1
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
@@ -103,7 +103,7 @@ jobs:
         run: cosign sign ${{ env.IMAGE_TAG }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.13.1
+        uses: anchore/sbom-action@v0.13.3
         with:
           image: ${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}

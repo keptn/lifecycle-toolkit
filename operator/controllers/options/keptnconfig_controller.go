@@ -18,18 +18,26 @@ package options
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme          *runtime.Scheme
+	Log             logr.Logger
+	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
 }
 
 //+kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create;update;patch;delete
@@ -38,19 +46,50 @@ type KeptnConfigReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the KeptnConfig object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	r.Log.Info("Searching for KeptnConfig")
 
-	// TODO(user): your logic here
+	config := &optionsv1alpha1.KeptnConfig{}
+	err := r.Get(ctx, req.NamespacedName, config)
+	if errors.IsNotFound(err) {
+		return reconcile.Result{}, nil
+	}
+	if err != nil {
+		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveConfigMsg, err)
+	}
 
+	if r.LastAppliedSpec == nil {
+		r.Log.Info("initializing KeptnConfig since no config was there before")
+		r.initConfig()
+	}
+
+	result, err := r.reconcileOtelCollectorUrl(config)
+	if err != nil {
+		return result, err
+	}
+
+	r.LastAppliedSpec = &config.Spec
 	return ctrl.Result{}, nil
+}
+
+func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
+	r.Log.Info(fmt.Sprintf("reconciling Keptn Config: %s", config.Name))
+	otelConfig := controllercommon.GetOtelInstance()
+
+	// collector URL changed, so we need to re-initialize the exporter
+	if r.LastAppliedSpec.OTelCollectorUrl != config.Spec.OTelCollectorUrl {
+		if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
+			r.Log.Error(err, "unable to initialize OTel tracer options")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+	}
+	return ctrl.Result{}, nil
+}
+
+func (r *KeptnConfigReconciler) initConfig() {
+	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
+		OTelCollectorUrl: "",
+	}
 }
 
 // SetupWithManager sets up the controller with the Manager.

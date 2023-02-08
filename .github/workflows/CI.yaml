@@ -11,7 +11,7 @@ on:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.9.2"
+  CONTROLLER_TOOLS_VERSION: "v0.11.3"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -68,7 +68,7 @@ jobs:
             folder: "operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -109,7 +109,7 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -127,7 +127,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64
@@ -215,7 +215,7 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "keptn-cert-manager"
+          - name: "klt-cert-manager"
             folder: "klt-cert-manager/"
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -242,7 +242,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
@@ -261,7 +261,7 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'keptn-cert-manager'
+        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 

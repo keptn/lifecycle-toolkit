@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+        - name: manager
+          env:
+            - name: OTEL_COLLECTOR_URL
+              value: "{{ .Values.otelCollector.url }}"
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+        - name: manager
+          env:
+#            - name: NEW_ENV_VAR
+#              value: "{{ .Values.myNewEnvVar }}"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keptn-scheduler
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: keptn-scheduler
+          env:
+            - name: OTEL_COLLECTOR_URL
+              value: "{{ .Values.otelCollector.url }}"
+

@@ -1,16 +1,4 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    control-plane: klt-cert-manager
-    app.kubernetes.io/name: namespace
-    app.kubernetes.io/instance: system
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: klt-cert-manager
-    app.kubernetes.io/part-of: klt-cert-manager
-    app.kubernetes.io/managed-by: kustomize
-  name: system
----
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,20 +26,29 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        seccompProfile:
-           type: RuntimeDefault
       containers:
       - command:
         - /manager
         args:
         - --leader-elect
         image: controller:latest
+        imagePullPolicy: Always
         name: manager
+        env:
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         securityContext:
+          seccompProfile:
+            type: RuntimeDefault
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           capabilities:
             drop:
               - "ALL"
+          runAsUser: 65532
+          runAsGroup: 65532
         livenessProbe:
           httpGet:
             path: /healthz

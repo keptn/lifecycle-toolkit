@@ -35,8 +35,7 @@ spec:
         console.log("Deployment Task has been executed");
 ```
 
-In the code section, it is possible to define a full-fletched Deno script. An example for that would be:
-
+In the code section, it is possible to define a full-fletched Deno script.
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
@@ -68,6 +67,8 @@ spec:
       url: <url>
 ```
 
+An example is available [here](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+
 Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
 
@@ -87,13 +88,76 @@ spec:
       secret: slack-token
 ```
 
+## Context
+
+A context environment variable is available via `Deno.env.get("CONTEXT")`. It can be used like this:
+
+```javascript
+let context = Deno.env.get("CONTEXT");
+
+if (contextdata.objectType == "Application") {
+  let application_name = contextdata.appName;
+  let application_version = contextdata.appVersion;
+}
+
+if (contextdata.objectType == "Workload") {
+  let application_name = contextdata.appName;
+  let workload_name = contextdata.workloadName;
+  let workload_version = contextdata.workloadVersion;
+}
+```
+## Input Parameters and Secret Handling
+
 As you might have noticed, Task Definitions also have the possibility to use input parameters.
 The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON object.
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
-Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the environment variable `SECURE_DATA`.
+Currently only one secret can be passed. The secret must have a `key` called `SECURE_DATA`.
+It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
+For example:
+
+```yaml
+# kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
+
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: dummy-task
+  namespace: "default"
+spec:
+  function:
+    secureParameters:
+      secret: my-secret
+    inline:
+      code: |
+        let secret_text = Deno.env.get("SECURE_DATA");
+        // secret_text = "foo"
+```
+
+This methodology supports multiple variables by creating a K8s secret with a JSON string:
+
+```yaml
+# kubectl create secret generic my-secret \
+# --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
+
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: dummy-task
+  namespace: "default"
+spec:
+  function:
+    secureParameters:
+      secret: my-secret
+    inline:
+      code: |
+        let secret_text = Deno.env.get("SECURE_DATA");
+        let secret_text_obj = JSON.parse(secret_text);
+        // secret_text_obj["foo"] = "bar"
+        // secret_text_obj["foo2"] = "bar2"
+```
 
 ### Keptn Task
 

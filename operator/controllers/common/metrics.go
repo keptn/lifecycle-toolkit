@@ -4,98 +4,88 @@ import (
 	"context"
 	"fmt"
 
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
+	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
+	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]apicommon.GaugeFloatValue, error) {
+func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncfloat64.Gauge) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
+		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	res := []apicommon.GaugeFloatValue{}
 
 	for _, ro := range piWrapper.GetItems() {
 		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.IsEndTimeSet() {
 			duration := reconcileObject.GetEndTime().Sub(reconcileObject.GetStartTime())
-			res = append(res, apicommon.GaugeFloatValue{
-				Value:      duration.Seconds(),
-				Attributes: reconcileObject.GetDurationMetricsAttributes(),
-			})
+			gauge.Observe(ctx, duration.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
 		}
 	}
 
-	return res, nil
+	return nil
 }
 
-func GetDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object) ([]apicommon.GaugeFloatValue, error) {
+func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object, gauge asyncfloat64.Gauge) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
+		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	res := []apicommon.GaugeFloatValue{}
 	for _, ro := range piWrapper.GetItems() {
 		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.GetPreviousVersion() != "" {
 			err := client.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", reconcileObject.GetParentName(), reconcileObject.GetPreviousVersion()), Namespace: reconcileObject.GetNamespace()}, previousObject)
 			if err != nil {
-				return nil, nil
+				return nil
 			}
 			piWrapper2, err := interfaces.NewMetricsObjectWrapperFromClientObject(previousObject)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			if reconcileObject.IsEndTimeSet() {
 				previousInterval := reconcileObject.GetEndTime().Sub(piWrapper2.GetStartTime())
-				res = append(res, apicommon.GaugeFloatValue{
-					Value:      previousInterval.Seconds(),
-					Attributes: reconcileObject.GetDurationMetricsAttributes(),
-				})
+				gauge.Observe(ctx, previousInterval.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
 			}
 		}
 	}
-	return res, nil
+
+	return nil
 }
 
-func GetActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList) ([]apicommon.GaugeValue, error) {
+func ObserveActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncint64.Gauge) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
-		return nil, fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
+		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
 	}
 
 	piWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(reconcileObjectList)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	res := []apicommon.GaugeValue{}
 	for _, ro := range piWrapper.GetItems() {
 		activeMetricsObject, _ := interfaces.NewActiveMetricsObjectWrapperFromClientObject(ro)
 		gaugeValue := int64(0)
 		if !activeMetricsObject.IsEndTimeSet() {
 			gaugeValue = int64(1)
 		}
-		res = append(res, apicommon.GaugeValue{
-			Value:      gaugeValue,
-			Attributes: activeMetricsObject.GetActiveMetricsAttributes(),
-		})
+
+		gauge.Observe(ctx, gaugeValue, activeMetricsObject.GetActiveMetricsAttributes()...)
 	}
 
-	return res, nil
+	return nil
 }

@@ -37,7 +37,7 @@ integration-test-local:
 load-test:
 	kubectl apply -f ./test/load/assets/kube-burner-config.yaml
 	kubectl apply -f ./test/load/assets/loadtest.yaml
-	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=15m job/loadtest
+	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=5m job/loadtest
 	kubectl logs -n keptn-lifecycle-toolkit-system job/loadtest -c loadtest
 
 .PHONY: cleanup-manifests

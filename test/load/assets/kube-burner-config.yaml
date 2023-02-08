@@ -12,12 +12,12 @@ data:
       prometheusURL: http://prometheus-k8s.monitoring:9090
 
     jobs:
-      - name: keptn-apps
+      - name: keptn-metrics
         jobIterations: 1
         qps: 4
         burst: 4
         namespacedIterations: true
-        namespace: keptn-apps
+        namespace: keptn-metrics
         podWait: false
         cleanup: true
         waitFor: []
@@ -25,7 +25,7 @@ data:
         preLoadImages: false
         objects:
           - objectTemplate: /config/templates.yaml
-            replicas: 100
+            replicas: 10
   metric-profile.yml: |
     - query: container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}
       metricName: MemoryUsage
@@ -40,7 +40,6 @@ data:
     kind: KeptnMetric
     metadata:
       name: keptnmetric-load-test
-      namespace: keptn-lifecycle-toolkit-system
     spec:
       provider:
         name: "prometheus-load-test-provider"

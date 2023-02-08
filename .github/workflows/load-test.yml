@@ -9,7 +9,7 @@ on:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
-  KUBE_BURNER_VERSION: "v1.2"
+  KUBE_BURNER_VERSION: "v1.3"
 defaults:
   run:
     shell: bash
@@ -39,8 +39,8 @@ jobs:
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
       - name: Download kube-burner
         run: |
-          curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner
-          chmod +x kube-burner
+          curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
+          tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin
       - name: Run load Tests
         working-directory: .

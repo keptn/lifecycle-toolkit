@@ -5,12 +5,12 @@ global:
   prometheusURL: http://localhost:9090
 
 jobs:
-  - name: keptn-apps
+  - name: keptn-metrics
     jobIterations: 1
     qps: 4
     burst: 4
     namespacedIterations: true
-    namespace: keptn-apps
+    namespace: keptn-metrics
     podWait: false
     cleanup: true
     waitFor: []
@@ -18,4 +18,4 @@ jobs:
     preLoadImages: false
     objects:
       - objectTemplate: ./test/load/assets/templates/metric.yaml
-        replicas: 100
+        replicas: 10

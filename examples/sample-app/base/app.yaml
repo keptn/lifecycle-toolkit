@@ -18,6 +18,5 @@ spec:
       version: 0.2.7
     - name: podtato-head-hat
       version: 0.1.0
-  postDeploymentTasks:
-    - post-deployment-notification
+
 

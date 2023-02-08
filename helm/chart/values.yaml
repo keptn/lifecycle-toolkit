@@ -6,3 +6,24 @@ otelCollector:
 deployment:
   ## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
   imagePullPolicy: Always
+
+## @section Controller Log level
+operator:
+  commonController:
+    logLevel: 10
+  keptnappController:
+    logLevel: 10
+  keptnappversionController:
+    logLevel: 10
+  keptnevaluationController:
+    logLevel: 10
+  keptntaskController:
+    logLevel: 10
+  keptntaskdefinitionController:
+    logLevel: 10
+  keptnworkloadController:
+    logLevel: 10
+  metricsController:
+    logLevel: 10
+  optionsController:
+    logLevel: 10

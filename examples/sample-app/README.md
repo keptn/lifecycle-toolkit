@@ -5,7 +5,7 @@ This example should demonstrate the capabilities of the lifecycle toolkit as ill
 ![img.png](assets/big-picture.png)
 
 ## PostDeployment Slack Notification
-This section describes how to **prepare and enable** post deployment task to send notification into slack using webhook.
+This section describes how to **prepare and enable** post-deployment tasks to send notifications to slack using webhooks.
 
 **Create Slack Webhook**
 

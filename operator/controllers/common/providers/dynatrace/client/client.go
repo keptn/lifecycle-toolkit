@@ -7,84 +7,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
 	"k8s.io/klog/v2"
 )
-
-const (
-	defaultAuthURL                  = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
-	oAuthGrantType                  = "grant_type"
-	oAuthGrantTypeClientCredentials = "client_credentials"
-	oAuthScope                      = "scope"
-	oAuthClientID                   = "client_id"
-	oAuthClientSecret               = "client_secret"
-)
-
-// OAuthScope represents a scope provided for the registered OAuth client interacting with the DT API
-type OAuthScope string
-
-// These constants define the scopes that we currently need for the DQL metric functionality. This list might extend as new features will be added.
-// For now, we keep this at the minimum set of scopes required, as these are currently likely to change
-const (
-	OAuthScopeStorageMetricsRead    = "storage:metrics:read"
-	OAuthScopeEnvironmentRoleViewer = "environment:roles:viewer"
-)
-
-type OAuthResponse struct {
-	AccessToken string `json:"access_token"`
-}
-
-type apiConfig struct {
-	serverURL        string
-	authURL          string
-	oAuthCredentials oAuthCredentials
-}
-
-type APIConfigOption func(config *apiConfig)
-
-func WithAuthURL(authURL string) APIConfigOption {
-	return func(config *apiConfig) {
-		config.authURL = authURL
-	}
-}
-
-// WithScopes passes the given scopes to the client config
-func WithScopes(scopes []OAuthScope) APIConfigOption {
-	return func(config *apiConfig) {
-		config.oAuthCredentials.scopes = scopes
-	}
-}
-
-// NewAPIConfig returns a new apiConfig that can be used for initializing a DTAPIClient with the NewAPIClient function
-func NewAPIConfig(serverURL string, secret string, opts ...APIConfigOption) (*apiConfig, error) {
-	if err := validateOAuthSecret(secret); err != nil {
-		return nil, err
-	}
-
-	secretParts := strings.Split(secret, ".")
-	clientId := fmt.Sprintf("%s.%s", secretParts[0], secretParts[1])
-	clientSecret := fmt.Sprintf("%s.%s", clientId, secretParts[2])
-
-	cfg := &apiConfig{
-		serverURL: serverURL,
-		authURL:   defaultAuthURL,
-		oAuthCredentials: oAuthCredentials{
-			clientID:     clientId,
-			clientSecret: clientSecret,
-			scopes:       []OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer},
-		},
-	}
-
-	for _, o := range opts {
-		o(cfg)
-	}
-
-	return cfg, nil
-}
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/dt_client_mock.go . DTAPIClient
 type DTAPIClient interface {
@@ -205,38 +132,4 @@ func (client *apiClient) auth(ctx context.Context) error {
 
 	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken
 	return nil
-}
-
-type oAuthCredentials struct {
-	clientID     string
-	clientSecret string
-	scopes       []OAuthScope
-	accessToken  string
-}
-
-func (oac oAuthCredentials) urlValues() url.Values {
-	values := url.Values{}
-	values.Add(oAuthGrantType, oAuthGrantTypeClientCredentials)
-	values.Add(oAuthScope, oac.getScopesAsString())
-	values.Add(oAuthClientID, oac.clientID)
-	values.Add(oAuthClientSecret, oac.clientSecret)
-
-	return values
-}
-
-func (oac oAuthCredentials) getScopesAsString() string {
-	scopeStr := ""
-
-	for i := 0; i < len(oac.scopes); i++ {
-		if i == 0 {
-			scopeStr += string(oac.scopes[i])
-		} else {
-			scopeStr += " " + string(oac.scopes[i])
-		}
-	}
-	return scopeStr
-}
-
-func isErrorStatus(statusCode int) bool {
-	return statusCode < 200 || statusCode >= 300
 }

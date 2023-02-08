@@ -11,6 +11,15 @@ var ErrClientSecretInvalid = errors.New("the Dynatrace token has an invalid form
 var ErrRequestFailed = errors.New("the API returned a response with a status outside of the 2xx range")
 var ErrAuthenticationFailed = errors.New("could not retrieve an OAuth token from the API")
 
+const (
+	defaultAuthURL                  = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
+	oAuthGrantType                  = "grant_type"
+	oAuthGrantTypeClientCredentials = "client_credentials"
+	oAuthScope                      = "scope"
+	oAuthClientID                   = "client_id"
+	oAuthClientSecret               = "client_secret"
+)
+
 const dtTokenPrefix = "dt0s08"
 
 func validateOAuthSecret(token string) error {
@@ -29,4 +38,8 @@ func validateOAuthSecret(token string) error {
 		return fmt.Errorf("length of secret is not equal to 64: %w", ErrClientSecretInvalid)
 	}
 	return nil
+}
+
+func isErrorStatus(statusCode int) bool {
+	return statusCode < 200 || statusCode >= 300
 }

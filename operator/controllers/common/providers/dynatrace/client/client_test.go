@@ -11,6 +11,8 @@ import (
 	"k8s.io/klog/v2"
 )
 
+const mockSecret = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
 func TestNewConfigInvalidSecretFormat(t *testing.T) {
 
 	config, err := NewAPIConfig("", "my-secret")
@@ -31,8 +33,6 @@ func TestAPIClient(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
@@ -42,19 +42,6 @@ func TestAPIClient(t *testing.T) {
 
 	require.Nil(t, err)
 	require.NotNil(t, config)
-
-	require.Equal(t, "storage:metrics:read environment:roles:viewer", config.oAuthCredentials.getScopesAsString())
-
-	expectedApiConfig := apiConfig{
-		serverURL: server.URL,
-		authURL:   server.URL + "/auth",
-		oAuthCredentials: oAuthCredentials{
-			clientID:     "dt0s08.XX",
-			clientSecret: mockSecret,
-			scopes:       []OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer},
-		},
-	}
-	require.Equal(t, expectedApiConfig, *config)
 
 	apiClient := NewAPIClient(
 		*config,

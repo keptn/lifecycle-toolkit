@@ -31,9 +31,9 @@ jobs:
         working-directory: ./test/load
         run: |
           kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-          kubectl apply --server-side -f assets/prometheus/setup
+          kubectl apply --server-side -f ../../examples/support/observability/config/prometheus/setup
           kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
-          kubectl apply -f assets/prometheus/
+          kubectl apply -f ../../examples/support/observability/config/prometheus/
           kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s

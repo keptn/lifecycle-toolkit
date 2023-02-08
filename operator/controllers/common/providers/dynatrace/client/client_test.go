@@ -105,6 +105,43 @@ func TestAPIClientAuthError(t *testing.T) {
 	require.Empty(t, resp)
 }
 
+func TestAPIClientAuthNoToken(t *testing.T) {
+
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.URL.Path == "/auth" {
+			_, _ = writer.Write([]byte(`{"something": "else"}`))
+			return
+		}
+		_, _ = writer.Write([]byte("success"))
+	}))
+
+	defer server.Close()
+
+	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+	config, err := NewAPIConfig(
+		server.URL,
+		mockSecret,
+		WithAuthURL(server.URL+"/auth"),
+	)
+
+	require.Nil(t, err)
+	require.NotNil(t, config)
+
+	apiClient := NewAPIClient(
+		*config,
+		WithHTTPClient(http.Client{}),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	require.NotNil(t, apiClient)
+
+	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+
+	require.ErrorIs(t, err, ErrAuthenticationFailed)
+	require.Empty(t, resp)
+}
+
 func TestAPIClientRequestError(t *testing.T) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {

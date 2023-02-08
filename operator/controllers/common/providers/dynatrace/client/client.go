@@ -199,6 +199,10 @@ func (client *apiClient) auth(ctx context.Context) error {
 		return err
 	}
 
+	if oauthResponse.AccessToken == "" {
+		return ErrAuthenticationFailed
+	}
+
 	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken
 	return nil
 }

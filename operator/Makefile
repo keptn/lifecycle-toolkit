@@ -71,7 +71,7 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 
 .PHONY: gen-crds
 gen-crds: manifests #create CustomResourceDefinition objects for helm.
-	kustomize build config/crd > ../helm/chart/crds/crds.yaml
+	kustomize build config/crd > ../helm/chart/templates/crds.yaml
 
 
 .PHONY: generate

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: keptn-lifecycle-toolkit
 description: A Helm chart for Keptn Lifecycle Toolkit, a set of tools to enable cloud-native application lifecycle management
-icon: "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/assets/logo/keptn_lifecycle_controller_logo.png"
+icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
 home: https://keptn.sh
 sources:
   - "https://github.com/keptn/lifecycle-toolkit"

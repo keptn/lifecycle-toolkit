@@ -16,8 +16,8 @@ data:
         jobIterations: 1
         qps: 4
         burst: 4
-        namespacedIterations: true
-        namespace: keptn-metrics
+        namespacedIterations: false
+        namespace: keptn-lifecycle-toolkit-system
         podWait: false
         cleanup: true
         waitFor: []
@@ -25,7 +25,7 @@ data:
         preLoadImages: false
         objects:
           - objectTemplate: /config/templates.yaml
-            replicas: 10
+            replicas: 100
   metric-profile.yml: |
     - query: container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}
       metricName: MemoryUsage
@@ -43,14 +43,7 @@ data:
       namespace: keptn-lifecycle-toolkit-system
     spec:
       provider:
-        name: "prometheus-load-test-provider"
+        name: "prometheus"
       query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
-      fetchIntervalSeconds: 10
-    ---
-    apiVersion: lifecycle.keptn.sh/v1alpha2
-    kind: KeptnEvaluationProvider
-    metadata:
-      name: prometheus-load-test-provider
-      namespace: keptn-lifecycle-toolkit-system
-    spec:
-      targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+      fetchIntervalSeconds: 5
+

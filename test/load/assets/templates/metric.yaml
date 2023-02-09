@@ -5,6 +5,6 @@ metadata:
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
-    name: "prometheus-load-test-provider"
+    name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
-  fetchIntervalSeconds: 10
+  fetchIntervalSeconds: 5

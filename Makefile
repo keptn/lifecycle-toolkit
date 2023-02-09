@@ -35,10 +35,9 @@ integration-test-local:
 
 .PHONY: load-test
 load-test:
-	kubectl apply -f ./test/load/assets/kube-burner-config.yaml
-	kubectl apply -f ./test/load/assets/loadtest.yaml
-	kubectl wait --for=condition=complete -n keptn-lifecycle-toolkit-system --timeout=5m job/loadtest
-	kubectl logs -n keptn-lifecycle-toolkit-system job/loadtest -c loadtest
+	kubectl apply -f ./test/load/assets/templates/namespace.yaml
+	kubectl apply -f ./test/load/assets/templates/provider.yaml
+	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

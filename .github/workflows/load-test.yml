@@ -27,7 +27,7 @@ jobs:
         with:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
 
-      - name: Install Prometheus
+      - name: Install and expose Prometheus
         working-directory: ./test/load
         run: |
           kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
@@ -37,23 +37,21 @@ jobs:
           kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+          kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
+
       - name: Download kube-burner
         run: |
           curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin
+
       - name: Run load Tests
         working-directory: .
         run: make load-test
-
-      - name: Create reports
-        if: always()
-        working-directory: ./.github/scripts
-        run: ./create-reports-full.sh
 
       - name: Upload cluster logs
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: logs-load-tests
-          path: .github/scripts/logs
+          path: ./collected-metrics

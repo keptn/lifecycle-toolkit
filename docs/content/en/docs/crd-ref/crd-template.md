@@ -2,7 +2,7 @@
 title: <crd-name>
 description: <one-line description of CRD>
 weight: <assign weight to create alphabetical order>
-hidden: true
+hide: true
 ---
 
 Copy this template to create a new CRD reference page.

@@ -1,6 +1,7 @@
-## Keptn Lifecycle Toolkit
+# Keptn Lifecycle Toolkit
 
-KLT introduces a more cloud-native approach for pre- and post-deployment, as well as the concept of application health checks
+KLT introduces a more cloud-native approach for pre- and post-deployment, as well as the concept of application health
+checks
 
 ## Parameters
 

@@ -9,15 +9,17 @@ We are thrilled to have you join us as a contributor! The Keptn Lifecycle Toolki
 This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE, the following configuration is required.
 
-Further information can also be found in the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
+Further information can also be found in
+the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
 
 ### Visual Studio Code
 
-In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi) extension is required.
+In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi)
+extension is required.
 
 Adding the following lines to the `Golang` extension configuration file will enable all linters used in this project.
 
-```
+```json
 "go.lintTool": {
  "type": "string",
  "default": "golangci-lint",

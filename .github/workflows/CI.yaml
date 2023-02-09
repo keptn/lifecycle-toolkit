@@ -316,7 +316,7 @@ jobs:
       run: make helm-package
 
     - name: Copy charts from klt to helm repo
-      run: ./.github/scripts/copy-helm-charts.sh ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
+      run: rsync -av --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
@@ -325,12 +325,11 @@ jobs:
       with:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
         path: ./helm-charts-repository
-        commit-message: "Helm Charts update"
+        commit-message: "Update KLT chart"
         signoff: true
-        branch: helm-chart-update-${{ env.GIT_SHA }}
+        branch: klt-chart-update-${{ env.GIT_SHA }}
         delete-branch: true
         base: main
         title: "Update KLT Helm chart"
         body: |
           :robot: **This is an automated PR for updating and releasing Helm charts from keptn/lifecycle-toolkit!** :robot:
-

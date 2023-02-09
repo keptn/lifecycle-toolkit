@@ -1,0 +1,6 @@
+
+versions:
+- url: /docs/
+  version: development
+- url: https://lifecycle.keptn.sh
+  version: production

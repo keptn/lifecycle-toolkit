@@ -9,6 +9,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 
 ### Keptn Evaluation Definition
+
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
 
@@ -30,8 +31,8 @@ spec:
       evaluationTarget: >4
 ```
 
-
 ### Keptn Evaluation Provider
+
 A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the
 pre- and post-analysis phases of a workload or application.
 

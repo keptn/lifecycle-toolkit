@@ -19,22 +19,22 @@ Adding the following lines to the `Golang` extension configuration file will ena
 
 ```
 "go.lintTool": {
-	"type": "string",
-	"default": "golangci-lint",
-	"description": "GolangGCI Linter",
-	"scope": "resource",
-	"enum": [
-		"golangci-lint",
-	]
+ "type": "string",
+ "default": "golangci-lint",
+ "description": "GolangGCI Linter",
+ "scope": "resource",
+ "enum": [
+  "golangci-lint",
+ ]
 },
 "go.lintFlags": {
-	"type": "array",
-	"items": {
-		"type": "string"
-	},
-	"default": ["--fast", "--fix"],
-	"description": "Flags to pass to GCI Linter",
-	"scope": "resource"
+ "type": "array",
+ "items": {
+  "type": "string"
+ },
+ "default": ["--fast", "--fix"],
+ "description": "Flags to pass to GCI Linter",
+ "scope": "resource"
 },
 ```
 

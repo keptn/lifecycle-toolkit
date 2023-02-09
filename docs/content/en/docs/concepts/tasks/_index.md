@@ -36,6 +36,7 @@ spec:
 ```
 
 In the code section, it is possible to define a full-fletched Deno script.
+
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
@@ -106,6 +107,7 @@ if (contextdata.objectType == "Workload") {
   let workload_version = contextdata.workloadVersion;
 }
 ```
+
 ## Input Parameters and Secret Handling
 
 As you might have noticed, Task Definitions also have the possibility to use input parameters.

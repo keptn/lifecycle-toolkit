@@ -123,7 +123,7 @@ spec:
         console.error("Success")
 ```
 
-After we have done that, we can restart the deployment of our `KeptnApplication` by incrementing the `spec.revision` field by one 
+After we have done that, we can restart the deployment of our `KeptnApplication` by incrementing the `spec.revision` field by one
 (`kubectl -n restartable-apps edit keptnapps.lifecycle.keptn.sh podtato-head`):
 
 ```yaml
@@ -142,7 +142,7 @@ spec:
     - pre-deployment-check
 ```
 
-After those changes have been made, you will notice a new revision of the `podtato-head` `KeptnAppVersion`: 
+After those changes have been made, you will notice a new revision of the `podtato-head` `KeptnAppVersion`:
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps       
@@ -162,5 +162,5 @@ pre-pre-deployment-check-49827   podtato-head   0.1.1                           
 pre-pre-deployment-check-65056   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--57313   Succeeded
 ```
 
-You will notice that for both the `KeptnAppVersions` and `KeptnTasks` the previous failed instances are still available, as this might be useful historical data to keep track of 
+You will notice that for both the `KeptnAppVersions` and `KeptnTasks` the previous failed instances are still available, as this might be useful historical data to keep track of
 what went wrong during earlier deployment attempts.

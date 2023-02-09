@@ -27,4 +27,5 @@ postDeploymentTasks:
 preDeploymentEvaluations:    
 - my-prometheus-definition
 ```
+
 While changes in the workload version will affect only workload checks, a change in the app version will also cause a new execution of app level checks.

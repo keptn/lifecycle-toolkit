@@ -42,12 +42,12 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []interfaces.Controller{&keptntask.KeptnTaskReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-task-controller"),
-			Log:      GinkgoLogr,
-			Meters:   initKeptnMeters(),
-			Tracer:   tracer.Tracer("test-task-tracer"),
+			Client:        k8sManager.GetClient(),
+			Scheme:        k8sManager.GetScheme(),
+			Recorder:      k8sManager.GetEventRecorderFor("test-task-controller"),
+			Log:           GinkgoLogr,
+			Meters:        initKeptnMeters(),
+			TracerFactory: &tracerFactory{tracer: tracer},
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 	})

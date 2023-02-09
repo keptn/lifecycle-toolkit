@@ -68,13 +68,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []interfaces.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-			Client:      k8sManager.GetClient(),
-			Scheme:      k8sManager.GetScheme(),
-			Recorder:    k8sManager.GetEventRecorderFor("test-app-controller"),
-			Log:         GinkgoLogr,
-			Meters:      initKeptnMeters(),
-			SpanHandler: &controllercommon.SpanHandler{},
-			Tracer:      tracer.Tracer("test-app-tracer"),
+			Client:        k8sManager.GetClient(),
+			Scheme:        k8sManager.GetScheme(),
+			Recorder:      k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:           GinkgoLogr,
+			Meters:        initKeptnMeters(),
+			SpanHandler:   &controllercommon.SpanHandler{},
+			TracerFactory: &tracerFactory{tracer: tracer},
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 		// so that they have a different span/trace

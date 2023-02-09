@@ -42,6 +42,13 @@ If you believe that additional content should be included in this list, please s
   - [ ]  [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
 </details>
 
+<details>
+  <summary>Operator SDK</summary>
+
+- **Go-based Operators**
+  - [ ]  [Go operator tutorial from RedHat](https://docs.okd.io/latest/operators/operator_sdk/golang/osdk-golang-tutorial.html)
+</details>
+
 ## Linters
 
 This project uses a set of linters to ensure good code quality.

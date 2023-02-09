@@ -1,0 +1,26 @@
+_merge: deep
+module:
+  imports:
+  - path: github.com/keptn-sandbox/lifecycle-toolkit-docs
+    ignoreConfig: false
+    mounts:
+    - source: static
+      target: static
+    - source: layouts
+      target: layouts
+    - source: data
+      target: data
+    - source: assets
+      target: assets
+    - source: archetypes
+      target: archetypes
+    - source: content/en/_index.md
+      target: content/en/_index.md
+  proxy: direct
+
+params:
+  versions:
+  - url: /docs/
+    version: development
+  - url: https://lifecycle.keptn.sh
+    version: production

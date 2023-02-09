@@ -18,7 +18,12 @@ Copy this template to create a new CRD reference page.
 
 ## Parameters
 
+<Detailed description of each field/parameter>
+
 ## Usage
+
+<How this CRD is "activated".  For example, which event uses this CRD>
+<Instructions and guidelines for when and how to customize a CRD>
 
 ## Examples
 

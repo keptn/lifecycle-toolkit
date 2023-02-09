@@ -2,9 +2,11 @@ package component
 
 import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 func initKeptnMeters() apicommon.KeptnMeters {
@@ -30,4 +32,12 @@ func initKeptnMeters() apicommon.KeptnMeters {
 		EvaluationDuration: evaluationDuration,
 	}
 	return meters
+}
+
+type tracerFactory struct {
+	tracer trace.TracerProvider
+}
+
+func (f *tracerFactory) GetTracer(name string) controllercommon.ITracer {
+	return f.tracer.Tracer(name)
 }

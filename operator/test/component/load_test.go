@@ -43,11 +43,11 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
 		controllers := []interfaces.Controller{&keptnapp.KeptnAppReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("load-app-controller"),
-			Log:      GinkgoLogr,
-			Tracer:   tracer.Tracer("load-app-tracer"),
+			Client:        k8sManager.GetClient(),
+			Scheme:        k8sManager.GetScheme(),
+			Recorder:      k8sManager.GetEventRecorderFor("load-app-controller"),
+			Log:           GinkgoLogr,
+			TracerFactory: &tracerFactory{tracer: tracer},
 		}}
 		setupManager(controllers)
 	})

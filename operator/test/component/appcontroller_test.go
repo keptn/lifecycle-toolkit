@@ -2,7 +2,6 @@ package component
 
 import (
 	"fmt"
-
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
@@ -45,11 +44,11 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []interfaces.Controller{&keptnapp.KeptnAppReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-app-controller"),
-			Log:      GinkgoLogr,
-			Tracer:   tracer.Tracer("test-app-tracer"),
+			Client:        k8sManager.GetClient(),
+			Scheme:        k8sManager.GetScheme(),
+			Recorder:      k8sManager.GetEventRecorderFor("test-app-controller"),
+			Log:           GinkgoLogr,
+			TracerFactory: &tracerFactory{tracer: tracer},
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 		// so that they have a different span/trace

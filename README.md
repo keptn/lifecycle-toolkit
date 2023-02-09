@@ -19,11 +19,11 @@ Click to watch it on YouTube:
 ## Deploy the latest release
 
 **Known Limitations**
+
 * Kubernetes >=1.24 is needed to deploy the Lifecycle Toolkit
 * The Lifecycle Toolkit is currently not compatible with [vcluster](https://github.com/loft-sh/vcluster)
 
 **Installation**
-
 
 <!---x-release-please-start-version-->
 
@@ -47,11 +47,11 @@ See [installation guideline](https://github.com/keptn/lifecycle-toolkit/blob/mai
 
 The Keptn Lifecycle Toolkit aims to support Cloud Native teams with:
 
-- Pre-requisite evaluation before deploying workloads and applications
-- Finding out when an application (not workload) is ready and working
-- Checking the Application Health in a declarative (cloud-native) way
-- Standardized way for pre- and post-deployment tasks
-- Provide out-of-the-box Observability of the deployment cycle
+* Pre-requisite evaluation before deploying workloads and applications
+* Finding out when an application (not workload) is ready and working
+* Checking the Application Health in a declarative (cloud-native) way
+* Standardized way for pre- and post-deployment tasks
+* Provide out-of-the-box Observability of the deployment cycle
 
 ![](./assets/operator-maturity.jpg)
 
@@ -113,11 +113,10 @@ The deployment for a Workload will stay in a `Pending` state until the respectiv
 
 ## Architecture
 
-
 The Keptn Lifecycle Toolkit is composed of the following components:
 
-- Keptn Lifecycle Operator
-- Keptn Scheduler
+* Keptn Lifecycle Operator
+* Keptn Scheduler
 
 The Keptn Lifecycle Operator contains several controllers for Keptn CRDs and a Mutating Webhook.
 The Keptn Scheduler ensures that Pods are started only after the pre-deployment checks have finished.
@@ -149,50 +148,51 @@ metadata:
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"  # this lines tells the webhook to handle the namespace
 ```
+
 However, the mutating webhook will modify only resources in the annotated namespace that have Keptn annotations.
 When the webhook receives a request for a new pod, it will look for the workload annotations:
 
 ```
 keptn.sh/workload
 ```
-The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler. Webhook then creates a workload and app resource per annotated resource. 
+
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler. Webhook then creates a workload and app resource per annotated resource.
 You can also specify a custom app definition with the annotation:
 
 ```
 keptn.sh/app
 ```
+
 In this case the webhook will not generate an app, but it will expect that the user will provide one.
 The webhook should be as fast as possible and should not create/change any resource.
 Additionally, it will compute a version string, using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).
 Next, it will look for an existing instance of a `Workload CRD` for the given workload name:
 
-- If it finds the `Workload`, it will update its version according to the previously computed version string.
+* If it finds the `Workload`, it will update its version according to the previously computed version string.
   In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner),
   or the pod itself, if it does not have an owner.
-- If it does not find a workload instance, it will create one containing the previously computed version string.
+* If it does not find a workload instance, it will create one containing the previously computed version string.
   In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if it does not have an owner.
 
 It will use the following annotations for
 the specification of the pre/post deployment checks that should be executed for the `Workload`:
 
-  - `keptn.sh/pre-deployment-tasks: task1,task2`
-  - `keptn.sh/post-deployment-tasks: task1,task2`
+* `keptn.sh/pre-deployment-tasks: task1,task2`
+* `keptn.sh/post-deployment-tasks: task1,task2`
 
 and for the Evaluations:
 
-  - `keptn.sh/pre-deployment-evaluations: my-evaluation-definition`
-  - `keptn.sh/post-deployment-evaluations: my-eval-definition`
+* `keptn.sh/pre-deployment-evaluations: my-evaluation-definition`
+* `keptn.sh/post-deployment-evaluations: my-eval-definition`
 
 After either one of those actions has been taken, the webhook will set the scheduler of the pod and allow the pod to be scheduled.
-
 
 ### Scheduler
 
 After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows the default scheduler behavior,
 since it implements a scheduler plugin based on the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a node.
-
 
 ### Keptn App
 
@@ -217,6 +217,7 @@ postDeploymentTasks:
 preDeploymentEvaluations:    
 - my-prometheus-definition
 ```
+
 While changes in the workload version will affect only workload checks,  a change in the app version will also cause a new execution of app level checks.
 
 ### Keptn Workload
@@ -242,9 +243,9 @@ In the future, we also intend to support other runtimes, especially running a co
 
 A task definition can be configured in three different ways:
 
-- inline
-- referring to an HTTP script
-- referring to another `KeptnTaskDefinition`
+* inline
+* referring to an HTTP script
+* referring to another `KeptnTaskDefinition`
 
 An inline task definition looks like the following:
 
@@ -304,7 +305,6 @@ The JSON object can be read through the environment variable `DATA` using `Deno.
 K8s secrets can also be passed to the function using the `secureParameters` field.
 Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the environment variable `SECURE_DATA`.
 
-
 ### Keptn Task
 
 A Task is responsible for executing the TaskDefinition of a workload.
@@ -312,6 +312,7 @@ The execution is done spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
 
 ### Keptn Evaluation Definition
+
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
 
@@ -333,9 +334,9 @@ spec:
       evaluationTarget: >4
 ```
 
-
 ### Keptn Evaluation Provider
-A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the 
+
+A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the
 pre- and post-analysis phases of a workload or application.
 
 A Keptn evaluation provider looks like the following:
@@ -351,6 +352,7 @@ spec:
 ```
 
 ### Keptn Metric
+
 A `KeptnMetric` is a CRD used to define SLI provider with a query and to store metric data fetched from the provider.
 Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
 Furthermore, this allows using multiple observability platforms for different metrics.
@@ -396,7 +398,6 @@ RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 make build-deploy-dev-environment
 
 ```
-
 
 ## License
 

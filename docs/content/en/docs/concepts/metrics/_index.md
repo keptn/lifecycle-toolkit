@@ -8,6 +8,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 ### Keptn Metric
+
 A `KeptnMetric` is a CRD representing a metric. The metric will be collected from the provider specified in the specs.provider.name field. The query is a string in the provider-specific query language, used to obtain a metric. Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components. Furthermore, this allows using multiple observability platforms for different metrics. Please note, there is a limitation that `KeptnMetric` resource needs to be created only in `keptn-lifecycle-toolkit-system` namespace.
 
 A `KeptnMetric` looks like the following:
@@ -36,7 +37,6 @@ and access the metrics via your browser with:
 ```
 http://localhost:9999/metrics
 ```
-
 
 #### Accessing Metrics via the Kubernetes Custom Metrics API
 

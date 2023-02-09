@@ -6,3 +6,9 @@
 
 - query: rate(apiserver_request_total{job="apiserver"}[5m])
   metricName: APIServerRequests
+
+- query: rate(etcd_request_duration_seconds_sum[5m])
+  metricName: EtcdRequestLatency
+
+- query: rate(node_cpu_core_throttles_total[5m])
+  metricName: CPUThrottling

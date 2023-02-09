@@ -39,6 +39,12 @@ jobs:
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
           kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
 
+          # wait for port 9090 to become available
+          while ! nc -vz localhost 9090 > /dev/null 2>&1 ; do
+            echo "Sleeping until port-forward for Prometheus at port 9090 is ready..."
+            sleep 0.1
+          done
+
       - name: Download kube-burner
         run: |
           curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz

@@ -7,6 +7,41 @@ Please, explore the options below to learn more about how you can contribute.
 
 ## Prerequisites
 
+## Ancillary Technologies
+This section serves as a reference for various supplementary technologies associated with Keptn. 
+The information has been gathered from the community and is subject to alteration. 
+It is suggested that this list be utilized as a means of gaining familiarity with the ancillary technologies of Keptn. 
+If you believe that additional content should be included in this list, please submit a comment on issue
+[#733](https://github.com/keptn/lifecycle-toolkit/issues/733).
+
+<details>
+  <summary>Kubernetes</summary>
+
+- **Understand the basics of Kubernetes**
+  - [ ]  [Kubernetes For Beginner](https://youtu.be/X48VuDVv0do)
+- **Kubernetes Architecture**
+  - [ ]  [Philosophy](https://youtu.be/ZuIQurh_kDk)
+  - [ ]  [Kubernetes Deconstructed: Understanding Kubernetes by Breaking It Down](https://www.youtube.com/watch?v=90kZRyPcRZw)
+- **CRD**
+  - [ ]  [Custom Resouce Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
+  - [ ]  [Kubernetes Operator simply explained in 10 mins](https://www.youtube.com/watch?v=ha3LjlD6g7g)
+  - [ ]  [Writing Kubernetes Controllers for CRDs](https://www.youtube.com/watch?v=7wdUa4Ulwxg)
+- **Kube-builder Tutorial**
+  - [ ] [book.kubebuilder.io](https://book.kubebuilder.io/introduction.html)
+- **Isitobservable**
+  - [ ] Keptn has tight integrations with Observability tools and therefore knowing how to _Observe a System_ is important.
+  - [ ] [Isitobservable website](https://isitobservable.io/)
+  - [ ] [Is it Observable? with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
+</details>
+
+<details>
+  <summary>Understanding SLO, SLA, SLIs</summary>
+
+- **Overview**
+  - [ ]  [overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
+  - [ ]  [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
+</details>
+
 ## Linters
 
 This project uses a set of linters to ensure good code quality.

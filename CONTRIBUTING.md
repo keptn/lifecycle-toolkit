@@ -18,6 +18,7 @@ If you have suggestions about additional content that should be included in this
   <summary>Kubernetes</summary>
 
 - **Understand the basics of Kubernetes**
+  - [ ]  [Kubernetes official documentation](https://kubernetes.io/docs/concepts/overview/)
   - [ ]  [Kubernetes For Beginner](https://youtu.be/X48VuDVv0do)
 - **Kubernetes Architecture**
   - [ ]  [Philosophy](https://youtu.be/ZuIQurh_kDk)

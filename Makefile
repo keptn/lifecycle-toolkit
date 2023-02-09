@@ -98,3 +98,6 @@ build-deploy-certmanager:
 
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-scheduler
+
+markdownlint:
+	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md"

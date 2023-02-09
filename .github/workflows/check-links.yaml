@@ -52,10 +52,7 @@ jobs:
         run: |
           git diff --exit-code '*.md' || (echo "Table of Contents is out of date. Please update the following files: $(git diff --name-status --exit-code)" && exit 1)
 
-      - name: Linting Markdowns
-        run: |
-          FILES=`find . -type f -name '*.md' -not -path './.github/*' -not -path './node_modules/*' | sort`
-          for f in $(ALL_DOCS); do
-            echo "Checking links for ${f}";
-            npx markdownlint-cli markdownlint ${f} || exit 1;
-          done
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v9.0.0
+        with:
+          globs: '**.md'

@@ -1,4 +1,4 @@
-package providers
+package prometheus
 
 import (
 	"context"
@@ -75,7 +75,7 @@ func Test_prometheus(t *testing.T) {
 			defer svr.Close()
 
 			kpp := KeptnPrometheusProvider{
-				httpClient: http.Client{},
+				HttpClient: http.Client{},
 				Log:        ctrl.Log.WithName("testytest"),
 			}
 			obj := klcv1alpha2.Objective{

@@ -33,6 +33,7 @@ jobs:
             test
             deps
           scopes: |
+            helm-chart
             scheduler
             operator
             cert-manager

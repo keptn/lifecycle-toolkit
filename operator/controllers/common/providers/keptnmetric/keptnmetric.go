@@ -1,4 +1,4 @@
-package providers
+package keptnmetric
 
 import (
 	"context"
@@ -13,13 +13,13 @@ import (
 
 type KeptnMetricProvider struct {
 	Log       logr.Logger
-	k8sClient client.Client
+	K8sClient client.Client
 }
 
 // EvaluateQuery fetches the SLI values from KeptnMetric resource
 func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
 	metric := &metricsv1alpha1.KeptnMetric{}
-	if err := p.k8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: provider.Namespace}, metric); err != nil {
+	if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: provider.Namespace}, metric); err != nil {
 		p.Log.Error(err, "Could not retrieve KeptnMetric")
 		return "", nil, err
 	}

@@ -308,7 +308,7 @@ jobs:
     - name: Check out helm-charts repo
       uses: actions/checkout@v3
       with:
-        repository: 'keptn/helm-charts'
+        repository: 'keptn/lifecycle-toolkit-charts'
         path: ./helm-charts-repository
         token: ${{ secrets.GITHUB_TOKEN }}
 

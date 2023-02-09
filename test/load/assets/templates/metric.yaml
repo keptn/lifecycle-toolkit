@@ -1,7 +1,8 @@
 apiVersion: metrics.keptn.sh/v1alpha1
 kind: KeptnMetric
 metadata:
-  name: keptnmetric-load-test
+  name: keptnmetric-load-test-{{.Iteration}}-{{.Replica}}
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
     name: "prometheus-load-test-provider"

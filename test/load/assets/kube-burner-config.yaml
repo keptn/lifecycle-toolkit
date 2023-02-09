@@ -39,9 +39,18 @@ data:
     apiVersion: metrics.keptn.sh/v1alpha1
     kind: KeptnMetric
     metadata:
-      name: keptnmetric-load-test
+      name: keptnmetric-load-test-{{.Iteration}}-{{.Replica}}
+      namespace: keptn-lifecycle-toolkit-system
     spec:
       provider:
         name: "prometheus-load-test-provider"
       query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
       fetchIntervalSeconds: 10
+    ---
+    apiVersion: lifecycle.keptn.sh/v1alpha2
+    kind: KeptnEvaluationProvider
+    metadata:
+      name: prometheus-load-test-provider
+      namespace: keptn-lifecycle-toolkit-system
+    spec:
+      targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

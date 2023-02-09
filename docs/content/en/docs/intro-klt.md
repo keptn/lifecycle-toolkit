@@ -34,15 +34,14 @@ so adds pre-deployment and post-deployment evaluations and actions.
 For many installations, this provides the functionality they need
 with much less complexity than the Keptn LTS project.
 
-Keptn LTS is a fully-incubated, LTS release
+Keptn LTS is a fully-incubated, long-term support release
 that can deploy applications on platforms other than Kubernetes
-and currently offers some functionality that KLT does not
-such as the abiity to accomodate complex scoring algorithms
-for SLO evaluations
+and currently offers functionality that KLT does not currently have
+such as the abiity to accomodate complex scoring algorithms for SLO evaluations
 and the ability to implement remediations (self-healing) for problems discovered
 on the production site.
 Keptn LTS can also be more difficult to set up and maintain
-thank the Keptn Lifecycle Toolkit.
+than the Keptn Lifecycle Toolkit.
 
 In a December 2022 Keptn Community meeting, 
 we discussed the differences and similarities

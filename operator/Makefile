@@ -69,11 +69,6 @@ help: ## Display this help.
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
-.PHONY: gen-crds
-gen-crds: manifests #create CustomResourceDefinition objects for helm.
-	kustomize build config/crd > ../helm/chart/crds/crds.yaml
-
-
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
@@ -140,12 +135,6 @@ release-manifests: manifests
 	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	echo "building default overlay"
 	kustomize build config/default > config/rendered/release.yaml
-
-.PHONY: release-helm-manifests
- release-helm-manifests: manifests gen-crds
-	echo "building helm overlay"
-	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-	kustomize build config/default/base > config/rendered/release.yaml
 
 .PHONY: deploy
 deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/config.

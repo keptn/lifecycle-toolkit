@@ -40,7 +40,7 @@ jobs:
       - name: Run TOC generation
         run: |
           FILES=`find . -type f -name '*.md' -not -path './.github/*' -not -path './node_modules/*' | sort`
-          for f in $(FILES); do
+          for f in $FILES; do
             if grep -q '<!-- tocstop -->' $$f; then
               echo "Checking TOC for ${f}";
               npx markdown-toc --no-first-h1 --no-stripHeadingTags -i ${f} || exit 1;

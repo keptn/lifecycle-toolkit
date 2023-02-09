@@ -1,21 +1,27 @@
-## Add Application Awareness
+# Add Application Awareness
 
-In the previous step, we installed the demo application without any application awareness. This means that the Lifecycle Toolkit assumed that every workload is a single-service application at the moment and created the Application resources for you.
+In the previous step, we installed the demo application without any application awareness. This means that the Lifecycle
+Toolkit assumed that every workload is a single-service application at the moment and created the Application resources
+for you.
 
-To get the overall state of an application, we need a grouping of workloads, called KeptnApp in the Lifecycle Toolkit. To get this working, we need to modify our application manifest with two things:
+To get the overall state of an application, we need a grouping of workloads, called KeptnApp in the Lifecycle Toolkit.
+To get this working, we need to modify our application manifest with two things:
 
 * Add an "app.kubernetes.io/part-of" or "keptn.sh/app" label to the deployment
 * Create an application resource
 
-### Preparing the Manifest and create an App resource
+## Preparing the Manifest and create an App resource
 
 ---
-**TL;DR**
 
-You can also used the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and proceed [here](#watch-application-behavior).
+### TL;DR
+
+You can also used the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and
+proceed [here](#watch-application-behavior).
 
 ---
-**Otherwise**
+
+### Otherwise
 
 Create a temporary directory and copy the base manifest there:
 
@@ -51,7 +57,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:0.2.7
+          image: ghcr.io/podtato-head/right-leg:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -93,20 +99,21 @@ Now, apply the manifests:
 kubectl apply -f ./my-deployment/.
 ```
 
-### Watch Application behavior
+## Watch Application behavior
 
-Now, your application gets deployed in an application aware way. This means that pre-deployment tasks and evaluations would be executed if you would have any. The same would happen for post-deployment tasks and evaluations after the last workload has been deployed successfully.
+Now, your application gets deployed in an application aware way. This means that pre-deployment tasks and evaluations
+would be executed if you would have any. The same would happen for post-deployment tasks and evaluations after the last
+workload has been deployed successfully.
 
-<details>
-<summary>Watch application state</summary>
 Now that you defined your application, you could watch the state of the whole application using:
 
 ```shell
 kubectl get keptnappversions -n podtato-kubectl`
 ```
 
-</details>
+You should see that the application is in a progressing state as long as the workloads (`kubectl get kwi`) are
+progressing. After the last application has been deployed, and post-deployment tasks and evaluations are finished (there
+are none at this point), the state should switch to completed.
 
-You should see that the application is in a progressing state as long as the workloads (`kubectl get kwi`) are progressing. After the last application has been deployed, and post-deployment tasks and evaluations are finished (there are none at this point), the state should switch to completed.
-
-Now, we have deployed an application and are able to get the total state of the application state. Metrics and traces get exported and now we're ready to dive deeper in the world of Pre- and Post-Deployment Tasks.
+Now, we have deployed an application and are able to get the total state of the application state. Metrics and traces
+get exported and now we're ready to dive deeper in the world of Pre- and Post-Deployment Tasks.

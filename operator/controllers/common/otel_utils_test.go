@@ -229,3 +229,14 @@ func TestSetUpKeptnTaskMeters_ErrorCase(t *testing.T) {
 	require.Nil(t, got.EvaluationCount)
 	require.Nil(t, got.EvaluationDuration)
 }
+
+func Test_otelConfig_GetTracer(t *testing.T) {
+	otelConfig := GetOtelInstance()
+
+	tracer := otelConfig.GetTracer("new-tracer")
+	require.NotNil(t, tracer)
+
+	otelConfig.cleanTracers()
+
+	require.Empty(t, otelConfig.tracers)
+}

@@ -9,18 +9,18 @@ import (
 	"sync"
 )
 
-// ITracerMock is a mock implementation of common.ITracer.
+// ITracerMock is a mock implementation of interfaces.ITracer.
 //
 //	func TestSomethingThatUsesITracer(t *testing.T) {
 //
-//		// make and configure a mocked common.ITracer
+//		// make and configure a mocked interfaces.ITracer
 //		mockedITracer := &ITracerMock{
 //			StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 //				panic("mock out the Start method")
 //			},
 //		}
 //
-//		// use mockedITracer in code that requires common.ITracer
+//		// use mockedITracer in code that requires interfaces.ITracer
 //		// and then make assertions.
 //
 //	}

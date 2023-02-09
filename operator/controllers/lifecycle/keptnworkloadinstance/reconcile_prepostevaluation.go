@@ -15,7 +15,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 		Client:      r.Client,
 		Recorder:    r.Recorder,
 		Log:         r.Log,
-		Tracer:      r.Tracer,
+		Tracer:      r.getTracer(),
 		Scheme:      r.Scheme,
 		SpanHandler: r.SpanHandler,
 	}

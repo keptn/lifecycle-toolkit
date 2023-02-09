@@ -26,7 +26,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -43,14 +42,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-// KeptnAppReconciler reconciles a KeptnApp object
+const traceComponentName = "keptn/operator/app"
 
+// KeptnAppReconciler reconciles a KeptnApp object
 type KeptnAppReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Tracer   interfaces.ITracer
+	Scheme        *runtime.Scheme
+	Recorder      record.EventRecorder
+	Log           logr.Logger
+	TracerFactory controllercommon.TracerFactory
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete
@@ -84,7 +84,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	traceContextCarrier := propagation.MapCarrier(app.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.Tracer.Start(ctx, "reconcile_app", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.getTracer().Start(ctx, "reconcile_app", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
 	app.SetSpanAttributes(span)
@@ -138,10 +138,10 @@ func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha2.KeptnApp) (*klcv1alpha2.KeptnAppVersion, error) {
-	ctx, span := r.Tracer.Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.getTracer().Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	ctxAppTrace, spanAppTrace := r.Tracer.Start(ctx, app.GetAppVersionName(), trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
+	ctxAppTrace, spanAppTrace := r.getTracer().Start(ctx, app.GetAppVersionName(), trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer spanAppTrace.End()
 
 	app.SetSpanAttributes(span)
@@ -200,4 +200,8 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 		}
 	}
 	return lastResultErr
+}
+
+func (r *KeptnAppReconciler) getTracer() controllercommon.ITracer {
+	return r.TracerFactory.GetTracer(traceComponentName)
 }

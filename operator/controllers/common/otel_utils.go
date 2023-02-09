@@ -38,6 +38,9 @@ var (
 type otelConfig struct {
 	TracerProvider *trace.TracerProvider
 	OtelExporter   *trace.SpanExporter
+
+	mtx     sync.RWMutex
+	tracers map[string]ITracer
 }
 
 // do not export this type to make it accessible only via the GetInstance method (i.e Singleton)
@@ -46,7 +49,9 @@ var otelInstance *otelConfig
 func GetOtelInstance() *otelConfig {
 	// initialize once
 	otelInitOnce.Do(func() {
-		otelInstance = &otelConfig{}
+		otelInstance = &otelConfig{
+			tracers: map[string]ITracer{},
+		}
 	})
 
 	return otelInstance
@@ -62,6 +67,7 @@ func (o *otelConfig) InitOtelCollector(otelCollectorUrl string) error {
 	otel.SetTracerProvider(o.TracerProvider)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	o.OtelExporter = &otelExporter
+	o.cleanTracers()
 	logger.Info("Successfully initialized OTel collector")
 	return nil
 }
@@ -70,6 +76,21 @@ func (o *otelConfig) ShutDown() {
 	if err := o.TracerProvider.Shutdown(context.Background()); err != nil {
 		os.Exit(1)
 	}
+}
+
+func (o *otelConfig) GetTracer(name string) ITracer {
+	o.mtx.Lock()
+	defer o.mtx.Unlock()
+	if o.tracers[name] == nil {
+		o.tracers[name] = otel.Tracer(name)
+	}
+	return o.tracers[name]
+}
+
+func (o *otelConfig) cleanTracers() {
+	o.mtx.Lock()
+	defer o.mtx.Unlock()
+	o.tracers = map[string]ITracer{}
 }
 
 func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProviderOption, trace.SpanExporter, error) {

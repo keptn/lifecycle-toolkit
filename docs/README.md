@@ -25,3 +25,9 @@ To check your markdown files for linter errors, run the following from the repo 
 ```
 make markdownlint
 ```
+
+To use the auto-fix option, run:
+
+```
+make markdownlint-fix
+```

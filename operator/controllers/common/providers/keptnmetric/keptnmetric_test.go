@@ -1,4 +1,4 @@
-package providers
+package keptnmetric
 
 import (
 	"context"
@@ -66,7 +66,7 @@ func Test_keptnmetric(t *testing.T) {
 
 			kmp := KeptnMetricProvider{
 				Log:       ctrl.Log.WithName("testytest"),
-				k8sClient: client,
+				K8sClient: client,
 			}
 
 			obj := klcv1alpha2.Objective{

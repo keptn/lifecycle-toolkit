@@ -1,14 +1,14 @@
-- query: rate(container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}[5m])
+- query: sum by (job) (rate(container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}[5m]))
   metricName: MemoryUsage
 
-- query: rate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system"}[5m])
+- query: sum by (job) (rate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system"}[5m]))
   metricName: CPUUsage
 
-- query: rate(apiserver_request_total{job="apiserver"}[5m])
+- query: sum by (job) (rate(apiserver_request_total{job="apiserver"}[5m]))
   metricName: APIServerRequests
 
-- query: rate(etcd_request_duration_seconds_sum[5m])
+- query: sum by (job) (rate(etcd_request_duration_seconds_sum[5m]))
   metricName: EtcdRequestLatency
 
-- query: rate(node_cpu_core_throttles_total[5m])
+- query: sum by (job) (rate(node_cpu_core_throttles_total[5m]))
   metricName: CPUThrottling

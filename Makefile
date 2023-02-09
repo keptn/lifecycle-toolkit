@@ -38,7 +38,6 @@ load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
 	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
-	kubectl delete keptnmetric -n keptn-lifecycle-toolkit-system $(kubectl get keptnmetric -n keptn-lifecycle-toolkit-system)
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

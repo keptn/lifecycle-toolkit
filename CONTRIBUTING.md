@@ -8,11 +8,11 @@ Please, explore the options below to learn more about how you can contribute.
 ## Prerequisites
 
 ## Ancillary Technologies
-This section serves as a reference for various supplementary technologies associated with Keptn. 
-The information has been gathered from the community and is subject to alteration. 
-It is suggested that this list be utilized as a means of gaining familiarity with the ancillary technologies of Keptn. 
-If you believe that additional content should be included in this list, please submit a comment on issue
-[#733](https://github.com/keptn/lifecycle-toolkit/issues/733).
+You should understand some ancillary technologies
+to effectively use and contribute to the Keptn lifecycle-toolkit.
+This section provides links to some materials that can help your learning.
+The information has been gathered from the community and is subject to alteration.
+If you have suggestions about additional content that should be included in this list, please submit an issue.
 
 <details>
   <summary>Kubernetes</summary>

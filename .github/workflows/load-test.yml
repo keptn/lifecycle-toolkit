@@ -27,18 +27,22 @@ jobs:
         with:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
 
+      - name: Install cert-manager
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+
       - name: Install and expose Prometheus
         working-directory: ./test/load
         run: |
           kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply --server-side -f ../../examples/support/observability/config/prometheus/setup
           kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
-          sleep 60
+          #sleep 60
           kubectl apply -f ../../examples/support/observability/config/prometheus/
           kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
-          sleep 60
+          #sleep 60
           kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
 
           # wait for port 9090 to become available

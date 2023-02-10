@@ -42,7 +42,10 @@ jobs:
           kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
-          #sleep 60
+          kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
+          sleep 60
+          echo "after sleep---------------------------------------------"
+          kubectl logs prometheus-k8s-0 -n monitoring
           kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
 
           # wait for port 9090 to become available

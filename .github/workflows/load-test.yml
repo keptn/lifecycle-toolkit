@@ -67,9 +67,21 @@ jobs:
         working-directory: .
         run: make load-test
 
-      - name: Upload cluster logs
+      - name: Upload results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: logs-load-tests
           path: ./collected-metrics
+      
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-toolkit.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-load-tests
+          path: .github/scripts/logs

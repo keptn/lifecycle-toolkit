@@ -51,6 +51,7 @@ jobs:
           curl -fL https://github.com/cloud-bulldozer/kube-burner/releases/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin
+          sleep 120
 
       - name: Run load Tests
         working-directory: .

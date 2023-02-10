@@ -47,8 +47,6 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
-            add:
-            - SYS_TIME
             drop:
             - ALL
           readOnlyRootFilesystem: true
@@ -93,8 +91,6 @@ spec:
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
-      hostNetwork: true
-      hostPID: true
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical

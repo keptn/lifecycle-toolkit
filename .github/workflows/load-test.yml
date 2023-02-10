@@ -45,7 +45,7 @@ jobs:
           echo "logs------------------------------------------------------------"
           kubectl logs prometheus-k8s-0 -n monitoring
           echo "logs------------------------------------------------------------"
-          #kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
+          kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
           sleep 60
           echo "after sleep---------------------------------------------"
           kubectl logs prometheus-k8s-0 -n monitoring

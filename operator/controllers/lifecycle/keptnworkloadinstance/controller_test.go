@@ -11,7 +11,6 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	testrequire "github.com/stretchr/testify/require"
@@ -1048,7 +1047,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 
 }
 
-func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *interfacesfake.ITracerMock) {
+func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -1056,20 +1055,24 @@ func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *interfac
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+		return tr
 	}}
 
 	fakeClient := fake.NewClient()
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnWorkloadInstanceReconciler{
-		Client:      fakeClient,
-		Scheme:      scheme.Scheme,
-		Recorder:    recorder,
-		Log:         ctrl.Log.WithName("test-appController"),
-		Tracer:      tr,
-		Meters:      controllercommon.InitAppMeters(),
-		SpanHandler: &controllercommon.SpanHandler{},
+		Client:        fakeClient,
+		Scheme:        scheme.Scheme,
+		Recorder:      recorder,
+		Log:           ctrl.Log.WithName("test-appController"),
+		TracerFactory: tf,
+		Meters:        controllercommon.InitAppMeters(),
+		SpanHandler:   &controllercommon.SpanHandler{},
 	}
 	return r, recorder.Events, tr
 }

@@ -24,6 +24,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -39,14 +40,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+const traceComponentName = "keptn/operator/task"
+
 // KeptnTaskReconciler reconciles a KeptnTask object
 type KeptnTaskReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Meters   apicommon.KeptnMeters
-	Tracer   trace.Tracer
+	Scheme        *runtime.Scheme
+	Recorder      record.EventRecorder
+	Log           logr.Logger
+	Meters        apicommon.KeptnMeters
+	TracerFactory controllercommon.TracerFactory
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
@@ -73,7 +76,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	traceContextCarrier := propagation.MapCarrier(task.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.Tracer.Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.getTracer().Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
 	task.SetSpanAttributes(span)
@@ -163,4 +166,8 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha2.Ke
 	}
 
 	return false, nil
+}
+
+func (r *KeptnTaskReconciler) getTracer() controllercommon.ITracer {
+	return r.TracerFactory.GetTracer(traceComponentName)
 }

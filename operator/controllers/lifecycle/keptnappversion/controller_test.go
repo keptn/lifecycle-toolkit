@@ -11,7 +11,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
-	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -145,19 +144,23 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
+	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+		return tr
+	}}
+
 	r := &KeptnAppVersionReconciler{
-		Log:    ctrl.Log.WithName("test-appVersionController"),
-		Tracer: tr,
-		Meters: controllercommon.InitAppMeters(),
+		Log:           ctrl.Log.WithName("test-appVersionController"),
+		TracerFactory: tf,
+		Meters:        controllercommon.InitAppMeters(),
 	}
 	return r
 }
 
-func setupReconciler() (*KeptnAppVersionReconciler, chan string, *interfacesfake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler() (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -165,8 +168,12 @@ func setupReconciler() (*KeptnAppVersionReconciler, chan string, *interfacesfake
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+		return tr
 	}}
 
 	//fake span handler
@@ -182,13 +189,13 @@ func setupReconciler() (*KeptnAppVersionReconciler, chan string, *interfacesfake
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
-		Client:      fakeClient,
-		Scheme:      scheme.Scheme,
-		Recorder:    recorder,
-		Log:         ctrl.Log.WithName("test-appVersionController"),
-		Tracer:      tr,
-		SpanHandler: spanRecorder,
-		Meters:      controllercommon.InitAppMeters(),
+		Client:        fakeClient,
+		Scheme:        scheme.Scheme,
+		Recorder:      recorder,
+		Log:           ctrl.Log.WithName("test-appVersionController"),
+		TracerFactory: tf,
+		SpanHandler:   spanRecorder,
+		Meters:        controllercommon.InitAppMeters(),
 	}
 	return r, recorder.Events, tr, spanRecorder
 }

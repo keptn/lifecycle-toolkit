@@ -41,15 +41,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+const traceComponentName = "keptn/operator/workloadinstance"
+
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
-	Scheme      *runtime.Scheme
-	Recorder    record.EventRecorder
-	Log         logr.Logger
-	Meters      apicommon.KeptnMeters
-	Tracer      trace.Tracer
-	SpanHandler *controllercommon.SpanHandler
+	Scheme        *runtime.Scheme
+	Recorder      record.EventRecorder
+	Log           logr.Logger
+	Meters        apicommon.KeptnMeters
+	SpanHandler   *controllercommon.SpanHandler
+	TracerFactory controllercommon.TracerFactory
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -104,7 +106,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	// this will be the parent span for all phases of the WorkloadInstance
-	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.Tracer, workloadInstance, "")
+	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadInstance, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -118,7 +120,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePre)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePre)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -130,7 +132,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePreEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePreEval)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -142,7 +144,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadInstance)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcileWorkloadInstance)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcileWorkloadInstance)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -154,7 +156,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostDeployment)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePostDeployment)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -166,7 +168,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.Tracer, workloadInstance, phase, span, reconcilePostEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePostEval)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -228,7 +230,7 @@ func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context
 	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.Tracer.Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.getTracer().Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
 
 	endFunc := func(span trace.Span, workloadInstance *klcv1alpha2.KeptnWorkloadInstance) {
 		if workloadInstance.IsEndTimeSet() {
@@ -307,6 +309,10 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, klcv1alpha2.KeptnAppVersion{}, nil
 	}
 	return true, latestVersion, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) getTracer() controllercommon.ITracer {
+	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
 func getLatestAppVersion(apps *klcv1alpha2.KeptnAppVersionList, wli *klcv1alpha2.KeptnWorkloadInstance) (bool, klcv1alpha2.KeptnAppVersion, error) {

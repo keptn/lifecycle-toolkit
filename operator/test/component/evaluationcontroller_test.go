@@ -48,13 +48,13 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 		////setup controllers here
 		controllers := []interfaces.Controller{&keptnevaluation.KeptnEvaluationReconciler{
-			Client:    k8sManager.GetClient(),
-			Scheme:    k8sManager.GetScheme(),
-			Recorder:  k8sManager.GetEventRecorderFor("test-evaluation-controller"),
-			Log:       GinkgoLogr,
-			Meters:    initKeptnMeters(),
-			Tracer:    tracer.Tracer("test-evaluation-tracer"),
-			Namespace: KLTnamespace,
+			Client:        k8sManager.GetClient(),
+			Scheme:        k8sManager.GetScheme(),
+			Recorder:      k8sManager.GetEventRecorderFor("test-evaluation-controller"),
+			Log:           GinkgoLogr,
+			Meters:        initKeptnMeters(),
+			TracerFactory: &tracerFactory{tracer: tracer},
+			Namespace:     KLTnamespace,
 		}}
 		setupManager(controllers) // we can register multiple time the same controller
 		ns = makeKLTDefaultNamespace(KLTnamespace)

@@ -10,7 +10,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
-	interfacesfake "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -165,7 +164,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	assert.Matches(t, event, `Normal CreateAppVersionAppVersionDeprecated Create AppVersion: deprecated KeptnAppVersions for KeptnAppVersion: myapp-1.0.0-2 / Namespace: default, Name: myapp, Version: 1.0.0`)
 }
 
-func setupReconciler() (*KeptnAppReconciler, chan string, *interfacesfake.ITracerMock) {
+func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -173,19 +172,23 @@ func setupReconciler() (*KeptnAppReconciler, chan string, *interfacesfake.ITrace
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	//fake a tracer
-	tr := &interfacesfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+		return tr
 	}}
 
 	fakeClient := fake.NewClient()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{
-		Client:   fakeClient,
-		Scheme:   scheme.Scheme,
-		Recorder: recorder,
-		Log:      ctrl.Log.WithName("test-appController"),
-		Tracer:   tr,
+		Client:        fakeClient,
+		Scheme:        scheme.Scheme,
+		Recorder:      recorder,
+		Log:           ctrl.Log.WithName("test-appController"),
+		TracerFactory: tf,
 	}
 	return r, recorder.Events, tr
 }

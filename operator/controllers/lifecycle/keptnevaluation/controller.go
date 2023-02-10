@@ -40,15 +40,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+const traceComponentName = "keptn/operator/evaluation"
+
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
 type KeptnEvaluationReconciler struct {
 	client.Client
-	Scheme    *runtime.Scheme
-	Recorder  record.EventRecorder
-	Log       logr.Logger
-	Meters    apicommon.KeptnMeters
-	Tracer    trace.Tracer
-	Namespace string
+	Scheme        *runtime.Scheme
+	Recorder      record.EventRecorder
+	Log           logr.Logger
+	Meters        apicommon.KeptnMeters
+	TracerFactory controllercommon.TracerFactory
+	Namespace     string
 }
 
 //clusterrole
@@ -140,7 +142,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation) (context.Context, trace.Span) {
 	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-	ctx, span := r.Tracer.Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.getTracer().Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
 	evaluation.SetSpanAttributes(span)
 	evaluation.SetStartTime()
 
@@ -280,4 +282,8 @@ func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Conte
 		return nil, nil, err
 	}
 	return evaluationDefinition, evaluationProvider, nil
+}
+
+func (r *KeptnEvaluationReconciler) getTracer() controllercommon.ITracer {
+	return r.TracerFactory.GetTracer(traceComponentName)
 }

@@ -48,11 +48,8 @@ import (
 	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/sdk/trace"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -163,31 +160,20 @@ func main() {
 	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	// Enabling OTel
-	tpOptions, _, err := controllercommon.GetOTelTracerProviderOptions("")
+	err = controllercommon.GetOtelInstance().InitOtelCollector("")
 	if err != nil {
 		setupLog.Error(err, "unable to initialize OTel tracer options")
 	}
 
-	tp := trace.NewTracerProvider(tpOptions...)
-
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			setupLog.Error(err, "unable to shutdown  OTel exporter")
-			os.Exit(1)
-		}
-	}()
-	otel.SetTracerProvider(tp)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-
 	spanHandler := &controllercommon.SpanHandler{}
 
 	taskReconciler := &keptntask.KeptnTaskReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnTask Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptntask-controller"),
-		Meters:   keptnMeters,
-		Tracer:   otel.Tracer("keptn/operator/task"),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnTask Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptntask-controller"),
+		Meters:        keptnMeters,
+		TracerFactory: controllercommon.GetOtelInstance(),
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
@@ -206,11 +192,11 @@ func main() {
 	}
 
 	appReconciler := &keptnapp.KeptnAppReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnApp Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnapp-controller"),
-		Tracer:   otel.Tracer("keptn/operator/app"),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnApp Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptnapp-controller"),
+		TracerFactory: controllercommon.GetOtelInstance(),
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
@@ -218,11 +204,11 @@ func main() {
 	}
 
 	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnWorkload Controller"),
-		Recorder: mgr.GetEventRecorderFor("keptnworkload-controller"),
-		Tracer:   otel.Tracer("keptn/operator/workload"),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnWorkload Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptnworkload-controller"),
+		TracerFactory: controllercommon.GetOtelInstance(),
 	}
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
@@ -230,13 +216,13 @@ func main() {
 	}
 
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
-		Recorder:    mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
-		Meters:      keptnMeters,
-		Tracer:      otel.Tracer("keptn/operator/workloadinstance"),
-		SpanHandler: spanHandler,
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Meters:        keptnMeters,
+		TracerFactory: controllercommon.GetOtelInstance(),
+		SpanHandler:   spanHandler,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
@@ -244,13 +230,13 @@ func main() {
 	}
 
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         ctrl.Log.WithName("KeptnAppVersion Controller"),
-		Recorder:    mgr.GetEventRecorderFor("keptnappversion-controller"),
-		Tracer:      otel.Tracer("keptn/operator/appversion"),
-		Meters:      keptnMeters,
-		SpanHandler: spanHandler,
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptnappversion-controller"),
+		TracerFactory: controllercommon.GetOtelInstance(),
+		Meters:        keptnMeters,
+		SpanHandler:   spanHandler,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
@@ -258,13 +244,13 @@ func main() {
 	}
 
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
-		Client:    mgr.GetClient(),
-		Scheme:    mgr.GetScheme(),
-		Log:       ctrl.Log.WithName("KeptnEvaluation Controller"),
-		Recorder:  mgr.GetEventRecorderFor("keptnevaluation-controller"),
-		Tracer:    otel.Tracer("keptn/operator/evaluation"),
-		Meters:    keptnMeters,
-		Namespace: env.PodNamespace,
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           ctrl.Log.WithName("KeptnEvaluation Controller"),
+		Recorder:      mgr.GetEventRecorderFor("keptnevaluation-controller"),
+		TracerFactory: controllercommon.GetOtelInstance(),
+		Meters:        keptnMeters,
+		Namespace:     env.PodNamespace,
 	}
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")

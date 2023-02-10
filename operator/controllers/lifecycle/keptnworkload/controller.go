@@ -41,13 +41,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+const traceComponentName = "keptn/operator/workload"
+
 // KeptnWorkloadReconciler reconciles a KeptnWorkload object
 type KeptnWorkloadReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
-	Log      logr.Logger
-	Tracer   trace.Tracer
+	Scheme        *runtime.Scheme
+	Recorder      record.EventRecorder
+	Log           logr.Logger
+	TracerFactory controllercommon.TracerFactory
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
@@ -81,7 +83,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.Tracer.Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
+	ctx, span := r.getTracer().Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
 	defer span.End()
 
 	workload.SetSpanAttributes(span)
@@ -131,7 +133,7 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha2.KeptnWorkload) (*klcv1alpha2.KeptnWorkloadInstance, error) {
-	ctx, span := r.Tracer.Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.getTracer().Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
 	workload.SetSpanAttributes(span)
@@ -153,4 +155,8 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	}
 
 	return &workloadInstance, err
+}
+
+func (r *KeptnWorkloadReconciler) getTracer() controllercommon.ITracer {
+	return r.TracerFactory.GetTracer(traceComponentName)
 }

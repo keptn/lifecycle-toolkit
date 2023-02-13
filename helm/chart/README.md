@@ -18,3 +18,5 @@ checks
 | ---------------------------- | ---------------------------------------------------- | -------- |
 | `deployment.imagePullPolicy` | Sets the image pull policy for kubernetes deployment | `Always` |
 
+
+<!-- markdownlint-enable MD012 -->

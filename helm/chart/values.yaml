@@ -233,4 +233,3 @@ schedulerConfig:
       schedulerName: keptn-scheduler
 tolerations: []
 topologySpreadConstraints: []
-

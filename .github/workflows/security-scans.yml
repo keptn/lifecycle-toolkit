@@ -60,13 +60,21 @@ jobs:
           # directory where to extract artifacts to
           path: ./dist
 
-      - name: Upload manifests
+      - name: Upload manifests main build
         uses: actions/upload-artifact@v3
+        if: ${{ github.event_name  == 'schedule' }}
         with:
           name: manifests
           path: |
             ./dist/*-manifest/
-            ./dist/*-manifest-test/
+
+      - name: Upload manifests user run
+        if: ${{ github.event_name  != 'schedule' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: manifests
+          path: |
+            ./dist/*-manifest-test/   
 
       - name: Upload images
         uses: actions/upload-artifact@v3

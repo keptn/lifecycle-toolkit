@@ -9,6 +9,7 @@ spec:
     spec:
       containers:
         - name: manager
+          image: '{{ template "lifecycletoolkit.operator.image" . }}'
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"
@@ -26,6 +27,7 @@ spec:
     spec:
       containers:
         - name: manager
+          image: '{{ template "lifecycletoolkit.certmanager.image" . }}'
           env:
 #            - name: NEW_ENV_VAR
 #              value: "{{ .Values.myNewEnvVar }}"
@@ -41,6 +43,7 @@ spec:
     spec:
       containers:
         - name: keptn-scheduler
+          image: '{{ template "lifecycletoolkit.scheduler.image" . }}'
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"

@@ -3,14 +3,6 @@ otelCollector:
   ## @param otelCollector.url Sets the URL for the open telemetry collector
   url: "otel-collector:4317"
 
-## @param nameOverride String to partially override common.names.fullname
-##
-nameOverride: ""
-## @param fullnameOverride String to fully override common.names.fullname
-##
-fullnameOverride: ""
-## @param commonLabels Labels to add to all deployed objects
-##
 commonLabels:
     unk: ijdierj
 
@@ -18,64 +10,20 @@ commonLabels:
 ##
 commonAnnotations: {}
 
+## @param imageLifecycle contains the name of the image for the lifecycle toolkit operator
+imageLifecycle: "keptn/keptn-lifecycle-operator"
+## @param imageLifecycle contains the name of the image for the lifecycle toolkit  scheduler
+imageScheduler: "keptn/scheduler"
+## @param imageLifecycle contains the name of the image for the lifecycle toolkit certificate manager
+imageCertManager: "keptn/klt-cert-manager"
+
 global:
   ## @param global.imageRegistry Sets the registry to pull images
-  imageRegistry: ""
-  ## E.g.
-  ## imagePullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
-  imagePullSecrets: []
+  imageRegistry: "ghcr.keptn.sh"
+  ## @param global.imageTag Sets the tags of the images
+  imageTag: "v0.5.0"  # x-release-please-version
   ## @param global.imagePullPolicy Sets the image pull policy for kubernetes deployment
   imagePullPolicy: Always
-
-
-## @param image.registry Contour Operator image registry
-## @param image.repository Contour Operator image repository
-## @param image.tag Contour Operator image tag (immutable tags are recommended)
-## @param image.pullPolicy Contour Operator image pull policy
-##
-lifecycleControllerImage:
-  registry:
-  repository:
-  tag: ""
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  pullPolicy: IfNotPresent
-
-
-## @param image.registry Contour Operator image registry
-## @param image.repository Contour Operator image repository
-## @param image.tag Contour Operator image tag (immutable tags are recommended)
-## @param image.pullPolicy Contour Operator image pull policy
-##
-schedulerImage:
-  registry:
-  repository:
-  tag: ""
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  pullPolicy: IfNotPresent
-
-  ## @param image.registry Contour Operator image registry
-  ## @param image.repository Contour Operator image repository
-  ## @param image.tag Contour Operator image tag (immutable tags are recommended)
-  ## @param image.pullPolicy Contour Operator image pull policy
-  ##
-certificateManagerImage:
-  registry:
-  repository:
-  tag: ""
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  pullPolicy: IfNotPresent
-
 
 ## Configure extra options for Contour Operator containers' liveness and readiness probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes

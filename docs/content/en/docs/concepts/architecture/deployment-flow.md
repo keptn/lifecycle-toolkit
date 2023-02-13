@@ -7,7 +7,7 @@ weight: 25
 
 A deployment is started by the following command:
 
-```
+```bash
 kubectl apply -f deployment.yaml
 ```
 
@@ -17,7 +17,7 @@ Events are resources such as Deployments or Pods.
 
 A user can view these events by executing:
 
-```
+```bash
 kubectl get events -n <namespace> . 
 ```
 
@@ -33,7 +33,7 @@ that blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 ## Summary of deployment flow
 
-```
+```bash
 AppPreDeployTasks
   AppPreDeployTasksStarted
   AppPreDeployTasksSucceeded OR AppPreDeployTasksErrored
@@ -102,7 +102,7 @@ The following events are defined as part of the Keptn Lifecycle Toolkit
 but they are not part of the deployment flow.
 These include:
 
-```
+```bash
 CreateEvaluation
 ReconcileEvaluation
 ReconcileTask

@@ -35,7 +35,8 @@ spec:
 
 In the code section, it is possible to define a full-fletched Deno script.
 
-The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the
+following:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
@@ -72,4 +73,5 @@ The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 Kubernetes secrets can also be passed to the function using the `secureParameters` field.
-Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function via the environment variable `SECURE_DATA`.
+Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function
+via the environment variable `SECURE_DATA`.

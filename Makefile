@@ -33,6 +33,12 @@ integration-test:
 integration-test-local:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
+.PHONY: load-test
+load-test:
+	kubectl apply -f ./test/load/assets/templates/namespace.yaml
+	kubectl apply -f ./test/load/assets/templates/provider.yaml
+	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
+
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests

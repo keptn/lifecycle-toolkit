@@ -1,0 +1,7 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnEvaluationProvider
+metadata:
+  name: prometheus
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

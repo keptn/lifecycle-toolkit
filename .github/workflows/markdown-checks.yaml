@@ -1,0 +1,57 @@
+name: Markdown checks
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - '**.md'
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - '**.md'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          config-file: '.github/mlc_config.json'
+          use-verbose-mode: true
+          use-quiet-mode: true
+          folder-path: 'examples,docs'
+          file-path: 'README.md'
+
+  markdown-lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run TOC generation
+        run: |
+          FILES=`find . -type f -name '*.md' -not -path './.github/*' -not -path './node_modules/*' | sort`
+          for f in $FILES; do
+            if grep -q '<!-- tocstop -->' $$f; then
+              echo "Checking TOC for ${f}";
+              npx markdown-toc --no-first-h1 --no-stripHeadingTags -i ${f} || exit 1;
+            else
+              echo Skipping ${f};
+            fi;
+          done
+
+      - name: Check TOC
+        run: |
+          git diff --exit-code '*.md' || (echo "Table of Contents is out of date. Please update the following files: $(git diff --name-status --exit-code)" && exit 1)
+
+      - name: Lint Markdown files
+        run: make markdownlint

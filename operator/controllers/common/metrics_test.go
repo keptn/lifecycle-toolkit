@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"testing"
 	"time"
 
@@ -340,10 +341,79 @@ func TestMetrics_ObserveDeploymentInterval(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := lifecyclev1alpha2.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			client := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
-			err = ObserveDeploymentInterval(context.TODO(), client, tt.list, tt.previous, gauge)
+			fakeClient := fake.NewClientBuilder().WithObjects(tt.clientObject).WithLists(tt.clientObjects).Build()
+			err = ObserveDeploymentInterval(context.TODO(), fakeClient, &lifecyclev1alpha2.KeptnAppVersionList{}, &lifecyclev1alpha2.KeptnWorkloadInstance{}, gauge)
 			require.ErrorIs(t, err, tt.err)
 		})
 
 	}
+}
+
+func TestGetPredecessor(t *testing.T) {
+	now := time.Now()
+	appVersions := &lifecyclev1alpha2.KeptnAppVersionList{
+		Items: []lifecyclev1alpha2.KeptnAppVersion{
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "my-app-1.0.0-1",
+				},
+				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+						Version:  "1.0.0",
+						Revision: 0,
+					},
+					AppName: "my-app",
+				},
+				Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+					StartTime: metav1.NewTime(now),
+					EndTime:   metav1.NewTime(now.Add(10 * time.Second)),
+				},
+			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "my-app-1.0.0-2",
+				},
+				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+						Version:  "1.0.0",
+						Revision: 0,
+					},
+					AppName: "my-app",
+				},
+				Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+					StartTime: metav1.NewTime(now.Add(1 * time.Second)),
+					EndTime:   metav1.NewTime(now.Add(10 * time.Second)),
+				},
+			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "my-app-1.1.0-1",
+				},
+				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+						Version:  "1.0.0",
+						Revision: 0,
+					},
+					AppName: "my-app",
+				},
+				Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+					StartTime: metav1.NewTime(now),
+					EndTime:   metav1.NewTime(now.Add(10 * time.Second)),
+				},
+			},
+		},
+	}
+
+	appVersionsWrapper, err := interfaces.NewListItemWrapperFromClientObjectList(appVersions)
+	require.Nil(t, err)
+
+	latestAppVersion, err := interfaces.NewMetricsObjectWrapperFromClientObject(appVersionsWrapper.GetItems()[2])
+
+	require.Nil(t, err)
+	predecessor := getPredecessor(latestAppVersion, appVersionsWrapper.GetItems())
+
+	expectedPredecessor, err := interfaces.NewMetricsObjectWrapperFromClientObject(appVersionsWrapper.GetItems()[0])
+	require.Nil(t, err)
+
+	require.Equal(t, expectedPredecessor, predecessor)
 }

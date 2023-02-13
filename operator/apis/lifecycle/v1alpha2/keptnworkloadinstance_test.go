@@ -405,4 +405,6 @@ func TestKeptnWorkloadInstanceList(t *testing.T) {
 
 	got := list.GetItems()
 	require.Len(t, got, 2)
+	require.Equal(t, "obj1", got[0].GetName())
+	require.Equal(t, "obj2", got[1].GetName())
 }

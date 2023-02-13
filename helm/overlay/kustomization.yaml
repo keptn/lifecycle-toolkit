@@ -16,7 +16,18 @@ patches:
   - patch: |
       - op: replace
         path: '/spec/template/spec/containers/0/imagePullPolicy'
-        value: "{{ .Values.deployment.imagePullPolicy}}"
+        value: |-
+          {{ .Values.global.imagePullPolicy}}
     target:
       kind: Deployment
       name: "(controller-manager|cert-manager|keptn-scheduler)"
+  - patch: |
+      - op: add
+        path: '/spec/template/metadata/labels'
+        value: |
+          {{- if .Values.commonLabels }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+          {{- end }}
+    target:
+      kind: Deployment
+      name: "(controller-manager)"

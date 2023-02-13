@@ -34,7 +34,7 @@ func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconc
 	return nil
 }
 
-func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object, gauge asyncfloat64.Gauge) error {
+func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncfloat64.Gauge) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)

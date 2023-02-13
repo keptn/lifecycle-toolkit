@@ -69,7 +69,7 @@ clean-helm-charts:
 clean-helm-yaml:
 	sed -i "s/'{{/{{/g" ./helm/chart/templates/rendered.yaml
 	sed -i "s/}}'/}}/g" ./helm/chart/templates/rendered.yaml
-	sed -i "s/: |-/:/g" ./helm/chart/templates/rendered.yaml
+	sed -i "/.*automation:.*$\/d" ./helm/chart/templates/rendered.yaml
 
 .PHONY: build-release-manifests
 build-release-manifests:

@@ -11,38 +11,58 @@ bases:
 namespace: "{{ .Release.Namespace }}"
 patchesStrategicMerge:
   - patches/patch_deployment.yaml
+  - patches/patch_readylive.yaml
+
 
 patches:
+  #patch labels and images for all
   - patch: |
       - op: replace
         path: '/spec/template/spec/containers/0/imagePullPolicy'
         value: |-
           {{ .Values.global.imagePullPolicy}}
-    target:
-      kind: Deployment
-      name: "(controller-manager|cert-manager|keptn-scheduler)"
-  - patch: |
       - op: add
-        path: '/spec/template/metadata'
-        value: |
-          {{- if or .Values.podLabels .Values.commonLabels }}
-          labels:
+        path: '/spec/template/metadata/labels/automation'
+        value: |-
             {{- if .Values.commonLabels }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
             {{- end }}
             {{- if .Values.podLabels }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $) | nindent 8 }}
             {{- end }}
-          {{- end }}
-          {{- if or .Values.podAnnotations .Values.commonAnnotations }}
-          annotations:
-            {{- if .Values.commonAnnotations }}
-              {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
-            {{- end }}
-            {{- if .Values.podAnnotations }}
-              {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
-            {{- end }}
-          {{- end }}
     target:
       kind: Deployment
       name: "(controller-manager|cert-manager|keptn-scheduler)"
+
+  # patches cert manager and operator since they already have annotations
+  - patch: |
+        - op: add
+          path: '/spec/template/metadata/annotations/automation'
+          value: |
+            {{- if .Values.commonAnnotations }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+            {{- end }}
+            {{- if .Values.podAnnotations }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+            {{- end }}
+    target:
+      kind: Deployment
+      name: "(controller-manager|cert-manager)"
+
+  # patches when no annotations exist (for now this is true in scheduler)
+  - patch: |
+        - op: add
+          path: '/spec/template/metadata/automation'
+          value: |
+            {{- if or .Values.podAnnotations .Values.commonAnnotations }}
+            annotations:
+              {{- if .Values.commonAnnotations }}
+                {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+                {{- end }}
+                {{- if .Values.podAnnotations }}
+                {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+                {{- end }}
+            {{- end }}
+    target:
+      kind: Deployment
+      name: "(keptn-scheduler)"

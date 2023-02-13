@@ -112,8 +112,8 @@ func init() {
 
 func (w KeptnWorkloadInstanceList) GetItems() []client.Object {
 	var b []client.Object
-	for _, i := range w.Items {
-		b = append(b, &i)
+	for i := 0; i < len(w.Items); i++ {
+		b = append(b, &w.Items[i])
 	}
 	return b
 }

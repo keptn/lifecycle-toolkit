@@ -439,6 +439,9 @@ func TestKeptnAppVersionList(t *testing.T) {
 	got := list.GetItems()
 	require.Len(t, got, 2)
 
+	require.Equal(t, "obj1", list.Items[0].GetName())
+	require.Equal(t, "obj2", list.Items[1].GetName())
+
 	// remove deprecated items from the list
 	list.RemoveDeprecated()
 

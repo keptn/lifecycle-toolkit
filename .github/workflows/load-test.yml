@@ -1,4 +1,4 @@
-name: Load-Test
+name: Load Tests
 on:
   workflow_call:
     inputs:

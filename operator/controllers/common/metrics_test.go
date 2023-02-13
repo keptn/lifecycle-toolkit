@@ -2,12 +2,12 @@ package common
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"testing"
 	"time"
 
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/stretchr/testify/require"
 	noop "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"

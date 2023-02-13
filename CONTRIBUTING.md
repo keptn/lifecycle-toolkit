@@ -1,5 +1,9 @@
-# Contributing
+# Contributing to the Keptn Lifecycle Toolkit
 
+We are thrilled to have you join us as a contributor! The Keptn Lifecycle Toolkit is a community-driven project and we greatly value collaboration. There are various ways to contribute to the Lifecycle Toolkit, and all contributions are highly valued. Please, explore the options below to learn more about how you can contribute.
+
+# How to Contribute
+## Prerequisites
 ## Linters
 
 This project uses a set of linters to ensure good code quality.

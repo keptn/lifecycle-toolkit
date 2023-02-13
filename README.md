@@ -17,9 +17,11 @@ Status of the different features:
 - ![status](https://img.shields.io/badge/status-alpha-orange) Metrics
 - ![status](https://img.shields.io/badge/status-alpha-orange) Release lifecycle
 
-[//]: # ( alpha ![status](https://img.shields.io/badge/status-alpha-orange)
-[//]: # ( beta ![status](https://img.shields.io/badge/status-beta-yellow)
-[//]: # ( stable ![status](https://img.shields.io/badge/status-stable-brightgreen)
+<!---
+alpha ![status](https://img.shields.io/badge/status-alpha-orange) )
+beta ![status](https://img.shields.io/badge/status-beta-yellow) )
+stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
+--> 
 
 For more info about the features, please refer to our [documentation](./docs/content/en/docs/).
 

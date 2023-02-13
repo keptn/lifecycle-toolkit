@@ -8,23 +8,27 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 An App contains information about all workloads and checks associated with an application.
-It will use the following structure for the specification of the pre/post deployment and pre/post evaluations checks that should be executed at app level:
+It will use the following structure for the specification of the pre/post deployment and pre/post evaluations checks
+that should be executed at app level:
 
-```
+```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnApp
 metadata:
-name: podtato-head
-namespace: podtato-kubectl
+  name: podtato-head
+  namespace: podtato-kubectl
 spec:
-version: "1.3"
-workloads:
-- name: podtato-head-left-arm
-version: 0.1.0
-- name: podtato-head-left-leg
-postDeploymentTasks:
-- post-deployment-hello
-preDeploymentEvaluations:    
-- my-prometheus-definition
+  version: "1.3"
+  workloads:
+  - name: podtato-head-left-arm
+    version: 0.1.0
+  - name: podtato-head-left-leg
+    version: 1.2.3
+  postDeploymentTasks:
+  - post-deployment-hello
+  preDeploymentEvaluations:    
+  - my-prometheus-definition
 ```
-While changes in the workload version will affect only workload checks, a change in the app version will also cause a new execution of app level checks.
+
+While changes in the workload version will affect only workload checks, a change in the app version will also cause a
+new execution of app level checks.

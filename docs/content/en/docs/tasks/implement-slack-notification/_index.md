@@ -7,12 +7,10 @@ weight: 24
 hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-# Overview
-This section describes how to **prepare and enable** post-deployment tasks to send notifications to slack using webhooks.
-
 ## Create Slack Webhook
 
-At first, create an incoming slack webhook. Necessary information is available in the [slack api page](https://api.slack.com/messaging/webhooks).
+At first, create an incoming slack webhook.
+Necessary information is available in the [slack api page](https://api.slack.com/messaging/webhooks).
 Once you create the webhook, you will get a URL similar to below example.
 
 `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
@@ -22,16 +20,18 @@ Once you create the webhook, you will get a URL similar to below example.
 ## Create slack-secret
 
 Create a `slack-secret.yaml` definition using the following command.
-This will create a kubernetes secret named `slack-secret.yaml` in the `examples/sample-app/base` directory. Before running 
-this command change your current directory into `examples/sample-app`.
+This will create a kubernetes secret named `slack-secret.yaml` in the `examples/sample-app/base` directory.
+Before running this command change your current directory into `examples/sample-app`.
 
-```bash
+```shell
 kubectl create secret generic slack-secret --from-literal=SECURE_DATA='{"slack_hook":<YOUR_HOOK_SECRET>,"text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml
 ```
+
 ## Enable post deployment task
 
 To enable Slack notification add `post-deployment-notification` in as a postDeploymentTasks in the
-[examples/sample-app/base/app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/app.yaml) file as shown below.
+[examples/sample-app/base/app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/app.yaml)
+file as shown below.
 
 ```yaml
   postDeploymentTasks:

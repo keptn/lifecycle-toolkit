@@ -4,7 +4,6 @@ This directory contains the Keptn Lifecycle Controller logos in different format
 
 ## Logos
 
-| Name                                       | Logo                                                                 | Format |
-| ------------------------------------------ | -------------------------------------------------------------------- | ------ |
-| `keptn_lifecycle_controller_logo.png`      | <img src="./keptn_lifecycle_controller_logo.png" width="160">        | PNG    |
-
+| Name                                       | Logo                                               | Format |
+| ------------------------------------------ |----------------------------------------------------| ------ |
+| `keptn_lifecycle_controller_logo.png`      | ![KLT Logo](./keptn_lifecycle_controller_logo.png) | PNG    |

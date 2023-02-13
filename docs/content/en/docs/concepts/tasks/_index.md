@@ -12,7 +12,8 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
 The task definition is a [Deno](https://deno.land/) script
-Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime) for more information about the runtime.
+Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime) for more
+information about the runtime.
 In the future, we also intend to support other runtimes, especially running a container image directly.
 
 A task definition can be configured in three different ways:
@@ -36,6 +37,7 @@ spec:
 ```
 
 In the code section, it is possible to define a full-fletched Deno script.
+
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
@@ -49,12 +51,13 @@ spec:
         let data;
         let name;
         data = JSON.parse(text);
-        
+
         name = data.name
         console.log("Hello, " + name + " new");
 ```
 
-The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the following:
+The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the
+following:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha2
@@ -67,7 +70,9 @@ spec:
       url: <url>
 ```
 
-An example is available [here](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+An example is
+available [here](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
+.
 
 Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
@@ -96,16 +101,17 @@ A context environment variable is available via `Deno.env.get("CONTEXT")`. It ca
 let context = Deno.env.get("CONTEXT");
 
 if (contextdata.objectType == "Application") {
-  let application_name = contextdata.appName;
-  let application_version = contextdata.appVersion;
+    let application_name = contextdata.appName;
+    let application_version = contextdata.appVersion;
 }
 
 if (contextdata.objectType == "Workload") {
-  let application_name = contextdata.appName;
-  let workload_name = contextdata.workloadName;
-  let workload_version = contextdata.workloadVersion;
+    let application_name = contextdata.appName;
+    let workload_name = contextdata.workloadName;
+    let workload_version = contextdata.workloadVersion;
 }
 ```
+
 ## Input Parameters and Secret Handling
 
 As you might have noticed, Task Definitions also have the possibility to use input parameters.

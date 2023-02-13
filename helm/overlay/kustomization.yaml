@@ -23,11 +23,17 @@ patches:
       name: "(controller-manager|cert-manager|keptn-scheduler)"
   - patch: |
       - op: add
-        path: '/spec/template/metadata/labels'
+        path: '/spec/template/metadata'
         value: |
-          {{- if .Values.commonLabels }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+          {{- if or .Values.podLabels .Values.commonLabels }}
+          annotations:
+            {{- if .Values.commonLabels }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+            {{- end }}
+            {{- if .Values.podLabels }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $) | nindent 8 }}
+            {{- end }}
           {{- end }}
     target:
       kind: Deployment
-      name: "(controller-manager)"
+      name: "(controller-manager|cert-manager|keptn-scheduler)"

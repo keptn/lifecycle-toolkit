@@ -26,12 +26,21 @@ patches:
         path: '/spec/template/metadata'
         value: |
           {{- if or .Values.podLabels .Values.commonLabels }}
-          annotations:
+          labels:
             {{- if .Values.commonLabels }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
             {{- end }}
             {{- if .Values.podLabels }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $) | nindent 8 }}
+            {{- end }}
+          {{- end }}
+          {{- if or .Values.podAnnotations .Values.commonAnnotations }}
+          annotations:
+            {{- if .Values.commonAnnotations }}
+              {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+            {{- end }}
+            {{- if .Values.podAnnotations }}
+              {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
             {{- end }}
           {{- end }}
     target:

@@ -11,7 +11,9 @@ nameOverride: ""
 fullnameOverride: ""
 ## @param commonLabels Labels to add to all deployed objects
 ##
-commonLabels: {}
+commonLabels:
+    unk: ijdierj
+
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
@@ -125,11 +127,13 @@ podSecurityContext:
 ## @param containerSecurityContext.readOnlyRootFilesystem Mount / (root) as a readonly filesystem on Contour Operator containers
 ##
 containerSecurityContext:
-  enabled: true
-  runAsUser: 1001
+  seccompProfile:
+    type: RuntimeDefault
+  privileged: false
+  allowPrivilegeEscalation: false
   runAsNonRoot: true
-  readOnlyRootFilesystem: true
-
+  runAsUser: 65532
+  runAsGroup: 65532
 
 ##
 podLabels: {}

@@ -13,6 +13,7 @@ jobs:
     namespace: keptn-lifecycle-toolkit-system
     podWait: false
     cleanup: true
+    step: 90s
     waitFor: []
     waitWhenFinished: true
     preLoadImages: false

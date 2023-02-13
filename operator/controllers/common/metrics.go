@@ -3,12 +3,12 @@ package common
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
 	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -34,7 +34,7 @@ func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconc
 	return nil
 }
 
-func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, previousObject client.Object, gauge asyncfloat64.Gauge) error {
+func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncfloat64.Gauge) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
@@ -45,25 +45,43 @@ func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconc
 		return err
 	}
 
-	for _, ro := range piWrapper.GetItems() {
+	items := piWrapper.GetItems()
+	for index := 0; index < len(items); index++ {
+		ro := items[index]
 		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.GetPreviousVersion() != "" {
-			err := client.Get(ctx, types.NamespacedName{Name: fmt.Sprintf("%s-%s", reconcileObject.GetParentName(), reconcileObject.GetPreviousVersion()), Namespace: reconcileObject.GetNamespace()}, previousObject)
-			if err != nil {
-				return nil
+			if !reconcileObject.IsEndTimeSet() {
+				continue
 			}
-			piWrapper2, err := interfaces.NewMetricsObjectWrapperFromClientObject(previousObject)
-			if err != nil {
-				return err
+			predecessor := getPredecessor(reconcileObject, items)
+			if predecessor == nil {
+				continue
 			}
-			if reconcileObject.IsEndTimeSet() {
-				previousInterval := reconcileObject.GetEndTime().Sub(piWrapper2.GetStartTime())
-				gauge.Observe(ctx, previousInterval.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
-			}
+
+			previousInterval := reconcileObject.GetEndTime().Sub(predecessor.GetStartTime())
+			gauge.Observe(ctx, previousInterval.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
 		}
 	}
 
 	return nil
+}
+
+func getPredecessor(successor *interfaces.MetricsObjectWrapper, items []client.Object) interfaces.MetricsObject {
+	var predecessor interfaces.MetricsObject
+	for i := 0; i < len(items); i++ {
+		// to calculate the interval, we take the earliest revision of the previous version as a reference
+		if strings.HasPrefix(items[i].GetName(), fmt.Sprintf("%s-%s", successor.GetParentName(), successor.GetPreviousVersion())) {
+			predecessorCandidate, err := interfaces.NewMetricsObjectWrapperFromClientObject(items[i])
+			if err != nil {
+				// continue with the other items
+				continue
+			}
+			if predecessor == nil || predecessorCandidate.GetStartTime().Before(predecessor.GetStartTime()) {
+				predecessor = predecessorCandidate
+			}
+		}
+	}
+	return predecessor
 }
 
 func ObserveActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncint64.Gauge) error {

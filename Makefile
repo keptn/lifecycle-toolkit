@@ -37,7 +37,7 @@ integration-test-local:
 load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
-	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
+	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml --step=90s
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

@@ -183,6 +183,13 @@ jobs:
       functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/integration-test.yml
 
+  load-tests:
+    name: Load Tests
+    needs: [ prepare_ci_run, build_image ]
+    with:
+      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+    uses: ./.github/workflows/load-test.yml
+
   e2e_tests:
     name: End to End Tests
     needs: [ prepare_ci_run, build_image ]

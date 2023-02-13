@@ -1,0 +1,21 @@
+---
+global:
+  writeToFile: true
+  metricsDirectory: collected-metrics
+  prometheusURL: http://localhost:9090
+
+jobs:
+  - name: keptn-metrics
+    jobIterations: 1
+    qps: 4
+    burst: 4
+    namespacedIterations: false
+    namespace: keptn-lifecycle-toolkit-system
+    podWait: false
+    cleanup: true
+    waitFor: []
+    waitWhenFinished: true
+    preLoadImages: false
+    objects:
+      - objectTemplate: ./test/load/assets/templates/metric.yaml
+        replicas: 100

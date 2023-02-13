@@ -4,12 +4,35 @@ This example should demonstrate the capabilities of the lifecycle toolkit as ill
 
 ![img.png](assets/big-picture.png)
 
-## Prepare Secret for Slack Notification
-As a first step, create an incoming webhook according to the instructions
-https://api.slack.com/messaging/webhooks
+## PostDeployment Slack Notification
+This section describes how to **prepare and enable** post-deployment tasks to send notifications to slack using webhooks.
 
-Afterwards create a secret with the created webhook
-> kubectl create secret generic slack-notification --from-literal=SECURE_DATA='{"slack_hook":<YOUR_HOOK>,"text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml
+**Create Slack Webhook**
+
+In the first step, create an incoming slack webhook. Necessary information is available in the [slack api page](https://api.slack.com/messaging/webhooks).
+Once you create the webhook, you will get a URL similar to below example.
+
+`https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX` 
+
+`T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX` is the secret part of the webhook which we would need in the next step.
+
+**Create slack-secret**
+
+Create a `slack-secret.yaml` definition using the following command. 
+This will create a kubernetes secret named `slack-secret.yaml` in the [base](./base) directory.
+
+```bash
+kubectl create secret generic slack-secret --from-literal=SECURE_DATA='{"slack_hook":<YOUR_HOOK_SECRET>,"text":"Deployed PodTatoHead Application"}' -n podtato-kubectl -oyaml --dry-run=client > base/slack-secret.yaml
+```
+**Enable post deployment task**
+
+To enable Slack notification add `post-deployment-notification` in as a postDeploymentTasks in the
+[app.yaml](base/app.yaml) file as shown below.
+
+```yaml
+  postDeploymentTasks:
+    - post-deployment-notification
+```
 
 ## Deploy the Observability Part and Keptn-lifecycle-toolkit
 > make install

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Validate Pull Request
-        uses: amannn/action-semantic-pull-request@v5.0.2
+        uses: amannn/action-semantic-pull-request@v5.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

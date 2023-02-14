@@ -49,7 +49,7 @@ Click to watch it on YouTube:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.6.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->

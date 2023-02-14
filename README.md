@@ -4,13 +4,32 @@
 ![Codecov](https://img.shields.io/codecov/c/github/keptn/lifecycle-toolkit?token=KPGfrBb2sA)
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=operator%2Fgo.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
-![status](https://img.shields.io/badge/status-not--for--production-red)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 
 The goal of this toolkit is to introduce a more “cloud-native” approach for pre- and post-deployment, as well as the
 concept of application health checks.
 It is an incubating project, under the umbrella of
 the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
+
+Status of the different features:
+
+- ![status](https://img.shields.io/badge/status-stable-brightgreen)
+  Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
+- ![status](https://img.shields.io/badge/status-alpha-orange)
+  K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
+- ![status](https://img.shields.io/badge/status-alpha-orange)
+  Release lifecycle: handle pre- and post-checks of your Application deployment.
+- ![status](https://img.shields.io/badge/status-beta-yellow)
+  Certificate Manager: automatically configure TLS certificates for
+  [secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
+
+<!---
+alpha ![status](https://img.shields.io/badge/status-alpha-orange) )
+beta ![status](https://img.shields.io/badge/status-beta-yellow) )
+stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
+-->
+
+For more info about the features, please refer to our [documentation](./docs/content/en/docs/).
 
 ## Watch the KubeCon 2022 Detroit Demo
 

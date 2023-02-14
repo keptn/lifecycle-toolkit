@@ -104,11 +104,11 @@ spec:
         # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
-            cpu: 100m
-            memory: 64Mi
+            cpu: 500m
+            memory: 128Mi
           requests:
-            cpu: 10m
-            memory: 32Mi
+            cpu: 5m
+            memory: 64Mi
         volumeMounts:
           - name: certs-dir
             mountPath: /tmp/k8s-webhook-server/serving-certs/

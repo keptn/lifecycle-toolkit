@@ -299,6 +299,70 @@ func TestMetrics_ObserveDeploymentInterval(t *testing.T) {
 			},
 			err: nil,
 		},
+		{
+			name:     "previous version - object found with endtime and revision",
+			list:     &lifecyclev1alpha2.KeptnAppVersionList{},
+			previous: &lifecyclev1alpha2.KeptnAppVersion{},
+			clientObjects: &lifecyclev1alpha2.KeptnAppVersionList{
+				Items: []lifecyclev1alpha2.KeptnAppVersion{
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:       "appName-version-1",
+							Namespace:  "namespace",
+							Generation: 1,
+						},
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+								Version: "version",
+							},
+							AppName:         "appName",
+							PreviousVersion: "previousVersion",
+						},
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
+							StartTime: metav1.Time{Time: metav1.Now().Time},
+						},
+					},
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:       "appName-previousVersion-2",
+							Namespace:  "namespace",
+							Generation: 2,
+						},
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+								Version: "previousVersion",
+							},
+							AppName:         "appName",
+							PreviousVersion: "",
+						},
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
+							StartTime: metav1.Time{Time: metav1.Now().Time},
+						},
+					},
+					{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:       "appName-previousVersion-1",
+							Namespace:  "namespace",
+							Generation: 1,
+						},
+						Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
+							KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
+								Version: "previousVersion",
+							},
+							AppName:         "appName",
+							PreviousVersion: "",
+						},
+						Status: lifecyclev1alpha2.KeptnAppVersionStatus{
+							EndTime:   metav1.Time{Time: metav1.Now().Time.Add(5 * time.Second)},
+							StartTime: metav1.Time{Time: metav1.Now().Time},
+						},
+					},
+				},
+			},
+			err: nil,
+		},
 	}
 
 	gauge, err := noop.NewNoopMeter().AsyncFloat64().Gauge("mine")
@@ -322,12 +386,12 @@ func TestGetPredecessor(t *testing.T) {
 		Items: []lifecyclev1alpha2.KeptnAppVersion{
 			{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "my-app-1.0.0-1",
+					Name:       "my-app-1.0.0-1",
+					Generation: 1,
 				},
 				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
 					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
-						Version:  "1.0.0",
-						Revision: 0,
+						Version: "1.0.0",
 					},
 					AppName: "my-app",
 				},
@@ -338,12 +402,12 @@ func TestGetPredecessor(t *testing.T) {
 			},
 			{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "my-app-1.0.0-2",
+					Name:       "my-app-1.0.0-2",
+					Generation: 2,
 				},
 				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
 					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
-						Version:  "1.0.0",
-						Revision: 0,
+						Version: "1.0.0",
 					},
 					AppName: "my-app",
 				},
@@ -354,14 +418,15 @@ func TestGetPredecessor(t *testing.T) {
 			},
 			{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "my-app-1.1.0-1",
+					Name:       "my-app-1.1.0-1",
+					Generation: 1,
 				},
 				Spec: lifecyclev1alpha2.KeptnAppVersionSpec{
 					KeptnAppSpec: lifecyclev1alpha2.KeptnAppSpec{
-						Version:  "1.0.0",
-						Revision: 0,
+						Version: "1.1.0",
 					},
-					AppName: "my-app",
+					AppName:         "my-app",
+					PreviousVersion: "1.0.0",
 				},
 				Status: lifecyclev1alpha2.KeptnAppVersionStatus{
 					StartTime: metav1.NewTime(now),
@@ -375,9 +440,13 @@ func TestGetPredecessor(t *testing.T) {
 	require.Nil(t, err)
 
 	latestAppVersion, err := interfaces.NewMetricsObjectWrapperFromClientObject(appVersionsWrapper.GetItems()[2])
-
 	require.Nil(t, err)
+
+	require.Equal(t, "1.0.0", latestAppVersion.GetPreviousVersion())
+
 	predecessor := getPredecessor(latestAppVersion, appVersionsWrapper.GetItems())
+
+	require.Equal(t, "", predecessor.GetPreviousVersion())
 
 	expectedPredecessor, err := interfaces.NewMetricsObjectWrapperFromClientObject(appVersionsWrapper.GetItems()[0])
 	require.Nil(t, err)

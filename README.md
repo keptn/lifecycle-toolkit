@@ -13,9 +13,10 @@ the [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-
 
 Status of the different features:
 
-- ![status](https://img.shields.io/badge/status-stable-brightgreen) Observability
-- ![status](https://img.shields.io/badge/status-alpha-orange) Metrics
-- ![status](https://img.shields.io/badge/status-alpha-orange) Release lifecycle
+- ![status](https://img.shields.io/badge/status-stable-brightgreen) Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
+- ![status](https://img.shields.io/badge/status-alpha-orange) K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
+- ![status](https://img.shields.io/badge/status-alpha-orange) Release lifecycle: handle pre- and post-checks of your Application deployment.
+- ![status](https://img.shields.io/badge/status-beta-yellow) Certificate Manager: automatically configure TLS certificates for [secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security). 
 
 <!---
 alpha ![status](https://img.shields.io/badge/status-alpha-orange) )

@@ -7,11 +7,4 @@ spec:
   template:
     spec:
       containers:
-      - name: manager
-        resources:
-          limits:
-            cpu: 100m
-            memory: 32Mi
-          requests:
-            cpu: 5m
-            memory: 16Mi
+        - name: manager

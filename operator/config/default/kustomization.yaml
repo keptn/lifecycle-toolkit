@@ -12,4 +12,5 @@ bases:
 
 patchesStrategicMerge:
 - manager_auth_proxy_patch.yaml
+- manager_config_patch.yaml
 - webhooknamespaces_patch.yaml

@@ -11,7 +11,6 @@ resources:
 - bases/lifecycle.keptn.sh_keptnevaluationdefinitions.yaml
 - bases/lifecycle.keptn.sh_keptnevaluationproviders.yaml
 - bases/lifecycle.keptn.sh_keptnevaluations.yaml
-- bases/metrics.keptn.sh_keptnmetrics.yaml
 - bases/options.keptn.sh_keptnconfigs.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
@@ -27,7 +26,6 @@ patchesStrategicMerge:
 #- patches/webhook_in_keptnevaluationdefinitions.yaml
 - patches/webhook_in_keptnevaluationproviders.yaml
 #- patches/webhook_in_keptnevaluations.yaml
-#- patches/webhook_in_keptnmetrics.yaml
 #- patches/webhook_in_keptnconfigs.yaml
 #+kubebuilder:scaffold:crdkustomizewebhookpatch
 

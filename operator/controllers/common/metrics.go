@@ -58,7 +58,7 @@ func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconc
 				continue
 			}
 
-			previousInterval := reconcileObject.GetEndTime().Sub(predecessor.GetStartTime())
+			previousInterval := reconcileObject.GetEndTime().Sub(predecessor.GetEndTime())
 			gauge.Observe(ctx, previousInterval.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
 		}
 	}

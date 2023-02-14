@@ -76,9 +76,10 @@ To set up a local Docsy build:
    * [Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
    * [Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
 
-1. Clone the Keptn Docsy repo:
+1. Clone and build the Keptn Docsy repo:
    ```
    make clone
+   make build
    ```
    **Note:** To utilize the `makefile`, you must have GNU **make**
    available on your local machine.
@@ -95,7 +96,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
 1. Enter the following in a browser to view the website:
     ```
-    http://localhost:1313/docs-dev/
+    http://localhost:1314/docs-dev/
     ```
 
    **Note:** By default, Hugo serves the local docs on port 1313.
@@ -174,10 +175,10 @@ Perform the following steps to create a copy of this repository on your local ma
     ```
     or
     ```
-    git clone git@github.com:<UserName>/keptn.github.io.git
+    git clone git@github.com:<UserName>/lifecycle-toolkit.git
     ```
     Where <*UserName*> is your GitHub username.
-    The keptn.github.io directory is now available in the local directory.
+    The lifecycle-toolkit directory is now available in the local directory.
 
 4. Associate your clone with `upstream`.
    To do this, use the same string you used to clone your fork.
@@ -236,8 +237,15 @@ The `git commit -s` command commits the files and signs that you are contributin
    git commit -s
    ```
 
-   Use vi commands to add a description of the PR (should be 80 characters or less) to the commit. This will be displayed as the title of the PR in listings.
-You can add multiple lines explaining the PR here but, in general, it is better to only supply the PR title here; you can add more information and edit the PR title when you create the PR on the GitHub UI page.
+   Use vi commands to add a description of the PR
+   (should be 80 characters or less) to the commit.
+   The title text should be prefixed with `docs:`
+   to conform to our semantic commit scheme.
+   This title is displayed as the title of the PR in listings.
+   You can add multiple lines explaining the PR here but, in general,
+   it is better to only supply the PR title here;
+   you can add more information and edit the PR title
+   when you create the PR on the GitHub UI page.
 
 5. Push your branch to github:
    - If you cloned your fork to use SSH, the command is:

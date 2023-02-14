@@ -5,10 +5,16 @@ bases:
   - ../../operator/config/default
   - ../../klt-cert-manager/config/default
   - ../../scheduler/manifests/install
+
 # replace the default namespace with {{ include "chart.namespace" . }}
 # .Release.Namespace has not been used so that a custom _helpers.tpl file can maintain the expected behaviour of
 # helm install -n
 namespace: "{{ .Release.Namespace }}"
+commonLabels: #adds fields in root metadata
+  automation: |
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
 patchesStrategicMerge:
   - patches/patch_deployment.yaml
   - patches/patch_readylive.yaml
@@ -30,6 +36,7 @@ patches:
             {{- if .Values.podLabels }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $) | nindent 8 }}
             {{- end }}
+
     target:
       kind: Deployment
       name: "(controller-manager|cert-manager|keptn-scheduler)"
@@ -49,7 +56,7 @@ patches:
       kind: Deployment
       name: "(controller-manager|cert-manager)"
 
-  # patches when no annotations exist (for now this is true in scheduler)
+  # patches when no annotations exist
   - patch: |
         - op: add
           path: '/spec/template/metadata/automation'

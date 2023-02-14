@@ -8,3 +8,10 @@ spec:
     spec:
       containers:
       - name: manager
+        resources:
+          limits:
+            cpu: 500m
+            memory: 32Mi
+          requests:
+            cpu: 5m
+            memory: 16Mi

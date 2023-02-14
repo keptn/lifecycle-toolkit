@@ -76,7 +76,7 @@ spec:
           - name: EXPOSE_KEPTN_METRICS
             value: "true"
           - name: FUNCTION_RUNNER_IMAGE
-            value: ghcr.keptn.sh/keptn/functions-runtime:v0.5.0 #x-release-please-version
+            value: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0 #x-release-please-version
         securityContext:
           seccompProfile:
             type: RuntimeDefault

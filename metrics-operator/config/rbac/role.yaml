@@ -1,0 +1,51 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - providers
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: manager-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get

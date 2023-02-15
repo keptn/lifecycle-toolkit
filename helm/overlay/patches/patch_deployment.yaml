@@ -12,20 +12,20 @@ spec:
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"
-            - name: COMMON_CONTROLLER_LOG_LEVEL
-              value: "{{ .Values.operator.commonController.logLevel }}"
-            - name: KEPTNAPP_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptnappController.logLevel }}"
-            - name: KEPTNAPPVERSION_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptnappversionController.logLevel }}"
-            - name: KEPTNEVALUATION_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptnevaluationController.logLevel }}"
-            - name: KEPTNTASK_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptntaskController.logLevel }}"
-            - name: KEPTNTASKDEFINITION_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptntaskdefinitionController.logLevel }}"
-            - name: KEPTNWORKLOAD_CONTROLLER_LOG_LEVEL
+            - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.keptnworkloadController.logLevel }}"
+            - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptnworkloadinstanceController.logLevel }}"
             - name: METRICS_CONTROLLER_LOG_LEVEL
               value: "{{ .Values.operator.metricsController.logLevel }}"
             - name: OPTIONS_CONTROLLER_LOG_LEVEL

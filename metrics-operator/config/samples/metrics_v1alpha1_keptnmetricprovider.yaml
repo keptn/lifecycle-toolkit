@@ -1,0 +1,6 @@
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: KeptnMetricProvider
+metadata:
+  name: keptnmetricprovider-sample
+spec:
+  # TODO(user): Add fields here

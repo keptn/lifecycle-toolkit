@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: manager-rolebinding
+  labels:
+    app.kubernetes.io/name: clusterrolebinding
+    app.kubernetes.io/instance: klt-metrics-manager-rolebinding
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: klt-metrics-manager
+    app.kubernetes.io/part-of: klt-metrics-manager
+    app.kubernetes.io/managed-by: kustomize
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: klt-metrics-manager-role
+subjects:
+- kind: ServiceAccount
+  name: metrics-manager
+  namespace: system

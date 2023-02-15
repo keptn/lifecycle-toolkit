@@ -1,0 +1,20 @@
+# permissions for end users to view keptnmetricproviders.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnmetricprovider-viewer-role
+rules:
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetricproviders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetricproviders/status
+  verbs:
+  - get

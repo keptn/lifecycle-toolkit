@@ -3,4 +3,13 @@ layout:
 - go.kubebuilder.io/v3
 projectName: metrics-operator
 repo: github.com/keptn/lifecycle-toolkit/metrics-operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: metrics
+  kind: KeptnMetricsProvider
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2
+  version: v1alpha2
 version: "3"

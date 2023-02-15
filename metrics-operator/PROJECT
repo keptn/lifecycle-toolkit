@@ -1,0 +1,6 @@
+domain: keptn.sh
+layout:
+- go.kubebuilder.io/v3
+projectName: metrics-operator
+repo: github.com/keptn/lifecycle-toolkit/metrics-operator
+version: "3"

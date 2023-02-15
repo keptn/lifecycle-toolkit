@@ -80,6 +80,16 @@ type envConfig struct {
 	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
 	PodName            string `envconfig:"POD_NAME" default:""`
 	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+
+	KeptnAppControllerLogLevel              int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppVersionControllerLogLevel       int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnEvaluationControllerLogLevel       int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskControllerLogLevel             int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskDefinitionControllerLogLevel   int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadControllerLogLevel         int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnMetricControllerLogLevel           int `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KptnOptionsControllerLogLevel           int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -126,7 +136,6 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -175,6 +184,7 @@ func main() {
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
+	taskReconciler.Log.V(env.KeptnTaskControllerLogLevel)
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
@@ -186,6 +196,7 @@ func main() {
 		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
 		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
 	}
+	taskDefinitionReconciler.Log.V(env.KeptnTaskDefinitionControllerLogLevel)
 	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
@@ -198,6 +209,7 @@ func main() {
 		Recorder:      mgr.GetEventRecorderFor("keptnapp-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
+	appReconciler.Log.V(env.KeptnAppControllerLogLevel)
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
@@ -210,6 +222,7 @@ func main() {
 		Recorder:      mgr.GetEventRecorderFor("keptnworkload-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
+	workloadReconciler.Log.V(env.KeptnWorkloadControllerLogLevel)
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
@@ -224,6 +237,7 @@ func main() {
 		TracerFactory: controllercommon.GetOtelInstance(),
 		SpanHandler:   spanHandler,
 	}
+	workloadInstanceReconciler.Log.V(env.KeptnWorkloadInstanceControllerLogLevel)
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)
@@ -238,6 +252,7 @@ func main() {
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
 	}
+	appVersionReconciler.Log.V(env.KeptnAppVersionControllerLogLevel)
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
@@ -252,6 +267,7 @@ func main() {
 		Meters:        keptnMeters,
 		Namespace:     env.PodNamespace,
 	}
+	evaluationReconciler.Log.V(env.KeptnEvaluationControllerLogLevel)
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
@@ -262,6 +278,7 @@ func main() {
 		Scheme: mgr.GetScheme(),
 		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
 	}
+	metricsReconciler.Log.V(env.KeptnMetricControllerLogLevel)
 	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
@@ -272,6 +289,7 @@ func main() {
 		Scheme: mgr.GetScheme(),
 		Log:    ctrl.Log.WithName("KeptnConfig Controller"),
 	}
+	configReconciler.Log.V(env.KptnOptionsControllerLogLevel)
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)

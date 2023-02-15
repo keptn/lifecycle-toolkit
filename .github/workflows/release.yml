@@ -45,6 +45,8 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
+          - name: "klt-metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
@@ -162,10 +164,13 @@ jobs:
           make controller-gen release-manifests
           cd ../klt-cert-manager
           make controller-gen release-manifests
+          cd ../klt-metrics-operator
+          make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
-          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml > manifest.yaml
+          echo "---" >> klt-cert-manager/config/rendered/release.yaml
+          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml klt-metrics-operator/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1

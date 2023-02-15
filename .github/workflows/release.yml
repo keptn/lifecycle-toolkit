@@ -165,7 +165,15 @@ jobs:
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
-          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml > manifest.yaml
+          cat >> namespace.yaml << EOF
+          ---
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: keptn-lifecycle-toolkit-system
+          ---
+          EOF
+          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1

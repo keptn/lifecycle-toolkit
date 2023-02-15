@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
@@ -84,14 +84,14 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 				By("Update KeptnMetric to have status")
 
-				metric2 := &metricsv1alpha1.KeptnMetric{}
+				metric2 := &metricsv1alpha2.KeptnMetric{}
 				err := k8sClient.Get(context.TODO(), types.NamespacedName{
 					Namespace: KLTnamespace,
 					Name:      metric.Name,
 				}, metric2)
 				Expect(err).To(BeNil())
 
-				metric2.Status = metricsv1alpha1.KeptnMetricStatus{
+				metric2.Status = metricsv1alpha2.KeptnMetricStatus{
 					Value:       "5",
 					RawValue:    []byte("5"),
 					LastUpdated: metav1.NewTime(time.Now().UTC()),
@@ -251,14 +251,14 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 	return evalDef
 }
 
-func makeKeptnMetric(name string) *metricsv1alpha1.KeptnMetric {
-	metric := &metricsv1alpha1.KeptnMetric{
+func makeKeptnMetric(name string) *metricsv1alpha2.KeptnMetric {
+	metric := &metricsv1alpha2.KeptnMetric{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: KLTnamespace,
 		},
-		Spec: metricsv1alpha1.KeptnMetricSpec{
-			Provider: metricsv1alpha1.ProviderRef{
+		Spec: metricsv1alpha2.KeptnMetricSpec{
+			Provider: metricsv1alpha2.ProviderRef{
 				Name: "provider",
 			},
 			Query:                "query",

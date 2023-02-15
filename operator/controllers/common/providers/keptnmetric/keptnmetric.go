@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -18,7 +18,7 @@ type KeptnMetricProvider struct {
 
 // EvaluateQuery fetches the SLI values from KeptnMetric resource
 func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
-	metric := &metricsv1alpha1.KeptnMetric{}
+	metric := &metricsv1alpha2.KeptnMetric{}
 	if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: provider.Namespace}, metric); err != nil {
 		p.Log.Error(err, "Could not retrieve KeptnMetric")
 		return "", nil, err

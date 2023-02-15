@@ -40,7 +40,7 @@ type KeptnMetricProviderStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:storageversion
 //+kubebuilder:subresource:status
-//+kubebuilder:resource:path=KeptnMetricproviders,shortName=kep
+//+kubebuilder:resource:path=keptnmetricprovider,shortName=kmp
 
 // KeptnMetricProvider is the Schema for the KeptnMetricproviders API
 type KeptnMetricProvider struct {

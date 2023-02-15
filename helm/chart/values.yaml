@@ -10,20 +10,20 @@ deployment:
 ## @section Controller Log level
 operator:
   commonController:
-    logLevel: 10
+    logLevel: -1
   keptnappController:
-    logLevel: 10
+    logLevel: -1
   keptnappversionController:
-    logLevel: 10
+    logLevel: -1
   keptnevaluationController:
-    logLevel: 10
+    logLevel: -1
   keptntaskController:
-    logLevel: 10
+    logLevel: -1
   keptntaskdefinitionController:
-    logLevel: 10
+    logLevel: -1
   keptnworkloadController:
-    logLevel: 10
+    logLevel: -1
   metricsController:
-    logLevel: 10
+    logLevel: -1
   optionsController:
-    logLevel: 10
+    logLevel: -1

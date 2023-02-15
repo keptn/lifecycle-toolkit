@@ -12,6 +12,24 @@ spec:
           env:
             - name: OTEL_COLLECTOR_URL
               value: "{{ .Values.otelCollector.url }}"
+            - name: COMMON_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.commonController.logLevel }}"
+            - name: KEPTNAPP_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptnappController.logLevel }}"
+            - name: KEPTNAPPVERSION_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptnappversionController.logLevel }}"
+            - name: KEPTNEVALUATION_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptnevaluationController.logLevel }}"
+            - name: KEPTNTASK_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptntaskController.logLevel }}"
+            - name: KEPTNTASKDEFINITION_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptntaskdefinitionController.logLevel }}"
+            - name: KEPTNWORKLOAD_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.keptnworkloadController.logLevel }}"
+            - name: METRICS_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.metricsController.logLevel }}"
+            - name: OPTIONS_CONTROLLER_LOG_LEVEL
+              value: "{{ .Values.operator.optionsController.logLevel }}"
 
 
 

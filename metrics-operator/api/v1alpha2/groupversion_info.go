@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v1alpha2 contains API Schema definitions for the metrics v1alpha2 API group
-//+kubebuilder:object:generate=true
-//+groupName=metrics.keptn.sh
+// +kubebuilder:object:generate=true
+// +groupName=metrics.keptn.sh
 package v1alpha2
 
 import (

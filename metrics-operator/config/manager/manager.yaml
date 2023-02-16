@@ -2,27 +2,27 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: controller-manager
+    control-plane: metrics-controller
   name: system
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: controller
   namespace: system
   labels:
-    control-plane: controller-manager
+    control-plane: metrics-controller
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: metrics-controller
   replicas: 1
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: controller-manager
+        control-plane: metrics-controller
     spec:
       securityContext:
         runAsNonRoot: true
@@ -38,8 +38,23 @@ spec:
         - /manager
         args:
         - --leader-elect
+          # Secure port for the metrics adapter
+        - --adapter-port=6443
+        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+          # Log level for the metrics adapter
+        - --v=10
         image: controller:latest
         name: manager
+        ports:
+          - containerPort: 9443
+            name: webhook-server
+            protocol: TCP
+          - name: metrics
+            containerPort: 2222
+            protocol: TCP
+          - name: custom-metrics
+            containerPort: 6443
+            protocol: TCP
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -66,5 +81,5 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
-      serviceAccountName: controller-manager
+      serviceAccountName: controller
       terminationGracePeriodSeconds: 10

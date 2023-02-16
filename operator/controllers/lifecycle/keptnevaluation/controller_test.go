@@ -15,7 +15,7 @@ import (
 
 const KltNamespace = "klt-namespace"
 
-func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
+func TestKeptnEvaluationReconciler_fetchDefinition(t *testing.T) {
 
 	metricEvalDef, DTEvalDef, PromEvalDef, EvalDef := setupEvalDefinitions()
 	DTProv, PromProv := setupProviders()
@@ -31,7 +31,6 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 		name                 string
 		namespacedDefinition types.NamespacedName
 		wantDef              *klcv1alpha2.KeptnEvaluationDefinition
-		wantProv             *klcv1alpha2.KeptnEvaluationProvider
 		wantErr              bool
 	}{
 		{
@@ -40,8 +39,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "myKeptn",
 			},
-			wantDef:  metricEvalDef,
-			wantProv: providers.GetDefaultMetricProvider(KltNamespace),
+			wantDef: metricEvalDef,
 		},
 		{
 			name: "DT metrics",
@@ -49,8 +47,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "myDT",
 			},
-			wantDef:  DTEvalDef,
-			wantProv: DTProv,
+			wantDef: DTEvalDef,
 		},
 
 		{
@@ -59,8 +56,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "myProm",
 			},
-			wantDef:  PromEvalDef,
-			wantProv: PromProv,
+			wantDef: PromEvalDef,
 		},
 
 		{
@@ -69,9 +65,8 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "whatever",
 			},
-			wantDef:  nil,
-			wantProv: nil,
-			wantErr:  true,
+			wantDef: nil,
+			wantErr: true,
 		},
 		{
 			name: "Unexisting Provider",
@@ -79,15 +74,14 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "mydef",
 			},
-			wantDef:  nil,
-			wantProv: nil,
-			wantErr:  true,
+			wantDef: nil,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			got, got1, err := r.fetchDefinitionAndProvider(context.TODO(), tt.namespacedDefinition)
+			got, err := r.fetchDefinition(context.TODO(), tt.namespacedDefinition)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("fetchDefinitionAndProvider() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -97,13 +91,6 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 			} else {
 				require.Nil(t, got)
 			}
-
-			if tt.wantProv != nil {
-				require.Equal(t, got1.Name, tt.wantProv.Name)
-			} else {
-				require.Nil(t, got1)
-			}
-
 		})
 	}
 }

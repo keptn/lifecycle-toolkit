@@ -17,23 +17,17 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
 	"github.com/kelseyhightower/envconfig"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/metrics/adapter"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
@@ -43,10 +37,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
-	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
-	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -62,24 +53,21 @@ import (
 )
 
 var (
-	scheme                     = runtime.NewScheme()
-	setupLog                   = ctrl.Log.WithName("setup")
-	metricServerTickerInterval = 10 * time.Second
+	scheme   = runtime.NewScheme()
+	setupLog = ctrl.Log.WithName("setup")
 )
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
-	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
 type envConfig struct {
-	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
-	PodName            string `envconfig:"POD_NAME" default:""`
-	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	PodNamespace string `envconfig:"POD_NAMESPACE" default:""`
+	PodName      string `envconfig:"POD_NAME" default:""`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -110,9 +98,6 @@ func main() {
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()
-
-	// Start the custom metrics adapter
-	go startCustomMetricsAdapter(env.PodNamespace)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -154,10 +139,6 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	// Enabling OTel
 	err = controllercommon.GetOtelInstance().InitOtelCollector("")
@@ -257,16 +238,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	metricsReconciler := &keptnmetric.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
-	}
-	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
-		os.Exit(1)
-	}
-
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -291,10 +262,6 @@ func main() {
 	}
 	if err = (&lifecyclev1alpha2.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-	if err = (&metricsv1alpha1.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
@@ -342,12 +309,4 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
-}
-
-func startCustomMetricsAdapter(namespace string) {
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
-	defer cancel()
-
-	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
-	adapter.RunAdapter(ctx)
 }

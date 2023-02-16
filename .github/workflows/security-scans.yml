@@ -147,12 +147,16 @@ jobs:
           cd operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
+          cd ../../../metrics-operator/config/default
+          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
+          echo "---" >> /tmp/crds.yaml
+          cd ../crd && kustomize build ./ >> /tmp/crds.yaml
           cd ../../../scheduler/manifests/install && kustomize build ./ > /tmp/scheduler-manifest.yaml
 
           curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
-          cd .. && echo "---" >> operator-manifest.yaml && cat operator-manifest.yaml scheduler-manifest.yaml > manifest.yaml
+          cd .. && echo "---" >> operator-manifest.yaml && echo "---" >> scheduler-manifest.yaml && cat operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
           kubeconform -schema-location default -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -summary manifest.yaml
 
       - name: Kubescape Scan
@@ -176,6 +180,7 @@ jobs:
         image:
           - "functions-runtime"
           - "keptn-lifecycle-operator"
+          - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
     steps:
@@ -201,6 +206,7 @@ jobs:
       matrix:
         artifact:
           - "operator"
+          - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
 

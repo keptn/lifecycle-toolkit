@@ -20,8 +20,8 @@ import (
 func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 	provider := metricsapi.KeptnMetricsProvider{
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "KeptnEvaluationProvider",
-			APIVersion: "lifecycle.keptn.sh/v1alpha2"},
+			Kind:       "KeptnMetricsProvider",
+			APIVersion: "metrics.keptn.sh/v1alpha2"},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myprovider",
 			Namespace: "default",

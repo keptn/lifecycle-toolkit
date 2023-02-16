@@ -22,5 +22,4 @@ func setupSchemes() {
 	utilruntime.Must(corev1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(apiv1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(metricsapi.AddToScheme(scheme.Scheme))
-
 }

@@ -17,8 +17,17 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
+	"fmt"
+	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -48,7 +57,17 @@ func init() {
 	//+kubebuilder:scaffold:scheme
 }
 
+type envConfig struct {
+	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
+	PodName            string `envconfig:"POD_NAME" default:""`
+	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+}
+
 func main() {
+	var env envConfig
+	if err := envconfig.Process("", &env); err != nil {
+		log.Fatalf("Failed to process env var: %s", err)
+	}
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
@@ -64,6 +83,12 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	// Start the prometheus HTTP server and pass the exporter Collector to it
+	go serveMetrics()
+
+	// Start the custom metrics adapter
+	go startCustomMetricsAdapter(env.PodNamespace)
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
@@ -112,4 +137,23 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+func serveMetrics() {
+	log.Printf("serving metrics at localhost:2222/metrics")
+
+	http.Handle("/metrics", promhttp.Handler())
+	err := http.ListenAndServe(":2222", nil)
+	if err != nil {
+		fmt.Printf("error serving http: %v", err)
+		return
+	}
+}
+
+func startCustomMetricsAdapter(namespace string) {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
+	defer cancel()
+
+	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
+	adapter.RunAdapter(ctx)
 }

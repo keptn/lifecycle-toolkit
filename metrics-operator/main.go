@@ -20,10 +20,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	corev1 "k8s.io/api/core/v1"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"syscall"
 
 	"github.com/kelseyhightower/envconfig"
@@ -92,6 +94,8 @@ func main() {
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
 
+	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -110,6 +114,8 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
+		ClientDisableCacheFor: disableCacheFor, // due to https://github.com/kubernetes-sigs/controller-runtime/issues/550
+		// We disable secret informer cache so that the operator won't need clusterrole list access to secrets
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

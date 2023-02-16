@@ -3,12 +3,11 @@ package providers
 import (
 	"context"
 	"fmt"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"net/http"
 	"strings"
 
 	"github.com/go-logr/logr"
-
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"sigs.k8s.io/controller-runtime/pkg/client"

@@ -2,12 +2,12 @@ package prometheus
 
 import (
 	"context"
-	"fmt" //nolint:gci
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"fmt"      //nolint:gci
 	"net/http" //nolint:gci
 	"time"
 
 	"github.com/go-logr/logr"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"

@@ -2,11 +2,11 @@ package dynatrace
 
 import (
 	"context"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 )

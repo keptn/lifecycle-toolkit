@@ -20,29 +20,27 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-	// to ensure that exec-entrypoint and run can make use of them.
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
+	"github.com/kelseyhightower/envconfig"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
+	// to ensure that exec-entrypoint and run can make use of them.
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-	//+kubebuilder:scaffold:imports
+	//+kubebuilder:scaffold:imports nolint:gci
 )
 
 var (

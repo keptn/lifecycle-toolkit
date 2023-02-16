@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"

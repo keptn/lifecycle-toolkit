@@ -1,8 +1,9 @@
 package v1alpha2
 
 import (
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
+
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnMetric_IsStatusSet(t *testing.T) {

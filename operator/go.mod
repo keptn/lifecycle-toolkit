@@ -15,6 +15,7 @@ require (
 	github.com/open-feature/go-sdk v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-00010101000000-000000000000
 	github.com/prometheus/common v0.39.0
 	github.com/spf13/afero v1.9.3
 	github.com/stretchr/testify v1.8.1
@@ -37,7 +38,6 @@ require (
 	k8s.io/klog/v2 v2.90.0
 	k8s.io/metrics v0.26.1
 	sigs.k8s.io/controller-runtime v0.14.4
-	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 )
 
 require (
@@ -125,3 +125,4 @@ require (
 )
 
 replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.6
+replace github.com/keptn/lifecycle-toolkit/metrics-operator => ../metrics-operator

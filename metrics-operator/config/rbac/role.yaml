@@ -6,6 +6,14 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - metrics.keptn.sh
   resources:
   - keptnmetrics
@@ -27,6 +35,14 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetricsproviders
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - metrics.keptn.sh
   resources:

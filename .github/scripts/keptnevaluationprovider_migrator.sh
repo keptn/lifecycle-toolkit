@@ -62,7 +62,7 @@ fi
 
 echo -e "------------------------------\n"
 
-read -p "Do you want to apply the newly created KeptnMetricsProvider resources? [Y/N]" -n 1 -r
+read -p "Do you want to apply the newly created KeptnMetricsProvider resources? [y/N]" -n 1 -r
 echo -e "\n"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

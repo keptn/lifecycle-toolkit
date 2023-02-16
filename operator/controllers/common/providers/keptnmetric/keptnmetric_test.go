@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha2"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -73,14 +73,7 @@ func Test_keptnmetric(t *testing.T) {
 				Name: "metric",
 			}
 
-			p := klcv1alpha2.KeptnEvaluationProvider{
-				ObjectMeta: metav1.ObjectMeta{
-					Namespace: "default",
-					Name:      "provider",
-				},
-			}
-
-			r, raw, e := kmp.EvaluateQuery(context.TODO(), obj, p)
+			r, raw, e := kmp.EvaluateQuery(context.TODO(), obj, "default")
 			require.Equal(t, tt.out, r)
 			require.Equal(t, tt.outraw, raw)
 			if tt.wantError != (e != nil) {

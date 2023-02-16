@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha2"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"

@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/apis/metrics/v1alpha2"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	. "github.com/onsi/ginkgo/v2"

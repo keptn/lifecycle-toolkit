@@ -144,7 +144,7 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	metricObj := metricsapi.KeptnMetric{}
 	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
 	if err != nil {
-		fmt.Println("failed to list keptn-metrics" + err.Error())
+		fmt.Println("failed to list keptn-metrics: " + err.Error())
 	}
 
 	data := map[string]string{

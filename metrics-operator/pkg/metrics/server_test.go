@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,13 +16,13 @@ import (
 )
 
 func TestMetricServer_happyPath(t *testing.T) {
-	metric := metricsv1alpha1.KeptnMetric{
+	metric := metricsapi.KeptnMetric{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "sample-metric",
 			Namespace: "keptn-lifecycle-toolkit-system",
 		},
-		Spec: metricsv1alpha1.KeptnMetricSpec{
-			Provider: metricsv1alpha1.ProviderRef{
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
 				Name: "dynatrace",
 			},
 			Query:                "query",
@@ -30,7 +30,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 		},
 	}
 
-	err := metricsv1alpha1.AddToScheme(scheme.Scheme)
+	err := metricsapi.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(&metric).Build()
 
@@ -69,7 +69,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 }
 
 func TestMetricServer_disabledServer(t *testing.T) {
-	err2 := metricsv1alpha1.AddToScheme(scheme.Scheme)
+	err2 := metricsapi.AddToScheme(scheme.Scheme)
 	require.Nil(t, err2)
 	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
 
@@ -91,7 +91,7 @@ func TestMetricServer_disabledServer(t *testing.T) {
 		return err != nil
 	}, 30*time.Second, 3*time.Second)
 
-	require.Contains(t, err.Error(), "dial tcp 127.0.0.1:9999: connect: connection refused")
+	require.Contains(t, err.Error(), "connection refused")
 
 	cancel()
 

@@ -49,6 +49,18 @@ echo -e "Manifests migrated successfully.\n"
 echo -e "To review the newly created manifests, check ./$MANIFESTS_FILE file.\n"
 echo -e "------------------------------\n"
 
+read -p "Do you want to apply the newly created KeptnMetricsProvider resources? [y/N]" -n 1 -r
+echo -e "\n"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  kubectl apply -f $MANIFESTS_FILE
+  echo -e "\nManifests applied.\n"
+else
+  echo -e "Manifests not applied.\n"
+fi
+
+echo -e "------------------------------\n"
+
 read -p "Do you want to delete the old KeptnEvaluationProvider resources? [y/N]" -n 1 -r
 echo -e "\n"
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -56,16 +68,8 @@ then
   for n in "${providers[@]}"
   do
     kubectl delete keptnevaluationproviders $n
-    echo -e "Resources deleted.\n"
   done
-fi
-
-echo -e "------------------------------\n"
-
-read -p "Do you want to apply the newly created KeptnMetricsProvider resources? [y/N]" -n 1 -r
-echo -e "\n"
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-  kubectl apply -f $MANIFESTS_FILE
-  echo -e "Manifests applied.\n"
+  echo -e "\nResources deleted.\n"
+else
+  echo -e "Resources not deleted.\n"
 fi

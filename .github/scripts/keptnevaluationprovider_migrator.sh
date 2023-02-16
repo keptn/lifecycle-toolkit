@@ -49,7 +49,7 @@ echo -e "Manifests migrated successfully.\n"
 echo -e "To review the newly created manifests, check ./$MANIFESTS_FILE file.\n"
 echo -e "------------------------------\n"
 
-read -p "Do you want to delete the old KeptnEvaluationProvider resources? [Y/N]" -n 1 -r
+read -p "Do you want to delete the old KeptnEvaluationProvider resources? [y/N]" -n 1 -r
 echo -e "\n"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

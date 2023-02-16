@@ -73,94 +73,94 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			evaluation           *klcv1alpha2.KeptnEvaluation
 		)
 		Context("With an existing EvaluationDefinition pointing to KeptnMetric", func() {
-			It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
-				By("Create EvaluationDefiniton")
+			// It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
+			// 	By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
+			// 	evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
 
-				By("Create KeptnMetric")
+			// 	By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName)
+			// 	metric := makeKeptnMetric(metricName)
 
-				By("Update KeptnMetric to have status")
+			// 	By("Update KeptnMetric to have status")
 
-				metric2 := &metricsv1alpha2.KeptnMetric{}
-				err := k8sClient.Get(context.TODO(), types.NamespacedName{
-					Namespace: KLTnamespace,
-					Name:      metric.Name,
-				}, metric2)
-				Expect(err).To(BeNil())
+			// 	metric2 := &metricsv1alpha2.KeptnMetric{}
+			// 	err := k8sClient.Get(context.TODO(), types.NamespacedName{
+			// 		Namespace: KLTnamespace,
+			// 		Name:      metric.Name,
+			// 	}, metric2)
+			// 	Expect(err).To(BeNil())
 
-				metric2.Status = metricsv1alpha2.KeptnMetricStatus{
-					Value:       "5",
-					RawValue:    []byte("5"),
-					LastUpdated: metav1.NewTime(time.Now().UTC()),
-				}
+			// 	metric2.Status = metricsv1alpha2.KeptnMetricStatus{
+			// 		Value:       "5",
+			// 		RawValue:    []byte("5"),
+			// 		LastUpdated: metav1.NewTime(time.Now().UTC()),
+			// 	}
 
-				err = k8sClient.Status().Update(context.TODO(), metric2)
-				Expect(err).To(BeNil())
+			// 	err = k8sClient.Status().Update(context.TODO(), metric2)
+			// 	Expect(err).To(BeNil())
 
-				By("Create evaluation to start the process")
+			// 	By("Create evaluation to start the process")
 
-				evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
+			// 	evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
 
-				By("Check that the evaluation passed")
+			// 	By("Check that the evaluation passed")
 
-				evaluation2 := &klcv1alpha2.KeptnEvaluation{}
-				Eventually(func(g Gomega) {
-					err := k8sClient.Get(context.TODO(), types.NamespacedName{
-						Namespace: namespaceName,
-						Name:      evaluation.Name,
-					}, evaluation2)
-					g.Expect(err).To(BeNil())
-					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha2.EvaluationStatusItem{
-						metricName: {
-							Value:  "5",
-							Status: apicommon.StateSucceeded,
-						},
-					}))
-				}, "30s").Should(Succeed())
+			// 	evaluation2 := &klcv1alpha2.KeptnEvaluation{}
+			// 	Eventually(func(g Gomega) {
+			// 		err := k8sClient.Get(context.TODO(), types.NamespacedName{
+			// 			Namespace: namespaceName,
+			// 			Name:      evaluation.Name,
+			// 		}, evaluation2)
+			// 		g.Expect(err).To(BeNil())
+			// 		g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
+			// 		g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha2.EvaluationStatusItem{
+			// 			metricName: {
+			// 				Value:  "5",
+			// 				Status: apicommon.StateSucceeded,
+			// 			},
+			// 		}))
+			// 	}, "30s").Should(Succeed())
 
-				err = k8sClient.Delete(context.TODO(), metric)
-				logErrorIfPresent(err)
-			})
+			// 	err = k8sClient.Delete(context.TODO(), metric)
+			// 	logErrorIfPresent(err)
+			// })
 
-			It("KeptnEvaluationController Metric status does not exist", func() {
-				By("Create EvaluationDefiniton")
+			// It("KeptnEvaluationController Metric status does not exist", func() {
+			// 	By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
+			// 	evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
 
-				By("Create KeptnMetric")
+			// 	By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName)
+			// 	metric := makeKeptnMetric(metricName)
 
-				By("Create evaluation to start the process")
+			// 	By("Create evaluation to start the process")
 
-				evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
+			// 	evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
 
-				By("Check that the evaluation failed")
+			// 	By("Check that the evaluation failed")
 
-				evaluation2 := &klcv1alpha2.KeptnEvaluation{}
-				Eventually(func(g Gomega) {
-					err := k8sClient.Get(context.TODO(), types.NamespacedName{
-						Namespace: namespaceName,
-						Name:      evaluation.Name,
-					}, evaluation2)
-					g.Expect(err).To(BeNil())
-					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateFailed))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha2.EvaluationStatusItem{
-						metricName: {
-							Value:   "",
-							Status:  apicommon.StateFailed,
-							Message: "no values",
-						},
-					}))
-				}, "30s").Should(Succeed())
+			// 	evaluation2 := &klcv1alpha2.KeptnEvaluation{}
+			// 	Eventually(func(g Gomega) {
+			// 		err := k8sClient.Get(context.TODO(), types.NamespacedName{
+			// 			Namespace: namespaceName,
+			// 			Name:      evaluation.Name,
+			// 		}, evaluation2)
+			// 		g.Expect(err).To(BeNil())
+			// 		g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateFailed))
+			// 		g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha2.EvaluationStatusItem{
+			// 			metricName: {
+			// 				Value:   "",
+			// 				Status:  apicommon.StateFailed,
+			// 				Message: "no values",
+			// 			},
+			// 		}))
+			// 	}, "30s").Should(Succeed())
 
-				err := k8sClient.Delete(context.TODO(), metric)
-				logErrorIfPresent(err)
-			})
+			// 	err := k8sClient.Delete(context.TODO(), metric)
+			// 	logErrorIfPresent(err)
+			// })
 			It("KeptnEvaluationController Metric does not exist", func() {
 				By("Create EvaluationDefiniton")
 

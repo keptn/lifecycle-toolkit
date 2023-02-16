@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Get project data
         env:
-          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
           ORGANIZATION: keptn
           PROJECT_NUMBER: 18
         run: |
@@ -45,7 +45,7 @@ jobs:
         
       - name: Add item id
         env:
-          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
         run: |
           item_id="$( gh api graphql -f query='
@@ -60,7 +60,7 @@ jobs:
                          
       - name: Set End Date
         env:
-         GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_TOKEN }}
+         GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
         run: |
           gh api graphql -f query='
             mutation (

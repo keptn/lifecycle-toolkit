@@ -86,6 +86,14 @@ build-deploy-operator:
 
 	kubectl apply -f operator/config/rendered/release.yaml
 
+.PHONY: build-deploy-metrics-operator
+build-deploy-metrics-operator:
+	$(MAKE) -C metrics-operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C metrics-operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+
+	kubectl apply -f metrics-operator/config/rendered/release.yaml
+
 .PHONY: build-deploy-scheduler
 build-deploy-scheduler:
 	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
@@ -103,7 +111,7 @@ build-deploy-certmanager:
 	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-scheduler
+build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
 markdownlint:
 	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --ignore "/workdir/CHANGELOG.md"

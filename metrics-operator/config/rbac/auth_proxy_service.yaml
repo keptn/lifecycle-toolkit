@@ -11,5 +11,12 @@ spec:
     port: 8443
     protocol: TCP
     targetPort: https
+  - name: custom-metrics
+    targetPort: custom-metrics
+    port: 443
+  - name: keptn-metrics
+    protocol: TCP
+    port: 9999
+    targetPort: keptn-metrics
   selector:
     control-plane: controller-manager

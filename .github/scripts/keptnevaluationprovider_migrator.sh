@@ -41,7 +41,7 @@ do
   kubectl get keptnevaluationproviders $n -oyaml >> $MANIFESTS_FILE
 done
 
-sed -i 's/lifecycle\.keptn\.sh\/v1alpha2/metrics\.keptn\.sh\/v1alpha2/g' $MANIFESTS_FILE
+sed -i 's#lifecycle\.keptn\.sh/v1alpha2#metrics\.keptn\.sh/v1alpha2#g' $MANIFESTS_FILE
 sed -i 's/KeptnEvaluationProvider/KeptnMetricsProvider/g' $MANIFESTS_FILE
 
 echo -e "------------------------------\n"

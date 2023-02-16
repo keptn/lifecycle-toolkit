@@ -9,7 +9,7 @@ roleRef:
   name: system:auth-delegator
 subjects:
   - kind: ServiceAccount
-    name: controller-manager
+    name: controller
     namespace: system
 ---
 apiVersion: rbac.authorization.k8s.io/v1

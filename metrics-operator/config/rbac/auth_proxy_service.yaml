@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    control-plane: metrics-controller-manager
-  name: controller-manager-metrics-service
+    control-plane: metrics-controller
+  name: controller-metrics-service
   namespace: system
 spec:
   ports:
@@ -19,4 +19,4 @@ spec:
     port: 2222
     targetPort: metrics
   selector:
-    control-plane: metrics-controller-manager
+    control-plane: metrics-controller

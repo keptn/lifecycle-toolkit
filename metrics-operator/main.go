@@ -20,37 +20,39 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	corev1 "k8s.io/api/core/v1"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"syscall"
+	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-
+	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
+	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	//+kubebuilder:scaffold:imports nolint:gci
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	scheme                     = runtime.NewScheme()
+	setupLog                   = ctrl.Log.WithName("setup")
+	metricServerTickerInterval = 10 * time.Second
 )
 
 func init() {
@@ -121,6 +123,10 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	if err = (&metricscontroller.KeptnMetricReconciler{
 		Client: mgr.GetClient(),

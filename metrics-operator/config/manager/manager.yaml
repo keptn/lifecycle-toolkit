@@ -49,8 +49,8 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
-          - name: keptn-metrics
-            containerPort: 9999
+          - name: metrics
+            containerPort: 2222
             protocol: TCP
           - name: custom-metrics
             containerPort: 6443

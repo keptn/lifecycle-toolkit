@@ -7,7 +7,7 @@ type: Opaque
 data:
   DT_TOKEN: dG9rZW46IG15dG9rZW4=
 ---
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: podtatometric

@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.13
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-00010101000000-000000000000
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230216134748-9446ef7866f0
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.8.0
 	github.com/onsi/gomega v1.26.0
@@ -99,5 +99,3 @@ require (
 )
 
 replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.6
-
-replace github.com/keptn/lifecycle-toolkit/metrics-operator => ../metrics-operator

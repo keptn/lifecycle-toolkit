@@ -283,7 +283,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: odubajdt/klt-metrics-operator:main
+        image: odubajdt/metrics-operator:main
         livenessProbe:
           httpGet:
             path: /healthz

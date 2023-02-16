@@ -180,7 +180,7 @@ jobs:
         image:
           - "functions-runtime"
           - "keptn-lifecycle-operator"
-          - "klt-metrics-operator"
+          - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
     steps:

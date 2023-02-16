@@ -22,7 +22,7 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
-          - name: "klt-metrics-operator"
+          - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"

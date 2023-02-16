@@ -136,6 +136,7 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -176,120 +177,120 @@ func main() {
 
 	spanHandler := &controllercommon.SpanHandler{}
 
+	taskLogger := ctrl.Log.WithName("KeptnTask Controller")
 	taskReconciler := &keptntask.KeptnTaskReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnTask Controller"),
+		Log:           taskLogger.V(env.KeptnTaskControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptntask-controller"),
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
-	taskReconciler.Log.V(env.KeptnTaskControllerLogLevel)
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
 	}
 
+	taskDefinitionLogger := ctrl.Log.WithName("KeptnTaskDefinition Controller")
 	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
-		Log:      ctrl.Log.WithName("KeptnTaskDefinition Controller"),
+		Log:      taskDefinitionLogger.V(env.KeptnTaskDefinitionControllerLogLevel),
 		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
 	}
-	taskDefinitionReconciler.Log.V(env.KeptnTaskDefinitionControllerLogLevel)
 	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
 
+	appLogger := ctrl.Log.WithName("KeptnApp Controller")
 	appReconciler := &keptnapp.KeptnAppReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnApp Controller"),
+		Log:           appLogger.V(env.KeptnAppControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptnapp-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
-	appReconciler.Log.V(env.KeptnAppControllerLogLevel)
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
 		os.Exit(1)
 	}
 
+	workloadLogger := ctrl.Log.WithName("KeptnWorkload Controller")
 	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnWorkload Controller"),
+		Log:           workloadLogger.V(env.KeptnWorkloadControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptnworkload-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
-	workloadReconciler.Log.V(env.KeptnWorkloadControllerLogLevel)
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
 
+	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller")
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnWorkloadInstance Controller"),
+		Log:           workloadInstanceLogger.V(env.KeptnWorkloadInstanceControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 		SpanHandler:   spanHandler,
 	}
-	workloadInstanceReconciler.Log.V(env.KeptnWorkloadInstanceControllerLogLevel)
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
 
+	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller")
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnAppVersion Controller"),
+		Log:           appVersionLogger.V(env.KeptnAppVersionControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptnappversion-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
 	}
-	appVersionReconciler.Log.V(env.KeptnAppVersionControllerLogLevel)
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
 		os.Exit(1)
 	}
 
+	evaluationLogger := ctrl.Log.WithName("KeptnEvaluation Controller")
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnEvaluation Controller"),
+		Log:           evaluationLogger.V(env.KeptnEvaluationControllerLogLevel),
 		Recorder:      mgr.GetEventRecorderFor("keptnevaluation-controller"),
 		TracerFactory: controllercommon.GetOtelInstance(),
 		Meters:        keptnMeters,
 		Namespace:     env.PodNamespace,
 	}
-	evaluationReconciler.Log.V(env.KeptnEvaluationControllerLogLevel)
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")
 		os.Exit(1)
 	}
 
+	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	metricsReconciler := &keptnmetric.KeptnMetricReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
+		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
 	}
-	metricsReconciler.Log.V(env.KeptnMetricControllerLogLevel)
 	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
 
+	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-		Log:    ctrl.Log.WithName("KeptnConfig Controller"),
+		Log:    configLogger.V(env.KptnOptionsControllerLogLevel),
 	}
-	configReconciler.Log.V(env.KptnOptionsControllerLogLevel)
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)

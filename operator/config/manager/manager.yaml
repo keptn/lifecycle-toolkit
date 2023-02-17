@@ -17,7 +17,6 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
-        openfeature.dev/enabled: "true"
       labels:
         control-plane: controller-manager
     spec:

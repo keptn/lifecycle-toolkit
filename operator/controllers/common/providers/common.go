@@ -9,6 +9,7 @@ const DynatraceProviderName = "dynatrace"
 const DynatraceDQLProviderName = "dql"
 const PrometheusProviderName = "prometheus"
 const KeptnMetricProviderName = "keptn-metric"
+const DataDogProviderName = "datadog"
 
 func GetDefaultMetricProvider(namespace string) *klcv1alpha2.KeptnEvaluationProvider {
 	return &klcv1alpha2.KeptnEvaluationProvider{

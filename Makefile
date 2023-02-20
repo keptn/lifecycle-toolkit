@@ -52,24 +52,17 @@ $(KUSTOMIZE): $(LOCALBIN)
 .PHONY: release-helm-manifests
 release-helm-manifests:
 	echo "building helm overlay"
-	kustomize build ./helm/overlay > ./helm/chart/templates/rendered.yaml
+	kustomize build ./helm/overlay  > helmchart.yaml
+	cat helmchart.yaml | helmify -probes=true -image-pull-secret=true helm/test
 
 .PHONY: helm-package
-helm-package: clean-helm-charts build-release-manifests release-helm-manifests clean-helm-yaml
-	cd ./helm && helm package ./chart
-	cd ./helm && mv keptn-lifecycle-toolkit-*.tgz ./chart/charts
+helm-package: clean-helm-charts build-release-manifests release-helm-manifests
 
 .PHONY: clean-helm-charts
 clean-helm-charts:
-	@if test -f "/helm/chart/charts/keptn-lifecycle-toolkit-*.tgz" ; then \
-		rm "./helm/chart/charts/keptn-lifecycle-toolkit-*.tgz"; \
+	@if test -f "/helm/chart" ; then \
+		rm "./helm/chart"; \
 	fi
-
-.PHONY: clean-helm-yaml
-clean-helm-yaml:
-	sed -i "s/'{{/{{/g" ./helm/chart/templates/rendered.yaml
-	sed -i "s/}}'/}}/g" ./helm/chart/templates/rendered.yaml
-	sed -i "/.*automation:.*$\/d" ./helm/chart/templates/rendered.yaml
 
 .PHONY: build-release-manifests
 build-release-manifests:
@@ -111,3 +104,4 @@ markdownlint:
 
 markdownlint-fix:
 	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --fix --ignore "/workdir/CHANGELOG.md"
+

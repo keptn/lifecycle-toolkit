@@ -21,6 +21,7 @@ else
 fi
 
 echo "Generating readme now..."
-readme-generator --values=./helm/chart/values.yaml --readme=./helm/chart/README.md
+cat ./helm/chart/values.yaml ./helm/chart/doc.yaml > ./helm/chart/rendered.yaml
+readme-generator --values=./helm/chart/rendered.yaml --readme=./helm/chart/README.md
 
 # Please be aware, the readme file needs to exist and needs to have a Parameters section, as only this section will be re-generated

@@ -1,4 +1,5 @@
 *.tgz
+chart/rendered.yaml
 chart/templates/rendered.yaml
 chart/templates/crds.yaml
 chart/crds/*.yaml

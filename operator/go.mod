@@ -124,4 +124,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.6
+replace github.com/open-feature/go-sdk-contrib/providers/flagd => github.com/open-feature/flagd v0.3.7

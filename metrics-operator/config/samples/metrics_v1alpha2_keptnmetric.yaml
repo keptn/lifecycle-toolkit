@@ -1,6 +1,9 @@
 apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
-  name: keptnmetric-sample
+  name: available-cpus
 spec:
-  # TODO(user): Add fields here
+  provider: 
+    name: prometheus
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+  fetchIntervalSeconds: 10

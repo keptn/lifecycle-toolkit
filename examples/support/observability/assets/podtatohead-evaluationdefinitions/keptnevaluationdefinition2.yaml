@@ -4,7 +4,7 @@ metadata:
   name: my-prometheus-definition2
   namespace: podtato-kubectl
 spec:
-  source: prometheus
+  source: keptn-metric
   objectives:
     - name: consumed-memory ## this query should pass
       query: "sum(kube_node_status_capacity{resource='memory'})"

@@ -7,7 +7,7 @@ type: Opaque
 data:
   DT_TOKEN: dG9rZW46IG15dG9rZW4=
 ---
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: podtatometric
@@ -19,8 +19,8 @@ spec:
   fetchIntervalSeconds: 5
 
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnEvaluationProvider
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
 metadata:
   name: dynatrace
   namespace: keptn-lifecycle-toolkit-system

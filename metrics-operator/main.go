@@ -65,9 +65,10 @@ func init() {
 }
 
 type envConfig struct {
-	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
-	PodName            string `envconfig:"POD_NAME" default:""`
-	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	PodNamespace                  string `envconfig:"POD_NAMESPACE" default:""`
+	PodName                       string `envconfig:"POD_NAME" default:""`
+	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
+	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
 func main() {
@@ -129,10 +130,11 @@ func main() {
 	defer cancel()
 	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
+	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-		Log:    ctrl.Log.WithName("KeptnMetric Controller"),
+		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)

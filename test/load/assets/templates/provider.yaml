@@ -1,5 +1,5 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnEvaluationProvider
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
 metadata:
   name: prometheus
   namespace: keptn-lifecycle-toolkit-system

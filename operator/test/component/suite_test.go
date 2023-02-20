@@ -74,7 +74,10 @@ var _ = BeforeSuite(func() {
 	} else {
 		GinkgoLogr.Info("Setting up fake test env")
 		testEnv = &envtest.Environment{
-			CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
+			CRDDirectoryPaths: []string{
+				filepath.Join("..", "..", "config", "crd", "bases"),
+				filepath.Join("..", "..", "..", "metrics-operator", "config", "crd", "bases"),
+			},
 			ErrorIfCRDPathMissing: true,
 		}
 	}

@@ -58,7 +58,6 @@ $(KUSTOMIZE): $(LOCALBIN)
 release-helm-manifests: helmify
 	echo "building helm overlay"
 	kustomize build ./helm/overlay  > helmchart.yaml
-	cat helmchart.yaml
 	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
 
 .PHONY: helm-package

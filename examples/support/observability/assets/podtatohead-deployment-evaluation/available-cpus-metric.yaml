@@ -1,7 +1,8 @@
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: available-cpus
+  namespace: podtato-kubectl
 spec:
   provider: 
     name: prometheus

@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"fmt"
+	"k8s.io/apimachinery/pkg/types"
 	"sync"
 
 	"k8s.io/apimachinery/pkg/labels"
@@ -27,16 +29,18 @@ func (cm *CustomMetricsCache) Update(metricName string, metricValue CustomMetric
 	if cm.metrics == nil {
 		cm.metrics = map[string]CustomMetricValue{}
 	}
+	metricNamespace := metricValue.Value.DescribedObject.Namespace
 
-	cm.metrics[metricName] = metricValue
+	metricKey := getMetricKey(metricName, metricNamespace)
+	cm.metrics[metricKey] = metricValue
 }
 
 // Delete will delete the value for the given metricName
-func (cm *CustomMetricsCache) Delete(metricName string) {
+func (cm *CustomMetricsCache) Delete(metricName types.NamespacedName) {
 	cm.mtx.Lock()
 	defer cm.mtx.Unlock()
 
-	delete(cm.metrics, metricName)
+	delete(cm.metrics, getMetricKey(metricName.Name, metricName.Namespace))
 }
 
 // List returns a slice of provider.CustomMetricInfo objects containing all the available metrics
@@ -69,10 +73,10 @@ func (cm *CustomMetricsCache) ListByLabelSelector(selector labels.Selector) []pr
 }
 
 // Get returns the metric value for the given metric name
-func (cm *CustomMetricsCache) Get(metricName string) (*CustomMetricValue, error) {
+func (cm *CustomMetricsCache) Get(metricName types.NamespacedName) (*CustomMetricValue, error) {
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
-	metric, ok := cm.metrics[metricName]
+	metric, ok := cm.metrics[getMetricKey(metricName.Name, metricName.Namespace)]
 	if !ok {
 		return nil, ErrMetricNotFound
 	}
@@ -103,4 +107,12 @@ func generateCustomMetricInfo(name string) provider.CustomMetricInfo {
 		Metric:     name,
 		Namespaced: true,
 	}
+}
+
+func getMetricKey(metricName, metricNamespace string) string {
+	if metricNamespace == "" {
+		metricNamespace = "default"
+	}
+	metricKey := fmt.Sprintf("%s-%s", metricNamespace, metricName)
+	return metricKey
 }

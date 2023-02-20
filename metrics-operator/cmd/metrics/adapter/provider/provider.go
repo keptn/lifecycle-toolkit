@@ -75,7 +75,7 @@ func (p *keptnMetricsProvider) ListAllMetrics() []provider.CustomMetricInfo {
 // Used for requests such as e.g. /apis/custom.metrics.k8s.io/v1beta2/namespaces/keptn-lifecycle-toolkit/keptnmetrics.metrics.sh/keptnmetric-sample/keptnmetric-sample
 func (p *keptnMetricsProvider) GetMetricByName(ctx context.Context, name types.NamespacedName, info provider.CustomMetricInfo, metricSelector labels.Selector) (*custom_metrics.MetricValue, error) {
 	klog.InfoS("GetMetricByName()", "name", name, "metricSelector", metricSelector, "context", ctx)
-	val, err := p.cache.Get(name.Name)
+	val, err := p.cache.Get(name)
 	if err != nil {
 		if errors.Is(err, ErrMetricNotFound) {
 			return nil, provider.NewMetricNotFoundForSelectorError(info.GroupResource, info.Metric, name.Name, metricSelector)
@@ -110,7 +110,7 @@ func (p *keptnMetricsProvider) GetMetricBySelector(ctx context.Context, _ string
 }
 
 func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(p.client, 0, p.KltNamespace, nil)
+	factory := dynamicinformer.NewDynamicSharedInformerFactory(p.client, 0)
 
 	informer := factory.ForResource(keptnMetricGroupVersionResource).Informer()
 
@@ -126,7 +126,11 @@ func (p *keptnMetricsProvider) watchMetrics(ctx context.Context) error {
 		DeleteFunc: func(obj interface{}) {
 			klog.InfoS("DeleteFunc", "obj", obj)
 			unstructuredKeptnMetric := obj.(*unstructured.Unstructured)
-			p.cache.Delete(unstructuredKeptnMetric.GetName())
+
+			p.cache.Delete(types.NamespacedName{
+				Namespace: unstructuredKeptnMetric.GetNamespace(),
+				Name:      unstructuredKeptnMetric.GetName(),
+			})
 		},
 	}
 	if _, err := informer.AddEventHandler(handlers); err != nil {

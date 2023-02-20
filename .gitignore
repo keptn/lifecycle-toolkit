@@ -41,3 +41,6 @@ manifests/
 
 # Helm readme generator project
 readme-generator-for-helm/
+/out.yaml
+/test.yaml
+/helmchart.yaml

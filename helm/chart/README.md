@@ -12,7 +12,6 @@ checks
 | ------------------- | --------------------------------------------- | --------------------- |
 | `otelCollector.url` | Sets the URL for the open telemetry collector | `otel-collector:4317` |
 
-
 ### General
 
 | Name                         | Description                                          | Value    |

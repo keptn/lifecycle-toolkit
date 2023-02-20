@@ -8,11 +8,15 @@
 # Dependencies:
 # Node >=16
 
+# renovate: datasource=github-tags depName=bitnami-labs/readme-generator-for-helm
+GENERATOR_VERSION="2.5.0"
+
 echo "Checking if readme generator is installed already..."
-if [[ $(npm list -g | grep -c 'readme-generator-for-helm') -eq 0 ]]; then
-  echo "Readme Generator not installed, installing now..."
+if [[ $(npm list -g | grep -c "readme-generator-for-helm@${GENERATOR_VERSION}") -eq 0 ]]; then
+  echo "Readme Generator v${GENERATOR_VERSION} not installed, installing now..."
   git clone https://github.com/bitnami-labs/readme-generator-for-helm.git
   cd ./readme-generator-for-helm || exit
+  git checkout ${GENERATOR_VERSION}
   npm ci
   cd ..
   npm install -g ./readme-generator-for-helm

@@ -25,8 +25,8 @@ import (
 	"testing"
 	"time"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
@@ -74,7 +74,10 @@ var _ = BeforeSuite(func() {
 	} else {
 		GinkgoLogr.Info("Setting up fake test env")
 		testEnv = &envtest.Environment{
-			CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
+			CRDDirectoryPaths: []string{
+				filepath.Join("..", "..", "config", "crd", "bases"),
+				filepath.Join("..", "..", "..", "metrics-operator", "config", "crd", "bases"),
+			},
 			ErrorIfCRDPathMissing: true,
 		}
 	}
@@ -87,7 +90,7 @@ var _ = BeforeSuite(func() {
 	//+kubebuilder:scaffold:scheme
 	err = klcv1alpha2.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
-	err = metricsv1alpha1.AddToScheme(scheme.Scheme)
+	err = metricsapi.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})

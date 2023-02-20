@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
@@ -80,18 +80,18 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 				By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName)
+				metric := makeKeptnMetric(metricName, namespaceName)
 
 				By("Update KeptnMetric to have status")
 
-				metric2 := &metricsv1alpha1.KeptnMetric{}
+				metric2 := &metricsapi.KeptnMetric{}
 				err := k8sClient.Get(context.TODO(), types.NamespacedName{
-					Namespace: KLTnamespace,
+					Namespace: namespaceName,
 					Name:      metric.Name,
 				}, metric2)
 				Expect(err).To(BeNil())
 
-				metric2.Status = metricsv1alpha1.KeptnMetricStatus{
+				metric2.Status = metricsapi.KeptnMetricStatus{
 					Value:       "5",
 					RawValue:    []byte("5"),
 					LastUpdated: metav1.NewTime(time.Now().UTC()),
@@ -133,7 +133,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 
 				By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName)
+				metric := makeKeptnMetric(metricName, namespaceName)
 
 				By("Create evaluation to start the process")
 
@@ -251,14 +251,14 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 	return evalDef
 }
 
-func makeKeptnMetric(name string) *metricsv1alpha1.KeptnMetric {
-	metric := &metricsv1alpha1.KeptnMetric{
+func makeKeptnMetric(name string, namespaceName string) *metricsapi.KeptnMetric {
+	metric := &metricsapi.KeptnMetric{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
-			Namespace: KLTnamespace,
+			Namespace: namespaceName,
 		},
-		Spec: metricsv1alpha1.KeptnMetricSpec{
-			Provider: metricsv1alpha1.ProviderRef{
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
 				Name: "provider",
 			},
 			Query:                "query",

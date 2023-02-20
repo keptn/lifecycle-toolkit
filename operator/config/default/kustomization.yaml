@@ -8,7 +8,6 @@ bases:
 - ../rbac
 - ../manager
 - ../webhook
-- ../metrics
 
 patchesStrategicMerge:
 - manager_auth_proxy_patch.yaml

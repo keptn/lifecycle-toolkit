@@ -8,9 +8,46 @@ cascade:
   path_base_for_github_subdir: "/content/en/docs-dev"
 ---
 
-The Keptn Lifecycle Toolkit (KLT) makes your deployments observable,
-brings application-awareness to your Kubernetes cluster,
-and helps you reliably deliver your application with:
+The Keptn Lifecycle Toolkit (KLT) implements observability
+for deployments that are implemented with standard GitOps tools
+such as ArgoCD, Flux, and Gitlab
+and brings application awareness to your Kubernetes cluster.
+
+These standard GitOps deployment tools
+do an excellent job at deploying applications
+but do not handle all issues
+that are required to ensure that your deployment is usable.
+The Keptn Lifecycle Toolkit "wraps" a standard Kubernetes GitOps deployment
+with the capability to automatically handle issues
+before and after the actual deployment.
+
+Pre-deployment issues:
+
+* Send appropriate notifications that this deployment is about to happen
+* Check that downstream services meet their SLOs
+* Verify that your infrastructure is ready
+* Ensure that your infrastructure
+  has the resources necessary for a successful deployment
+
+Post-deployment issues:
+
+* Integrate with tooling beyond the standard Kubernetes probes
+  to automatically test the deployment
+* Ensure that the deployment is meeting its SLOs
+* Identify any downstream issues that may be caused by this deployment
+* Send appropriate notifications about whether the deployment was successful or unsuccessful
+
+KLT can evaluate both workload (single service) tests
+and SLO evaluations before and after the actual deployment.
+Multiple workloads can also be logically grouped and evaluated
+as a single cohesive unit called a `KeptnApp`.
+In other words, a `KeptnApp` is a collection of multiple workloads.
+
+KLT is tool- and vendor neutral and does not depend on particular GitOps tooling.
+KLT emits signals at every stage
+(Kubernetes events, OpenTelemetry metrics and traces)
+to ensure that your deployments are observable.
+It supports the following steps:
 
 * Pre-Deployment Tasks: e.g. checking for dependant services,
   setting the cluster to be ready for the deployment, etc.
@@ -21,27 +58,24 @@ and helps you reliably deliver your application with:
 * Post-Deployment Evaluations: e.g. evaluate the deployment,
   evaluate the test results, etc.
 
-All of these things can be executed on a workload or on an application level,
-whereby a Keptn application is a collection of multiple workloads.
+All of these things can be executed for a workload or for a KeptnApp,
+which is a collection of multiple workloads.
 
 ## Compare Keptn Lifecycle Toolkit and Keptn LTS
 
 The Keptn Lifecycle Controller (KLT) is a Keptn subproject
 whose design reflects lessons we learned while developing Keptn LTS.
 KLT recognizes that tools such as Argo and Flux
-are very good at deploying applications
-so adds pre-deployment and post-deployment evaluations and actions.
-For many installations, this provides the functionality they need
-with much less complexity than the Keptn LTS project.
+are very good at deploying applications.
+However, these deployment tools do not provide
+pre-deployment and post-deployment evaluations and actions;
+this is what KLT adds.
 
-Keptn LTS is a fully-incubated, long-term support release
-that can deploy applications on platforms other than Kubernetes
-and currently offers functionality that KLT does not currently have
-such as the abiity to accomodate complex scoring algorithms for SLO evaluations
-and the ability to implement remediations (self-healing) for problems discovered
+Keptn LTS is a long-term support release
+that can deploy applications on platforms other than Kubernetes,
+can accomodate complex scoring algorithms for SLO evaluations,
+and can implement remediations (self-healing) for problems discovered
 on the production site.
-Keptn LTS can also be more difficult to set up and maintain
-than the Keptn Lifecycle Toolkit.
 
 In a December 2022 Keptn Community meeting, 
 we discussed the differences and similarities
@@ -55,6 +89,8 @@ View the recording:
 A number of presentations are available to give an overview
 of the Keptn Lifecycle Toolkit:
 
+* [What is keptn, how it works, and how to get started!](https://www.dynatrace.com/news/blog/what-is-keptn-how-it-works-and-how-to-get-started/)
+
 * [Observability and Orchestration of your Deployment](https://www.youtube.com/watch?v=0nCbrG_RFos)
 
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)
@@ -62,3 +98,4 @@ of the Keptn Lifecycle Toolkit:
 * The "IsItObservable Tutorial for KLT" will be released to YouTube soon.
   You can explore the GitHub repository that accompanies this video
   at https://github.com/isItObservable/keptn-lifecycle-Toolkit in the meantime.
+

@@ -17,9 +17,9 @@ type KeptnMetricProvider struct {
 }
 
 // EvaluateQuery fetches the SLI values from KeptnMetric resource
-func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, namespace string) (string, []byte, error) {
+func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alpha2.Objective) (string, []byte, error) {
 	metric := &metricsapi.KeptnMetric{}
-	if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: namespace}, metric); err != nil {
+	if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: objective.KeptnMetricRef.Namespace}, metric); err != nil {
 		p.Log.Error(err, "Could not retrieve KeptnMetric")
 		return "", nil, err
 	}

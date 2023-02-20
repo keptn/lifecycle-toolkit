@@ -234,11 +234,12 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 			Namespace: namespaceName,
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source: source,
 			Objectives: []klcv1alpha2.Objective{
 				{
-					Name:             objectiveName,
-					Query:            "",
+					KeptnMetricRef: klcv1alpha2.KeptnMetricRef{
+						Name:      objectiveName,
+						Namespace: "default",
+					},
 					EvaluationTarget: "<10",
 				},
 			},

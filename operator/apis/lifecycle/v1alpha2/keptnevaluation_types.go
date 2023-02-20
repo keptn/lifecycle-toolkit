@@ -159,7 +159,7 @@ func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
 	if e.Status.EvaluationStatus == nil {
 		e.Status.EvaluationStatus = make(map[string]EvaluationStatusItem)
 	}
-	e.Status.EvaluationStatus[objective.Name] = evaluationStatusItem
+	e.Status.EvaluationStatus[objective.KeptnMetricRef.Name] = evaluationStatusItem
 
 }
 

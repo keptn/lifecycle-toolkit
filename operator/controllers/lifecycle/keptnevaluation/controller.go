@@ -24,7 +24,7 @@ import (
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/keptnmetric"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -111,17 +111,8 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{}, nil
 		}
-		// load the provider
-		provider, err2 := providers.NewProvider(evaluationDefinition.Spec.Source, r.Log, r.Client)
-		if err2 != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Error", evaluation, "ProviderNotFound", "evaluation provider was not found", "")
-			r.Log.Error(err2, "Failed to get the correct Metric Provider")
-			span.SetStatus(codes.Error, err2.Error())
-			return ctrl.Result{Requeue: false}, err2
-		}
 
-		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition, provider)
-
+		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition)
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
@@ -175,7 +166,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.
 	}
 }
 
-func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider) *klcv1alpha2.KeptnEvaluation {
+func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition) *klcv1alpha2.KeptnEvaluation {
 	statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
 	newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
 
@@ -184,7 +175,7 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	}
 
 	for _, query := range evaluationDefinition.Spec.Objectives {
-		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider)
+		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query)
 	}
 
 	evaluation.Status.RetryCount++
@@ -198,17 +189,21 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	return evaluation
 }
 
-func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective, provider providers.KeptnSLIProvider) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
-	if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
+func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
+	if _, ok := evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]; !ok {
 		evaluation.AddEvaluationStatus(query)
 	}
-	if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
+	if evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name].Status.IsSucceeded() {
 		statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
-		newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
+		newStatus[query.KeptnMetricRef.Name] = evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, _, err := provider.EvaluateQuery(ctx, query, evaluation.Namespace)
+	provider := &keptnmetric.KeptnMetricProvider{
+		Log:       r.Log,
+		K8sClient: r.Client,
+	}
+	value, _, err := provider.FetchData(ctx, query)
 	statusItem := &klcv1alpha2.EvaluationStatusItem{
 		Value:  value,
 		Status: apicommon.StateFailed,
@@ -227,7 +222,7 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		statusItem.Status = apicommon.StateSucceeded
 	}
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
-	newStatus[query.Name] = *statusItem
+	newStatus[query.KeptnMetricRef.Name] = *statusItem
 
 	return newStatus, statusSummary
 }

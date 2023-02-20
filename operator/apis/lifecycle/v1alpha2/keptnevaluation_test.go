@@ -72,10 +72,10 @@ func TestKeptnEvaluation(t *testing.T) {
 		common.EvaluationStatus.String(string(common.StateFailed)),
 	}, evaluation.GetMetricsAttributes())
 
-	evaluation.AddEvaluationStatus(Objective{Name: "objName"})
+	evaluation.AddEvaluationStatus(Objective{KeptnMetricRef: KeptnMetricRef{Name: "objName", Namespace: "default"}})
 	require.Equal(t, EvaluationStatusItem{
 		Status: common.StatePending,
-	}, evaluation.Status.EvaluationStatus["objName"])
+	}, evaluation.Status.EvaluationStatus["default-objName"])
 
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("app"),

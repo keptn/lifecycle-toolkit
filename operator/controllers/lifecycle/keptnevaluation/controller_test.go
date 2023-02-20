@@ -102,7 +102,6 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 			Name:      "myKeptn",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.KeptnMetricProviderName,
 			Objectives: nil,
 		},
 		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
@@ -114,7 +113,6 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 			Name:      "myDT",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.DynatraceProviderName,
 			Objectives: nil,
 		},
 		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
@@ -126,7 +124,6 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 			Name:      "myProm",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.PrometheusProviderName,
 			Objectives: nil,
 		},
 		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
@@ -138,7 +135,6 @@ func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha
 			Name:      "mdef",
 		},
 		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     "dunno",
 			Objectives: nil,
 		},
 		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},

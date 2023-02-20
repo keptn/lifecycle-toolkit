@@ -167,7 +167,6 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
-	a.Log.Info("TSCDEBUG: Start copy")
 	podOwner := a.getOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false, nil
@@ -175,7 +174,6 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 
 	switch podOwner.Kind {
 	case "ReplicaSet":
-		fmt.Println("TSCDEBUG: ReplicaSet detected")
 		rs := &appsv1.ReplicaSet{}
 		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
 			return false, nil
@@ -189,7 +187,6 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 
 		if rsOwner.Kind == "Rollout" {
 			ro := argov1alpha1.Rollout{}
-			fmt.Println("TSCDEBUG: Rollout detected")
 			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, &ro)
 		}
 		dp := &appsv1.Deployment{}

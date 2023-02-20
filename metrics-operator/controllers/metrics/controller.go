@@ -51,7 +51,7 @@ type KeptnMetricReconciler struct {
 //+kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch
 
 //role
-//+kubebuilder:rbac:groups=core,namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get
+//+kubebuilder:rbac:groups=core,resources=secrets,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

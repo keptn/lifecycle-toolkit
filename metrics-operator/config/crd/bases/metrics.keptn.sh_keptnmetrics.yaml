@@ -15,7 +15,17 @@ spec:
     singular: keptnmetric
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KeptnMetric is the Schema for the keptnmetrics API
@@ -35,13 +45,46 @@ spec:
           spec:
             description: KeptnMetricSpec defines the desired state of KeptnMetric
             properties:
-              foo:
-                description: Foo is an example field of KeptnMetric. Edit keptnmetric_types.go
-                  to remove/update
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run
                 type: string
+            required:
+            - fetchIntervalSeconds
+            - provider
+            - query
             type: object
           status:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            required:
+            - lastUpdated
+            - rawValue
+            - value
             type: object
         type: object
     served: true

@@ -23,7 +23,12 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
+HELMIFY ?=  $(LOCALBIN)/helmify
 
+.PHONY: helmify
+helmify: $(HELMIFY) ## Download helmify locally if necessary.
+$(HELMIFY): $(LOCALBIN)
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@latest
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
@@ -50,10 +55,10 @@ $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
 .PHONY: release-helm-manifests
-release-helm-manifests:
+release-helm-manifests: helmify
 	echo "building helm overlay"
 	kustomize build ./helm/overlay  > helmchart.yaml
-	cat helmchart.yaml | helmify -probes=true -image-pull-secret=true helm/test
+	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true helm/chart
 
 .PHONY: helm-package
 helm-package: clean-helm-charts build-release-manifests release-helm-manifests

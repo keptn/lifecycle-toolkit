@@ -1,135 +1,233 @@
-## @section OpenTelemetry
-otelCollector:
-  ## @param otelCollector.url Sets the URL for the open telemetry collector
-  url: "otel-collector:4317"
-
-commonLabels:
-    unk: ijdierj
-
-## @param commonAnnotations Annotations to add to all deployed objects
-##
-commonAnnotations: {}
-
-## @param imageLifecycle contains the name of the image for the lifecycle toolkit operator
-imageLifecycle: "keptn/keptn-lifecycle-operator"
-## @param imageLifecycle contains the name of the image for the lifecycle toolkit  scheduler
-imageScheduler: "keptn/scheduler"
-## @param imageLifecycle contains the name of the image for the lifecycle toolkit certificate manager
-imageCertManager: "keptn/klt-cert-manager"
-
-global:
-  ## @param global.imageRegistry Sets the registry to pull images
-  imageRegistry: "ghcr.keptn.sh"
-  ## @param global.imageTag Sets the tags of the images
-  imageTag: "v0.5.0"  # x-release-please-version
-  ## @param global.imagePullPolicy Sets the image pull policy for kubernetes deployment
-  imagePullPolicy: Always
-
-## Configure extra options for Contour Operator containers' liveness and readiness probes
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-## @param livenessProbe.enabled Enable livenessProbe on Contour Operator nodes
-## @param livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-## @param livenessProbe.periodSeconds Period seconds for livenessProbe
-## @param livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-## @param livenessProbe.failureThreshold Failure threshold for livenessProbe
-## @param livenessProbe.successThreshold Success threshold for livenessProbe
-##
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 5
-  periodSeconds: 30
-  timeoutSeconds: 5
-  successThreshold: 1
-  failureThreshold: 5
-
-## @param readinessProbe.enabled Enable readinessProbe on Contour Operator nodes
-## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-## @param readinessProbe.periodSeconds Period seconds for readinessProbe
-## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
-## @param readinessProbe.successThreshold Success threshold for readinessProbe
-##
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 5
-  periodSeconds: 30
-  timeoutSeconds: 5
-  successThreshold: 1
-  failureThreshold: 5
-
-
-## Configure Pods Security Context
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-## @param podSecurityContext.enabled Enabled Contour Operator pods' Security Context
-## @param podSecurityContext.fsGroup Set Contour Operator pod's Security Context fsGroup
-##
-podSecurityContext:
-  enabled: true
-  fsGroup: 1001
-
-## Configure Container Security Context
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-## @param containerSecurityContext.enabled Enabled Contour Operator containers' Security Context
-## @param containerSecurityContext.runAsUser Set Contour Operator containers' Security Context runAsUser
-## @param containerSecurityContext.runAsNonRoot Set Contour Operator containers' Security Context runAsNonRoot
-## @param containerSecurityContext.readOnlyRootFilesystem Mount / (root) as a readonly filesystem on Contour Operator containers
-##
-containerSecurityContext:
-  seccompProfile:
-    type: RuntimeDefault
-  privileged: false
-  allowPrivilegeEscalation: false
-  runAsNonRoot: true
-  runAsUser: 65532
-  runAsGroup: 65532
-
-##
-podLabels: {}
-## @param podAnnotations Annotations for Contour Operator pods
-## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-##
-podAnnotations: {}
-## @param podAffinityPreset Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
-## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-##
-podAffinityPreset: ""
-## @param podAntiAffinityPreset Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
-## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-##
-podAntiAffinityPreset: soft
-## Node affinity preset
-## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
-##
-nodeAffinityPreset:
-  ## @param nodeAffinityPreset.type Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
-  ##
-  type: ""
-  ## @param nodeAffinityPreset.key Node label key to match. Ignored if `affinity` is set
-  ##
-  key: ""
-  ## @param nodeAffinityPreset.values Node label values to match. Ignored if `affinity` is set
-  ## E.g.
-  ## values:
-  ##   - e2e-az1
-  ##   - e2e-az2
-  ##
-  values: []
-## @param affinity Affinity for Contour Operator pods assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-## NOTE: `podAffinityPreset`, `podAntiAffinityPreset`, and `nodeAffinityPreset` will be ignored when it's set
-##
-affinity: {}
-## @param nodeSelector Node labels for Contour Operator pods assignment
-## ref: https://kubernetes.io/docs/user-guide/node-selection/
-##
+keptnScheduler:
+  keptnScheduler:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      otelCollectorUrl: otel-collector:4317
+    image:
+      repository: ghcr.io/keptn/scheduler
+      tag: "202302201676892381"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+      initialDelaySeconds: 15
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 20Mi
+  replicas: 1
+klcControllerManager:
+  kubeRbacProxy:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      tag: v0.13.0
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    resources:
+      limits:
+        cpu: 500m
+        memory: 16Mi
+      requests:
+        cpu: 5m
+        memory: 8Mi
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      exposeKeptnMetrics: "true"
+      functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
+      podName: ""
+      podNamespace: ""
+    image:
+      repository: ghcr.io/keptn/keptn-lifecycle-operator
+      tag: "202302201676892381"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  replicas: 1
+klcControllerManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  - name: custom-metrics
+    port: 443
+    targetPort: custom-metrics
+  - name: keptn-metrics
+    port: 9999
+    protocol: TCP
+    targetPort: keptn-metrics
+  type: ClusterIP
+klcManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+klcWebhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  type: ClusterIP
+kltCertManager:
+  kubeRbacProxy:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      tag: v0.13.0
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    resources:
+      limits:
+        cpu: 500m
+        memory: 16Mi
+      requests:
+        cpu: 5m
+        memory: 8Mi
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      namespace: ""
+    image:
+      repository: ghcr.io/keptn/klt-cert-manager
+      tag: "202302201676892381"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 100m
+        memory: 32Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+  replicas: 1
+kltCertManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
 nodeSelector: {}
-## @param tolerations Tolerations for Contour Operator pods assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-##
+schedulerConfig:
+  schedulerConfigYaml:
+    leaderElection:
+      leaderElect: false
+    profiles:
+    - plugins:
+        permit:
+          enabled:
+          - name: KLCPermit
+      schedulerName: keptn-scheduler
 tolerations: []
-
-terminationGracePeriodSeconds: ""
-## @param topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
-## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
-##
 topologySpreadConstraints: []

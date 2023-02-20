@@ -1,0 +1,230 @@
+imagePullSecrets: []
+keptnScheduler:
+  keptnScheduler:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      otelCollectorUrl: otel-collector:4317
+    image:
+      repository: ghcr.io/keptn/scheduler
+      tag: "202302201676899836"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+      initialDelaySeconds: 15
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 20Mi
+  replicas: 1
+klcControllerManager:
+  kubeRbacProxy:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      tag: v0.13.0
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    resources:
+      limits:
+        cpu: 500m
+        memory: 16Mi
+      requests:
+        cpu: 5m
+        memory: 8Mi
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      exposeKeptnMetrics: "true"
+      functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
+    image:
+      repository: ghcr.io/keptn/keptn-lifecycle-operator
+      tag: "202302201676899836"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  replicas: 1
+klcControllerManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  - name: custom-metrics
+    port: 443
+    targetPort: custom-metrics
+  - name: keptn-metrics
+    port: 9999
+    protocol: TCP
+    targetPort: keptn-metrics
+  type: ClusterIP
+klcManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+klcWebhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  type: ClusterIP
+kltCertManager:
+  kubeRbacProxy:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      tag: v0.13.0
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 20
+      tcpSocket:
+        port: 8443
+    resources:
+      limits:
+        cpu: 500m
+        memory: 16Mi
+      requests:
+        cpu: 5m
+        memory: 8Mi
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: ghcr.io/keptn/klt-cert-manager
+      tag: "202302201676899836"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 100m
+        memory: 32Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+  replicas: 1
+kltCertManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
+nodeSelector: {}
+schedulerConfig:
+  schedulerConfigYaml:
+    leaderElection:
+      leaderElect: false
+    profiles:
+    - plugins:
+        permit:
+          enabled:
+          - name: KLCPermit
+      schedulerName: keptn-scheduler
+tolerations: []
+topologySpreadConstraints: []

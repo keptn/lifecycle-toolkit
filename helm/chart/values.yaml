@@ -16,7 +16,8 @@ keptnScheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202302201676903582"
+      tag: "202302201676908578"
+    imagePullPolicy: Always
     livenessProbe:
       httpGet:
         path: /healthz
@@ -51,6 +52,7 @@ klcControllerManager:
     image:
       repository: gcr.io/kubebuilder/kube-rbac-proxy
       tag: v0.13.0
+    imagePullPolicy: IfNotPresent
     livenessProbe:
       initialDelaySeconds: 5
       periodSeconds: 20
@@ -85,7 +87,8 @@ klcControllerManager:
       functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
     image:
       repository: ghcr.io/keptn/keptn-lifecycle-operator
-      tag: "202302201676903582"
+      tag: "202302201676908578"
+    imagePullPolicy: Always
     livenessProbe:
       httpGet:
         path: /healthz
@@ -156,6 +159,7 @@ kltCertManager:
     image:
       repository: gcr.io/kubebuilder/kube-rbac-proxy
       tag: v0.13.0
+    imagePullPolicy: IfNotPresent
     livenessProbe:
       initialDelaySeconds: 5
       periodSeconds: 20
@@ -186,7 +190,8 @@ kltCertManager:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/klt-cert-manager
-      tag: "202302201676903582"
+      tag: "202302201676908578"
+    imagePullPolicy: Always
     livenessProbe:
       httpGet:
         path: /healthz

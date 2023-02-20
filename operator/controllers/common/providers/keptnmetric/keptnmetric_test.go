@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,21 +16,21 @@ import (
 func Test_keptnmetric(t *testing.T) {
 	tests := []struct {
 		name      string
-		metric    *metricsv1alpha2.KeptnMetric
+		metric    *metricsapi.KeptnMetric
 		out       string
 		outraw    []byte
 		wantError bool
 	}{
 		{
 			name:      "no KeptnMetric",
-			metric:    &metricsv1alpha2.KeptnMetric{},
+			metric:    &metricsapi.KeptnMetric{},
 			out:       "",
 			outraw:    []byte(nil),
 			wantError: true,
 		},
 		{
 			name: "KeptnMetric without results",
-			metric: &metricsv1alpha2.KeptnMetric{
+			metric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
 					Namespace: "default",
@@ -42,12 +42,12 @@ func Test_keptnmetric(t *testing.T) {
 		},
 		{
 			name: "KeptnMetric with results",
-			metric: &metricsv1alpha2.KeptnMetric{
+			metric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
 					Namespace: "default",
 				},
-				Status: metricsv1alpha2.KeptnMetricStatus{
+				Status: metricsapi.KeptnMetricStatus{
 					Value:    "1",
 					RawValue: []byte("1"),
 				},
@@ -60,7 +60,7 @@ func Test_keptnmetric(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := metricsv1alpha2.AddToScheme(scheme.Scheme)
+			err := metricsapi.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithObjects(tt.metric).Build()
 

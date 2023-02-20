@@ -138,6 +138,12 @@ jobs:
           name: keptn-lifecycle-toolkit.tgz
           path: ./helm/chart/*
 
+      - name: Upload generated helm yaml
+        uses: actions/upload-artifact@v3
+        with:
+          name: helmchart.yaml
+          path: .
+
   integration_tests:
     name: Integration Tests
     needs: [ build_helm_chart ]

@@ -8,7 +8,7 @@
 # Dependencies:
 # Node >=16
 
-# renovate: datasource=github-tags depName=bitnami-labs/readme-generator-for-helm
+# renovate: datasource=github-releases depName=bitnami-labs/readme-generator-for-helm
 GENERATOR_VERSION="2.5.0"
 
 echo "Checking if readme generator is installed already..."

@@ -174,8 +174,13 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
 	}
 
+	provider := &keptnmetric.KeptnMetricProvider{
+		Log:       r.Log,
+		K8sClient: r.Client,
+	}
+
 	for _, query := range evaluationDefinition.Spec.Objectives {
-		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query)
+		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider)
 	}
 
 	evaluation.Status.RetryCount++
@@ -189,7 +194,7 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	return evaluation
 }
 
-func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
+func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective, provider *keptnmetric.KeptnMetricProvider) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
 	if _, ok := evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]; !ok {
 		evaluation.AddEvaluationStatus(query)
 	}
@@ -199,10 +204,6 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	provider := &keptnmetric.KeptnMetricProvider{
-		Log:       r.Log,
-		K8sClient: r.Client,
-	}
 	value, _, err := provider.FetchData(ctx, query)
 	statusItem := &klcv1alpha2.EvaluationStatusItem{
 		Value:  value,

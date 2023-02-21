@@ -66,22 +66,27 @@ spec:
           httpRef:
             url: <url>
     ```
-* **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
-  Populate this field with the value of the `name` field
-  for the `KeptnTaskDefinition` to be called.
-  This is commonly used to call a general function
-  that is used in multiple place with different parameters.
-  An example is:
-   ```yaml
-   spec:
-     function:
-       functionRef:
-         name: slack-notification
-   ```
+  * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
+    Populate this field with the value of the `name` field
+    for the `KeptnTaskDefinition` to be called.
+    This is commonly used to call a general function
+    that is used in multiple place with different parameters.
+    An example is:
+     ```yaml
+     spec:
+       function:
+         functionRef:
+           name: slack-notification
+     ```
 
-  This can also be used to group a set of tasks into a single `KeptnTaskDefinitions`,
-  such as defining a `KeptnTaskDefinition` for testing
-  and have it call a `KeptnTaskDefinition` for each type of test to be run.
+    This can also be used to group a set of tasks into a single `KeptnTaskDefinitions`,
+    such as defining a `KeptnTaskDefinition` for testing
+    and have it call a `KeptnTaskDefinition` for each type of test to be run.
+
+    <Explain what happens if one task fails.
+    Will the subsequent tasks execute or does the pipeline stop
+    or pass control to whatever would execute next.
+    Can I control that behavior?
 
 * **parameters** - An optional field to supply input parameters to a function.
   The Lifecycle Toolkit passes the values defined inside the `map` field
@@ -114,14 +119,24 @@ A Task is responsible for executing the TaskDefinition of a workload.
 The execution is done by spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
 
-
 <!-- How this CRD is "activated".  For example, which event uses this CRD -->
+<!-- Can I execute tasks in parallel? -->
 <!-- Instructions and guidelines for when and how to customize a CRD -->
 
 ## Examples
 
+This section can do any of the following:
+
+* Include annotated examples
+* Link to formal `examples`; include an annotation about what they illustrate
+
 ## Files
+
+* link to source code file where this is defined.
 
 ## Differences between versions
 
 ## See also
+
+* Link to "use-case" guide pages that do something interesting with this CRD
+* Link to reference pages for any related CRDs

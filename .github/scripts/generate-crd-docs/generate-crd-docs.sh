@@ -1,4 +1,12 @@
 #!/bin/bash
+
+# CRD docs auto generation script
+#
+# This script goes through all API definitions in the operator/apis folder
+# and generates docs from code for each API group and version
+#
+# Inputs: None
+
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
 GENERATOR_VERSION=v0.0.8
 API_DOMAIN="keptn.sh"

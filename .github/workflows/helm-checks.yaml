@@ -141,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: helmchart.yaml
-          path: .
+          path: ./helmchart.yaml
 
   integration_tests:
     name: Integration Tests

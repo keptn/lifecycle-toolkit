@@ -4,7 +4,7 @@
 
 ---
 title: {{ $groupVersion.Version }}
-description: Reference information about the KLT CRDs
+description: Reference information for {{ $groupVersion.GroupVersionString }}
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---

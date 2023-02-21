@@ -1,6 +1,6 @@
 ---
 title: v1alpha1
-description: Reference information about the KLT CRDs
+description: Reference information for lifecycle.keptn.sh/v1alpha1
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---

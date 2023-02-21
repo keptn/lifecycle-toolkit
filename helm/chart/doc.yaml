@@ -1,7 +1,27 @@
 ## @section Keptn Scheduler
 ## @param keptnScheduler.keptnScheduler.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
 ## @param  keptnScheduler.keptnScheduler.containerSecurityContext.capabilities.drop Sets what capability drop in the container
-
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.privileged
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.readOnlyRootFilesystem
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.runAsNonRoot
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.runAsUser
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.seccompProfile.type
+## @param keptnScheduler.keptnScheduler.env.otelCollectorUrl
+## @param keptnScheduler.keptnScheduler.image.repository
+## @param keptnScheduler.keptnScheduler.image.tag
+## @param keptnScheduler.keptnScheduler.imagePullPolicy
+## @param keptnScheduler.keptnScheduler.livenessProbe customizable liveness probe for the scheduler
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.path
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.port
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.scheme
+## @skip keptnScheduler.keptnScheduler.livenessProbe.initialDelaySeconds
+## @param keptnScheduler.keptnScheduler.readinessProbe.httpGet.path
+## @param keptnScheduler.keptnScheduler.readinessProbe.httpGet.port
+## @param keptnScheduler.keptnScheduler.readinessProbe.httpGet.scheme
+## @param keptnScheduler.keptnScheduler.resources.limits.cpu
+## @param keptnScheduler.keptnScheduler.resources.limits.memory
+## @param keptnScheduler.keptnScheduler.resources.requests.cpu
+## @param keptnScheduler.keptnScheduler.resources.requests.memory
 ## @section Keptn Cert Manager
 ## @param kltCertManager.kubeRbacProxy.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
 ## @param kltCertManager.manager.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false

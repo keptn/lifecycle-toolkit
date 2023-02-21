@@ -4,7 +4,6 @@ on:
   release:
     types: [published]
 
-
 env:
   PAGE_DIR: ./tmp/page
   DOCS_DIR: ./tmp/page/docs

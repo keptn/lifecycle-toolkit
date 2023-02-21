@@ -129,7 +129,7 @@ jobs:
       - name: Generate helm charts
         run: |
           make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/values.yaml
+          sed -i 's/functionRunnerImage:ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functionRunnerImage:functions-runtime:dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/values.yaml
 
       - name: Upload KLT helm charts archive
         uses: actions/upload-artifact@v3

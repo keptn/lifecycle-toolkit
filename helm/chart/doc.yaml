@@ -1,6 +1,19 @@
-## @section OpenTelemetry
-## @param otelCollector.url Sets the URL for the open telemetry collector
+## @section Keptn Scheduler
+## @param keptnScheduler.keptnScheduler.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
+## @param  keptnScheduler.keptnScheduler.containerSecurityContext.capabilities.drop Sets what capability drop in the container
+
+## @section Keptn Cert Manager
+## @param kltCertManager.kubeRbacProxy.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
+## @param kltCertManager.manager.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
+## @param kltCertManager.manager.containerSecurityContext.capabilities.drop Sets what capability drop in the container
+## @param kltCertManager.kubeRbacProxy.containerSecurityContext.capabilities.drop Sets what capability drop in the container
+
+## @section Keptn Lifecycle Operator
+## @param klcControllerManager.kubeRbacProxy.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
+## @param klcControllerManager.manager.containerSecurityContext.allowPrivilegeEscalation Sets security context privilegies for escalation, values true or false
+## @param klcControllerManager.manager.containerSecurityContext.capabilities.drop Sets what capability drop in the container
+## @param klcControllerManager.kubeRbacProxy.containerSecurityContext.capabilities.drop Sets what capability drop in the container
 
 ## @section General
-## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
+## Current available parameters: imageRegistry, imagePullSecrets and storageClass
 

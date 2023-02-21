@@ -1,4 +1,6 @@
 _merge: deep
+title: keptn
+
 module:
   hugoVersion:
     extended: true

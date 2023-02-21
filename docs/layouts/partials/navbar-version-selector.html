@@ -6,7 +6,12 @@
       {{ if (findRE "docs" .File.ContentBaseName) -}}
       {{ $versionFile :=  printf "%s%s" .File.Dir "/version"  -}}
       {{ if fileExists $versionFile -}}
-        <a class="dropdown-item" href="{{ .RelPermalink }}">{{readFile ( $versionFile )}}</a>
+        <a class="dropdown-item" href="{{ .RelPermalink }}">
+          {{readFile ( $versionFile )}}
+          {{- if eq .File.ContentBaseName "docs" -}}
+            &nbsp;(latest)
+          {{- end -}}
+        </a>
       {{ end -}}
       {{ end -}}
     {{ end -}}

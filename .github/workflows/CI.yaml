@@ -12,6 +12,8 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
+      - "netlify.toml"
+
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools

@@ -29,7 +29,7 @@ for api_group in "$API_ROOT"*; do
     # Use sanitized_api_group and make first char uppercase
     API_GROUP="$(tr '[:lower:]' '[:upper:]' <<< "${sanitized_api_group:0:1}")${sanitized_api_group:1}"
     export API_GROUP
-    envsubst < './.github/scripts/generate-crd-docs/index-template.md' > "$INDEX_PATH"
+    envsubst < './.github/scripts/generate-crd-docs/templates/index-template.md' > "$INDEX_PATH"
     unset API_GROUP
   fi
 

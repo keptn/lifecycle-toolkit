@@ -1,8 +1,6 @@
 ---
 title: v1alpha1
 description: Reference information for metrics.keptn.sh/v1alpha1
-weight: 100
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 <!-- markdownlint-disable -->
 

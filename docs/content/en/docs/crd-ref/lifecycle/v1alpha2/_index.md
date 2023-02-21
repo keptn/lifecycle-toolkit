@@ -1,8 +1,6 @@
 ---
 title: v1alpha2
 description: Reference information for lifecycle.keptn.sh/v1alpha2
-weight: 100
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 <!-- markdownlint-disable -->
 

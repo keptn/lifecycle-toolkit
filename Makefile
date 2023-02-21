@@ -28,7 +28,7 @@ HELMIFY ?=  $(LOCALBIN)/helmify
 .PHONY: helmify
 helmify: $(HELMIFY) ## Download helmify locally if necessary.
 $(HELMIFY): $(LOCALBIN)
-	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@70f93ffa7fae39c77fba571bac6a904b0acd9eee
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@739e53831963a413199a7e0aa2e0b6737fb3625b
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:

@@ -2,9 +2,9 @@
 
 API_DOMAIN="keptn.sh"
 API_ROOT='operator/apis/'
-TEMPLATE_DIR='./template'
+TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'
-RENDERER_CONFIG_FILE='.github/crd-docs-generator-config.yaml'
+RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
 
 echo "Running CRD docs auto-generator..."
 

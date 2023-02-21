@@ -3,8 +3,8 @@ package common
 import (
 	"testing"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -14,19 +14,19 @@ import (
 func Test_GetItemStatus(t *testing.T) {
 	tests := []struct {
 		name     string
-		inStatus []klcv1alpha2.ItemStatus
-		want     klcv1alpha2.ItemStatus
+		inStatus []klcv1alpha3.ItemStatus
+		want     klcv1alpha3.ItemStatus
 	}{
 		{
 			name: "non-existing",
-			inStatus: []klcv1alpha2.ItemStatus{
+			inStatus: []klcv1alpha3.ItemStatus{
 				{
 					DefinitionName: "def-name",
 					Name:           "name",
 					Status:         apicommon.StatePending,
 				},
 			},
-			want: klcv1alpha2.ItemStatus{
+			want: klcv1alpha3.ItemStatus{
 				DefinitionName: "non-existing",
 				Status:         apicommon.StatePending,
 				Name:           "",
@@ -34,14 +34,14 @@ func Test_GetItemStatus(t *testing.T) {
 		},
 		{
 			name: "def-name",
-			inStatus: []klcv1alpha2.ItemStatus{
+			inStatus: []klcv1alpha3.ItemStatus{
 				{
 					DefinitionName: "def-name",
 					Name:           "name",
 					Status:         apicommon.StateProgressing,
 				},
 			},
-			want: klcv1alpha2.ItemStatus{
+			want: klcv1alpha3.ItemStatus{
 				DefinitionName: "def-name",
 				Name:           "name",
 				Status:         apicommon.StateProgressing,
@@ -49,8 +49,8 @@ func Test_GetItemStatus(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			inStatus: []klcv1alpha2.ItemStatus{},
-			want: klcv1alpha2.ItemStatus{
+			inStatus: []klcv1alpha3.ItemStatus{},
+			want: klcv1alpha3.ItemStatus{
 				DefinitionName: "empty",
 				Status:         apicommon.StatePending,
 				Name:           "",
@@ -119,22 +119,22 @@ func Test_GetAppVersionName(t *testing.T) {
 
 func Test_GetOldStatus(t *testing.T) {
 	tests := []struct {
-		statuses       []klcv1alpha2.ItemStatus
+		statuses       []klcv1alpha3.ItemStatus
 		definitionName string
 		want           apicommon.KeptnState
 	}{
 		{
-			statuses:       []klcv1alpha2.ItemStatus{},
+			statuses:       []klcv1alpha3.ItemStatus{},
 			definitionName: "",
 			want:           "",
 		},
 		{
-			statuses:       []klcv1alpha2.ItemStatus{},
+			statuses:       []klcv1alpha3.ItemStatus{},
 			definitionName: "defName",
 			want:           "",
 		},
 		{
-			statuses: []klcv1alpha2.ItemStatus{
+			statuses: []klcv1alpha3.ItemStatus{
 				{
 					DefinitionName: "defName",
 					Status:         apicommon.StateFailed,
@@ -145,7 +145,7 @@ func Test_GetOldStatus(t *testing.T) {
 			want:           "",
 		},
 		{
-			statuses: []klcv1alpha2.ItemStatus{
+			statuses: []klcv1alpha3.ItemStatus{
 				{
 					DefinitionName: "defName",
 					Status:         apicommon.StateFailed,
@@ -182,7 +182,7 @@ func Test_setEventMessage(t *testing.T) {
 		},
 	}
 
-	appVersion := &klcv1alpha2.KeptnAppVersion{
+	appVersion := &klcv1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
@@ -208,12 +208,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name:   "empty object",
-			object: &klcv1alpha2.KeptnEvaluationDefinition{},
+			object: &klcv1alpha3.KeptnEvaluationDefinition{},
 			want:   nil,
 		},
 		{
 			name: "unknown object",
-			object: &klcv1alpha2.KeptnEvaluationDefinition{
+			object: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -228,7 +228,7 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "object with traceparent",
-			object: &klcv1alpha2.KeptnEvaluationDefinition{
+			object: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -246,13 +246,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnApp",
-			object: &klcv1alpha2.KeptnApp{
+			object: &klcv1alpha3.KeptnApp{
 				ObjectMeta: v1.ObjectMeta{
 					Name:       "app",
 					Namespace:  "namespace",
 					Generation: 1,
 				},
-				Spec: klcv1alpha2.KeptnAppSpec{
+				Spec: klcv1alpha3.KeptnAppSpec{
 					Version: "1.0.0",
 				},
 			},
@@ -268,14 +268,14 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnAppVersion",
-			object: &klcv1alpha2.KeptnAppVersion{
+			object: &klcv1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "appVersion",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha2.KeptnAppVersionSpec{
+				Spec: klcv1alpha3.KeptnAppVersionSpec{
 					AppName: "app",
-					KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+					KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
 						Version: "1.0.0",
 					},
 				},
@@ -292,12 +292,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkload",
-			object: &klcv1alpha2.KeptnWorkload{
+			object: &klcv1alpha3.KeptnWorkload{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workload",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha2.KeptnWorkloadSpec{
+				Spec: klcv1alpha3.KeptnWorkloadSpec{
 					AppName: "app",
 					Version: "1.0.0",
 				},
@@ -314,13 +314,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkloadInstance",
-			object: &klcv1alpha2.KeptnWorkloadInstance{
+			object: &klcv1alpha3.KeptnWorkloadInstance{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workloadInstance",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
-					KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "app",
 						Version: "1.0.0",
 					},
@@ -340,12 +340,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnTask",
-			object: &klcv1alpha2.KeptnTask{
+			object: &klcv1alpha3.KeptnTask{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "task",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha2.KeptnTaskSpec{
+				Spec: klcv1alpha3.KeptnTaskSpec{
 					AppName:         "app",
 					AppVersion:      "1.0.0",
 					Workload:        "workload",
@@ -368,12 +368,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnEvaluation",
-			object: &klcv1alpha2.KeptnEvaluation{
+			object: &klcv1alpha3.KeptnEvaluation{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "eval",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha2.KeptnEvaluationSpec{
+				Spec: klcv1alpha3.KeptnEvaluationSpec{
 					AppName:              "app",
 					AppVersion:           "1.0.0",
 					Workload:             "workload",

@@ -8,11 +8,15 @@
 # Dependencies:
 # Node >=16
 
+# renovate: datasource=github-releases depName=bitnami-labs/readme-generator-for-helm
+GENERATOR_VERSION="2.5.0"
+
 echo "Checking if readme generator is installed already..."
-if [[ $(npm list -g | grep -c 'readme-generator-for-helm') -eq 0 ]]; then
-  echo "Readme Generator not installed, installing now..."
+if [[ $(npm list -g | grep -c "readme-generator-for-helm@${GENERATOR_VERSION}") -eq 0 ]]; then
+  echo "Readme Generator v${GENERATOR_VERSION} not installed, installing now..."
   git clone https://github.com/bitnami-labs/readme-generator-for-helm.git
   cd ./readme-generator-for-helm || exit
+  git checkout ${GENERATOR_VERSION}
   npm ci
   cd ..
   npm install -g ./readme-generator-for-helm
@@ -21,6 +25,7 @@ else
 fi
 
 echo "Generating readme now..."
-readme-generator --values=./helm/chart/values.yaml --readme=./helm/chart/README.md
+cat ./helm/chart/values.yaml ./helm/chart/doc.yaml > ./helm/chart/rendered.yaml
+readme-generator --values=./helm/chart/rendered.yaml --readme=./helm/chart/README.md
 
 # Please be aware, the readme file needs to exist and needs to have a Parameters section, as only this section will be re-generated

@@ -1,0 +1,6 @@
+## @section OpenTelemetry
+## @param otelCollector.url Sets the URL for the open telemetry collector
+
+## @section General
+## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
+

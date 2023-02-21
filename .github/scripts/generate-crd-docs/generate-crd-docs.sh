@@ -1,10 +1,14 @@
 #!/bin/bash
-
+# renovate: datasource=github-releases depName=elastic/crd-ref-docs
+GENERATOR_VERSION=v0.0.8
 API_DOMAIN="keptn.sh"
 API_ROOT='operator/apis/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'
 RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
+
+echo "Checking if code generator tool is installed..."
+test -s crd-ref-docs || go install github.com/elastic/crd-ref-docs@${GENERATOR_VERSION}
 
 echo "Running CRD docs auto-generator..."
 

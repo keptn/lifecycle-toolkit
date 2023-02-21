@@ -54,7 +54,8 @@
       "fileMatch": [
         "(^|\\/)Makefile$",
         "(^|\\/)Dockerfile",
-        "(^|\\/).*\\.ya?ml$"
+        "(^|\\/).*\\.ya?ml$",
+        "(^|\\/).*\\.sh$"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(\\??=|\\: ?) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"

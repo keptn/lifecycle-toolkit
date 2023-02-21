@@ -28,17 +28,18 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -137,6 +138,10 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
+	if err = (&metricsv1alpha2.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
@@ -170,6 +175,6 @@ func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
 
-	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
-	adapter.RunAdapter(ctx)
+	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
+	metricsAdapter.RunAdapter(ctx)
 }

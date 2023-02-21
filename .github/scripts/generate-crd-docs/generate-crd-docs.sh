@@ -9,9 +9,21 @@ RENDERER_CONFIG_FILE='.github/crd-docs-generator-config.yaml'
 echo "Running CRD docs auto-generator..."
 
 for api_group in "$API_ROOT"*; do
+  sanitized_api_group="${api_group#$API_ROOT}"
+  INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
+
+  if [ ! -f "$INDEX_PATH" ]; then
+    echo "API group index file doesn't exist for group $sanitized_api_group. Creating it now..."
+    # Use sanitized_api_group and make first char uppercase
+    API_GROUP="$(tr '[:lower:]' '[:upper:]' <<< "${sanitized_api_group:0:1}")${sanitized_api_group:1}"
+    export API_GROUP
+    envsubst < './.github/scripts/generate-crd-docs/index-template.md' > "$INDEX_PATH"
+    unset API_GROUP
+  fi
+
   for api_version in "$api_group"/*; do
-    sanitized_api_group="${api_group#$API_ROOT}"
     sanitized_api_version="${api_version#$API_ROOT$sanitized_api_group/}"
+
     OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
 
     echo "Arguments:"

@@ -14,6 +14,12 @@ rules:
   - list
   - watch
 - apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
   - metrics.keptn.sh
   resources:
   - keptnmetrics
@@ -51,17 +57,3 @@ rules:
   - get
   - list
   - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  creationTimestamp: null
-  name: manager-role
-  namespace: keptn-lifecycle-toolkit-system
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get

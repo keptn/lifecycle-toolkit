@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"k8s.io/apimachinery/pkg/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -12,8 +13,8 @@ import (
 
 func TestCustomMetrics_Delete(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
-			"my-metric": {
+		metrics: map[metricKey]CustomMetricValue{
+			"my-namespace-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
 						Name: "my-metric",
@@ -23,14 +24,17 @@ func TestCustomMetrics_Delete(t *testing.T) {
 		},
 	}
 
-	cm.Delete("my-metric")
+	cm.Delete(types.NamespacedName{
+		Namespace: "my-namespace",
+		Name:      "my-metric",
+	})
 
 	require.Empty(t, cm.metrics)
 }
 
 func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -41,7 +45,10 @@ func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
 		},
 	}
 
-	cm.Delete("something-else")
+	cm.Delete(types.NamespacedName{
+		Namespace: "",
+		Name:      "something-else",
+	})
 
 	require.Len(t, cm.metrics, 1)
 }
@@ -49,15 +56,18 @@ func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
 func TestCustomMetrics_DeleteFromEmptyMetrics(t *testing.T) {
 	cm := CustomMetricsCache{}
 
-	cm.Delete("my-metric")
+	cm.Delete(types.NamespacedName{
+		Namespace: "",
+		Name:      "my-metric",
+	})
 
 	require.Empty(t, cm.metrics)
 }
 
 func TestCustomMetrics_Get(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
-			"my-metric": {
+		metrics: map[metricKey]CustomMetricValue{
+			"default-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
 						Name: "my-metric",
@@ -67,20 +77,26 @@ func TestCustomMetrics_Get(t *testing.T) {
 		},
 	}
 
-	val, err := cm.Get("my-metric")
+	val, err := cm.Get(types.NamespacedName{
+		Namespace: "",
+		Name:      "my-metric",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, val)
 
-	val, err = cm.Get("nothere")
+	val, err = cm.Get(types.NamespacedName{
+		Namespace: "",
+		Name:      "nothere",
+	})
 	require.ErrorIs(t, err, ErrMetricNotFound)
 	require.Nil(t, val)
 }
 
 func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
-			"my-metric": {
+		metrics: map[metricKey]CustomMetricValue{
+			"default-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
 						Name: "my-metric",
@@ -100,7 +116,10 @@ func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 		},
 	}
 
-	val, err := cm.Get("my-metric")
+	val, err := cm.Get(types.NamespacedName{
+		Namespace: "",
+		Name:      "my-metric",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, val)
@@ -117,7 +136,7 @@ func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 
 func TestCustomMetrics_List(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -154,7 +173,7 @@ func TestCustomMetrics_List(t *testing.T) {
 
 func TestCustomMetrics_ListByLabelSelector(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -196,7 +215,10 @@ func TestCustomMetrics_Update(t *testing.T) {
 		},
 	})
 
-	get, err := cm.Get("my-metric")
+	get, err := cm.Get(types.NamespacedName{
+		Namespace: "",
+		Name:      "my-metric",
+	})
 
 	require.Nil(t, err)
 	require.Equal(t, "my-metric", get.Value.Metric.Name)
@@ -211,7 +233,10 @@ func TestCustomMetrics_Update(t *testing.T) {
 		},
 	})
 
-	get, err = cm.Get("my-metric")
+	get, err = cm.Get(types.NamespacedName{
+		Namespace: "",
+		Name:      "my-metric",
+	})
 
 	require.Nil(t, err)
 	require.Equal(t, "my-metric", get.Value.Metric.Name)

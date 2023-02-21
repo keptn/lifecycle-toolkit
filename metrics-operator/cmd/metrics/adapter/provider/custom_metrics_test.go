@@ -13,7 +13,7 @@ import (
 
 func TestCustomMetrics_Delete(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-namespace-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -34,7 +34,7 @@ func TestCustomMetrics_Delete(t *testing.T) {
 
 func TestCustomMetrics_DeleteWrongKey(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -66,7 +66,7 @@ func TestCustomMetrics_DeleteFromEmptyMetrics(t *testing.T) {
 
 func TestCustomMetrics_Get(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"default-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -95,7 +95,7 @@ func TestCustomMetrics_Get(t *testing.T) {
 
 func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"default-my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -136,7 +136,7 @@ func TestCustomMetrics_GetValuesByLabel(t *testing.T) {
 
 func TestCustomMetrics_List(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{
@@ -173,7 +173,7 @@ func TestCustomMetrics_List(t *testing.T) {
 
 func TestCustomMetrics_ListByLabelSelector(t *testing.T) {
 	cm := CustomMetricsCache{
-		metrics: map[string]CustomMetricValue{
+		metrics: map[metricKey]CustomMetricValue{
 			"my-metric": {
 				Value: custom_metrics.MetricValue{
 					Metric: custom_metrics.MetricIdentifier{

@@ -11,6 +11,8 @@ import (
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
+type metricKey string
+
 type CustomMetricValue struct {
 	Value  custom_metrics.MetricValue
 	Labels map[string]string
@@ -18,7 +20,7 @@ type CustomMetricValue struct {
 
 type CustomMetricsCache struct {
 	mtx     sync.RWMutex
-	metrics map[string]CustomMetricValue
+	metrics map[metricKey]CustomMetricValue
 }
 
 // Update adds a new metricValue for the given metricName to the cache. If an item has already been present for the provided
@@ -27,7 +29,7 @@ func (cm *CustomMetricsCache) Update(metricName string, metricValue CustomMetric
 	cm.mtx.Lock()
 	defer cm.mtx.Unlock()
 	if cm.metrics == nil {
-		cm.metrics = map[string]CustomMetricValue{}
+		cm.metrics = map[metricKey]CustomMetricValue{}
 	}
 	metricNamespace := metricValue.Value.DescribedObject.Namespace
 
@@ -52,7 +54,7 @@ func (cm *CustomMetricsCache) List() []provider.CustomMetricInfo {
 
 	i := 0
 	for metricInfo := range cm.metrics {
-		res[i] = generateCustomMetricInfo(metricInfo)
+		res[i] = generateCustomMetricInfo(cm.metrics[metricInfo].Value.Metric.Name)
 		i++
 	}
 	return res
@@ -64,9 +66,9 @@ func (cm *CustomMetricsCache) ListByLabelSelector(selector labels.Selector) []pr
 	cm.mtx.RLock()
 	defer cm.mtx.RUnlock()
 	res := []provider.CustomMetricInfo{}
-	for metricInfo, metricValue := range cm.metrics {
+	for _, metricValue := range cm.metrics {
 		if selector.Matches(labels.Set(metricValue.Labels)) {
-			res = append(res, generateCustomMetricInfo(metricInfo))
+			res = append(res, generateCustomMetricInfo(metricValue.Value.Metric.Name))
 		}
 	}
 	return res
@@ -109,10 +111,10 @@ func generateCustomMetricInfo(name string) provider.CustomMetricInfo {
 	}
 }
 
-func getMetricKey(metricName, metricNamespace string) string {
+func getMetricKey(metricName, metricNamespace string) metricKey {
 	if metricNamespace == "" {
 		metricNamespace = "default"
 	}
-	metricKey := fmt.Sprintf("%s-%s", metricNamespace, metricName)
-	return metricKey
+	mk := fmt.Sprintf("%s-%s", metricNamespace, metricName)
+	return metricKey(mk)
 }

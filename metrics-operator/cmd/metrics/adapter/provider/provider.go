@@ -52,7 +52,7 @@ func NewProvider(ctx context.Context, client dynamic.Interface, namespace string
 			client: client,
 			scheme: scheme,
 			cache: CustomMetricsCache{
-				metrics: map[string]CustomMetricValue{},
+				metrics: map[metricKey]CustomMetricValue{},
 			},
 			logger:       ctrl.Log.WithName("provider"),
 			KltNamespace: namespace,

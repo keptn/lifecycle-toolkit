@@ -8,7 +8,6 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
 	. "github.com/onsi/ginkgo/v2"
@@ -76,7 +75,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
 				By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 
 				By("Create KeptnMetric")
 
@@ -129,7 +128,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			It("KeptnEvaluationController Metric status does not exist", func() {
 				By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 
 				By("Create KeptnMetric")
 
@@ -164,7 +163,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			It("KeptnEvaluationController Metric does not exist", func() {
 				By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName, providers.KeptnMetricProviderName)
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 
 				By("Create evaluation to start the process")
 
@@ -189,30 +188,6 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 					}))
 				}, "30s").Should(Succeed())
 			})
-			It("KeptnEvaluationController Invalid provider", func() {
-				By("Create EvaluationDefiniton")
-
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, "invalid", "invalid")
-
-				By("Create evaluation to start the process")
-
-				evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
-
-				By("Check that the evaluation failed")
-
-				time.Sleep(15 * time.Second)
-
-				evaluation2 := &klcv1alpha2.KeptnEvaluation{}
-				Eventually(func(g Gomega) {
-					err := k8sClient.Get(context.TODO(), types.NamespacedName{
-						Namespace: namespaceName,
-						Name:      evaluation.Name,
-					}, evaluation2)
-					g.Expect(err).To(BeNil())
-					g.Expect(evaluation2.Status.OverallStatus).To(BeEmpty())
-
-				}, "10s").Should(Succeed())
-			})
 			AfterEach(func() {
 				err := k8sClient.Delete(context.TODO(), evaluationDefinition)
 				logErrorIfPresent(err)
@@ -227,7 +202,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 	})
 })
 
-func makeEvaluationDefinition(name string, namespaceName string, objectiveName string, source string) *klcv1alpha2.KeptnEvaluationDefinition {
+func makeEvaluationDefinition(name string, namespaceName string, objectiveName string) *klcv1alpha2.KeptnEvaluationDefinition {
 	evalDef := &klcv1alpha2.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
@@ -238,7 +213,7 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 				{
 					KeptnMetricRef: klcv1alpha2.KeptnMetricRef{
 						Name:      objectiveName,
-						Namespace: "default",
+						Namespace: namespaceName,
 					},
 					EvaluationTarget: "<10",
 				},

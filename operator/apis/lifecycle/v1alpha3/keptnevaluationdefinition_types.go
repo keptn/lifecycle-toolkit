@@ -25,14 +25,17 @@ import (
 
 // KeptnEvaluationDefinitionSpec defines the desired state of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionSpec struct {
-	Source     string      `json:"source"`
 	Objectives []Objective `json:"objectives"`
 }
 
 type Objective struct {
-	Name             string `json:"name"`
-	Query            string `json:"query"`
-	EvaluationTarget string `json:"evaluationTarget"`
+	KeptnMetricRef   KeptnMetricRef `json:"keptnMetricRef"`
+	EvaluationTarget string         `json:"evaluationTarget"`
+}
+
+type KeptnMetricRef struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition

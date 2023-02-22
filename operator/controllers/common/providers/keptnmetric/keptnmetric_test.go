@@ -70,10 +70,13 @@ func Test_keptnmetric(t *testing.T) {
 			}
 
 			obj := klcv1alpha3.Objective{
-				Name: "metric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+					Name:      "metric",
+					Namespace: "default",
+				},
 			}
 
-			r, raw, e := kmp.EvaluateQuery(context.TODO(), obj, "default")
+			r, raw, e := kmp.FetchData(context.TODO(), obj, "default")
 			require.Equal(t, tt.out, r)
 			require.Equal(t, tt.outraw, raw)
 			if tt.wantError != (e != nil) {

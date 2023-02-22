@@ -172,36 +172,6 @@ func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfigurations(c
 	return &validatingWebhooks, nil
 }
 
-func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration(ctx context.Context) (
-	*admissionregistrationv1.MutatingWebhookConfiguration, error) {
-	var mutatingWebhook admissionregistrationv1.MutatingWebhookConfiguration
-	if err := r.Client.Get(ctx, client.ObjectKey{
-		Name: MutatingWebhookconfig,
-	}, &mutatingWebhook); err != nil {
-		return nil, err
-	}
-
-	if len(mutatingWebhook.Webhooks) <= 0 {
-		return nil, errors.New("mutating webhook configuration has no registered webhooks")
-	}
-	return &mutatingWebhook, nil
-}
-
-func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfiguration(ctx context.Context) (
-	*admissionregistrationv1.ValidatingWebhookConfiguration, error) {
-	var validatingWebhook admissionregistrationv1.ValidatingWebhookConfiguration
-	if err := r.Client.Get(ctx, client.ObjectKey{
-		Name: ValidatingWebhookconfig,
-	}, &validatingWebhook); err != nil {
-		return nil, err
-	}
-
-	if len(validatingWebhook.Webhooks) <= 0 {
-		return nil, errors.New("validating webhook configuration has no registered webhooks")
-	}
-	return &validatingWebhook, nil
-}
-
 func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(ctx context.Context, bundle []byte,
 	webhookClientConfigs []*admissionregistrationv1.WebhookClientConfig, webhookConfig client.Object) error {
 	if webhookConfig == nil || reflect.ValueOf(webhookConfig).IsNil() {

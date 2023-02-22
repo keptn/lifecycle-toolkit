@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"k8s.io/apimachinery/pkg/labels"
 	"log"
 	"os"
 
@@ -91,9 +90,9 @@ func main() {
 		CancelMgrFunc: nil,
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
 		Namespace:     env.KLTNamespace,
-		MatchLabels: labels.SelectorFromSet(labels.Set(map[string]string{
+		MatchLabels: map[string]string{
 			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
-		})),
+		},
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 		os.Exit(1)

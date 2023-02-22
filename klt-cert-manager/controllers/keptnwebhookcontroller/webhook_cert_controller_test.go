@@ -20,11 +20,12 @@ import (
 )
 
 const (
-	testDomain         = ServiceName + "." + testnamespace + ".svc"
+	testDomain         = "my-domain." + testnamespace + ".svc"
 	expectedSecretName = DeploymentName + secretPostfix
 	strategyWebhook    = "webhook"
 	testBytes          = 123
 	testnamespace      = "keptn-ns"
+	crdGroup           = "lifecycle.keptn.sh"
 )
 
 func TestReconcileCertificate_Create(t *testing.T) {
@@ -138,14 +139,14 @@ func TestReconcile(t *testing.T) {
 			Labels: getMatchLabel(),
 		},
 		Spec: apiv1.CustomResourceDefinitionSpec{
-			Group: crdGroup,
+			Group: "metric.keptn.sh",
 		},
 	}
 
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name: "my-mutating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -166,7 +167,7 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with validatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name: "my-validating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -219,7 +220,7 @@ func TestReconcile(t *testing.T) {
 	t.Run(`update crd and webhooks successfully with up-to-date secret`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name: "my-mutating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -231,7 +232,7 @@ func TestReconcile(t *testing.T) {
 			},
 		}, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name: "my-validating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -292,7 +293,7 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	objs := []client.Object{
 		&admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:   MutatingWebhookconfig,
+				Name:   "my-mutating-webhook-config",
 				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
@@ -307,7 +308,7 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 
 		&admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:   ValidatingWebhookconfig,
+				Name:   "my-validating-webhook-config",
 				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
@@ -453,7 +454,7 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	mutatingWebhookConfig := &admissionregistrationv1.MutatingWebhookConfiguration{}
 	err := clt.Get(context.TODO(), client.ObjectKey{
-		Name: MutatingWebhookconfig,
+		Name: "my-mutating-webhook-config",
 	}, mutatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, mutatingWebhookConfig.Webhooks, 2)
@@ -461,7 +462,7 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	validatingWebhookConfig := &admissionregistrationv1.ValidatingWebhookConfiguration{}
 	err = clt.Get(context.TODO(), client.ObjectKey{
-		Name: ValidatingWebhookconfig,
+		Name: "my-validating-webhook-config",
 	}, validatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, validatingWebhookConfig.Webhooks, 2)

@@ -13,7 +13,7 @@ checks
 | `keptnScheduler.keptnScheduler.containerSecurityContext`                         | Sets security context                                          |                           |
 | `keptnScheduler.keptnScheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317`     |
 | `keptnScheduler.keptnScheduler.image.repository`                                 | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `keptnScheduler.keptnScheduler.image.tag`                                        | set image tag for scheduler                                    | `202302221677061234`      |
+| `keptnScheduler.keptnScheduler.image.tag`                                        | set image tag for scheduler                                    | `202302221677063327`      |
 | `keptnScheduler.keptnScheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`                  |
 | `keptnScheduler.keptnScheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                           |
 | `keptnScheduler.keptnScheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                           |
@@ -67,7 +67,7 @@ checks
 | ------------------------------------------------- | ------------------------------------------------ | -------------------------------- |
 | `kltCertManager.manager.containerSecurityContext` | Sets security context for the cert manager       |                                  |
 | `kltCertManager.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/klt-cert-manager` |
-| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `202302221677061234`             |
+| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `202302221677063327`             |
 | `kltCertManager.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                         |
 | `kltCertManager.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                  |
 | `kltCertManager.manager.readinessProbe`           | custom manager readiness probe                   |                                  |
@@ -122,10 +122,11 @@ checks
 | `klcControllerManager.manager.containerSecurityContext.runAsNonRoot`             |                                                   | `true`                                         |
 | `klcControllerManager.manager.containerSecurityContext.runAsUser`                |                                                   | `65532`                                        |
 | `klcControllerManager.manager.containerSecurityContext.seccompProfile.type`      |                                                   | `RuntimeDefault`                               |
+| `klcControllerManager.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector     | `otel-collector:4317`                          |
 | `klcControllerManager.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                                         |
 | `klcControllerManager.manager.env.functionRunnerImage`                           | specify image for task runtime                    | `ghcr.keptn.sh/keptn/functions-runtime:v0.6.0` |
 | `klcControllerManager.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/keptn-lifecycle-operator`       |
-| `klcControllerManager.manager.image.tag`                                         | select tag for manager image                      | `202302221677061234`                           |
+| `klcControllerManager.manager.image.tag`                                         | select tag for manager image                      | `202302221677063327`                           |
 | `klcControllerManager.manager.imagePullPolicy`                                   | specify pull policy for manager image             | `Always`                                       |
 | `klcControllerManager.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                                |
 | `klcControllerManager.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                                |

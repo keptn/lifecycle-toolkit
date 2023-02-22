@@ -8,7 +8,7 @@
 # Inputs: None
 
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
-GENERATOR_VERSION=v0.0.8
+GENERATOR_VERSION=master
 API_DOMAIN="keptn.sh"
 API_ROOT='operator/apis/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'

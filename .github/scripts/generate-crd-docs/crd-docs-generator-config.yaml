@@ -1,4 +1,5 @@
 processor:
+  useRawDocstring: true
   ignoreTypes: [ ]
   ignoreFields:
     - "status$"
@@ -6,4 +7,3 @@ processor:
 
 render:
   kubernetesVersion: 1.24
-

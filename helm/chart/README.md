@@ -8,11 +8,15 @@ checks
 
 ### OpenTelemetry
 
-| Name                         | Description                                          | Value                 |
-| ---------------------------- | ---------------------------------------------------- | --------------------- |
-| `otelCollector.url`          | Sets the URL for the open telemetry collector        | `otel-collector:4317` |
-| `deployment.imagePullPolicy` | Sets the image pull policy for kubernetes deployment | `Always`              |
+| Name                | Description                                   | Value                 |
+| ------------------- | --------------------------------------------- | --------------------- |
+| `otelCollector.url` | Sets the URL for the open telemetry collector | `otel-collector:4317` |
 
+### General
+
+| Name                         | Description                                          | Value    |
+| ---------------------------- | ---------------------------------------------------- | -------- |
+| `deployment.imagePullPolicy` | Sets the image pull policy for kubernetes deployment | `Always` |
 
 ### Controller Log level
 
@@ -28,5 +32,7 @@ checks
 | `operator.metricsController.logLevel`               | Sets the log level of Keptn Metrics Controller           | `0`   |
 | `operator.optionsController.logLevel`               | Sets the log level of Keptn Options Controller           | `0`   |
 
+
+## Other info
 
 <!-- markdownlint-enable MD012 -->

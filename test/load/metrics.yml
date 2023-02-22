@@ -1,14 +1,14 @@
-- query: sum by (job) (rate(container_memory_usage_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system"}[1m]))
-  metricName: MemoryUsage
+- query: (max_over_time(container_memory_working_set_bytes{container="manager", namespace="keptn-lifecycle-toolkit-system", pod=~"klc-controller-manager-.*"}[1m]))/1024/1024
+  metricName: MemoryUsageInMB
 
-- query: sum by (job) (rate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system"}[1m]))
+- query: max_over_time(irate(container_cpu_usage_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system", pod=~"klc-controller-manager-.*"}[1m])[{{ .elapsed }}:])
   metricName: CPUUsage
 
-- query: sum by (job) (rate(apiserver_request_total{job="apiserver"}[1m]))
-  metricName: APIServerRequests
+- query: irate(container_cpu_cfs_throttled_seconds_total{container="manager", namespace="keptn-lifecycle-toolkit-system", pod=~"klc-controller-manager-.*"}[1m])
+  metricName: CPUThrottling
+
+- query: histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{group="metrics.keptn.sh", verb!~"WATCH", subresource!="log"}[1m])) by (verb,resource,subresource,instance,le)) > 0
+  metricName: P99APIServerCallsLatency
 
 - query: sum by (job) (rate(etcd_request_duration_seconds_sum[1m]))
   metricName: EtcdRequestLatency
-
-- query: sum by (job) (rate(node_cpu_core_throttles_total[1m]))
-  metricName: CPUThrottling

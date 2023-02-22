@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -69,7 +69,7 @@ func Test_keptnmetric(t *testing.T) {
 				K8sClient: client,
 			}
 
-			obj := klcv1alpha2.Objective{
+			obj := klcv1alpha3.Objective{
 				Name: "metric",
 			}
 

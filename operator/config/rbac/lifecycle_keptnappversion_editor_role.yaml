@@ -1,0 +1,24 @@
+# permissions for end users to edit keptnappversions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnappversion-editor-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappversions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappversions/status
+  verbs:
+  - get

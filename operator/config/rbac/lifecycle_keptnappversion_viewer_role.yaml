@@ -1,0 +1,20 @@
+# permissions for end users to view keptnappversions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnappversion-viewer-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappversions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappversions/status
+  verbs:
+  - get

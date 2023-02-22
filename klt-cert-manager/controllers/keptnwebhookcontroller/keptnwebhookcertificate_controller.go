@@ -3,6 +3,7 @@ package keptnwebhookcontroller
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/labels"
 	"reflect"
 
 	"github.com/go-logr/logr"
@@ -26,6 +27,7 @@ type KeptnWebhookCertificateReconciler struct {
 	CancelMgrFunc context.CancelFunc
 	Log           logr.Logger
 	Namespace     string
+	MatchLabels   labels.Set
 }
 
 //clusterrole
@@ -45,12 +47,12 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	r.Log.Info("reconciling webhook certificates",
 		"namespace", request.Namespace, "name", request.Name)
 
-	mutatingWebhookConfiguration, err := r.getMutatingWebhookConfiguration(ctx)
+	mutatingWebhookConfigurations, err := r.getMutatingWebhookConfigurations(ctx)
 	if err != nil {
 		r.Log.Error(err, "could not find mutating webhook configuration")
 	}
 
-	validatingWebhookConfiguration, err := r.getValidatingWebhookConfiguration(ctx)
+	validatingWebhookConfigurations, err := r.getValidatingWebhookConfigurations(ctx)
 	if err != nil {
 		r.Log.Error(err, "could not find validating webhook configuration")
 	}
@@ -66,9 +68,9 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
-	mutatingWebhookConfigs := getClientConfigsFromMutatingWebhook(mutatingWebhookConfiguration)
+	mutatingWebhookConfigs := getClientConfigsFromMutatingWebhook(mutatingWebhookConfigurations)
 
-	validatingWebhookConfigs := getClientConfigsFromValidatingWebhook(validatingWebhookConfiguration)
+	validatingWebhookConfigs := getClientConfigsFromValidatingWebhook(validatingWebhookConfigurations)
 
 	areMutatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(mutatingWebhookConfigs)
 	areValidatingWebhookConfigsValid := certSecret.areWebhookConfigsValid(validatingWebhookConfigs)
@@ -81,7 +83,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 		return reconcile.Result{RequeueAfter: SuccessDuration}, nil
 	}
 
-	if err = r.updateConfigurations(ctx, certSecret, crds, mutatingWebhookConfigs, mutatingWebhookConfiguration, validatingWebhookConfigs, validatingWebhookConfiguration); err != nil {
+	if err = r.updateConfigurations(ctx, certSecret, crds, mutatingWebhookConfigs, mutatingWebhookConfigurations, validatingWebhookConfigs, validatingWebhookConfigurations); err != nil {
 		return reconcile.Result{}, errors.WithStack(err)
 	}
 
@@ -93,7 +95,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
-		WithEventFilter(eventfilter.ForObjectNameAndNamespace(DeploymentName, r.Namespace)).
+		WithEventFilter(eventfilter.ForLabelsAndNamespace(labels.SelectorFromSet(r.MatchLabels), r.Namespace)).
 		Owns(&corev1.Secret{}).
 		Complete(r)
 
@@ -115,9 +117,7 @@ func (r *KeptnWebhookCertificateReconciler) setCertificates(ctx context.Context,
 	return nil
 }
 
-func (r *KeptnWebhookCertificateReconciler) updateConfigurations(ctx context.Context, certSecret *certificateSecret, crds *apiv1.CustomResourceDefinitionList,
-	mutatingWebhookConfigs []*admissionregistrationv1.WebhookClientConfig, mutatingWebhookConfiguration *admissionregistrationv1.MutatingWebhookConfiguration,
-	validatingWebhookConfigs []*admissionregistrationv1.WebhookClientConfig, validatingWebhookConfiguration *admissionregistrationv1.ValidatingWebhookConfiguration) error {
+func (r *KeptnWebhookCertificateReconciler) updateConfigurations(ctx context.Context, certSecret *certificateSecret, crds *apiv1.CustomResourceDefinitionList, mutatingWebhookConfigs []*admissionregistrationv1.WebhookClientConfig, mutatingWebhookConfigurationList *admissionregistrationv1.MutatingWebhookConfigurationList, validatingWebhookConfigs []*admissionregistrationv1.WebhookClientConfig, validatingWebhookConfigurationList *admissionregistrationv1.ValidatingWebhookConfigurationList) error {
 	if err := certSecret.createOrUpdateIfNecessary(ctx); err != nil {
 		return err
 	}
@@ -127,12 +127,16 @@ func (r *KeptnWebhookCertificateReconciler) updateConfigurations(ctx context.Con
 		return err
 	}
 
-	if err := r.updateClientConfigurations(ctx, bundle, mutatingWebhookConfigs, mutatingWebhookConfiguration); err != nil {
-		return err
+	for i := range mutatingWebhookConfigurationList.Items {
+		if err := r.updateClientConfigurations(ctx, bundle, mutatingWebhookConfigs, &mutatingWebhookConfigurationList.Items[i]); err != nil {
+			return err
+		}
 	}
 
-	if err := r.updateClientConfigurations(ctx, bundle, validatingWebhookConfigs, validatingWebhookConfiguration); err != nil {
-		return err
+	for i := range validatingWebhookConfigurationList.Items {
+		if err := r.updateClientConfigurations(ctx, bundle, validatingWebhookConfigs, &validatingWebhookConfigurationList.Items[i]); err != nil {
+			return err
+		}
 	}
 
 	if err = r.updateCRDsConfiguration(ctx, crds, bundle); err != nil {
@@ -146,6 +150,26 @@ func (r *KeptnWebhookCertificateReconciler) cancelMgr() {
 		r.Log.Info("stopping manager after certificates creation")
 		r.CancelMgrFunc()
 	}
+}
+
+func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfigurations(ctx context.Context) (
+	*admissionregistrationv1.MutatingWebhookConfigurationList, error) {
+	var mutatingWebhooks admissionregistrationv1.MutatingWebhookConfigurationList
+
+	if err := r.Client.List(ctx, &mutatingWebhooks, client.MatchingLabels(r.MatchLabels)); err != nil {
+		return nil, err
+	}
+	return &mutatingWebhooks, nil
+}
+
+func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfigurations(ctx context.Context) (
+	*admissionregistrationv1.ValidatingWebhookConfigurationList, error) {
+	var validatingWebhooks admissionregistrationv1.ValidatingWebhookConfigurationList
+
+	if err := r.Client.List(ctx, &validatingWebhooks, client.MatchingLabels(r.MatchLabels)); err != nil {
+		return nil, err
+	}
+	return &validatingWebhooks, nil
 }
 
 func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfiguration(ctx context.Context) (
@@ -197,9 +221,7 @@ func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(ctx conte
 func (r *KeptnWebhookCertificateReconciler) getCRDConfigurations(ctx context.Context) (
 	*apiv1.CustomResourceDefinitionList, error) {
 	var crds apiv1.CustomResourceDefinitionList
-	opt := client.MatchingLabels{
-		"crdGroup": crdGroup,
-	}
+	opt := client.MatchingLabels(r.MatchLabels)
 	if err := r.Client.List(ctx, &crds, opt); err != nil {
 		return nil, err
 	}

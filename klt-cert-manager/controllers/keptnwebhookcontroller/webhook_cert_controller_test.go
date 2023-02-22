@@ -2,6 +2,7 @@ package keptnwebhookcontroller
 
 import (
 	"context"
+	"k8s.io/apimachinery/pkg/labels"
 	"testing"
 	"time"
 
@@ -100,10 +101,8 @@ func TestReconcile(t *testing.T) {
 
 	crd1 := &apiv1.CustomResourceDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "crd1",
-			Labels: map[string]string{
-				"crdGroup": "lifecycle.keptn.sh",
-			},
+			Name:   "crd1",
+			Labels: getMatchLabel(),
 		},
 		Spec: apiv1.CustomResourceDefinitionSpec{
 			Group: crdGroup,
@@ -135,10 +134,8 @@ func TestReconcile(t *testing.T) {
 	}
 	crd3 := &apiv1.CustomResourceDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "crd3",
-			Labels: map[string]string{
-				"crdGroup": "lifecycle.keptn.sh",
-			},
+			Name:   "crd3",
+			Labels: getMatchLabel(),
 		},
 		Spec: apiv1.CustomResourceDefinitionSpec{
 			Group: crdGroup,
@@ -295,7 +292,8 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	objs := []client.Object{
 		&admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name:   MutatingWebhookconfig,
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -309,7 +307,8 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 
 		&admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name:   ValidatingWebhookconfig,
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -375,6 +374,12 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	return faker
 }
 
+func getMatchLabel() map[string]string {
+	return map[string]string{
+		"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit",
+	}
+}
+
 func createInvalidTestCertData(_ *testing.T) map[string][]byte {
 	return map[string][]byte{
 		RootKey:    {testBytes},
@@ -405,10 +410,10 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := &KeptnWebhookCertificateReconciler{
-
-		Client:    clt,
-		Log:       testr.New(t),
-		Namespace: testnamespace,
+		Client:      clt,
+		Log:         testr.New(t),
+		Namespace:   testnamespace,
+		MatchLabels: labels.Set(map[string]string{"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit"}),
 	}
 
 	request := reconcile.Request{

@@ -7,6 +7,7 @@ global:
 jobs:
   - name: keptn-metrics
     jobIterations: 1
+    jobPause: 180s
     qps: 4
     burst: 4
     namespacedIterations: false

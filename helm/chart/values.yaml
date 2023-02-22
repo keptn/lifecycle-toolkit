@@ -16,7 +16,7 @@ keptnScheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202302211676981327"
+      tag: "202302221677061234"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -36,7 +36,10 @@ keptnScheduler:
       requests:
         cpu: 100m
         memory: 20Mi
+  nodeSelector: {}
   replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
 klcControllerManager:
   kubeRbacProxy:
     containerSecurityContext:
@@ -87,7 +90,7 @@ klcControllerManager:
       functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
     image:
       repository: ghcr.io/keptn/keptn-lifecycle-operator
-      tag: "202302211676981327"
+      tag: "202302221677061234"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -108,7 +111,10 @@ klcControllerManager:
       requests:
         cpu: 5m
         memory: 64Mi
+  nodeSelector: {}
   replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
 klcControllerManagerMetricsService:
   ports:
   - name: https
@@ -190,7 +196,7 @@ kltCertManager:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/klt-cert-manager
-      tag: "202302211676981327"
+      tag: "202302221677061234"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -211,7 +217,10 @@ kltCertManager:
       requests:
         cpu: 5m
         memory: 16Mi
+  nodeSelector: {}
   replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
 kltCertManagerMetricsService:
   ports:
   - name: https
@@ -220,7 +229,6 @@ kltCertManagerMetricsService:
     targetPort: https
   type: ClusterIP
 kubernetesClusterDomain: cluster.local
-nodeSelector: {}
 schedulerConfig:
   schedulerConfigYaml:
     leaderElection:
@@ -231,5 +239,3 @@ schedulerConfig:
           enabled:
           - name: KLCPermit
       schedulerName: keptn-scheduler
-tolerations: []
-topologySpreadConstraints: []

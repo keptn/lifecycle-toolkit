@@ -1,0 +1,84 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-entry
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/version: 0.1.0
+      annotations:
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-hat
+        keptn.sh/pre-deployment-tasks: pre-deployment-check-entry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-left-leg
+        keptn.sh/pre-deployment-tasks: pre-deployment-check-entry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-arm
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: podtato-head
+      annotations:
+        app.kubernetes.io/name: podtato-head-left-arm
+        keptn.sh/pre-deployment-tasks: pre-deployment-check-entry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        component: podtato-head-right-leg
+      annotations:
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/name: podtato-head-right-leg
+        keptn.sh/pre-deployment-tasks: pre-deployment-check-entry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-arm
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/part-of: podtato-head
+        keptn.sh/workload: podtato-head-right-arm
+        keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-tasks: pre-deployment-check-entry

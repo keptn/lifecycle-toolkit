@@ -1,0 +1,22 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  version: "0.1.1"
+  workloads:
+    - name: left-arm
+      version: "0.1.2"
+    - name: left-leg
+      version: "0.1.2"
+    - name: entry
+      version: "0.1.2"
+    - name: right-arm
+      version: "0.1.2"
+    - name: left-arm
+      version: "0.1.2"
+    - name: hat
+      version: "0.1.2"
+  preDeploymentTasks:
+    - pre-deployment-check-entry

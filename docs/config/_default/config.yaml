@@ -1,0 +1,24 @@
+_merge: deep
+title: keptn
+
+module:
+  hugoVersion:
+    extended: true
+  imports:
+  - path: github.com/keptn-sandbox/lifecycle-toolkit-docs
+    ignoreConfig: false
+    mounts:
+    - source: static
+      target: static
+    - source: layouts
+      target: layouts
+    - source: data
+      target: data
+    - source: assets
+      target: assets
+    - source: archetypes
+      target: archetypes
+    - source: content/en/_index.md
+      target: content/en/_index.md
+  proxy: direct
+  

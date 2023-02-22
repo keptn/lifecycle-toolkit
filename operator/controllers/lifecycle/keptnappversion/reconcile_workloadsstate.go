@@ -3,14 +3,14 @@ package keptnappversion
 import (
 	"context"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 )
 
-func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appVersion *klcv1alpha2.KeptnAppVersion) (apicommon.KeptnState, error) {
+func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion) (apicommon.KeptnState, error) {
 	r.Log.Info("Reconciling Workloads")
 	var summary apicommon.StatusSummary
 	summary.Total = len(appVersion.Spec.Workloads)
@@ -20,7 +20,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		LongName:  "Reconcile Workloads",
 	}
 
-	var newStatus []klcv1alpha2.WorkloadStatus
+	var newStatus []klcv1alpha3.WorkloadStatus
 	for _, w := range appVersion.Spec.Workloads {
 		r.Log.Info("Reconciling workload " + w.Name)
 		workload, err := r.getWorkloadInstance(ctx, getWorkloadInstanceName(appVersion.Namespace, appVersion.Spec.AppName, w.Name, w.Version))
@@ -33,7 +33,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		}
 		workloadStatus := workload.Status.Status
 
-		newStatus = append(newStatus, klcv1alpha2.WorkloadStatus{
+		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{
 			Workload: w,
 			Status:   workloadStatus,
 		})
@@ -52,8 +52,8 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	return overallState, err
 }
 
-func (r *KeptnAppVersionReconciler) getWorkloadInstance(ctx context.Context, workload types.NamespacedName) (klcv1alpha2.KeptnWorkloadInstance, error) {
-	workloadInstance := &klcv1alpha2.KeptnWorkloadInstance{}
+func (r *KeptnAppVersionReconciler) getWorkloadInstance(ctx context.Context, workload types.NamespacedName) (klcv1alpha3.KeptnWorkloadInstance, error) {
+	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
 	err := r.Get(ctx, workload, workloadInstance)
 	return *workloadInstance, err
 }

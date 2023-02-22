@@ -3,3 +3,33 @@ otelCollector:
 
 deployment:
   imagePullPolicy: Always
+
+## @section Controller Log level
+operator:
+  keptnappController:
+    ## @param operator.keptnappController.logLevel Sets the log level of Keptn App Controller
+    logLevel: 0
+  keptnappversionController:
+    ## @param operator.keptnappversionController.logLevel Sets the log level of Keptn Version Controller
+    logLevel: 0
+  keptnevaluationController:
+    ## @param operator.keptnevaluationController.logLevel Sets the log level of Keptn Evaluation Controller
+    logLevel: 0
+  keptntaskController:
+    ## @param operator.keptntaskController.logLevel Sets the log level of Keptn Task Controller
+    logLevel: 0
+  keptntaskdefinitionController:
+    ## @param operator.keptntaskdefinitionController.logLevel Sets the log level of Keptn Task Defintion Controller
+    logLevel: 0
+  keptnworkloadController:
+    ## @param operator.keptnworkloadController.logLevel Sets the log level of Keptn Workload Controller
+    logLevel: 0
+  keptnworkloadinstanceController:
+    ## @param operator.keptnworkloadinstanceController.logLevel Sets the log level of Keptn Workload Instance Controller
+    logLevel: 0
+  metricsController:
+    ## @param operator.metricsController.logLevel Sets the log level of Keptn Metrics Controller
+    logLevel: 0
+  optionsController:
+    ## @param operator.optionsController.logLevel Sets the log level of Keptn Options Controller
+    logLevel: 0

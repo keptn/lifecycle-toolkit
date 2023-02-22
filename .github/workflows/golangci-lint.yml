@@ -4,13 +4,6 @@ on:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
-    paths:
-      - "**.go"
-      - "**/go.mod"
-      - "**/go.sum"
-      - ".golangi.yml"
-      - ".github/workflows/golangci-lint.yml"
-      - "!docs/**"
   pull_request:
     branches:
       - 'main'

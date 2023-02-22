@@ -37,12 +37,9 @@ spec:
       - command:
         - /manager
         args:
-        - --leader-elect
-          # Secure port for the metrics adapter
-        - --adapter-port=6443
-        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
-          # Log level for the metrics adapter
-        - --v=10
+          - --health-probe-bind-address=:8081
+          - --metrics-bind-address=127.0.0.1:8080
+          - --leader-elect
         image: controller:latest
         name: manager
         ports:

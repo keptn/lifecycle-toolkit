@@ -86,6 +86,11 @@ runs:
       run: |
         echo "Installing KLT using helm"
         helm version
-        kubectl delete crds --all -n keptn-lifecycle-toolkit-system
-        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz --set deployment.imagePullPolicy=Never --debug --wait --timeout 1m
-        kubectl get crds keptnappversions.lifecycle.keptn.sh -o yaml
+        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz \
+        --set keptnScheduler.keptnScheduler.imagePullPolicy=Never \
+        --set klcControllerManager.manager.imagePullPolicy=Never \
+        --set metricsOperatorController.manager.imagePullPolicy=Never \
+        --set klcControllerManager.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.functions_runtime_tag }} \
+        --set kltCertManager.manager.imagePullPolicy=Never \
+        --set fullnameOverride="" \
+        --debug --wait --timeout 1m

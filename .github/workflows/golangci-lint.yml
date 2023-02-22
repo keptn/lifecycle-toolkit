@@ -8,6 +8,13 @@ on:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - "**.go"
+      - "**/go.mod"
+      - "**/go.sum"
+      - ".golangi.yml"
+      - ".github/workflows/golangci-lint.yml"
+      - "!docs/**"
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
   GOLANGCI_LINT_VERSION: "v1.50.1"

@@ -39,7 +39,7 @@ If you have suggestions about additional content that should be included in this
   <summary>Understanding SLO, SLA, SLIs</summary>
 
 - **Overview**
-  - [ ]  [overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
+  - [ ]  [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
   - [ ]  [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
 </details>
 

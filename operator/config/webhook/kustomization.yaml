@@ -4,3 +4,6 @@ resources:
 
 configurations:
 - kustomizeconfig.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: keptn-lifecycle-toolkit

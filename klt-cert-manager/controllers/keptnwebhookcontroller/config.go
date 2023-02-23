@@ -2,8 +2,6 @@ package keptnwebhookcontroller
 
 import (
 	"time"
-
-	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 const (
@@ -14,9 +12,3 @@ const (
 	certificatesSecretEmptyErr = "certificates secret is empty"
 	couldNotUpdateCRDErr       = "could not update crd config"
 )
-
-var keptnCRD = schema.GroupVersionResource{Group: "lifecycle.keptn.sh"}
-var crdversion = schema.GroupVersion{
-	Group:   "apiextensions.k8s.io",
-	Version: "v1",
-}

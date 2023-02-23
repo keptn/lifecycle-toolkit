@@ -45,8 +45,8 @@ type KeptnWorkloadStatus struct {
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 
@@ -59,7 +59,7 @@ type KeptnWorkload struct {
 	Status KeptnWorkloadStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnWorkloadList contains a list of KeptnWorkload
 type KeptnWorkloadList struct {

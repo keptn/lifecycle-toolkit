@@ -35,7 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	//+kubebuilder:scaffold:imports
+	// +kubebuilder:scaffold:imports
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
@@ -69,7 +69,7 @@ var _ = BeforeSuite(func() {
 	cfg, err = testEnv.Start()
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
-	//+kubebuilder:scaffold:scheme
+	// +kubebuilder:scaffold:scheme
 	err = klcv1alpha2.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
@@ -81,7 +81,7 @@ var _ = BeforeSuite(func() {
 
 	go func() {
 		defer GinkgoRecover()
-		time.Sleep(3 * time.Second) //wait for test to start
+		time.Sleep(3 * time.Second) // wait for test to start
 		wg.Wait()
 		fmt.Println("SUITE FINISHED")
 		err := testEnv.Stop()

@@ -72,9 +72,9 @@ type KeptnTaskStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
@@ -91,7 +91,7 @@ type KeptnTask struct {
 	Status KeptnTaskStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnTaskList contains a list of KeptnTask
 type KeptnTaskList struct {

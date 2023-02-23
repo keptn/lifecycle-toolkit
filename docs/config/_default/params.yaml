@@ -4,7 +4,7 @@ github_repo: https://github.com/keptn/lifecycle-toolkit
 github_subdir: docs
 
 versions:
-- url: /docs/
-  version: development
-- url: https://lifecycle.keptn.sh
-  version: production
+  - url: /docs/
+    version: development
+  - url: https://lifecycle.keptn.sh
+    version: production

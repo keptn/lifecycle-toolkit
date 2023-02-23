@@ -80,6 +80,7 @@ func buildSecretName() string {
 }
 
 func getDomain(namespace string) string {
+	// use a wildcard here because the secret is potentially used by multiple operators providing webhooks
 	return fmt.Sprintf("*.%s.svc", namespace)
 }
 

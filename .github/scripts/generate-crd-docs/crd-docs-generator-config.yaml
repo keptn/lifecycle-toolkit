@@ -1,0 +1,9 @@
+processor:
+  useRawDocstring: true
+  ignoreTypes: [ ]
+  ignoreFields:
+    - "status$"
+    - "TypeMeta$"
+
+render:
+  kubernetesVersion: 1.24

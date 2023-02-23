@@ -14,6 +14,9 @@ on:
     paths:
       - '**.md'
 
+env:
+  GO_VERSION: "~1.19"
+
 defaults:
   run:
     shell: bash
@@ -55,3 +58,35 @@ jobs:
 
       - name: Lint Markdown files
         run: make markdownlint
+
+  check-crd-docs:
+    name: Check CRD auto-generated docs
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Copy old docs
+        run: |
+          cp -R ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old
+
+      - name: Run docs generator
+        run: ./.github/scripts/generate-crd-docs/generate-crd-docs.sh
+
+      - name: Check if docs are up to date
+        run: |
+          if ! diff -rq ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old &>/dev/null; then
+            echo "The CRD docs have changes that are not reflected in the docs pages. Please use ./.github/scripts/generate-crd-docs/generate-crd-docs.sh to re-generate the docs."
+            echo ""
+            echo "=========== Diff ==========="
+            diff -ru ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old
+            exit 1
+          else
+            echo ""
+            echo "CRD docs are up to date!"
+          fi

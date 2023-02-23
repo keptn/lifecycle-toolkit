@@ -128,12 +128,14 @@ func (r *KeptnWebhookCertificateReconciler) updateConfigurations(ctx context.Con
 	}
 
 	for i := range mutatingWebhookConfigurationList.Items {
+		r.Log.Info("injecting certificate into mutating webhook config", "mwc", mutatingWebhookConfigurationList.Items[i])
 		if err := r.updateClientConfigurations(ctx, bundle, mutatingWebhookConfigs, &mutatingWebhookConfigurationList.Items[i]); err != nil {
 			return err
 		}
 	}
 
 	for i := range validatingWebhookConfigurationList.Items {
+		r.Log.Info("injecting certificate into validating webhook config", "vwc", mutatingWebhookConfigurationList.Items[i])
 		if err := r.updateClientConfigurations(ctx, bundle, validatingWebhookConfigs, &validatingWebhookConfigurationList.Items[i]); err != nil {
 			return err
 		}

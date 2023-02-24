@@ -2,26 +2,30 @@ package keptnwebhookcontroller
 
 import admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 
-func getClientConfigsFromMutatingWebhook(mutatingWebhookConfig *admissionregistrationv1.MutatingWebhookConfiguration) []*admissionregistrationv1.WebhookClientConfig {
-	if mutatingWebhookConfig == nil {
+func getClientConfigsFromMutatingWebhook(mutatingWebhookConfigList *admissionregistrationv1.MutatingWebhookConfigurationList) []*admissionregistrationv1.WebhookClientConfig {
+	if mutatingWebhookConfigList == nil {
 		return nil
 	}
 
-	mutatingWebhookConfigs := make([]*admissionregistrationv1.WebhookClientConfig, len(mutatingWebhookConfig.Webhooks))
-	for i := range mutatingWebhookConfig.Webhooks {
-		mutatingWebhookConfigs[i] = &mutatingWebhookConfig.Webhooks[i].ClientConfig
+	mutatingWebhookConfigs := []*admissionregistrationv1.WebhookClientConfig{}
+	for i := range mutatingWebhookConfigList.Items {
+		for j := range mutatingWebhookConfigList.Items[i].Webhooks {
+			mutatingWebhookConfigs = append(mutatingWebhookConfigs, &mutatingWebhookConfigList.Items[i].Webhooks[j].ClientConfig)
+		}
 	}
 	return mutatingWebhookConfigs
 }
 
-func getClientConfigsFromValidatingWebhook(validatingWebhookConfig *admissionregistrationv1.ValidatingWebhookConfiguration) []*admissionregistrationv1.WebhookClientConfig {
-	if validatingWebhookConfig == nil {
+func getClientConfigsFromValidatingWebhook(validatingWebhookConfigList *admissionregistrationv1.ValidatingWebhookConfigurationList) []*admissionregistrationv1.WebhookClientConfig {
+	if validatingWebhookConfigList == nil {
 		return nil
 	}
 
-	mutatingWebhookConfigs := make([]*admissionregistrationv1.WebhookClientConfig, len(validatingWebhookConfig.Webhooks))
-	for i := range validatingWebhookConfig.Webhooks {
-		mutatingWebhookConfigs[i] = &validatingWebhookConfig.Webhooks[i].ClientConfig
+	validatingWebhookConfigs := []*admissionregistrationv1.WebhookClientConfig{}
+	for i := range validatingWebhookConfigList.Items {
+		for j := range validatingWebhookConfigList.Items[i].Webhooks {
+			validatingWebhookConfigs = append(validatingWebhookConfigs, &validatingWebhookConfigList.Items[i].Webhooks[j].ClientConfig)
+		}
 	}
-	return mutatingWebhookConfigs
+	return validatingWebhookConfigs
 }

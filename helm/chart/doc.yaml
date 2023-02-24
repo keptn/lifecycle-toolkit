@@ -185,8 +185,7 @@
 ## @param   klcControllerManager.manager.containerSecurityContext.seccompProfile.type
 
 ## @param   klcControllerManager.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
-## @param   klcControllerManager.manager.env.exposeKeptnMetrics enable metrics exporter
-## @param   klcControllerManager.manager.env.functionRunnerImage specify image for task runtime 
+## @param   klcControllerManager.manager.env.functionRunnerImage specify image for task runtime
 
 ## @param   klcControllerManager.manager.image.repository specify registry for manager image 
 ## @param   klcControllerManager.manager.image.tag  select tag for manager image 

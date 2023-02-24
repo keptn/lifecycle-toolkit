@@ -11,4 +11,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.keptn.sh/keptn/keptn-lifecycle-operator
-  newTag: "202301111673423054"
+  newTag: "0.6.0-next.1"

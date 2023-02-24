@@ -6,14 +6,14 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/keptnmetric"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // KeptnSLIProvider is the interface that describes the operations that an SLI provider must implement
 type KeptnSLIProvider interface {
-	EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, namespace string) (string, []byte, error)
+	EvaluateQuery(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error)
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider

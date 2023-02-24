@@ -67,8 +67,8 @@ type EvaluationStatusItem struct {
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:storageversion
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 //+kubebuilder:resource:path=keptnevaluations,shortName=ke
 //+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
 //+kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`

@@ -60,7 +60,7 @@ var _ = Describe("KeptnAppController", func() {
 
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
-			instance *klcv1alpha2.KeptnApp // declare CRD
+			instance *klcv1alpha3.KeptnApp // declare CRD
 		)
 		Context("with one App", func() {
 			BeforeEach(func() {

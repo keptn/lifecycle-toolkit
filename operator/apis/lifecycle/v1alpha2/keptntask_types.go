@@ -73,8 +73,8 @@ type KeptnTaskStatus struct {
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:storageversion
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`

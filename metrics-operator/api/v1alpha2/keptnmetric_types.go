@@ -23,6 +23,8 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+func (*KeptnMetric) Hub() {}
+
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
 	// Provider represents the provider object

@@ -13,7 +13,7 @@ checks
 | `keptnScheduler.keptnScheduler.containerSecurityContext`                         | Sets security context                                          |                           |
 | `keptnScheduler.keptnScheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317`     |
 | `keptnScheduler.keptnScheduler.image.repository`                                 | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `keptnScheduler.keptnScheduler.image.tag`                                        | set image tag for scheduler                                    | `202302241677228960`      |
+| `keptnScheduler.keptnScheduler.image.tag`                                        | set image tag for scheduler                                    | `0.6.0-next.1`            |
 | `keptnScheduler.keptnScheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`                  |
 | `keptnScheduler.keptnScheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                           |
 | `keptnScheduler.keptnScheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                           |
@@ -67,7 +67,7 @@ checks
 | ------------------------------------------------- | ------------------------------------------------ | -------------------------------- |
 | `kltCertManager.manager.containerSecurityContext` | Sets security context for the cert manager       |                                  |
 | `kltCertManager.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/klt-cert-manager` |
-| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `202302241677228960`             |
+| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `0.6.0-next.1`                   |
 | `kltCertManager.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                         |
 | `kltCertManager.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                  |
 | `kltCertManager.manager.readinessProbe`           | custom manager readiness probe                   |                                  |
@@ -119,7 +119,7 @@ checks
 | `klcControllerManager.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                                         |
 | `klcControllerManager.manager.env.functionRunnerImage`                           | specify image for task runtime                    | `ghcr.keptn.sh/keptn/functions-runtime:v0.6.0` |
 | `klcControllerManager.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/keptn-lifecycle-operator`       |
-| `klcControllerManager.manager.image.tag`                                         | select tag for manager image                      | `202302241677228960`                           |
+| `klcControllerManager.manager.image.tag`                                         | select tag for manager image                      | `0.6.0-next.1`                                 |
 | `klcControllerManager.manager.imagePullPolicy`                                   | specify pull policy for manager image             | `Always`                                       |
 | `klcControllerManager.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                                |
 | `klcControllerManager.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                                |
@@ -159,7 +159,7 @@ checks
 | `metricsOperatorController.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `metricsOperatorController.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
 | `metricsOperatorController.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
-| `metricsOperatorController.manager.image.tag`                                         | select tag for manager image                      | `202302241677228960`             |
+| `metricsOperatorController.manager.image.tag`                                         | select tag for manager image                      | `0.6.0-next.1`                   |
 | `metricsOperatorController.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
 | `metricsOperatorController.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
 | `metricsOperatorController.manager.resources`                                         | specify limits and requests for manager container |                                  |

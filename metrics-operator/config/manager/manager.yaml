@@ -58,6 +58,12 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: EXPOSE_KEPTN_METRICS
+            value: "true"
         ports:
           - containerPort: 9443
             name: webhook-server

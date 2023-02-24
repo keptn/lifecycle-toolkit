@@ -76,7 +76,7 @@ func (certSecret *certificateSecret) setCertificates(namespace string) error {
 }
 
 func buildSecretName() string {
-	return fmt.Sprintf("%s%s", DeploymentName, secretPostfix)
+	return secretName
 }
 
 func getDomain(namespace string) string {

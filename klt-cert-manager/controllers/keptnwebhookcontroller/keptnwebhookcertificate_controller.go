@@ -80,7 +80,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	if isCertSecretRecent && areMutatingWebhookConfigsValid && areValidatingWebhookConfigsValid && areCRDConversionsConfigValid {
 		r.Log.Info("secret for certificates up to date, skipping update")
 		r.cancelMgr()
-		return reconcile.Result{RequeueAfter: SuccessDuration}, nil
+		return reconcile.Result{RequeueAfter: successDuration}, nil
 	}
 
 	if err = r.updateConfigurations(ctx, certSecret, crds, mutatingWebhookConfigs, mutatingWebhookConfigurations, validatingWebhookConfigs, validatingWebhookConfigurations); err != nil {
@@ -88,7 +88,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	}
 
 	r.cancelMgr()
-	return reconcile.Result{RequeueAfter: SuccessDuration}, nil
+	return reconcile.Result{RequeueAfter: successDuration}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

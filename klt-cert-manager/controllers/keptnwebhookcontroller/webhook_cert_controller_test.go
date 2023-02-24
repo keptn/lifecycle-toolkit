@@ -21,7 +21,7 @@ import (
 
 const (
 	testDomain         = "my-domain." + testnamespace + ".svc"
-	expectedSecretName = DeploymentName + secretPostfix
+	expectedSecretName = secretName
 	strategyWebhook    = "webhook"
 	testBytes          = 123
 	testnamespace      = "keptn-ns"
@@ -35,7 +35,7 @@ func TestReconcileCertificate_Create(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -62,7 +62,7 @@ func TestReconcileCertificate_Update(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -89,7 +89,7 @@ func TestReconcileCertificate_ExistingSecretWithValidCertificate(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -419,7 +419,7 @@ func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificat
 
 	request := reconcile.Request{
 		NamespacedName: types.NamespacedName{
-			Name:      DeploymentName,
+			Name:      "klc-controller-manager",
 			Namespace: testnamespace,
 		},
 	}

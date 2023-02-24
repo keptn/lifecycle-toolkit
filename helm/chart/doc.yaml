@@ -247,6 +247,8 @@
 ## @param   metricsOperatorController.manager.image.repository specify registry for manager image
 ## @param   metricsOperatorController.manager.image.tag  select tag for manager image
 
+## @param   metricsOperatorController.manager.env.exposeKeptnMetrics enable metrics exporter
+
 ## @extra  metricsOperatorController.manager.livenessProbe custom livenessprobe for manager container
 ## @skip   metricsOperatorController.manager.livenessProbe.httpGet.path
 ## @skip   metricsOperatorController.manager.livenessProbe.httpGet.port

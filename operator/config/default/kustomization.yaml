@@ -11,5 +11,4 @@ bases:
 - ../metrics
 
 patchesStrategicMerge:
-- manager_auth_proxy_patch.yaml
 - webhooknamespaces_patch.yaml

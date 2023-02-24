@@ -42,7 +42,7 @@ spec:
 * **name** Unique name of this task.
   This must be an alphanumeric string and, by convention, is all lowercase.
   It can use the special characters `_`, `-` ... <what others>.
-  It should not inclue spaces.
+  It should not include spaces.
 
 * **function** - Code to be executed.
   This can be expressed as one of the following:

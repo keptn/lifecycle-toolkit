@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	FlagCertificateDirectory   = "certs-dir"
-	FlagCertificateFileName    = "cert"
-	FlagCertificateKeyFileName = "cert-key"
-	SecretCertsName            = "klt-certs"
+	flagCertificateDirectory   = "certs-dir"
+	flagCertificateFileName    = "cert"
+	flagCertificateKeyFileName = "cert-key"
+	secretCertsName            = "klt-certs"
 )
 
 var (
@@ -69,7 +69,7 @@ func (builder Builder) Run(webhookManager manager.Manager) error {
 	builder.GetManagerProvider().SetupWebhookServer(webhookManager)
 
 	certificates.
-		NewCertificateWatcher(webhookManager, builder.namespace, SecretCertsName, ctrl.Log.WithName("Webhook Cert Manager")).
+		NewCertificateWatcher(webhookManager, builder.namespace, secretCertsName, ctrl.Log.WithName("Webhook Cert Manager")).
 		WaitForCertificates()
 
 	signalHandler := ctrl.SetupSignalHandler()
@@ -78,8 +78,8 @@ func (builder Builder) Run(webhookManager manager.Manager) error {
 }
 
 func addFlags() {
-	flag.StringVar(&certificateDirectory, FlagCertificateDirectory, "/tmp/webhook/certs", "Directory to look certificates for.")
-	flag.StringVar(&certificateFileName, FlagCertificateFileName, "tls.crt", "File name for the public certificate.")
-	flag.StringVar(&certificateKeyFileName, FlagCertificateKeyFileName, "tls.key", "File name for the private key.")
+	flag.StringVar(&certificateDirectory, flagCertificateDirectory, "/tmp/webhook/certs", "Directory to look certificates for.")
+	flag.StringVar(&certificateFileName, flagCertificateFileName, "tls.crt", "File name for the public certificate.")
+	flag.StringVar(&certificateKeyFileName, flagCertificateKeyFileName, "tls.key", "File name for the private key.")
 	flag.Parse()
 }

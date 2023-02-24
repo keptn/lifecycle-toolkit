@@ -34,7 +34,9 @@ func init() {
 }
 
 type envConfig struct {
-	KLTNamespace string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+	KLTNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"app.kubernetes.io/part-of"`
+	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"keptn-lifecycle-toolkit"`
 }
 
 func main() {
@@ -88,6 +90,9 @@ func main() {
 		CancelMgrFunc: nil,
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
 		Namespace:     env.KLTNamespace,
+		MatchLabels: map[string]string{
+			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
+		},
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 		os.Exit(1)

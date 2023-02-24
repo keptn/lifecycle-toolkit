@@ -5,6 +5,7 @@ metadata:
   name: controller-manager
   namespace: system
   labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: controller-manager
 spec:
   selector:

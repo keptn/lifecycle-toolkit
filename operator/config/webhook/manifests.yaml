@@ -4,8 +4,6 @@ kind: MutatingWebhookConfiguration
 metadata:
   creationTimestamp: null
   name: mutating-webhook-configuration
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
 webhooks:
 - admissionReviewVersions:
   - v1

@@ -61,13 +61,8 @@ release-helm-manifests: helmify
 	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
 
 .PHONY: helm-package
-helm-package: clean-helm-charts build-release-manifests release-helm-manifests
+helm-package: build-release-manifests release-helm-manifests
 
-.PHONY: clean-helm-charts
-clean-helm-charts:
-	@if test -f "/helm/chart" ; then \
-		rm "./helm/chart"; \
-	fi
 
 .PHONY: build-release-manifests
 build-release-manifests:

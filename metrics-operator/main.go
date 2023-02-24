@@ -30,7 +30,9 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
@@ -39,7 +41,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -77,9 +78,11 @@ func main() {
 	}
 	var metricsAddr string
 	var enableLeaderElection bool
+	var disableWebhook bool
 	var probeAddr string
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
+	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
@@ -137,6 +140,10 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
+	if err = (&metricsv1alpha2.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
@@ -148,10 +155,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	setupLog.Info("starting manager")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		setupLog.Error(err, "problem running manager")
-		os.Exit(1)
+	if !disableWebhook {
+		webhookBuilder := webhook.NewWebhookBuilder().
+			SetNamespace(env.PodNamespace).
+			SetPodName(env.PodName).
+			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+
+		setupLog.Info("starting webhook and manager")
+		if err1 := webhookBuilder.Run(mgr); err1 != nil {
+			setupLog.Error(err, "problem running manager")
+			os.Exit(1)
+		}
+
+	} else {
+		flag.Parse()
+		setupLog.Info("starting manager")
+		setupLog.Info("Keptn metrics-operator is alive")
+		if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+			setupLog.Error(err, "problem running manager")
+			os.Exit(1)
+		}
 	}
 }
 
@@ -170,6 +193,6 @@ func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
 
-	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
-	adapter.RunAdapter(ctx)
+	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
+	metricsAdapter.RunAdapter(ctx)
 }

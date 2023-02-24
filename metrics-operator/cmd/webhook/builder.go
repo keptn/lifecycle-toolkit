@@ -15,7 +15,7 @@ const (
 	FlagCertificateDirectory   = "certs-dir"
 	FlagCertificateFileName    = "cert"
 	FlagCertificateKeyFileName = "cert-key"
-	SecretCertsName            = "klc-controller-manager-certs"
+	SecretCertsName            = "klt-certs"
 )
 
 var (

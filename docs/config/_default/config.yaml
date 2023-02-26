@@ -1,5 +1,5 @@
 _merge: deep
-title: keptn
+title: Keptn
 
 module:
   hugoVersion:
@@ -23,5 +23,5 @@ module:
   proxy: direct
 languages:
   en:
-    title: Docsy
+    title: Keptn
     contentDir: "content/en"

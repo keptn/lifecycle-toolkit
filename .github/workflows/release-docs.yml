@@ -35,6 +35,7 @@ jobs:
         with:
           ref: "page"
           path: ${{ inputs.page_dir }}
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
       - name: Get Latest Release Information
         uses: octokit/request-action@v2.x

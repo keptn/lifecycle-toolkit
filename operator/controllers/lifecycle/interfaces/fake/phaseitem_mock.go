@@ -4,12 +4,13 @@
 package fake
 
 import (
+	"sync"
+	"time"
+
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
-	"sync"
-	"time"
 )
 
 // PhaseItemMock is a mock implementation of interfaces.PhaseItem.

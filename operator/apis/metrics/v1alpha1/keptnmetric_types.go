@@ -50,11 +50,11 @@ type ProviderRef struct {
 	Name string `json:"name"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
-//+kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
-//+kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
+// +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
+// +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {
@@ -65,7 +65,7 @@ type KeptnMetric struct {
 	Status KeptnMetricStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnMetricList contains a list of KeptnMetric
 type KeptnMetricList struct {

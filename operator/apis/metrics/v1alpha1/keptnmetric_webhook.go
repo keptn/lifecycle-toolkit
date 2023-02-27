@@ -36,7 +36,7 @@ func (s *KeptnMetric) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha1-keptnmetric,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=keptnmetrics,verbs=create;update,versions=v1alpha1,name=vkeptnmetric.kb.io,admissionReviewVersions=v1
+// +kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha1-keptnmetric,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=keptnmetrics,verbs=create;update,versions=v1alpha1,name=vkeptnmetric.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &KeptnMetric{}
 
@@ -60,7 +60,7 @@ func (s *KeptnMetric) ValidateDelete() error {
 }
 
 func (s *KeptnMetric) validateKeptnMetric() error {
-	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
+	var allErrs field.ErrorList // defined as a list to allow returning multiple validation errors
 	var err *field.Error
 	if err = s.validateProvider(); err != nil {
 		allErrs = append(allErrs, err)

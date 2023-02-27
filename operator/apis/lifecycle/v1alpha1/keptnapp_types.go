@@ -48,8 +48,8 @@ type KeptnWorkloadRef struct {
 	Version string `json:"version"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // KeptnApp is the Schema for the keptnapps API
 type KeptnApp struct {
@@ -60,7 +60,7 @@ type KeptnApp struct {
 	Status KeptnAppStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnAppList contains a list of KeptnApp
 type KeptnAppList struct {

@@ -54,15 +54,15 @@ type KeptnWorkloadInstanceReconciler struct {
 	TracerFactory controllercommon.TracerFactory
 }
 
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
-//+kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
-//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
-//+kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets;daemonsets,verbs=get;list;watch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
+// +kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+// +kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets;daemonsets,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -74,7 +74,7 @@ type KeptnWorkloadInstanceReconciler struct {
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for Keptn Workload Instance")
 
-	//retrieve workload instance
+	// retrieve workload instance
 	workloadInstance := &klcv1alpha2.KeptnWorkloadInstance{}
 	err := r.Get(ctx, req.NamespacedName, workloadInstance)
 	if errors.IsNotFound(err) {
@@ -96,7 +96,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	//Wait for pre-deployment checks of Workload
+	// Wait for pre-deployment checks of Workload
 	phase := apicommon.PhaseWorkloadPreDeployment
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
@@ -126,7 +126,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	//Wait for pre-evaluation checks of Workload
+	// Wait for pre-evaluation checks of Workload
 	phase = apicommon.PhaseWorkloadPreEvaluation
 	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
@@ -138,7 +138,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	//Wait for deployment of Workload
+	// Wait for deployment of Workload
 	phase = apicommon.PhaseWorkloadDeployment
 	if !workloadInstance.IsDeploymentSucceeded() {
 		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
@@ -150,7 +150,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	//Wait for post-deployment checks of Workload
+	// Wait for post-deployment checks of Workload
 	phase = apicommon.PhaseWorkloadPostDeployment
 	if !workloadInstance.IsPostDeploymentSucceeded() {
 		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
@@ -162,7 +162,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	//Wait for post-evaluation checks of Workload
+	// Wait for post-evaluation checks of Workload
 	phase = apicommon.PhaseWorkloadPostEvaluation
 	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {

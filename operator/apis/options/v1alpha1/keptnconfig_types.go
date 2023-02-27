@@ -42,8 +42,8 @@ type KeptnConfigStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // KeptnConfig is the Schema for the keptnconfigs API
 type KeptnConfig struct {
@@ -54,7 +54,7 @@ type KeptnConfig struct {
 	Status KeptnConfigStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnConfigList contains a list of KeptnConfig
 type KeptnConfigList struct {

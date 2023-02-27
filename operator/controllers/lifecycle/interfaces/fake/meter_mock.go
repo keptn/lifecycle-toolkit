@@ -5,12 +5,13 @@ package fake
 
 import (
 	"context"
+	"sync"
+
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
 	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
 	"go.opentelemetry.io/otel/metric/instrument/syncint64"
-	"sync"
 )
 
 // IMeterMock is a mock implementation of interfaces.IMeter.

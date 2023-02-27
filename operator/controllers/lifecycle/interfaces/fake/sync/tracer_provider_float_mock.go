@@ -4,9 +4,10 @@
 package fake
 
 import (
+	"sync"
+
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
-	"sync"
 )
 
 // ITracerProviderSyncFloat64Mock is a mock implementation of interfaces.ITracerProviderSyncFloat64.

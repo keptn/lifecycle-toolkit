@@ -66,16 +66,16 @@ type EvaluationStatusItem struct {
 	Message string            `json:"message,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:resource:path=keptnevaluations,shortName=ke
-//+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
-//+kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
-//+kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
-//+kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
-//+kubebuilder:printcolumn:name="RetryCount",type=string,JSONPath=`.status.retryCount`
-//+kubebuilder:printcolumn:name="EvaluationStatus",type=string,JSONPath=`.status.evaluationStatus`
-//+kubebuilder:printcolumn:name="OverallStatus",type=string,JSONPath=`.status.overallStatus`
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=keptnevaluations,shortName=ke
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
+// +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
+// +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
+// +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
+// +kubebuilder:printcolumn:name="RetryCount",type=string,JSONPath=`.status.retryCount`
+// +kubebuilder:printcolumn:name="EvaluationStatus",type=string,JSONPath=`.status.evaluationStatus`
+// +kubebuilder:printcolumn:name="OverallStatus",type=string,JSONPath=`.status.overallStatus`
 
 // KeptnEvaluation is the Schema for the keptnevaluations API
 type KeptnEvaluation struct {
@@ -86,7 +86,7 @@ type KeptnEvaluation struct {
 	Status KeptnEvaluationStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnEvaluationList contains a list of KeptnEvaluation
 type KeptnEvaluationList struct {

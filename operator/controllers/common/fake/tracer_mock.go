@@ -5,8 +5,9 @@ package fake
 
 import (
 	"context"
-	"go.opentelemetry.io/otel/trace"
 	"sync"
+
+	"go.opentelemetry.io/otel/trace"
 )
 
 // ITracerMock is a mock implementation of interfaces.ITracer.

@@ -38,10 +38,10 @@ type KeptnEvaluationProviderStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:subresource:status
-//+kubebuilder:resource:path=keptnevaluationproviders,shortName=kep
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=keptnevaluationproviders,shortName=kep
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
 type KeptnEvaluationProvider struct {
@@ -52,7 +52,7 @@ type KeptnEvaluationProvider struct {
 	Status KeptnEvaluationProviderStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
 type KeptnEvaluationProviderList struct {

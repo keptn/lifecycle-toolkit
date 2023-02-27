@@ -81,9 +81,9 @@ type EvaluationStatus struct {
 	EndTime        metav1.Time       `json:"endTime,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
@@ -103,7 +103,7 @@ type KeptnWorkloadInstance struct {
 	Status KeptnWorkloadInstanceStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 type KeptnWorkloadInstanceList struct {
@@ -402,12 +402,12 @@ func (w *KeptnWorkloadInstance) CancelRemainingPhases(phase common.KeptnPhaseTyp
 	if phase == common.PhaseWorkloadPostEvaluation {
 		return
 	}
-	//cancel everything if app pre-eval tasks have failed
+	// cancel everything if app pre-eval tasks have failed
 	if phase == common.PhaseAppPreEvaluation {
 		w.Status.PreDeploymentStatus = common.StateCancelled
 		w.Status.PreDeploymentEvaluationStatus = common.StateCancelled
 	}
-	//cancel deployment and post-deployment tasks if workload pre-eval tasks have failed
+	// cancel deployment and post-deployment tasks if workload pre-eval tasks have failed
 	w.Status.DeploymentStatus = common.StateCancelled
 	w.Status.PostDeploymentStatus = common.StateCancelled
 	w.Status.PostDeploymentEvaluationStatus = common.StateCancelled

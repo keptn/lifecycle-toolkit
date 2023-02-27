@@ -4,8 +4,9 @@
 package fake
 
 import (
-	"go.opentelemetry.io/otel/attribute"
 	"sync"
+
+	"go.opentelemetry.io/otel/attribute"
 )
 
 // ActiveMetricsObjectMock is a mock implementation of common.ActiveMetricsObject.

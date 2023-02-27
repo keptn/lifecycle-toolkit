@@ -58,7 +58,8 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	//+kubebuilder:scaffold:imports
+	// nolint:gci
+	// +kubebuilder:scaffold:imports
 )
 
 var (
@@ -73,7 +74,7 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
-	//+kubebuilder:scaffold:scheme
+	// +kubebuilder:scaffold:scheme
 }
 
 type envConfig struct {
@@ -316,7 +317,7 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+	// +kubebuilder:scaffold:builder
 
 	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
 

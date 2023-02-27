@@ -4,8 +4,9 @@
 package fake
 
 import (
-	"go.opentelemetry.io/otel/trace"
 	"sync"
+
+	"go.opentelemetry.io/otel/trace"
 )
 
 // TracerFactoryMock is a mock implementation of interfaces.TracerFactory.

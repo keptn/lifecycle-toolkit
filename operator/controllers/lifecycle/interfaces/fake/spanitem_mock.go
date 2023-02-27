@@ -4,9 +4,10 @@
 package fake
 
 import (
+	"sync"
+
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	"sync"
 )
 
 // SpanItemMock is a mock implementation of common.SpanItem.

@@ -18,9 +18,6 @@ linters:
 issues:
   exclude-rules:
     - linters:
-        - gci
-      text: '//+kubebuilder'
-    - linters:
         - containedctx
         - gocyclo
         - gocognit

@@ -41,10 +41,10 @@ type KeptnEvaluationDefinitionStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:subresource:status
-//+kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
 
 // KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
 type KeptnEvaluationDefinition struct {
@@ -55,7 +55,7 @@ type KeptnEvaluationDefinition struct {
 	Status KeptnEvaluationDefinitionStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionList struct {

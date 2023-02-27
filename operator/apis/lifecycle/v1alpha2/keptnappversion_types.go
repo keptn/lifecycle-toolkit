@@ -72,11 +72,11 @@ type WorkloadStatus struct {
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:resource:path=keptnappversions,shortName=kav
-//+kubebuilder:subresource:status
-//+kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:resource:path=keptnappversions,shortName=kav
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`
 // +kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.currentPhase`
 // +kubebuilder:printcolumn:name="PreDeploymentStatus",priority=1,type=string,JSONPath=`.status.preDeploymentStatus`
@@ -94,7 +94,7 @@ type KeptnAppVersion struct {
 	Status KeptnAppVersionStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnAppVersionList contains a list of KeptnAppVersion
 type KeptnAppVersionList struct {

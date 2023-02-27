@@ -39,10 +39,10 @@ type KeptnTaskDefinitionReconciler struct {
 	Recorder record.EventRecorder
 }
 
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions/finalizers,verbs=update
-//+kubebuilder:rbac:groups=core,resources=configmaps,verbs=create;get;update;list;watch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions/finalizers,verbs=update
+// +kubebuilder:rbac:groups=core,resources=configmaps,verbs=create;get;update;list;watch
 
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling KeptnTaskDefinition")

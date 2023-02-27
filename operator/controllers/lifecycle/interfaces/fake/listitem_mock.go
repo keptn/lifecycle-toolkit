@@ -4,8 +4,9 @@
 package fake
 
 import (
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
+
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // ListItemMock is a mock implementation of common.ListItem.

@@ -69,9 +69,9 @@ type FunctionStatus struct {
 	ConfigMap string `json:"configMap,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:subresource:status
 
 // KeptnTaskDefinition is the Schema for the keptntaskdefinitions API
 type KeptnTaskDefinition struct {
@@ -82,7 +82,7 @@ type KeptnTaskDefinition struct {
 	Status KeptnTaskDefinitionStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 type KeptnTaskDefinitionList struct {

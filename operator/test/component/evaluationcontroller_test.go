@@ -99,6 +99,22 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 				err = k8sClient.Status().Update(context.TODO(), metric2)
 				Expect(err).To(BeNil())
 
+				evaluationdef := &klcv1alpha3.KeptnEvaluationDefinition{}
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespaceName,
+						Name:      evaluationDefinitionName,
+					}, evaluationdef)
+					g.Expect(err).To(BeNil())
+					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1alpha3.Objective{
+						KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+							Name:      metricName,
+							Namespace: namespaceName,
+						},
+						EvaluationTarget: "<10",
+					}))
+				}, "5s").Should(Succeed())
+
 				By("Create evaluation to start the process")
 
 				evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)

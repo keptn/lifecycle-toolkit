@@ -25,7 +25,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "garbage values",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -42,7 +42,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "Item nan",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -59,7 +59,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "garbage comparison",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -76,7 +76,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "objective nan",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -93,7 +93,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "10>10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -110,7 +110,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "9>10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -127,7 +127,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "11>10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -144,7 +144,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "10<10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -161,7 +161,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "9<10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -178,7 +178,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "11<10",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
@@ -195,7 +195,7 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "invalid op",
 			obj: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},

@@ -29,13 +29,13 @@ type KeptnEvaluationDefinitionSpec struct {
 }
 
 type Objective struct {
-	KeptnMetricRef   KeptnMetricRef `json:"keptnMetricRef"`
-	EvaluationTarget string         `json:"evaluationTarget"`
+	KeptnMetricRef   KeptnMetricReference `json:"keptnMetricRef"`
+	EvaluationTarget string               `json:"evaluationTarget"`
 }
 
-type KeptnMetricRef struct {
+type KeptnMetricReference struct {
 	Name      string `json:"name"`
-	Namespace string `json:"namespace,omitempty"`
+	Namespace string `json:"namespace"`
 }
 
 // KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition

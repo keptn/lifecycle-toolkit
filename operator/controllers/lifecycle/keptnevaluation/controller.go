@@ -212,7 +212,6 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 	}
 	if err != nil {
 		statusItem.Message = err.Error()
-		statusItem.Status = apicommon.StateFailed
 	}
 	// Evaluating SLO
 	check, err := checkValue(query, statusItem)

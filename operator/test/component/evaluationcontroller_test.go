@@ -211,7 +211,7 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
 			Objectives: []klcv1alpha3.Objective{
 				{
-					KeptnMetricRef: klcv1alpha3.KeptnMetricRef{
+					KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 						Name:      objectiveName,
 						Namespace: namespaceName,
 					},

@@ -1,6 +1,7 @@
 package fake
 
 import (
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	lfcv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -28,5 +29,5 @@ func setupSchemes() {
 	utilruntime.Must(lfcv1alpha2.AddToScheme(scheme.Scheme))
 	utilruntime.Must(lfcv1alpha3.AddToScheme(scheme.Scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme.Scheme))
-
+	utilruntime.Must(metricsapi.AddToScheme(scheme.Scheme))
 }

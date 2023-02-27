@@ -114,7 +114,7 @@ You can find a list of all possible feature types [here](#commit-types-and-scope
 
 An example for a pull request title would be:
 
-```
+```bash
 feat(api): New endpoint for feature X (#1234)
 ```
 
@@ -124,7 +124,7 @@ Also, please remove the PR number at the end and just add the issue number.
 
 An example for a PR with breaking changes and the according merge commit:
 
-```
+```bash
 feat(bridge): New button that breaks other things (#345)
 
 BREAKING CHANGE: The new button added with #345 introduces new functionality that is not compatible with the previous type of sent events.
@@ -132,7 +132,7 @@ BREAKING CHANGE: The new button added with #345 introduces new functionality tha
 
 If your breaking change can be explained in a single line you can also use this form:
 
-```
+```bash
 feat(bridge)!: New button that breaks other things (#345)
 ```
 

@@ -1,0 +1,6 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationProvider
+metadata:
+  name: keptnevaluationprovider-sample
+spec:
+  # TODO(user): Add fields here

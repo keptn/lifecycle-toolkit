@@ -174,14 +174,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnevaluationproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptnevaluations
   verbs:
   - create
@@ -309,6 +301,14 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - options.keptn.sh
   resources:

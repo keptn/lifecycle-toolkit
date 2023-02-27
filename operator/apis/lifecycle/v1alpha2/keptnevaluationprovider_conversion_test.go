@@ -1,9 +1,9 @@
-package v1alpha1
+package v1alpha2
 
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -19,7 +19,7 @@ func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 		wantObj *KeptnEvaluationProvider
 	}{
 		{
-			name: "Test that conversion from v1alpha3 to v1alpha1 works",
+			name: "Test that conversion from v1alpha3 to v1alpha2 works",
 			srcObj: &v1alpha3.KeptnEvaluationProvider{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnEvaluationProvider",
@@ -60,7 +60,12 @@ func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 				},
 				Spec: KeptnEvaluationProviderSpec{
 					TargetServer: "my-server",
-					SecretName:   "my-secret-name",
+					SecretKeyRef: corev1.SecretKeySelector{
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: "my-secret-name",
+						},
+						Key: "my-secret-key",
+					},
 				},
 			},
 		},
@@ -91,11 +96,11 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 		wantObj *v1alpha3.KeptnEvaluationProvider
 	}{
 		{
-			name: "Test that conversion from v1alpha1 to v1alpha3 works",
+			name: "Test that conversion from v1alpha2 to v1alpha3 works",
 			src: &KeptnEvaluationProvider{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnEvaluationProvider",
-					APIVersion: "lifecycle.keptn.sh/v1alpha1",
+					APIVersion: "lifecycle.keptn.sh/v1alpha2",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
@@ -109,7 +114,12 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 				},
 				Spec: KeptnEvaluationProviderSpec{
 					TargetServer: "my-server",
-					SecretName:   "my-secret-name",
+					SecretKeyRef: corev1.SecretKeySelector{
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: "my-secret-name",
+						},
+						Key: "apiToken",
+					},
 				},
 				Status: KeptnEvaluationProviderStatus{},
 			},

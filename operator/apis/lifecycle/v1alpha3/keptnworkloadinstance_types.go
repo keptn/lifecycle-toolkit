@@ -77,6 +77,7 @@ type ItemStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`

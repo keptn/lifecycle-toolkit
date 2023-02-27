@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha3
 
 import (
 	"strings"
@@ -39,8 +39,8 @@ type KeptnEvaluationProviderStatus struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:storageversion
 //+kubebuilder:subresource:status
-//+kubebuilder:resource:path=keptnevaluationproviders,shortName=kep
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
 type KeptnEvaluationProvider struct {

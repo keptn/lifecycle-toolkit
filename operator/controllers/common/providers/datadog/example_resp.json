@@ -1,0 +1,82 @@
+{
+  "data": [
+    {
+      "created_at": 1677413713,
+      "creator": {
+        "email": "sudiptobaral.me@gmail.com",
+        "handle": "sudiptobaral.me@gmail.com",
+        "name": "sudipto baral"
+      },
+      "description": "string",
+      "id": "691bd5bdd78b5b848a03efc882f6bccb",
+      "modified_at": 1677491641,
+      "monitor_tags": [
+
+      ],
+      "name": "TEST_SLO_1",
+      "query": {
+        "denominator": "sum:httpservice.hits{!code:3xx}.as_count()",
+        "numerator": "sum:httpservice.hits{code:2xx}.as_count()"
+      },
+      "tags": [
+        "app:core",
+        "env:prod"
+      ],
+      "target_threshold": 97,
+      "thresholds": [
+        {
+          "target": 97,
+          "target_display": "97.",
+          "timeframe": "7d",
+          "warning": 98,
+          "warning_display": "98."
+        }
+      ],
+      "timeframe": "7d",
+      "type": "metric",
+      "warning_threshold": 98
+    },
+    {
+      "created_at": 1677491606,
+      "creator": {
+        "email": "sudiptobaral.me@gmail.com",
+        "handle": "sudiptobaral.me@gmail.com",
+        "name": "sudipto baral"
+      },
+      "description": "string",
+      "id": "9b1f168123175d6b86a8a6dfb8193f6f",
+      "modified_at": 1677491606,
+      "monitor_tags": [
+
+      ],
+      "name": "TEST_SLO_2",
+      "query": {
+        "denominator": "sum:httpservice.hits{!code:3xx}.as_count()",
+        "numerator": "sum:httpservice.hits{code:2xx}.as_count()"
+      },
+      "tags": [
+        "app:core",
+        "env:prod"
+      ],
+      "target_threshold": 97,
+      "thresholds": [
+        {
+          "target": 97,
+          "target_display": "97.",
+          "timeframe": "7d",
+          "warning": 98,
+          "warning_display": "98."
+        }
+      ],
+      "timeframe": "7d",
+      "type": "metric",
+      "warning_threshold": 98
+    }
+  ],
+  "metadata": {
+    "page": {
+      "total_count": 2,
+      "total_filtered_count": 2
+    }
+  }
+}

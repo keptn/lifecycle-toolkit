@@ -1,0 +1,20 @@
+extends: default
+
+rules:
+  document-start: disable
+  line-length:
+    level: warning
+    max: 150  
+  brackets:
+    forbid: false
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: -1
+    max-spaces-inside-empty: -1
+  trailing-spaces: disable
+  indentation:
+    indent-sequences: whatever
+  truthy: disable
+  empty-lines:
+    max-end: 2
+    

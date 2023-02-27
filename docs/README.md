@@ -16,8 +16,9 @@ make clone
 make build
 make server
 ```
+Note: If the above command is not working try with `sudo` command.
 
-After the server is running on <http://localhost:1314/docs-dev>.
+After the server is running on <http://localhost:1314>.
 Any modification in the docs folder will be reflected on the server under the dev revision.
 You can modify the content in realtime to verify the correct behaviour of links and such.
 

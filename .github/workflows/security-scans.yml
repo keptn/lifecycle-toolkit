@@ -50,7 +50,7 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts from last successful build of main branch
-        uses: dawidd6/action-download-artifact@v2.25.0
+        uses: dawidd6/action-download-artifact@v2.26.0
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build

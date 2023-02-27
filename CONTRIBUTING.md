@@ -7,8 +7,9 @@ Please, explore the options below to learn more about how you can contribute.
 
 ## Prerequisites
 
-## Ancillary Technologies
-You should understand some ancillary technologies
+## Related Technologies
+
+You should understand some related technologies
 to effectively use and contribute to the Keptn lifecycle-toolkit.
 This section provides links to some materials that can help your learning.
 The information has been gathered from the community and is subject to alteration.

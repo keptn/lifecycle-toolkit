@@ -11,11 +11,11 @@ To verify your changes to the dev documentations you can use the makefile:
 
 ```shell
 cd  lifecycle-toolkit/docs
-
 make clone
 make build
 make server
 ```
+
 Note: If the above command is not working try with `sudo` command.
 
 After the server is running on <http://localhost:1314>.

@@ -1,0 +1,85 @@
+name: Release Documentation
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: "Tag for the functions runner image"
+        type: "string"
+        required: true
+      page_dir:
+        description: "Root directory of the website"
+        type: "string"
+        required: true
+        default: "./tmp/page"
+      docs_dir:
+        description: "Root directory of the website"
+        type: "string"
+        required: true
+        default: "/docs"
+      dry_run:
+        description: "Flag for testing"
+        type: "boolean"
+        default: false
+        required: false
+
+jobs:
+  release-docs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Checkout - page branch
+        uses: actions/checkout@v3
+        with:
+          ref: "page"
+          path: ${{ inputs.page_dir }}
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
+
+      - name: Get Latest Release Information
+        uses: octokit/request-action@v2.x
+        id: latest_release
+        with:
+          route: GET /repos/:owner/:repository/releases/latest
+          repository: lifecycle-toolkit
+          owner: keptn
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detect needed Folder Operations
+        id: folder
+        run: |
+            CURRENT_VERSION=`cat ${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/version || "unknown"`
+            echo $CURRENT_VERSION
+            if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" == "${{ inputs.tag_name }}" ]]; then
+              if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" != "$CURRENT_VERSION" ]]; then
+                echo "migrate=docs-$CURRENT_VERSION" >> $GITHUB_OUTPUT
+              fi
+              echo "name=docs" >> $GITHUB_OUTPUT
+              echo "latest=true" >> $GITHUB_OUTPUT
+            else
+              echo "name=docs-${{ inputs.tag_name }}" >> $GITHUB_OUTPUT
+            fi
+
+      - name: Move old latest release documentation folder
+        if: ${{steps.folder.outputs.migrate }}
+        run: cp -R "${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/." "${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/${{ steps.folder.outputs.migrate }}"
+
+      - name: Copy configuration
+        if: ${{steps.folder.outputs.latest }}
+        run: |
+          cp -R ./docs/. "${{ inputs.page_dir }}${{ inputs.docs_dir }}"
+
+      - name: Copy documentation folder
+        run: |
+            cp -R ./docs/content/en/docs/. "${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/${{ steps.folder.outputs.name}}"
+            echo "${{ inputs.tag_name }}" > "${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/${{ steps.folder.outputs.name}}/version"
+
+      - name: Push content
+        if: ${{ inputs.dry_run != true }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          cwd: ${{ inputs.page_dir }}
+          message: "releasing documentation ${{ inputs.tag_name }}"

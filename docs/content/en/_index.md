@@ -1,7 +1,6 @@
-+++
-title = "Home"
-
-+++
+---
+title: Home
+---
 
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable-next-line MD013 -->

@@ -3,9 +3,6 @@ title: Getting Started
 linktitle: Getting Started
 description: Learn how to use the Keptn Lifecycle Toolkit.
 weight: 15
-cascade:
-github_subdir: "docs/content/en/docs"
-path_base_for_github_subdir: "/content/en/docs-dev"
 ---
 
 `kubectl create -f deployment.yaml` will "blindly" deploy workloads, but who needs to be notified that this deployment

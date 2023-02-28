@@ -12,6 +12,8 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
+      - "netlify.toml"
+
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
@@ -289,23 +291,6 @@ jobs:
         with:
           name: ${{ matrix.config.name }}-manifest
           path: ${{ matrix.config.folder }}/config/rendered/release.yaml
-
-  update-docs:
-    name: Update Documentation
-    needs:
-      - prepare_ci_run
-    if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Update Documentation
-        uses: ./.github/actions/update-documentation
-        with:
-          version: "dev"
-          klt-repo: ${{ github.workspace }}
-          token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
 
   helm_charts_build:
     name: Publish helm chart changes to charts repo

@@ -1,42 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 # This kustomization.yaml is not intended to be run by itself,
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/lifecycle.keptn.sh_keptntaskdefinitions.yaml
-- bases/lifecycle.keptn.sh_keptntasks.yaml
-- bases/lifecycle.keptn.sh_keptnapps.yaml
-- bases/lifecycle.keptn.sh_keptnworkloads.yaml
-- bases/lifecycle.keptn.sh_keptnworkloadinstances.yaml
-- bases/lifecycle.keptn.sh_keptnappversions.yaml
-- bases/lifecycle.keptn.sh_keptnevaluationdefinitions.yaml
-- bases/lifecycle.keptn.sh_keptnevaluationproviders.yaml
-- bases/lifecycle.keptn.sh_keptnevaluations.yaml
-- bases/options.keptn.sh_keptnconfigs.yaml
+  - bases/lifecycle.keptn.sh_keptntaskdefinitions.yaml
+  - bases/lifecycle.keptn.sh_keptntasks.yaml
+  - bases/lifecycle.keptn.sh_keptnapps.yaml
+  - bases/lifecycle.keptn.sh_keptnworkloads.yaml
+  - bases/lifecycle.keptn.sh_keptnworkloadinstances.yaml
+  - bases/lifecycle.keptn.sh_keptnappversions.yaml
+  - bases/lifecycle.keptn.sh_keptnevaluationdefinitions.yaml
+  - bases/lifecycle.keptn.sh_keptnevaluationproviders.yaml
+  - bases/lifecycle.keptn.sh_keptnevaluations.yaml
+  - bases/options.keptn.sh_keptnconfigs.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
-patchesStrategicMerge:
-# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
-# patches here are for enabling the conversion webhook for each CRD
-#- patches/webhook_in_keptntaskdefinitions.yaml
-#- patches/webhook_in_keptntasks.yaml
-- patches/webhook_in_keptnapps.yaml
-#- patches/webhook_in_keptnworkloads.yaml
-- patches/webhook_in_keptnworkloadinstances.yaml
-- patches/webhook_in_keptnappversions.yaml
-#- patches/webhook_in_keptnevaluationdefinitions.yaml
-- patches/webhook_in_keptnevaluationproviders.yaml
-#- patches/webhook_in_keptnevaluations.yaml
-#- patches/webhook_in_keptnconfigs.yaml
-#- patches/webhook_in_keptnapps.yaml
-#- patches/webhook_in_keptnappversions.yaml
-#- patches/webhook_in_keptnworkloadinstances.yaml
-#- patches/webhook_in_keptnevaluationproviders.yaml
+patches:
+  # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
+  # patches here are for enabling the conversion webhook for each CRD
+  #- path: patches/webhook_in_keptntaskdefinitions.yaml
+  #- path: patches/webhook_in_keptntasks.yaml
+  - path: patches/webhook_in_keptnapps.yaml
+  #- path: patches/webhook_in_keptnworkloads.yaml
+  - path: patches/webhook_in_keptnworkloadinstances.yaml
+  - path: patches/webhook_in_keptnappversions.yaml
+  #- path: patches/webhook_in_keptnevaluationdefinitions.yaml
+  - path: patches/webhook_in_keptnevaluationproviders.yaml
+  #- path: patches/webhook_in_keptnevaluations.yaml
+  #- path: patches/webhook_in_keptnconfigs.yaml
+  #- path: patches/webhook_in_keptnapps.yaml
+  #- path: patches/webhook_in_keptnappversions.yaml
+  #- path: patches/webhook_in_keptnworkloadinstances.yaml
+  #- path: patches/webhook_in_keptnevaluationproviders.yaml
 #+kubebuilder:scaffold:crdkustomizewebhookpatch
 
 # the following config is for teaching kustomize how to do kustomization for CRDs.
 configurations:
-- kustomizeconfig.yaml
+  - kustomizeconfig.yaml
 
-commonLabels:
-  crdGroup: lifecycle.keptn.sh
-  app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+      crdGroup: lifecycle.keptn.sh

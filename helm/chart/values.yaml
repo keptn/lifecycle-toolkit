@@ -16,7 +16,7 @@ keptnScheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202302241677231674"
+      tag: "202302281677584335"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -58,7 +58,7 @@ klcControllerManager:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/keptn-lifecycle-operator
-      tag: "202302241677231674"
+      tag: "202302281677584335"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -125,7 +125,7 @@ kltCertManager:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/klt-cert-manager
-      tag: "202302241677231674"
+      tag: "202302281677584335"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -169,7 +169,7 @@ metricsOperatorController:
       exposeKeptnMetrics: "true"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: "202302241677231674"
+      tag: "202302281677584335"
     livenessProbe:
       httpGet:
         path: /healthz

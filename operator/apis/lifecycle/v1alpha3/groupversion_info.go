@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API group
-//+kubebuilder:object:generate=true
-//+groupName=lifecycle.keptn.sh
+// +kubebuilder:object:generate=true
+// +groupName=lifecycle.keptn.sh
 package v1alpha3
 
 import (

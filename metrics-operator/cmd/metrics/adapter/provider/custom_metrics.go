@@ -2,11 +2,11 @@ package provider
 
 import (
 	"fmt"
-	"k8s.io/apimachinery/pkg/types"
 	"sync"
 
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )

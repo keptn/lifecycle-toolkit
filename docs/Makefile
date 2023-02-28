@@ -1,4 +1,5 @@
-VOLUMES := -v $(CURDIR):/src 
+ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+VOLUMES := -v $(ROOT_DIR):/src 
 # renovate: datasource=docker depName=klakegg/hugo
 HUGO_VERSION := 0.105.0-ext
 IMAGE := klakegg/hugo:$(HUGO_VERSION)

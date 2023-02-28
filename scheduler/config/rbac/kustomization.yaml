@@ -17,5 +17,5 @@ resources:
   # which protects your /metrics endpoint.
   - auth_proxy_service.yaml
   - auth_proxy_role.yaml
-- auth_proxy_role_binding.yaml
-- auth_proxy_client_clusterrole.yaml
+  - auth_proxy_role_binding.yaml
+  - auth_proxy_client_clusterrole.yaml

@@ -50,7 +50,11 @@ jobs:
       - name: Detect needed Folder Operations
         id: folder
         run: |
+<<<<<<< HEAD
             CURRENT_VERSION=`cat ${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/version || echo "unknown"`
+=======
+            CURRENT_VERSION=`cat ${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/version || "unknown"`
+>>>>>>> 09013de (docs: add Netlify configuration and advanced build (#892))
             echo $CURRENT_VERSION
             if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" == "${{ inputs.tag_name }}" ]]; then
               if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" != "$CURRENT_VERSION" ]]; then

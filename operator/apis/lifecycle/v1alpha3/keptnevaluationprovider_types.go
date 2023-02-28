@@ -17,56 +17,47 @@ limitations under the License.
 package v1alpha3
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// KeptnEvaluationDefinitionSpec defines the desired state of KeptnEvaluationDefinition
-type KeptnEvaluationDefinitionSpec struct {
-	Objectives []Objective `json:"objectives"`
+// KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
+type KeptnEvaluationProviderSpec struct {
+	TargetServer string                   `json:"targetServer"`
+	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
-type Objective struct {
-	KeptnMetricRef   KeptnMetricReference `json:"keptnMetricRef"`
-	EvaluationTarget string               `json:"evaluationTarget"`
-}
-
-type KeptnMetricReference struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
-
-// KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition
-type KeptnEvaluationDefinitionStatus struct {
+// KeptnEvaluationProviderStatus defines the observed state of KeptnEvaluationProvider
+type KeptnEvaluationProviderStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 //+kubebuilder:storageversion
-//+kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
+//+kubebuilder:subresource:status
 
-// KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
-type KeptnEvaluationDefinition struct {
+// KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
+type KeptnEvaluationProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnEvaluationDefinitionSpec   `json:"spec,omitempty"`
-	Status KeptnEvaluationDefinitionStatus `json:"status,omitempty"`
+	Spec   KeptnEvaluationProviderSpec   `json:"spec,omitempty"`
+	Status KeptnEvaluationProviderStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
-type KeptnEvaluationDefinitionList struct {
+// KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
+type KeptnEvaluationProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KeptnEvaluationDefinition `json:"items"`
+	Items           []KeptnEvaluationProvider `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KeptnEvaluationDefinition{}, &KeptnEvaluationDefinitionList{})
+	SchemeBuilder.Register(&KeptnEvaluationProvider{}, &KeptnEvaluationProviderList{})
 }

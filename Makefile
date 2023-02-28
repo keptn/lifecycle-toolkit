@@ -6,6 +6,8 @@ CERT_MANAGER_VERSION ?= v1.11.0
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.11.1
+# renovate: datasource=github-tags depName=keptn/helmify
+HELMIFY_VERSION ?= b1da2bb756ec4328bac7645da037a6fb4e6f30cf
 CHART_VERSION = v0.5.0 # x-release-please-version
 
 
@@ -28,7 +30,7 @@ HELMIFY ?=  $(LOCALBIN)/helmify
 .PHONY: helmify
 helmify: $(HELMIFY) ## Download helmify locally if necessary.
 $(HELMIFY): $(LOCALBIN)
-	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@b1da2bb756ec4328bac7645da037a6fb4e6f30cf
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@$(HELMIFY_VERSION)
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:

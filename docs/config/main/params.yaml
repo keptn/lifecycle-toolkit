@@ -5,8 +5,6 @@ github_subdir: docs
 
 versions:
   - url: /docs/
-    version: branch-preview
-  - url: https://main.lifecycle-test.keptn.sh/docs
-    version: main
+    version: development
   - url: https://lifecycle-test.keptn.sh/docs
     version: latest

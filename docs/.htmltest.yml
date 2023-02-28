@@ -2,5 +2,7 @@
 CheckDoctype: false
 IgnoreDirs:
   - favicons
-IgnoreURLs: []
+IgnoreURLs:
+  - "linkedin.com"
+  - "localhost"
 StripQueryString: false

@@ -20,4 +20,4 @@ clean:
 	docker run --rm -t $(VOLUMES) $(IMAGE) --cleanDestinationDir
 
 htmltest: build
-	docker run --rm -t -v $(ROOT_DIR):/test wjdp/htmltest -s -c .htmltest.yml public
+	docker run --rm -t -v $(ROOT_DIR):/test wjdp/htmltest -c .htmltest.yml public

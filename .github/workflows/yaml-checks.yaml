@@ -20,5 +20,4 @@ jobs:
 
       - name: Lint YAML files
         run: yamllint .github docs
-
-    
+        

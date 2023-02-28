@@ -110,3 +110,5 @@ markdownlint:
 
 markdownlint-fix:
 	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --fix --ignore "/workdir/CHANGELOG.md"
+
+include docs/Makefile

@@ -1,9 +1,3 @@
-## @section OpenTelemetry
-## @param otelCollector.url Sets the URL for the open telemetry collector
-
-## @section General
-## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
-
 ## @section Keptn Scheduler
 ## @extra keptnScheduler.keptnScheduler.containerSecurityContext Sets security context
 ## @skip keptnScheduler.keptnScheduler.containerSecurityContext.allowPrivilegeEscalation
@@ -71,37 +65,6 @@
 ## @param    klcWebhookService.ports[0].targetPort TODO  TODO  TODO
 ## @param    klcWebhookService.type TODO  TODO  TODO
 
-
-## @section Keptn Cert Manager RBAC proxy
-## @extra   kltCertManager.kubeRbacProxy.containerSecurityContext Sets security context for RBAC proxy
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.allowPrivilegeEscalation
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.capabilities.drop
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.readOnlyRootFilesystem
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.runAsNonRoot
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.runAsUser
-## @skip    kltCertManager.kubeRbacProxy.containerSecurityContext.seccompProfile.type
-
-## @param    kltCertManager.kubeRbacProxy.image.repository setup proxy image repository
-## @param    kltCertManager.kubeRbacProxy.image.tag specify proxy image tag 
-## @param    kltCertManager.kubeRbacProxy.imagePullPolicy specify proxy image pull policy
-
-## @extra    kltCertManager.kubeRbacProxy.livenessProbe custom RBAC proxy liveness probe 
-## @skip    kltCertManager.kubeRbacProxy.livenessProbe.initialDelaySeconds
-## @skip    kltCertManager.kubeRbacProxy.livenessProbe.initialDelaySeconds
-## @skip    kltCertManager.kubeRbacProxy.livenessProbe.periodSeconds
-## @skip    kltCertManager.kubeRbacProxy.livenessProbe.tcpSocket.port
-
-## @extra    kltCertManager.kubeRbacProxy.readinessProbe custom RBAC proxy readiness probe
-## @skip    kltCertManager.kubeRbacProxy.readinessProbe.initialDelaySeconds
-## @skip    kltCertManager.kubeRbacProxy.readinessProbe.periodSeconds
-## @skip    kltCertManager.kubeRbacProxy.readinessProbe.tcpSocket.port
-
-## @extra    kltCertManager.kubeRbacProxy.resources custom RBAC proxy's limits and requests for cpu and memory
-## @skip    kltCertManager.kubeRbacProxy.resources.limits.cpu
-## @skip    kltCertManager.kubeRbacProxy.resources.limits.memory
-## @skip    kltCertManager.kubeRbacProxy.resources.requests.cpu
-## @skip    kltCertManager.kubeRbacProxy.resources.requests.memory
-
 ## @section Keptn Cert Manager controller
 ## @extra   kltCertManager.manager.containerSecurityContext Sets security context for the cert manager
 ## @skip    kltCertManager.manager.containerSecurityContext.allowPrivilegeEscalation
@@ -149,36 +112,6 @@
 ## @param   klcControllerManager.nodeSelector add custom nodes selector to lifecycle operator
 ## @param   klcControllerManager.tolerations add custom tolerations to lifecycle operator
 ## @param   klcControllerManager.topologySpreadConstraints add custom topology constraints to lifecycle operator
-
-## @section Keptn Lifecycle Operator RBAC proxy
-
-## @extra  klcControllerManager.kubeRbacProxy.containerSecurityContext Sets security context privileges for RBAC proxy
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.allowPrivilegeEscalation
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.capabilities.drop
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.readOnlyRootFilesystem
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.runAsNonRoot
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.runAsUser
-## @skip   klcControllerManager.kubeRbacProxy.containerSecurityContext.seccompProfile.type
-
-## @param   klcControllerManager.kubeRbacProxy.image.repository specify registry for RBAC proxy image
-## @param   klcControllerManager.kubeRbacProxy.image.tag select tag for RBAC proxy image
-## @param   klcControllerManager.kubeRbacProxy.imagePullPolicy custom pull policy for RBAC proxy image
-
-## @extra  klcControllerManager.kubeRbacProxy.livenessProbe custom livenessprobe for proxy RBAC container
-## @skip   klcControllerManager.kubeRbacProxy.livenessProbe.initialDelaySeconds
-## @skip   klcControllerManager.kubeRbacProxy.livenessProbe.periodSeconds
-## @skip   klcControllerManager.kubeRbacProxy.livenessProbe.tcpSocket.port
-
-## @extra  klcControllerManager.kubeRbacProxy.readinessProbe custom readinessprobe for proxy RBAC container
-## @skip   klcControllerManager.kubeRbacProxy.readinessProbe.initialDelaySeconds
-## @skip   klcControllerManager.kubeRbacProxy.readinessProbe.periodSeconds
-## @skip   klcControllerManager.kubeRbacProxy.readinessProbe.tcpSocket.port
-
-## @extra  klcControllerManager.kubeRbacProxy.resources specify limits and requests for proxy RBAC container
-## @skip   klcControllerManager.kubeRbacProxy.resources.limits.cpu
-## @skip   klcControllerManager.kubeRbacProxy.resources.limits.memory
-## @skip   klcControllerManager.kubeRbacProxy.resources.requests.cpu
-## @skip   klcControllerManager.kubeRbacProxy.resources.requests.memory
 
 ## @section Keptn Lifecycle Operator controller
 ## @extra   klcControllerManager.manager.containerSecurityContext Sets security context privileges
@@ -239,6 +172,11 @@
 ## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
 ## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
 ## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+
+## @param      metricsOperatorWebhookService.ports[0].port TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.ports[0].protocol TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.ports[0].targetPort TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.type TODO  TODO  TODO
 
 ## @param    metricsOperatorController.nodeSelector add custom nodes selector to metrics operator
 ## @param    metricsOperatorController.tolerations add custom tolerations to metrics operator

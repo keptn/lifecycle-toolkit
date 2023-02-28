@@ -6,7 +6,6 @@ import (
 	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -74,11 +73,17 @@ func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseTyp
 
 	piWrapper, err := interfaces.NewEventObjectWrapperFromClientObject(reconcileObject)
 	if err == nil {
-		maps.Copy(annotations, piWrapper.GetEventAnnotations())
+		copyMap(annotations, piWrapper.GetEventAnnotations())
 	}
 
 	annotationsObject := reconcileObject.GetAnnotations()
 	annotations["traceparent"] = annotationsObject["traceparent"]
 
 	return annotations
+}
+
+func copyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
+	for k, v := range src {
+		dst[k] = v
+	}
 }

@@ -25,8 +25,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "garbage values",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "testytest",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "testytest",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -40,8 +42,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "Item nan",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -55,8 +59,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "garbage comparison",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "testytest",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -70,8 +76,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "objective nan",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "nan",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -85,8 +93,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "10>10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: ">10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -100,8 +110,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "9>10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: ">10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -115,8 +127,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "11>10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: ">10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -130,8 +144,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "10<10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "<10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -145,8 +161,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "9<10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "<10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -160,8 +178,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "11<10",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "<10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{
@@ -175,8 +195,10 @@ func TestCheckValue(t *testing.T) {
 		{
 			name: "invalid op",
 			obj: klcv1alpha3.Objective{
-				Name:             "testytest",
-				Query:            "mymetric",
+				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+					Name:      "testytest",
+					Namespace: "default",
+				},
 				EvaluationTarget: "-10",
 			},
 			item: &klcv1alpha3.EvaluationStatusItem{

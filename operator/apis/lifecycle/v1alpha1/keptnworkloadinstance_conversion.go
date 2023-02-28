@@ -4,15 +4,15 @@ import (
 	"fmt"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	v1alpha3common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"go.opentelemetry.io/otel/propagation"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha1.KeptnWorkloadInstance to the hub version (v1alpha2.KeptnWorkloadInstance)
+// ConvertTo converts the src v1alpha1.KeptnWorkloadInstance to the hub version (v1alpha3.KeptnWorkloadInstance)
 func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
-	dst, ok := dstRaw.(*v1alpha2.KeptnWorkloadInstance)
+	dst, ok := dstRaw.(*v1alpha3.KeptnWorkloadInstance)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnWorkloadInstance)
@@ -28,7 +28,7 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
 	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
 	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
-	dst.Spec.ResourceReference = v1alpha2.ResourceReference{
+	dst.Spec.ResourceReference = v1alpha3.ResourceReference{
 		UID:  src.Spec.ResourceReference.UID,
 		Kind: src.Spec.ResourceReference.Kind,
 		Name: src.Spec.ResourceReference.Name,
@@ -41,20 +41,20 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 		dst.Spec.TraceId[k] = v
 	}
 
-	dst.Status.PreDeploymentStatus = v1alpha2common.KeptnState(src.Status.PreDeploymentStatus)
-	dst.Status.PostDeploymentStatus = v1alpha2common.KeptnState(src.Status.PostDeploymentStatus)
-	dst.Status.PreDeploymentEvaluationStatus = v1alpha2common.KeptnState(src.Status.PreDeploymentEvaluationStatus)
-	dst.Status.PostDeploymentEvaluationStatus = v1alpha2common.KeptnState(src.Status.PostDeploymentEvaluationStatus)
-	dst.Status.DeploymentStatus = v1alpha2common.KeptnState(src.Status.DeploymentStatus)
-	dst.Status.Status = v1alpha2common.KeptnState(src.Status.Status)
+	dst.Status.PreDeploymentStatus = v1alpha3common.KeptnState(src.Status.PreDeploymentStatus)
+	dst.Status.PostDeploymentStatus = v1alpha3common.KeptnState(src.Status.PostDeploymentStatus)
+	dst.Status.PreDeploymentEvaluationStatus = v1alpha3common.KeptnState(src.Status.PreDeploymentEvaluationStatus)
+	dst.Status.PostDeploymentEvaluationStatus = v1alpha3common.KeptnState(src.Status.PostDeploymentEvaluationStatus)
+	dst.Status.DeploymentStatus = v1alpha3common.KeptnState(src.Status.DeploymentStatus)
+	dst.Status.Status = v1alpha3common.KeptnState(src.Status.Status)
 
 	dst.Status.CurrentPhase = src.Status.CurrentPhase
 
 	// Convert changed fields
 	for _, item := range src.Status.PreDeploymentTaskStatus {
-		dst.Status.PreDeploymentTaskStatus = append(dst.Status.PreDeploymentTaskStatus, v1alpha2.ItemStatus{
+		dst.Status.PreDeploymentTaskStatus = append(dst.Status.PreDeploymentTaskStatus, v1alpha3.ItemStatus{
 			DefinitionName: item.TaskDefinitionName,
-			Status:         v1alpha2common.KeptnState(item.Status),
+			Status:         v1alpha3common.KeptnState(item.Status),
 			Name:           item.TaskName,
 			StartTime:      item.StartTime,
 			EndTime:        item.EndTime,
@@ -62,9 +62,9 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	}
 
 	for _, item := range src.Status.PostDeploymentTaskStatus {
-		dst.Status.PostDeploymentTaskStatus = append(dst.Status.PostDeploymentTaskStatus, v1alpha2.ItemStatus{
+		dst.Status.PostDeploymentTaskStatus = append(dst.Status.PostDeploymentTaskStatus, v1alpha3.ItemStatus{
 			DefinitionName: item.TaskDefinitionName,
-			Status:         v1alpha2common.KeptnState(item.Status),
+			Status:         v1alpha3common.KeptnState(item.Status),
 			Name:           item.TaskName,
 			StartTime:      item.StartTime,
 			EndTime:        item.EndTime,
@@ -72,9 +72,9 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	}
 
 	for _, item := range src.Status.PreDeploymentEvaluationTaskStatus {
-		dst.Status.PreDeploymentEvaluationTaskStatus = append(dst.Status.PreDeploymentEvaluationTaskStatus, v1alpha2.ItemStatus{
+		dst.Status.PreDeploymentEvaluationTaskStatus = append(dst.Status.PreDeploymentEvaluationTaskStatus, v1alpha3.ItemStatus{
 			DefinitionName: item.EvaluationDefinitionName,
-			Status:         v1alpha2common.KeptnState(item.Status),
+			Status:         v1alpha3common.KeptnState(item.Status),
 			Name:           item.EvaluationName,
 			StartTime:      item.StartTime,
 			EndTime:        item.EndTime,
@@ -82,16 +82,16 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	}
 
 	for _, item := range src.Status.PostDeploymentEvaluationTaskStatus {
-		dst.Status.PostDeploymentEvaluationTaskStatus = append(dst.Status.PostDeploymentEvaluationTaskStatus, v1alpha2.ItemStatus{
+		dst.Status.PostDeploymentEvaluationTaskStatus = append(dst.Status.PostDeploymentEvaluationTaskStatus, v1alpha3.ItemStatus{
 			DefinitionName: item.EvaluationDefinitionName,
-			Status:         v1alpha2common.KeptnState(item.Status),
+			Status:         v1alpha3common.KeptnState(item.Status),
 			Name:           item.EvaluationName,
 			StartTime:      item.StartTime,
 			EndTime:        item.EndTime,
 		})
 	}
 
-	dst.Status.PhaseTraceIDs = make(v1alpha2common.PhaseTraceID, len(src.Status.PhaseTraceIDs))
+	dst.Status.PhaseTraceIDs = make(v1alpha3common.PhaseTraceID, len(src.Status.PhaseTraceIDs))
 	for k, v := range src.Status.PhaseTraceIDs {
 		c := make(propagation.MapCarrier, len(v))
 		for k1, v1 := range v {
@@ -106,9 +106,9 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha2.KeptnWorkloadInstance) to this version (v1alpha1.KeptnWorkloadInstance)
+// ConvertFrom converts from the hub version (v1alpha3.KeptnWorkloadInstance) to this version (v1alpha1.KeptnWorkloadInstance)
 func (dst *KeptnWorkloadInstance) ConvertFrom(srcRaw conversion.Hub) error {
-	src, ok := srcRaw.(*v1alpha2.KeptnWorkloadInstance)
+	src, ok := srcRaw.(*v1alpha3.KeptnWorkloadInstance)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnWorkloadInstance)

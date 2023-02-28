@@ -39,7 +39,6 @@ type KeptnEvaluationProviderStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnevaluationproviders,shortName=kep
 

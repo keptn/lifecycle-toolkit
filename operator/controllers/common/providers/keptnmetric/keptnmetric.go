@@ -16,11 +16,12 @@ type KeptnMetricProvider struct {
 	K8sClient client.Client
 }
 
-// EvaluateQuery fetches the SLI values from KeptnMetric resource
-func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error) {
-	metric := &metricsapi.KeptnMetric{}
-	if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.Name, Namespace: namespace}, metric); err != nil {
-		p.Log.Error(err, "Could not retrieve KeptnMetric")
+const KLTNamespace = "keptn-lifecycle-toolkit-system"
+
+// FetchData fetches the SLI values from KeptnMetric resource
+func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error) {
+	metric, err := p.GetKeptnMetric(ctx, objective, namespace)
+	if err != nil {
 		return "", nil, err
 	}
 
@@ -31,4 +32,25 @@ func (p *KeptnMetricProvider) EvaluateQuery(ctx context.Context, objective klcv1
 	}
 
 	return metric.Status.Value, metric.Status.RawValue, nil
+}
+
+func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (*metricsapi.KeptnMetric, error) {
+	metric := &metricsapi.KeptnMetric{}
+
+	if objective.KeptnMetricRef.Namespace != "" {
+		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: objective.KeptnMetricRef.Namespace}, metric); err != nil {
+			p.Log.Error(err, "Failed to get KeptnMetric from objective namespace")
+			return nil, err
+		}
+	} else {
+		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: namespace}, metric); err != nil {
+			p.Log.Error(err, "Failed to get KeptnMetric from KeptnEvaluation resource namespace")
+			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: KLTNamespace}, metric); err != nil {
+				p.Log.Error(err, "Failed to get KeptnMetric from "+KLTNamespace+" namespace")
+				return nil, err
+			}
+		}
+	}
+
+	return metric, nil
 }

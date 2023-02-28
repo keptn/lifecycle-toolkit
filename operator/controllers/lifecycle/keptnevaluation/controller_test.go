@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
@@ -18,9 +18,9 @@ const KltNamespace = "klt-namespace"
 
 func TestKeptnEvaluationReconciler_fetchDefinition(t *testing.T) {
 
-	metricEvalDef, DTEvalDef, PromEvalDef, EvalDef := setupEvalDefinitions()
+	metricEvalDef, EvalDef := setupEvalDefinitions()
 	DTProv, PromProv := setupProviders()
-	client := fake.NewClient(metricEvalDef, DTEvalDef, PromEvalDef, EvalDef, DTProv, PromProv)
+	client := fake.NewClient(metricEvalDef, EvalDef, DTProv, PromProv)
 
 	r := &KeptnEvaluationReconciler{
 		Client: client,
@@ -41,23 +41,6 @@ func TestKeptnEvaluationReconciler_fetchDefinition(t *testing.T) {
 				Name:      "myKeptn",
 			},
 			wantDef: metricEvalDef,
-		},
-		{
-			name: "DT metrics",
-			namespacedDefinition: types.NamespacedName{
-				Namespace: KltNamespace,
-				Name:      "myDT",
-			},
-			wantDef: DTEvalDef,
-		},
-
-		{
-			name: "Prometheus metrics",
-			namespacedDefinition: types.NamespacedName{
-				Namespace: KltNamespace,
-				Name:      "myProm",
-			},
-			wantDef: PromEvalDef,
 		},
 
 		{
@@ -96,38 +79,13 @@ func TestKeptnEvaluationReconciler_fetchDefinition(t *testing.T) {
 	}
 }
 
-func setupEvalDefinitions() (*klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition) {
+func setupEvalDefinitions() (*klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition) {
 	metricEvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: KltNamespace,
 			Name:      "myKeptn",
 		},
 		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Source:     providers.KeptnMetricProviderName,
-			Objectives: nil,
-		},
-		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
-	}
-
-	DTEvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "myDT",
-		},
-		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Source:     providers.DynatraceProviderName,
-			Objectives: nil,
-		},
-		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
-	}
-
-	PromEvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "myProm",
-		},
-		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Source:     providers.PrometheusProviderName,
 			Objectives: nil,
 		},
 		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
@@ -139,24 +97,23 @@ func setupEvalDefinitions() (*klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha
 			Name:      "mdef",
 		},
 		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Source:     "dunno",
 			Objectives: nil,
 		},
 		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
 	}
 
-	return metricEvalDef, DTEvalDef, PromEvalDef, EvalDef
+	return metricEvalDef, EvalDef
 }
 
-func setupProviders() (*klcv1alpha2.KeptnEvaluationProvider, *klcv1alpha2.KeptnEvaluationProvider) {
-	DTProv := &klcv1alpha2.KeptnEvaluationProvider{
+func setupProviders() (*metricsapi.KeptnMetricsProvider, *metricsapi.KeptnMetricsProvider) {
+	DTProv := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.DynatraceProviderName,
 			Namespace: KltNamespace,
 		},
 	}
 
-	PromProv := &klcv1alpha2.KeptnEvaluationProvider{
+	PromProv := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.PrometheusProviderName,
 			Namespace: KltNamespace,

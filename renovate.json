@@ -55,6 +55,7 @@
         "(^|\\/)Makefile$",
         "(^|\\/)Dockerfile",
         "(^|\\/).*\\.ya?ml$",
+        "(^|\\/).*\\.toml$",
         "(^|\\/).*\\.sh$"
       ],
       "matchStrings": [

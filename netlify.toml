@@ -1,0 +1,20 @@
+[build]
+base = "docs/"
+publish = "public/"
+command = "hugo -b $DEPLOY_PRIME_URL"
+
+[build.environment]
+# added specifically a docker image, so the versions within makefile and netlify documentation match
+# renovate: datasource=docker depName=klakegg/hugo
+HUGO_VERSION = "0.105.0"
+HUGO_ENABLEGITINFO = "true"
+
+[context.deploy-preview]
+
+[context.branch-deploy]
+
+[context.production.environment]
+HUGO_ENV = "production"
+
+[context.production]
+command = "hugo -b $URL"

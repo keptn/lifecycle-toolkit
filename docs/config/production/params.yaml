@@ -1,0 +1,4 @@
+versions:
+  - url: https://dev.lifecycle-test.keptn.sh
+    version: development
+github_branch: pages

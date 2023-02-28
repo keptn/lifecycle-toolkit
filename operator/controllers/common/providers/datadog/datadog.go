@@ -18,7 +18,7 @@ type KeptnDataDogProvider struct {
 }
 
 func (k KeptnDataDogProvider) EvaluateQuery(ctx context.Context, objective klcv1alpha2.Objective, provider klcv1alpha2.KeptnEvaluationProvider) (string, []byte, error) {
-	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
 	// TODO: get DD_API_KEY and DD_APP_KEY from kubernetes secret
@@ -37,7 +37,6 @@ func (k KeptnDataDogProvider) EvaluateQuery(ctx context.Context, objective klcv1
 			},
 		},
 	)
-
 	fromTime := time.Now().AddDate(0, 0, -1)
 	queryTime := time.Now()
 
@@ -62,5 +61,4 @@ func (k KeptnDataDogProvider) EvaluateQuery(ctx context.Context, objective klcv1
 	points := (resp.Series)[0].Pointlist
 	value := strconv.FormatFloat(*points[len(points)-1][1], 'g', 5, 64)
 	return value, []byte(value), nil
-
 }

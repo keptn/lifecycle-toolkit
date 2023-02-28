@@ -1,0 +1,6 @@
+---
+CheckDoctype: false
+IgnoreDirs:
+  - favicons
+IgnoreURLs: []
+StripQueryString: false

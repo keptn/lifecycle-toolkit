@@ -123,6 +123,15 @@
 ## @param   klcControllerManager.manager.containerSecurityContext.runAsUser
 ## @param   klcControllerManager.manager.containerSecurityContext.seccompProfile.type
 
+## @param   klcControllerManager.manager.keptnappController.logLevel sets the log level of Keptn App Controller
+## @param   klcControllerManager.manager.keptnappversionController.logLevel sets the log level of Keptn AppVersion Controller
+## @param   klcControllerManager.manager.keptnevaluationController.logLevel sets the log level of Keptn Evaluation Controller
+## @param   klcControllerManager.manager.keptntaskController.logLevel sets the log level of Keptn Task Controller
+## @param   klcControllerManager.manager.keptntaskdefinitionController.logLevel sets the log level of Keptn TaskDefinition Controller
+## @param   klcControllerManager.manager.keptnworkloadController.logLevel sets the log level of Keptn Workload Controller
+## @param   klcControllerManager.manager.keptnworkloadinstanceController.logLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   klcControllerManager.manager.optionsController.logLevel sets the log level of Keptn Options Controller
+
 ## @param   klcControllerManager.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
 ## @param   klcControllerManager.manager.env.functionRunnerImage specify image for task runtime
 
@@ -186,6 +195,8 @@
 ## @extra   metricsOperatorController.manager.containerSecurityContext Sets security context privileges
 ## @param   metricsOperatorController.manager.containerSecurityContext.allowPrivilegeEscalation
 ## @param   metricsOperatorController.manager.containerSecurityContext.capabilities.drop
+
+## @param   metricsOperatorController.manager.metricsController.logLevel sets the log level of Keptn Metrics Controller
 
 ## @param   metricsOperatorController.manager.image.repository specify registry for manager image
 ## @param   metricsOperatorController.manager.image.tag  select tag for manager image

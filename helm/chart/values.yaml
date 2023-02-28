@@ -42,6 +42,22 @@ keptnScheduler:
   topologySpreadConstraints: []
 klcControllerManager:
   manager:
+    keptnappController:
+      logLevel: 0
+    keptnappversionController:
+      logLevel: 0
+    keptnevaluationController:
+      logLevel: 0
+    keptntaskController:
+      logLevel: 0
+    keptntaskdefinitionController:
+      logLevel: 0
+    keptnworkloadController:
+      logLevel: 0
+    keptnworkloadinstanceController:
+      logLevel: 0
+    optionsController:
+      logLevel: 0
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -160,6 +176,8 @@ kltCertManagerMetricsService:
 kubernetesClusterDomain: cluster.local
 metricsOperatorController:
   manager:
+    metricsController:
+      logLevel: 0
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:

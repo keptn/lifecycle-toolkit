@@ -5,10 +5,16 @@ on:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - '**.yaml'
+      - '**.yml'
   pull_request:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - '**.yaml'
+      - '**.yml'  
 jobs:
   yamllint:
     runs-on: ubuntu-latest
@@ -20,4 +26,4 @@ jobs:
 
       - name: Lint YAML files
         run: yamllint .github docs
-        
+

@@ -1,0 +1,24 @@
+name: YAML checks
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML files
+        run: yamllint .github docs
+
+    

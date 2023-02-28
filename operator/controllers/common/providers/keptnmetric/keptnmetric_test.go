@@ -170,14 +170,14 @@ func Test_Getkeptnmetric(t *testing.T) {
 			metric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: KLTNamespace,
 				},
 			},
 			namespace: "my-other-namespace",
 			out: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: KLTNamespace,
 				},
 			},
 			wantError: false,

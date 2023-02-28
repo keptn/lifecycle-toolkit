@@ -16,6 +16,8 @@ type KeptnMetricProvider struct {
 	K8sClient client.Client
 }
 
+const KLTNamespace = "keptn-lifecycle-toolkit-system"
+
 // FetchData fetches the SLI values from KeptnMetric resource
 func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error) {
 	metric, err := p.GetKeptnMetric(ctx, objective, namespace)
@@ -43,8 +45,8 @@ func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv
 	} else {
 		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: namespace}, metric); err != nil {
 			p.Log.Error(err, "Failed to get KeptnMetric from KeptnEvaluation resource namespace")
-			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: "keptn-lifecycle-toolkit-system"}, metric); err != nil {
-				p.Log.Error(err, "Failed to get KeptnMetric from keptn-lifecycle-toolkit-system namespace")
+			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: KLTNamespace}, metric); err != nil {
+				p.Log.Error(err, "Failed to get KeptnMetric from "+KLTNamespace+" namespace")
 				return nil, err
 			}
 		}

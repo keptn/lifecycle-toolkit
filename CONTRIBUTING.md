@@ -119,7 +119,7 @@ make markdownlint-fix
 
 #### Markdownlint Configuration
 
-We are sticking to the defaults regarding configuration for `markdownlint`.
+We use the default configuration values for `markdownlint`.
 
 This means:
 

@@ -590,7 +590,7 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
-        image: odubajdt/metrics-operator:main
+        image: odubajdt/metrics-operator:v1alpha3
         livenessProbe:
           httpGet:
             path: /healthz

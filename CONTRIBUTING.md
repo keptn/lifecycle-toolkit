@@ -15,6 +15,34 @@ This section provides links to some materials that can help your learning.
 The information has been gathered from the community and is subject to alteration.
 If you have suggestions about additional content that should be included in this list, please submit an issue.
 
+## Commit Signing
+**Every** commit must be signed off when contributing to Keptn.
+
+Do this either by:
+- Adding the `-s` flag during a commit (eg. `git commit -sm "my commit message"`)
+- Creating a `prepare-commit-msg` Git Hook (see below)
+
+### prepare-commit-msg Git Hook
+Create a file called `.git/hooks/prepare-commit-msg` and add the following content:
+
+```
+#!/bin/sh
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+SOB=$(git var GIT_COMMITTER_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+git interpret-trailers --in-place --trailer "$SOB" "$COMMIT_MSG_FILE"
+if test -z "$COMMIT_SOURCE"
+then
+  /usr/bin/perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
+fi
+```
+
+Now, even if you forget the `-s` flag, your commits will automatically be signed off.
+
+Notice: This is the standard sample code from GitHub when you initialise a new repository.
+
 ### Kubernetes
 
 - **Understand the basics of Kubernetes**

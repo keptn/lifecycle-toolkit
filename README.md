@@ -415,7 +415,10 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-**Note:** If using version 0.6.0 or older, please see the migration documentation when upgrading to 0.7.0.
+**Note:** The KeptnMetricsProvider is a new feature in KLT 0.7.0.
+The migration documentation provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
+about migrating 
+If using version 0.6.0 or older, please see the migration documentation when upgrading to 0.7.0.
 
 ### Keptn Metric
 

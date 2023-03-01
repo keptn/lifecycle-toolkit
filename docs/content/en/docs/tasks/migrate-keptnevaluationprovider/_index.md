@@ -9,12 +9,8 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 ## Migrate KeptnEvaluationProvider to KeptmMetricsProvider
 
-Due to the recent changes by splitting the `klt-operator` to two separate operators: `klt-operator` and
-`metric-operator` (introduced in version 0.7.0)some of the functionality and behaviour was moved to
-`metric-operator` and changed/renamed. `KeptnEvaluationProvider` CR was deprecated and its functionality
-was moved to `KeptnMetricsOperator` CR as a part of `metrics.keptn.sh/v1alpha2` API group. During the
-upgrade from version 0.6.0 (or sooner) to 0.7.0 there is a need to manually migrate
-`KeptnEvaluationProvider` CRs by using a external bash script:
+Due to the recent changes by splitting the `klt-operator` into two separate operators: `klt-operator` and
+`metric-operator` (introduced in version 0.7.0), some of the functionality and behavior have been moved, changed, or renamed. The `KeptnEvaluationProvider` CRD was deprecated and replaced by the `KeptnMetricsOperator` CRD as a part of the `metrics.keptn.sh/v1alpha2` API group. During the upgrade from version 0.6.0 (or sooner) to 0.7.0, there is a need to migrate manually `KeptnEvaluationProvider` CRDs by using an external bash script:
 
 ```sh
 curl -sL https://raw.githubusercontent.com/keptn/lifecycle-toolkit/epic/split-metrics-operator/.github/scripts/keptnevaluationprovider_migrator.sh | bash

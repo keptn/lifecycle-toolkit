@@ -50,10 +50,12 @@ If you have suggestions about additional content that should be included in this
 This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE, the following configuration is required.
 
+### Golangci-lint
+
 Further information can also be found in
 the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
 
-### Visual Studio Code
+#### Visual Studio Code
 
 In Visual Studio Code the [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi)
 extension is required.
@@ -81,7 +83,7 @@ Adding the following lines to the `Golang` extension configuration file will ena
 },
 ```
 
-### GoLand / IntelliJ
+#### GoLand / IntelliJ
 
 In GoLand or IntelliJ, the plugin [Go Linter](https://plugins.jetbrains.com/plugin/12496-go-linter) will be required.
 
@@ -89,3 +91,39 @@ The plugin can be installed via `Settings` >> `Plugins` >> `Marketplace`, search
 Once installed, make sure that the plugin is using the `.golangci.yml` file from the root directory.
 
 The configuration of `Go Linter` can be found in the `Tools` section of the settings.
+
+### Markdownlint
+
+We are using [markdownlint](https://github.com/DavidAnson/markdownlint) to ensure consistent styling
+within our Markdown files.
+Specifically we are using [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli).
+
+We are using `GNU MAKE` to ensure the same functionality locally and within our CI builds.
+This should allow easier debugging and problem resolution.
+
+#### Markdownlint execution
+
+To verify your changes, run:
+
+```shell
+make markdownlint
+```
+
+To use the auto-fix option, run:
+
+```shell
+make markdownlint-fix
+```
+
+#### Markdownlint Configuration
+
+We are sticking to the defaults regarding configuration for `markdownlint`.
+
+This means:
+
+- [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
+- [.markdownlintignore](./.markdownlintignore) contains the ignored files in `.gitignore` style
+
+We decided to stick to the default, so tools like
+[markdownlint for VSCode](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
+can be used without additional configuration.

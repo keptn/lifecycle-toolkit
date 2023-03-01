@@ -21,3 +21,21 @@ clean:
 
 htmltest: build
 	docker run -v $(CURDIR):/test --rm wjdp/htmltest -s /test/tmp/lifecycle-toolkit-docs/public
+
+.PHONY: lint lint-fix
+lint: markdownlint
+lint: lint-fix
+
+# Markdown lint configuration
+#
+# - .markdownlintignore holds the configuration for files to be ignored
+# - .markdownlint.yaml contains the rules for markdownfiles
+#
+MARKDOWNLINT_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" 
+
+.PHONY: markdownlint markdownlint-fix
+markdownlint:
+	$(MARKDOWNLINT_CMD)
+
+markdownlint-fix:
+	$(MARKDOWNLINT_CMD) --fix

@@ -5,6 +5,7 @@ runs:
   steps:
     - name: Install and expose Prometheus
       working-directory: ./test
+      shell: bash
       run: |
         kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
         kubectl apply --server-side -f ./prometheus/setup

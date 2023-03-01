@@ -426,7 +426,7 @@ A `KeptnMetric` is a CRD that defines the SLI provider with a query and stores m
 Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
 Furthermore, this allows using multiple observability platforms for different metrics.
 
-A `KeptnMetric` looks like the following:
+A `KeptnMetric` is defined in a yaml file that looks like the following:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2

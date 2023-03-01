@@ -103,7 +103,7 @@ This should allow easier debugging and problem resolution.
 
 #### Markdownlint execution
 
-To verify your changes, run:
+To verify that your markdown code conforms to the rules, run the following on your local branch:
 
 ```shell
 make markdownlint

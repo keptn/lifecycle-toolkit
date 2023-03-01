@@ -18,7 +18,7 @@ import (
 	"k8s.io/klog/v2"
 )
 
-var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha2", Resource: "keptnworkloadinstances"}
+var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha3", Resource: "keptnworkloadinstances"}
 
 type Status string
 

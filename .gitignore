@@ -26,6 +26,7 @@ kubeconfig
 manifests/
 /scheduler/config/rendered/release.yaml
 /operator/config/rendered/release.yaml
+/metrics-operator/config/rendered/release.yaml
 /klt-cert-manager/config/rendered/release.yaml
 # macOS
 .DS_Store
@@ -41,3 +42,6 @@ manifests/
 
 # Helm readme generator project
 readme-generator-for-helm/
+/out.yaml
+/test.yaml
+/helmchart.yaml

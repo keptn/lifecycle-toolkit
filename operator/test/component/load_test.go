@@ -7,7 +7,7 @@ import (
 	"path"
 	"time"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
@@ -26,8 +26,8 @@ const LOAD = 100
 
 var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func() {
 	var (
-		apps         []*klcv1alpha2.KeptnApp //Shelf is declared here
-		appVersions  []*klcv1alpha2.KeptnAppVersion
+		apps         []*klcv1alpha3.KeptnApp //Shelf is declared here
+		appVersions  []*klcv1alpha3.KeptnAppVersion
 		spanRecorder *sdktest.SpanRecorder
 		tracer       *otelsdk.TracerProvider
 		metrics      Metric
@@ -56,14 +56,14 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 		//		createTimes := make(map[string]metav1.Time, 0)
 
 		for i := 0; i < LOAD; i++ {
-			instance := &klcv1alpha2.KeptnApp{
+			instance := &klcv1alpha3.KeptnApp{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      fmt.Sprintf("app-%d", i),
 					Namespace: "default",
 				},
-				Spec: klcv1alpha2.KeptnAppSpec{
+				Spec: klcv1alpha3.KeptnAppSpec{
 					Version: "1.2.3",
-					Workloads: []klcv1alpha2.KeptnWorkloadRef{
+					Workloads: []klcv1alpha3.KeptnWorkloadRef{
 						{
 							Name:    "app-wname",
 							Version: "2.0",

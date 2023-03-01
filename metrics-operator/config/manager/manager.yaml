@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: metrics-controller
+  name: system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller
+  namespace: system
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: metrics-controller
+spec:
+  selector:
+    matchLabels:
+      control-plane: metrics-controller
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        control-plane: metrics-controller
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        # TODO(user): For common cases that do not require escalating privileges
+        # it is recommended to ensure that all your Pods/Containers are restrictive.
+        # More info: https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+        # Please uncomment the following code if your project does NOT have to work on old Kubernetes
+        # versions < 1.19 or on vendors versions which do NOT support this field by default (i.e. Openshift < 4.11 ).
+        # seccompProfile:
+        #   type: RuntimeDefault
+      volumes:
+        - emptyDir: { }
+          name: certs-dir
+        - emptyDir: { }
+          name: adapter-certs-dir
+      containers:
+      - command:
+        - /manager
+        args:
+        - webhook-server
+        # OLM mounts the certificates here, so we reuse it for simplicity
+        - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
+        - --leader-elect
+          # Secure port for the metrics adapter
+        - --adapter-port=6443
+        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+          # Log level for the metrics adapter
+        - --v=10
+        image: controller:latest
+        name: manager
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: EXPOSE_KEPTN_METRICS
+            value: "true"
+        ports:
+          - containerPort: 9443
+            name: webhook-server
+            protocol: TCP
+          - name: metrics
+            containerPort: 2222
+            protocol: TCP
+          - name: custom-metrics
+            containerPort: 6443
+            protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        volumeMounts:
+          - name: certs-dir
+            mountPath: /tmp/k8s-webhook-server/serving-certs/
+          - name: adapter-certs-dir
+            mountPath: /tmp/metrics-adapter/serving-certs
+      serviceAccountName: controller
+      terminationGracePeriodSeconds: 10

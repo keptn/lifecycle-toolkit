@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
@@ -13,8 +13,8 @@ import (
 )
 
 func TestPhaseItemWrapper_GetState(t *testing.T) {
-	appVersion := &v1alpha2.KeptnAppVersion{
-		Status: v1alpha2.KeptnAppVersionStatus{
+	appVersion := &v1alpha3.KeptnAppVersion{
+		Status: v1alpha3.KeptnAppVersionStatus{
 			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},
@@ -77,10 +77,10 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentTasksFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentTaskStatusFunc: func() []v1alpha2.ItemStatus {
+		GetPreDeploymentTaskStatusFunc: func() []v1alpha3.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentTaskStatusFunc: func() []v1alpha2.ItemStatus {
+		GetPostDeploymentTaskStatusFunc: func() []v1alpha3.ItemStatus {
 			return nil
 		},
 		GetPreDeploymentEvaluationsFunc: func() []string {
@@ -89,17 +89,17 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationsFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.ItemStatus {
+		GetPreDeploymentEvaluationTaskStatusFunc: func() []v1alpha3.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha2.ItemStatus {
+		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha3.ItemStatus {
 			return nil
 		},
-		GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) v1alpha2.KeptnTask {
-			return v1alpha2.KeptnTask{}
+		GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) v1alpha3.KeptnTask {
+			return v1alpha3.KeptnTask{}
 		},
-		GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) v1alpha2.KeptnEvaluation {
-			return v1alpha2.KeptnEvaluation{}
+		GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) v1alpha3.KeptnEvaluation {
+			return v1alpha3.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
 		},

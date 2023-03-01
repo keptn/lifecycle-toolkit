@@ -3,8 +3,8 @@ package e2e
 import (
 	"time"
 
-	testv1alpha2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2"
-	common2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2/common"
+	testv1alpha3 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3"
+	common3 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	types2 "github.com/onsi/gomega/types"
@@ -163,7 +163,7 @@ func checkPending(pod *apiv1.Pod) {
 
 }
 
-func checkWorkload(workloadname string, pod apiv1.Pod, status common2.KeptnState) {
+func checkWorkload(workloadname string, pod apiv1.Pod, status common3.KeptnState) {
 	workloadinstance := initWorkloadInstance(workloadname)
 
 	err := k8sClient.Create(ctx, workloadinstance)
@@ -195,20 +195,20 @@ func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
 	}).WithTimeout(time.Second * 60).WithPolling(3 * time.Second)
 }
 
-func initWorkloadInstance(name string) *testv1alpha2.KeptnWorkloadInstance {
+func initWorkloadInstance(name string) *testv1alpha3.KeptnWorkloadInstance {
 
-	var fakeInstance = testv1alpha2.KeptnWorkloadInstance{
+	var fakeInstance = testv1alpha3.KeptnWorkloadInstance{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "KeptnWorkloadInstance",
-			APIVersion: "lifecycle.keptn.sh/v1alpha2",
+			APIVersion: "lifecycle.keptn.sh/v1alpha3",
 		},
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: "default"},
-		Spec: testv1alpha2.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: testv1alpha2.KeptnWorkloadSpec{
-				ResourceReference: testv1alpha2.ResourceReference{Name: "myfakeres"},
+		Spec: testv1alpha3.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: testv1alpha3.KeptnWorkloadSpec{
+				ResourceReference: testv1alpha3.ResourceReference{Name: "myfakeres"},
 			},
 		},
-		Status: testv1alpha2.KeptnWorkloadInstanceStatus{},
+		Status: testv1alpha3.KeptnWorkloadInstanceStatus{},
 	}
 
 	return &fakeInstance

@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: badmetric

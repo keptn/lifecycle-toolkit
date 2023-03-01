@@ -5,12 +5,12 @@ import (
 	"context"
 	"fmt"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha2.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,

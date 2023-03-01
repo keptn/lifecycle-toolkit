@@ -21,8 +21,8 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -71,7 +71,7 @@ type KeptnWorkloadReconciler struct {
 func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for workload")
 
-	workload := &klcv1alpha2.KeptnWorkload{}
+	workload := &klcv1alpha3.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -90,7 +90,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
-	workloadInstance := &klcv1alpha2.KeptnWorkloadInstance{}
+	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
 
 	// Try to find the workload instance
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
@@ -128,11 +128,11 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha2.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha3.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha2.KeptnWorkload) (*klcv1alpha2.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha3.KeptnWorkloadInstance, error) {
 	ctx, span := r.getTracer().Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 

@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha1.KeptnApp to the hub version (v1alpha2.KeptnApp)
+// ConvertTo converts the src v1alpha1.KeptnApp to the hub version (v1alpha3.KeptnApp)
 func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
-	dst, ok := dstRaw.(*v1alpha2.KeptnApp)
+	dst, ok := dstRaw.(*v1alpha3.KeptnApp)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnApp)
@@ -22,7 +22,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 
 	dst.Spec.Version = src.Spec.Version
 	for _, srcWl := range src.Spec.Workloads {
-		dst.Spec.Workloads = append(dst.Spec.Workloads, v1alpha2.KeptnWorkloadRef{
+		dst.Spec.Workloads = append(dst.Spec.Workloads, v1alpha3.KeptnWorkloadRef{
 			Name:    srcWl.Name,
 			Version: srcWl.Version,
 		})
@@ -40,9 +40,9 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha2.KeptnApp) to this version (v1alpha1.KeptnApp)
+// ConvertFrom converts from the hub version (v1alpha3.KeptnApp) to this version (v1alpha1.KeptnApp)
 func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
-	src, ok := srcRaw.(*v1alpha2.KeptnApp)
+	src, ok := srcRaw.(*v1alpha3.KeptnApp)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnApp)

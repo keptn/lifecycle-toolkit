@@ -1,6 +1,228 @@
-## @section OpenTelemetry
-## @param otelCollector.url Sets the URL for the open telemetry collector
+## @section Keptn Scheduler
+## @extra keptnScheduler.keptnScheduler.containerSecurityContext Sets security context
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.allowPrivilegeEscalation
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.capabilities.drop
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.privileged
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.readOnlyRootFilesystem
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.runAsNonRoot
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.runAsUser
+## @skip keptnScheduler.keptnScheduler.containerSecurityContext.seccompProfile.type
 
-## @section General
-## @param deployment.imagePullPolicy Sets the image pull policy for kubernetes deployment
+## @param keptnScheduler.keptnScheduler.env.otelCollectorUrl sets url for open telemetry collector
 
+## @param keptnScheduler.keptnScheduler.image.repository set image repository for scheduler
+## @param keptnScheduler.keptnScheduler.image.tag set image tag for scheduler
+## @param keptnScheduler.keptnScheduler.imagePullPolicy set image pull policy for scheduler
+
+## @extra keptnScheduler.keptnScheduler.livenessProbe customizable liveness probe for the scheduler
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.path
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.port
+## @skip keptnScheduler.keptnScheduler.livenessProbe.httpGet.scheme
+## @skip keptnScheduler.keptnScheduler.livenessProbe.initialDelaySeconds
+
+## @extra keptnScheduler.keptnScheduler.readinessProbe customizable readiness probe for the scheduler
+## @skip keptnScheduler.keptnScheduler.readinessProbe.httpGet.path
+## @skip keptnScheduler.keptnScheduler.readinessProbe.httpGet.port
+## @skip keptnScheduler.keptnScheduler.readinessProbe.httpGet.scheme
+
+## @extra keptnScheduler.keptnScheduler.resources sets cpu and memory resurces/limits for scheduler
+## @skip keptnScheduler.keptnScheduler.resources.limits.cpu
+## @skip keptnScheduler.keptnScheduler.resources.limits.memory
+## @skip keptnScheduler.keptnScheduler.resources.requests.cpu
+## @skip keptnScheduler.keptnScheduler.resources.requests.memory
+
+## @param  schedulerConfig.schedulerConfigYaml.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
+## @param  schedulerConfig.schedulerConfigYaml.profiles[0].plugins.permit.enabled[0].name enables permit plugin
+## @param  schedulerConfig.schedulerConfigYaml.profiles[0].schedulerName changes scheduler name
+
+## @param keptnScheduler.nodeSelector adds node selectors for scheduler
+## @param keptnScheduler.replicas modifies replicas
+## @param keptnScheduler.tolerations adds tolerations for scheduler
+## @param keptnScheduler.topologySpreadConstraints add topology constraints for scheduler
+
+## @section Keptn Cert Manager common
+
+## @param    kltCertManager.replicas customize number of replicas
+
+## @param    kltCertManagerMetricsService.ports[0].name TODO  TODO  TODO
+## @param    kltCertManagerMetricsService.ports[0].port TODO  TODO  TODO
+## @param    kltCertManagerMetricsService.ports[0].protocol TODO  TODO  TODO
+## @param    kltCertManagerMetricsService.ports[0].targetPort TODO  TODO  TODO
+## @param    kltCertManagerMetricsService.type TODO  TODO TODO
+
+## @param    kltCertManager.nodeSelector specify custom node selectors for cert manager
+## @param    kltCertManager.tolerations customize tolerations for cert manager
+## @param    kltCertManager.topologySpreadConstraints add topology constraints for cert manager
+
+## @param    klcManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
+## @param    klcManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
+## @param    klcManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
+## @param    klcManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param    klcManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+
+## @param    klcWebhookService.ports[0].port TODO  TODO  TODO
+## @param    klcWebhookService.ports[0].protocol TODO  TODO  TODO
+## @param    klcWebhookService.ports[0].targetPort TODO  TODO  TODO
+## @param    klcWebhookService.type TODO  TODO  TODO
+
+## @section Keptn Cert Manager controller
+## @extra   kltCertManager.manager.containerSecurityContext Sets security context for the cert manager
+## @skip    kltCertManager.manager.containerSecurityContext.allowPrivilegeEscalation
+## @skip    kltCertManager.manager.containerSecurityContext.capabilities.drop
+## @skip    kltCertManager.manager.containerSecurityContext.readOnlyRootFilesystem
+## @skip    kltCertManager.manager.containerSecurityContext.runAsGroup
+## @skip    kltCertManager.manager.containerSecurityContext.runAsUser
+## @skip    kltCertManager.manager.containerSecurityContext.seccompProfile.type
+
+## @param    kltCertManager.manager.image.repository specify repo for manager image
+## @param    kltCertManager.manager.image.tag select tag for manager container
+## @param    kltCertManager.manager.imagePullPolicy select image pull policy for manager container
+
+## @extra    kltCertManager.manager.livenessProbe custom RBAC proxy liveness probe
+## @skip    kltCertManager.manager.livenessProbe.httpGet.path
+## @skip    kltCertManager.manager.livenessProbe.httpGet.port
+## @skip    kltCertManager.manager.livenessProbe.initialDelaySeconds
+## @skip    kltCertManager.manager.livenessProbe.periodSeconds
+
+## @extra   kltCertManager.manager.readinessProbe custom manager readiness probe
+## @skip    kltCertManager.manager.readinessProbe.httpGet.path
+## @skip    kltCertManager.manager.readinessProbe.httpGet.port
+## @skip    kltCertManager.manager.readinessProbe.initialDelaySeconds
+## @skip    kltCertManager.manager.readinessProbe.periodSeconds
+
+## @extra   kltCertManager.manager.resources custom limits and requests for manager container
+## @skip    kltCertManager.manager.resources.limits.cpu
+## @skip    kltCertManager.manager.resources.limits.memory
+## @skip    kltCertManager.manager.resources.requests.cpu
+## @skip    kltCertManager.manager.resources.requests.memory
+
+## @section Keptn Lifecycle Operator common
+
+## @param   klcControllerManager.replicas customize number of installed lifecycle operator replicas
+## @param   klcControllerManagerMetricsService.ports[0].name TODO  TODO  TODO
+## @param   klcControllerManagerMetricsService.ports[0].port TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[0].protocol TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[0].targetPort TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[1].name TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[1].port TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[1].protocol TODO  TODO  TODO 
+## @param   klcControllerManagerMetricsService.ports[1].targetPort TODO  TODO  TODO
+## @param   klcControllerManagerMetricsService.type TODO TODO TODO
+
+## @param   klcControllerManager.nodeSelector add custom nodes selector to lifecycle operator
+## @param   klcControllerManager.tolerations add custom tolerations to lifecycle operator
+## @param   klcControllerManager.topologySpreadConstraints add custom topology constraints to lifecycle operator
+
+## @section Keptn Lifecycle Operator controller
+## @extra   klcControllerManager.manager.containerSecurityContext Sets security context privileges
+## @param   klcControllerManager.manager.containerSecurityContext.allowPrivilegeEscalation
+## @param   klcControllerManager.manager.containerSecurityContext.capabilities.drop
+## @param   klcControllerManager.manager.containerSecurityContext.privileged
+## @param   klcControllerManager.manager.containerSecurityContext.runAsGroup
+## @param   klcControllerManager.manager.containerSecurityContext.runAsNonRoot
+## @param   klcControllerManager.manager.containerSecurityContext.runAsUser
+## @param   klcControllerManager.manager.containerSecurityContext.seccompProfile.type
+
+## @param   klcControllerManager.manager.keptnappController.logLevel sets the log level of Keptn App Controller
+## @param   klcControllerManager.manager.keptnappversionController.logLevel sets the log level of Keptn AppVersion Controller
+## @param   klcControllerManager.manager.keptnevaluationController.logLevel sets the log level of Keptn Evaluation Controller
+## @param   klcControllerManager.manager.keptntaskController.logLevel sets the log level of Keptn Task Controller
+## @param   klcControllerManager.manager.keptntaskdefinitionController.logLevel sets the log level of Keptn TaskDefinition Controller
+## @param   klcControllerManager.manager.keptnworkloadController.logLevel sets the log level of Keptn Workload Controller
+## @param   klcControllerManager.manager.keptnworkloadinstanceController.logLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   klcControllerManager.manager.optionsController.logLevel sets the log level of Keptn Options Controller
+
+## @param   klcControllerManager.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
+## @param   klcControllerManager.manager.env.functionRunnerImage specify image for task runtime
+
+## @param   klcControllerManager.manager.image.repository specify registry for manager image 
+## @param   klcControllerManager.manager.image.tag  select tag for manager image 
+## @param   klcControllerManager.manager.imagePullPolicy specify pull policy for manager image 
+
+## @extra  klcControllerManager.manager.livenessProbe custom livenessprobe for manager container
+## @skip   klcControllerManager.manager.livenessProbe.httpGet.path
+## @skip   klcControllerManager.manager.livenessProbe.httpGet.port
+## @skip   klcControllerManager.manager.livenessProbe.initialDelaySeconds
+## @skip   klcControllerManager.manager.livenessProbe.periodSeconds
+
+## @extra  klcControllerManager.manager.readinessProbe custom readinessprobe for manager container
+## @skip   klcControllerManager.manager.readinessProbe.httpGet.path
+## @skip   klcControllerManager.manager.readinessProbe.httpGet.port
+## @skip   klcControllerManager.manager.readinessProbe.initialDelaySeconds
+## @skip   klcControllerManager.manager.readinessProbe.periodSeconds
+
+## @extra  klcControllerManager.manager.resources specify limits and requests for manager container
+## @skip   klcControllerManager.manager.resources.limits.cpu
+## @skip   klcControllerManager.manager.resources.limits.memory
+## @skip   klcControllerManager.manager.resources.requests.cpu
+## @skip   klcControllerManager.manager.resources.requests.memory
+
+
+
+## @section Keptn Metrics Operator common
+
+## @param   metricsOperatorController.replicas customize number of installed metrics operator replicas
+
+## @param   metricsOperatorControllerMetricsService.ports[0].name
+## @param   metricsOperatorControllerMetricsService.ports[0].port
+## @param   metricsOperatorControllerMetricsService.ports[0].protocol
+## @param   metricsOperatorControllerMetricsService.ports[0].targetPort
+## @param   metricsOperatorControllerMetricsService.ports[1].name
+## @param   metricsOperatorControllerMetricsService.ports[1].port
+## @param   metricsOperatorControllerMetricsService.ports[1].targetPort
+## @param   metricsOperatorControllerMetricsService.ports[2].name
+## @param   metricsOperatorControllerMetricsService.ports[2].port
+## @param   metricsOperatorControllerMetricsService.ports[2].protocol
+## @param   metricsOperatorControllerMetricsService.ports[2].targetPort
+## @param   metricsOperatorControllerMetricsService.type
+
+## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
+## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
+## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
+## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+
+## @param      metricsOperatorWebhookService.ports[0].port TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.ports[0].protocol TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.ports[0].targetPort TODO  TODO  TODO
+## @param      metricsOperatorWebhookService.type TODO  TODO  TODO
+
+## @param    metricsOperatorController.nodeSelector add custom nodes selector to metrics operator
+## @param    metricsOperatorController.tolerations add custom tolerations to metrics operator
+## @param    metricsOperatorController.topologySpreadConstraints add custom topology constraints to metrics operator
+
+## @section Keptn Metrics Operator controller
+## @extra   metricsOperatorController.manager.containerSecurityContext Sets security context privileges
+## @param   metricsOperatorController.manager.containerSecurityContext.allowPrivilegeEscalation
+## @param   metricsOperatorController.manager.containerSecurityContext.capabilities.drop
+
+## @param   metricsOperatorController.manager.metricsController.logLevel sets the log level of Keptn Metrics Controller
+
+## @param   metricsOperatorController.manager.image.repository specify registry for manager image
+## @param   metricsOperatorController.manager.image.tag  select tag for manager image
+
+## @param   metricsOperatorController.manager.env.exposeKeptnMetrics enable metrics exporter
+
+## @extra  metricsOperatorController.manager.livenessProbe custom livenessprobe for manager container
+## @skip   metricsOperatorController.manager.livenessProbe.httpGet.path
+## @skip   metricsOperatorController.manager.livenessProbe.httpGet.port
+## @skip   metricsOperatorController.manager.livenessProbe.initialDelaySeconds
+## @skip   metricsOperatorController.manager.livenessProbe.periodSeconds
+
+## @extra  metricsOperatorController.manager.readinessProbe custom readinessprobe for manager container
+## @skip   metricsOperatorController.manager.readinessProbe.httpGet.path
+## @skip   metricsOperatorController.manager.readinessProbe.httpGet.port
+## @skip   metricsOperatorController.manager.readinessProbe.initialDelaySeconds
+## @skip   metricsOperatorController.manager.readinessProbe.periodSeconds
+
+## @extra  metricsOperatorController.manager.resources specify limits and requests for manager container
+## @skip   metricsOperatorController.manager.resources.limits.cpu
+## @skip   metricsOperatorController.manager.resources.limits.memory
+## @skip   metricsOperatorController.manager.resources.requests.cpu
+## @skip   metricsOperatorController.manager.resources.requests.memory
+
+
+## @section Global
+## Current available parameters: kubernetesClusterDomain, imagePullSecrets
+## @param  kubernetesClusterDomain overrides domain.local
+## @param  imagePullSecrets global value for image registry secret

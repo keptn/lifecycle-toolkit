@@ -1,0 +1,667 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: metrics-controller
+  name: keptn-lifecycle-toolkit-system
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: keptnmetrics.metrics.keptn.sh
+spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          name: metrics-operator-webhook-service
+          namespace: keptn-lifecycle-toolkit-system
+          path: /convert
+      conversionReviewVersions:
+      - v1
+  group: metrics.keptn.sh
+  names:
+    kind: KeptnMetric
+    listKind: KeptnMetricList
+    plural: keptnmetrics
+    singular: keptnmetric
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetric is the Schema for the keptnmetrics API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricSpec defines the desired state of KeptnMetric
+            properties:
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run
+                type: string
+            required:
+            - fetchIntervalSeconds
+            - provider
+            - query
+            type: object
+          status:
+            description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            required:
+            - lastUpdated
+            - rawValue
+            - value
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetric is the Schema for the keptnmetrics API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricSpec defines the desired state of KeptnMetric
+            properties:
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run
+                type: string
+            required:
+            - fetchIntervalSeconds
+            - provider
+            - query
+            type: object
+          status:
+            description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            required:
+            - lastUpdated
+            - rawValue
+            - value
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: keptnmetricsproviders.metrics.keptn.sh
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: KeptnMetricsProvider
+    listKind: KeptnMetricsProviderList
+    plural: keptnmetricsproviders
+    shortNames:
+    - kmp
+    singular: keptnmetricsprovider
+  scope: Namespaced
+  versions:
+  - name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetricsProvider is the Schema for the keptnmetricsproviders
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
+            properties:
+              secretKeyRef:
+                description: SecretKeySelector selects a key of a Secret.
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
+                    type: string
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              targetServer:
+                type: string
+            required:
+            - targetServer
+            type: object
+          status:
+            description: KeptnMetricsProviderStatus defines the observed state of
+              KeptnMetricsProvider
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: metrics-operator-leader-election-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metrics-operator-keptn-metrics-server-resources
+rules:
+- apiGroups:
+  - custom.metrics.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: metrics-operator-manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetricsproviders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - providers
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metrics-operator-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metrics-operator-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metrics-operator-leader-election-rolebinding
+  namespace: keptn-lifecycle-toolkit-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: metrics-operator-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metrics-operator-manager-rolebinding
+  namespace: keptn-lifecycle-toolkit-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: manager-role
+subjects:
+- kind: ServiceAccount
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: metrics-operator-hpa-controller-keptn-metrics
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: metrics-operator-keptn-metrics-server-resources
+subjects:
+- kind: ServiceAccount
+  name: horizontal-pod-autoscaler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: metrics-operator-keptn-metrics-system-auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: metrics-operator-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: metrics-operator-manager-role
+subjects:
+- kind: ServiceAccount
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: metrics-operator-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: metrics-operator-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: v1
+data:
+  controller_manager_config.yaml: |
+    apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
+    kind: ControllerManagerConfig
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+    leaderElection:
+      leaderElect: true
+      resourceName: 3f8532ca.keptn.sh
+    # leaderElectionReleaseOnCancel defines if the leader should step down volume
+    # when the Manager ends. This requires the binary to immediately end when the
+    # Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
+    # speeds up voluntary leader transitions as the new leader don't have to wait
+    # LeaseDuration time first.
+    # In the default scaffold provided, the program ends immediately after
+    # the manager stops, so would be fine to enable this option. However,
+    # if you are doing or is intended to do any operation such as perform cleanups
+    # after the manager stops then its usage might be unsafe.
+    # leaderElectionReleaseOnCancel: true
+kind: ConfigMap
+metadata:
+  name: metrics-operator-manager-config
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: metrics-controller
+  name: metrics-operator-controller-metrics-service
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: custom-metrics
+    port: 443
+    targetPort: custom-metrics
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    control-plane: metrics-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metrics-operator-webhook-service
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  selector:
+    control-plane: metrics-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    control-plane: metrics-controller
+  name: metrics-operator-controller
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: metrics-controller
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        control-plane: metrics-controller
+    spec:
+      containers:
+      - args:
+        - webhook-server
+        - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
+        - --leader-elect
+        - --adapter-port=6443
+        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+        - --v=10
+        command:
+        - /manager
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: EXPOSE_KEPTN_METRICS
+          value: "true"
+        image: odubajdt/metrics-operator:v1alpha3
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        - containerPort: 2222
+          name: metrics
+          protocol: TCP
+        - containerPort: 6443
+          name: custom-metrics
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs/
+          name: certs-dir
+        - mountPath: /tmp/metrics-adapter/serving-certs
+          name: adapter-certs-dir
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: metrics-operator-controller
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: certs-dir
+      - emptyDir: {}
+        name: adapter-certs-dir
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.custom.metrics.k8s.io
+spec:
+  group: custom.metrics.k8s.io
+  groupPriorityMinimum: 100
+  insecureSkipTLSVerify: true
+  service:
+    name: metrics-operator-controller-metrics-service
+    namespace: keptn-lifecycle-toolkit-system
+  version: v1beta1
+  versionPriority: 100
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta2.custom.metrics.k8s.io
+spec:
+  group: custom.metrics.k8s.io
+  groupPriorityMinimum: 100
+  insecureSkipTLSVerify: true
+  service:
+    name: metrics-operator-controller-metrics-service
+    namespace: keptn-lifecycle-toolkit-system
+  version: v1beta2
+  versionPriority: 200

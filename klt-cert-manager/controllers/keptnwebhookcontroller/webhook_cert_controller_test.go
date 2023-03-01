@@ -13,17 +13,19 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 const (
-	testDomain         = ServiceName + "." + testnamespace + ".svc"
-	expectedSecretName = DeploymentName + secretPostfix
+	testDomain         = "my-domain." + testnamespace + ".svc"
+	expectedSecretName = secretName
 	strategyWebhook    = "webhook"
 	testBytes          = 123
 	testnamespace      = "keptn-ns"
+	crdGroup           = "lifecycle.keptn.sh"
 )
 
 func TestReconcileCertificate_Create(t *testing.T) {
@@ -33,7 +35,7 @@ func TestReconcileCertificate_Create(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -60,7 +62,7 @@ func TestReconcileCertificate_Update(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -87,7 +89,7 @@ func TestReconcileCertificate_ExistingSecretWithValidCertificate(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, SuccessDuration, res.RequeueAfter)
+	assert.Equal(t, successDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -100,10 +102,8 @@ func TestReconcile(t *testing.T) {
 
 	crd1 := &apiv1.CustomResourceDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "crd1",
-			Labels: map[string]string{
-				"crdGroup": "lifecycle.keptn.sh",
-			},
+			Name:   "crd1",
+			Labels: getMatchLabel(),
 		},
 		Spec: apiv1.CustomResourceDefinitionSpec{
 			Group: crdGroup,
@@ -135,20 +135,18 @@ func TestReconcile(t *testing.T) {
 	}
 	crd3 := &apiv1.CustomResourceDefinition{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "crd3",
-			Labels: map[string]string{
-				"crdGroup": "lifecycle.keptn.sh",
-			},
+			Name:   "crd3",
+			Labels: getMatchLabel(),
 		},
 		Spec: apiv1.CustomResourceDefinitionSpec{
-			Group: crdGroup,
+			Group: "metric.keptn.sh",
 		},
 	}
 
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name: "my-mutating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -169,7 +167,7 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with validatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name: "my-validating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -222,7 +220,7 @@ func TestReconcile(t *testing.T) {
 	t.Run(`update crd and webhooks successfully with up-to-date secret`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name: "my-mutating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -234,7 +232,7 @@ func TestReconcile(t *testing.T) {
 			},
 		}, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name: "my-validating-webhook-config",
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -295,7 +293,8 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	objs := []client.Object{
 		&admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: MutatingWebhookconfig,
+				Name:   "my-mutating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -309,7 +308,8 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 
 		&admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: ValidatingWebhookconfig,
+				Name:   "my-validating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -375,6 +375,12 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 	return faker
 }
 
+func getMatchLabel() map[string]string {
+	return map[string]string{
+		"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit",
+	}
+}
+
 func createInvalidTestCertData(_ *testing.T) map[string][]byte {
 	return map[string][]byte{
 		RootKey:    {testBytes},
@@ -405,15 +411,15 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := &KeptnWebhookCertificateReconciler{
-
-		Client:    clt,
-		Log:       testr.New(t),
-		Namespace: testnamespace,
+		Client:      clt,
+		Log:         testr.New(t),
+		Namespace:   testnamespace,
+		MatchLabels: labels.Set(map[string]string{"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit"}),
 	}
 
 	request := reconcile.Request{
 		NamespacedName: types.NamespacedName{
-			Name:      DeploymentName,
+			Name:      "klc-controller-manager",
 			Namespace: testnamespace,
 		},
 	}
@@ -448,7 +454,7 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	mutatingWebhookConfig := &admissionregistrationv1.MutatingWebhookConfiguration{}
 	err := clt.Get(context.TODO(), client.ObjectKey{
-		Name: MutatingWebhookconfig,
+		Name: "my-mutating-webhook-config",
 	}, mutatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, mutatingWebhookConfig.Webhooks, 2)
@@ -456,7 +462,7 @@ func verifyCertificates(t *testing.T, secret *corev1.Secret, clt client.Client, 
 
 	validatingWebhookConfig := &admissionregistrationv1.ValidatingWebhookConfiguration{}
 	err = clt.Get(context.TODO(), client.ObjectKey{
-		Name: ValidatingWebhookconfig,
+		Name: "my-validating-webhook-config",
 	}, validatingWebhookConfig)
 	require.NoError(t, err)
 	assert.Len(t, validatingWebhookConfig.Webhooks, 2)

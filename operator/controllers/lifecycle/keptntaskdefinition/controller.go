@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -47,7 +47,7 @@ type KeptnTaskDefinitionReconciler struct {
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling KeptnTaskDefinition")
 
-	definition := &klcv1alpha2.KeptnTaskDefinition{}
+	definition := &klcv1alpha3.KeptnTaskDefinition{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, definition); err != nil {
 		if errors.IsNotFound(err) {
@@ -59,7 +59,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha2.FunctionSpec{}) {
+	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
 		err := r.reconcileFunction(ctx, req, definition)
 		if err != nil {
 			return ctrl.Result{}, nil
@@ -72,7 +72,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnTaskDefinitionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha2.KeptnTaskDefinition{}).
+		For(&klcv1alpha3.KeptnTaskDefinition{}).
 		Owns(&corev1.ConfigMap{}).
 		Complete(r)
 }

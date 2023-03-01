@@ -72,6 +72,8 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "klt-cert-manager"
@@ -111,6 +113,8 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
@@ -159,7 +163,7 @@ jobs:
           path: /tmp/${{ matrix.config.name }}-image.tar
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator'
+        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
@@ -224,6 +228,8 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
@@ -274,7 +280,7 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager'
+        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 

@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"os"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -20,10 +20,10 @@ type FunctionExecutionParams struct {
 	Parameters       map[string]string
 	SecureParameters string
 	URL              string
-	Context          klcv1alpha2.TaskContext
+	Context          klcv1alpha3.TaskContext
 }
 
-func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha2.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
+func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
 	randomId := rand.Intn(99999-10000) + 10000
 	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
@@ -114,12 +114,12 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha2.KeptnTask, p
 	return job, nil
 }
 
-func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha2.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
+func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha3.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
 	params := FunctionExecutionParams{}
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
-	if definition.Spec.Function.FunctionReference != (klcv1alpha2.FunctionReference{}) {
+	if definition.Spec.Function.FunctionReference != (klcv1alpha3.FunctionReference{}) {
 		hasParent = true
 	}
 

@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
@@ -24,17 +24,17 @@ import (
 // Example Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
-	app := &lfcv1alpha2.KeptnApp{
+	app := &lfcv1alpha3.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1alpha2.KeptnAppSpec{
+		Spec: lfcv1alpha3.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1alpha2.KeptnAppStatus{},
+		Status: lfcv1alpha3.KeptnAppStatus{},
 	}
 	r, _, _ := setupReconciler()
 
@@ -96,7 +96,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	require.Nil(t, err)
 	err = controllercommon.AddApp(r.Client, "myfinishedapp")
 	require.Nil(t, err)
-	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0-1", nil, lfcv1alpha2.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0-1", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
 	require.Nil(t, err)
 
 	for _, tt := range tests {

@@ -1,0 +1,24 @@
+# permissions for end users to edit keptnworkloads.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnworkload-editor-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloads
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloads/status
+  verbs:
+  - get

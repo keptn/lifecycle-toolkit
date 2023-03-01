@@ -1,35 +1,254 @@
-otelCollector:
-  url: "otel-collector:4317"
-
-deployment:
-  imagePullPolicy: Always
-
-## @section Controller Log level
-operator:
-  keptnappController:
-    ## @param operator.keptnappController.logLevel Sets the log level of Keptn App Controller
-    logLevel: 0
-  keptnappversionController:
-    ## @param operator.keptnappversionController.logLevel Sets the log level of Keptn Version Controller
-    logLevel: 0
-  keptnevaluationController:
-    ## @param operator.keptnevaluationController.logLevel Sets the log level of Keptn Evaluation Controller
-    logLevel: 0
-  keptntaskController:
-    ## @param operator.keptntaskController.logLevel Sets the log level of Keptn Task Controller
-    logLevel: 0
-  keptntaskdefinitionController:
-    ## @param operator.keptntaskdefinitionController.logLevel Sets the log level of Keptn Task Defintion Controller
-    logLevel: 0
-  keptnworkloadController:
-    ## @param operator.keptnworkloadController.logLevel Sets the log level of Keptn Workload Controller
-    logLevel: 0
-  keptnworkloadinstanceController:
-    ## @param operator.keptnworkloadinstanceController.logLevel Sets the log level of Keptn Workload Instance Controller
-    logLevel: 0
-  metricsController:
-    ## @param operator.metricsController.logLevel Sets the log level of Keptn Metrics Controller
-    logLevel: 0
-  optionsController:
-    ## @param operator.optionsController.logLevel Sets the log level of Keptn Options Controller
-    logLevel: 0
+imagePullSecrets: []
+keptnScheduler:
+  keptnScheduler:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      otelCollectorUrl: otel-collector:4317
+    image:
+      repository: ghcr.io/keptn/scheduler
+      tag: "202302281677584335"
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+      initialDelaySeconds: 15
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 20Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+klcControllerManager:
+  manager:
+    keptnappController:
+      logLevel: 0
+    keptnappversionController:
+      logLevel: 0
+    keptnevaluationController:
+      logLevel: 0
+    keptntaskController:
+      logLevel: 0
+    keptntaskdefinitionController:
+      logLevel: 0
+    keptnworkloadController:
+      logLevel: 0
+    keptnworkloadinstanceController:
+      logLevel: 0
+    optionsController:
+      logLevel: 0
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
+      otelCollectorUrl: otel-collector:4317
+    image:
+      repository: ghcr.io/keptn/keptn-lifecycle-operator
+      tag: "202302281677584335"
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+klcControllerManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  type: ClusterIP
+klcManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+klcWebhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  type: ClusterIP
+kltCertManager:
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    image:
+      repository: ghcr.io/keptn/klt-cert-manager
+      tag: "202302281677584335"
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 100m
+        memory: 32Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+kltCertManagerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
+metricsOperatorController:
+  manager:
+    metricsController:
+      logLevel: 0
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    env:
+      exposeKeptnMetrics: "true"
+    image:
+      repository: ghcr.io/keptn/metrics-operator
+      tag: "202302281677584335"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 64Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+metricsOperatorControllerMetricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: custom-metrics
+    port: 443
+    targetPort: custom-metrics
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  type: ClusterIP
+metricsOperatorManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 3f8532ca.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+metricsOperatorWebhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  type: ClusterIP
+schedulerConfig:
+  schedulerConfigYaml:
+    leaderElection:
+      leaderElect: false
+    profiles:
+    - plugins:
+        permit:
+          enabled:
+          - name: KLCPermit
+      schedulerName: keptn-scheduler

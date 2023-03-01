@@ -4,19 +4,21 @@ kind: Kustomization
 bases:
   - ../../operator/config/default
   - ../../klt-cert-manager/config/default
+  - ../../metrics-operator/config/default
   - ../../scheduler/manifests/install
+
 # replace the default namespace with {{ include "chart.namespace" . }}
 # .Release.Namespace has not been used so that a custom _helpers.tpl file can maintain the expected behaviour of
 # helm install -n
-namespace: "{{ .Release.Namespace }}"
-patchesStrategicMerge:
-  - patches/patch_deployment.yaml
-
 patches:
   - patch: |
-      - op: replace
-        path: '/spec/template/spec/containers/0/imagePullPolicy'
-        value: "{{ .Values.deployment.imagePullPolicy}}"
+      - op: add
+        path: '/webhooks/0/namespaceSelector/matchExpressions/-'
+        value:
+          key: kubernetes.io/metadata.name
+          operator: "NotIn"
+          values:
+            - '{{ .Release.Namespace }}'
     target:
-      kind: Deployment
-      name: "(controller-manager|cert-manager|keptn-scheduler)"
+      kind: MutatingWebhookConfiguration
+      name: "(mutating-webhook-configuration)"

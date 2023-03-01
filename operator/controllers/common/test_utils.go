@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	lfcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -15,23 +15,23 @@ import (
 )
 
 func AddApp(c client.Client, name string) error {
-	app := &lfcv1alpha2.KeptnApp{
+	app := &lfcv1alpha3.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       name,
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1alpha2.KeptnAppSpec{
+		Spec: lfcv1alpha3.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1alpha2.KeptnAppStatus{},
+		Status: lfcv1alpha3.KeptnAppStatus{},
 	}
 	return c.Create(context.TODO(), app)
 }
 
 func UpdateAppRevision(c client.Client, name string, revision uint) error {
-	app := &lfcv1alpha2.KeptnApp{}
+	app := &lfcv1alpha3.KeptnApp{}
 	err := c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
 	if err != nil {
 		return err
@@ -41,17 +41,17 @@ func UpdateAppRevision(c client.Client, name string, revision uint) error {
 	return c.Update(context.TODO(), app)
 }
 
-func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha2.KeptnWorkloadRef, status lfcv1alpha2.KeptnAppVersionStatus) error {
+func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha3.KeptnWorkloadRef, status lfcv1alpha3.KeptnAppVersionStatus) error {
 	appVersionName := fmt.Sprintf("%s-%s", appName, version)
-	app := &lfcv1alpha2.KeptnAppVersion{
+	app := &lfcv1alpha3.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       appVersionName,
 			Namespace:  namespace,
 			Generation: 1,
 		},
-		Spec: lfcv1alpha2.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1alpha2.KeptnAppSpec{
+		Spec: lfcv1alpha3.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1alpha3.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
 			},

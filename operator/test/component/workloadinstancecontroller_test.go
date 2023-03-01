@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
@@ -98,8 +98,8 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 	})
 	Describe("Creation of WorkloadInstance", func() {
 		var (
-			appVersion *klcv1alpha2.KeptnAppVersion
-			wi         *klcv1alpha2.KeptnWorkloadInstance
+			appVersion *klcv1alpha3.KeptnAppVersion
+			wi         *klcv1alpha3.KeptnWorkloadInstance
 		)
 		Context("with a new AppVersions CRD", func() {
 
@@ -109,13 +109,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 			It("should fail if Workload not found in AppVersion", func() {
 				wiName := "not-found"
-				wi = &klcv1alpha2.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      name,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{},
+					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{},
 						WorkloadName:      "wi-test-app-wname-" + wiName,
 						TraceId:           map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
@@ -130,7 +130,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Consistently(func(g Gomega) {
-					wi := &klcv1alpha2.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))
@@ -184,14 +184,14 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Creating a WorkloadInstance that references the StatefulSet")
-				wi = &klcv1alpha2.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      name,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
-							ResourceReference: klcv1alpha2.ResourceReference{
+					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha3.ResourceReference{
 								UID:  statefulSet.UID,
 								Kind: "StatefulSet",
 								Name: "my-statefulset",
@@ -212,7 +212,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha2.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
@@ -261,14 +261,14 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Creating a WorkloadInstance that references the DaemonSet")
-				wi = &klcv1alpha2.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      name,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
-							ResourceReference: klcv1alpha2.ResourceReference{
+					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+							ResourceReference: klcv1alpha3.ResourceReference{
 								UID:  daemonSet.UID,
 								Kind: "DaemonSet",
 								Name: "my-daemonset",
@@ -289,19 +289,19 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha2.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
 			It("should be deprecated when pre-eval checks failed", func() {
-				evaluation := &klcv1alpha2.KeptnEvaluation{
+				evaluation := &klcv1alpha3.KeptnEvaluation{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "pre-eval-eval-def",
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha2.KeptnEvaluationSpec{
+					Spec: klcv1alpha3.KeptnEvaluationSpec{
 						EvaluationDefinition: "eval-def",
 						Workload:             "test-app-wname",
 						WorkloadVersion:      "2.0",
@@ -318,10 +318,10 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err := k8sClient.Create(context.TODO(), evaluation)
 				Expect(err).To(BeNil())
 
-				evaluation.Status = klcv1alpha2.KeptnEvaluationStatus{
+				evaluation.Status = klcv1alpha3.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
 					RetryCount:    10,
-					EvaluationStatus: map[string]klcv1alpha2.EvaluationStatusItem{
+					EvaluationStatus: map[string]klcv1alpha3.EvaluationStatusItem{
 						"something": {
 							Status: apicommon.StateFailed,
 							Value:  "10",
@@ -334,13 +334,13 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
-				wi = &klcv1alpha2.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "test-app-wname-2.0",
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha2.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha2.KeptnWorkloadSpec{
+					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							Version:                  "2.0",
 							AppName:                  appVersion.GetAppName(),
 							PreDeploymentEvaluations: []string{"eval-def"},
@@ -354,12 +354,12 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 				time.Sleep(5 * time.Second)
 
-				wi2 := &klcv1alpha2.KeptnWorkloadInstance{}
+				wi2 := &klcv1alpha3.KeptnWorkloadInstance{}
 				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: wi.Namespace, Name: wi.Name}, wi2)
 				Expect(err).To(BeNil())
 				Expect(wi2).To(Not(BeNil()))
 
-				wi2.Status = klcv1alpha2.KeptnWorkloadInstanceStatus{
+				wi2.Status = klcv1alpha3.KeptnWorkloadInstanceStatus{
 					PreDeploymentStatus:            apicommon.StateSucceeded,
 					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
 					DeploymentStatus:               apicommon.StatePending,
@@ -367,7 +367,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					PostDeploymentEvaluationStatus: apicommon.StatePending,
 					CurrentPhase:                   apicommon.PhaseWorkloadPreEvaluation.ShortName,
 					Status:                         apicommon.StateProgressing,
-					PreDeploymentEvaluationTaskStatus: []klcv1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []klcv1alpha3.ItemStatus{
 						{
 							Name:           "pre-eval-eval-def",
 							Status:         apicommon.StateProgressing,
@@ -385,7 +385,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha2.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))
@@ -430,18 +430,18 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 	})
 })
 
-func createAppVersionInCluster(name string, namespace string, version string) *klcv1alpha2.KeptnAppVersion {
-	instance := &klcv1alpha2.KeptnAppVersion{
+func createAppVersionInCluster(name string, namespace string, version string) *klcv1alpha3.KeptnAppVersion {
+	instance := &klcv1alpha3.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       name,
 			Namespace:  namespace,
 			Generation: 1,
 		},
-		Spec: klcv1alpha2.KeptnAppVersionSpec{
+		Spec: klcv1alpha3.KeptnAppVersionSpec{
 			AppName: name,
-			KeptnAppSpec: klcv1alpha2.KeptnAppSpec{
+			KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
 				Version: version,
-				Workloads: []klcv1alpha2.KeptnWorkloadRef{
+				Workloads: []klcv1alpha3.KeptnWorkloadRef{
 					{
 						Name:    "wname",
 						Version: "2.0",

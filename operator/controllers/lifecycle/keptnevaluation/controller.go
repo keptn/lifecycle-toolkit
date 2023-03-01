@@ -21,10 +21,10 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers/keptnmetric"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -61,7 +61,7 @@ type KeptnEvaluationReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnevaluationdefinitions,verbs=get;list;watch
 
 // role
-// +kubebuilder:rbac:groups=core,namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get
+// +kubebuilder:rbac:groups=core,resources=secrets,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -75,7 +75,7 @@ type KeptnEvaluationReconciler struct {
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	r.Log.Info("Reconciling KeptnEvaluation")
-	evaluation := &klcv1alpha2.KeptnEvaluation{}
+	evaluation := &klcv1alpha3.KeptnEvaluation{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {
 		if errors.IsNotFound(err) {
@@ -100,7 +100,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			Namespace: req.NamespacedName.Namespace,
 			Name:      evaluation.Spec.EvaluationDefinition,
 		}
-		evaluationDefinition, evaluationProvider, err := r.fetchDefinitionAndProvider(ctx, namespacedDefinition)
+		evaluationDefinition, err := r.fetchDefinition(ctx, namespacedDefinition)
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
@@ -111,16 +111,8 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{}, nil
 		}
-		// load the provider
-		provider, err2 := providers.NewProvider(evaluationDefinition.Spec.Source, r.Log, r.Client)
-		if err2 != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Error", evaluation, "ProviderNotFound", "evaluation provider was not found", "")
-			r.Log.Error(err2, "Failed to get the correct Metric Provider")
-			span.SetStatus(codes.Error, err2.Error())
-			return ctrl.Result{Requeue: false}, err2
-		}
 
-		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition, provider, evaluationProvider)
+		evaluation = r.performEvaluation(ctx, evaluation, evaluationDefinition)
 
 	}
 
@@ -139,7 +131,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 }
 
-func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation) (context.Context, trace.Span) {
+func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation) (context.Context, trace.Span) {
 	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 	ctx, span := r.getTracer().Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
@@ -149,7 +141,7 @@ func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, ev
 	return ctx, span
 }
 
-func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {
+func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
@@ -164,7 +156,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 
 }
 
-func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) {
+func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) {
 	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "ReconcileTimeOut", "retryCount exceeded", "")
 	err := controllererrors.ErrRetryCountExceeded
 	span.SetStatus(codes.Error, err.Error())
@@ -175,16 +167,21 @@ func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.
 	}
 }
 
-func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, evaluationDefinition *klcv1alpha2.KeptnEvaluationDefinition, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) *klcv1alpha2.KeptnEvaluation {
+func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, evaluationDefinition *klcv1alpha3.KeptnEvaluationDefinition) *klcv1alpha3.KeptnEvaluation {
 	statusSummary := apicommon.StatusSummary{Total: len(evaluationDefinition.Spec.Objectives)}
-	newStatus := make(map[string]klcv1alpha2.EvaluationStatusItem)
+	newStatus := make(map[string]klcv1alpha3.EvaluationStatusItem)
 
 	if evaluation.Status.EvaluationStatus == nil {
-		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha2.EvaluationStatusItem)
+		evaluation.Status.EvaluationStatus = make(map[string]klcv1alpha3.EvaluationStatusItem)
+	}
+
+	provider := &keptnmetric.KeptnMetricProvider{
+		Log:       r.Log,
+		K8sClient: r.Client,
 	}
 
 	for _, query := range evaluationDefinition.Spec.Objectives {
-		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider, evaluationProvider)
+		newStatus, statusSummary = r.evaluateObjective(ctx, evaluation, statusSummary, newStatus, query, provider)
 	}
 
 	evaluation.Status.RetryCount++
@@ -198,24 +195,23 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	return evaluation
 }
 
-func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha2.EvaluationStatusItem, query klcv1alpha2.Objective, provider providers.KeptnSLIProvider, evaluationProvider *klcv1alpha2.KeptnEvaluationProvider) (map[string]klcv1alpha2.EvaluationStatusItem, apicommon.StatusSummary) {
-	if _, ok := evaluation.Status.EvaluationStatus[query.Name]; !ok {
+func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha3.EvaluationStatusItem, query klcv1alpha3.Objective, provider *keptnmetric.KeptnMetricProvider) (map[string]klcv1alpha3.EvaluationStatusItem, apicommon.StatusSummary) {
+	if _, ok := evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]; !ok {
 		evaluation.AddEvaluationStatus(query)
 	}
-	if evaluation.Status.EvaluationStatus[query.Name].Status.IsSucceeded() {
+	if evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name].Status.IsSucceeded() {
 		statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
-		newStatus[query.Name] = evaluation.Status.EvaluationStatus[query.Name]
+		newStatus[query.KeptnMetricRef.Name] = evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, _, err := provider.EvaluateQuery(ctx, query, *evaluationProvider)
-	statusItem := &klcv1alpha2.EvaluationStatusItem{
+	value, _, err := provider.FetchData(ctx, query, evaluation.Namespace)
+	statusItem := &klcv1alpha3.EvaluationStatusItem{
 		Value:  value,
 		Status: apicommon.StateFailed,
 	}
 	if err != nil {
 		statusItem.Message = err.Error()
-		statusItem.Status = apicommon.StateFailed
 	}
 	// Evaluating SLO
 	check, err := checkValue(query, statusItem)
@@ -227,12 +223,12 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		statusItem.Status = apicommon.StateSucceeded
 	}
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
-	newStatus[query.Name] = *statusItem
+	newStatus[query.KeptnMetricRef.Name] = *statusItem
 
 	return newStatus, statusSummary
 }
 
-func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha2.KeptnEvaluation, span trace.Span) error {
+func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
 	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)
@@ -258,30 +254,17 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha2.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha3.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnEvaluationReconciler) fetchDefinitionAndProvider(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationProvider, error) {
-	evaluationDefinition := &klcv1alpha2.KeptnEvaluationDefinition{}
+func (r *KeptnEvaluationReconciler) fetchDefinition(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
+	evaluationDefinition := &klcv1alpha3.KeptnEvaluationDefinition{}
 	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	if evaluationDefinition.Spec.Source == providers.KeptnMetricProviderName {
-		return evaluationDefinition, providers.GetDefaultMetricProvider(r.Namespace), nil
-	}
-
-	namespacedProvider := types.NamespacedName{
-		Namespace: namespacedDefinition.Namespace,
-		Name:      evaluationDefinition.Spec.Source,
-	}
-
-	evaluationProvider := &klcv1alpha2.KeptnEvaluationProvider{}
-	if err := r.Client.Get(ctx, namespacedProvider, evaluationProvider); err != nil {
-		return nil, nil, err
-	}
-	return evaluationDefinition, evaluationProvider, nil
+	return evaluationDefinition, nil
 }
 
 func (r *KeptnEvaluationReconciler) getTracer() controllercommon.ITracer {

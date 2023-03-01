@@ -5,10 +5,10 @@ import (
 	"math"
 	"strconv"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 )
 
-func checkValue(objective klcv1alpha2.Objective, item *klcv1alpha2.EvaluationStatusItem) (bool, error) {
+func checkValue(objective klcv1alpha3.Objective, item *klcv1alpha3.EvaluationStatusItem) (bool, error) {
 
 	if len(item.Value) == 0 || len(objective.EvaluationTarget) == 0 {
 		return false, fmt.Errorf("no values")

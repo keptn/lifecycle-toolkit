@@ -3,8 +3,8 @@ package common
 import (
 	"fmt"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
@@ -18,13 +18,13 @@ type CreateAttributes struct {
 }
 
 // GetItemStatus retrieves the state of the task/evaluation, if it does not exists, it creates a default one
-func GetItemStatus(name string, instanceStatus []klcv1alpha2.ItemStatus) klcv1alpha2.ItemStatus {
+func GetItemStatus(name string, instanceStatus []klcv1alpha3.ItemStatus) klcv1alpha3.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {
 			return status
 		}
 	}
-	return klcv1alpha2.ItemStatus{
+	return klcv1alpha3.ItemStatus{
 		DefinitionName: name,
 		Status:         apicommon.StatePending,
 		Name:           "",
@@ -36,7 +36,7 @@ func GetAppVersionName(namespace string, appName string, version string) types.N
 }
 
 // GetOldStatus retrieves the state of the task/evaluation
-func GetOldStatus(name string, statuses []klcv1alpha2.ItemStatus) apicommon.KeptnState {
+func GetOldStatus(name string, statuses []klcv1alpha3.ItemStatus) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {
 		if ts.DefinitionName == name {

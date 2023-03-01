@@ -3,16 +3,16 @@ package interfaces
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 )
 
 func TestActiveMetricsObjectWrapper(t *testing.T) {
-	appVersion := v1alpha2.KeptnAppVersion{
-		Status: v1alpha2.KeptnAppVersionStatus{
+	appVersion := v1alpha3.KeptnAppVersion{
+		Status: v1alpha3.KeptnAppVersionStatus{
 			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},

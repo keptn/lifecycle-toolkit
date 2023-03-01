@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -10,7 +10,7 @@ spec:
   postDeploymentTasks:
     - post-deployment-hello
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service

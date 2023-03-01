@@ -114,4 +114,4 @@ build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator bui
 include docs/Makefile
 
 yamllint:
-	@docker run --rm $$(tty -s && echo "-it" || echo) -v $(PWD):/data cytopia/yamllint:latest .github docs
+	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:latest .github docs

@@ -1,5 +1,5 @@
 ---
-title: Migrate KeptnEvaluationProvider
+title: Migrate KeptnEvaluationProvider to KeptnMetricsProvider
 description: Migrate deprecated KeptnEvaluationProvider to KeptnMetricsProvider.
 icon: concepts
 layout: quickstart

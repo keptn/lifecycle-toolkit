@@ -402,7 +402,7 @@ spec:
 A `KeptnMetricsProvider` is a CRD that defines the evaluation provider that provides data for the
 pre- and post-analysis phases of a workload or Keptn application.
 
-A Keptn metrics provider looks like the following:
+A Keptn metrics provider in a yaml file that looks like the following:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2

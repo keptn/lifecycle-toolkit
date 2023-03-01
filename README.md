@@ -441,7 +441,7 @@ spec:
   fetchIntervalSeconds: 5
 ```
 
-To be able to use `KeptnMetric` as part of your evaluation, you need specify the
+To be able to use `KeptnMetric` as part of your evaluation, you must set the
 `.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
 `KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name` and `metafata.namespace`
 of `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.

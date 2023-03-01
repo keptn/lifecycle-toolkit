@@ -109,7 +109,9 @@ To verify that your markdown code conforms to the rules, run the following on yo
 make markdownlint
 ```
 
-To use the auto-fix option, run:
+`markdown-lint` supports an auto-fix mod
+that can fix most of the issues the tool identifies.
+To use the auto-fix option, run the following on your local branch:
 
 ```shell
 make markdownlint-fix

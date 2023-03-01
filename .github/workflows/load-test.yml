@@ -28,12 +28,12 @@ jobs:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
 
       - name: Install and expose Prometheus
-        working-directory: ./test/load
+        working-directory: ./test
         run: |
           kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-          kubectl apply --server-side -f ../assets/prometheus/setup
+          kubectl apply --server-side -f ./assets/prometheus/setup
           kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
-          kubectl apply -f ../assets/prometheus/
+          kubectl apply -f ./assets/prometheus/
           kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
           kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s

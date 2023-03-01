@@ -16,10 +16,7 @@ Due to the recent changes by splitting the `klt-operator` into two separate oper
 curl -sL https://raw.githubusercontent.com/keptn/lifecycle-toolkit/epic/split-metrics-operator/.github/scripts/keptnevaluationprovider_migrator.sh | bash
 ```
 
-This script will fetch all existing `KeptnEvaluationProvider` CRs, migrate them to `KeptnMetricsProvider`
-and store the migrated manifests to a manifests file of your current working directory. Additionally, it
-will directly apply the created manifests and also delete the deprecated`KeptnEvaluationProvider` CRs,
-if the user wishes to do so.
+This script will fetch all existing `KeptnEvaluationProvider` objects and migrate them to the `KeptnMetricsProvider` definition. Additionally, the script stores the migrated manifests in your current working directory. 
+The script will also ask the user to delete the deprecated`KeptnEvaluationProvider` CRDs.
 
-**Note:** Please be aware, that only `KeptnEvaluationProvider` CRs from the cluster your kubecontext is
-pointing to will be fetched and migrated.
+**Note:** Please be aware that only `KeptnEvaluationProvider` objects from the cluster your kubecontext is pointing to will be fetched and migrated.

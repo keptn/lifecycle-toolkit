@@ -13,7 +13,7 @@ HUGO_ENABLEGITINFO = "true"
 HUGO_ENV = "development"
 
 [context.branch-deploy]
-HUGO_ENV = "main"
+HUGO_ENV = "staging"
 
 [context.production.environment]
 HUGO_ENV = "production"

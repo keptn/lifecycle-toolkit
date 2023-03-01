@@ -29,7 +29,8 @@ spec:
   fetchIntervalSeconds: 5
 ```
 
-In this example, the provider is set to `prometheus`, which is one of the currently supported `KeptnMetricProviders`. The provider tells the metrics-operator where to get the value for the `KeptnMetric`, and its configuration looks follows:
+In this example, the provider is set to `prometheus`, which is one of the currently supported `KeptnMetricProviders`.
+The provider tells the metrics-operator where to get the value for the `KeptnMetric`, and its configuration looks follows:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2

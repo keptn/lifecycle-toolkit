@@ -15,6 +15,7 @@ metadata:
 spec:
   selector:
     matchLabels:
+      app.kubernetes.io/part-of: keptn-lifecycle-toolkit
       control-plane: metrics-controller
   replicas: 1
   template:

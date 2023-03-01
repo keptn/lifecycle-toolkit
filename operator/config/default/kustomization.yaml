@@ -8,7 +8,6 @@ bases:
 - ../rbac
 - ../manager
 - ../webhook
-- ../metrics
 
 patchesStrategicMerge:
 - webhooknamespaces_patch.yaml

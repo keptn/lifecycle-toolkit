@@ -70,7 +70,6 @@ type FunctionStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 
 // KeptnTaskDefinition is the Schema for the keptntaskdefinitions API

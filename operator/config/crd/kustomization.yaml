@@ -11,7 +11,6 @@ resources:
 - bases/lifecycle.keptn.sh_keptnevaluationdefinitions.yaml
 - bases/lifecycle.keptn.sh_keptnevaluationproviders.yaml
 - bases/lifecycle.keptn.sh_keptnevaluations.yaml
-- bases/metrics.keptn.sh_keptnmetrics.yaml
 - bases/options.keptn.sh_keptnconfigs.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
@@ -27,8 +26,11 @@ patchesStrategicMerge:
 #- patches/webhook_in_keptnevaluationdefinitions.yaml
 - patches/webhook_in_keptnevaluationproviders.yaml
 #- patches/webhook_in_keptnevaluations.yaml
-#- patches/webhook_in_keptnmetrics.yaml
 #- patches/webhook_in_keptnconfigs.yaml
+#- patches/webhook_in_keptnapps.yaml
+#- patches/webhook_in_keptnappversions.yaml
+#- patches/webhook_in_keptnworkloadinstances.yaml
+#- patches/webhook_in_keptnevaluationproviders.yaml
 #+kubebuilder:scaffold:crdkustomizewebhookpatch
 
 # the following config is for teaching kustomize how to do kustomization for CRDs.
@@ -37,3 +39,4 @@ configurations:
 
 commonLabels:
   crdGroup: lifecycle.keptn.sh
+  app.kubernetes.io/part-of: keptn-lifecycle-toolkit

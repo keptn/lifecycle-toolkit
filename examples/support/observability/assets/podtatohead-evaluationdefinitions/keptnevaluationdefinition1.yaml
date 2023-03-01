@@ -1,12 +1,12 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-definition1
   namespace: podtato-kubectl
 spec:
-  source: prometheus
   objectives:
-    - name: available-cpus ## this query should pass
-      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+    - keptnMetricRef:
+        name: available-cpus
+        namespace: podtato-kubectl
       evaluationTarget: "<1"
 

@@ -23,7 +23,12 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
+HELMIFY ?=  $(LOCALBIN)/helmify
 
+.PHONY: helmify
+helmify: $(HELMIFY) ## Download helmify locally if necessary.
+$(HELMIFY): $(LOCALBIN)
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@b1da2bb756ec4328bac7645da037a6fb4e6f30cf
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
@@ -50,33 +55,25 @@ $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
 .PHONY: release-helm-manifests
-release-helm-manifests:
+release-helm-manifests: helmify
 	echo "building helm overlay"
-	kustomize build ./helm/overlay > ./helm/chart/templates/rendered.yaml
+	kustomize build ./helm/overlay  > helmchart.yaml
+	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
 
 .PHONY: helm-package
-helm-package: clean-helm-charts build-release-manifests release-helm-manifests clean-helm-yaml
-	cd ./helm && helm package ./chart
-	cd ./helm && mv keptn-lifecycle-toolkit-*.tgz ./chart/charts
+helm-package: build-release-manifests release-helm-manifests
 
-.PHONY: clean-helm-charts
-clean-helm-charts:
-	@if test -f "/helm/chart/charts/keptn-lifecycle-toolkit-*.tgz" ; then \
-		rm "./helm/chart/charts/keptn-lifecycle-toolkit-*.tgz"; \
-	fi
-
-.PHONY: clean-helm-yaml
-clean-helm-yaml:
-	sed -i "s/'{{/{{/g" ./helm/chart/templates/rendered.yaml
-	sed -i "s/}}'/}}/g" ./helm/chart/templates/rendered.yaml
 
 .PHONY: build-release-manifests
 build-release-manifests:
 	$(MAKE) -C operator generate
 	$(MAKE) -C klt-cert-manager generate
+	$(MAKE) -C metrics-operator generate
+
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 
 .PHONY: build-deploy-operator
 build-deploy-operator:
@@ -85,6 +82,14 @@ build-deploy-operator:
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
 
 	kubectl apply -f operator/config/rendered/release.yaml
+
+.PHONY: build-deploy-metrics-operator
+build-deploy-metrics-operator:
+	$(MAKE) -C metrics-operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C metrics-operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+
+	kubectl apply -f metrics-operator/config/rendered/release.yaml
 
 .PHONY: build-deploy-scheduler
 build-deploy-scheduler:
@@ -103,7 +108,7 @@ build-deploy-certmanager:
 	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-scheduler
+build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
 markdownlint:
 	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --ignore "/workdir/CHANGELOG.md"

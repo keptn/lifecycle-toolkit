@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
 	"github.com/stretchr/testify/require"
@@ -15,11 +16,11 @@ import (
 
 const KltNamespace = "klt-namespace"
 
-func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
+func TestKeptnEvaluationReconciler_fetchDefinition(t *testing.T) {
 
-	metricEvalDef, DTEvalDef, PromEvalDef, EvalDef := setupEvalDefinitions()
+	metricEvalDef, EvalDef := setupEvalDefinitions()
 	DTProv, PromProv := setupProviders()
-	client := fake.NewClient(metricEvalDef, DTEvalDef, PromEvalDef, EvalDef, DTProv, PromProv)
+	client := fake.NewClient(metricEvalDef, EvalDef, DTProv, PromProv)
 
 	r := &KeptnEvaluationReconciler{
 		Client: client,
@@ -30,8 +31,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 	tests := []struct {
 		name                 string
 		namespacedDefinition types.NamespacedName
-		wantDef              *klcv1alpha2.KeptnEvaluationDefinition
-		wantProv             *klcv1alpha2.KeptnEvaluationProvider
+		wantDef              *klcv1alpha3.KeptnEvaluationDefinition
 		wantErr              bool
 	}{
 		{
@@ -40,27 +40,7 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "myKeptn",
 			},
-			wantDef:  metricEvalDef,
-			wantProv: providers.GetDefaultMetricProvider(KltNamespace),
-		},
-		{
-			name: "DT metrics",
-			namespacedDefinition: types.NamespacedName{
-				Namespace: KltNamespace,
-				Name:      "myDT",
-			},
-			wantDef:  DTEvalDef,
-			wantProv: DTProv,
-		},
-
-		{
-			name: "Prometheus metrics",
-			namespacedDefinition: types.NamespacedName{
-				Namespace: KltNamespace,
-				Name:      "myProm",
-			},
-			wantDef:  PromEvalDef,
-			wantProv: PromProv,
+			wantDef: metricEvalDef,
 		},
 
 		{
@@ -69,9 +49,8 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "whatever",
 			},
-			wantDef:  nil,
-			wantProv: nil,
-			wantErr:  true,
+			wantDef: nil,
+			wantErr: true,
 		},
 		{
 			name: "Unexisting Provider",
@@ -79,15 +58,14 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 				Namespace: KltNamespace,
 				Name:      "mydef",
 			},
-			wantDef:  nil,
-			wantProv: nil,
-			wantErr:  true,
+			wantDef: nil,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			got, got1, err := r.fetchDefinitionAndProvider(context.TODO(), tt.namespacedDefinition)
+			got, err := r.fetchDefinition(context.TODO(), tt.namespacedDefinition)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("fetchDefinitionAndProvider() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -97,78 +75,45 @@ func TestKeptnEvaluationReconciler_fetchDefinitionAndProvider(t *testing.T) {
 			} else {
 				require.Nil(t, got)
 			}
-
-			if tt.wantProv != nil {
-				require.Equal(t, got1.Name, tt.wantProv.Name)
-			} else {
-				require.Nil(t, got1)
-			}
-
 		})
 	}
 }
 
-func setupEvalDefinitions() (*klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition, *klcv1alpha2.KeptnEvaluationDefinition) {
-	metricEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
+func setupEvalDefinitions() (*klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition) {
+	metricEvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: KltNamespace,
 			Name:      "myKeptn",
 		},
-		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.KeptnMetricProviderName,
+		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
 			Objectives: nil,
 		},
-		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
+		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
 	}
 
-	DTEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "myDT",
-		},
-		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.DynatraceProviderName,
-			Objectives: nil,
-		},
-		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
-	}
-
-	PromEvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "myProm",
-		},
-		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     providers.PrometheusProviderName,
-			Objectives: nil,
-		},
-		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
-	}
-
-	EvalDef := &klcv1alpha2.KeptnEvaluationDefinition{
+	EvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: KltNamespace,
 			Name:      "mdef",
 		},
-		Spec: klcv1alpha2.KeptnEvaluationDefinitionSpec{
-			Source:     "dunno",
+		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
 			Objectives: nil,
 		},
-		Status: klcv1alpha2.KeptnEvaluationDefinitionStatus{},
+		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
 	}
 
-	return metricEvalDef, DTEvalDef, PromEvalDef, EvalDef
+	return metricEvalDef, EvalDef
 }
 
-func setupProviders() (*klcv1alpha2.KeptnEvaluationProvider, *klcv1alpha2.KeptnEvaluationProvider) {
-	DTProv := &klcv1alpha2.KeptnEvaluationProvider{
+func setupProviders() (*metricsapi.KeptnMetricsProvider, *metricsapi.KeptnMetricsProvider) {
+	DTProv := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.DynatraceProviderName,
 			Namespace: KltNamespace,
 		},
 	}
 
-	PromProv := &klcv1alpha2.KeptnEvaluationProvider{
+	PromProv := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      providers.PrometheusProviderName,
 			Namespace: KltNamespace,

@@ -53,7 +53,6 @@ type KeptnWorkloadRef struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 
 // KeptnApp is the Schema for the keptnapps API

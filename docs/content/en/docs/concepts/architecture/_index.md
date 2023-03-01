@@ -11,31 +11,36 @@ cascade:
 
 ### Architecture
 
-The Keptn Lifecycle Toolkit is composed of the following components:
+The Keptn Lifecycle Toolkit consists of two main components: 
 
-- Keptn Lifecycle Operator
-- Keptn Scheduler
+* Keptn Lifecycle Operator
+* Keptn Scheduler
 
-The Keptn Lifecycle Operator contains several controllers for Keptn CRDs and a Mutating Webhook.
-The Keptn Scheduler ensures that Pods are started only after the pre-deployment checks have finished.
+The Keptn Lifecycle Operator contains several controllers for **Keptn CRDs** 
+and a **Mutating Webhook**.
+The Keptn Scheduler guarantees that Pods are initiated only after 
+the Pre-Deployment checks are completed.
 
-A Kubernetes Manifest, which is annotated with Keptn specific annotations, gets applied to the Kubernetes Cluster.
-Afterward, the Keptn Scheduler gets injected (via Mutating Webhook), and Kubernetes Events for Pre-Deployment are sent
-to the event stream.
-The Event Controller watches for events and triggers a Kubernetes Job to fullfil the Pre-Deployment.
-After the Pre-Deployment has finished, the Keptn Scheduler schedules the Pod to be deployed.
-The KeptnApp and KeptnWorkload Controllers watch for the workload resources to finish and then generate a
-Post-Deployment Event.
-After the Post-Deployment checks, SLOs can be validated using an interface for retrieving SLI data from a provider,
-e.g, [Prometheus](https://prometheus.io/).
-Finally, Keptn Lifecycle Toolkit exposes Metrics and Traces of the whole Deployment cycle
+A **Kubernetes Manifest**, which is annotated with Keptn specific annotations, 
+gets applied to the Kubernetes Cluster.
+The Keptn Scheduler is then added through a Mutating Webhook, 
+and events related to Pre-Deployment are sent to the event stream in Kubernetes. 
+The Event Controller monitors these events and starts a Kubernetes Job to complete 
+the Pre-Deployment process. Once the Pre-Deployment is done, the Keptn Scheduler 
+schedules the pod to be deployed.
+
+The **KeptnApp** and **KeptnWorkload** Controllers watch for the workload resources to finish 
+and then generate a Post-Deployment Event.
+After the Post-Deployment checks, SLOs can be validated by using an interface that retrieves 
+SLI data from a provider, such as Prometheus [Prometheus](https://prometheus.io/).
+Lastly, the Keptn Lifecycle Toolkit provides Metrics and Traces of the entire Deployment process 
 with [OpenTelemetry](https://opentelemetry.io/).
 
-![KLT Architecture](./assets/architecture.png)
+<!-- ![KLT Architecture](./assets/architecture.png) -->
 
 ## How it works
 
-The following sections will provide insights on each component of the Keptn Lifecycle Toolkit in terms of their purpose,
+<!-- The following sections will provide insights on each component of the Keptn Lifecycle Toolkit in terms of their purpose,
 responsibility, and communication with other components.
 Furthermore, there will be a description on what CRD they monitor and a general overview of their fields.
 
@@ -104,4 +109,4 @@ the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-evict
 For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have
 terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a
 node.
-
+ -->

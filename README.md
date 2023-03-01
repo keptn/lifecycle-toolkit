@@ -386,26 +386,27 @@ kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
 spec:
-  source: prometheus
   objectives:
-    - name: query-1
-      query: "xxxx"
+    - keptnMetricRef:
+        name: cpu
+        namespace: ns
       evaluationTarget: <20
-    - name: query-2
-      query: "yyyy"
+    - keptnMetricRef:
+        name: memory
+        namespace: ns
       evaluationTarget: >4
 ```
 
-### Keptn Evaluation Provider
+### Keptn Metrics Provider
 
-A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the
+A `KeptnMetricsProvider` is a CRD used to define evaluation provider, which will provide data for the
 pre- and post-analysis phases of a workload or application.
 
-A Keptn evaluation provider looks like the following:
+A Keptn metrics provider looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnEvaluationProvider
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
 metadata:
   name: prometheus
 spec:
@@ -413,6 +414,8 @@ spec:
   secretKeyRef:
     key: prometheusLoginCredentials
 ```
+
+**Note:** If using version 0.6.0 or older, please see the migration documentation when upgrading to 0.7.0.
 
 ### Keptn Metric
 
@@ -423,7 +426,7 @@ Furthermore, this allows using multiple observability platforms for different me
 A `KeptnMetric` looks like the following:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
@@ -435,12 +438,15 @@ spec:
   fetchIntervalSeconds: 5
 ```
 
-To be able to use `KeptnMetric` as part of your evaluation, you need to add `keptn-metric` as your value
-for `.spec.source` in `KeptnEvaluationDefiniton`. Further you need specify
-the `.spec.objectives[i].name` of `KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name`
-of `KeptnMetric` resource. The `.spec.objectives[i].query` parameter
-of `KeptnEvaluationDefiniton` will be ignored and `.spec.query` of `KeptnMetric` will be use instead as a query to fetch
-the data.
+To be able to use `KeptnMetric` as part of your evaluation, you need specify the
+`.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
+`KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name` and `metafata.namespace`
+of `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
+If it's not specified, it will search for `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
+is stored. If the `KeptnMetric` resource cannot be found there, it will fallback to search in the default KLT namespace.
+
+**Note:** Please be aware, that if `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
+resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.
 
 ## Install a dev build
 

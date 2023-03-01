@@ -126,6 +126,6 @@ This means:
 - [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
 - [.markdownlintignore](./.markdownlintignore) contains the ignored files in `.gitignore` style
 
-We decided to stick to the default, so tools like
+We use the default values, so tools like
 [markdownlint for VSCode](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 can be used without additional configuration.

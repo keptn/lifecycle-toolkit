@@ -10,13 +10,13 @@ on:
       page_dir:
         description: "Root directory of the website"
         type: "string"
-        required: true
-        default: "./tmp/page"
+        required: false
+        default: "./tmp/page/"
       docs_dir:
-        description: "Root directory of the website"
+        description: "Sub directory of documentation"
         type: "string"
-        required: true
-        default: "/docs"
+        required: false
+        default: "./docs"
       dry_run:
         description: "Flag for testing"
         type: "boolean"
@@ -50,7 +50,7 @@ jobs:
       - name: Detect needed Folder Operations
         id: folder
         run: |
-            CURRENT_VERSION=`cat ${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/version || "unknown"`
+            CURRENT_VERSION=`cat ${{ inputs.page_dir }}${{ inputs.docs_dir }}/content/en/docs/version || echo "unknown"`
             echo $CURRENT_VERSION
             if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" == "${{ inputs.tag_name }}" ]]; then
               if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" != "$CURRENT_VERSION" ]]; then

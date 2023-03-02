@@ -12,4 +12,3 @@ images:
 - name: controller
   newName: ghcr.keptn.sh/keptn/metrics-operator
   newTag: 0.6.0-next.8
-

@@ -1,0 +1,9 @@
+---
+CheckDoctype: false
+IgnoreDirs:
+  - favicons
+  - docs/crd-ref/lifecycle/
+IgnoreURLs:
+  - "linkedin.com"
+  - "localhost"
+StripQueryString: false

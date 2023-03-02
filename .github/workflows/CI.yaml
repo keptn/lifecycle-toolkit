@@ -315,6 +315,8 @@ jobs:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
     - name: Generate helm charts
+      env:
+        RELEASE_REGISTRY: ghcr.keptn.sh/keptn
       run: make helm-package
 
     - name: Copy charts from klt to helm repo

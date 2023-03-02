@@ -77,8 +77,8 @@ Kubernetes secrets can also be passed to the function using the `secureParameter
 Here, the `secret` value is the name of the K8s secret containing a field with the key `SECURE_DATA`.  
 The value of that field will then be available to the functions runtime via an environment variable called `SECURE_DATA`.
 
-For example, if you have a task function that should make use of secret data, you must first ensure that the secret containing the `SECURE_DATA` 
-key exists, as e.g.:
+For example, if you have a task function that should make use of secret data, you must first ensure that the secret
+containing the `SECURE_DATA` key exists, as e.g.:
 
 ```yaml
 apiVersion: v1

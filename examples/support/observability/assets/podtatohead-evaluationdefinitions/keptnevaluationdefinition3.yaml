@@ -8,7 +8,7 @@ spec:
     - keptnMetricRef:
         name: available-cpus
         namespace: podtato-kubectl
-      evaluationTarget: ">1"
+      evaluationTarget: ">100"
     - keptnMetricRef:
         name: consumed-memory
         namespace: podtato-kubectl

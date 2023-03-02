@@ -8,4 +8,4 @@ spec:
     - keptnMetricRef:
         name: available-cpus
         namespace: podtato-kubectl
-      evaluationTarget: ">4"
+      evaluationTarget: ">100"

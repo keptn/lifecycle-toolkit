@@ -4,20 +4,21 @@ VOLUMES := -v $(ROOT_DIR):/src
 HUGO_VERSION := 0.105.0-ext
 IMAGE := klakegg/hugo:$(HUGO_VERSION)
 PORT := 1314
+DOCKER_CMD := docker run --rm -t -e HUGO_CACHEDIR=/src/tmp/.hugo
 
 .PHONY: build server clean shell htmltest
 
 build:
-	docker run --rm -t $(VOLUMES) $(IMAGE) -D -v
+	$(DOCKER_CMD) $(VOLUMES) $(IMAGE) -D -v
 
 shell:
-	docker run --rm -it $(VOLUMES) $(IMAGE) shell
+	$(DOCKER_CMD) -i $(VOLUMES) $(IMAGE) shell
 
 server:
-	docker run --rm -t $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
+	$(DOCKER_CMD) $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
 
 clean:
-	docker run --rm -t $(VOLUMES) $(IMAGE) --cleanDestinationDir
+	$(DOCKER_CMD) $(VOLUMES) $(IMAGE) --cleanDestinationDir
 
 htmltest: build
-	docker run --rm -t -v $(ROOT_DIR):/test wjdp/htmltest -c .htmltest.yml public
+	$(DOCKER_CMD) -v $(ROOT_DIR):/test wjdp/htmltest -c .htmltest.yml public

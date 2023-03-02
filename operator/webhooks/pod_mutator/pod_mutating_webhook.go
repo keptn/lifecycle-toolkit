@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"hash/fnv"
 	"net/http"
 	"reflect"
@@ -166,6 +167,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+	a.Log.Info("TSCDEBUG: Start copy")
 	podOwner := a.getOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false, nil
@@ -173,6 +175,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 
 	switch podOwner.Kind {
 	case "ReplicaSet":
+		fmt.Println("TSCDEBUG: ReplicaSet detected")
 		rs := &appsv1.ReplicaSet{}
 		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
 			return false, nil
@@ -184,8 +187,14 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 			return false, nil
 		}
 
+		if rsOwner.Kind == "Rollout" {
+			ro := argov1alpha1.Rollout{}
+			fmt.Println("TSCDEBUG: Rollout detected")
+			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, &ro)
+		}
 		dp := &appsv1.Deployment{}
 		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
+
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
@@ -496,7 +505,7 @@ func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) meta
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
-			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" {
+			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout" {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name

@@ -19,6 +19,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"log"
 	"net/http"
 	"os"
@@ -65,6 +66,7 @@ func init() {
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(metricsapi.AddToScheme(scheme))
+	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/keptn/klt-cert-manager
-  newTag: "202303021677763654"
+  newTag: latest

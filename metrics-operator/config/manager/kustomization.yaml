@@ -1,5 +1,6 @@
 resources:
 - manager.yaml
+- service.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
@@ -11,4 +12,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/keptn/metrics-operator
-  newTag: "202303021677763654"
+  newTag: latest

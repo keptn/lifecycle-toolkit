@@ -108,7 +108,8 @@ func (m *serverManager) setup() error {
 	klog.Infof("Keptn Metrics server enabled: %v", serverEnabled)
 
 	if serverEnabled && m.server == nil {
-		klog.Infof("serving metrics at localhost:9999/metrics")
+		klog.Infof("serving Prometheus metrics at localhost:9999/metrics")
+		klog.Infof("serving KeptnMetrics at localhost:9999/api/v1/metrics/{namespace}/{metric}")
 
 		router := mux.NewRouter()
 		router.Path("/metrics").Handler(promhttp.Handler())

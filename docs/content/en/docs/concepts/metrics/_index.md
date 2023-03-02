@@ -12,8 +12,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 A `KeptnMetric` is a CRD representing a metric. The metric will be collected from the provider specified in the
 specs.provider.name field. The query is a string in the provider-specific query language, used to obtain a metric.
 Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
-Furthermore, this allows using multiple observability platforms for different metrics. Please note, there is a
-limitation that `KeptnMetric` resource needs to be created only in `keptn-lifecycle-toolkit-system` namespace.
+Furthermore, this allows using multiple observability platforms for different metrics.
 
 A `KeptnMetric` looks like the following:
 
@@ -22,20 +21,58 @@ apiVersion: metrics.keptn.sh/v1alpha1
 kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: podtato-kubectl
 spec:
   provider:
-    name: "<your-keptn-evaluation-provider-crd-name>"
+    name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
 ```
 
-Keptn metrics can be exposed as OTel metrics via port `9999` of the KLT operator. To expose them, the env
-variable `EXPOSE_KEPTN_METRICS` in the operator manifest needs to be set to `true`. The default value of this variable
+In this example, the provider is set to `prometheus`, which is one of the currently supported `KeptnMetricProviders`.
+The provider tells the metrics-operator where to get the value for the `KeptnMetric`, and its configuration looks follows:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+```
+
+Other supported providers are `dynatrace`, and `dql`:
+
+````yaml
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: dynatrace
+  namespace: podtato-kubectl
+spec:
+  targetServer: "<dynatrace-tenant-url>"
+  secretKeyRef:
+    name: dt-api-token
+    key: DT_TOKEN
+---
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: dql
+  namespace: podtato-kubectl
+spec:
+  secretKeyRef:
+    key: CLIENT_SECRET
+    name: dt-third-gen-secret 
+  targetServer: "<dynatrace-third-gen-target-server>"
+````
+
+Keptn metrics can be exposed as OTel metrics via port `9999` of the KLT metrics-operator. To expose them, the env
+variable `EXPOSE_KEPTN_METRICS` in the metrics-operator manifest needs to be set to `true`. The default value of this variable
 is `true`. To access the metrics, use the following command:
 
 ```shell
-kubectl port-forward deployment/klc-controller-manager 9999 -n keptn-lifecycle-toolkit-system
+kubectl port-forward deployment/metrics-operator-controller 9999 -n keptn-lifecycle-toolkit-system
 ```
 
 and access the metrics via your browser with:
@@ -44,8 +81,7 @@ and access the metrics via your browser with:
 
 #### Accessing Metrics via the Kubernetes Custom Metrics API
 
-`KeptnMetrics` that are located in the `keptn-lifecycle-toolkit-system` namespace can also be retrieved via the
-Kubernetes Custom Metrics API.
+`KeptnMetrics` can also be retrieved via the Kubernetes Custom Metrics API.
 This makes it possible to refer to these metrics via the Kubernetes *HorizontalPodAutoscaler*, as in the following
 example:
 
@@ -89,7 +125,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
     {
       "describedObject": {
         "kind": "KeptnMetric",
-        "namespace": "keptn-lifecycle-toolkit-system",
+        "namespace": "podtato-kubectl",
         "name": "keptnmetric-sample",
         "apiVersion": "metrics.keptn.sh/v1alpha1"
       },

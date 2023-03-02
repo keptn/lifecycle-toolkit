@@ -12,6 +12,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.11.3
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
   name: keptnmetrics.metrics.keptn.sh
 spec:
   conversion:
@@ -193,6 +194,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
   name: keptnmetricsproviders.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
@@ -551,6 +553,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: metrics-controller
   name: metrics-operator-controller
   namespace: keptn-lifecycle-toolkit-system

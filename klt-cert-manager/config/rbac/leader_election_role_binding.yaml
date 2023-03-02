@@ -5,8 +5,8 @@ metadata:
     app.kubernetes.io/name: rolebinding
     app.kubernetes.io/instance: leader-election-rolebinding
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: klt-cert-manager
-    app.kubernetes.io/part-of: klt-cert-manager
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/part-of: certificate-operator
     app.kubernetes.io/managed-by: kustomize
   name: leader-election-rolebinding
 roleRef:
@@ -15,5 +15,5 @@ roleRef:
   name: leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: cert-manager
+  name: certificate-operator
   namespace: system

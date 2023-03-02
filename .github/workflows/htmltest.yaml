@@ -30,14 +30,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            tmp/.htmltest
+            docs/tmp/.htmltest
           key: ${{ runner.os }}-htmltest
 
       - name: Cache Hugo packages
         uses: actions/cache@v3
         with:
           path: |
-            tmp/.hugo
+            docs/tmp/.hugo
           key: ${{ runner.os }}-hugo
 
       - name: Check HTML

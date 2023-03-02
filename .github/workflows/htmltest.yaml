@@ -1,0 +1,37 @@
+name: HtmlTest
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - 'docs/**'
+
+jobs:
+  htmltest:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Cache HTMLTest packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            tmp/.htmltest
+          key: ${{ runner.os }}-htmltest
+
+      - name: Check HTML
+        run: make htmltest

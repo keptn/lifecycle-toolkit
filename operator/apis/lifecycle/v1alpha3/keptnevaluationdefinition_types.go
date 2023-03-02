@@ -35,7 +35,7 @@ type Objective struct {
 
 type KeptnMetricReference struct {
 	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition

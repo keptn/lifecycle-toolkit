@@ -73,5 +73,41 @@ The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 Kubernetes secrets can also be passed to the function using the `secureParameters` field.
-Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function
-via the environment variable `SECURE_DATA`.
+
+Here, the `secret` value is the name of the K8s secret containing a field with the key `SECURE_DATA`.  
+The value of that field will then be available to the functions runtime via an environment variable called `SECURE_DATA`.
+
+For example, if you have a task function that should make use of secret data, you must first ensure that the secret
+containing the `SECURE_DATA` key exists, as e.g.:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: deno-demo-secret
+  namespace: default
+type: Opaque
+data:
+  SECURE_DATA: YmFyCg== # base64 encoded string, e.g. 'bar'
+```
+
+Then, you can make use of that secret as follows:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: deployment-hello
+  namespace: "default"
+spec:
+  function:
+    secureParameters:
+      secret: deno-demo-secret
+    inline:
+      code: |
+        console.log("Deployment Hello Task has been executed");
+
+        let foo = Deno.env.get('SECURE_DATA');
+        console.log(foo);
+        Deno.exit(0);
+```

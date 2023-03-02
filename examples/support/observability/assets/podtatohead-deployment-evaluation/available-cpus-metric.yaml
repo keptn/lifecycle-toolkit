@@ -6,5 +6,5 @@ metadata:
 spec:
   provider: 
     name: prometheus
-  query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+  query: "sum(kube_node_status_capacity{resource='cpu'})"
   fetchIntervalSeconds: 10

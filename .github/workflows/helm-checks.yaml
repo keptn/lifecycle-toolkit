@@ -68,6 +68,8 @@ jobs:
         config:
           - name: "keptn-lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
@@ -122,16 +124,18 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       RELEASE_REGISTRY: "localhost:5000/keptn"
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
       - name: Generate helm charts
         run: |
-          make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-          sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ./helm/chart/templates/rendered.yaml
-          sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:dev-${{ needs.prepare_ci_run.outputs.DATETIME }}/g' ./helm/chart/templates/rendered.yaml        
-          rm -r ./helm/chart/charts
+          make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ env.DATETIME }}
+          for file in $(find ./helm/chart/templates -type f -name "*.yaml");
+          	do
+              sed -i 's/{{ include "chart.fullname" . }}-//g' "$file"
+          	done
 
       - name: Upload KLT helm charts archive
         uses: actions/upload-artifact@v3
@@ -139,9 +143,15 @@ jobs:
           name: keptn-lifecycle-toolkit.tgz
           path: ./helm/chart/*
 
+      - name: Upload generated helm yaml
+        uses: actions/upload-artifact@v3
+        with:
+          name: helmchart.yaml
+          path: ./helmchart.yaml
+
   integration_tests:
     name: Integration Tests
-    needs: [ build_helm_chart ]
+    needs: [  prepare_ci_run, build_helm_chart ]
     with:
       functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: true

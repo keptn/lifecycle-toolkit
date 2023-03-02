@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello

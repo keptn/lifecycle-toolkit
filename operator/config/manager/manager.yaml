@@ -5,6 +5,7 @@ metadata:
   name: controller-manager
   namespace: system
   labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: controller-manager
 spec:
   selector:
@@ -17,7 +18,6 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
-        openfeature.dev/enabled: "true"
       labels:
         control-plane: controller-manager
     spec:
@@ -54,12 +54,6 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
-          - name: keptn-metrics
-            containerPort: 9999
-            protocol: TCP
-          - name: custom-metrics
-            containerPort: 6443
-            protocol: TCP
           - name: metrics
             containerPort: 2222
             protocol: TCP
@@ -73,8 +67,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: EXPOSE_KEPTN_METRICS
-            value: "true"
+          - name: OTEL_COLLECTOR_URL
+            value: otel-collector:4317
           - name: FUNCTION_RUNNER_IMAGE
             value: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0 #x-release-please-version
         securityContext:

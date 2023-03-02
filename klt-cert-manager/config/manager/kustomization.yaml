@@ -4,5 +4,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: ghcr.keptn.sh/keptn/keptn-cert-manager
-  newTag: "202301111673450920"
+  newName: ghcr.keptn.sh/keptn/klt-cert-manager
+  newTag: "0.6.0-next.1"

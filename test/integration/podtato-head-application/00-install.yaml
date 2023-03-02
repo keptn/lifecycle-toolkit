@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -308,7 +308,7 @@ spec:
       targetPort: 9000
   type: ClusterIP
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
@@ -318,7 +318,7 @@ spec:
       code: |
         console.log("Post-Deployment Task has been executed");
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service

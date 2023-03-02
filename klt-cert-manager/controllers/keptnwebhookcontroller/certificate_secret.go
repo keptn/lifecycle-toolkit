@@ -76,11 +76,12 @@ func (certSecret *certificateSecret) setCertificates(namespace string) error {
 }
 
 func buildSecretName() string {
-	return fmt.Sprintf("%s%s", DeploymentName, secretPostfix)
+	return secretName
 }
 
 func getDomain(namespace string) string {
-	return fmt.Sprintf("%s.%s.svc", ServiceName, namespace)
+	// use a wildcard here because the secret is potentially used by multiple operators providing webhooks
+	return fmt.Sprintf("*.%s.svc", namespace)
 }
 
 func (certSecret *certificateSecret) areWebhookConfigsValid(configs []*admissionregistrationv1.WebhookClientConfig) bool {

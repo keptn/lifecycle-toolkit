@@ -8,16 +8,16 @@ PORT := 1314
 .PHONY: build server clean shell htmltest
 
 build:
-	docker run --rm -it $(VOLUMES) $(IMAGE) -D -v
+	docker run --rm -t $(VOLUMES) $(IMAGE) -D -v
 
 shell:
 	docker run --rm -it $(VOLUMES) $(IMAGE) shell
 
 server:
-	docker run --rm -it $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
+	docker run --rm -t $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
 
 clean:
-	docker run --rm -it $(VOLUMES) $(IMAGE) --cleanDestinationDir
+	docker run --rm -t $(VOLUMES) $(IMAGE) --cleanDestinationDir
 
 htmltest: build
-	docker run -v $(CURDIR):/test --rm wjdp/htmltest -s /test/tmp/lifecycle-toolkit-docs/public
+	docker run --rm -t -v $(ROOT_DIR):/test wjdp/htmltest -c .htmltest.yml public

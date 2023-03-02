@@ -310,6 +310,14 @@ rules:
   - patch
   - update
 - apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - keptnmetrics
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - options.keptn.sh
   resources:
   - keptnconfigs

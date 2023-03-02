@@ -1,0 +1,24 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkloadInstance
+metadata:
+  name: waiter-waiter-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  postDeploymentEvaluationTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentEvaluationTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello

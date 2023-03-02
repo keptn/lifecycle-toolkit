@@ -31,6 +31,9 @@ jobs:
         with:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
           helm-install:  ${{ inputs.helm-install }}
+      
+      - name: Install and expose Prometheus
+        uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Download KUTTL
         run: |

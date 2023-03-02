@@ -55,7 +55,7 @@ func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Contex
 
 	for _, ownerRef := range rep.OwnerReferences {
 		if ownerRef.Kind == "Rollout" {
-			return r.isRolloutRunning(ctx, klcv1alpha2.ResourceReference{Name: ownerRef.Name, UID: ownerRef.UID}, namespace)
+			return r.isRolloutRunning(ctx, klcv1alpha3.ResourceReference{Name: ownerRef.Name, UID: ownerRef.UID}, namespace)
 		}
 	}
 
@@ -96,7 +96,7 @@ func (r *KeptnWorkloadInstanceReconciler) isStatefulSetRunning(ctx context.Conte
 	return *sts.Spec.Replicas == sts.Status.AvailableReplicas, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) isRolloutRunning(ctx context.Context, resource klcv1alpha2.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadInstanceReconciler) isRolloutRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
 	rollout := argov1alpha1.Rollout{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rollout)
 	if err != nil {

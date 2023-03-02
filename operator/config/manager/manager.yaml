@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: lifecycle-operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    control-plane: controller-manager
+    control-plane: lifecycle-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: lifecycle-operator
   replicas: 1
   template:
     metadata:
@@ -19,7 +19,7 @@ spec:
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
       labels:
-        control-plane: controller-manager
+        control-plane: lifecycle-operator
     spec:
       securityContext:
         runAsNonRoot: true
@@ -108,5 +108,5 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
           - name: adapter-certs-dir
             mountPath: /tmp/metrics-adapter/serving-certs
-      serviceAccountName: controller-manager
+      serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

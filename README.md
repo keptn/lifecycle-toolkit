@@ -400,9 +400,9 @@ spec:
 ### Keptn Metrics Provider
 
 A `KeptnMetricsProvider` is a CRD that defines the evaluation provider that provides data for the
-pre- and post-analysis phases of a workload or Keptn application.
+pre- and post-analysis phases of a Keptn workload or Keptn application.
 
-A Keptn metrics provider in a yaml file that looks like the following:
+A Keptn metrics provider definition looks like the following:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2
@@ -415,10 +415,8 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-**Note:** The KeptnMetricsProvider is a new feature in KLT 0.7.0.
+**Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
 The migration documentation provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
-about migrating
-If using version 0.6.0 or older, please see the migration documentation when upgrading to 0.7.0.
 
 ### Keptn Metric
 
@@ -426,7 +424,7 @@ A `KeptnMetric` is a CRD that defines the SLI provider with a query and stores m
 Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
 Furthermore, this allows using multiple observability platforms for different metrics.
 
-A `KeptnMetric` is defined in a yaml file that looks like the following:
+A Keptn metric definition looks like the following:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2
@@ -443,10 +441,10 @@ spec:
 
 To be able to use `KeptnMetric` as part of your evaluation, you must set the
 `.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
-`KeptnEvaluationDefiniton` to the same value that is stored in `.metadata.name` and `metafata.namespace`
+`KeptnEvaluationDefiniton` resource to the same value that is stored in `.metadata.name` and `metafata.namespace`
 of `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
-is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace.
+resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace.
 
 **Note:** Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`

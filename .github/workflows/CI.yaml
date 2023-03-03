@@ -163,7 +163,7 @@ jobs:
           path: /tmp/${{ matrix.config.name }}-image.tar
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'metrics-operator'
+        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 

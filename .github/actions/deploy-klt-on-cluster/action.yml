@@ -69,16 +69,16 @@ runs:
         
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/klt-cert-manager-manifest-test/release.yaml
         kubectl apply -f ~/download/artifacts/klt-cert-manager-manifest-test
-        kubectl rollout status deployment klt-cert-manager -n keptn-lifecycle-toolkit-system -w
+        kubectl rollout status deployment certificate-operator -n keptn-lifecycle-toolkit-system -w
 
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/metrics-operator-manifest-test/release.yaml
         kubectl apply -f ~/download/artifacts/metrics-operator-manifest-test
-        kubectl rollout status deployment metrics-operator-controller -n keptn-lifecycle-toolkit-system -w
+        kubectl rollout status deployment metrics-operator -n keptn-lifecycle-toolkit-system -w
         
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/scheduler-manifest-test/release.yaml
         kubectl apply -f ~/download/artifacts/scheduler-manifest-test
-        kubectl rollout status deployment keptn-scheduler -n keptn-lifecycle-toolkit-system -w
-        kubectl rollout status deployment klc-controller-manager -n keptn-lifecycle-toolkit-system -w
+        kubectl rollout status deployment scheduler -n keptn-lifecycle-toolkit-system -w
+        kubectl rollout status deployment lifecycle-operator -n keptn-lifecycle-toolkit-system -w
 
     - name: Install lifecycle-toolkit with helm
       if: ${{ inputs.helm-install == 'true'  }}

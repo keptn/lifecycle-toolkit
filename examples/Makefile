@@ -10,7 +10,7 @@ install: install-observability install-argo
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
 	kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml #x-release-please-version
-	kubectl wait --for=condition=available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=300s
+	kubectl wait --for=condition=available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=300s
 
 .PHONY: install-observability
 install-observability:
@@ -75,7 +75,7 @@ restart-lifecycle-toolkit:
 	@echo "----------------------------------"
 	@echo "Restart Keptn Lifecycle Controller"
 	@echo "----------------------------------"
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-toolkit-system
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" scheduler -n keptn-lifecycle-toolkit-system
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" scheduler --watch

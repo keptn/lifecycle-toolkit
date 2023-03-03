@@ -3,13 +3,13 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   creationTimestamp: null
-  name: lifecycle-operator-mutating-webhook-configuration
+  name: mutating-webhook-configuration
 webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
     service:
-      name: lifecycle-operator-webhook-service
+      name: webhook-service
       namespace: system
       path: /mutate-v1-pod
   failurePolicy: Fail

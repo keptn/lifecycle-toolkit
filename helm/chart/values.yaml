@@ -140,7 +140,7 @@ kltCertManager:
       seccompProfile:
         type: RuntimeDefault
     image:
-      repository: ghcr.io/keptn/klt-cert-manager
+      repository: ghcr.io/keptn/certificate-operator
       tag: "202302281677584335"
     imagePullPolicy: Always
     livenessProbe:

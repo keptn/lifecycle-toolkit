@@ -53,15 +53,15 @@ checks
 
 ### Keptn Cert Manager controller
 
-| Name                                              | Description                                      | Value                            |
-| ------------------------------------------------- | ------------------------------------------------ | -------------------------------- |
-| `kltCertManager.manager.containerSecurityContext` | Sets security context for the cert manager       |                                  |
-| `kltCertManager.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/klt-cert-manager` |
-| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `202302281677584335`             |
-| `kltCertManager.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                         |
-| `kltCertManager.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                  |
-| `kltCertManager.manager.readinessProbe`           | custom manager readiness probe                   |                                  |
-| `kltCertManager.manager.resources`                | custom limits and requests for manager container |                                  |
+| Name                                              | Description                                      | Value                                |
+| ------------------------------------------------- | ------------------------------------------------ | ------------------------------------ |
+| `kltCertManager.manager.containerSecurityContext` | Sets security context for the cert manager       |                                      |
+| `kltCertManager.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/certificate-operator` |
+| `kltCertManager.manager.image.tag`                | select tag for manager container                 | `202302281677584335`                 |
+| `kltCertManager.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                             |
+| `kltCertManager.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                      |
+| `kltCertManager.manager.readinessProbe`           | custom manager readiness probe                   |                                      |
+| `kltCertManager.manager.resources`                | custom limits and requests for manager container |                                      |
 
 
 ### Keptn Lifecycle Operator common

@@ -72,7 +72,7 @@ variable `EXPOSE_KEPTN_METRICS` in the metrics-operator manifest needs to be set
 is `true`. To access the metrics, use the following command:
 
 ```shell
-kubectl port-forward deployment/metrics-operator-controller 9999 -n keptn-lifecycle-toolkit-system
+kubectl port-forward deployment/metrics-operator 9999 -n keptn-lifecycle-toolkit-system
 ```
 
 and access the metrics via your browser with:

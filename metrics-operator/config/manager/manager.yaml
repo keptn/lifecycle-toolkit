@@ -65,6 +65,8 @@ spec:
                 fieldPath: metadata.name
           - name: EXPOSE_KEPTN_METRICS
             value: "true"
+          - name: METRICS_CONTROLLER_LOG_LEVEL
+            value: "0"
         ports:
           - containerPort: 9443
             name: webhook-server

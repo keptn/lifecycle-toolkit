@@ -109,14 +109,14 @@
 ## @param   lifecycleOperator.manager.containerSecurityContext.runAsUser
 ## @param   lifecycleOperator.manager.containerSecurityContext.seccompProfile.type
 
-## @param   lifecycleOperator.manager.env.keptnappController.logLevel sets the log level of Keptn App Controller
-## @param   lifecycleOperator.manager.env.keptnappversionController.logLevel sets the log level of Keptn AppVersion Controller
-## @param   lifecycleOperator.manager.env.keptnevaluationController.logLevel sets the log level of Keptn Evaluation Controller
-## @param   lifecycleOperator.manager.env.keptntaskController.logLevel sets the log level of Keptn Task Controller
-## @param   lifecycleOperator.manager.env.keptntaskdefinitionController.logLevel sets the log level of Keptn TaskDefinition Controller
-## @param   lifecycleOperator.manager.env.keptnworkloadController.logLevel sets the log level of Keptn Workload Controller
-## @param   lifecycleOperator.manager.env.keptnworkloadinstanceController.logLevel sets the log level of Keptn WorkloadInstance Controller
-## @param   lifecycleOperator.manager.env.optionsController.logLevel sets the log level of Keptn Options Controller
+## @param   lifecycleOperator.manager.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+## @param   lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
+## @param   lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
+## @param   lifecycleOperator.manager.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
+## @param   lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
+## @param   lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
+## @param   lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
 ## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime
@@ -186,6 +186,7 @@
 ## @param   metricsOperator.manager.image.tag  select tag for manager image
 
 ## @param   metricsOperator.manager.env.exposeKeptnMetrics enable metrics exporter
+## @param   metricsOperator.manager.env.metricsControllerLogLevel sets the log level of Metrics Controller
 
 ## @extra  metricsOperator.manager.livenessProbe custom livenessprobe for manager container
 ## @skip   metricsOperator.manager.livenessProbe.httpGet.path

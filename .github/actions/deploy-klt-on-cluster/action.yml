@@ -63,7 +63,7 @@ runs:
       run: |
         echo "Installing KLT using manifests"
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
-        sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/keptn-lifecycle-operator-manifest-test/release.yaml
+        sed -i 's/ghcr.keptn.sh\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.functions_runtime_tag }}/g' ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
         kubectl create namespace keptn-lifecycle-toolkit-system
         kubectl apply -f ~/download/artifacts/lifecycle-operator-manifest-test
         

@@ -5,39 +5,13 @@ description: Learn how to use the Keptn Lifecycle Toolkit.
 weight: 15
 ---
 
-<<<<<<< HEAD
-`kubectl create -f deployment.yaml` will "blindly" deploy workloads, but who needs to be notified that this deployment
-is about to happen? Is your infrastructure ready? Do your downstream services meet their SLOs? Can your infrastructure
-handle the deployment?
 
-After the deployment, beyond the standard k8s probes, how can you integrate with other tooling to automatically test the
-deployment? How do you know the deployment is meeting its SLOs? Has the deployment caused any issues downstream? Who
-needs to know that the deployment was successful (or unsuccessful)?
-
-The Keptn Lifecycle Toolkit (KLT) "wraps" a standard Kubernetes deployment and provides both workload (single service)
-tests and SLO evaluations. Multiple workloads can also be logically grouped (and evaluated) as a single cohesive unit: a
-Keptn Application. In other words, an application is a collection of multiple workloads.
-
-The Keptn Lifecycle Toolkit is a tool and vendor-neutral mechanism - it does not depend on particular GitOps tooling -
-ArgoCD, Flux, Gitlab or others - KLT works with them all.
-
-The Keptn Lifecycle Toolkit emits signals at every stage (k8s events, OpenTelemetry metrics and traces) to ensure your
-deployments are observable.
-
-Available steps (applicable to both workload and application entities):
-=======
 This page gives instructions for installing the Keptn Lifecycle Toolkit
 and running a simple Keptn application to familiarize yourself
 with how KLT works.
->>>>>>> 48b6a12 (Add "Intro to KLT"; edit "Getting Started")
 
 You will learn how to do the following:
 
-<<<<<<< HEAD
-## What you will learn here
-
-=======
->>>>>>> 48b6a12 (Add "Intro to KLT"; edit "Getting Started")
 * Use the Keptn Lifecycle Toolkit to control the deployment of your application
 * Connect the lifecycle-toolkit to Prometheus
 * Use pre-deployment tasks to check if a dependency is met before deploying a workload
@@ -45,18 +19,13 @@ You will learn how to do the following:
 
 ## Prerequisites
 
-<<<<<<< HEAD
-* A Kubernetes cluster >= Kubernetes 1.24
-  * If you don't have one, we recommend [Kubernetes-in-Docker(KinD)](https://kind.sigs.k8s.io/docs/user/quick-start/)
-    to set up your local development environment
-=======
 You need the following to complete this exercise:
 
 * A Kubernetes cluster >= Kubernetes 1.24
-    * If you don't have one, we recommend
+  * If you don't have one, we recommend
       [Kubernetes-in-Docker(KinD)](https://kind.sigs.k8s.io/docs/user/quick-start/)
       to set up your local development environment
->>>>>>> 48b6a12 (Add "Intro to KLT"; edit "Getting Started")
+
 * kubectl installed on your system
   * See (<https://kubernetes.io/docs/tasks/tools/>) for more information
 
@@ -69,14 +38,9 @@ are running Kubernetes versions greater than or equal to v1.24.
 kubectl version --short
 ```
 
-<<<<<<< HEAD
-The output should look like this. In this example, both client and server are at v1.24.0 so the Keptn Lifecycle Toolkit
-will work.
-=======
 The output should look like this.
 In this example, both client and server are at v1.24.0
 so the Keptn Lifecycle Toolkit will work.
->>>>>>> 48b6a12 (Add "Intro to KLT"; edit "Getting Started")
 
 {{% readfile file="./snippets/tasks/k8s_version_output.md" markdown="true" %}}
 
@@ -85,14 +49,11 @@ so the Keptn Lifecycle Toolkit will work.
 {{% readfile file="./snippets/tasks/install.md" markdown="true" %}}
 
 ## Check out the Getting Started Repository
-<<<<<<< HEAD
-=======
 
 This exercise uses a sample application and some helpers
 that make it easier for you to set up your environment.
 These can be found in our Getting Started repository.
 Use the following command to check out this repository:
->>>>>>> 48b6a12 (Add "Intro to KLT"; edit "Getting Started")
 
 For the further progress of this guide, we need a sample application as well as some helpers which make it easier for
 your to set up your environment. These things can be found in our Getting Started repository which can be checked out as
@@ -148,6 +109,7 @@ from a simple manifest to a Keptn-managed application:
   and notify an external webhook service when the deployment has finished.
 
 ## Install the Demo Application (Version 1)
+
 In the first version of the Demo application,
 the Keptn Lifecycle Toolkit evaluates metrics provided by Prometheus
 and checks if the specified amount of CPUs are available
@@ -201,15 +163,14 @@ You can watch the state of the pods using:
 kubectl get pods -n podtato-kubectl
 ```
 
-
 Furthermore, you can port-forward the podtato-head service
 to your local machine and access the application via your browser:
 
 ```shell
 make port-forward-grafana
 ```
- 
-In your browser (http://localhost:3000),
+
+In your browser (<http://localhost:3000>),
 log in with the user `admin` and the password `admin`).
 You can open the Dashboard `Keptn Applications`
 and see the current state of the application,
@@ -238,6 +199,7 @@ In this case, the minimum amount of CPUs is not met.
 This is a problem we can solve by changing the treshold in the evaluation file.
 
 ## Install the Demo Application (Version 2)
+
 To achieve this, we changed the operator in the evaluation file
 (sample-app/version-2/app-pre-deploy-eval) from `<` to `>`
 and applied the new manifest:

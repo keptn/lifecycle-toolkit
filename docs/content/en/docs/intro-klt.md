@@ -77,7 +77,7 @@ can accomodate complex scoring algorithms for SLO evaluations,
 and can implement remediations (self-healing) for problems discovered
 on the production site.
 
-In a December 2022 Keptn Community meeting, 
+In a December 2022 Keptn Community meeting,
 we discussed the differences and similarities
 between Keptn and the Keptn Lifecycle Toolkit
 to help you decide which best fits your needs.
@@ -97,5 +97,4 @@ of the Keptn Lifecycle Toolkit:
 
 * The "IsItObservable Tutorial for KLT" will be released to YouTube soon.
   You can explore the GitHub repository that accompanies this video
-  at https://github.com/isItObservable/keptn-lifecycle-Toolkit in the meantime.
-
+  at <https://github.com/isItObservable/keptn-lifecycle-Toolkit> in the meantime.

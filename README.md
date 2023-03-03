@@ -399,7 +399,7 @@ spec:
 
 ### Keptn Metrics Provider
 
-A `KeptnMetricsProvider` is a CRD that defines the evaluation provider that provides data for the
+A `KeptnMetricsProvider` CRD defines the evaluation provider that provides data for the
 pre- and post-analysis phases of a Keptn workload or Keptn application.
 
 A Keptn metrics provider definition looks like the following:

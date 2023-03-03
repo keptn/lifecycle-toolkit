@@ -77,27 +77,30 @@ To set up a local Docsy build:
    * [Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 1. Clone and build the Keptn Docsy repo:
-   ```
+
+   ```console
    make clone
    make build
    ```
+
    **Note:** To utilize the `makefile`, you must have GNU **make**
    available on your local machine.
    Versions are available for all the usual Operating Systems.
 
 1. Execute the following command from the `docs` folder of your clone:
-   ```
+
+   ```console
    make server
    ```
+
    It will continue running in its own shell.
 
 1. Start contributing!
 Note that Hugo updates the rendered documentation each time you write the file.
 
 1. Enter the following in a browser to view the website:
-    ```
-    http://localhost:1314/docs-dev/
-    ```
+
+    `http://localhost:1314/docs-dev/`
 
    **Note:** By default, Hugo serves the local docs on port 1313.
    We have modified that port for the lifecycle-toolkit docs
@@ -108,11 +111,11 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
 1. To restart the continuous build:
 
-   - Restart Docker-Desktop, if necessary
-   - If changes have been made to the build tools:
-     - make clone
-     - make build
-   - Run `make server`
+   * Restart Docker-Desktop, if necessary
+   * If changes have been made to the build tools:
+     * make clone
+     * make build
+   * Run `make server`
 
 ### Building markdown files without Hugo
 
@@ -122,20 +125,21 @@ If you need to render another markdown file
 (such as this *CONTRIBUTING.md* file)
 to check your formatting, you have the following options:
 
-   - If you are using an IDE to author the markdown text,
+* If you are using an IDE to author the markdown text,
      use the markdown preview browser for the IDE.
-   - You can push your changes to GitHub
+* You can push your changes to GitHub
      and use the GitHub previewer (*View Page*).
-   - You can install and use the
+* You can install and use the
      [grip](https://github.com/joeyespo/grip/blob/master/README.md) previewer
      to view the rendered content locally.
      When *grip* is installed,
      you can format the specified file locally
      by running the following in its own shell:
 
-     ```
+     ```console
      grip <file>.md
      ```
+
      Point your browser at `localhost:6419` to view the formatted file.
      The document updates automatically
      each time you write your changes to disk.
@@ -152,44 +156,50 @@ Perform the following steps to create a copy of this repository on your local ma
 
 1. Fork the Keptn repository:
 
-     - Log into GitHub (or create a GitHub account and then log into it).
-     - Go to the [Keptn lifecycle-toolkit repository](https://github.com/keptn/lifecycle-toolkit).
-     - Click the **Fork** button at the top of the screen.
-     - Choose the user for the fork from the options you are given,
+     * Log into GitHub (or create a GitHub account and then log into it).
+     * Go to the [Keptn lifecycle-toolkit repository](https://github.com/keptn/lifecycle-toolkit).
+     * Click the **Fork** button at the top of the screen.
+     * Choose the user for the fork from the options you are given,
        usually your GitHub ID.
 
    A copy of this repository is now available in your GitHub account.
 
 2. Get the string to use when cloning your fork:
 
-     - Click the green "Code" button on the UI page.
-     - Select the protocol to use for this clone (either HTTPS or SSH).
-     - A box is displayed that gives the URL for the selected protocol.
+     * Click the green "Code" button on the UI page.
+     * Select the protocol to use for this clone (either HTTPS or SSH).
+     * A box is displayed that gives the URL for the selected protocol.
        Click the icon at the right end of that box to copy that URL.
 
-3.  Run the **git clone** command from the shell of a local directory
+3. Run the **git clone** command from the shell of a local directory
     to clone the forked repository to a directory on your local machine,
     pasting in the URl you saved in the previous step:
-    ```
+
+    ```console
     git clone https://github.com/<UserName>/lifecycle-toolkit
     ```
+
     or
-    ```
+
+    ```console
     git clone git@github.com:<UserName>/lifecycle-toolkit.git
     ```
+
     Where <*UserName*> is your GitHub username.
     The lifecycle-toolkit directory is now available in the local directory.
 
 4. Associate your clone with `upstream`.
    To do this, use the same string you used to clone your fork.
 
-   - Be sure that you are in the root folder of the project
+   * Be sure that you are in the root folder of the project
      and run *git status* to confirm that you are on the `main` branch.
-   - Type the following to associate `upstream` with your clone,
+   * Type the following to associate `upstream` with your clone,
      pasting in the string for the main repo that you copied above.:
-     ```
+
+     ```console
      git remote add upstream https://github.com/keptn/lifecycle-toolkit.git 
      ```
+
 ### Create a new branch and make your changes
 
 Now you have your upstream setup in your local machine.
@@ -199,7 +209,7 @@ unless you intend to create a derivative PR:
 
 The following sequence of commands does that:
 
-```
+```console
 git checkout main
 git pull upstream main
 git push origin main
@@ -214,25 +224,30 @@ then create a PR to add these changes to the documentation set
 If you have forked and cloned the repository,
 you can modify the documentation or add new material
 by editing the markdown file(s) in the local clone of your fork
-and then submitting a _pull request (PR)_.
+and then submitting a *pull request (PR)*.
 
 Note that you can also modify the source using the GitHub editor.
 This is very useful when you want to fix a typo or make a small editorial change
 but, if you are doing significant writing,
 it is generally better to work on files in your local clone.
 
-3. Execute the following and check the output to ensure that your branch is set up correctly:
-   ```
+1. Execute the following and check the output to ensure that your branch is set up correctly:
+
+   ```console
    git status
    ```
 
-3. Do the writing you want to do in your local branch, checking the formatted version at `localhost:1314/docs-dev`.
+1. Do the writing you want to do in your local branch, checking the formatted version at `localhost:1314/docs-dev`.
 
-4. When you have completed the writing you want to do, close all files in your branch and run `git status` to confirm that it correctly reflects the files you have modified, added, and deleted.
+1. When you have completed the writing you want to do, close all files in your branch and run `git status` to confirm
+   that it correctly reflects the files you have modified, added, and deleted.
 
-4. Add and commit your changes.  Here, we commit all modified files but you can specify individual files to the `git add` command.
-The `git commit -s` command commits the files and signs that you are contributing this intellectual property to the Keptn project.
-   ```
+1. Add and commit your changes.  Here, we commit all modified files but you can specify individual files to the
+   `git add` command.
+The `git commit -s` command commits the files and signs that you are contributing this intellectual property to the
+Keptn project.
+
+   ```console
    git add .
    git commit -s
    ```
@@ -247,74 +262,102 @@ The `git commit -s` command commits the files and signs that you are contributin
    you can add more information and edit the PR title
    when you create the PR on the GitHub UI page.
 
-5. Push your branch to github:
-   - If you cloned your fork to use SSH, the command is:
-     ```
-     git push --set-upstream origin <branch-name>
-     ```
+1. Push your branch to github:
+   * If you cloned your fork to use SSH, the command is:
 
-     Note that you can just issue the `git push` command.
-Git responds with an error message that gives you the full command line to use; you can copy this command and paste it into your shell to push the content.
-   - If you cloned your fork to use HTTP, the command is:
-     ```
-     git push <need options/arguments>
-     ```
+      ```console
+      git push --set-upstream origin <branch-name>
+      ```
 
-6. Create the PR by going to the [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit) GitHub repository.
-   - You should see a yellow shaded area that says something like:
-     ```
+      > **Note**
+      You can just issue the `git push` command.
+      Git responds with an error message that gives you the full command line to use; you can copy this command and
+      paste it into your shell to push the content.
+
+   * If you cloned your fork to use HTTP, the command is:
+
+      ```console
+      git push <need options/arguments>
+      ```
+
+1. Create the PR by going to the [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit) GitHub repository.
+   * You should see a yellow shaded area that says something like:
+
+     ```console
      <GitID>:<branch> had recent pushes less than a minute ago
      ```
 
-   - Click on the button in that shaded area marked:
-     ```
+   * Click on the button in that shaded area marked:
+
+     ```console
      Compare & pull request
      ```
-   - Check that the title of the PR is correct; click the "Edit" button to modify it.
+
+   * Check that the title of the PR is correct; click the "Edit" button to modify it.
 Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready for general review.
-   - Add a full description of the work in the PR, including any notes for reviewers, a reference to the relevant GitHub issue (if any), and tags for specific people (if any) who may be interested in this PR.
-   - Carefully review the changes GitHub displays for this PR to ensure that they are what you want.
-   - Click the green "Create pull request" button to create the PR.
-You may want to record the PR number somewhere for future reference although you can always find the PR in the GitHub lists of open and closed PRs.
-   - GitHub automatically populates the "Reviewers" block.
-   - If this PR is not ready for review, click the "Still in progress? Convert to draft" string under the list of reviewers.
-People can still review the content but can not merge the PR until you remove the "Draft" status.
-   - The block of the PR that reports on checks will include the following item:
-     ```
+   * Add a full description of the work in the PR, including any notes for reviewers, a reference to the relevant GitHub
+      issue (if any), and tags for specific people (if any) who may be interested in this PR.
+   * Carefully review the changes GitHub displays for this PR to ensure that they are what you want.
+   * Click the green "Create pull request" button to create the PR.
+      You may want to record the PR number somewhere for future reference although you can always find the PR in the
+      GitHub lists of open and closed PRs.
+   * GitHub automatically populates the "Reviewers" block.
+   * If this PR is not ready for review, click the "Still in progress? Convert to draft" string under the list of
+      reviewers.
+      People can still review the content but can not merge the PR until you remove the "Draft" status.
+   * The block of the PR that reports on checks will include the following item:
+
+     ```console
      This pull request is still a work in progress
      Draft pull requests cannot be merged.
      ```
-   - When the PR is ready to be reviewed, approved, and merged, click the "Ready to review" button to remove the "Draft" status. Then, if you added "WIP" or "Draft" to the PR title, remove it now.
 
-7. Your PR should be reviewed within a few days.  Watch for any comments that may be added by reviewers and implement or respond to the recommended changes as soon as possible.
+   * When the PR is ready to be reviewed, approved, and merged, click the "Ready to review" button to remove the "Draft"
+      status. Then, if you added "WIP" or "Draft" to the PR title, remove it now.
 
-   * If a reviewer makes a GitHub suggestion and you agree with the change, just click "Accept this change" to create a commit for that modification.  You can also group several suggestions into a single commit using the GitHub tools.
+1. Your PR should be reviewed within a few days.  Watch for any comments that may be added by reviewers and implement or
+   respond to the recommended changes as soon as possible.
+
+   * If a reviewer makes a GitHub suggestion and you agree with the change, just click "Accept this change" to create a
+      commit for that modification.
+      You can also group several suggestions into a single commit using the GitHub tools.
    * You can make other changes using the GitHub editor or you can work in your local branch to make modifications.
 
-      * If changes have been made using the GitHub editor, you will need to do a `git pull` request to pull those commits back to your local branch before you push the new changes.
-      * After modifying the local source, issue the `git add .`, `git commit`, and `git push` commands to push your changes to github.
+      * If changes have been made using the GitHub editor, you will need to do a `git pull` request to pull those
+         commits back to your local branch before you push the new changes.
+      * After modifying the local source, issue the `git add .`, `git commit`, and `git push` commands to push your
+         changes to github.
 
-8. When your PR has the appropriate approvals, it will be merged and the revised content should be published on the web site within a few minutes.
+1. When your PR has the appropriate approvals, it will be merged and the revised content should be published on the
+   website within a few minutes.
 
-9. When your PR has been approved and merged,
+1. When your PR has been approved and merged,
    you can delete your local branch with the following command:
-   ```
+
+   ```console
    git branch -d <branch-name>
    ```
 
 ### Developer Certification of Origin (DCO)
 
-Licensing is very important to open source projects. It helps ensure the software continues to be available under the terms that the author desired.
+Licensing is very important to open source projects. It helps ensure the software continues to be available under the
+terms that the author desired.
 
-Keptn uses [Apache License 2.0](https://github.com/keptn/lifecycle-toolkit/blob/main/LICENSE) to strike a balance between open contributions and allowing you to use the software however you would like to.
+Keptn uses [Apache License 2.0](https://github.com/keptn/lifecycle-toolkit/blob/main/LICENSE) to strike a balance
+between open contributions and allowing you to use the software however you would like to.
 
-The license tells you what rights you have that are provided by the copyright holder. It is important that the contributor fully understands what rights they are licensing and agrees to them. Sometimes the copyright holder isn't the contributor, such as when the contributor is doing work on behalf of a company.
+The license tells you what rights you have that are provided by the copyright holder.
+It is important that the contributor fully understands what rights they are licensing and agrees to them.
+Sometimes the copyright holder isn't the contributor, such as when the contributor is doing work on behalf of a company.
 
-To make a good faith effort to ensure these criteria are met, Keptn requires the Developer Certificate of Origin (DCO) process to be followed.
+To make a good faith effort to ensure these criteria are met,
+Keptn requires the Developer Certificate of Origin (DCO) process to be followed.
 
-The DCO is an attestation attached to every contribution made by every developer. In the commit message of the contribution, the developer simply adds a Signed-off-by statement and thereby agrees to the DCO, which you can find below or at <http://developercertificate.org/>.
+The DCO is an attestation attached to every contribution made by every developer.
+In the commit message of the contribution, the developer simply adds a Signed-off-by statement and
+thereby agrees to the DCO, which you can find below or at <http://developercertificate.org/>.
 
-```
+```text
 Developer Certificate of Origin
 Version 1.1
 
@@ -355,33 +398,42 @@ By making a contribution to this project, I certify that:
 
 The DCO requires a sign-off message in the following format to appear on each commit in the pull request:
 
-```
+```text
 Signed-off-by: Humpty Dumpty <humpty.dumpty@example.com>
 ```
 
-The DCO text can either be manually added to your commit body, or you can add either **-s** or **--signoff** to your usual git commit commands. If you are using the GitHub UI to make a change you can add the sign-off message directly to the commit message when creating the pull request. If you forget to add the sign-off you can also amend a previous commit with the sign-off by running **git commit --amend -s**. If you've pushed your changes to GitHub already you'll need to force push your branch after this with **git push -f**.
+The DCO text can either be manually added to your commit body,
+or you can add either **-s** or **--signoff** to your usual git commit commands.
+If you are using the GitHub UI to make a change you can add the sign-off message directly to the commit message
+when creating the pull request.
+If you forget to add the sign-off you can also amend a previous commit
+with the sign-off by running **git commit --amend -s**.
+If you've pushed your changes to GitHub already you'll need to force push your branch after this with **git push -f**.
 
 **ATTRIBUTION**:
 
-- https://probot.github.io/apps/dco/
-- https://github.com/opensearch-project/common-utils/blob/main/CONTRIBUTING.md
-- https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5
-- https://thesofproject.github.io/latest/contribute/contribute_guidelines.html
+* <https://probot.github.io/apps/dco/>
+* <https://github.com/opensearch-project/common-utils/blob/main/CONTRIBUTING.md>
+* <https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5>
+* <https://thesofproject.github.io/latest/contribute/contribute_guidelines.html>
 
 ## Source file structure [Preliminary]
 
-The source files for the [Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs) are stored under the *docs/content/en/docs* directory in the repository.
+The source files for the [Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs) are stored under
+the *docs/content/en/docs* directory in the repository.
 The build strategy is to build everything except for:
 
-* The files/folders that are listed in the `ignoreFiles` array in the [config.toml](https://github.com/keptn/keptn.github.io/blob/master/config.toml) file
+* The files/folders that are listed in the `ignoreFiles` array in the
+   [config.toml](https://github.com/keptn/keptn.github.io/blob/master/config.toml) file
 * Files that include the `hidden: true` string in the file's metadata section
 
-The order in which the files are displayed is determined by the value of the `weight` field in the metadata section of *_index.md* and *index.md* files located throughout the directory tree.
+The order in which the files are displayed is determined by the value of the `weight` field
+in the metadata section of *_index.md* and *index.md* files located throughout the directory tree.
 
 The metadata section of these files contains at least three fields.
 As an example, the metadata section for the *Concepts* section of the documentation includes the following fields:
 
-```
+```yaml
 title: Concepts
 description: Learn about underlying concepts of the keptn lifecycle toolkit.
 icon: concepts
@@ -393,7 +445,9 @@ The meaning of these fields is:
 
 * **title** -- title displayed for the section or file
 * **description** -- subtext displayed for the section or subsection
-* **weight** -- order in which section or subsection is desplayed relative to other sections and subsections at the same level.
+* **weight** -- order in which section or subsection is desplayed relative to other sections and
+   subsections at the same level.
+
 In this case, the weight of 50 means that this section is displayed
 after sections that have weights of 49 and lower
 and before sections that have weights of 51 and higher.
@@ -406,7 +460,8 @@ Some other fields are sometimes used in the metadata.
 ### Top level structure
 
 The current tools do not support versioning.
-To work around this limitation, the docs are arranged with some general topics that generally apply to all releases and then subsections for each release that is currently supported.
+To work around this limitation, the docs are arranged with some general topics that generally apply to all releases and
+then subsections for each release that is currently supported.
 
 The system for assigning weights for the docs landing page is:
 
@@ -419,15 +474,15 @@ The system for assigning weights for the docs landing page is:
 Each subdirectory contains topical subdirectories for each chapter in that section.
 Each topical subdirectory contains:
 
-  - An *index.md* file that has the metadata discussed above plus the text for the section
-  - An *assets* subdirectory where graphical files for that topic are stored.
+* An *index.md* file that has the metadata discussed above plus the text for the section
+* An *assets* subdirectory where graphical files for that topic are stored.
 No *assets* subdirectory is present if the topic has no graphics.
 
 ## Guidelines for working on documentation in development versus already released documentation
 
 [This material will be provided when we define the versioning scheme to use]
 
-**Documentation for new features**
+### Documentation for new features
 
 Most documentation changes should be made to the docs-dev branch,
 which means creating a PR in the `lifecycle-toolkit` repository
@@ -436,7 +491,7 @@ You can view the local build as described above.
 We are releasing new versions of the software frequently
 so this makes new content available reasonably quickly.
 
-**Documentation for published docs**
+### Documentation for published docs
 
 If a critical problem needs to be solved immediately,
 you can modify the documentation source in the sandbox.

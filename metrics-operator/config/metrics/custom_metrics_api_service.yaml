@@ -5,7 +5,7 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
 spec:
   service:
-    name: metrics-operator-metrics-service
+    name: metrics-operator-service
     namespace: system
   group: custom.metrics.k8s.io
   version: v1beta1

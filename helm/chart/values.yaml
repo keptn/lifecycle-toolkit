@@ -12,7 +12,7 @@ certificateOperator:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/certificate-operator
-      tag: "202303031677829895"
+      tag: "202303031677834963"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -41,22 +41,6 @@ imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
 lifecycleOperator:
   manager:
-    keptnappController:
-      logLevel: 0
-    keptnappversionController:
-      logLevel: 0
-    keptnevaluationController:
-      logLevel: 0
-    keptntaskController:
-      logLevel: 0
-    keptntaskdefinitionController:
-      logLevel: 0
-    keptnworkloadController:
-      logLevel: 0
-    keptnworkloadinstanceController:
-      logLevel: 0
-    optionsController:
-      logLevel: 0
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -72,8 +56,8 @@ lifecycleOperator:
       functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
       otelCollectorUrl: otel-collector:4317
     image:
-      repository: ghcr.io/keptn/keptn-lifecycle-operator
-      tag: "202303031677829895"
+      repository: ghcr.io/keptn/lifecycle-operator
+      tag: "202303031677834963"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -126,7 +110,7 @@ metricsOperator:
       exposeKeptnMetrics: "true"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: "202303031677829895"
+      tag: "202303031677834963"
     livenessProbe:
       httpGet:
         path: /healthz
@@ -194,7 +178,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202303031677829895"
+      tag: "202303031677834963"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

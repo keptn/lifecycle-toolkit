@@ -15,7 +15,7 @@ spec:
       labels:
         component: scheduler
     spec:
-      serviceAccountName: scheduler
+      serviceAccountName: keptn-scheduler
       containers:
         - command:
             - /bin/kube-scheduler

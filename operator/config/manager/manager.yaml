@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lifecycle-operator
+  name: operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit

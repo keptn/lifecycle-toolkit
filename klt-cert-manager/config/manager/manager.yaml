@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: certificate-operator
+  name: operator
   namespace: system
   labels:
     control-plane: certificate-operator

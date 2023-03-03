@@ -2,12 +2,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: metrics-operator-rolebinding
+  name: operator-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: metrics-operator-role
+  name: operator-role
 subjects:
   - kind: ServiceAccount
-    name: metrics-operator
+    name: operator
     namespace: system

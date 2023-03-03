@@ -208,7 +208,8 @@ git rebase main
 git push --set-upstream origin feature/123/foo
 ```
 
-**All PRs must include a commit message with a description of the changes made!**
+> Note:
+All PRs must include a commit message with a description of the changes made!
 
 Make sure you **sign off your commits**. To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
 Finally, go to GitHub and create a Pull Request.
@@ -231,8 +232,10 @@ feat(api): New endpoint for feature X (#1234)
 
 If you have **breaking changes** in your PR, it is important to note them in the PR
 description but also in the merge commit for that PR.
-When pressing "squash and merge", you have the option to fill out the commit message. Please use that feature to add the
-breaking changes according to the [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
+
+When pressing "squash and merge", you have the option to fill out the commit message.
+Please use that feature to add the breaking changes according to the
+[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
 Also, please remove the PR number at the end and just add the issue number.
 
 An example for a PR with breaking changes and the according merge commit:

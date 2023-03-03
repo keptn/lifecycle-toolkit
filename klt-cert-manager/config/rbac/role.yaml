@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: cert-manager-role
+  name: operator-role
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -48,7 +48,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: cert-manager-role
+  name: operator-role
   namespace: keptn-lifecycle-toolkit-system
 rules:
 - apiGroups:

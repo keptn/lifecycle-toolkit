@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
@@ -51,7 +51,7 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     runs-on: ubuntu-22.04
     permissions:

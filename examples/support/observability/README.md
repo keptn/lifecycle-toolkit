@@ -55,7 +55,7 @@ in the `config` directory:
 kubectl apply -f config/otel-collector.yaml -n keptn-lifecycle-toolkit-system
 ```
 
-Also, please ensure that the `OTEL_COLLECTOR_URL` env vars of both the `klc-controller-manager`,
+Also, please ensure that the `OTEL_COLLECTOR_URL` env vars of both the `lifecycle-operator`,
 as well as the `keptn-scheduler` deployments are set appropriately.
 By default, they are set to `otel-collector:4317`, which should be the correct value for this tutorial.
 
@@ -75,11 +75,11 @@ can edit the Collector ConfigMap with the following command:
 kubectl edit configmap otel-collector-conf -n keptn-lifecycle-toolkit-system
 ```
 
-When the `otel-collector` pod is up and running, restart the `keptn-scheduler` and `klc-controller-manager` so they can
+When the `otel-collector` pod is up and running, restart the `keptn-scheduler` and `lifecycle-operator` so they can
 pick up the new configuration.
 
 ```shell
-kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system keptn-scheduler klc-controller-manager
+kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system keptn-scheduler lifecycle-operator
 ```
 
 ## Seeing the OpenTelemetry Collector in action

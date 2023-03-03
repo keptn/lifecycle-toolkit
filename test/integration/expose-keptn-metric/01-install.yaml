@@ -24,7 +24,7 @@ spec:
         - /bin/sh
         - -ec
         - |
-          curl -s metrics-operator-controller-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222/metrics > ~/out.txt
+          curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222/metrics > ~/out.txt
           if grep -Fxq "# HELP keptnmetric_sample keptnmetric-sample" ~/out.txt
           then
             exit 0

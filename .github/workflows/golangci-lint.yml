@@ -27,13 +27,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code

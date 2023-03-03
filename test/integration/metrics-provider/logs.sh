@@ -5,7 +5,7 @@ RETRY_COUNT=3
 SLEEP_TIME=5
 
 for i in $(seq 1 $RETRY_COUNT); do
-    VAR=$(kubectl logs -n keptn-lifecycle-toolkit-system deployments/klc-controller-manager | grep -c "Error while parsing response")
+    VAR=$(kubectl logs -n keptn-lifecycle-toolkit-system deployments/lifecycle-operator | grep -c "Error while parsing response")
     # shellcheck disable=SC1072
     if [ "$VAR" -ge 1 ]; then
       echo "Controller could access secret"

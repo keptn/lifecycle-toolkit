@@ -179,10 +179,10 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
-          - "keptn-lifecycle-operator"
+          - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
-          - "klt-cert-manager"
+          - "certificate-operator"
     steps:
       - name: Download images
         id: download_images

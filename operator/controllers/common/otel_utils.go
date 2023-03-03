@@ -146,7 +146,7 @@ func newResource() *resource.Resource {
 	r := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.TelemetrySDKLanguageGo,
-		semconv.ServiceNameKey.String("keptn-lifecycle-operator"),
+		semconv.ServiceNameKey.String("lifecycle-operator"),
 		semconv.ServiceVersionKey.String(buildVersion+"-"+gitCommit+"-"+buildTime),
 	)
 	return r

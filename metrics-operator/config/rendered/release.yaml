@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: metrics-controller
+    control-plane: metrics-operator
   name: keptn-lifecycle-toolkit-system
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -10,6 +10,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
@@ -20,7 +21,7 @@ spec:
     webhook:
       clientConfig:
         service:
-          name: metrics-operator-webhook-service
+          name: webhook-service
           namespace: keptn-lifecycle-toolkit-system
           path: /convert
       conversionReviewVersions:
@@ -264,7 +265,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: metrics-operator-controller
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -308,7 +309,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: metrics-operator-keptn-metrics-server-resources
+  name: keptn-metrics-server-resources
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -321,7 +322,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: metrics-operator-manager-role
+  name: manager-role
 rules:
 - apiGroups:
   - ""
@@ -377,37 +378,9 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: metrics-operator-metrics-reader
-rules:
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: metrics-operator-proxy-role
-rules:
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: metrics-operator-leader-election-rolebinding
+  name: leader-election-rolebinding
   namespace: keptn-lifecycle-toolkit-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -415,31 +388,31 @@ roleRef:
   name: metrics-operator-leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: metrics-operator-controller
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: metrics-operator-manager-rolebinding
+  name: metrics-operator-rolebinding
   namespace: keptn-lifecycle-toolkit-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: manager-role
+  name: metrics-operator-role
 subjects:
 - kind: ServiceAccount
-  name: metrics-operator-controller
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metrics-operator-hpa-controller-keptn-metrics
+  name: hpa-controller-keptn-metrics
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: metrics-operator-keptn-metrics-server-resources
+  name: keptn-metrics-server-resources
 subjects:
 - kind: ServiceAccount
   name: horizontal-pod-autoscaler
@@ -448,40 +421,27 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metrics-operator-keptn-metrics-system-auth-delegator
+  name: keptn-metrics-system-auth-delegator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: system:auth-delegator
 subjects:
 - kind: ServiceAccount
-  name: metrics-operator-controller
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metrics-operator-manager-rolebinding
+  name: metrics-operator-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: metrics-operator-manager-role
+  name: metrics-operator-role
 subjects:
 - kind: ServiceAccount
-  name: metrics-operator-controller
-  namespace: keptn-lifecycle-toolkit-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: metrics-operator-proxy-rolebinding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: metrics-operator-proxy-role
-subjects:
-- kind: ServiceAccount
-  name: metrics-operator-controller
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
@@ -510,7 +470,7 @@ data:
     # leaderElectionReleaseOnCancel: true
 kind: ConfigMap
 metadata:
-  name: metrics-operator-manager-config
+  name: manager-config
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
@@ -518,7 +478,7 @@ kind: Service
 metadata:
   labels:
     control-plane: metrics-controller
-  name: metrics-operator-controller-metrics-service
+  name: metrics-operator-service
   namespace: keptn-lifecycle-toolkit-system
 spec:
   ports:
@@ -534,12 +494,12 @@ spec:
     protocol: TCP
     targetPort: metrics
   selector:
-    control-plane: metrics-controller
+    control-plane: metrics-operator
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: metrics-operator-webhook-service
+  name: webhook-service
   namespace: keptn-lifecycle-toolkit-system
 spec:
   ports:
@@ -547,27 +507,27 @@ spec:
     protocol: TCP
     targetPort: 9443
   selector:
-    control-plane: metrics-controller
+    control-plane: metrics-operator
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    control-plane: metrics-controller
-  name: metrics-operator-controller
+    control-plane: metrics-operator
+  name: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      control-plane: metrics-controller
+      control-plane: metrics-operator
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: metrics-controller
+        control-plane: metrics-operator
     spec:
       containers:
       - args:
@@ -590,7 +550,7 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
-        image: odubajdt/metrics-operator:v1alpha3
+        image: ghcr.io/keptn/metrics-operator:latest
         livenessProbe:
           httpGet:
             path: /healthz
@@ -633,7 +593,7 @@ spec:
           name: adapter-certs-dir
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: metrics-operator-controller
+      serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10
       volumes:
       - emptyDir: {}
@@ -650,7 +610,7 @@ spec:
   groupPriorityMinimum: 100
   insecureSkipTLSVerify: true
   service:
-    name: metrics-operator-controller-metrics-service
+    name: metrics-operator-metrics-service
     namespace: keptn-lifecycle-toolkit-system
   version: v1beta1
   versionPriority: 100
@@ -664,7 +624,7 @@ spec:
   groupPriorityMinimum: 100
   insecureSkipTLSVerify: true
   service:
-    name: metrics-operator-controller-metrics-service
+    name: metrics-operator-service
     namespace: keptn-lifecycle-toolkit-system
   version: v1beta2
   versionPriority: 200

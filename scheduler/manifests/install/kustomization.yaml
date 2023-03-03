@@ -13,5 +13,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: scheduler
-  newName : ghcr.keptn.sh/keptn/scheduler
-  newTag: "0.6.0-next.1"
+  newName: ghcr.io/keptn/scheduler
+  newTag: "202303021677763654"

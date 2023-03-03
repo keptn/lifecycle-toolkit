@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    control-plane: controller-manager
+    control-plane: lifecycle-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: lifecycle-operator
   replicas: 1
   template:
     metadata:
@@ -19,7 +19,7 @@ spec:
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
       labels:
-        control-plane: controller-manager
+        control-plane: lifecycle-operator
     spec:
       securityContext:
         runAsNonRoot: true
@@ -71,6 +71,24 @@ spec:
             value: otel-collector:4317
           - name: FUNCTION_RUNNER_IMAGE
             value: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0 #x-release-please-version
+          - name: OTEL_COLLECTOR_URL
+            value: "0"
+          - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: OPTIONS_CONTROLLER_LOG_LEVEL
+            value: "0"
         securityContext:
           seccompProfile:
             type: RuntimeDefault
@@ -108,5 +126,5 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
           - name: adapter-certs-dir
             mountPath: /tmp/metrics-adapter/serving-certs
-      serviceAccountName: controller-manager
+      serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

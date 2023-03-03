@@ -16,7 +16,7 @@ spec:
       port: 443
     - name: metrics
       protocol: TCP
-      port: 2222
+      port: 9999
       targetPort: metrics
   selector:
     control-plane: metrics-operator

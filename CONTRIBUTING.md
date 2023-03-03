@@ -149,7 +149,8 @@ of the settings.
 
 If you are on Windows, you need to install **make** for the above process to complete.
 
-( **NOTE**: When using the make command on Windows, you may receive an `unrecognized command` error for a command that is installed.
+( **NOTE**:
+When using the make command on Windows, you may receive an `unrecognized command` error for a command that is installed.
 This usually indicates that `PATH` for the binary is not set correctly).
 
 ### Markdownlint
@@ -181,8 +182,8 @@ We use the default configuration values for `markdownlint`.
 
 This means:
 
-- [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
-- [.markdownlintignore](./.markdownlintignore) list files that markdown-lint ignores,  using `.gitignore` conventions
+* [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
+* [.markdownlintignore](./.markdownlintignore) list files that markdown-lint ignores,  using `.gitignore` conventions
 
 We use the default values, so tools like
 [markdownlint for VSCode](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
@@ -220,7 +221,7 @@ Please follow the
 
 If you only have one commit in your PR, please follow the guidelines for the message
 of that single commit, otherwise the PR title is enough.
-You can find a list of all possible feature types [here](#commit-types-and-scopes).
+You can find a list of all possible feature types [here](#commit-types).
 
 An example for a pull request title would be:
 
@@ -230,8 +231,8 @@ feat(api): New endpoint for feature X (#1234)
 
 If you have **breaking changes** in your PR, it is important to note them in the PR
 description but also in the merge commit for that PR.
-When pressing "squash and merge", you have the option to fill out the commit message. Please use that feature to add the breaking changes according to the
-[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
+When pressing "squash and merge", you have the option to fill out the commit message. Please use that feature to add the
+breaking changes according to the [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
 Also, please remove the PR number at the end and just add the issue number.
 
 An example for a PR with breaking changes and the according merge commit:
@@ -303,19 +304,19 @@ by creating a pre-commit git hook as follows:
 
 1. Create the hook:
 
-``` bash
-touch .git/hooks/prepare-commit-msg
-```
+    ``` bash
+    touch .git/hooks/prepare-commit-msg
+    ```
 
 2. Add the following to the `prepare-commit-msg` file:
 
-```bash
-SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
-```
+    ```bash
+    SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+    grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+    ```
 
 3. Give it execution permissions by calling:
 
-```bash
-chmod +x ./.git/hooks/prepare-commit-msg
-```
+    ```bash
+    chmod +x ./.git/hooks/prepare-commit-msg
+    ```

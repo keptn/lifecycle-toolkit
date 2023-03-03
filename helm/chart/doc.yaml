@@ -44,26 +44,16 @@
 
 ## @param     certificateOperator.replicas customize number of replicas
 
-## @param     certificateOperatorMetricsService.ports[0].name TODO  TODO  TODO
-## @param     certificateOperatorMetricsService.ports[0].port TODO  TODO  TODO
-## @param     certificateOperatorMetricsService.ports[0].protocol TODO  TODO  TODO
-## @param     certificateOperatorMetricsService.ports[0].targetPort TODO  TODO  TODO
-## @param     certificateOperatorMetricsService.type TODO  TODO TODO
-
 ## @param     certificateOperator.nodeSelector specify custom node selectors for cert manager
 ## @param     certificateOperator.tolerations customize tolerations for cert manager
 ## @param     certificateOperator.topologySpreadConstraints add topology constraints for cert manager
 
-## @param    klcManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
-## @param    klcManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
-## @param    klcManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
-## @param    klcManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
-## @param    klcManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
 
-## @param    klcWebhookService.ports[0].port TODO  TODO  TODO
-## @param    klcWebhookService.ports[0].protocol TODO  TODO  TODO
-## @param    klcWebhookService.ports[0].targetPort TODO  TODO  TODO
-## @param    klcWebhookService.type TODO  TODO  TODO
 
 ## @section Keptn Cert Manager controller
 ## @extra    certificateOperator.manager.containerSecurityContext Sets security context for the cert manager
@@ -99,15 +89,11 @@
 ## @section Keptn Lifecycle Operator common
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
-## @param   lifecycleOperatorMetricsService.ports[0].name TODO  TODO  TODO
-## @param   lifecycleOperatorMetricsService.ports[0].port TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[0].protocol TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[0].targetPort TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[1].name TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[1].port TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[1].protocol TODO  TODO  TODO 
-## @param   lifecycleOperatorMetricsService.ports[1].targetPort TODO  TODO  TODO
-## @param   lifecycleOperatorMetricsService.type TODO TODO TODO
+
+## @param    lifecycleWebhookService.ports[0].port TODO  TODO  TODO
+## @param    lifecycleWebhookService.ports[0].protocol TODO  TODO  TODO
+## @param    lifecycleWebhookService.ports[0].targetPort TODO  TODO  TODO
+## @param    lifecycleWebhookService.type TODO  TODO  TODO
 
 ## @param   lifecycleOperator.nodeSelector add custom nodes selector to lifecycle operator
 ## @param   lifecycleOperator.tolerations add custom tolerations to lifecycle operator
@@ -123,14 +109,14 @@
 ## @param   lifecycleOperator.manager.containerSecurityContext.runAsUser
 ## @param   lifecycleOperator.manager.containerSecurityContext.seccompProfile.type
 
-## @param   lifecycleOperator.manager.keptnappController.logLevel sets the log level of Keptn App Controller
-## @param   lifecycleOperator.manager.keptnappversionController.logLevel sets the log level of Keptn AppVersion Controller
-## @param   lifecycleOperator.manager.keptnevaluationController.logLevel sets the log level of Keptn Evaluation Controller
-## @param   lifecycleOperator.manager.keptntaskController.logLevel sets the log level of Keptn Task Controller
-## @param   lifecycleOperator.manager.keptntaskdefinitionController.logLevel sets the log level of Keptn TaskDefinition Controller
-## @param   lifecycleOperator.manager.keptnworkloadController.logLevel sets the log level of Keptn Workload Controller
-## @param   lifecycleOperator.manager.keptnworkloadinstanceController.logLevel sets the log level of Keptn WorkloadInstance Controller
-## @param   lifecycleOperator.manager.optionsController.logLevel sets the log level of Keptn Options Controller
+## @param   lifecycleOperator.manager.env.keptnappController.logLevel sets the log level of Keptn App Controller
+## @param   lifecycleOperator.manager.env.keptnappversionController.logLevel sets the log level of Keptn AppVersion Controller
+## @param   lifecycleOperator.manager.env.keptnevaluationController.logLevel sets the log level of Keptn Evaluation Controller
+## @param   lifecycleOperator.manager.env.keptntaskController.logLevel sets the log level of Keptn Task Controller
+## @param   lifecycleOperator.manager.env.keptntaskdefinitionController.logLevel sets the log level of Keptn TaskDefinition Controller
+## @param   lifecycleOperator.manager.env.keptnworkloadController.logLevel sets the log level of Keptn Workload Controller
+## @param   lifecycleOperator.manager.env.keptnworkloadinstanceController.logLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   lifecycleOperator.manager.env.optionsController.logLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
 ## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime
@@ -158,34 +144,33 @@
 ## @skip   lifecycleOperator.manager.resources.requests.memory
 
 
-
 ## @section Keptn Metrics Operator common
 
 ## @param   metricsOperator.replicas customize number of installed metrics operator replicas
 
-## @param   metricsOperatorMetricsService.ports[0].name
-## @param   metricsOperatorMetricsService.ports[0].port
-## @param   metricsOperatorMetricsService.ports[0].protocol
-## @param   metricsOperatorMetricsService.ports[0].targetPort
-## @param   metricsOperatorMetricsService.ports[1].name
-## @param   metricsOperatorMetricsService.ports[1].port
-## @param   metricsOperatorMetricsService.ports[1].targetPort
-## @param   metricsOperatorMetricsService.ports[2].name
-## @param   metricsOperatorMetricsService.ports[2].port
-## @param   metricsOperatorMetricsService.ports[2].protocol
-## @param   metricsOperatorMetricsService.ports[2].targetPort
-## @param   metricsOperatorMetricsService.type
+## @param   metricsOperatorService.ports[0].name
+## @param   metricsOperatorService.ports[0].port
+## @param   metricsOperatorService.ports[0].protocol
+## @param   metricsOperatorService.ports[0].targetPort
+## @param   metricsOperatorService.ports[1].name
+## @param   metricsOperatorService.ports[1].port
+## @param   metricsOperatorService.ports[1].targetPort
+## @param   metricsOperatorService.ports[2].name
+## @param   metricsOperatorService.ports[2].port
+## @param   metricsOperatorService.ports[2].protocol
+## @param   metricsOperatorService.ports[2].targetPort
+## @param   metricsOperatorService.type
 
-## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
-## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
-## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
-## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
-## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
 
-## @param      metricsOperatorWebhookService.ports[0].port TODO  TODO  TODO
-## @param      metricsOperatorWebhookService.ports[0].protocol TODO  TODO  TODO
-## @param      metricsOperatorWebhookService.ports[0].targetPort TODO  TODO  TODO
-## @param      metricsOperatorWebhookService.type TODO  TODO  TODO
+## @param     metricsWebhookService.ports[0].port TODO  TODO  TODO
+## @param     metricsWebhookService.ports[0].protocol TODO  TODO  TODO
+## @param     metricsWebhookService.ports[0].targetPort TODO  TODO  TODO
+## @param     metricsWebhookService.type TODO  TODO  TODO
 
 ## @param    metricsOperator.nodeSelector add custom nodes selector to metrics operator
 ## @param    metricsOperator.tolerations add custom tolerations to metrics operator
@@ -196,7 +181,6 @@
 ## @param   metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation
 ## @param   metricsOperator.manager.containerSecurityContext.capabilities.drop
 
-## @param   metricsOperator.manager.metricsController.logLevel sets the log level of Keptn Metrics Controller
 
 ## @param   metricsOperator.manager.image.repository specify registry for manager image
 ## @param   metricsOperator.manager.image.tag  select tag for manager image

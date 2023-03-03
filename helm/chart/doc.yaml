@@ -176,11 +176,11 @@
 ## @param   metricsOperatorMetricsService.ports[2].targetPort
 ## @param   metricsOperatorMetricsService.type
 
-## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
-## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
-## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
-## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
-## @param      metricsOperatorManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
+## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
+## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
+## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param      metricsManagerConfigConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
 
 ## @param      metricsOperatorWebhookService.ports[0].port TODO  TODO  TODO
 ## @param      metricsOperatorWebhookService.ports[0].protocol TODO  TODO  TODO

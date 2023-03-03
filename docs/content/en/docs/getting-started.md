@@ -132,7 +132,8 @@ information about the workloads by describing one of the resources:
 kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
 ```
 
-Note that there are more detailed information in the event stream of the object.
+> **Note**
+There are more detailed information in the event stream of the object.
 
 ### Watch application state
 

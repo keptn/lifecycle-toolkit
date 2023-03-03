@@ -1,4 +1,4 @@
-certificateOperator:
+certificateoperator:
   manager:
     containerSecurityContext:
       allowPrivilegeEscalation: false
@@ -12,7 +12,7 @@ certificateOperator:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/certificate-operator
-      tag: "202303031677834963"
+      tag: "202303031677837155"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -39,6 +39,17 @@ certificateOperator:
   topologySpreadConstraints: []
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
+lifecycleManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
 lifecycleOperator:
   manager:
     containerSecurityContext:
@@ -57,7 +68,7 @@ lifecycleOperator:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/lifecycle-operator
-      tag: "202303031677834963"
+      tag: "202303031677837155"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -82,23 +93,23 @@ lifecycleOperator:
   replicas: 1
   tolerations: []
   topologySpreadConstraints: []
-lifecycleOperatorManagerConfig:
-  controllerManagerConfigYaml:
-    health:
-      healthProbeBindAddress: :8081
-    leaderElection:
-      leaderElect: true
-      resourceName: 6b866dd9.keptn.sh
-    metrics:
-      bindAddress: 127.0.0.1:8080
-    webhook:
-      port: 9443
-lifecycleOperatorWebhookService:
+lifecycleWebhookService:
   ports:
   - port: 443
     protocol: TCP
     targetPort: 9443
   type: ClusterIP
+metricsManagerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 3f8532ca.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
 metricsOperator:
   manager:
     containerSecurityContext:
@@ -110,7 +121,7 @@ metricsOperator:
       exposeKeptnMetrics: "true"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: "202303031677834963"
+      tag: "202303031677837155"
     livenessProbe:
       httpGet:
         path: /healthz
@@ -134,17 +145,6 @@ metricsOperator:
   replicas: 1
   tolerations: []
   topologySpreadConstraints: []
-metricsOperatorManagerConfig:
-  controllerManagerConfigYaml:
-    health:
-      healthProbeBindAddress: :8081
-    leaderElection:
-      leaderElect: true
-      resourceName: 3f8532ca.keptn.sh
-    metrics:
-      bindAddress: 127.0.0.1:8080
-    webhook:
-      port: 9443
 metricsOperatorService:
   ports:
   - name: https
@@ -158,6 +158,12 @@ metricsOperatorService:
     port: 2222
     protocol: TCP
     targetPort: metrics
+  type: ClusterIP
+metricsWebhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
   type: ClusterIP
 scheduler:
   nodeSelector: {}
@@ -178,7 +184,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202303031677834963"
+      tag: "202303031677837155"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -210,9 +216,3 @@ schedulerConfig:
           enabled:
           - name: KLCPermit
       schedulerName: keptn-scheduler
-webhookService:
-  ports:
-  - port: 443
-    protocol: TCP
-    targetPort: 9443
-  type: ClusterIP

@@ -8,7 +8,7 @@ In version 0.6.0 and later, you can install the Lifecycle Toolkit using the curr
 
 ```shell
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml
-kubectl wait --for=condition=Available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=120s
+kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
 
 <!---x-release-please-end-->
@@ -28,5 +28,5 @@ After that, you can install the Lifecycle Toolkit `<oldversion>` with:
 
 ```shell
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/<oldversion>/manifest.yaml
-kubectl wait --for=condition=Available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=120s
+kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```

@@ -419,7 +419,7 @@ func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificat
 
 	request := reconcile.Request{
 		NamespacedName: types.NamespacedName{
-			Name:      "klc-controller-manager",
+			Name:      "lifecycle-operator",
 			Namespace: testnamespace,
 		},
 	}

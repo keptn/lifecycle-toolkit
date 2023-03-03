@@ -10,7 +10,7 @@
         "designatorType": "Attributes",
         "attributes": {
           "kind": "ServiceAccount",
-          "name": "klc-controller-manager"
+          "name": "lifecycle-operator"
         }
       }
     ],

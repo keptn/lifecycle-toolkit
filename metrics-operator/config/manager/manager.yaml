@@ -2,28 +2,28 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: metrics-controller
+    control-plane: metrics-operator
   name: system
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller
+  name: operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    control-plane: metrics-controller
+    control-plane: metrics-operator
 spec:
   selector:
     matchLabels:
-      control-plane: metrics-controller
+      control-plane: metrics-operator
   replicas: 1
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: metrics-controller
+        control-plane: metrics-operator
     spec:
       securityContext:
         runAsNonRoot: true
@@ -65,6 +65,8 @@ spec:
                 fieldPath: metadata.name
           - name: EXPOSE_KEPTN_METRICS
             value: "true"
+          - name: METRICS_CONTROLLER_LOG_LEVEL
+            value: "0"
         ports:
           - containerPort: 9443
             name: webhook-server
@@ -104,5 +106,5 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
           - name: adapter-certs-dir
             mountPath: /tmp/metrics-adapter/serving-certs
-      serviceAccountName: controller
+      serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10

@@ -13,7 +13,7 @@ webhooks:
         - key: control-plane
           operator: NotIn
           values:
-            - "controller-manager"
+            - "lifecycle-operator"
         - key: kubernetes.io/metadata.name
           operator: NotIn
           values:

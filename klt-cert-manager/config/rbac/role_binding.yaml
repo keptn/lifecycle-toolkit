@@ -3,17 +3,17 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: clusterrolebinding
-    app.kubernetes.io/instance: klt-cert-manager-rolebinding
+    app.kubernetes.io/instance: certificate-operator-rolebinding
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: klt-cert-manager
-    app.kubernetes.io/part-of: klt-cert-manager
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/part-of: certificate-operator
     app.kubernetes.io/managed-by: kustomize
-  name: cert-manager-rolebinding
+  name: operator-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: klt-cert-manager-role
+  name: operator-role
 subjects:
 - kind: ServiceAccount
-  name: cert-manager
+  name: operator
   namespace: system

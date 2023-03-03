@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     component: scheduler
-  name: keptn-scheduler
+  name: scheduler
   namespace: keptn-lifecycle-toolkit-system
 spec:
   selector:
@@ -31,7 +31,7 @@ spec:
               port: 10259
               scheme: HTTPS
             initialDelaySeconds: 15
-          name: keptn-scheduler
+          name: scheduler
           readinessProbe:
             httpGet:
               path: /healthz

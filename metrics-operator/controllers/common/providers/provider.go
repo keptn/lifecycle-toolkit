@@ -42,6 +42,7 @@ func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (Kep
 		return &datadog.KeptnDataDogProvider{
 			Log:        log,
 			HttpClient: http.Client{},
+			K8sClient:  k8sClient,
 		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider)

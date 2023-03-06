@@ -44,8 +44,8 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
-        keptn.sh/pre-deployment-evaluations: pre-deployment-hello
-        keptn.sh/ppost-deployment-evaluations: pre-deployment-hello
+        keptn.sh/pre-deployment-evaluations: available-cpus
+        keptn.sh/post-deployment-evaluations: available-cpus
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
         keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:

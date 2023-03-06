@@ -99,10 +99,12 @@ This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE,
 the following configuration is required.
 
+### Golangci-lint
+
 Further information can also be found in
 the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
 
-### Visual Studio Code
+#### Visual Studio Code
 
 In Visual Studio Code the
 [Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi)
@@ -132,7 +134,7 @@ configuration file enables all linters used in this project.
 },
 ```
 
-### GoLand / IntelliJ requirements
+#### GoLand / IntelliJ requirements
 
 * Install either the **GoLand** or **IntelliJ**  Integrated Development Environment
 (IDE) for the Go programming language, plus the [Go Linter](https://plugins.jetbrains.com/plugin/12496-go-linter) plugin.
@@ -150,6 +152,42 @@ If you are on Windows, you need to install **make** for the above process to com
 ( **NOTE**:
 When using the make command on Windows, you may receive an `unrecognized command` error for a command that is installed.
 This usually indicates that `PATH` for the binary is not set correctly).
+
+### Markdownlint
+
+We are using [markdownlint](https://github.com/DavidAnson/markdownlint) to ensure consistent styling
+within our Markdown files.
+Specifically we are using [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli).
+
+We are using `GNU MAKE` to ensure the same functionality locally and within our CI builds.
+This should allow easier debugging and problem resolution.
+
+#### Markdownlint execution
+
+To verify that your markdown code conforms to the rules, run the following on your local branch:
+
+```shell
+make markdownlint
+```
+
+To use the auto-fix option, run:
+
+```shell
+make markdownlint-fix
+```
+
+#### Markdownlint Configuration
+
+We use the default configuration values for `markdownlint`.
+
+This means:
+
+* [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
+* [.markdownlintignore](./.markdownlintignore) list files that markdown-lint ignores,  using `.gitignore` conventions
+
+We use the default values, so tools like
+[markdownlint for VSCode](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
+can be used without additional configuration.
 
 ## Submit a Pull Request 🚀
 
@@ -194,6 +232,7 @@ feat(api): New endpoint for feature X (#1234)
 
 If you have **breaking changes** in your PR, it is important to note them in the PR
 description but also in the merge commit for that PR.
+
 When pressing "squash and merge", you have the option to fill out the commit message.
 Please use that feature to add the breaking changes according to the
 [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
@@ -284,18 +323,3 @@ by creating a pre-commit git hook as follows:
     ```bash
     chmod +x ./.git/hooks/prepare-commit-msg
     ```
-
-### Markdown linting
-
-To check your markdown files for linter errors, run the following
-from the repo root:
-
-```shell
-make markdownlint
-```
-
-To use the auto-fix option, run:
-
-```shell
-make markdownlint-fix
-```

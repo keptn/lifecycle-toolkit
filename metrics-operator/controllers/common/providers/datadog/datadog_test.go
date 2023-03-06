@@ -24,14 +24,18 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	secretName, secretKey, secretValue := "datadogToken", "apiKey", "fake-api-key"
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
 	apiToken := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      secretName,
 			Namespace: "",
 		},
 		Data: map[string][]byte{
-			secretKey: []byte(secretValue),
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
 		},
 	}
 	fakeClient := fake.NewClient(apiToken)
@@ -46,13 +50,14 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			Query: "system.cpu.idle{*}",
 		},
 	}
+	b := true
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: secretName,
 				},
-				Key: secretKey,
+				Optional: &b,
 			},
 			TargetServer: svr.URL,
 		},

@@ -253,7 +253,7 @@ It will use the following structure for the specification of the pre/post deploy
 that should be executed at app level:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -310,7 +310,7 @@ A task definition can be configured in three different ways:
 An inline KeptnTaskDefinition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: deployment-hello
@@ -328,7 +328,7 @@ To runtime can also fetch the script on the fly from a remote webserver. For thi
 following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
@@ -344,7 +344,7 @@ Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
@@ -381,7 +381,7 @@ as part of pre- and post-analysis phases of a workload or application.
 A KeptnEvaluationDefinition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation

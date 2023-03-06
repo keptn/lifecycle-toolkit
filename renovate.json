@@ -64,6 +64,9 @@
     }
   ],
   "kubernetes": {
-    "fileMatch": ["examples\\/.*\\.ya?ml$"]
+    "fileMatch": [
+      "examples\\/.*\\.ya?ml$",
+      "test\\/.*\\.ya?ml$"
+    ]
   }
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	corev1 "k8s.io/api/core/v1"
@@ -13,19 +14,30 @@ import (
 
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the DataDog API Key is missing")
 
-func getDDSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (string, error) {
-	if !provider.HasSecretDefined() {
-		return "", ErrSecretKeyRefNotDefined
+func hasDDSecretDefined(spec metricsapi.KeptnMetricsProviderSpec) bool {
+	if spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
+		return false
+	}
+	if strings.TrimSpace(spec.SecretKeyRef.Name) == "" {
+		return false
+	}
+	return true
+}
+
+func getDDSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (string, string, error) {
+	if !hasDDSecretDefined(provider.Spec) {
+		return "", "", ErrSecretKeyRefNotDefined
 	}
 	ddCredsSecret := &corev1.Secret{}
 	if err := k8sClient.Get(ctx, types.NamespacedName{Name: provider.Spec.SecretKeyRef.Name, Namespace: provider.Namespace}, ddCredsSecret); err != nil {
-		return "", err
+		return "", "", err
 	}
-	fmt.Println(provider.Spec.SecretKeyRef.Key)
 
-	apiKey := ddCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
-	if len(apiKey) == 0 {
-		return "", fmt.Errorf("secret contains invalid key %s", provider.Spec.SecretKeyRef.Key)
+	apiKey, appKey := "DD_CLIENT_API_KEY", "DD_CLIENT_APP_KEY"
+	apiKeyVal := ddCredsSecret.Data[apiKey]
+	appKeyVal := ddCredsSecret.Data[appKey]
+	if len(apiKeyVal) == 0 || len(appKeyVal) == 0 {
+		return "", "", fmt.Errorf("secret does not contain %s, %s", apiKey, appKey)
 	}
-	return string(apiKey), nil
+	return string(apiKeyVal), string(appKeyVal), nil
 }

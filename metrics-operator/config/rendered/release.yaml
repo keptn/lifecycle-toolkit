@@ -542,7 +542,7 @@ spec:
           value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: "0"
-        image: ghcr.io/keptn/metrics-operator:202303061678116059
+        image: ghcr.io/keptn/metrics-operator:202303061678116268
         livenessProbe:
           httpGet:
             path: /healthz

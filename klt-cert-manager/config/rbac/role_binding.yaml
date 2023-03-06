@@ -8,12 +8,12 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: certificate-operator
     app.kubernetes.io/managed-by: kustomize
-  name: operator-rolebinding
+  name: certificate-operator-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: operator-role
+  name: certificate-operator-role
 subjects:
 - kind: ServiceAccount
-  name: operator
+  name: certificate-operator
   namespace: system

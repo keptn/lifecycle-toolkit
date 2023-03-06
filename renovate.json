@@ -20,9 +20,7 @@
   ],
   "ignorePaths": [
     "**/test/**",
-    "**/tests/**",
-    "examples/support/observability/config/prometheus/*",
-    "test/prometheus"
+    "**/tests/**"
   ],
   "ignoreDeps": [
     "ghcr.keptn.sh/keptn/lifecycle-operator",
@@ -82,6 +80,10 @@
     "fileMatch": [
       "examples\\/.*\\.ya?ml$",
       "test\\/.*\\.ya?ml$"
+    ],
+    "ignorePaths": [
+      "examples/support/observability/config/prometheus/**/*",
+      "test/prometheus/**/*"
     ]
   }
 }

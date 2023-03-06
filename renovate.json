@@ -62,5 +62,8 @@
         "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(\\??=|\\: ?) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
       ]
     }
-  ]
+  ],
+  "kubernetes": {
+    "fileMatch": ["examples\\/.*\\.ya?ml$"]
+  }
 }

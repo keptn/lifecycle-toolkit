@@ -460,7 +460,7 @@ data:
     true\r\n"
 kind: ConfigMap
 metadata:
-  name: metrics-operator-manager-config
+  name: metrics-manager-config
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1

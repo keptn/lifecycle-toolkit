@@ -11,10 +11,10 @@ spec:
         args:
         - "--config=controller_manager_config.yaml"
         volumeMounts:
-        - name: metrics-operator-manager-config
+        - name: metrics-manager-config
           mountPath: /controller_manager_config.yaml
           subPath: controller_manager_config.yaml
       volumes:
-      - name: metrics-operator-manager-config
+      - name: metrics-manager-config
         configMap:
-          name: metrics-operator-manager-config
+          name: metrics-manager-config

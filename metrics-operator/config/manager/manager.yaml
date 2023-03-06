@@ -8,7 +8,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: operator
+  name: metrics-operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit

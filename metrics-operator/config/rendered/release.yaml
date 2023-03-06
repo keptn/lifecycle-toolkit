@@ -367,7 +367,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: metrics-server-resources
+  name: server-resources
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -398,7 +398,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: operator-role
+  name: metrics-operator-role
 subjects:
 - kind: ServiceAccount
   name: metrics-operator
@@ -407,11 +407,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metrics-hpa-controller-keptn-metrics
+  name: hpa-controller-keptn-metrics
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: metrics-server-resources
+  name: server-resources
 subjects:
 - kind: ServiceAccount
   name: horizontal-pod-autoscaler
@@ -433,7 +433,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metrics-system-auth-delegator
+  name: system-auth-delegator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -441,7 +441,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metrics-operator
-  namespace: system
+  namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
 data:
@@ -460,7 +460,7 @@ data:
     true\r\n"
 kind: ConfigMap
 metadata:
-  name: metrics-manager-config
+  name: metrics-operator-manager-config
   namespace: keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
@@ -542,7 +542,7 @@ spec:
           value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: "0"
-        image: ghcr.io/keptn/metrics-operator:202303061678114674
+        image: ghcr.io/keptn/metrics-operator:202303061678116059
         livenessProbe:
           httpGet:
             path: /healthz

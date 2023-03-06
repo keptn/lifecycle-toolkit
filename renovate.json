@@ -20,18 +20,33 @@
   ],
   "ignorePaths": [
     "**/test/**",
-    "**/tests/**"
+    "**/tests/**",
+    "examples/support/observability/config/prometheus/*",
+    "test/prometheus"
   ],
   "ignoreDeps": [
-    "ghcr.keptn.sh/keptn/keptn-lifecycle-operator",
+    "ghcr.keptn.sh/keptn/lifecycle-operator",
     "ghcr.keptn.sh/keptn/scheduler",
     "ghcr.keptn.sh/keptn/functions-runtime",
-    "docker.io/thschue/keptn-lifecycle-operator",
-    "docker.io/thschue/scheduler",
-    "docker.io/annadreal/keptn-lifecycle-operator",
-    "docker.io/annadreal/kube-scheduler"
+    "ghcr.keptn.sh/keptn/certificate-operator",
+    "ghcr.keptn.sh/keptn/metrics-operator"
   ],
   "packageRules": [
+    {
+      "excludePackagePatterns": [
+        "docker.io\\/thschue\\/.*",
+        "docker.io\\/annadreal\\/.*",
+        "docker.io\\/bacherfl\\/.*",
+        "docker.io\\/mowies\\/.*",
+        "docker.io\\/odubajdt\\/.*",
+        "docker.io\\/thisthatdc\\/.*"
+      ]
+    },
+    {
+      "excludePackagePatterns": [
+        "ghcr.io\\/podtato-head\\/.*"
+      ]
+    },
     {
       "matchManagers": ["gomod"],
       "addLabels": ["go"]

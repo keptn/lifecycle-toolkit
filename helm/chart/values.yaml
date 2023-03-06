@@ -12,7 +12,7 @@ certificateOperator:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/certificate-operator
-      tag: "202303061678111572"
+      tag: "202303061678114674"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -39,17 +39,6 @@ certificateOperator:
   topologySpreadConstraints: []
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
-lifecycleManagerConfig:
-  controllerManagerConfigYaml:
-    health:
-      healthProbeBindAddress: :8081
-    leaderElection:
-      leaderElect: true
-      resourceName: 6b866dd9.keptn.sh
-    metrics:
-      bindAddress: 127.0.0.1:8080
-    webhook:
-      port: 9443
 lifecycleOperator:
   manager:
     containerSecurityContext:
@@ -73,10 +62,10 @@ lifecycleOperator:
       keptnWorkloadControllerLogLevel: "0"
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
-      otelCollectorUrl: "0"
+      otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/lifecycle-operator
-      tag: "202303061678111572"
+      tag: "202303061678114674"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -107,6 +96,17 @@ lifecycleWebhookService:
     protocol: TCP
     targetPort: 9443
   type: ClusterIP
+managerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
 metricsManagerConfig:
   controllerManagerConfigYaml:
     health:
@@ -130,7 +130,7 @@ metricsOperator:
       metricsControllerLogLevel: "0"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: "202303061678111572"
+      tag: "202303061678114674"
     livenessProbe:
       httpGet:
         path: /healthz
@@ -193,7 +193,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202303061678111572"
+      tag: "202303061678114674"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

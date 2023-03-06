@@ -110,10 +110,5 @@ build-deploy-certmanager:
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
-markdownlint:
-	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --ignore "/workdir/CHANGELOG.md"
-
-markdownlint-fix:
-	docker run -v $(CURDIR):/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:latest  "**/*.md" --config "/workdir/docs/markdownlint-rules.yaml" --fix --ignore "/workdir/CHANGELOG.md"
 
 include docs/Makefile

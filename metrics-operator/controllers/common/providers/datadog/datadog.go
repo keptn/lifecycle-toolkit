@@ -39,15 +39,14 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 		return "", nil, err
 	}
 
-	apiKey, err := getDDSecret(ctx, provider, d.K8sClient)
+	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return "", nil, err
 	}
-	appKey := "appkey" // TODO: retrieve this from kubernetes secret
 
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Dd-Api-Key", apiKey)
-	req.Header.Set("Dd-Application-Key", appKey)
+	req.Header.Set("Dd-Api-Key", apiKeyVal)
+	req.Header.Set("Dd-Application-Key", appKeyVal)
 
 	res, err := d.HttpClient.Do(req)
 	if err != nil {

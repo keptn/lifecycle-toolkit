@@ -19,9 +19,7 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -36,7 +34,6 @@ import (
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -91,9 +88,6 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-
-	// Start the prometheus HTTP server and pass the exporter Collector to it
-	go serveMetrics()
 
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
@@ -174,17 +168,6 @@ func main() {
 			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}
-	}
-}
-
-func serveMetrics() {
-	log.Printf("serving metrics at localhost:2222/metrics")
-
-	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":2222", nil)
-	if err != nil {
-		fmt.Printf("error serving http: %v", err)
-		return
 	}
 }
 

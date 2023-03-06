@@ -79,7 +79,7 @@
     "packageRules": [
       {
         "excludePackagePatterns": [
-          "ghcr.io\\/podtato-head\\/.*"
+          ".*podtato\\-head.*"
         ]
       }
     ],

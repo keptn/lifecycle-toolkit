@@ -67,6 +67,7 @@ type envConfig struct {
 }
 
 func main() {
+	// adding a useless comment
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
 		log.Fatalf("Failed to process env var: %s", err)

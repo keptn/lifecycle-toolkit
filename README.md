@@ -416,7 +416,8 @@ spec:
 ```
 
 **Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
-The migration documentation provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
+The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
+provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
 
 ### KeptnMetric
 

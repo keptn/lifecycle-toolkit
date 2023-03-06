@@ -442,7 +442,7 @@ spec:
 
 To use `KeptnMetric` as part of your evaluation, you must set the
 `.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
-`KeptnEvaluationDefiniton` resource to the same value that is stored in `.metadata.name` and `metafata.namespace`
+`KeptnEvaluationDefiniton` resource to the same value that is stored in `.metadata.name` and `metadata.namespace`
 of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
 resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace.

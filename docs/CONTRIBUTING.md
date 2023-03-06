@@ -417,15 +417,12 @@ If you've pushed your changes to GitHub already you'll need to force push your b
 * <https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5>
 * <https://thesofproject.github.io/latest/contribute/contribute_guidelines.html>
 
-## Source file structure [Preliminary]
+## Source file structure
 
 The source files for the [Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs) are stored under
 the *docs/content/en/docs* directory in the repository.
-The build strategy is to build everything except for:
-
-* The files/folders that are listed in the `ignoreFiles` array in the
-   [config.toml](https://github.com/keptn/keptn.github.io/blob/master/config.toml) file
-* Files that include the `hidden: true` string in the file's metadata section
+The build strategy is to build everything except for files that are explicitly ignored
+and files that include the `hidden: true` string in the file's metadata section
 
 The order in which the files are displayed is determined by the value of the `weight` field
 in the metadata section of *_index.md* and *index.md* files located throughout the directory tree.

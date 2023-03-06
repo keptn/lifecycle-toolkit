@@ -122,7 +122,7 @@ keptn.sh/post-deployment-tasks: slack-notification,performance-test
 
 The value of these annotations are
 Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-called [KeptnTaskDefinition](#keptn-task-definition)s. These CRDs contains re-usable "functions" that can
+called [KeptnTaskDefinition](#keptntaskdefinition)s. These CRDs contains re-usable "functions" that can
 executed before and after the deployment. In this example, before the deployment starts, a check for open problems in
 your infrastructure
 is performed. If everything is fine, the deployment continues and afterward, a slack notification is sent with the
@@ -246,14 +246,14 @@ For each pod, at the very end of the scheduling cycle, the plugin verifies wheth
 terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a
 node.
 
-### Keptn App
+### KeptnApp
 
 An App contains information about all workloads and checks associated with an application.
 It will use the following structure for the specification of the pre/post deployment and pre/post evaluations checks
 that should be executed at app level:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -275,7 +275,7 @@ spec:
 While changes in the workload version will affect only workload checks, a change in the app version will also cause a
 new execution of app level checks.
 
-### Keptn Workload
+### KeptnWorkload
 
 A Workload contains information about which tasks should be performed during the `preDeployment` as well as
 the `postDeployment`
@@ -283,7 +283,7 @@ phase of a deployment. In its state it keeps track of the currently active `Work
 for doing those checks for
 a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version).
 
-### Keptn Workload Instance
+### KeptnWorkloadInstance
 
 A Workload Instance is responsible for executing the pre- and post deployment checks of a workload. In its state, it
 keeps track of the current status of all checks, as well as the overall state of
@@ -293,7 +293,7 @@ desired state. If it detects that the referenced object has reached
 its desired state (e.g. all pods of a deployment are up and running), it will be able to tell that
 a `PostDeploymentCheck` can be triggered.
 
-### Keptn Task Definition
+### KeptnTaskDefinition
 
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
@@ -307,10 +307,10 @@ A task definition can be configured in three different ways:
 - referring to an HTTP script
 - referring to another `KeptnTaskDefinition`
 
-An inline task definition looks like the following:
+An inline KeptnTaskDefinition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: deployment-hello
@@ -328,7 +328,7 @@ To runtime can also fetch the script on the fly from a remote webserver. For thi
 following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
@@ -344,7 +344,7 @@ Finally, `KeptnTaskDefinition` can build on top of other `KeptnTaskDefinition`s.
 This is a common use case where a general function can be re-used in multiple places with different parameters.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
@@ -367,45 +367,46 @@ K8s secrets can also be passed to the function using the `secureParameters` fiel
 Here, the `secret` value is the K8s secret name that will be mounted into the runtime and made available to the function
 via the environment variable `SECURE_DATA`.
 
-### Keptn Task
+### KeptnTask
 
 A Task is responsible for executing the TaskDefinition of a workload.
 The execution is done spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
 
-### Keptn Evaluation Definition
+### KeptnEvaluationDefinition
 
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
 
-A Keptn evaluation definition looks like the following:
+A KeptnEvaluationDefinition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
 spec:
-  source: prometheus
   objectives:
-    - name: query-1
-      query: "xxxx"
+    - keptnMetricRef:
+        name: cpu
+        namespace: ns
       evaluationTarget: <20
-    - name: query-2
-      query: "yyyy"
+    - keptnMetricRef:
+        name: memory
+        namespace: ns
       evaluationTarget: >4
 ```
 
-### Keptn Evaluation Provider
+### KeptnMetricsProvider
 
-A `KeptnEvaluationProvider` is a CRD used to define evaluation provider, which will provide data for the
-pre- and post-analysis phases of a workload or application.
+A `KeptnMetricsProvider` CRD defines the evaluation provider that provides data for the
+pre- and post-analysis phases of a Keptn workload or Keptn application.
 
-A Keptn evaluation provider looks like the following:
+A KeptnMetricsProvider definition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnEvaluationProvider
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
 metadata:
   name: prometheus
 spec:
@@ -414,16 +415,20 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-### Keptn Metric
+**Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
+The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
+provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
 
-A `KeptnMetric` is a CRD used to define SLI provider with a query and to store metric data fetched from the provider.
-Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
+### KeptnMetric
+
+A `KeptnMetric` CRD defines the SLI provider with a query and stores metric data fetched from the provider.
+Providing the metrics as CRD into a Kubernetes cluster makes this data reusable across multiple projects or workloads.
 Furthermore, this allows using multiple observability platforms for different metrics.
 
-A `KeptnMetric` looks like the following:
+A KeptnMetric definition looks like the following:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
@@ -435,12 +440,16 @@ spec:
   fetchIntervalSeconds: 5
 ```
 
-To be able to use `KeptnMetric` as part of your evaluation, you need to add `keptn-metric` as your value
-for `.spec.source` in `KeptnEvaluationDefiniton`. Further you need specify
-the `.spec.objectives[i].name` of `KeptnEvaluationDefiniton` to the same value as it is stored in `.metadata.name`
-of `KeptnMetric` resource. The `.spec.objectives[i].query` parameter
-of `KeptnEvaluationDefiniton` will be ignored and `.spec.query` of `KeptnMetric` will be use instead as a query to fetch
-the data.
+To use `KeptnMetric` as part of your evaluation, you must set the
+`.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
+`KeptnEvaluationDefiniton` resource to the same value that is stored in `.metadata.name` and `metadata.namespace`
+of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
+If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
+resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
+
+**Note:** Please be aware that, if
+ the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
+resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.
 
 ## Install a dev build
 

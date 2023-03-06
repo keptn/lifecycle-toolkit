@@ -26,7 +26,7 @@ checks
 | `scheduler.tolerations`                                                          | adds tolerations for scheduler                                 | `[]`                      |
 | `scheduler.topologySpreadConstraints`                                            | add topology constraints for scheduler                         | `[]`                      |
 
-### Keptn Cert Manager common
+### Keptn Certificate Manager common
 
 | Name                                                                               | Description                                    | Value               |
 | ---------------------------------------------------------------------------------- | ---------------------------------------------- | ------------------- |

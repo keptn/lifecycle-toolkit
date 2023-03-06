@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # import the default deployment as the base
-bases:
+resources:
   - ../../operator/config/default
   - ../../klt-cert-manager/config/default
   - ../../metrics-operator/config/default
@@ -22,3 +22,23 @@ patches:
     target:
       kind: MutatingWebhookConfiguration
       name: "(mutating-webhook-configuration)"
+  - patch: |
+      - op: replace
+        path: '/spec/conversion/webhook/clientConfig/service/name'
+        value: 
+          '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
+    target:
+      kind: CustomResourceDefinition
+      labelSelector: 'crdGroup=lifecycle.keptn.sh'
+      name: "(keptnapps.lifecycle.keptn.sh|keptnappversions.lifecycle.keptn.sh|keptnworkloadinstances.lifecycle.keptn.sh|keptnevaluationproviders.lifecycle.keptn.sh)"
+  - patch: |
+      - op: replace
+        path: '/spec/conversion/webhook/clientConfig/service/name'
+        value:
+          '{{ include "chart.fullname" . }}-metrics-webhook-service'
+    target:
+      kind: CustomResourceDefinition
+      name: "keptnmetrics.metrics.keptn.sh"
+
+
+

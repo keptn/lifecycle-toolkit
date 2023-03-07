@@ -24,9 +24,7 @@ jobs:
           node-version: 16
 
       - name: Generate helm charts
-        env:
-          TAG: ${{ env.CHART_APPVERSION }}
-        run: make helm-package TAG= ${{ env.TAG }}
+        run: make helm-package TAG="${{ env.CHART_APPVERSION }}"
 
       - name: Install readme generator
         run: |

@@ -1,5 +1,5 @@
 ---
-title: KeptnConfigs
+title: KeptnConfig
 description: Learn what Keptn Configs are and how to use them
 icon: concepts
 layout: quickstart
@@ -9,8 +9,9 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 
 ### Keptn Config
-A `KeptnConfig` is a CRD used to define configuration values of the Keptn Lifecycle Toolkit.
-In the current state, there is a possibility to configure url of OTel collector.
+
+A `KeptnConfig` CRD defines configuration values for the Keptn Lifecycle Toolkit.
+Currently, it can be used to configure the URL of the OpenTelemetry collector.
 
 A `KeptnConfig` looks like the following:
 

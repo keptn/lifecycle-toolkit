@@ -46,13 +46,13 @@ Click to watch it on YouTube:
 
 ### Installation
 
+Use the following command sequence to install the latest release of the Keptn Lifecycle Toolkit:
+
 ```shell
 helm repo add keptn-lifecycle-toolkit https://charts.lifecycle.keptn.sh
 helm repo update
 helm upgrade --install keptn-lifecycle-toolkit keptn/lifecycle-toolkit -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
-
-to install the latest release of the Lifecycle Toolkit.
 
 For installing the Lifecycle Toolkit via manifests use:
 
@@ -67,7 +67,7 @@ kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data. To install it, follow
 their [installation instructions](https://opentelemetry.io/docs/collector/getting-started/).
-We also provide some more information about this in our [observability example](./examples/support/observability/).
+We provide some information about this in our [observability example](./examples/support/observability/).
 
 The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod.
 The certificate creation
@@ -423,7 +423,7 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-**Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
+> **Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
 The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
 provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
 
@@ -455,13 +455,14 @@ of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRe
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
 resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
 
-**Note:** Please be aware that, if
+> **Note:** Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
 resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.
 
 ### Keptn Config
-A `KeptnConfig` is a CRD used to define configuration values of the Keptn Lifecycle Toolkit.
-In the current state, there is a possibility to configure url of OTel collector.
+
+The `KeptnConfig` is a CRD defines configuration values for the Keptn Lifecycle Toolkit.
+Currently, it can be used to configure the URL of the OpenTelemetry collector.
 
 A `KeptnConfig` looks like the following:
 

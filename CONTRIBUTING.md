@@ -323,3 +323,47 @@ by creating a pre-commit git hook as follows:
     ```bash
     chmod +x ./.git/hooks/prepare-commit-msg
     ```
+
+### File Structure
+
+```bash
+.
+├── dashboard grafana # Grafana dashboards
+│   ├── configmap # Config files
+│   ├── import # Imported using the API
+│   ├── utils
+├── docs # Docs and tutorials related to KLT
+│   ├── config # Config files
+│   ├── content # Imported using the API
+│   ├── layouts
+├── examples
+│   ├── sample-app # Demonstration of KLT
+│   ├── support # Dependency support
+|   |   ├── argo # Deploying an application using the KLT and ArgoCD
+|   |   ├── observability #OpenTelemetry Collector
+├── function-runtime
+│   ├── samples/ts # Function Runtime
+├── helm
+│   ├── chart # application health checks
+|   |   ├── templates
+│   ├── overlay # Helm pipline
+├── KLT-cert-manager
+│   ├── config 
+|   |   ├── default
+|   |   ├── manager
+|   |   ├── rbac
+|   |   ├── rendered
+│   ├── controllers
+│   ├── eventfilters
+│   ├── fake
+│   ├── hack 
+│   ├── kubeutils 
+├── metrics-operator
+│   ├── api
+│   ├── cmd 
+│   ├── config 
+│   ├── controllers
+│   ├── hack
+│   ├── pkg/metrics
+
+```

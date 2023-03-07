@@ -14,4 +14,4 @@ kind: Kustomization
 images:
 - name: scheduler
   newName: ghcr.io/keptn/scheduler
-  newTag: "202303061678117798"
+  newTag: 0.6.0

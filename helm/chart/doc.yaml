@@ -55,7 +55,7 @@
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
 
 
-## @section Keptn Certificate Manager controller
+## @section Keptn Certificate Operator controller
 ## @extra    certificateOperator.manager.containerSecurityContext Sets security context for the cert manager
 ## @skip     certificateOperator.manager.containerSecurityContext.allowPrivilegeEscalation
 ## @skip     certificateOperator.manager.containerSecurityContext.capabilities.drop

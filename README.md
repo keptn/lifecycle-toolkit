@@ -46,6 +46,16 @@ Click to watch it on YouTube:
 
 ### Installation
 
+```shell
+helm repo add keptn-lifecycle-toolkit https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn-lifecycle-toolkit keptn/lifecycle-toolkit -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+to install the latest release of the Lifecycle Toolkit.
+
+For installing the Lifecycle Toolkit via manifests use:
+
 <!---x-release-please-start-version-->
 
 ```shell
@@ -53,8 +63,6 @@ kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0
 ```
 
 <!---x-release-please-end-->
-
-to install the latest release of the Lifecycle Toolkit.
 
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data. To install it, follow
@@ -450,6 +458,21 @@ resource is stored. If the `KeptnMetric` resource cannot be found there, it sear
 **Note:** Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
 resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.
+
+### Keptn Config
+A `KeptnConfig` is a CRD used to define configuration values of the Keptn Lifecycle Toolkit.
+In the current state, there is a possibility to configure url of OTel collector.
+
+A `KeptnConfig` looks like the following:
+
+```yaml
+apiVersion: options.keptn.sh/v1alpha1
+kind: KeptnConfig
+metadata:
+  name: keptnconfig-sample
+spec:
+  OTelCollectorUrl: 'otel-collector:4317'
+```
 
 ## Install a dev build
 

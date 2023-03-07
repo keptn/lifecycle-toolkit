@@ -8,12 +8,14 @@ import (
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"io"
+	//nolint:gci
+	"net/http" //nolint:gci
 	"net/url"
 	"strconv"
 	"time"
 
 	//nolint:gci
-	"net/http" //nolint:gci
+	//nolint:gci
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

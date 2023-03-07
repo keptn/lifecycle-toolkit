@@ -40,7 +40,7 @@
 ## @param scheduler.tolerations adds tolerations for scheduler
 ## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
 
-## @section Keptn Certificate Manager common
+## @section Keptn Certificate Operator common
 
 ## @param     certificateOperator.replicas customize number of replicas
 

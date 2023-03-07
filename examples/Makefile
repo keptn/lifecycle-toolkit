@@ -9,9 +9,9 @@ install: install-observability install-argo
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
-	helm repo add keptn-lifecycle-toolkit https://charts.lifecycle.keptn.sh
+	helm repo add klt https://charts.lifecycle.keptn.sh
 	helm repo update
-	helm upgrade --install keptn-lifecycle-toolkit keptn/lifecycle-toolkit -n keptn-lifecycle-toolkit-system --create-namespace --wait
+	helm upgrade --install klt keptn-lifecycle-toolkit/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 
 .PHONY: install-observability
 install-observability:

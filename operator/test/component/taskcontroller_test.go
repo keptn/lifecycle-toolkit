@@ -54,8 +54,8 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = names.SimpleNameGenerator.GenerateName("test-task-")
-		taskDefinitionName = names.SimpleNameGenerator.GenerateName("my-taskdefinition-")
+		name = names.SimpleNameGenerator.GenerateName("test-task-reconciler-")
+		taskDefinitionName = names.SimpleNameGenerator.GenerateName("my-taskdef-")
 		namespace = "default" // namespaces are not deleted in the api so be careful
 	})
 

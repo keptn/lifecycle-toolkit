@@ -338,13 +338,13 @@ by creating a pre-commit git hook as follows:
 │   └── layouts
 ├── examples
 │   ├── sample-app # Demonstration of KLT
-│   ├── support # Dependency support
-|   |   ├── argo # Deploying an application using the KLT and ArgoCD
-|   |   └── observability #OpenTelemetry Collector
+│   └── support # Dependency support
+|       ├── argo # Deploying an application using the KLT and ArgoCD
+|       └── observability #OpenTelemetry Collector
 ├── function-runtime
-│   └── samples/ts # Function Runtime
+│   └── samples/ts 
 ├── helm
-│   ├── chart # application health checks
+│   ├── chart # Application health checks
 |   |   └── templates
 │   └── overlay # Helm pipline
 ├── KLT-cert-manager

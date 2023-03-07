@@ -12,4 +12,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/keptn/metrics-operator
-  newTag: "202303061678117798"
+  newTag: 0.6.0

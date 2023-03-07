@@ -328,10 +328,6 @@ by creating a pre-commit git hook as follows:
 
 ```bash
 .
-├── CHANGELOG.md
-├── codecov.yml
-├── CODEOWNERS
-├── CONTRIBUTING.md
 ├── dashboards
 │   └── grafana
 │        └── configmap

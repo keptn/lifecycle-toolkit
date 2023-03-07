@@ -40,7 +40,7 @@
 ## @param scheduler.tolerations adds tolerations for scheduler
 ## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
 
-## @section Keptn Cert Manager common
+## @section Keptn Certificate Operator common
 
 ## @param     certificateOperator.replicas customize number of replicas
 
@@ -52,10 +52,10 @@
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
 
 
-## @section Keptn Cert Manager controller
+## @section Keptn Certificate Operator controller
 ## @extra    certificateOperator.manager.containerSecurityContext Sets security context for the cert manager
 ## @skip     certificateOperator.manager.containerSecurityContext.allowPrivilegeEscalation
 ## @skip     certificateOperator.manager.containerSecurityContext.capabilities.drop

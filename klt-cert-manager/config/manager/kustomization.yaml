@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/keptn/certificate-operator
-  newTag: latest
+  newTag: "202303061678117798"

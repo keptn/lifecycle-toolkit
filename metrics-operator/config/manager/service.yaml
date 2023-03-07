@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     control-plane: metrics-controller
-  name: operator-service
+  name: metrics-operator-service
   namespace: system
 spec:
   ports:

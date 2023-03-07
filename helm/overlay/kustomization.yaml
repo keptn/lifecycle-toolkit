@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # import the default deployment as the base
-bases:
+resources:
   - ../../operator/config/default
   - ../../klt-cert-manager/config/default
   - ../../metrics-operator/config/default
@@ -22,3 +22,4 @@ patches:
     target:
       kind: MutatingWebhookConfiguration
       name: "(mutating-webhook-configuration)"
+

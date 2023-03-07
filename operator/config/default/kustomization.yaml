@@ -1,8 +1,6 @@
 # Adds namespace to all resources.
 namespace: keptn-lifecycle-toolkit-system
 
-namePrefix: lifecycle-
-
 bases:
 - ../crd
 - ../rbac

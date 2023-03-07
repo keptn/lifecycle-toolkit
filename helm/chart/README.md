@@ -13,7 +13,7 @@ checks
 | `scheduler.scheduler.containerSecurityContext`                                   | Sets security context                                          |                           |
 | `scheduler.scheduler.env.otelCollectorUrl`                                       | sets url for open telemetry collector                          | `otel-collector:4317`     |
 | `scheduler.scheduler.image.repository`                                           | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `202303031677839700`      |
+| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `202303061678118281`      |
 | `scheduler.scheduler.imagePullPolicy`                                            | set image pull policy for scheduler                            | `Always`                  |
 | `scheduler.scheduler.livenessProbe`                                              | customizable liveness probe for the scheduler                  |                           |
 | `scheduler.scheduler.readinessProbe`                                             | customizable readiness probe for the scheduler                 |                           |
@@ -26,27 +26,27 @@ checks
 | `scheduler.tolerations`                                                          | adds tolerations for scheduler                                 | `[]`                      |
 | `scheduler.topologySpreadConstraints`                                            | add topology constraints for scheduler                         | `[]`                      |
 
-### Keptn Cert Manager common
+### Keptn Certificate Manager common
 
-| Name                                                                               | Description                                    | Value               |
-| ---------------------------------------------------------------------------------- | ---------------------------------------------- | ------------------- |
-| `certificateOperator.replicas`                                                     | customize number of replicas                   | `1`                 |
-| `certificateOperator.nodeSelector`                                                 | specify custom node selectors for cert manager | `{}`                |
-| `certificateOperator.tolerations`                                                  | customize tolerations for cert manager         | `[]`                |
-| `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager      | `[]`                |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | TODO  TODO  TODO                               | `:8081`             |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | TODO  TODO  TODO                               | `true`              |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | TODO  TODO  TODO                               | `6b866dd9.keptn.sh` |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | TODO  TODO  TODO                               | `127.0.0.1:8080`    |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | TODO  TODO  TODO                               | `9443`              |
+| Name                                                                               | Description                                             | Value               |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------- |
+| `certificateOperator.replicas`                                                     | customize number of replicas                            | `1`                 |
+| `certificateOperator.nodeSelector`                                                 | specify custom node selectors for cert manager          | `{}`                |
+| `certificateOperator.tolerations`                                                  | customize tolerations for cert manager                  | `[]`                |
+| `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager               | `[]`                |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | TODO  TODO  TODO                                        | `:8081`             |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | TODO  TODO  TODO                                        | `true`              |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | TODO  TODO  TODO                                        | `6b866dd9.keptn.sh` |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | TODO  TODO  TODO                                        | `127.0.0.1:8080`    |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | setup port for the lifecycle operator admission webhook | `9443`              |
 
-### Keptn Cert Manager controller
+### Keptn Certificate Manager controller
 
 | Name                                                   | Description                                      | Value                                |
 | ------------------------------------------------------ | ------------------------------------------------ | ------------------------------------ |
 | `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager       |                                      |
 | `certificateOperator.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container                 | `202303031677839700`                 |
+| `certificateOperator.manager.image.tag`                | select tag for manager container                 | `202303061678118281`                 |
 | `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                             |
 | `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                      |
 | `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                   |                                      |
@@ -85,10 +85,10 @@ checks
 | `lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller         | `0`                                            |
 | `lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller | `0`                                            |
 | `lifecycleOperator.manager.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller          | `0`                                            |
-| `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector           | `0`                                            |
+| `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector           | `otel-collector:4317`                          |
 | `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for task runtime                          | `ghcr.keptn.sh/keptn/functions-runtime:v0.6.0` |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                      | `ghcr.io/keptn/lifecycle-operator`             |
-| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                            | `202303031677839700`                           |
+| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                            | `202303061678118281`                           |
 | `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                   | `Always`                                       |
 | `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container              |                                                |
 | `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container             |                                                |
@@ -107,7 +107,7 @@ checks
 | `metricsOperatorService.ports[1].port`                                           |                                                         | `443`               |
 | `metricsOperatorService.ports[1].targetPort`                                     |                                                         | `custom-metrics`    |
 | `metricsOperatorService.ports[2].name`                                           |                                                         | `metrics`           |
-| `metricsOperatorService.ports[2].port`                                           |                                                         | `2222`              |
+| `metricsOperatorService.ports[2].port`                                           |                                                         | `9999`              |
 | `metricsOperatorService.ports[2].protocol`                                       |                                                         | `TCP`               |
 | `metricsOperatorService.ports[2].targetPort`                                     |                                                         | `metrics`           |
 | `metricsOperatorService.type`                                                    |                                                         | `ClusterIP`         |
@@ -132,7 +132,7 @@ checks
 | `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
 | `metricsOperator.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
-| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `202303031677839700`             |
+| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `202303061678118281`             |
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
 | `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
 | `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |

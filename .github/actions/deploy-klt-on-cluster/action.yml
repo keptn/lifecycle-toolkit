@@ -87,10 +87,9 @@ runs:
         echo "Installing KLT using helm"
         helm version
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz \
-        --set keptnScheduler.keptnScheduler.imagePullPolicy=Never \
-        --set klcControllerManager.manager.imagePullPolicy=Never \
-        --set metricsOperatorController.manager.imagePullPolicy=Never \
-        --set klcControllerManager.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.functions_runtime_tag }} \
-        --set kltCertManager.manager.imagePullPolicy=Never \
-        --set fullnameOverride="" \
+        --set scheduler.scheduler.imagePullPolicy=Never \
+        --set lifecycleOperator.manager.imagePullPolicy=Never \
+        --set metricsOperator.manager.imagePullPolicy=Never \
+        --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.functions_runtime_tag }} \
+        --set certificateOperator.manager.imagePullPolicy=Never \
         --debug --wait --timeout 1m

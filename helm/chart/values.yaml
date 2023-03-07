@@ -12,7 +12,7 @@ certificateOperator:
         type: RuntimeDefault
     image:
       repository: ghcr.io/keptn/certificate-operator
-      tag: "202303031677839700"
+      tag: "202303061678118281"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -73,10 +73,10 @@ lifecycleOperator:
       keptnWorkloadControllerLogLevel: "0"
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
-      otelCollectorUrl: "0"
+      otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/lifecycle-operator
-      tag: "202303031677839700"
+      tag: "202303061678118281"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -130,7 +130,7 @@ metricsOperator:
       metricsControllerLogLevel: "0"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: "202303031677839700"
+      tag: "202303061678118281"
     livenessProbe:
       httpGet:
         path: /healthz
@@ -164,7 +164,7 @@ metricsOperatorService:
     port: 443
     targetPort: custom-metrics
   - name: metrics
-    port: 2222
+    port: 9999
     protocol: TCP
     targetPort: metrics
   type: ClusterIP
@@ -193,7 +193,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: "202303031677839700"
+      tag: "202303061678118281"
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

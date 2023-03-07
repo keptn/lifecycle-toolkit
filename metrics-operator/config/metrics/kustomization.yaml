@@ -1,0 +1,4 @@
+resources:
+- custom_metrics_api_service.yaml
+- role.yaml
+- role_binding.yaml

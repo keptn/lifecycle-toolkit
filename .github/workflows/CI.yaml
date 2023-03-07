@@ -70,11 +70,13 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -109,13 +111,15 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -159,7 +163,7 @@ jobs:
           path: /tmp/${{ matrix.config.name }}-image.tar
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator'
+        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
@@ -222,13 +226,15 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -274,7 +280,7 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager'
+        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'certificate-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 

@@ -1,14 +1,11 @@
 # Adds namespace to all resources.
 namespace: keptn-lifecycle-toolkit-system
 
-namePrefix: klc-
-
 bases:
 - ../crd
 - ../rbac
 - ../manager
 - ../webhook
-- ../metrics
 
 patchesStrategicMerge:
 - webhooknamespaces_patch.yaml

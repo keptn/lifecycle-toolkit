@@ -1,0 +1,31 @@
+name: "Deploy Prometheus on GH cluster"
+description: "Deploys and exposes Prometheus on GH cluster"
+runs:
+  using: "composite"
+  steps:
+    - name: Install and expose Prometheus
+      working-directory: ./test
+      shell: bash
+      run: |
+        kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+        kubectl apply --server-side -f ./prometheus/setup
+        kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
+        kubectl apply -f ./prometheus/
+        kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+        kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+        kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+        kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
+        kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
+        kubectl -n monitoring port-forward svc/node-exporter 9100 &
+
+        # wait for port 9090 to become available
+        while ! nc -vz localhost 9090 > /dev/null 2>&1 ; do
+          echo "Sleeping until port-forward for Prometheus at port 9090 is ready..."
+          sleep 5
+        done
+
+        # wait until node exporter is available
+        while ! nc -vz localhost 9100 > /dev/null 2>&1 ; do
+          echo "Sleeping until port-forward for node exporter at port 9100 is ready..."
+          sleep 5
+        done

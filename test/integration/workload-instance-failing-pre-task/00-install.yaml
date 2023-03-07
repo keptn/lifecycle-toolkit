@@ -43,10 +43,6 @@ spec:
         keptn.sh/pre-deployment-tasks: check-entry-service  # this will check itself for being available and thus will fail
     spec:
       terminationGracePeriodSeconds: 5
-      initContainers:
-        - name: init-myservice
-          image: busybox:1.32.1
-          command: ['sh', '-c', 'sleep 30']
       containers:
         - name: server
           image: ghcr.io/podtato-head/entry:latest

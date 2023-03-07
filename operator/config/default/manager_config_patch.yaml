@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: operator
+  name: lifecycle-operator
   namespace: system
 spec:
   template:
@@ -17,4 +17,4 @@ spec:
       volumes:
       - name: lifecycle-operator-manager-config
         configMap:
-          name: manager-config
+          name: lifecycle-manager-config

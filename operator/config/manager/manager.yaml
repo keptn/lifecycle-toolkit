@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: operator
+  name: lifecycle-operator
   namespace: system
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -71,8 +71,6 @@ spec:
             value: otel-collector:4317
           - name: FUNCTION_RUNNER_IMAGE
             value: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0 #x-release-please-version
-          - name: OTEL_COLLECTOR_URL
-            value: "0"
           - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
             value: "0"
           - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL

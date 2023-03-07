@@ -17,6 +17,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
 )
 
 const KLTnamespace = "keptnlifecycle"
@@ -60,9 +61,9 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		evaluationName = "test-evaluation"
-		evaluationDefinitionName = "my-evaldefinition"
-		metricName = "metric1"
+		evaluationName = names.SimpleNameGenerator.GenerateName("test-evaluation-")
+		evaluationDefinitionName = names.SimpleNameGenerator.GenerateName("my-evaldefinition-")
+		metricName = names.SimpleNameGenerator.GenerateName("metric1-")
 		namespaceName = "default" // namespaces are not deleted in the api so be careful
 	})
 

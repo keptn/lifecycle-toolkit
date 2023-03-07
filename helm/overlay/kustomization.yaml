@@ -22,23 +22,4 @@ patches:
     target:
       kind: MutatingWebhookConfiguration
       name: "(mutating-webhook-configuration)"
-#  - patch: |
-#      - op: replace
-#        path: '/spec/conversion/webhook/clientConfig/service/name'
-#        value:
-#          '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
-#    target:
-#      kind: CustomResourceDefinition
-#      labelSelector: 'crdGroup=lifecycle.keptn.sh'
-#      name: "(keptnapps.lifecycle.keptn.sh|keptnappversions.lifecycle.keptn.sh|keptnworkloadinstances.lifecycle.keptn.sh|keptnevaluationproviders.lifecycle.keptn.sh)"
-#  - patch: |
-#      - op: replace
-#        path: '/spec/conversion/webhook/clientConfig/service/name'
-#        value:
-#          '{{ include "chart.fullname" . }}-metrics-webhook-service'
-#    target:
-#      kind: CustomResourceDefinition
-#      name: "keptnmetrics.metrics.keptn.sh"
-
-
 

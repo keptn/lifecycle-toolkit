@@ -196,7 +196,7 @@ You can click on the link to the trace and see the reason for the failure:
 In this case, we see the name of the failed pre-deployment evaluation
 and the reason for the failure.
 In this case, the minimum amount of CPUs is not met.
-This is a problem we can solve by changing the treshold in the evaluation file.
+This is a problem we can solve by changing the threshold in the evaluation file.
 
 ## Install the Demo Application (Version 2)
 

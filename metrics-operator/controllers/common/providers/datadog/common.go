@@ -38,7 +38,7 @@ func getDDSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, 
 	apiKeyVal := ddCredsSecret.Data[apiKey]
 	appKeyVal := ddCredsSecret.Data[appKey]
 	if len(apiKeyVal) == 0 || len(appKeyVal) == 0 {
-		return "", "", fmt.Errorf("secret does not contain %s, %s", apiKey, appKey)
+		return "", "", fmt.Errorf("secret does not contain %s or %s", apiKey, appKey)
 	}
 	return string(apiKeyVal), string(appKeyVal), nil
 }

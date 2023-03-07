@@ -31,10 +31,6 @@ spec:
         keptn.sh/pre-deployment-evaluations: missing-evaluation
     spec:
       terminationGracePeriodSeconds: 5
-      initContainers:
-        - name: init-myservice
-          image: busybox:1.32.1
-          command: ['sh', '-c', 'sleep 30']
       containers:
         - name: server
           image: ghcr.io/podtato-head/entry:latest

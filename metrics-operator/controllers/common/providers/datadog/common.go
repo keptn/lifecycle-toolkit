@@ -12,6 +12,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const apiKey, appKey = "DD_CLIENT_API_KEY", "DD_CLIENT_APP_KEY"
+
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the DataDog API Key is missing")
 
 func hasDDSecretDefined(spec metricsapi.KeptnMetricsProviderSpec) bool {
@@ -33,7 +35,6 @@ func getDDSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, 
 		return "", "", err
 	}
 
-	apiKey, appKey := "DD_CLIENT_API_KEY", "DD_CLIENT_APP_KEY"
 	apiKeyVal := ddCredsSecret.Data[apiKey]
 	appKeyVal := ddCredsSecret.Data[appKey]
 	if len(apiKeyVal) == 0 || len(appKeyVal) == 0 {

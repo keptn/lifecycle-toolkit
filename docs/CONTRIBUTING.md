@@ -76,10 +76,9 @@ To set up a local Docsy build:
    * [Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
    * [Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
 
-1. Clone and build the Keptn Docsy repo:
+1. Build the Keptn Docsy repo:
 
    ```console
-   make clone
    make build
    ```
 

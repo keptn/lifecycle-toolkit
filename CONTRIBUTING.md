@@ -328,42 +328,100 @@ by creating a pre-commit git hook as follows:
 
 ```bash
 .
-├── dashboard grafana # Grafana dashboards
-│   ├── configmap # Config files
-│   ├── import # Imported using the API
-│   └── utils
-├── docs # Docs and tutorials related to KLT
-│   ├── config # Config files
-│   ├── content #
-│   └── layouts
+├── CHANGELOG.md
+├── codecov.yml
+├── CODEOWNERS
+├── CONTRIBUTING.md
+├── dashboards
+│   └── grafana
+│        └── configmap
+├── docs
+│   ├── config
+│   ├── content
+│   ├── layouts
+│   ├── public
+│   ├── resources
+│   └── tmp
+│       └── lifecycle-toolkit-docs
 ├── examples
-│   ├── sample-app # Demonstration of KLT
-│   └── support # Dependency support
-|       ├── argo # Deploying an application using the KLT and ArgoCD
-|       └── observability #OpenTelemetry Collector
-├── function-runtime
-│   └── samples/ts 
+│   ├── sample-app
+│   └── support
+│       ├── argo
+│       └── observability
+├── functions-runtime
+│   └── samples
+│       └── ts
 ├── helm
-│   ├── chart # Application health checks
-|   |   └── templates
-│   └── overlay # Helm pipline
-├── KLT-cert-manager
-│   ├── config 
-|   |   ├── default
-|   |   ├── manager
-|   |   ├── rbac
-|   |   └── rendered
+│   ├── chart
+│   └── overlay
+├── klt-cert-manager
+│   ├── config
+│   │   ├── default
+│   │   ├── manager
+│   │   ├── rbac
+│   │   └── rendered
 │   ├── controllers
-│   ├── eventfilters
+│   │   └── keptnwebhookcontroller
+│   ├── Dockerfile
+│   ├── eventfilter
 │   ├── fake
-│   ├── hack 
-│   └── kubeutils 
+│   └── kubeutils
 ├── metrics-operator
 │   ├── api
-│   ├── cmd 
-│   ├── config 
+│   │   ├── v1alpha1
+│   │   └── v1alpha2
+│   ├── cmd
+│   │   ├── certificates
+│   │   ├── config
+│   │   ├── fake
+│   │   ├── manager
+│   │   ├── metrics
+│   │   └── webhook
+│   ├── config
+│   │   ├── crd
+│   │   ├── default
+│   │   ├── manager
+│   │   ├── metrics
+│   │   ├── prometheus
+│   │   ├── rbac
+│   │   ├── rendered
+│   │   ├── samples
+│   │   └── webhook
+│   └── controllers
+├── operator
+│   ├── apis
+│   │   ├── lifecycle
+│   │   └── options
+│   ├── cmd
+│   │   ├── certificates
+│   │   ├── config
+│   │   ├── fake
+│   │   ├── manager
+│   │   └── webhook
+│   ├── config
+│   │   ├── crd
+│   │   ├── default
+│   │   ├── manager
+│   │   ├── rbac
+│   │   ├── rendered
+│   │   ├── samples
+│   │   └── webhook
 │   ├── controllers
-│   ├── hack
-│   └── pkg/metrics
+│   │   ├── common
+│   │   ├── errors
+│   │   ├── lifecycle
+│   │   └── options
+├── scheduler
+│   ├── cmd
+│   │   └── scheduler
+│   ├── config
+│   │   ├── rbac
+│   │   └── rendered
+│   ├── pkg
+└── test
+    ├── integration
+    ├── load
+    └── prometheus
+        └── setup
 
 ```

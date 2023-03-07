@@ -30,9 +30,10 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	// Assumed default metric duration as 1 day(s)
+	// Assumed default metric duration as 5 minutes
 	// Think a better way to handle this
-	fromTime := time.Now().AddDate(0, 0, -1).Unix()
+	intervalInMin := 5
+	fromTime := time.Now().Add(time.Duration(-intervalInMin) * time.Minute).Unix()
 	toTime := time.Now().Unix()
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)

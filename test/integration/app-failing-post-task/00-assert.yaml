@@ -7,6 +7,6 @@ status:
   postDeploymentEvaluationStatus: Deprecated
   postDeploymentStatus: Failed
   preDeploymentEvaluationStatus: Succeeded
-  preDeploymentTaskStatus: Succeeded
+  preDeploymentStatus: Succeeded
   status: Failed
   workloadOverallStatus: Succeeded

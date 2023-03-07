@@ -75,7 +75,7 @@ var _ = Describe("KeptnWorkloadController", Ordered, func() {
 
 		Context("with a new Workload CRD", func() {
 			It("should update the spans and create WorkloadInstance", func() {
-				By("Check if WorkloadInstace was created")
+				By("Check if WorkloadInstance was created")
 
 				workloadInstance = &klcv1alpha3.KeptnWorkloadInstance{}
 				Eventually(func(g Gomega) {

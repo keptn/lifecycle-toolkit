@@ -162,7 +162,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 						Function: klcv1alpha3.FunctionSpec{
 							ConfigMapReference: klcv1alpha3.ConfigMapReference{
-								Name: "my-configmap",
+								Name: "my-configmap-non-existing",
 							},
 						},
 					},
@@ -177,7 +177,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
-						Name:      "my-configmap",
+						Name:      "my-configmap-non-existing",
 					}, configmap)
 					g.Expect(err).NotTo(BeNil())
 				}, "30s").Should(Succeed())
@@ -191,7 +191,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 						Name:      taskDefinition.Name,
 					}, taskDefinition2)
 					g.Expect(err).To(BeNil())
-					g.Expect(taskDefinition2.Status.Function.ConfigMap).To(Equal(""))
+					g.Expect(taskDefinition2.Status.Function.ConfigMap).NotTo(Equal(configmap.Name))
 
 				}, "30s").Should(Succeed())
 

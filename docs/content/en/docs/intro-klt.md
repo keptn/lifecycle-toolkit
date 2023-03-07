@@ -96,5 +96,4 @@ of the Keptn Lifecycle Toolkit:
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)
 
 * The "IsItObservable Tutorial for KLT" will be released to YouTube soon.
-  You can explore the GitHub repository that accompanies this video
-  at <https://github.com/isItObservable/keptn-lifecycle-Toolkit> in the meantime.
+  You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit) that accompanies this video in the meantime.

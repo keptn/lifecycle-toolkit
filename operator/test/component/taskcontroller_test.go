@@ -168,9 +168,5 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 	err = k8sClient.Create(context.TODO(), taskDefinition)
 	Expect(err).To(BeNil())
 
-	taskDefinition.Status.Function.ConfigMap = cmName
-	err = k8sClient.Status().Update(context.TODO(), taskDefinition)
-	Expect(err).To(BeNil())
-
 	return taskDefinition
 }

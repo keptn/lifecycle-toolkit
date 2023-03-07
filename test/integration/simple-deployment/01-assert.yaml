@@ -22,3 +22,17 @@ status:
   preDeploymentTaskStatus:
     - status: Succeeded
       definitionName: pre-deployment-hello
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: waiter
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: waiter-0.4-1

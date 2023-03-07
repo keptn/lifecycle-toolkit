@@ -17,8 +17,14 @@ spec:
       version: 0.1.0
     - name: podtato-head-hat
       version: 0.1.0
+  preDeploymentEvaluations:
+    - available-cpus
+  preDeploymentTasks:
+    - pre-deployment-hello
   postDeploymentTasks:
     - post-deployment-hello
+  postDeploymentEvaluations:
+    - available-cpus
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,6 +44,9 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-evaluations: available-cpus
+        keptn.sh/post-deployment-evaluations: available-cpus
+        keptn.sh/pre-deployment-tasks: pre-deployment-hello
         keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:
       terminationGracePeriodSeconds: 5
@@ -321,6 +330,16 @@ spec:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
+  name: pre-deployment-hello
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Pre-Deployment Task has been executed");
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
   name: check-entry-service
 spec:
   function:
@@ -329,4 +348,32 @@ spec:
     parameters:
       map:
         url: http://podtato-head-entry:9000
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: available-cpus
+spec:
+  objectives:
+    - evaluationTarget: ">1"
+      keptnMetricRef:
+        name: available-cpus
+---
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetric
+metadata:
+  name: available-cpus
+spec:
+  fetchIntervalSeconds: 10
+  provider:
+    name: prometheus
+  query: >-
+    sum(kube_node_status_capacity{resource='cpu'})
+---
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
 

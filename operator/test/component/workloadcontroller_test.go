@@ -14,6 +14,7 @@ import (
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
 )
 
 // clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
@@ -57,8 +58,8 @@ var _ = Describe("KeptnWorkloadController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "my-workload"
-		applicationName = "my-app"
+		name = names.SimpleNameGenerator.GenerateName("my-workload-")
+		applicationName = names.SimpleNameGenerator.GenerateName("my-app-")
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"

@@ -186,8 +186,8 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 
 		if rsOwner.Kind == "Rollout" {
-			ro := argov1alpha1.Rollout{}
-			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, &ro)
+			ro := &argov1alpha1.Rollout{}
+			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ro)
 		}
 		dp := &appsv1.Deployment{}
 		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)

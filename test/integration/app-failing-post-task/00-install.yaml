@@ -8,7 +8,7 @@ spec:
     - name: podtato-head-entry
       version: 0.1.0
   postDeploymentTasks:
-    - check-entry-service
+    - failing-task
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,11 +43,10 @@ spec:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
-  name: check-entry-service
+  name: failing-task
 spec:
   function:
-    httpRef:
-      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/http.ts
-    parameters:
-      map:
-        url: http://podtato-head-entry:9000
+    inline:
+      code: |
+        console.error("I failed")
+        process.exit(1)

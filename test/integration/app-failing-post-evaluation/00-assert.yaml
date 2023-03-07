@@ -6,7 +6,7 @@ status:
   currentPhase: AppPostDeployEvaluations
   postDeploymentTaskStatus: Succeeded
   postDeploymentEvaluationStatus: Failed
-  postDeploymentStatus: Deprecated
+  postDeploymentStatus: Succeeded
   preDeploymentEvaluationStatus: Succeeded
   status: Failed
   workloadOverallStatus: Succeeded

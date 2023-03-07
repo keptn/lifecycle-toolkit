@@ -48,10 +48,10 @@
 ## @param     certificateOperator.tolerations customize tolerations for cert manager
 ## @param     certificateOperator.topologySpreadConstraints add topology constraints for cert manager
 
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect enable leader election for multiple replicas of the operator
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName define LeaderElectionID
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
 
 
@@ -90,10 +90,11 @@
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 
-## @param    lifecycleWebhookService.ports[0].port TODO  TODO  TODO
-## @param    lifecycleWebhookService.ports[0].protocol TODO  TODO  TODO
-## @param    lifecycleWebhookService.ports[0].targetPort TODO  TODO  TODO
-## @param    lifecycleWebhookService.type TODO  TODO  TODO
+## @extra Mutating Webhook Configurations for lifecycle Operator
+## @param    lifecycleWebhookService.ports[0].port
+## @param    lifecycleWebhookService.ports[0].protocol
+## @param    lifecycleWebhookService.ports[0].targetPort
+## @param    lifecycleWebhookService.type
 
 ## @param   lifecycleOperator.nodeSelector add custom nodes selector to lifecycle operator
 ## @param   lifecycleOperator.tolerations add custom tolerations to lifecycle operator
@@ -148,29 +149,33 @@
 
 ## @param   metricsOperator.replicas customize number of installed metrics operator replicas
 
+## @extra   metricsOperatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
 ## @param   metricsOperatorService.ports[0].name
 ## @param   metricsOperatorService.ports[0].port
 ## @param   metricsOperatorService.ports[0].protocol
 ## @param   metricsOperatorService.ports[0].targetPort
+## @extra   metricsOperatorService.ports[1] port to integrate with the K8s custom metrics API
 ## @param   metricsOperatorService.ports[1].name
 ## @param   metricsOperatorService.ports[1].port
 ## @param   metricsOperatorService.ports[1].targetPort
+## @extra   metricsOperatorService.ports[2] port to integrate with metrics API (e.g. Keda)
 ## @param   metricsOperatorService.ports[2].name
 ## @param   metricsOperatorService.ports[2].port
 ## @param   metricsOperatorService.ports[2].protocol
 ## @param   metricsOperatorService.ports[2].targetPort
 ## @param   metricsOperatorService.type
 
-## @param      metricsManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress TODO  TODO  TODO
-## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect TODO  TODO  TODO
-## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName TODO  TODO  TODO
-## @param      metricsManagerConfig.controllerManagerConfigYaml.metrics.bindAddress TODO  TODO  TODO
-## @param      metricsManagerConfig.controllerManagerConfigYaml.webhook.port TODO  TODO  TODO
+## @param      metricsManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
+## @param      metricsManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName defines LeaderElectionID
+## @param      metricsManagerConfig.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
+## @param      metricsManagerConfig.controllerManagerConfigYaml.webhook.port
 
-## @param     metricsWebhookService.ports[0].port TODO  TODO  TODO
-## @param     metricsWebhookService.ports[0].protocol TODO  TODO  TODO
-## @param     metricsWebhookService.ports[0].targetPort TODO  TODO  TODO
-## @param     metricsWebhookService.type TODO  TODO  TODO
+## @extra Mutating Webhook Configurations for metrics Operator
+## @param     metricsWebhookService.ports[0].port
+## @param     metricsWebhookService.ports[0].protocol
+## @param     metricsWebhookService.ports[0].targetPort
+## @param     metricsWebhookService.type
 
 ## @param    metricsOperator.nodeSelector add custom nodes selector to metrics operator
 ## @param    metricsOperator.tolerations add custom tolerations to metrics operator

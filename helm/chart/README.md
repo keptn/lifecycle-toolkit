@@ -13,7 +13,7 @@ checks
 | `scheduler.scheduler.containerSecurityContext`                                   | Sets security context                                          |                           |
 | `scheduler.scheduler.env.otelCollectorUrl`                                       | sets url for open telemetry collector                          | `otel-collector:4317`     |
 | `scheduler.scheduler.image.repository`                                           | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `202303061678118281`      |
+| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `0.6.0`                   |
 | `scheduler.scheduler.imagePullPolicy`                                            | set image pull policy for scheduler                            | `Always`                  |
 | `scheduler.scheduler.livenessProbe`                                              | customizable liveness probe for the scheduler                  |                           |
 | `scheduler.scheduler.readinessProbe`                                             | customizable readiness probe for the scheduler                 |                           |
@@ -26,27 +26,27 @@ checks
 | `scheduler.tolerations`                                                          | adds tolerations for scheduler                                 | `[]`                      |
 | `scheduler.topologySpreadConstraints`                                            | add topology constraints for scheduler                         | `[]`                      |
 
-### Keptn Certificate Manager common
+### Keptn Certificate Operator common
 
-| Name                                                                               | Description                                             | Value               |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------- |
-| `certificateOperator.replicas`                                                     | customize number of replicas                            | `1`                 |
-| `certificateOperator.nodeSelector`                                                 | specify custom node selectors for cert manager          | `{}`                |
-| `certificateOperator.tolerations`                                                  | customize tolerations for cert manager                  | `[]`                |
-| `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager               | `[]`                |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | TODO  TODO  TODO                                        | `:8081`             |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | TODO  TODO  TODO                                        | `true`              |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | TODO  TODO  TODO                                        | `6b866dd9.keptn.sh` |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | TODO  TODO  TODO                                        | `127.0.0.1:8080`    |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | setup port for the lifecycle operator admission webhook | `9443`              |
+| Name                                                                               | Description                                                                                                                                                   | Value               |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `certificateOperator.replicas`                                                     | customize number of replicas                                                                                                                                  | `1`                 |
+| `certificateOperator.nodeSelector`                                                 | specify custom node selectors for cert manager                                                                                                                | `{}`                |
+| `certificateOperator.tolerations`                                                  | customize tolerations for cert manager                                                                                                                        | `[]`                |
+| `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager                                                                                                                     | `[]`                |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | enable leader election for multiple replicas of the operator                                                                                                  | `true`              |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | setup port for the lifecycle operator admission webhook                                                                                                       | `9443`              |
 
-### Keptn Certificate Manager controller
+### Keptn Certificate Operator controller
 
 | Name                                                   | Description                                      | Value                                |
 | ------------------------------------------------------ | ------------------------------------------------ | ------------------------------------ |
 | `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager       |                                      |
 | `certificateOperator.manager.image.repository`         | specify repo for manager image                   | `ghcr.io/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container                 | `202303061678118281`                 |
+| `certificateOperator.manager.image.tag`                | select tag for manager container                 | `0.6.0`                              |
 | `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container   | `Always`                             |
 | `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                 |                                      |
 | `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                   |                                      |
@@ -57,10 +57,11 @@ checks
 | Name                                          | Description                                               | Value       |
 | --------------------------------------------- | --------------------------------------------------------- | ----------- |
 | `lifecycleOperator.replicas`                  | customize number of installed lifecycle operator replicas | `1`         |
-| `lifecycleWebhookService.ports[0].port`       | TODO  TODO  TODO                                          | `443`       |
-| `lifecycleWebhookService.ports[0].protocol`   | TODO  TODO  TODO                                          | `TCP`       |
-| `lifecycleWebhookService.ports[0].targetPort` | TODO  TODO  TODO                                          | `9443`      |
-| `lifecycleWebhookService.type`                | TODO  TODO  TODO                                          | `ClusterIP` |
+| `Mutating`                                    | Webhook Configurations for lifecycle Operator             |             |
+| `lifecycleWebhookService.ports[0].port`       |                                                           | `443`       |
+| `lifecycleWebhookService.ports[0].protocol`   |                                                           | `TCP`       |
+| `lifecycleWebhookService.ports[0].targetPort` |                                                           | `9443`      |
+| `lifecycleWebhookService.type`                |                                                           | `ClusterIP` |
 | `lifecycleOperator.nodeSelector`              | add custom nodes selector to lifecycle operator           | `{}`        |
 | `lifecycleOperator.tolerations`               | add custom tolerations to lifecycle operator              | `[]`        |
 | `lifecycleOperator.topologySpreadConstraints` | add custom topology constraints to lifecycle operator     | `[]`        |
@@ -88,7 +89,7 @@ checks
 | `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector           | `otel-collector:4317`                          |
 | `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for task runtime                          | `ghcr.keptn.sh/keptn/functions-runtime:v0.6.0` |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                      | `ghcr.io/keptn/lifecycle-operator`             |
-| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                            | `202303061678118281`                           |
+| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                            | `0.6.0`                                        |
 | `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                   | `Always`                                       |
 | `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container              |                                                |
 | `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container             |                                                |
@@ -96,33 +97,37 @@ checks
 
 ### Keptn Metrics Operator common
 
-| Name                                                                             | Description                                             | Value               |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------- |
-| `metricsOperator.replicas`                                                       | customize number of installed metrics operator replicas | `1`                 |
-| `metricsOperatorService.ports[0].name`                                           |                                                         | `https`             |
-| `metricsOperatorService.ports[0].port`                                           |                                                         | `8443`              |
-| `metricsOperatorService.ports[0].protocol`                                       |                                                         | `TCP`               |
-| `metricsOperatorService.ports[0].targetPort`                                     |                                                         | `https`             |
-| `metricsOperatorService.ports[1].name`                                           |                                                         | `custom-metrics`    |
-| `metricsOperatorService.ports[1].port`                                           |                                                         | `443`               |
-| `metricsOperatorService.ports[1].targetPort`                                     |                                                         | `custom-metrics`    |
-| `metricsOperatorService.ports[2].name`                                           |                                                         | `metrics`           |
-| `metricsOperatorService.ports[2].port`                                           |                                                         | `9999`              |
-| `metricsOperatorService.ports[2].protocol`                                       |                                                         | `TCP`               |
-| `metricsOperatorService.ports[2].targetPort`                                     |                                                         | `metrics`           |
-| `metricsOperatorService.type`                                                    |                                                         | `ClusterIP`         |
-| `metricsManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | TODO  TODO  TODO                                        | `:8081`             |
-| `metricsManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | TODO  TODO  TODO                                        | `true`              |
-| `metricsManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | TODO  TODO  TODO                                        | `3f8532ca.keptn.sh` |
-| `metricsManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | TODO  TODO  TODO                                        | `127.0.0.1:8080`    |
-| `metricsManagerConfig.controllerManagerConfigYaml.webhook.port`                  | TODO  TODO  TODO                                        | `9443`              |
-| `metricsWebhookService.ports[0].port`                                            | TODO  TODO  TODO                                        | `443`               |
-| `metricsWebhookService.ports[0].protocol`                                        | TODO  TODO  TODO                                        | `TCP`               |
-| `metricsWebhookService.ports[0].targetPort`                                      | TODO  TODO  TODO                                        | `9443`              |
-| `metricsWebhookService.type`                                                     | TODO  TODO  TODO                                        | `ClusterIP`         |
-| `metricsOperator.nodeSelector`                                                   | add custom nodes selector to metrics operator           | `{}`                |
-| `metricsOperator.tolerations`                                                    | add custom tolerations to metrics operator              | `[]`                |
-| `metricsOperator.topologySpreadConstraints`                                      | add custom topology constraints to metrics operator     | `[]`                |
+| Name                                                                             | Description                                                                                                                                                   | Value               |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `metricsOperator.replicas`                                                       | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
+| `metricsOperatorService.ports[0]`                                                | webhook port (must correspond to Mutating Webhook Configurations)                                                                                             |                     |
+| `metricsOperatorService.ports[0].name`                                           |                                                                                                                                                               | `https`             |
+| `metricsOperatorService.ports[0].port`                                           |                                                                                                                                                               | `8443`              |
+| `metricsOperatorService.ports[0].protocol`                                       |                                                                                                                                                               | `TCP`               |
+| `metricsOperatorService.ports[0].targetPort`                                     |                                                                                                                                                               | `https`             |
+| `metricsOperatorService.ports[1]`                                                | port to integrate with the K8s custom metrics API                                                                                                             |                     |
+| `metricsOperatorService.ports[1].name`                                           |                                                                                                                                                               | `custom-metrics`    |
+| `metricsOperatorService.ports[1].port`                                           |                                                                                                                                                               | `443`               |
+| `metricsOperatorService.ports[1].targetPort`                                     |                                                                                                                                                               | `custom-metrics`    |
+| `metricsOperatorService.ports[2]`                                                | port to integrate with metrics API (e.g. Keda)                                                                                                                |                     |
+| `metricsOperatorService.ports[2].name`                                           |                                                                                                                                                               | `metrics`           |
+| `metricsOperatorService.ports[2].port`                                           |                                                                                                                                                               | `9999`              |
+| `metricsOperatorService.ports[2].protocol`                                       |                                                                                                                                                               | `TCP`               |
+| `metricsOperatorService.ports[2].targetPort`                                     |                                                                                                                                                               | `metrics`           |
+| `metricsOperatorService.type`                                                    |                                                                                                                                                               | `ClusterIP`         |
+| `metricsManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
+| `metricsManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | decides whether to enable leader election with multiple replicas                                                                                              | `true`              |
+| `metricsManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | defines LeaderElectionID                                                                                                                                      | `3f8532ca.keptn.sh` |
+| `metricsManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
+| `metricsManagerConfig.controllerManagerConfigYaml.webhook.port`                  |                                                                                                                                                               | `9443`              |
+| `Mutating`                                                                       | Webhook Configurations for metrics Operator                                                                                                                   |                     |
+| `metricsWebhookService.ports[0].port`                                            |                                                                                                                                                               | `443`               |
+| `metricsWebhookService.ports[0].protocol`                                        |                                                                                                                                                               | `TCP`               |
+| `metricsWebhookService.ports[0].targetPort`                                      |                                                                                                                                                               | `9443`              |
+| `metricsWebhookService.type`                                                     |                                                                                                                                                               | `ClusterIP`         |
+| `metricsOperator.nodeSelector`                                                   | add custom nodes selector to metrics operator                                                                                                                 | `{}`                |
+| `metricsOperator.tolerations`                                                    | add custom tolerations to metrics operator                                                                                                                    | `[]`                |
+| `metricsOperator.topologySpreadConstraints`                                      | add custom topology constraints to metrics operator                                                                                                           | `[]`                |
 
 ### Keptn Metrics Operator controller
 
@@ -132,7 +137,7 @@ checks
 | `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
 | `metricsOperator.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
-| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `202303061678118281`             |
+| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `0.6.0`                          |
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
 | `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
 | `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |

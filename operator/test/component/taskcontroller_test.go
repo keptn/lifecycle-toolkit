@@ -16,6 +16,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
 )
 
 var _ = Describe("KeptnTaskController", Ordered, func() {
@@ -53,8 +54,8 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "test-task"
-		taskDefinitionName = "my-taskdefinition"
+		name = names.SimpleNameGenerator.GenerateName("test-task-")
+		taskDefinitionName = names.SimpleNameGenerator.GenerateName("my-taskdefinition-")
 		namespace = "default" // namespaces are not deleted in the api so be careful
 	})
 

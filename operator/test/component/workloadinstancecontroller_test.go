@@ -70,7 +70,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 		controllers := []interfaces.Controller{&keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 			Client:        k8sManager.GetClient(),
 			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("test-app-controller"),
+			Recorder:      k8sManager.GetEventRecorderFor("test-workloadinstance-controller"),
 			Log:           GinkgoLogr,
 			Meters:        initKeptnMeters(),
 			SpanHandler:   &controllercommon.SpanHandler{},

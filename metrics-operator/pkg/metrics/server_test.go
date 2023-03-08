@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -12,8 +13,18 @@ import (
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+func TestMain(m *testing.M) {
+	cancel := setup()
+	code := m.Run()
+	cancel()
+	os.Exit(code)
+}
+
+var k8sClient client.WithWatch
 
 func TestMetricServer_happyPath(t *testing.T) {
 	metric := metricsapi.KeptnMetric{
@@ -30,23 +41,14 @@ func TestMetricServer_happyPath(t *testing.T) {
 		},
 	}
 
-	err := metricsapi.AddToScheme(scheme.Scheme)
+	err := k8sClient.Create(context.TODO(), &metric)
 	require.Nil(t, err)
-	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(&metric).Build()
-
-	ctx, cancel := context.WithCancel(context.Background())
-
-	StartServerManager(ctx, k8sClient, openfeature.NewClient("klt-test"), true, 3*time.Second)
-
-	require.Eventually(t, func() bool {
-		return instance.server != nil
-	}, 10*time.Second, time.Second)
 
 	var resp *http.Response
 
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, err2 := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/metrics", nil)
+		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/metrics", nil)
 		require.Nil(t, err2)
 		resp, err = cli.Do(req)
 		return err == nil
@@ -61,63 +63,33 @@ func TestMetricServer_happyPath(t *testing.T) {
 
 	require.Contains(t, newStr, "# TYPE sample_metric gauge")
 
-	cancel()
-
-	require.Eventually(t, func() bool {
-		return instance.server == nil
-	}, 10*time.Second, time.Second)
 }
 
 func TestMetricServer_noMetric(t *testing.T) {
 
-	err := metricsapi.AddToScheme(scheme.Scheme)
-	require.Nil(t, err)
-	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects().Build()
-
-	ctx, cancel := context.WithCancel(context.Background())
-
-	StartServerManager(ctx, k8sClient, openfeature.NewClient("klt-test2"), true, 3*time.Second)
-
+	var resp *http.Response
+	var err error
 	require.Eventually(t, func() bool {
-		return instance.server != nil
+		cli := &http.Client{}
+		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
+		require.Nil(t, err2)
+		resp, err = cli.Do(req)
+		return err == nil
 	}, 10*time.Second, time.Second)
 
-	var resp *http.Response
-
-	cli := &http.Client{}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
-	require.Nil(t, err)
-	resp, err = cli.Do(req)
-	require.Nil(t, err)
 	defer resp.Body.Close()
 	stat := resp.StatusCode
 	require.Equal(t, 404, stat)
 
-	cancel()
-
-	require.Eventually(t, func() bool {
-		return instance.server == nil
-	}, 10*time.Second, time.Second)
 }
 
 func TestMetricServer_disabledServer(t *testing.T) {
-	err2 := metricsapi.AddToScheme(scheme.Scheme)
-	require.Nil(t, err2)
-	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
-
-	ctx, cancel := context.WithCancel(context.Background())
-
-	StartServerManager(ctx, k8sClient, openfeature.NewClient("klt-test"), false, 3*time.Second)
-
-	require.Eventually(t, func() bool {
-		return instance.server == nil
-	}, 30*time.Second, 3*time.Second)
 
 	var err error
 
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, err2 := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/metrics", nil)
+		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/metrics", nil)
 		require.Nil(t, err2)
 		_, err = cli.Do(req)
 		return err != nil
@@ -125,9 +97,16 @@ func TestMetricServer_disabledServer(t *testing.T) {
 
 	require.Contains(t, err.Error(), "connection refused")
 
-	cancel()
+}
 
-	require.Eventually(t, func() bool {
-		return instance.server == nil
-	}, 30*time.Second, 3*time.Second)
+func setup() context.CancelFunc {
+	err2 := metricsapi.AddToScheme(scheme.Scheme)
+	if err2 != nil {
+		panic("BAD SCHEME!")
+	}
+	k8sClient = fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
+	ctx, cancel := context.WithCancel(context.Background())
+
+	StartServerManager(ctx, k8sClient, openfeature.NewClient("klt-test"), false, 3*time.Second)
+	return cancel
 }

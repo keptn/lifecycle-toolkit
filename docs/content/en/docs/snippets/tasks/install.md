@@ -10,7 +10,7 @@ For installing the Lifecycle Toolkit via Helm chart:
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install klt klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 To install a specific version, use the `--version <version>` flag as part of the
@@ -51,7 +51,8 @@ kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-li
 
 The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 
-> **Note:** Installation of the Lifecycle Toolkit version 0.5.0 and lower is not supported via helm charts.
+> **Note:**
+Installation of the Lifecycle Toolkit version 0.5.0 and lower is not supported via helm charts.
 
 ## Install version 0.5.0 and earlier
 

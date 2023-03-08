@@ -51,7 +51,7 @@ Use the following command sequence to install the latest release of the Keptn Li
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install klt klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 For installing the Lifecycle Toolkit via manifests use:
@@ -423,7 +423,8 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-> **Note:** The KeptnMetricsProvider is a new resource in KLT 0.7.0.
+> **Note:**
+The KeptnMetricsProvider is a new resource in KLT 0.7.0.
 The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
 provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
 
@@ -455,7 +456,8 @@ of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRe
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
 resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
 
-> **Note:** Please be aware that, if
+> **Note:**
+Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
 resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.
 

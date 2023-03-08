@@ -10,10 +10,10 @@ For installing the Lifecycle Toolkit via Helm chart:
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install klt keptn-lifecycle-toolkit/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install klt klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-To install a specific version, use the `--version <version>` falg as part of
+To install a specific version, use the `--version <version>` flag as part of the
 `helm upgrade --install` command.
 
 To list available versions:

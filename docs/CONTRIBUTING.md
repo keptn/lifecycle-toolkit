@@ -83,7 +83,7 @@ To set up a local Docsy build:
    make build
    ```
 
-   > **Note:** To utilize the `makefile`, you must have GNU **make**
+   > **Note:** To utilize the `Makefile`, you must have GNU **make**
    available on your local machine.
    Versions are available for all the usual Operating Systems.
 

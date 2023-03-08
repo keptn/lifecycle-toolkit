@@ -51,7 +51,7 @@ Use the following command sequence to install the latest release of the Keptn Li
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install klt keptn-lifecycle-toolkit/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install klt klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 For installing the Lifecycle Toolkit via manifests use:

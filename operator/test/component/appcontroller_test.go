@@ -3,8 +3,8 @@ package component
 import (
 	"fmt"
 
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	. "github.com/onsi/ginkgo/v2"
@@ -73,7 +73,7 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
-			instance *klcv1alpha2.KeptnApp
+			instance *klcv1alpha3.KeptnApp
 		)
 
 		BeforeEach(func() {
@@ -101,13 +101,13 @@ var _ = Describe("KeptnAppController", Ordered, func() {
 	})
 })
 
-func deleteAppInCluster(instance *klcv1alpha2.KeptnApp) {
+func deleteAppInCluster(instance *klcv1alpha3.KeptnApp) {
 	By("Cleaning Up KeptnApp CRD ")
 	err := k8sClient.Delete(ctx, instance)
 	logErrorIfPresent(err)
 }
 
-func assertResourceUpdated(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnAppVersion {
+func assertResourceUpdated(instance *klcv1alpha3.KeptnApp) *klcv1alpha3.KeptnAppVersion {
 
 	appVersion := getAppVersion(instance)
 
@@ -119,13 +119,13 @@ func assertResourceUpdated(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnApp
 	return appVersion
 }
 
-func getAppVersion(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnAppVersion {
+func getAppVersion(instance *klcv1alpha3.KeptnApp) *klcv1alpha3.KeptnAppVersion {
 	appvName := types.NamespacedName{
 		Namespace: instance.Namespace,
 		Name:      fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation),
 	}
 
-	appVersion := &klcv1alpha2.KeptnAppVersion{}
+	appVersion := &klcv1alpha3.KeptnAppVersion{}
 	By("Retrieving Created app version")
 	Eventually(func() error {
 		return k8sClient.Get(ctx, appvName, appVersion)
@@ -134,7 +134,7 @@ func getAppVersion(instance *klcv1alpha2.KeptnApp) *klcv1alpha2.KeptnAppVersion 
 	return appVersion
 }
 
-func assertAppSpan(instance *klcv1alpha2.KeptnApp, spanRecorder *sdktest.SpanRecorder) {
+func assertAppSpan(instance *klcv1alpha3.KeptnApp, spanRecorder *sdktest.SpanRecorder) {
 	By("Comparing spans")
 	var spans []otelsdk.ReadOnlySpan
 	Eventually(func() bool {
@@ -155,16 +155,16 @@ func assertAppSpan(instance *klcv1alpha2.KeptnApp, spanRecorder *sdktest.SpanRec
 	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 }
 
-func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha2.KeptnApp {
-	instance := &klcv1alpha2.KeptnApp{
+func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha3.KeptnApp {
+	instance := &klcv1alpha3.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       name,
 			Namespace:  namespace,
 			Generation: 1,
 		},
-		Spec: klcv1alpha2.KeptnAppSpec{
+		Spec: klcv1alpha3.KeptnAppSpec{
 			Version: version,
-			Workloads: []klcv1alpha2.KeptnWorkloadRef{
+			Workloads: []klcv1alpha3.KeptnWorkloadRef{
 				{
 					Name:    "app-wname",
 					Version: "2.0",

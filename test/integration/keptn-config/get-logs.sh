@@ -5,7 +5,7 @@ RETRY_COUNT=3
 SLEEP_TIME=5
 
 for i in $(seq 1 $RETRY_COUNT); do
-    VAR=$(kubectl logs -n "$NAMESPACE" deployments/klc-controller-manager | grep -c "initializing KeptnConfig since no config was there before")
+    VAR=$(kubectl logs -n "$NAMESPACE" deployments/lifecycle-operator | grep -c "initializing KeptnConfig since no config was there before")
     # shellcheck disable=SC1072
     if [ "$VAR" -ge 1 ]; then
       echo "Controller could access secret"

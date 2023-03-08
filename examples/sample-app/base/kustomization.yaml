@@ -3,3 +3,4 @@ resources:
   - manifest.yaml
   - app-post-deploy.yaml
   - provider.yaml
+  - metric.yaml

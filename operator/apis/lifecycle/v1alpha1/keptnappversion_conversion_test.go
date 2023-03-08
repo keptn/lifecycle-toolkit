@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	v1alpha2common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	v1alpha3common "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,16 +16,16 @@ import (
 func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
-		srcObj  *v1alpha2.KeptnAppVersion
+		srcObj  *v1alpha3.KeptnAppVersion
 		wantErr bool
 		wantObj *KeptnAppVersion
 	}{
 		{
-			name: "Test that conversion from v1alpha2 to v1alpha1 works",
-			srcObj: &v1alpha2.KeptnAppVersion{
+			name: "Test that conversion from v1alpha3 to v1alpha1 works",
+			srcObj: &v1alpha3.KeptnAppVersion{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnAppVersion",
-					APIVersion: "lifecycle.keptn.sh/v1alpha2",
+					APIVersion: "lifecycle.keptn.sh/v1alpha3",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
@@ -37,11 +37,11 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						Version:  "1.2.3",
 						Revision: 1,
-						Workloads: []v1alpha2.KeptnWorkloadRef{
+						Workloads: []v1alpha3.KeptnWorkloadRef{
 							{
 								Name:    "workload-1",
 								Version: "1.2.3",
@@ -71,78 +71,78 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: v1alpha2.KeptnAppVersionStatus{
-					PreDeploymentStatus:            v1alpha2common.StateFailed,
-					PostDeploymentStatus:           v1alpha2common.StateFailed,
-					PreDeploymentEvaluationStatus:  v1alpha2common.StateFailed,
-					PostDeploymentEvaluationStatus: v1alpha2common.StateFailed,
-					WorkloadOverallStatus:          v1alpha2common.StateFailed,
-					WorkloadStatus: []v1alpha2.WorkloadStatus{
+				Status: v1alpha3.KeptnAppVersionStatus{
+					PreDeploymentStatus:            v1alpha3common.StateFailed,
+					PostDeploymentStatus:           v1alpha3common.StateFailed,
+					PreDeploymentEvaluationStatus:  v1alpha3common.StateFailed,
+					PostDeploymentEvaluationStatus: v1alpha3common.StateFailed,
+					WorkloadOverallStatus:          v1alpha3common.StateFailed,
+					WorkloadStatus: []v1alpha3.WorkloadStatus{
 						{
-							Workload: v1alpha2.KeptnWorkloadRef{
+							Workload: v1alpha3.KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: v1alpha2common.StateFailed,
+							Status: v1alpha3common.StateFailed,
 						},
 						{
-							Workload: v1alpha2.KeptnWorkloadRef{
+							Workload: v1alpha3.KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: v1alpha2common.StateFailed,
+							Status: v1alpha3common.StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
-					PreDeploymentTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def1",
 							Name:           "name1",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def12",
 							Name:           "name12",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PostDeploymentTaskStatus: []v1alpha2.ItemStatus{
+					PostDeploymentTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def2",
 							Name:           "name2",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def22",
 							Name:           "name22",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def3",
 							Name:           "name3",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def32",
 							Name:           "name32",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PostDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PostDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def4",
 							Name:           "name4",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def42",
 							Name:           "name42",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PhaseTraceIDs: v1alpha2common.PhaseTraceID{
+					PhaseTraceIDs: v1alpha3common.PhaseTraceID{
 						"key": propagation.MapCarrier{
 							"key1": "value1",
 							"key2": "value2",
@@ -152,7 +152,7 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: v1alpha2common.StateFailed,
+					Status: v1alpha3common.StateFailed,
 				},
 			},
 			wantErr: false,
@@ -309,10 +309,10 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 		name    string
 		src     *KeptnAppVersion
 		wantErr bool
-		wantObj *v1alpha2.KeptnAppVersion
+		wantObj *v1alpha3.KeptnAppVersion
 	}{
 		{
-			name: "Test that conversion from v1alpha1 to v1alpha2 works",
+			name: "Test that conversion from v1alpha1 to v1alpha3 works",
 			src: &KeptnAppVersion{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnAppVersion",
@@ -446,7 +446,7 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			wantObj: &v1alpha2.KeptnAppVersion{
+			wantObj: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
@@ -457,11 +457,11 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						Version:  "1.2.3",
 						Revision: 1,
-						Workloads: []v1alpha2.KeptnWorkloadRef{
+						Workloads: []v1alpha3.KeptnWorkloadRef{
 							{
 								Name:    "workload-1",
 								Version: "1.2.3",
@@ -491,78 +491,78 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: v1alpha2.KeptnAppVersionStatus{
-					PreDeploymentStatus:            v1alpha2common.StateFailed,
-					PostDeploymentStatus:           v1alpha2common.StateFailed,
-					PreDeploymentEvaluationStatus:  v1alpha2common.StateFailed,
-					PostDeploymentEvaluationStatus: v1alpha2common.StateFailed,
-					WorkloadOverallStatus:          v1alpha2common.StateFailed,
-					WorkloadStatus: []v1alpha2.WorkloadStatus{
+				Status: v1alpha3.KeptnAppVersionStatus{
+					PreDeploymentStatus:            v1alpha3common.StateFailed,
+					PostDeploymentStatus:           v1alpha3common.StateFailed,
+					PreDeploymentEvaluationStatus:  v1alpha3common.StateFailed,
+					PostDeploymentEvaluationStatus: v1alpha3common.StateFailed,
+					WorkloadOverallStatus:          v1alpha3common.StateFailed,
+					WorkloadStatus: []v1alpha3.WorkloadStatus{
 						{
-							Workload: v1alpha2.KeptnWorkloadRef{
+							Workload: v1alpha3.KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: v1alpha2common.StateFailed,
+							Status: v1alpha3common.StateFailed,
 						},
 						{
-							Workload: v1alpha2.KeptnWorkloadRef{
+							Workload: v1alpha3.KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: v1alpha2common.StateFailed,
+							Status: v1alpha3common.StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
-					PreDeploymentTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def1",
 							Name:           "name1",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def12",
 							Name:           "name12",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PostDeploymentTaskStatus: []v1alpha2.ItemStatus{
+					PostDeploymentTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def2",
 							Name:           "name2",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def22",
 							Name:           "name22",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def3",
 							Name:           "name3",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def32",
 							Name:           "name32",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PostDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PostDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "def4",
 							Name:           "name4",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 						{
 							DefinitionName: "def42",
 							Name:           "name42",
-							Status:         v1alpha2common.StateFailed,
+							Status:         v1alpha3common.StateFailed,
 						},
 					},
-					PhaseTraceIDs: v1alpha2common.PhaseTraceID{
+					PhaseTraceIDs: v1alpha3common.PhaseTraceID{
 						"key": propagation.MapCarrier{
 							"key1": "value1",
 							"key2": "value2",
@@ -572,18 +572,18 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: v1alpha2common.StateFailed,
+					Status: v1alpha3common.StateFailed,
 				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dst := v1alpha2.KeptnAppVersion{
+			dst := v1alpha3.KeptnAppVersion{
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
-				Spec:       v1alpha2.KeptnAppVersionSpec{},
-				Status:     v1alpha2.KeptnAppVersionStatus{},
+				Spec:       v1alpha3.KeptnAppVersionSpec{},
+				Status:     v1alpha3.KeptnAppVersionStatus{},
 			}
 			if err := tt.src.ConvertTo(&dst); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertTo() error = %v, wantErr %v", err, tt.wantErr)

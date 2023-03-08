@@ -4,9 +4,10 @@
 package fake
 
 import (
+	"sync"
+
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
-	"sync"
 )
 
 // ITracerProviderAsyncInt64Mock is a mock implementation of interfaces.ITracerProviderAsyncInt64.

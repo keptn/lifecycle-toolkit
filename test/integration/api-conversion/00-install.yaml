@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: "some-klt-app2"
@@ -6,7 +6,7 @@ spec:
   version: "1.2.3"
   revision: 123
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
   name: "some-klt-app-version-2"
@@ -28,7 +28,7 @@ spec:
     - name: podtato-head-left-arm
       version: 0.2.7
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkloadInstance
 metadata:
   annotations:
@@ -53,7 +53,7 @@ spec:
     - post-deployment-evaluation
   workloadName: some-keptn-workload-instance-2
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationProvider
 metadata:
   name: some-evaluation-provider-2
@@ -62,5 +62,13 @@ spec:
   secretKeyRef:
     name: "my-secret-name"
     key: "apiToken"
-
-
+---
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetric
+metadata:
+  name: my-metric-1
+spec:
+  fetchIntervalSeconds: 60
+  provider:
+    name: prometheus
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"

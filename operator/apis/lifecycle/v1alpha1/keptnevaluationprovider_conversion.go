@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha1.KeptnEvaluationProvider to the hub version (v1alpha2.KeptnEvaluationProvider)
+// ConvertTo converts the src v1alpha1.KeptnEvaluationProvider to the hub version (v1alpha3.KeptnEvaluationProvider)
 func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
-	dst, ok := dstRaw.(*v1alpha2.KeptnEvaluationProvider)
+	dst, ok := dstRaw.(*v1alpha3.KeptnEvaluationProvider)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnEvaluationProvider)
@@ -34,9 +34,9 @@ func (src *KeptnEvaluationProvider) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha2.KeptnEvaluationProvider) to this version (v1alpha1.KeptnEvaluationProvider)
+// ConvertFrom converts from the hub version (v1alpha3.KeptnEvaluationProvider) to this version (v1alpha1.KeptnEvaluationProvider)
 func (dst *KeptnEvaluationProvider) ConvertFrom(srcRaw conversion.Hub) error {
-	src, ok := srcRaw.(*v1alpha2.KeptnEvaluationProvider)
+	src, ok := srcRaw.(*v1alpha3.KeptnEvaluationProvider)
 
 	if !ok {
 		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnEvaluationProvider)

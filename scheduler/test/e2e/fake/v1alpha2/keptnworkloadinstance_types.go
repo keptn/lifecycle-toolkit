@@ -68,9 +68,9 @@ type ItemStatus struct {
 	EndTime   metav1.Time `json:"endTime,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.version`
@@ -90,7 +90,7 @@ type KeptnWorkloadInstance struct {
 	Status KeptnWorkloadInstanceStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 type KeptnWorkloadInstanceList struct {

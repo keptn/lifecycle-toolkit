@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -30,7 +30,7 @@ type TaskHandler struct {
 }
 
 //nolint:gocognit,gocyclo
-func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateAttributes) ([]klcv1alpha2.ItemStatus, apicommon.StatusSummary, error) {
+func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -43,12 +43,12 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1alpha2.ItemStatus
+	var newStatus []klcv1alpha3.ItemStatus
 	for _, taskDefinitionName := range tasks {
 		oldstatus := GetOldStatus(taskDefinitionName, statuses)
 
 		taskStatus := GetItemStatus(taskDefinitionName, statuses)
-		task := &klcv1alpha2.KeptnTask{}
+		task := &klcv1alpha3.KeptnTask{}
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
@@ -133,13 +133,13 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	return newTask.Name, nil
 }
 
-func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha2.KeptnTask, spanTrace trace.Span) {
+func (r TaskHandler) setTaskFailureEvents(task *klcv1alpha3.KeptnTask, spanTrace trace.Span) {
 	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
 }
 
-func (r TaskHandler) setupTasks(taskCreateAttributes CreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha2.ItemStatus) {
+func (r TaskHandler) setupTasks(taskCreateAttributes CreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha3.ItemStatus) {
 	var tasks []string
-	var statuses []klcv1alpha2.ItemStatus
+	var statuses []klcv1alpha3.ItemStatus
 
 	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
@@ -152,7 +152,7 @@ func (r TaskHandler) setupTasks(taskCreateAttributes CreateAttributes, piWrapper
 	return tasks, statuses
 }
 
-func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha2.KeptnTask, taskStatus *klcv1alpha2.ItemStatus) error {
+func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) error {
 	taskCreateAttributes.Definition = taskName
 	taskName, err := r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
 	if err != nil {
@@ -168,7 +168,7 @@ func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.C
 	return nil
 }
 
-func (r TaskHandler) handleTaskExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, task *klcv1alpha2.KeptnTask, taskStatus *klcv1alpha2.ItemStatus) {
+func (r TaskHandler) handleTaskExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) {
 	_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")

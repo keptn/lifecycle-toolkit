@@ -2,7 +2,9 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: mutating-webhook-configuration
+  name: lifecycle-mutating-webhook-configuration
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
 # Add an exclusion rule for the Mutating Webhook since the operator pod will not be able to start since it's waiting for itself otherwise control-plane: controller-manager
 webhooks:
   - name: mpod.keptn.sh
@@ -11,7 +13,7 @@ webhooks:
         - key: control-plane
           operator: NotIn
           values:
-            - "controller-manager"
+            - "lifecycle-operator"
         - key: kubernetes.io/metadata.name
           operator: NotIn
           values:

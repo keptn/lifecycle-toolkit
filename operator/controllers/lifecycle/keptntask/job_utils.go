@@ -6,15 +6,15 @@ import (
 	"reflect"
 
 	"github.com/imdario/mergo"
-	klcv1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask) error {
+func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
 	jobName := ""
 	definition, err := r.getTaskDefinition(ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
@@ -22,7 +22,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha2.FunctionSpec{}) {
+	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -39,7 +39,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	return nil
 }
 
-func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask, definition *klcv1alpha2.KeptnTaskDefinition) (string, error) {
+func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition) (string, error) {
 	params, hasParent, err := r.parseFunctionTaskDefinition(definition)
 	if err != nil {
 		return "", err
@@ -79,7 +79,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	return job.Name, nil
 }
 
-func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask) error {
+func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil {
 		task.Status.JobName = ""
@@ -106,8 +106,8 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 	return job, nil
 }
 
-func setupTaskContext(task *klcv1alpha2.KeptnTask) klcv1alpha2.TaskContext {
-	taskContext := klcv1alpha2.TaskContext{}
+func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
+	taskContext := klcv1alpha3.TaskContext{}
 
 	if task.Spec.Workload != "" {
 		taskContext.WorkloadName = task.Spec.Workload
@@ -123,7 +123,7 @@ func setupTaskContext(task *klcv1alpha2.KeptnTask) klcv1alpha2.TaskContext {
 	return taskContext
 }
 
-func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request, task *klcv1alpha2.KeptnTask, definition *klcv1alpha2.KeptnTaskDefinition, params FunctionExecutionParams) error {
+func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, params FunctionExecutionParams) error {
 	var parentJobParams FunctionExecutionParams
 	parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
 	if err != nil {

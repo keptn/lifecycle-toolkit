@@ -100,6 +100,12 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 				err := k8sClient.Create(context.TODO(), evaluation)
 				Expect(err).To(BeNil())
 
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      evaluation.Name,
+				}, evaluation)
+				Expect(err).To(BeNil())
+
 				evaluation.Status = klcv1alpha3.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
 					RetryCount:    10,

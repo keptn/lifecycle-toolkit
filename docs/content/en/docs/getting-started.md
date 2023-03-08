@@ -55,9 +55,11 @@ that make it easier for you to set up your environment.
 These can be found in our Getting Started repository.
 Use the following command to check out this repository:
 
-For the further progress of this guide, we need a sample application as well as some helpers which make it easier for
-your to set up your environment. These things can be found in our Getting Started repository which can be checked out as
-follows:
+For the further progress of this guide,
+we need a sample application as well as some helpers
+which make it easier foryour to set up your environment.
+These things can be found in our Getting Started repository
+which can be checked out as follows:
 
 ```shell
 git clone https://github.com/keptn-sandbox/lifecycle-toolkit-examples.git
@@ -125,8 +127,10 @@ You can watch the progress of the deployment as follows:
 
 ### Watch workload state
 
-When the Lifecycle Toolkit detects workload labels ("app.kubernetes.io/name" and "keptn.sh/workload") on a resource, a
-KeptnWorkloadInstance (kwi) resource will be created. Using this resource you can watch the progress of the deployment.
+When the Lifecycle Toolkit detects workload labels
+("app.kubernetes.io/name" and "keptn.sh/workload") on a resource,
+a KeptnWorkloadInstance (kwi) resource is created.
+Using this resource you can watch the progress of the deployment.
 
 ```shell
 kubectl get keptnworkloadinstances -n podtato-kubectl

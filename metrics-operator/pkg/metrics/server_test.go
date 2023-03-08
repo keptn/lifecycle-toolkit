@@ -19,14 +19,18 @@ import (
 
 func TestMain(m *testing.M) {
 	cancel := setup()
+	defer cancel()
 	code := m.Run()
-	cancel()
 	os.Exit(code)
 }
 
 var k8sClient client.WithWatch
 
 func TestMetricServer_happyPath(t *testing.T) {
+	require.Eventually(t, func() bool {
+		return instance.server != nil
+	}, 30*time.Second, time.Second)
+
 	metric := metricsapi.KeptnMetric{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "sample-metric",
@@ -40,7 +44,6 @@ func TestMetricServer_happyPath(t *testing.T) {
 			FetchIntervalSeconds: 5,
 		},
 	}
-
 	err := k8sClient.Create(context.TODO(), &metric)
 	require.Nil(t, err)
 
@@ -66,6 +69,9 @@ func TestMetricServer_happyPath(t *testing.T) {
 }
 
 func TestMetricServer_noMetric(t *testing.T) {
+	require.Eventually(t, func() bool {
+		return instance.server != nil
+	}, 30*time.Second, time.Second)
 
 	var resp *http.Response
 	var err error
@@ -84,9 +90,7 @@ func TestMetricServer_noMetric(t *testing.T) {
 }
 
 func TestMetricServer_disabledServer(t *testing.T) {
-
 	var err error
-
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
 		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/metrics", nil)

@@ -27,12 +27,12 @@ Pre-deployment issues:
 * Check that downstream services meet their SLOs
 * Verify that your infrastructure is ready
 * Ensure that your infrastructure
-  has the resources necessary for a successful deployment
+* has the resources necessary for a successful deployment
 
 Post-deployment issues:
 
 * Integrate with tooling beyond the standard Kubernetes probes
-  to automatically test the deployment
+* to automatically test the deployment
 * Ensure that the deployment is meeting its SLOs
 * Identify any downstream issues that may be caused by this deployment
 * Send appropriate notifications about whether the deployment was successful or unsuccessful
@@ -96,4 +96,5 @@ of the Keptn Lifecycle Toolkit:
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)
 
 * The "IsItObservable Tutorial for KLT" will be released to YouTube soon.
-  You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit) that accompanies this video in the meantime.
+* You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit)
+* that accompanies this video in the meantime.

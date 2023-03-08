@@ -92,7 +92,6 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		appName = names.SimpleNameGenerator.GenerateName("test-app-")
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
@@ -105,6 +104,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 		Context("with a new AppVersions CRD", func() {
 
 			BeforeEach(func() {
+				appName = names.SimpleNameGenerator.GenerateName("test-app-")
 				appVersion = createAppVersionInCluster(appName, namespace, version)
 			})
 

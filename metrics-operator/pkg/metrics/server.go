@@ -17,8 +17,6 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/pkg/errors"
-
-	//"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"

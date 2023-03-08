@@ -165,6 +165,7 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 					Namespace: av.Namespace,
 					Name:      av.Name,
 				}
+				//nolint:dupl
 				Eventually(func(g Gomega) {
 					av := &klcv1alpha3.KeptnAppVersion{}
 					err := k8sClient.Get(ctx, avNameObj, av)

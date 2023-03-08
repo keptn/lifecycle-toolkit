@@ -384,6 +384,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Namespace: wi.Namespace,
 					Name:      wi.Name,
 				}
+				//nolint:dupl
 				Eventually(func(g Gomega) {
 					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)

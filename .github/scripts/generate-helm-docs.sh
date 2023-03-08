@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Readme generator for Keptn Helm Chart
 #

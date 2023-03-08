@@ -68,6 +68,38 @@ func TestMetricServer_happyPath(t *testing.T) {
 	}, 10*time.Second, time.Second)
 }
 
+func TestMetricServer_noMetric(t *testing.T) {
+
+	err := metricsapi.AddToScheme(scheme.Scheme)
+	require.Nil(t, err)
+	k8sClient := fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects().Build()
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	StartServerManager(ctx, k8sClient, openfeature.NewClient("klt-test2"), true, 3*time.Second)
+
+	require.Eventually(t, func() bool {
+		return instance.server != nil
+	}, 10*time.Second, time.Second)
+
+	var resp *http.Response
+
+	cli := &http.Client{}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
+	require.Nil(t, err)
+	resp, err = cli.Do(req)
+	defer resp.Body.Close()
+	require.Nil(t, err)
+	stat := resp.StatusCode
+	require.Equal(t, 404, stat)
+
+	cancel()
+
+	require.Eventually(t, func() bool {
+		return instance.server == nil
+	}, 10*time.Second, time.Second)
+}
+
 func TestMetricServer_disabledServer(t *testing.T) {
 	err2 := metricsapi.AddToScheme(scheme.Scheme)
 	require.Nil(t, err2)

@@ -16,8 +16,12 @@ import (
 	"github.com/gorilla/mux"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/pkg/errors"
+
+	//"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -142,10 +146,14 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	namespace := vars["namespace"]
 	metric := vars["metric"]
 
-	metricObj := metricsapi.KeptnMetric{}
-	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
+	metricObj := &metricsapi.KeptnMetric{}
+	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, metricObj)
 	if err != nil {
 		fmt.Println("failed to list keptn-metrics: " + err.Error())
+		if status, ok := err.(k8serrors.APIStatus); ok || errors.As(err, &status) {
+			w.WriteHeader(int(status.Status().Code))
+		}
+		return
 	}
 
 	data := map[string]string{
@@ -157,8 +165,10 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(data)
 	if err != nil {
 		fmt.Println("failed to encode data")
+		w.WriteHeader(422)
 		os.Exit(1)
 	}
+
 }
 
 func (m *serverManager) recordMetrics() {

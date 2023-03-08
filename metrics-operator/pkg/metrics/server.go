@@ -148,6 +148,7 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, metricObj)
 	if err != nil {
 		fmt.Println("failed to list keptn-metrics: " + err.Error())
+		//nolint:errorlint
 		if status, ok := err.(k8serrors.APIStatus); ok || errors.As(err, &status) {
 			w.WriteHeader(int(status.Status().Code))
 		}

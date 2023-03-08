@@ -337,7 +337,7 @@ Here, we briefly give you an overview of Keptn Lifecycle Toolkit's directories.
 ├── helm              - application health checks introduces by KLT.
 ├── klt-cert-manager  - secures webhooks for KLT operator's access to Kubernetes API server with valid certificates.
 ├── metrics-operator  - 
-├── operator          -
+├── operator          - 
 ├── scheduler         -
 └── test              -
 

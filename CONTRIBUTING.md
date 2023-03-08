@@ -324,100 +324,21 @@ by creating a pre-commit git hook as follows:
     chmod +x ./.git/hooks/prepare-commit-msg
     ```
 
-### File Structure
+### Code Directories
+
+Here, we briefly give you an overview of Keptn Lifecycle Toolkit's directories.
 
 ```bash
 .
-├── dashboards
-│   └── grafana
-│        └── configmap
-├── docs
-│   ├── config
-│   ├── content
-│   ├── layouts
-│   ├── public
-│   ├── resources
-│   └── tmp
-│       └── lifecycle-toolkit-docs
-├── examples
-│   ├── sample-app
-│   └── support
-│       ├── argo
-│       └── observability
-├── functions-runtime
-│   └── samples
-│       └── ts
-├── helm
-│   ├── chart
-│   └── overlay
-├── klt-cert-manager
-│   ├── config
-│   │   ├── default
-│   │   ├── manager
-│   │   ├── rbac
-│   │   └── rendered
-│   ├── controllers
-│   │   └── keptnwebhookcontroller
-│   ├── Dockerfile
-│   ├── eventfilter
-│   ├── fake
-│   └── kubeutils
-├── metrics-operator
-│   ├── api
-│   │   ├── v1alpha1
-│   │   └── v1alpha2
-│   ├── cmd
-│   │   ├── certificates
-│   │   ├── config
-│   │   ├── fake
-│   │   ├── manager
-│   │   ├── metrics
-│   │   └── webhook
-│   ├── config
-│   │   ├── crd
-│   │   ├── default
-│   │   ├── manager
-│   │   ├── metrics
-│   │   ├── prometheus
-│   │   ├── rbac
-│   │   ├── rendered
-│   │   ├── samples
-│   │   └── webhook
-│   └── controllers
-├── operator
-│   ├── apis
-│   │   ├── lifecycle
-│   │   └── options
-│   ├── cmd
-│   │   ├── certificates
-│   │   ├── config
-│   │   ├── fake
-│   │   ├── manager
-│   │   └── webhook
-│   ├── config
-│   │   ├── crd
-│   │   ├── default
-│   │   ├── manager
-│   │   ├── rbac
-│   │   ├── rendered
-│   │   ├── samples
-│   │   └── webhook
-│   ├── controllers
-│   │   ├── common
-│   │   ├── errors
-│   │   ├── lifecycle
-│   │   └── options
-├── scheduler
-│   ├── cmd
-│   │   └── scheduler
-│   ├── config
-│   │   ├── rbac
-│   │   └── rendered
-│   ├── pkg
-└── test
-    ├── integration
-    ├── load
-    └── prometheus
-        └── setup
+├── dashboards        - contains the Grafana dashboards for the KLT.
+├── docs              - docs and tutorials related to KLT
+├── examples          - usecases to demonstrate the capabilities of the KLT.
+├── functions-runtime - 
+├── helm              - application health checks introduces by KLT.
+├── klt-cert-manager  - secures webhooks for KLT operator's access to Kubernetes API server with valid certificates.
+├── metrics-operator  - 
+├── operator          -
+├── scheduler         -
+└── test              -
 
 ```

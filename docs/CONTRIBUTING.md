@@ -83,7 +83,8 @@ To set up a local Docsy build:
    make build
    ```
 
-   **Note:** To utilize the `makefile`, you must have GNU **make**
+   > **Note:**
+   To utilize the `Makefile`, you must have GNU **make**
    available on your local machine.
    Versions are available for all the usual Operating Systems.
 
@@ -102,7 +103,8 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
     `http://localhost:1314/docs-dev/`
 
-   **Note:** By default, Hugo serves the local docs on port 1313.
+   > **Note:**
+   By default, Hugo serves the local docs on port 1313.
    We have modified that port for the lifecycle-toolkit docs
    to avoid conflicts with the keptn.github.io docs, which use
    port 1313 for local builds.

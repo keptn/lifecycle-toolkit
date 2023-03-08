@@ -315,6 +315,8 @@ jobs:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
     - name: Generate helm charts
+      env:
+        RELEASE_REGISTRY: ghcr.keptn.sh/keptn
       run: make helm-package
 
     - name: Copy charts from klt to helm repo
@@ -322,14 +324,12 @@ jobs:
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
-      env:
-        GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
       with:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
         path: ./helm-charts-repository
-        commit-message: "Update KLT chart"
+        commit-message: "feat: update KLT chart"
         signoff: true
-        branch: klt-chart-update-${{ env.GIT_SHA }}
+        branch: klt-chart-update-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}
         delete-branch: true
         base: main
         title: "Update KLT Helm chart"

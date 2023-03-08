@@ -88,8 +88,8 @@ func TestMetricServer_noMetric(t *testing.T) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
 	require.Nil(t, err)
 	resp, err = cli.Do(req)
-	defer resp.Body.Close()
 	require.Nil(t, err)
+	defer resp.Body.Close()
 	stat := resp.StatusCode
 	require.Equal(t, 404, stat)
 

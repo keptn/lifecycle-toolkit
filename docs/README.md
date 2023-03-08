@@ -16,7 +16,8 @@ make build
 make server
 ```
 
-Note: If the above command is not working try with `sudo` command.
+> **Note:**
+If the above command is not working try with `sudo` command.
 
 After the server is running on <http://localhost:1314>.
 Any modification in the docs folder will be reflected on the server under the dev revision.

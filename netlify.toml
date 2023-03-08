@@ -11,8 +11,10 @@ HUGO_VERSION = "0.107.0"
 HUGO_ENABLEGITINFO = "true"
 
 [context.deploy-preview]
+HUGO_ENV = "development"
 
 [context.branch-deploy]
+HUGO_ENV = "staging"
 
 [context.production.environment]
 HUGO_ENV = "production"

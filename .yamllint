@@ -1,0 +1,37 @@
+extends: default
+
+rules:
+  braces:
+    level: warning
+    max-spaces-inside: 1
+  brackets:
+    level: warning
+    max-spaces-inside: 1
+  colons: 
+    level: warning
+  commas:
+    level: warning
+  comments: disable 
+  comments-indentation: disable
+  document-end: disable
+  document-start: disable
+  empty-lines: 
+    level: warning
+  hyphens: 
+    level: warning
+  indentation:
+    level: warning
+    spaces: consistent
+    indent-sequences: consistent
+  key-duplicates:
+    level: warning
+  line-length:
+    level: warning
+    max: 150  
+  new-line-at-end-of-file: 
+    level: warning
+  new-lines: 
+    level: warning
+  trailing-spaces: disable
+  truthy: disable
+

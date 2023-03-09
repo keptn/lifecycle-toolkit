@@ -10,7 +10,8 @@
 
 You’ll need a Kubernetes cluster v0.24.0 or higher to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a
 local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever
+> **Note:**
+Your controller will automatically use the current context in your kubeconfig file (i.e. whatever
 cluster `kubectl cluster-info` shows).
 
 ### Running on the cluster
@@ -21,7 +22,8 @@ cluster `kubectl cluster-info` shows).
 make build-and-push-local RELEASE_REGISTRY=<some-registry>
 ```
 
-**NOTE:** Run `make --help` for more information on all potential `make` targets
+> **Note:**
+Run `make --help` for more information on all potential `make` targets
 
 1. Generate your release manifest
 

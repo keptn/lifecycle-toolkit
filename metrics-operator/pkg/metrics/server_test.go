@@ -39,8 +39,7 @@ func TestMetricServer_disabledServer(t *testing.T) {
 	var err error
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/metrics", nil)
-		require.Nil(t, err2)
+		req, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/metrics", nil)
 		_, err = cli.Do(req)
 		return err != nil
 	}, 30*time.Second, 3*time.Second)
@@ -107,8 +106,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/keptn-lifecycle-toolkit-system/sample-metric", nil)
-		require.Nil(t, err2)
+		req, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/keptn-lifecycle-toolkit-system/sample-metric", nil)
 		resp, err = cli.Do(req)
 		return err == nil
 	}, 10*time.Second, time.Second)
@@ -143,8 +141,7 @@ func TestMetricServer_noMetric(t *testing.T) {
 	var err error
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, err2 := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
-		require.Nil(t, err2)
+		req, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/default/sample", nil)
 		resp, err = cli.Do(req)
 		return err == nil
 	}, 10*time.Second, time.Second)

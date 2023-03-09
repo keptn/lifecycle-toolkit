@@ -29,8 +29,6 @@ type Metrics struct {
 	gauges map[string]prometheus.Gauge
 }
 
-var metrics Metrics
-
 var instance *serverManager
 var smOnce sync.Once
 
@@ -40,13 +38,13 @@ type serverManager struct {
 	ofClient      *openfeature.Client
 	exposeMetrics bool
 	k8sClient     client.Client
+	metrics       Metrics
 }
 
 // StartServerManager starts a server manager to expose metrics and runs until
 // the context is cancelled (i.e. an env variable gets changes and pod is restarted)
 func StartServerManager(ctx context.Context, client client.Client, ofClient *openfeature.Client, exposeMetrics bool, interval time.Duration) {
 	smOnce.Do(func() {
-		metrics.gauges = make(map[string]prometheus.Gauge)
 		instance = &serverManager{
 			ticker:        clock.New().Ticker(interval),
 			ofClient:      ofClient,
@@ -110,6 +108,9 @@ func (m *serverManager) setup() error {
 	klog.Infof("Keptn Metrics server enabled: %v", serverEnabled)
 
 	if serverEnabled && m.server == nil {
+
+		m.metrics.gauges = make(map[string]prometheus.Gauge)
+
 		klog.Infof("serving Prometheus metrics at localhost:9999/metrics")
 		klog.Infof("serving KeptnMetrics at localhost:9999/api/v1/metrics/{namespace}/{metric}")
 
@@ -183,15 +184,15 @@ func (m *serverManager) recordMetrics() {
 			}
 			for _, metric := range list.Items {
 				normName := normalizeMetricName(metric.Name)
-				if _, ok := metrics.gauges[normName]; !ok {
-					metrics.gauges[normName] = prometheus.NewGauge(prometheus.GaugeOpts{
+				if _, ok := m.metrics.gauges[normName]; !ok {
+					m.metrics.gauges[normName] = prometheus.NewGauge(prometheus.GaugeOpts{
 						Name: normName,
 						Help: metric.Name,
 					})
-					prometheus.MustRegister(metrics.gauges[normName])
+					prometheus.MustRegister(m.metrics.gauges[normName])
 				}
 				val, _ := strconv.ParseFloat(metric.Status.Value, 64)
-				metrics.gauges[normName].Set(val)
+				m.metrics.gauges[normName].Set(val)
 			}
 			<-time.After(10 * time.Second)
 		}

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,8 +15,10 @@ import (
 	"github.com/gorilla/mux"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -26,8 +27,6 @@ import (
 type Metrics struct {
 	gauges map[string]prometheus.Gauge
 }
-
-var metrics Metrics
 
 var instance *serverManager
 var smOnce sync.Once
@@ -38,13 +37,13 @@ type serverManager struct {
 	ofClient      *openfeature.Client
 	exposeMetrics bool
 	k8sClient     client.Client
+	metrics       Metrics
 }
 
 // StartServerManager starts a server manager to expose metrics and runs until
 // the context is cancelled (i.e. an env variable gets changes and pod is restarted)
 func StartServerManager(ctx context.Context, client client.Client, ofClient *openfeature.Client, exposeMetrics bool, interval time.Duration) {
 	smOnce.Do(func() {
-		metrics.gauges = make(map[string]prometheus.Gauge)
 		instance = &serverManager{
 			ticker:        clock.New().Ticker(interval),
 			ofClient:      ofClient,
@@ -108,6 +107,9 @@ func (m *serverManager) setup() error {
 	klog.Infof("Keptn Metrics server enabled: %v", serverEnabled)
 
 	if serverEnabled && m.server == nil {
+
+		m.metrics.gauges = make(map[string]prometheus.Gauge)
+
 		klog.Infof("serving Prometheus metrics at localhost:9999/metrics")
 		klog.Infof("serving KeptnMetrics at localhost:9999/api/v1/metrics/{namespace}/{metric}")
 
@@ -142,10 +144,15 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	namespace := vars["namespace"]
 	metric := vars["metric"]
 
-	metricObj := metricsapi.KeptnMetric{}
-	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, &metricObj)
+	metricObj := &metricsapi.KeptnMetric{}
+	err := m.k8sClient.Get(context.Background(), types.NamespacedName{Name: metric, Namespace: namespace}, metricObj)
 	if err != nil {
 		fmt.Println("failed to list keptn-metrics: " + err.Error())
+		//nolint:errorlint
+		if status, ok := err.(k8serrors.APIStatus); ok || errors.As(err, &status) {
+			w.WriteHeader(int(status.Status().Code))
+		}
+		return
 	}
 
 	data := map[string]string{
@@ -157,8 +164,9 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(data)
 	if err != nil {
 		fmt.Println("failed to encode data")
-		os.Exit(1)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 	}
+
 }
 
 func (m *serverManager) recordMetrics() {
@@ -174,15 +182,15 @@ func (m *serverManager) recordMetrics() {
 			}
 			for _, metric := range list.Items {
 				normName := normalizeMetricName(metric.Name)
-				if _, ok := metrics.gauges[normName]; !ok {
-					metrics.gauges[normName] = prometheus.NewGauge(prometheus.GaugeOpts{
+				if _, ok := m.metrics.gauges[normName]; !ok {
+					m.metrics.gauges[normName] = prometheus.NewGauge(prometheus.GaugeOpts{
 						Name: normName,
 						Help: metric.Name,
 					})
-					prometheus.MustRegister(metrics.gauges[normName])
+					prometheus.MustRegister(m.metrics.gauges[normName])
 				}
 				val, _ := strconv.ParseFloat(metric.Status.Value, 64)
-				metrics.gauges[normName].Set(val)
+				m.metrics.gauges[normName].Set(val)
 			}
 			<-time.After(10 * time.Second)
 		}

@@ -32,7 +32,7 @@ Pre-deployment issues:
 Post-deployment issues:
 
 * Integrate with tooling beyond the standard Kubernetes probes
-* to automatically test the deployment
+* Automatically test the deployment
 * Ensure that the deployment is meeting its SLOs
 * Identify any downstream issues that may be caused by this deployment
 * Send appropriate notifications about whether the deployment was successful or unsuccessful

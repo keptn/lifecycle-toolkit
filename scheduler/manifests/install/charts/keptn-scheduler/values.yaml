@@ -4,7 +4,7 @@
 # Declare variables to be passed into your templates.
 
 scheduler:
-  name: keptn-scheduler
+  name: scheduler
   image: docker.io/annadreal/kube-scheduler:202209271664295209-v0.24.3 #we still do not have a register setup, edit the Makefile to point to your own register, run 'make push-release-images' copy the resulting image here
   namespace: keptn-lifecycle-toolkit-system
   replicaCount: 1
@@ -13,7 +13,7 @@ scheduler:
 #controller:
 #  name: scheduler-plugins-controller
 #  image: k8s.gcr.io/scheduler-plugins/controller:v0.23.10
-#  namespace: keptn-scheduler
+#  namespace: scheduler
 #  replicaCount: 1
 
 # LoadVariationRiskBalancing and TargetLoadPacking are not enabled by default

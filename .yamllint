@@ -24,7 +24,7 @@ rules:
     spaces: consistent
     indent-sequences: consistent
   key-duplicates:
-    level: warning     
+    level: warning
   line-length:
     level: warning
     max: 150  

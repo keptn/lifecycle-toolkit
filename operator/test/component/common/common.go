@@ -133,7 +133,7 @@ func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1
 	return appVersion
 }
 
-func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdktest.SpanRecorder, client.Client) {
+func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdktest.SpanRecorder, client.Client, context.CancelFunc) {
 	var (
 		cfg          *rest.Config
 		k8sClient    client.Client
@@ -142,10 +142,11 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 		k8sManager   ctrl.Manager
 		spanRecorder *sdktest.SpanRecorder
 		tracer       *otelsdk.TracerProvider
+		cancel       context.CancelFunc
 	)
 
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
-	ctx, _ = context.WithCancel(context.TODO())
+	ctx, cancel = context.WithCancel(context.TODO())
 	By("bootstrapping test environment")
 
 	if os.Getenv("USE_EXISTING_CLUSTER") == "true" {
@@ -202,7 +203,7 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 	spanRecorder = sdktest.NewSpanRecorder()
 	tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
-	return ctx, k8sManager, tracer, spanRecorder, k8sClient
+	return ctx, k8sManager, tracer, spanRecorder, k8sClient, cancel
 }
 
 func WriteReport(specReport ginkgotypes.SpecReport, f *os.File) {

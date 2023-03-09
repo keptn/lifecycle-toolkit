@@ -31,7 +31,7 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient = common.InitSuite()
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
 
 	_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image")
 

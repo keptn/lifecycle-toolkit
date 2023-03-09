@@ -1,11 +1,10 @@
-package component
+package taskdefinition_test
 
 import (
 	"context"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	v1 "k8s.io/api/core/v1"
@@ -14,30 +13,11 @@ import (
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
-var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
+var _ = Describe("Taskdefinition", Ordered, func() {
 	var (
 		taskDefinitionName string
 		namespace          string
 	)
-
-	BeforeAll(func() {
-		// setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		By("Creating the Controller")
-
-		////setup controllers here
-		controllers := []interfaces.Controller{&keptntaskdefinition.KeptnTaskDefinitionReconciler{
-			Client:   k8sManager.GetClient(),
-			Scheme:   k8sManager.GetScheme(),
-			Recorder: k8sManager.GetEventRecorderFor("test-taskdefinition-controller"),
-			Log:      GinkgoLogr,
-		}}
-		setupManager(controllers) // we can register multiple time the same controller
-	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
 		taskDefinitionName = names.SimpleNameGenerator.GenerateName("my-taskdefinition-")
@@ -99,7 +79,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 				}, "30s").Should(Succeed())
 
 				err = k8sClient.Delete(context.TODO(), configmap)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 
 			It("TaskDefinition referencing existing Configmap", func() {
@@ -150,7 +130,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 				}, "30s").Should(Succeed())
 
 				err = k8sClient.Delete(context.TODO(), configmap)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 
 			It("TaskDefinition referencing non-existing Configmap", func() {
@@ -200,7 +180,7 @@ var _ = Describe("KeptnTaskDefinitionController", Ordered, func() {
 
 			AfterEach(func() {
 				err := k8sClient.Delete(context.TODO(), taskDefinition)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 
 			})
 		})

@@ -1,4 +1,4 @@
-package component
+package workload_test
 
 import (
 	"context"
@@ -6,56 +6,22 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
-// clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
-// Workload controller creates WorkloadVersion when a new Workload CRD is added
-// span for creation and reconcile are correct
-// container must be ordered to have the before all setup
-// this way the container spec check is not randomized, so we can make
-// assertions on spans number and traces
-var _ = Describe("KeptnWorkloadController", Ordered, func() {
+var _ = Describe("Workload", Ordered, func() {
 	var (
 		name            string
 		namespace       string
 		version         string
 		applicationName string
-		spanRecorder    *sdktest.SpanRecorder
-		tracer          *otelsdk.TracerProvider
 	)
-
-	BeforeAll(func() {
-		//setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		By("Creating the Controller")
-
-		spanRecorder = sdktest.NewSpanRecorder()
-		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
-
-		////setup controllers here
-		controllers := []interfaces.Controller{&keptnworkload.KeptnWorkloadReconciler{
-			Client:        k8sManager.GetClient(),
-			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("test-workload-controller"),
-			Log:           GinkgoLogr,
-			TracerFactory: &tracerFactory{tracer: tracer},
-		}}
-		setupManager(controllers) // we can register multiple time the same controller
-		// so that they have a different span/trace
-	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
 		name = names.SimpleNameGenerator.GenerateName("my-workload-")
@@ -105,17 +71,17 @@ var _ = Describe("KeptnWorkloadController", Ordered, func() {
 				Expect(spans[1].Name()).To(Equal("create_workload_instance"))
 				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadName.String(workload.Name)))
 				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadVersion.String(workload.Spec.Version)))
-				Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
+				Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
 			})
 
 		})
 		AfterEach(func() {
 			By("Cleaning Up KeptnWorkload CRD")
 			err := k8sClient.Delete(ctx, workload)
-			logErrorIfPresent(err)
+			common.LogErrorIfPresent(err)
 			By("Cleaning Up KeptnWorkloadInstance CRD")
 			err = k8sClient.Delete(ctx, workloadInstance)
-			logErrorIfPresent(err)
+			common.LogErrorIfPresent(err)
 		})
 
 	})

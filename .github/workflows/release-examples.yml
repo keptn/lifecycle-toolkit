@@ -51,5 +51,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
-          cwd: ${{ inputs.page_dir }}
-          message: "releasing examples ${{ inputs.tag_name }}"
+          cwd: ${{ inputs.examples_dir }}
+          message: "feat: release examples ${{ inputs.tag_name }}"

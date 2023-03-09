@@ -74,6 +74,28 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	}
 
 	points := (result.Series)[0].Pointlist
-	value := strconv.FormatFloat(*points[len(points)-1][1], 'g', 5, 64)
+	if len(points) == 0 {
+		d.Log.Info("No metric points in query result")
+		return "", nil, fmt.Errorf("no metric points in query result")
+	}
+
+	r := d.getSingleValue(points)
+	value := strconv.FormatFloat(r, 'g', 5, 64)
 	return value, b, nil
+}
+
+func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
+	var sum float64 = 0
+	var count uint64 = 0
+	for _, point := range points {
+		if point[1] != nil {
+			sum += *point[1]
+			count++
+		}
+	}
+	if count < 1 {
+		// cannot dive by zero
+		return 0
+	}
+	return sum / float64(count)
 }

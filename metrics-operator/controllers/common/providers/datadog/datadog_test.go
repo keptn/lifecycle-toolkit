@@ -2,12 +2,14 @@ package datadog
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/DataDog/datadog-api-client-go/v2/api/datadogV1"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -69,7 +71,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
 	require.Nil(t, e)
 	require.Equal(t, []byte(ddPayload), raw)
-	require.Equal(t, fmt.Sprintf("%.3f", 84.782), r)
+	require.Equal(t, fmt.Sprintf("%.3f", 89.116), r)
 }
 func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -284,4 +286,31 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 	require.Equal(t, "", r)
 	require.True(t, strings.Contains(e.Error(), "no values in query result"))
 
+}
+func TestGetSingleValue_EmptyPoints(t *testing.T) {
+	fakeClient := fake.NewClient()
+	kdd := KeptnDataDogProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	var points [][]*float64
+	value := kdd.getSingleValue(points)
+
+	require.Zero(t, value)
+}
+func TestGetSingleValue_HappyPath(t *testing.T) {
+	fakeClient := fake.NewClient()
+	kdd := KeptnDataDogProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	result := datadogV1.MetricsQueryResponse{}
+	_ = json.Unmarshal([]byte(ddPayload), &result)
+	points := (result.Series)[0].Pointlist
+	value := kdd.getSingleValue(points)
+
+	require.NotZero(t, value)
+	require.Equal(t, 89.11554133097331, value)
 }

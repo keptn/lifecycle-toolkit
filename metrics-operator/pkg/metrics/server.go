@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -166,7 +165,6 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("failed to encode data")
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		os.Exit(1)
 	}
 
 }

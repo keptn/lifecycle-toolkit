@@ -1,4 +1,4 @@
-name: Set the End Date in the project
+name: Set the Start Date in the project
 
 on:
   issues:
@@ -69,7 +69,7 @@ jobs:
               $date_field: ID!
               $date_value: Date!
             ) {
-              set_end_date: updateProjectV2ItemFieldValue(input: {
+              set_start_date: updateProjectV2ItemFieldValue(input: {
                 projectId: $project
                 itemId: $item
                 fieldId: $date_field

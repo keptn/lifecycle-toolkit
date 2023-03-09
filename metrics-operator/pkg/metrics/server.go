@@ -165,7 +165,7 @@ func (m *serverManager) returnMetric(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(data)
 	if err != nil {
 		fmt.Println("failed to encode data")
-		w.WriteHeader(422)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 		os.Exit(1)
 	}
 

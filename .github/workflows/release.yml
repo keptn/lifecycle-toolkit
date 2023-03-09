@@ -100,8 +100,6 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Sign container images
-        env:
-          COSIGN_EXPERIMENTAL: 1
         run: cosign sign ${{ env.IMAGE_TAG }}
 
       - name: Generate SBOM

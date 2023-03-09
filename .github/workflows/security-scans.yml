@@ -192,7 +192,7 @@ jobs:
           path: images
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.9.1
+        uses: aquasecurity/trivy-action@0.9.2
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'

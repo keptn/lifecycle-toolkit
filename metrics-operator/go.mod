@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/metrics-operator
 
-go 1.18
+go 1.19
 
 require (
 	github.com/benbjohnson/clock v1.3.0

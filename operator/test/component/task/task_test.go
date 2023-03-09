@@ -1,17 +1,13 @@
-package component
+package task_test
 
 import (
 	"context"
-	"os"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,39 +15,12 @@ import (
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
-var _ = Describe("KeptnTaskController", Ordered, func() {
+var _ = Describe("Task", Ordered, func() {
 	var (
 		name               string
 		taskDefinitionName string
 		namespace          string
-		spanRecorder       *sdktest.SpanRecorder
-		tracer             *otelsdk.TracerProvider
 	)
-
-	BeforeAll(func() {
-		// setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		By("Creating the Controller")
-		_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image")
-
-		spanRecorder = sdktest.NewSpanRecorder()
-		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
-
-		////setup controllers here
-		controllers := []interfaces.Controller{&keptntask.KeptnTaskReconciler{
-			Client:        k8sManager.GetClient(),
-			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("test-task-controller"),
-			Log:           GinkgoLogr,
-			Meters:        initKeptnMeters(),
-			TracerFactory: &tracerFactory{tracer: tracer},
-		}}
-		setupManager(controllers) // we can register multiple time the same controller
-	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
 		name = names.SimpleNameGenerator.GenerateName("test-task-reconciler-")
@@ -108,9 +77,9 @@ var _ = Describe("KeptnTaskController", Ordered, func() {
 			})
 			AfterEach(func() {
 				err := k8sClient.Delete(context.TODO(), taskDefinition)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 				err = k8sClient.Delete(context.TODO(), task)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 		})
 	})
@@ -147,8 +116,8 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 			"code": "console.log('hello');",
 		},
 	}
-	err := k8sClient.Create(context.TODO(), cm)
 
+	err := k8sClient.Create(context.TODO(), cm)
 	Expect(err).To(BeNil())
 
 	taskDefinition := &klcv1alpha3.KeptnTaskDefinition{
@@ -166,6 +135,18 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 	}
 
 	err = k8sClient.Create(context.TODO(), taskDefinition)
+	Expect(err).To(BeNil())
+
+	err = k8sClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      taskDefinitionName,
+	}, taskDefinition)
+
+	Expect(err).To(BeNil())
+
+	taskDefinition.Status.Function.ConfigMap = cmName
+
+	err = k8sClient.Status().Update(ctx, taskDefinition)
 	Expect(err).To(BeNil())
 
 	return taskDefinition

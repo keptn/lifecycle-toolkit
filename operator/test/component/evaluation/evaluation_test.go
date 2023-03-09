@@ -1,64 +1,29 @@
-package component
+package evaluation_test
 
 import (
 	"context"
-	"os"
 	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
-const KLTnamespace = "keptnlifecycle"
-
-var _ = Describe("KeptnEvaluationController", Ordered, func() {
+var _ = Describe("Evaluation", Ordered, func() {
 	var (
 		evaluationName           string
 		evaluationDefinitionName string
 		metricName               string
 		namespaceName            string
-		spanRecorder             *sdktest.SpanRecorder
-		tracer                   *otelsdk.TracerProvider
 		ns                       *v1.Namespace
 	)
-
-	BeforeAll(func() {
-		// setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		By("Creating the Controller")
-		_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image")
-
-		spanRecorder = sdktest.NewSpanRecorder()
-		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
-
-		////setup controllers here
-		controllers := []interfaces.Controller{&keptnevaluation.KeptnEvaluationReconciler{
-			Client:        k8sManager.GetClient(),
-			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("test-evaluation-controller"),
-			Log:           GinkgoLogr,
-			Meters:        initKeptnMeters(),
-			TracerFactory: &tracerFactory{tracer: tracer},
-			Namespace:     KLTnamespace,
-		}}
-		setupManager(controllers) // we can register multiple time the same controller
-		ns = makeKLTDefaultNamespace(KLTnamespace)
-	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
 		evaluationName = names.SimpleNameGenerator.GenerateName("test-evaluation-")
@@ -139,7 +104,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 				}, "30s").Should(Succeed())
 
 				err = k8sClient.Delete(context.TODO(), metric)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 
 			It("KeptnEvaluationController Metric status does not exist", func() {
@@ -175,7 +140,7 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 				}, "30s").Should(Succeed())
 
 				err := k8sClient.Delete(context.TODO(), metric)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 			It("KeptnEvaluationController Metric does not exist", func() {
 				By("Create EvaluationDefiniton")
@@ -207,13 +172,13 @@ var _ = Describe("KeptnEvaluationController", Ordered, func() {
 			})
 			AfterEach(func() {
 				err := k8sClient.Delete(context.TODO(), evaluationDefinition)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 				err = k8sClient.Delete(context.TODO(), evaluation)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 			AfterAll(func() {
 				err := k8sClient.Delete(context.TODO(), ns)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 			})
 		})
 	})
@@ -284,17 +249,4 @@ func makeEvaluation(name string, namespaceName string, evaluationDefinition stri
 	Expect(err).To(BeNil())
 
 	return eval
-}
-
-func makeKLTDefaultNamespace(name string) *v1.Namespace {
-	ns := &v1.Namespace{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: name,
-		},
-	}
-
-	err := k8sClient.Create(context.TODO(), ns)
-	Expect(err).To(BeNil())
-
-	return ns
 }

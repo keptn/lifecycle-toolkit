@@ -1,4 +1,4 @@
-package component
+package appversion_test
 
 import (
 	"context"
@@ -7,13 +7,9 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -21,46 +17,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// clean example of component test (E2E test/ integration test can be achieved adding a real cluster)
-// App controller creates AppVersion when a new App CRD is added
-// span for creation and reconcile are correct
-// container must be ordered to have the before all setup
-// this way the container spec check is not randomized, so we can make
-// assertions on spans number and traces
-var _ = Describe("KeptnAppVersionController", Ordered, func() {
+var _ = Describe("Appversion", Ordered, func() {
 	var (
-		appName      string
-		namespace    string
-		version      string
-		spanRecorder *sdktest.SpanRecorder
-		tracer       *otelsdk.TracerProvider
+		appName   string
+		namespace string
+		version   string
 	)
-
-	BeforeAll(func() {
-		//setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		By("Creating the Controller")
-
-		spanRecorder = sdktest.NewSpanRecorder()
-		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
-
-		////setup controllers here
-		controllers := []interfaces.Controller{&keptnappversion.KeptnAppVersionReconciler{
-			Client:        k8sManager.GetClient(),
-			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("test-appversion-controller"),
-			Log:           GinkgoLogr,
-			Meters:        initKeptnMeters(),
-			SpanHandler:   &controllercommon.SpanHandler{},
-			TracerFactory: &tracerFactory{tracer: tracer},
-		}}
-		setupManager(controllers) // we can register multiple time the same controller
-		// so that they have a different span/trace
-	})
 
 	BeforeEach(func() { // list var here they avll be copied for every spec
 		appName = names.SimpleNameGenerator.GenerateName("test-appversion-reconciler-")
@@ -206,9 +168,9 @@ var _ = Describe("KeptnAppVersionController", Ordered, func() {
 			AfterEach(func() {
 				// Remember to clean up the cluster after each test
 				err := k8sClient.Delete(ctx, av)
-				logErrorIfPresent(err)
+				common.LogErrorIfPresent(err)
 				// Reset span recorder after each spec
-				resetSpanRecords(tracer, spanRecorder)
+				common.ResetSpanRecords(tracer, spanRecorder)
 			})
 
 		})

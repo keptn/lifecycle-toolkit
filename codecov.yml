@@ -10,12 +10,13 @@ coverage:
         threshold: 1% # allow patch
 
 ignore:
-  - "**/*.yaml"        # ignore all yaml files (Kubernetes manifests, etc...)
-  - "**/*.yml"         # same as above
-  - "**/*.md"          # ignore all markdown files, those are not relevant for building/testing
-  - "**/Dockerfile"    # ignore Dockerfiles, those are build with GH Actions
-  - "**/*.sh"          # ignore shell scripts
-  - "**/test_utils.go" # test utils don't need to be covered
+  - "**/*.yaml"                   # ignore all yaml files (Kubernetes manifests, etc...)
+  - "**/*.yml"                    # same as above
+  - "**/*.md"                     # ignore all markdown files, those are not relevant for building/testing
+  - "**/Dockerfile"               # ignore Dockerfiles, those are build with GH Actions
+  - "**/*.sh"                     # ignore shell scripts
+  - "**/test_utils.go"            # test utils don't need to be covered
+  - "**/zz_generated.deepcopy.go" # auto-generated deepcopy files for CRD structs
 
 comment:
   layout: "diff, files, flags"

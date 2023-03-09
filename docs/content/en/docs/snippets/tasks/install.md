@@ -1,8 +1,8 @@
 # Installation Instructions
 
-## Install version 0.6.0 and above
+## Install version 0.7.0 and above
 
-In version 0.6.0 and later, you can install the Lifecycle Toolkit using helm charts,
+In version 0.7.0 and later, you can install the Lifecycle Toolkit using helm charts,
 or manifests.
 
 For installing the Lifecycle Toolkit via Helm chart:
@@ -54,7 +54,7 @@ The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 > **Note:**
 Installation of the Lifecycle Toolkit version 0.5.0 and lower is not supported via helm charts.
 
-## Install version 0.5.0 and earlier
+## Install version 0.6.0 and earlier
 
 You must first install *cert-manager* with the following commands:
 

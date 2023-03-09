@@ -78,7 +78,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v2.8.1
+        uses: sigstore/cosign-installer@v3.0.1
 
       - name: Build Docker Image
         uses: docker/build-push-action@v4
@@ -100,8 +100,6 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Sign container images
-        env:
-          COSIGN_EXPERIMENTAL: 1
         run: cosign sign ${{ env.IMAGE_TAG }}
 
       - name: Generate SBOM

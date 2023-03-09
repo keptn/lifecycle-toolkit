@@ -128,7 +128,7 @@ You can watch the progress of the deployment as follows:
 ### Watch workload state
 
 When the Lifecycle Toolkit detects workload labels
-("app.kubernetes.io/name" and "keptn.sh/workload") on a resource,
+("app.kubernetes.io/name" or "keptn.sh/workload") on a resource,
 a KeptnWorkloadInstance (kwi) resource is created.
 Using this resource you can watch the progress of the deployment.
 

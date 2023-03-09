@@ -85,7 +85,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: ghcr.io/podtato-head/entry:0.2.14
+          image: ghcr.io/podtato-head/entry:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

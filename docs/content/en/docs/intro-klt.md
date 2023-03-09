@@ -27,7 +27,7 @@ Pre-deployment issues:
 * Check that downstream services meet their SLOs
 * Verify that your infrastructure is ready
 * Ensure that your infrastructure
-* has the resources necessary for a successful deployment
+  has the resources necessary for a successful deployment
 
 Post-deployment issues:
 

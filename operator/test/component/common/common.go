@@ -3,12 +3,19 @@ package common
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	. "github.com/onsi/ginkgo/v2"
+	ginkgotypes "github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 	"go.opentelemetry.io/otel/metric/instrument"
 	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -19,7 +26,13 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/envtest"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
 func InitKeptnMeters() apicommon.KeptnMeters {
@@ -118,4 +131,93 @@ func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1
 	}, "20s").Should(Succeed())
 
 	return appVersion
+}
+
+func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdktest.SpanRecorder, client.Client) {
+	var (
+		cfg          *rest.Config
+		k8sClient    client.Client
+		testEnv      *envtest.Environment
+		ctx          context.Context
+		k8sManager   ctrl.Manager
+		spanRecorder *sdktest.SpanRecorder
+		tracer       *otelsdk.TracerProvider
+	)
+
+	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
+	ctx, _ = context.WithCancel(context.TODO())
+	By("bootstrapping test environment")
+
+	if os.Getenv("USE_EXISTING_CLUSTER") == "true" {
+		t := true
+		testEnv = &envtest.Environment{
+			UseExistingCluster: &t,
+		}
+	} else {
+		GinkgoLogr.Info("Setting up fake test env")
+		testEnv = &envtest.Environment{
+			CRDDirectoryPaths: []string{
+				filepath.Join("..", "..", "..", "config", "crd", "bases"),
+				filepath.Join("..", "..", "..", "..", "metrics-operator", "config", "crd", "bases"),
+			},
+			ErrorIfCRDPathMissing: true,
+		}
+	}
+	var err error
+	// cfg is defined in this file globally.
+	cfg, err = testEnv.Start()
+	Expect(err).NotTo(HaveOccurred())
+	Expect(cfg).NotTo(BeNil())
+
+	// +kubebuilder:scaffold:scheme
+	err = klcv1alpha3.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+	err = metricsapi.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+
+	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})
+	Expect(err).NotTo(HaveOccurred())
+	Expect(k8sClient).NotTo(BeNil())
+
+	k8sManager, err = ctrl.NewManager(cfg, ctrl.Options{
+		Scheme: scheme.Scheme,
+	})
+	Expect(err).ToNot(HaveOccurred())
+
+	go func() {
+		defer GinkgoRecover()
+		err = k8sManager.Start(ctx)
+		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
+		gexec.KillAndWait(4 * time.Second)
+
+		// Teardown the test environment once controller is finished.
+		// Otherwise, from Kubernetes 1.21+, teardown timeouts waiting on
+		// kube-apiserver to return
+		err := testEnv.Stop()
+		Expect(err).ToNot(HaveOccurred())
+	}()
+
+	By("Creating the Controller")
+
+	spanRecorder = sdktest.NewSpanRecorder()
+	tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
+
+	return ctx, k8sManager, tracer, spanRecorder, k8sClient
+}
+
+func WriteReport(specReport ginkgotypes.SpecReport, f *os.File) {
+	path := strings.Split(specReport.FileName(), "/")
+	testFile := path[len(path)-1]
+	if specReport.ContainerHierarchyTexts != nil {
+		testFile = specReport.ContainerHierarchyTexts[0]
+	}
+	fmt.Fprintf(f, "%s %s ", testFile, specReport.LeafNodeText)
+	switch specReport.State {
+	case ginkgotypes.SpecStatePassed:
+		fmt.Fprintf(f, "%s\n", "✓")
+	case ginkgotypes.SpecStateFailed:
+		fmt.Fprintf(f, "%s\n", "✕")
+	default:
+		fmt.Fprintf(f, "%s\n", specReport.State)
+	}
 }

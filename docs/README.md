@@ -10,8 +10,6 @@ from <https://github.com/keptn-sandbox/lifecycle-toolkit-docs> or from <https://
 To verify your changes to the dev documentations you can use the makefile:
 
 ```shell
-cd  lifecycle-toolkit/docs
-make clone
 make build
 make server
 ```

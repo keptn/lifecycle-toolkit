@@ -1,4 +1,4 @@
-package component
+package load_test
 
 import (
 	"fmt"
@@ -8,12 +8,9 @@ import (
 	"time"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
+	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -24,37 +21,14 @@ type Metric struct {
 
 const LOAD = 100
 
-var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func() {
+var _ = Describe("Load", Ordered, func() {
 	var (
-		apps         []*klcv1alpha3.KeptnApp //Shelf is declared here
-		appVersions  []*klcv1alpha3.KeptnAppVersion
-		spanRecorder *sdktest.SpanRecorder
-		tracer       *otelsdk.TracerProvider
-		metrics      Metric
+		apps        []*klcv1alpha3.KeptnApp //Shelf is declared here
+		appVersions []*klcv1alpha3.KeptnAppVersion
+		metrics     Metric
 	)
-	BeforeAll(func() {
-		//setup once
-		By("Waiting for Manager")
-		Eventually(func() bool {
-			return k8sManager != nil
-		}).Should(Equal(true))
-
-		spanRecorder = sdktest.NewSpanRecorder()
-		tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
-
-		controllers := []interfaces.Controller{&keptnapp.KeptnAppReconciler{
-			Client:        k8sManager.GetClient(),
-			Scheme:        k8sManager.GetScheme(),
-			Recorder:      k8sManager.GetEventRecorderFor("load-app-controller"),
-			Log:           GinkgoLogr,
-			TracerFactory: &tracerFactory{tracer: tracer},
-		}}
-		setupManager(controllers)
-	})
 
 	BeforeEach(func() {
-		//		createTimes := make(map[string]metav1.Time, 0)
-
 		for i := 0; i < LOAD; i++ {
 			instance := &klcv1alpha3.KeptnApp{
 				ObjectMeta: metav1.ObjectMeta{
@@ -83,8 +57,8 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 	AfterEach(func() {
 		for _, app := range apps {
 			// Remember to clean up the cluster after each test
-			deleteAppInCluster(app)
-			resetSpanRecords(tracer, spanRecorder)
+			common.DeleteAppInCluster(ctx, k8sClient, app)
+			common.ResetSpanRecords(tracer, spanRecorder)
 		}
 	})
 	JustAfterEach(func() { // this is an example of how to add logs to report
@@ -95,7 +69,7 @@ var _ = Describe("[Feature:Performance] Load KeptnAppController", Ordered, func(
 
 	It("should create the app version CR", func() {
 		for _, app := range apps {
-			appVersions = append(appVersions, assertResourceUpdated(app))
+			appVersions = append(appVersions, common.AssertResourceUpdated(ctx, k8sClient, app))
 			metrics.succeededAppVersionCount++
 		}
 	})

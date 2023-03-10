@@ -8,6 +8,8 @@ KUSTOMIZE_VERSION?=v4.5.7
 HELM_VERSION ?= v3.11.1
 CHART_VERSION = v0.5.0 # x-release-please-version
 
+# renovate: datasource=docker depName=cytopia/yamllint
+YAMLLINT_VERSION ?= alpine-1-0.14
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
@@ -112,3 +114,6 @@ build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator bui
 
 
 include docs/Makefile
+
+yamllint:
+	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .github docs

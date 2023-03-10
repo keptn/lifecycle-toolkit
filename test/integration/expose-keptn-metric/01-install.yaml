@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: test-prometheus
-        image: curlimages/curl:7.72.0
+        image: curlimages/curl:7.88.1
         args:
         - /bin/sh
         - -ec
@@ -31,7 +31,7 @@ spec:
           fi
           exit 1
       - name: test-api-endpoint
-        image: curlimages/curl:7.72.0
+        image: curlimages/curl:7.88.1
         args:
           - /bin/sh
           - -ec

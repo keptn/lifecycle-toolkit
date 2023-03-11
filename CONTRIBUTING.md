@@ -333,7 +333,7 @@ Here, we briefly give you an overview of Keptn Lifecycle Toolkit's directories.
 ├── dashboards        - contains the Grafana dashboards for the KLT.
 ├── docs              - docs and tutorials related to KLT
 ├── examples          - usecases to demonstrate the capabilities of the KLT.
-├── functions-runtime - 
+├── functions-runtime - runtime definitions for executing KLT tasks
 ├── helm              - application health checks introduces by KLT.
 ├── klt-cert-manager  - secures webhooks for KLT operator's access to Kubernetes API server with valid certificates.
 ├── metrics-operator  - 

@@ -1,4 +1,4 @@
 versions:
-  - url: https://main.lifecycle-test.keptn.sh/docs
+  - url: https://main.lifecycle.keptn.sh/docs
     version: development
 github_branch: pages

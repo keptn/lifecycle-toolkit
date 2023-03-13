@@ -44,8 +44,6 @@ so the Keptn Lifecycle Toolkit will work.
 
 {{% readfile file="./snippets/tasks/k8s_version_output.md" markdown="true" %}}
 
-## Install the Keptn Lifecycle Toolkit
-
 {{% readfile file="./snippets/tasks/install.md" markdown="true" %}}
 
 ## Check out the Getting Started Repository

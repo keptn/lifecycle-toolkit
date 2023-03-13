@@ -27,7 +27,7 @@ annotations:
   artifacthub.io/operator: "true"
   artifacthub.io/operatorCapabilities: "Full Lifecycle"
 
-kubeVersion: ">= 1.24.0"
+kubeVersion: ">= 1.24.0-0"
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives

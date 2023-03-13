@@ -22,7 +22,7 @@ For more information, see the Kubernetes documentation:
 
 * [API Overview](https://kubernetes.io/docs/reference/using-api/)
 
-* [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#:~:text=A%20resource%20is%20an%20endpoint,in%20a%20default%20Kubernetes%20installation.)
+* [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 
 * [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
 

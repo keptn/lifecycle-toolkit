@@ -1,0 +1,20 @@
+documentation:
+  - docs/**/*
+
+operator:
+  - operator/**/*
+
+scheduler:
+  - scheduler/**/*
+
+metrics-operator:
+  - metrics-operator/**/*
+
+cert-manager:
+  - klt-cert-manager/**/*
+
+ops:
+  - .github/**/*
+
+helm:
+  - helm/**/*

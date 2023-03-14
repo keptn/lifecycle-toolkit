@@ -1,5 +1,6 @@
 documentation:
   - docs/**/*
+  - "**/*.md"
 
 operator:
   - operator/**/*
@@ -15,6 +16,8 @@ cert-manager:
 
 ops:
   - .github/**/*
+  - netlify.toml
+  - .markdownlint-cli2.yml
 
 helm:
   - helm/**/*

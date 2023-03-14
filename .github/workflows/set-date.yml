@@ -7,12 +7,11 @@ jobs:
   set_date:
     runs-on: ubuntu-22.04
     steps:
-      - name: Get project data for start date
+      - name: Get project data
         env:
           GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
           ORGANIZATION: keptn
           PROJECT_NUMBER: 18
-        if: ${{ github.event.action == 'assigned' }}
         run: |
           gh api graphql -f query='
             query($org: String!, $number: Int!) {
@@ -39,41 +38,8 @@ jobs:
               }
             }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
-          echo 'DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Start Date") | .id' project_data.json) >> $GITHUB_ENV
-
-      - name: Get project data for end date
-        env:
-          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
-          ORGANIZATION: keptn
-          PROJECT_NUMBER: 18
-        if: ${{ github.event.action == 'closed' }}  
-        run: |
-          gh api graphql -f query='
-            query($org: String!, $number: Int!) {
-              organization(login: $org){
-                projectV2(number: $number) {
-                  id
-                  fields(first:20) {
-                    nodes {
-                      ... on ProjectV2Field {
-                        id
-                        name
-                      }
-                      ... on ProjectV2SingleSelectField {
-                        id
-                        name
-                        options {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
-          echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
-          echo 'DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "End Date") | .id' project_data.json) >> $GITHUB_ENV  
+          echo 'START_DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Start Date") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'END_DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "End Date") | .id' project_data.json) >> $GITHUB_ENV         
         
       - name: Get date
         run: echo "DATE=$(date +"%Y-%m-%d")" >> $GITHUB_ENV
@@ -96,7 +62,7 @@ jobs:
       - name: Set Start Date
         env:
          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
-        if: ${{ github.event.action == 'assigned' }} 
+        if: github.event.action == 'assigned'
         run: |
           gh api graphql -f query='
             mutation (
@@ -117,12 +83,12 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$START_DATE_FIELD_ID -f date_value=$DATE
 
       - name: Set End Date
         env:
          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
-        if: ${{ github.event.action == 'closed' }}   
+        if: github.event.action == 'closed' 
         run: |
           gh api graphql -f query='
             mutation (
@@ -143,5 +109,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$END_DATE_FIELD_ID -f date_value=$DATE
 

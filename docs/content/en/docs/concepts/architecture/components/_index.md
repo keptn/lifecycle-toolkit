@@ -1,6 +1,6 @@
 ---
 title: Lifecycle Toolkit Components
-linktitle: KLT Components
+linktitle: Components
 description: Basic understanding of Keptn Lifecycle Toolkit Components
 weight: 80
 cascade:

@@ -3,7 +3,6 @@ github_project_repo: https://github.com/keptn/lifecycle-toolkit
 github_repo: https://github.com/keptn/lifecycle-toolkit
 github_subdir: docs
 
-
 versions:
   - url: /docs/
     version: branch-preview

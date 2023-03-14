@@ -1,6 +1,6 @@
 ---
 title: Lifecycle Toolkit Working
-linktitle: KLT Working
+linktitle: How it works
 description: Understand How Keptn Lifecycle Toolkit Works
 weight: 80
 cascade:

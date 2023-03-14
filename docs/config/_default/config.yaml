@@ -5,7 +5,7 @@ module:
   hugoVersion:
     extended: true
   imports:
-  - path: github.com/keptn-sandbox/lifecycle-toolkit-docs
+  - path: github.com/keptn/docs-tooling
     ignoreConfig: false
     mounts:
     - source: static

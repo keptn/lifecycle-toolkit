@@ -48,7 +48,7 @@ such as deployments and services.
 These labels and annotations are used to enable Keptn's automation
 and monitoring capabilities.
 
-**Keptn's Lifecycle Metrics Operator** 
+**Keptn's Lifecycle Metrics Operator**
 collects,  processes, and analyzes metrics data from a variety of sources.
 Once collected, this data, can be used to generate a variety of reports
 and dashboards that provide insights into the health and performance of the application and infrastructure.

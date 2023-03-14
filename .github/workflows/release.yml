@@ -59,7 +59,8 @@ jobs:
       packages: write
       id-token: write
     env:
-      IMAGE_TAG: ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
+      IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
+      IMAGE_TAG: ${{ needs.release-please.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -81,13 +82,14 @@ jobs:
         uses: sigstore/cosign-installer@v3.0.1
 
       - name: Build Docker Image
+        id: docker_build_image
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -99,13 +101,20 @@ jobs:
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
-      - name: Sign container images
-        run: cosign sign ${{ env.IMAGE_TAG }}
+      - name: Sign container image
+        env:
+          IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
+        run: |
+          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.13.3
         with:
-          image: ${{ env.IMAGE_TAG }}
+          image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 

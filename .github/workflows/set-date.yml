@@ -1,8 +1,8 @@
-name: Set the End Date in the project
+name: Set the Date in the project
 
 on:
   issues:
-    types: [closed]
+    types: [assigned, closed]
 jobs:
   set_date:
     runs-on: ubuntu-22.04
@@ -38,8 +38,9 @@ jobs:
               }
             }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
-          echo 'DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "End Date") | .id' project_data.json) >> $GITHUB_ENV
-      
+          echo 'START_DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Start Date") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'END_DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "End Date") | .id' project_data.json) >> $GITHUB_ENV         
+        
       - name: Get date
         run: echo "DATE=$(date +"%Y-%m-%d")" >> $GITHUB_ENV
         
@@ -58,9 +59,36 @@ jobs:
             }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.item.id')"
           echo 'ITEM_ID='$item_id >> $GITHUB_ENV
                          
+      - name: Set Start Date
+        env:
+         GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
+        if: github.event.action == 'assigned'
+        run: |
+          gh api graphql -f query='
+            mutation (
+              $project: ID!
+              $item: ID!
+              $date_field: ID!
+              $date_value: Date!
+            ) {
+              set_start_date: updateProjectV2ItemFieldValue(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $date_field
+                value: { 
+                  date: $date_value
+                }
+              }) {
+                projectV2Item {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$START_DATE_FIELD_ID -f date_value=$DATE
+
       - name: Set End Date
         env:
          GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}
+        if: github.event.action == 'closed' 
         run: |
           gh api graphql -f query='
             mutation (
@@ -81,5 +109,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$END_DATE_FIELD_ID -f date_value=$DATE
 

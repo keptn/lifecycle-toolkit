@@ -6,6 +6,9 @@ weight: 400
 menu:
   main:
     weight: 20
+type: docs
+cascade:
+  type: docs
 ---
 
 This section is under development.

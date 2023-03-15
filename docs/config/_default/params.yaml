@@ -10,3 +10,7 @@ versions:
     version: development
   - url: https://lifecycle.keptn.sh/docs
     version: latest
+
+
+mermaid:
+ enable: true

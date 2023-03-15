@@ -1,15 +1,7 @@
 ---
 title: Contributing to Keptn
 description: How to contribute to the Keptn projects
-<<<<<<< HEAD
-weight: 500
-=======
-linktitle: Contributing
-weight: 500
-menu:
-  main:
-    weight: 20
->>>>>>> 5fe111cf6652b98e963f1f7d231ff0755104fb2c
+weight: 400
 ---
 
 This section is under development.

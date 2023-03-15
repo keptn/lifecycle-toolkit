@@ -18,6 +18,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -47,7 +48,7 @@ func getPodTemplateSpec() corev1.PodTemplateSpec {
 // assertions on spans number and traces
 var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 	var (
-		name         string
+		appName      string
 		namespace    string
 		version      string
 		spanRecorder *sdktest.SpanRecorder
@@ -91,7 +92,6 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 	})
 
 	BeforeEach(func() { // list var here they will be copied for every spec
-		name = "test-app"
 		namespace = "default" // namespaces are not deleted in the api so be careful
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
@@ -104,19 +104,20 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 		Context("with a new AppVersions CRD", func() {
 
 			BeforeEach(func() {
-				appVersion = createAppVersionInCluster(name, namespace, version)
+				appName = names.SimpleNameGenerator.GenerateName("test-app-")
+				appVersion = createAppVersionInCluster(appName, namespace, version)
 			})
 
 			It("should fail if Workload not found in AppVersion", func() {
 				wiName := "not-found"
 				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      name,
+						Name:      appName,
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{},
-						WorkloadName:      "wi-test-app-wname-" + wiName,
+						WorkloadName:      appName + "-wname-" + wiName,
 						TraceId:           map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
@@ -165,15 +166,16 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
-				appVersion.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
-				err = k8sClient.Status().Update(ctx, appVersion)
+
+				av := &klcv1alpha3.KeptnAppVersion{}
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      appName,
+				}, av)
 				Expect(err).To(BeNil())
 
-				By("Bringing the StatefulSet into its ready state")
-				statefulSet.Status.AvailableReplicas = 1
-				statefulSet.Status.ReadyReplicas = 1
-				statefulSet.Status.Replicas = 1
-				err = k8sClient.Status().Update(ctx, statefulSet)
+				av.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
+				err = k8sClient.Status().Update(ctx, av)
 				Expect(err).To(BeNil())
 
 				By("Looking up the StatefulSet to retrieve its UID")
@@ -183,10 +185,17 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				}, statefulSet)
 				Expect(err).To(BeNil())
 
+				By("Bringing the StatefulSet into its ready state")
+				statefulSet.Status.AvailableReplicas = 1
+				statefulSet.Status.ReadyReplicas = 1
+				statefulSet.Status.Replicas = 1
+				err = k8sClient.Status().Update(ctx, statefulSet)
+				Expect(err).To(BeNil())
+
 				By("Creating a WorkloadInstance that references the StatefulSet")
 				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      name,
+						Name:      appName,
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
@@ -199,7 +208,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 							Version: "2.0",
 							AppName: appVersion.GetAppName(),
 						},
-						WorkloadName: "test-app-wname",
+						WorkloadName: appName + "-wname",
 						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
@@ -243,14 +252,16 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Setting the App PreDeploymentEvaluation Status to 'Succeeded'")
-				appVersion.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
-				err = k8sClient.Status().Update(ctx, appVersion)
+
+				av := &klcv1alpha3.KeptnAppVersion{}
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      appName,
+				}, av)
 				Expect(err).To(BeNil())
 
-				By("Bringing the DaemonSet into its ready state")
-				daemonSet.Status.DesiredNumberScheduled = 1
-				daemonSet.Status.NumberReady = 1
-				err = k8sClient.Status().Update(ctx, daemonSet)
+				av.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
+				err = k8sClient.Status().Update(ctx, av)
 				Expect(err).To(BeNil())
 
 				By("Looking up the DaemonSet to retrieve its UID")
@@ -260,10 +271,16 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 				}, daemonSet)
 				Expect(err).To(BeNil())
 
+				By("Bringing the DaemonSet into its ready state")
+				daemonSet.Status.DesiredNumberScheduled = 1
+				daemonSet.Status.NumberReady = 1
+				err = k8sClient.Status().Update(ctx, daemonSet)
+				Expect(err).To(BeNil())
+
 				By("Creating a WorkloadInstance that references the DaemonSet")
 				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      name,
+						Name:      appName,
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
@@ -276,7 +293,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 							Version: "2.0",
 							AppName: appVersion.GetAppName(),
 						},
-						WorkloadName: "test-app-wname",
+						WorkloadName: appName + "-wname",
 						TraceId:      map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
@@ -303,7 +320,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					},
 					Spec: klcv1alpha3.KeptnEvaluationSpec{
 						EvaluationDefinition: "eval-def",
-						Workload:             "test-app-wname",
+						Workload:             appName + "-wname",
 						WorkloadVersion:      "2.0",
 						Type:                 apicommon.PreDeploymentEvaluationCheckType,
 						Retries:              10,
@@ -316,6 +333,12 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 				By("Creating Evaluation")
 				err := k8sClient.Create(context.TODO(), evaluation)
+				Expect(err).To(BeNil())
+
+				err = k8sClient.Get(ctx, types.NamespacedName{
+					Namespace: namespace,
+					Name:      evaluation.Name,
+				}, evaluation)
 				Expect(err).To(BeNil())
 
 				evaluation.Status = klcv1alpha3.KeptnEvaluationStatus{
@@ -336,7 +359,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 
 				wi = &klcv1alpha3.KeptnWorkloadInstance{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test-app-wname-2.0",
+						Name:      appName + "-wname-2.0",
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
@@ -345,7 +368,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 							AppName:                  appVersion.GetAppName(),
 							PreDeploymentEvaluations: []string{"eval-def"},
 						},
-						WorkloadName: "test-app-wname",
+						WorkloadName: appName + "-wname",
 					},
 				}
 				By("Creating WorkloadInstance")
@@ -384,6 +407,7 @@ var _ = Describe("KeptnWorkloadInstanceController", Ordered, func() {
 					Namespace: wi.Namespace,
 					Name:      wi.Name,
 				}
+				//nolint:dupl
 				Eventually(func(g Gomega) {
 					wi := &klcv1alpha3.KeptnWorkloadInstance{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
@@ -453,7 +477,15 @@ func createAppVersionInCluster(name string, namespace string, version string) *k
 	By("Invoking Reconciling for Create")
 
 	Expect(ignoreAlreadyExists(k8sClient.Create(ctx, instance))).Should(Succeed())
-	instance.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
-	_ = k8sClient.Status().Update(ctx, instance)
-	return instance
+
+	av := &klcv1alpha3.KeptnAppVersion{}
+	err := k8sClient.Get(ctx, types.NamespacedName{
+		Namespace: namespace,
+		Name:      name,
+	}, av)
+	Expect(err).To(BeNil())
+
+	av.Status.PreDeploymentEvaluationStatus = apicommon.StateSucceeded
+	_ = k8sClient.Status().Update(ctx, av)
+	return av
 }

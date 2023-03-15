@@ -25,5 +25,6 @@ Additionally, the script stores the migrated manifests in your current working d
 The script will also ask the user to apply the created manifests and delete the deprecated
 `KeptnEvaluationProvider` CRs.
 
-**Note:** Please be aware that only `KeptnEvaluationProvider` CRs from the cluster your kubecontext is pointing
+> **Note:**
+Please be aware that only `KeptnEvaluationProvider` CRs from the cluster your kubecontext is pointing
 to will be fetched and migrated.

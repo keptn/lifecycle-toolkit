@@ -1,5 +1,6 @@
 resources:
 - manager.yaml
+- metric-service.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

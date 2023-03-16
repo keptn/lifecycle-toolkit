@@ -12,7 +12,8 @@
         "README.md",
         "operator/config/manager/manager.yaml",
         "examples/argo/Makefile",
-        "examples/observability/Makefile"
+        "examples/observability/Makefile",
+        "helm/chart/Chart.yaml"
       ],
       "changelog-sections": [
         {

@@ -11,8 +11,8 @@
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
-        "examples/argo/Makefile",
-        "examples/observability/Makefile",
+        "examples/support/argo/Makefile",
+        "examples/support/observability/Makefile",
         "helm/chart/Chart.yaml",
         ".github/workflows/validate-helm-docs.yml",
         "Makefile",

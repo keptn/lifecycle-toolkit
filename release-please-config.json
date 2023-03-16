@@ -16,8 +16,7 @@
         "helm/chart/Chart.yaml",
         ".github/workflows/validate-helm-docs.yml",
         "Makefile",
-        "docs/content/en/docs/snippets/tasks/install.md",
-        "operator/config/manager/manager.yaml"
+        "docs/content/en/docs/snippets/tasks/install.md"
       ],
       "changelog-sections": [
         {

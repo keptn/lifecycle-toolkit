@@ -57,7 +57,7 @@ install-cert-manager:
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install CertManager"
 	@echo "-----------------------------------"
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml # x-release-please-version
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 	kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
 
 .PHONY: port-forward-jaeger

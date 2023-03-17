@@ -80,3 +80,4 @@ restart-lifecycle-toolkit:
 	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator --watch
 	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" scheduler -n keptn-lifecycle-toolkit-system
 	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" scheduler --watch
+

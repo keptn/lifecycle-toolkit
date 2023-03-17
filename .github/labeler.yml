@@ -1,0 +1,23 @@
+documentation:
+  - docs/**/*
+  - "**/*.md"
+
+operator:
+  - operator/**/*
+
+scheduler:
+  - scheduler/**/*
+
+metrics-operator:
+  - metrics-operator/**/*
+
+cert-manager:
+  - klt-cert-manager/**/*
+
+ops:
+  - .github/**/*
+  - netlify.toml
+  - .markdownlint-cli2.yml
+
+helm:
+  - helm/**/*

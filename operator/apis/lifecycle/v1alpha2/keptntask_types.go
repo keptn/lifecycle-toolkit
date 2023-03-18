@@ -44,12 +44,14 @@ type KeptnTaskSpec struct {
 }
 
 type TaskContext struct {
-	WorkloadName    string `json:"workloadName"`
-	AppName         string `json:"appName"`
-	AppVersion      string `json:"appVersion"`
-	WorkloadVersion string `json:"workloadVersion"`
-	TaskType        string `json:"taskType"`
-	ObjectType      string `json:"objectType"`
+	WorkloadName        string   `json:"workloadName"`
+	AppName             string   `json:"appName"`
+	AppVersion          string   `json:"appVersion"`
+	WorkloadVersion     string   `json:"workloadVersion"`
+	TaskType            string   `json:"taskType"`
+	ObjectType          string   `json:"objectType"`
+	PreDeploymentTasks  []string `json:"preDeploymentTasks,omitempty"`
+	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
 }
 
 type TaskParameters struct {

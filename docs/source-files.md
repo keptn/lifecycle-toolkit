@@ -19,6 +19,7 @@ layout: quickstart
 weight: 50
 ```
 
+
 The meaning of these fields is:
 
 * **title** -- title displayed for the section or file
@@ -51,7 +52,6 @@ The system for assigning weights for the docs landing page is:
 
 Each subdirectory contains topical subdirectories for each chapter in that section.
 Each topical subdirectory contains:
-
 * An *index.md* file that has the metadata discussed above plus the text for the section
 * An *assets* subdirectory where graphical files for that topic are stored.
 No *assets* subdirectory is present if the topic has no graphics.

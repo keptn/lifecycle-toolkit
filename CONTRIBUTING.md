@@ -40,64 +40,12 @@ You can reach out with the questions to
 [Lifecycle Toolkit Channels](https://cloud-native.slack.com/channels/keptn-lifecycle-toolkit-dev)
 on Slack and a mentor will surely guide you!
 
-### Prerequisites
+## [Prerequisites](https://github.com/keptn/lifecycle-toolkit/tree/main/docs/content/en/docs/prerequisite.md)
 
-* [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
-which allows software applications to run in isolated environments
-and makes it easier to deploy and manage them.
-* A Kubernetes `cluster >= Kubernetes 1.24` .If you don’t have one,
-we recommend Kubernetes-in-Docker(kind) to set up your local development environment.
-* [**kubectl**](https://kubernetes.io/docs/tasks/tools/): a command-line interface tool used for deploying
-and managing applications on Kubernetes clusters.
-* [**kustomize**](https://kustomize.io/): a tool used for customizing Kubernetes resource configurations
-and generating manifests.
-* [**Helm**](https://helm.sh/): a package manager for Kubernetes that
-simplifies the deployment and management of applications on a Kubernetes cluster.
+## [Related Technologies](https://github.com/keptn/lifecycle-toolkit/tree/main/docs/content/en/docs/related-technologies.md)
 
-## Related Technologies
+## [Linters requirements](https://github.com/keptn/lifecycle-toolkit/tree/main/docs/content/en/docs/linters-requirements.md)
 
-You should understand some related technologies
-to effectively use and contribute to the Keptn lifecycle-toolkit.
-This section provides links to some materials that can help your learning.
-The information has been gathered from the community and is subject to alteration.
-If you have suggestions about additional content that should be included in this list,
-please submit an issue.
-
-### Kubernetes
-
-* **Understand the basics of Kubernetes**
-  * [ ] [Kubernetes official documentation](https://kubernetes.io/docs/concepts/overview/)
-  * [ ] [Kubernetes For Beginner](https://youtu.be/X48VuDVv0do)
-* **Kubernetes Architecture**
-  * [ ] [Philosophy](https://youtu.be/ZuIQurh_kDk)
-  * [ ] [Kubernetes Deconstructed: Understanding Kubernetes by Breaking It Down](https://www.youtube.com/watch?v=90kZRyPcRZw)
-* **CRD**
-  * [ ] [Custom Resouce Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
-  * [ ] [Kubernetes Operator simply explained in 10 mins](https://www.youtube.com/watch?v=ha3LjlD6g7g)
-  * [ ] [Writing Kubernetes Controllers for CRDs](https://www.youtube.com/watch?v=7wdUa4Ulwxg)
-* **Kube-builder Tutorial**
-  * [ ] [book.kubebuilder.io](https://book.kubebuilder.io/introduction.html)
-* **Isitobservable**
-  * [ ] Keptn has tight integrations with Observability tools and therefore knowing how to _Observe a System_ is important.
-  * [ ] [Isitobservable website](https://isitobservable.io/)
-  * [ ] [Is it Observable? with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
-
-### Understanding SLO, SLA, SLIs
-
-* **Overview**
-  * [ ] [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
-  * [ ] [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
-
-### Operator SDK
-
-* **Go-based Operators**
-  * [ ] [Go operator tutorial from RedHat](https://docs.okd.io/latest/operators/operator_sdk/golang/osdk-golang-tutorial.html)
-
-## Linters requirements
-
-This project uses a set of linters to ensure good code quality.
-In order to make proper use of those linters inside an IDE,
-the following configuration is required.
 
 ### Golangci-lint
 

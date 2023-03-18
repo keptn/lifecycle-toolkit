@@ -5,7 +5,7 @@ weight: 200
 ---
 
 
-### Prerequisites
+## Prerequisites
 
 * [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
 which allows software applications to run in isolated environments

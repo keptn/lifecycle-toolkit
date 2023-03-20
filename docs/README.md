@@ -14,7 +14,7 @@ make build
 make server
 ```
 
-> **Note:**
+> **Note**
 If the above command is not working try with `sudo` command.
 
 After the server is running on <http://localhost:1314>.

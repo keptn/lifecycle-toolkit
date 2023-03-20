@@ -14,7 +14,8 @@ operator deployment changes.
 
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for
 testing, or run against a remote cluster.
-> **Note:**
+
+> **Note**
 Your controller will automatically use the current context in your kubeconfig file (i.e. whatever
 cluster `kubectl cluster-info` shows).
 
@@ -79,7 +80,7 @@ make install
 make run
 ```
 
-> **Note:**
+> **Note**
 You can also run this in one step by running: `make install run`
 
 ### Modifying the API definitions
@@ -90,7 +91,7 @@ If you are editing the API definitions, generate the manifests such as CRs or CR
 make manifests
 ```
 
-> **Note:**
+> **Note**
 Run `make --help` for more information on all potential `make` targets
 
 More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)

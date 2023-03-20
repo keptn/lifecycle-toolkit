@@ -143,8 +143,8 @@ by describing one of the resources:
 kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
 ```
 
-Note that the event stream of the object contains more detailed information.
-</details>
+> **Note**
+The event stream of the object contains more detailed informatio
 
 <details>
 <summary>Watch application state</summary>

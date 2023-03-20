@@ -149,7 +149,7 @@ of the settings.
 
 If you are on Windows, you need to install **make** for the above process to complete.
 
-( **NOTE**:
+> **Note**
 When using the make command on Windows, you may receive an `unrecognized command` error for a command that is installed.
 This usually indicates that `PATH` for the binary is not set correctly).
 

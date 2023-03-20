@@ -4,7 +4,11 @@ description: Information about installing the tools before using Keptn Lifecycle
 weight: 200
 ---
 
-
+Before using the **Keptn Lifecycle Toolkit**,
+you must have these tools in your system for development contribution,
+follow the links for further installation guides.
+You may skip this step and go straight to the [document-setup]()
+if you enjoy writing.
 ## Prerequisites
 
 * [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
@@ -19,6 +23,4 @@ and generating manifests.
 * [**Helm**](https://helm.sh/): a package manager for Kubernetes that
 simplifies the deployment and management of applications on a Kubernetes cluster.
 
-Before using the Keptn Lifecycle Toolkit,
-you must have these tools in your system,
-follow the links for further installation guides.
+

@@ -9,7 +9,6 @@
       "pull-request-title-pattern": "chore: release${component} ${version}",
       "draft": false,
       "extra-files": [
-        "README.md",
         "operator/config/manager/manager.yaml",
         ".github/workflows/validate-helm-docs.yml",
         "Makefile"

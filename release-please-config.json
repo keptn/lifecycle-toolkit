@@ -14,7 +14,6 @@
         "helm/chart/Chart.yaml",
         "Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
-        ".github/workflows/validate-helm-docs.yml",
         "helm/chart/values.yaml"
       ],
       "changelog-sections": [

@@ -1,9 +1,5 @@
 ---
 title: Home
-cascade:
-- _target:
-    path: "/community/**"
-  type: "docs"
 ---
 
 <!-- markdownlint-disable MD033 -->

@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -37,6 +38,12 @@ func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (Kep
 			k8sClient,
 			dynatrace.WithLogger(log),
 		), nil
+	case DataDogProviderName:
+		return &datadog.KeptnDataDogProvider{
+			Log:        log,
+			HttpClient: http.Client{},
+			K8sClient:  k8sClient,
+		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider)
 	}

@@ -18,7 +18,7 @@
         {
           "type": "yaml",
           "path": ".github/workflows/validate-helm-docs.yml",
-          "jsonpath": "env.CHART_APPVERSION"
+          "jsonpath": "$.env.CHART_APPVERSION"
         }
       ],
       "changelog-sections": [

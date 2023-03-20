@@ -9,7 +9,7 @@ defaults:
   run:
     shell: bash
 env:
-  CHART_APPVERSION: "0.6.0" # x-release-please-version
+  CHART_APPVERSION: "v0.6.0" # x-release-please-version
 jobs:
   check-helm-docs:
     name: Check helm documentation values

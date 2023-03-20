@@ -8,8 +8,6 @@ on:
 defaults:
   run:
     shell: bash
-env:
-  CHART_APPVERSION: "v0.6.0"
 jobs:
   check-helm-docs:
     name: Check helm documentation values
@@ -23,7 +21,19 @@ jobs:
         with:
           node-version: 16
 
+      - name: Get Latest Release Information
+        uses: octokit/request-action@v2.x
+        id: latest_release
+        with:
+          route: GET /repos/:owner/:repository/releases/latest
+          repository: lifecycle-toolkit
+          owner: keptn
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate helm charts
+        env:
+          CHART_APPVERSION: ${{ fromJson(steps.latest_release.outputs.data).tag_name }}
         run: make helm-package TAG="${{ env.CHART_APPVERSION }}"
 
       - name: Install readme generator

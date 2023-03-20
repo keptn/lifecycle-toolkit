@@ -9,7 +9,11 @@
       "pull-request-title-pattern": "chore: release${component} ${version}",
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "README.md",
+        "operator/config/manager/manager.yaml",
+        "helm/chart/Chart.yaml",
+        "Makefile",
+        "docs/content/en/docs/snippets/tasks/install.md"
       ],
       "changelog-sections": [
         {

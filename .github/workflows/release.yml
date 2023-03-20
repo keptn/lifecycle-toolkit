@@ -31,7 +31,7 @@ jobs:
         uses: google-github-actions/release-please-action@v3
         id: release
         with:
-          command: manifest-pr
+          command: manifest
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"

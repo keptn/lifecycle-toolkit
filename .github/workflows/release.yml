@@ -201,3 +201,4 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
     uses: ./.github/workflows/release-docs.yml
+    secrets: inherit

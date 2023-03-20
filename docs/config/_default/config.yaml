@@ -18,6 +18,15 @@ module:
           target: assets
         - source: archetypes
           target: archetypes
+    - path: github.com/keptn/community
+      ignoreConfig: false
+      mounts:
+        - source: ./
+          target: ./content/en/community
+          excludeFiles:
+            - "/readme.md"
+          includeFiles:
+            - "*.md"
   proxy: direct
 languages:
   en:

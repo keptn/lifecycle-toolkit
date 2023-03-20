@@ -8,10 +8,8 @@ on:
 defaults:
   run:
     shell: bash
-# x-release-please-start-version
 env:
   CHART_APPVERSION: "v0.6.0"
-# x-release-please-end
 jobs:
   check-helm-docs:
     name: Check helm documentation values

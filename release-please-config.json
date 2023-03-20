@@ -15,7 +15,11 @@
         "Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
-        ".github/workflows/validate-helm-docs.yml"
+        {
+          "type": "yaml",
+          "path": ".github/workflows/validate-helm-docs.yml",
+          "jsonpath": "env.CHART_APPVERSION"
+        }
       ],
       "changelog-sections": [
         {

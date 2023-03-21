@@ -22,7 +22,7 @@ jobs:
           node-version: 16
 
       - name: Generate helm charts
-        run: make helm-package
+        run: make helm-package CHART_APPVERSION="v0.7.1"
 
       - name: Install readme generator
         run: |

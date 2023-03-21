@@ -185,7 +185,7 @@ jobs:
             name: keptn-lifecycle-toolkit-system
           ---
           EOF
-          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
+          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1

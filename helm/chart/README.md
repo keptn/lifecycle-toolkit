@@ -4,7 +4,7 @@ KLT introduces a more cloud-native approach for pre- and post-deployment, as wel
 checks
 
 <!-- markdownlint-disable MD012 -->
-<!-- x-release-please-version-start -->
+<!---x-release-please-start-version-->
 ## Parameters
 
 ### Keptn Scheduler
@@ -153,4 +153,4 @@ checks
 | `imagePullSecrets`        | global value for image registry secret | `[]`            |
 
 #### Other
-<!-- x-release-please-end -->
+<!---x-release-please-end-->

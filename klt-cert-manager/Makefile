@@ -186,5 +186,5 @@ push-local:
 
 .PHONY: release-manifests
 release-manifests:
-	export CHART_APPVERSION; envsubst < config/manager/kustomization.yaml > tmp.yaml; mv tmp.yaml config/manager/kustomization.yaml
 	kustomize build config/default > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml

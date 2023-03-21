@@ -101,8 +101,8 @@ $(KUSTOMIZE): $(LOCALBIN)
 
 .PHONY: release-manifests
 release-manifests:
-	export CHART_APPVERSION; envsubst < manifests/install/kustomization.yaml > tmp.yaml; mv tmp.yaml manifests/install/kustomization.yaml
 	kustomize build manifests/install > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml
 
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)

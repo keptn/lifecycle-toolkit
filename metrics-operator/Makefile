@@ -111,9 +111,9 @@ uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube
 
 .PHONY: release-manifests
 release-manifests: manifests
-	export CHART_APPVERSION; envsubst < config/manager/kustomization.yaml > tmp.yaml; mv tmp.yaml config/manager/kustomization.yaml
 	echo "building default overlay"
 	kustomize build config/default > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml
 
 .PHONY: deploy
 deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/config.

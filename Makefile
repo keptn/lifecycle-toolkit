@@ -6,14 +6,14 @@ CERT_MANAGER_VERSION ?= v1.11.0
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.11.2
-CHART_APPVERSION ?= v0.7.4 # x-release-please-version
+CHART_APPVERSION ?= v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine-1-0.14
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=ghcr.keptn.sh/keptn
+RELEASE_REGISTRY?=ghcr.io/keptn
 ARCH?=amd64
 TAG ?= "$(shell date +%Y%m%d%s)"
 TAG := $(TAG)

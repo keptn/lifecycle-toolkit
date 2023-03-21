@@ -24,9 +24,9 @@ module:
         - source: ./
           target: ./content/en/community
           excludeFiles:
-            - "/readme.md"
-          includeFiles:
-            - "*.md"
+            - "mentorship"
+        - source: "README.md"
+          target: "./content/community/_index.md"
   proxy: direct
 languages:
   en:

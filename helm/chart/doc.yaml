@@ -65,7 +65,7 @@
 ## @skip     certificateOperator.manager.containerSecurityContext.seccompProfile.type
 
 ## @param     certificateOperator.manager.image.repository specify repo for manager image
-## @param     certificateOperator.manager.image.tag select tag for manager container  <!---x-release-please-version-->
+## @param     certificateOperator.manager.image.tag select tag for manager container <!---x-release-please-version-->
 ## @param     certificateOperator.manager.imagePullPolicy select image pull policy for manager container
 
 ## @extra     certificateOperator.manager.livenessProbe custom RBAC proxy liveness probe
@@ -123,7 +123,7 @@
 ## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime
 
 ## @param   lifecycleOperator.manager.image.repository specify registry for manager image 
-## @param   lifecycleOperator.manager.image.tag  select tag for manager image  <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
 ## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image
 
 ## @extra  lifecycleOperator.manager.livenessProbe custom livenessprobe for manager container

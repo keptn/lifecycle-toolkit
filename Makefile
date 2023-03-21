@@ -5,7 +5,7 @@ CERT_MANAGER_VERSION ?= v1.11.0
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.11.1
+HELM_VERSION ?= v3.11.2
 CHART_VERSION = v0.5.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint

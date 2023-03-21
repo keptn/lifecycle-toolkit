@@ -9,7 +9,7 @@ This section provides comprehensive reference information about the
 [Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 that are defined for the Keptn Lifecycle Toolkit.
 
-> **NOTE:**
+> **Note**
 This section is under development.
 Information that is published here has been reviewed for technical accuracy
 but the format and content is still evolving.

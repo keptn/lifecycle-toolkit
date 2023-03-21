@@ -156,7 +156,7 @@ jobs:
           key: build-tools-${{ github.ref_name }}
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -185,7 +185,7 @@ jobs:
             name: keptn-lifecycle-toolkit-system
           ---
           EOF
-          cat operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
+          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1
@@ -201,3 +201,4 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
     uses: ./.github/workflows/release-docs.yml
+    secrets: inherit

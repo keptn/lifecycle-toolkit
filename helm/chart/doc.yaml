@@ -90,7 +90,14 @@
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 
-## @extra Mutating Webhook Configurations for lifecycle Operator
+## @extra   lifecycleOperatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
+## @skip    lifecycleOperatorMetricsService.ports[0].name
+## @skip    lifecycleOperatorMetricsService.ports[0].port
+## @skip    lifecycleOperatorMetricsService.ports[0].protocol
+## @skip    lifecycleOperatorMetricsService.ports[0].targetPort
+## @skip    lifecycleOperatorMetricsService.type
+
+## @extra    lifecycleWebhookService Mutating Webhook Configurations for lifecycle Operator
 ## @param    lifecycleWebhookService.ports[0].port
 ## @param    lifecycleWebhookService.ports[0].protocol
 ## @param    lifecycleWebhookService.ports[0].targetPort

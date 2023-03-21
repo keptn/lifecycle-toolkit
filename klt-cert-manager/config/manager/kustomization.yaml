@@ -6,7 +6,7 @@ patches:
   - patch: |
       - op: replace
         path: '/spec/template/spec/containers/0/image'
-        value: '${RELEASE_REGISTRY}/keptn/certificate-operator:${CHART_APPVERSION}'
+        value: '${RELEASE_REGISTRY}/certificate-operator:${CHART_APPVERSION}'
     target:
       kind: Deployment
       name: certificate-operator

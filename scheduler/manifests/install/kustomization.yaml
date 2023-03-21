@@ -15,7 +15,7 @@ patches:
   - patch: |
       - op: replace
         path: '/spec/template/spec/containers/0/image'
-        value: '${RELEASE_REGISTRY}/keptn/scheduler:${CHART_APPVERSION}'
+        value: '${RELEASE_REGISTRY}/scheduler:${CHART_APPVERSION}'
     target:
       kind: Deployment
       name: scheduler

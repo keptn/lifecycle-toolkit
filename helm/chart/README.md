@@ -4,6 +4,7 @@ KLT introduces a more cloud-native approach for pre- and post-deployment, as wel
 checks
 
 <!-- markdownlint-disable MD012 -->
+<!-- x-release-please-version-start -->
 ## Parameters
 
 ### Keptn Scheduler
@@ -151,3 +152,6 @@ checks
 | ------------------------- | -------------------------------------- | --------------- |
 | `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |
 | `imagePullSecrets`        | global value for image registry secret | `[]`            |
+
+#### Other
+<!-- x-release-please-end -->

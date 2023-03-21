@@ -16,9 +16,6 @@
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml"
       ],
-      "plugins": [
-        ".github/scripts/generate-helm-docs/generate-helm-docs.js"
-      ],
       "changelog-sections": [
         {
           "type": "feat",

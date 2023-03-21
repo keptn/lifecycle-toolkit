@@ -42,15 +42,15 @@ checks
 
 ### Keptn Certificate Operator controller
 
-| Name                                                   | Description                                                        | Value                                      |
-| ------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------ |
-| `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                         |                                            |
-| `certificateOperator.manager.image.repository`         | specify repo for manager image                                     | `ghcr.keptn.sh/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container  <!---x-release-please-version--> | `v0.7.0`                                   |
-| `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                     | `Always`                                   |
-| `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                                   |                                            |
-| `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                                     |                                            |
-| `certificateOperator.manager.resources`                | custom limits and requests for manager container                   |                                            |
+| Name                                                   | Description                                                       | Value                                      |
+| ------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------ |
+| `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                        |                                            |
+| `certificateOperator.manager.image.repository`         | specify repo for manager image                                    | `ghcr.keptn.sh/keptn/certificate-operator` |
+| `certificateOperator.manager.image.tag`                | select tag for manager container <!---x-release-please-version--> | `v0.7.0`                                   |
+| `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                    | `Always`                                   |
+| `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                                  |                                            |
+| `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                                    |                                            |
+| `certificateOperator.manager.resources`                | custom limits and requests for manager container                  |                                            |
 
 ### Keptn Lifecycle Operator common
 
@@ -69,32 +69,32 @@ checks
 
 ### Keptn Lifecycle Operator controller
 
-| Name                                                                          | Description                                                    | Value                                          |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------- |
-| `lifecycleOperator.manager.containerSecurityContext`                          | Sets security context privileges                               |                                                |
-| `lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                                | `false`                                        |
-| `lifecycleOperator.manager.containerSecurityContext.capabilities.drop`        |                                                                | `["ALL"]`                                      |
-| `lifecycleOperator.manager.containerSecurityContext.privileged`               |                                                                | `false`                                        |
-| `lifecycleOperator.manager.containerSecurityContext.runAsGroup`               |                                                                | `65532`                                        |
-| `lifecycleOperator.manager.containerSecurityContext.runAsNonRoot`             |                                                                | `true`                                         |
-| `lifecycleOperator.manager.containerSecurityContext.runAsUser`                |                                                                | `65532`                                        |
-| `lifecycleOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                                | `RuntimeDefault`                               |
-| `lifecycleOperator.manager.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                     | `0`                                            |
-| `lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller              | `0`                                            |
-| `lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel`             | sets the log level of Keptn Evaluation Controller              | `0`                                            |
-| `lifecycleOperator.manager.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                    | `0`                                            |
-| `lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel`         | sets the log level of Keptn TaskDefinition Controller          | `0`                                            |
-| `lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller                | `0`                                            |
-| `lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller        | `0`                                            |
-| `lifecycleOperator.manager.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                 | `0`                                            |
-| `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector                  | `otel-collector:4317`                          |
-| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for task runtime                                 | `ghcr.keptn.sh/keptn/functions-runtime:v0.7.0` |
-| `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                             | `ghcr.keptn.sh/keptn/lifecycle-operator`       |
-| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image  <!---x-release-please-version--> | `v0.7.0`                                       |
-| `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                          | `Always`                                       |
-| `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container                     |                                                |
-| `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container                    |                                                |
-| `lifecycleOperator.manager.resources`                                         | specify limits and requests for manager container              |                                                |
+| Name                                                                          | Description                                                   | Value                                          |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------- |
+| `lifecycleOperator.manager.containerSecurityContext`                          | Sets security context privileges                              |                                                |
+| `lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                               | `false`                                        |
+| `lifecycleOperator.manager.containerSecurityContext.capabilities.drop`        |                                                               | `["ALL"]`                                      |
+| `lifecycleOperator.manager.containerSecurityContext.privileged`               |                                                               | `false`                                        |
+| `lifecycleOperator.manager.containerSecurityContext.runAsGroup`               |                                                               | `65532`                                        |
+| `lifecycleOperator.manager.containerSecurityContext.runAsNonRoot`             |                                                               | `true`                                         |
+| `lifecycleOperator.manager.containerSecurityContext.runAsUser`                |                                                               | `65532`                                        |
+| `lifecycleOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                               | `RuntimeDefault`                               |
+| `lifecycleOperator.manager.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                    | `0`                                            |
+| `lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller             | `0`                                            |
+| `lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel`             | sets the log level of Keptn Evaluation Controller             | `0`                                            |
+| `lifecycleOperator.manager.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                   | `0`                                            |
+| `lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel`         | sets the log level of Keptn TaskDefinition Controller         | `0`                                            |
+| `lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller               | `0`                                            |
+| `lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller       | `0`                                            |
+| `lifecycleOperator.manager.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                | `0`                                            |
+| `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector                 | `otel-collector:4317`                          |
+| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for task runtime                                | `ghcr.keptn.sh/keptn/functions-runtime:v0.7.0` |
+| `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                            | `ghcr.keptn.sh/keptn/lifecycle-operator`       |
+| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image <!---x-release-please-version--> | `v0.7.0`                                       |
+| `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                         | `Always`                                       |
+| `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container                    |                                                |
+| `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container                   |                                                |
+| `lifecycleOperator.manager.resources`                                         | specify limits and requests for manager container             |                                                |
 
 ### Keptn Metrics Operator common
 

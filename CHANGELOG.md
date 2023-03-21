@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.4](https://github.com/mowies/lifecycle-controller/compare/v0.7.3...v0.7.4) (2023-03-21)
+
+
+### Bug Fixes
+
+* fix release pipeline ([1057b3e](https://github.com/mowies/lifecycle-controller/commit/1057b3e70534142b45b3af39686e5662065a7ab0))
+
 ## [0.7.3](https://github.com/mowies/lifecycle-controller/compare/v0.7.2...v0.7.3) (2023-03-21)
 
 

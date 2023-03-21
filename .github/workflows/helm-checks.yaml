@@ -131,7 +131,7 @@ jobs:
 
       - name: Generate helm charts
         run: |
-          make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} TAG=dev-${{ env.DATETIME }}
+          make helm-package RELEASE_REGISTRY=${{ env.RELEASE_REGISTRY }} CHART_APPVERSION=dev-${{ env.DATETIME }}
           for file in $(find ./helm/chart/templates -type f -name "*.yaml");
           	do
               sed -i 's/{{ include "chart.fullname" . }}-//g' "$file"

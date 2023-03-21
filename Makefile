@@ -6,7 +6,7 @@ CERT_MANAGER_VERSION ?= v1.11.0
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.11.2
-CHART_APPVERSION = v0.7.0 # x-release-please-version
+CHART_APPVERSION ?= v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine-1-0.14
@@ -60,10 +60,13 @@ $(KUSTOMIZE): $(LOCALBIN)
 release-helm-manifests: helmify
 	echo "building helm overlay"
 	kustomize build ./helm/overlay  > helmchart.yaml
+	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
 	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
 
 .PHONY: helm-package
-helm-package: build-release-manifests release-helm-manifests
+helm-package:
+	$(MAKE) build-release-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
+	$(MAKE) release-helm-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
 
 
 .PHONY: build-release-manifests

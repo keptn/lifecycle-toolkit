@@ -14,4 +14,4 @@ kind: Kustomization
 images:
 - name: scheduler
   newName: ghcr.io/keptn/scheduler
-  newTag: 0.6.0
+  newTag: "${CHART_APPVERSION}"

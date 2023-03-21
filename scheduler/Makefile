@@ -16,6 +16,7 @@ ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
 TAG?="v0.7.0" # x-release-please-version
+CHART_APPVERSION?=""
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins
 LOCAL_IMAGE=kube-scheduler:latest
@@ -100,7 +101,7 @@ $(KUSTOMIZE): $(LOCALBIN)
 
 .PHONY: release-manifests
 release-manifests:
-	cd manifests/install && kustomize edit set image scheduler=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	export CHART_APPVERSION; envsubst < manifests/install/kustomization.yaml > tmp.yaml; mv tmp.yaml manifests/install/kustomization.yaml
 	kustomize build manifests/install > config/rendered/release.yaml
 
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.

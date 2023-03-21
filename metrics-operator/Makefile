@@ -9,6 +9,7 @@ BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
 TAG?="v0.7.0" # x-release-please-version
 RELEASE_IMAGE:=metrics-operator:$(TAG)
+CHART_APPVERSION?=""
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -110,7 +111,7 @@ uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube
 
 .PHONY: release-manifests
 release-manifests: manifests
-	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+	export CHART_APPVERSION; envsubst < config/manager/kustomization.yaml > tmp.yaml; mv tmp.yaml config/manager/kustomization.yaml
 	echo "building default overlay"
 	kustomize build config/default > config/rendered/release.yaml
 

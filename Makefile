@@ -6,7 +6,7 @@ CERT_MANAGER_VERSION ?= v1.11.0
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.11.2
-CHART_VERSION = v0.5.0 # x-release-please-version
+CHART_APPVERSION = v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine-1-0.14
@@ -72,10 +72,10 @@ build-release-manifests:
 	$(MAKE) -C klt-cert-manager generate
 	$(MAKE) -C metrics-operator generate
 
-	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
-	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
-	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
-	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH)
+	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
+	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
+	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
+	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
 
 .PHONY: build-deploy-operator
 build-deploy-operator:

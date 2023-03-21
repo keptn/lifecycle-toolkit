@@ -12,4 +12,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/keptn/lifecycle-operator
-  newTag: 0.6.0
+  newTag: "${CHART_APPVERSION}"

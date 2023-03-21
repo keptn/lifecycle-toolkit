@@ -13,6 +13,10 @@
         "operator/config/manager/manager.yaml",
         "helm/chart/Chart.yaml",
         "Makefile",
+        "operator/Makefile",
+        "scheduler/Makefile",
+        "klt-cert-manager/Makefile",
+        "metrics-operator/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"

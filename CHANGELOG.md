@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/mowies/lifecycle-controller/compare/v0.7.1...v0.7.2) (2023-03-21)
+
+
+### Other
+
+* prepare pipeline again ([a05d484](https://github.com/mowies/lifecycle-controller/commit/a05d484d659ffdfaad89a32ecff911cda429be9d))
+
 ## [0.7.1](https://github.com/mowies/lifecycle-controller/compare/v0.7.0...v0.7.1) (2023-03-21)
 
 

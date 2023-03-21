@@ -14,7 +14,8 @@
         "helm/chart/Chart.yaml",
         "Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
-        "helm/chart/values.yaml"
+        "helm/chart/values.yaml",
+        "helm/chart/README.md"
       ],
       "changelog-sections": [
         {

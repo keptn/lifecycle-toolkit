@@ -1,0 +1,11 @@
+{
+  "name": "generate-helm-docs",
+  "version": "1.0.0",
+  "description": "Helm Docs Generator plugin for Release Please",
+  "main": "generate-helm-docs.ts",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "@bitnami/readme-generator-for-helm": "^2.5.0",
+    "release-please": "^15.9.1"
+  }
+}

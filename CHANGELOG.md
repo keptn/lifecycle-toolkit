@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.7.1](https://github.com/mowies/lifecycle-controller/compare/v0.7.0...v0.7.1) (2023-03-21)
+
+
+### Features
+
+* add helm values to rp files, add back helm validate pipeline ([53bbaf8](https://github.com/mowies/lifecycle-controller/commit/53bbaf89efea04bb927b593b16c537762d2b3ba3))
+* add release please plugin to update helm docs ([2244e29](https://github.com/mowies/lifecycle-controller/commit/2244e294b3027727455e464f8fe18d0f492f4f65))
+* bring back working files ([ee0a333](https://github.com/mowies/lifecycle-controller/commit/ee0a3334df306dcc2a80ccccfa6e8ab5cdd58804))
+* datadog metric provider for KLT ([#948](https://github.com/mowies/lifecycle-controller/issues/948)) ([597a23f](https://github.com/mowies/lifecycle-controller/commit/597a23f93433ce56aac7000cf1806dd79f67b3f6))
+* remove helm docs validation pipeline again ([385b78e](https://github.com/mowies/lifecycle-controller/commit/385b78e182617f7e1ffca77d7a72c6cb10ac0179))
+* test commit ([f2720b1](https://github.com/mowies/lifecycle-controller/commit/f2720b19f4c5546cc52888dcec5593ec8880e180))
+* try to remove need for rp in validation pipeline ([d3606bd](https://github.com/mowies/lifecycle-controller/commit/d3606bdf0352a3611edef861e5449004bfdd4797))
+* try using yaml matcher ([0a4d92f](https://github.com/mowies/lifecycle-controller/commit/0a4d92fb135188acc8f64af46e84a89b2023599e))
+
+
+### Bug Fixes
+
+* fix makefiles for rp ([faa4fc0](https://github.com/mowies/lifecycle-controller/commit/faa4fc0034db43b5d33855566a5576342d7fc5e5))
+* fix release registry being generated the wrong way ([63d3e05](https://github.com/mowies/lifecycle-controller/commit/63d3e05e750bdce150121199f779a4b8ca12bc4f))
+
+
+### Dependency Updates
+
+* update actions/setup-go action to v4 ([#1051](https://github.com/mowies/lifecycle-controller/issues/1051)) ([8b470d4](https://github.com/mowies/lifecycle-controller/commit/8b470d4c8e7285b481df5ae2e1e4674413caaaab))
+* update dependency argoproj/argo-cd to v2.6.6 ([#1039](https://github.com/mowies/lifecycle-controller/issues/1039)) ([fb0f7a3](https://github.com/mowies/lifecycle-controller/commit/fb0f7a39bad1bbeda96210bd198d3e0ca0b6cb86))
+* update dependency helm/helm to v3.11.2 ([#1050](https://github.com/mowies/lifecycle-controller/issues/1050)) ([2669e1d](https://github.com/mowies/lifecycle-controller/commit/2669e1d4760ed89797e312b7160d76d76f2171e8))
+* update dependency jaegertracing/jaeger to v1.43.0 ([#794](https://github.com/mowies/lifecycle-controller/issues/794)) ([abd4e09](https://github.com/mowies/lifecycle-controller/commit/abd4e0977fbc60638e32a19704580a667e0de282))
+* update module google.golang.org/grpc to v1.53.0 ([#817](https://github.com/mowies/lifecycle-controller/issues/817)) ([f5a3493](https://github.com/mowies/lifecycle-controller/commit/f5a3493545f391112f341b5c54b6bdf442d8179b))
+
+
+### Other
+
+* add pipeline file back in ([8b6c725](https://github.com/mowies/lifecycle-controller/commit/8b6c725aa9b3b94a929790f22a8afac59a36635f))
+* adjust rp config ([ffee87c](https://github.com/mowies/lifecycle-controller/commit/ffee87c8c0283d4ca1b4306646ea0d29333c8335))
+* also fix functions runner image ([d3b0503](https://github.com/mowies/lifecycle-controller/commit/d3b0503f629c981eeb2a3fb5e4e82c53e314f2fc))
+* move helm docs generator into sub folder ([8b183c2](https://github.com/mowies/lifecycle-controller/commit/8b183c21584c69aecf6eef08960157000d989fe3))
+* remove pipeline again ([2d9e7db](https://github.com/mowies/lifecycle-controller/commit/2d9e7dbcedac00396d0b4b8df6ae0b68f11f0e58))
+* remove rp plugin again since its not needed ([5dcd94e](https://github.com/mowies/lifecycle-controller/commit/5dcd94ebc89bda1ae66b5296d386d20fa7f4f916))
+* try again ([35af49d](https://github.com/mowies/lifecycle-controller/commit/35af49db2448e2996f052d3ed44036d7992fe0ce))
+* try to fix again ([6a401f7](https://github.com/mowies/lifecycle-controller/commit/6a401f76e45c0ac129c5c4a67182e11c43967628))
+* try to fix helm readme version updates ([465661e](https://github.com/mowies/lifecycle-controller/commit/465661e4ab5df05a9bc81adb8afc45616f8ca424))
+* try using block comments ([64529e9](https://github.com/mowies/lifecycle-controller/commit/64529e9bed5cfc7c6c7b751ad57b19bc2477bc8c))
+* update helm readme ([233b377](https://github.com/mowies/lifecycle-controller/commit/233b3773b20d10212fbcc69728ea7b0dccfd2dd8))
+* update rp comments ([ede9f30](https://github.com/mowies/lifecycle-controller/commit/ede9f30040606c0688958a2fca432e0a321976bd))
+* use evsubst instead of kustomize to update image tags ([768102f](https://github.com/mowies/lifecycle-controller/commit/768102f353b5c2a58c763e9c62f70ec96b84159c))
+
+
+### Docs
+
+* improve Notes within the documentation ([#962](https://github.com/mowies/lifecycle-controller/issues/962)) ([4e69699](https://github.com/mowies/lifecycle-controller/commit/4e69699d12d82cac1c8516c42dee8e131d993b4c))
+* technologies to get familiar before working with KLT ([#1060](https://github.com/mowies/lifecycle-controller/issues/1060)) ([58e8a4c](https://github.com/mowies/lifecycle-controller/commit/58e8a4cac7b02a1b3fc37b5b448cb5df45a4c484))
+* update helm readme ([ac8d066](https://github.com/mowies/lifecycle-controller/commit/ac8d0668718d133c27c745749dc6d96f5568a1f9))
+
 ## [0.7.0](https://github.com/keptn/lifecycle-toolkit/compare/v0.6.0...v0.7.0) (2023-03-16)
 
 

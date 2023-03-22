@@ -11,5 +11,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: ghcr.io/keptn/lifecycle-operator
-  newTag: 0.6.0
+  newName: ghcr.keptn.sh/keptn/lifecycle-operator
+  newTag: v0.7.0

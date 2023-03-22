@@ -17,7 +17,7 @@ but the format and content is still evolving.
 We welcome your input!**
 
 Each CRD is an object of an
-[API library](../-ref).
+[API library](../../docs/api-ref/)
 Keptn APIs follow the Kubernetes API versioning scheme.
 and are themselves composed of objects and sub-objects.
 By introducing CRDs, Keptn is extending the base Kubernetes API with new objects and functionality.

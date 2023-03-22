@@ -35,9 +35,11 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
 				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
+					RestartPolicy: "Never",
 				},
 			},
+			BackoffLimit:          task.Spec.Retries,
+			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
 		},
 	}
 	err := controllerutil.SetControllerReference(task, job, r.Scheme)

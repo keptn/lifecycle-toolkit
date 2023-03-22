@@ -27,13 +27,13 @@ import (
 type KeptnTaskDefinitionSpec struct {
 	Function FunctionSpec `json:"function,omitempty"`
 	// +kubebuilder:default:=10
-	Retries int `json:"retries,omitempty"`
+	Retries *int32 `json:"retries"`
 	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	Timeout metav1.Duration `json:"timeout,omitempty"`
+	Timeout metav1.Duration `json:"timeout"`
 }
 
 type FunctionSpec struct {

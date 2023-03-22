@@ -21,6 +21,12 @@ import (
 
 //nolint:dupl
 func TestTaskHandler(t *testing.T) {
+	taskDefObj := v1alpha3.KeptnTaskDefinition{
+		ObjectMeta: v1.ObjectMeta{
+			Namespace: "namespace",
+			Name:      "task-def",
+		},
+	}
 	tests := []struct {
 		name            string
 		object          client.Object
@@ -61,6 +67,9 @@ func TestTaskHandler(t *testing.T) {
 		{
 			name: "task not started",
 			object: &v1alpha3.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
 				Spec: v1alpha3.KeptnAppVersionSpec{
 					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentTasks: []string{"task-def"},
@@ -252,7 +261,7 @@ func TestTaskHandler(t *testing.T) {
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
 				Recorder:    record.NewFakeRecorder(100),
-				Client:      fake.NewClientBuilder().WithObjects(&tt.taskObj).Build(),
+				Client:      fake.NewClientBuilder().WithObjects(&tt.taskObj, &taskDefObj).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}

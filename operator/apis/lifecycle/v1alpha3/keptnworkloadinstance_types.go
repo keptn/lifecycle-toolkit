@@ -318,35 +318,37 @@ func (w KeptnWorkloadInstance) GetVersion() string {
 	return w.Spec.Version
 }
 
-func (w KeptnWorkloadInstance) GenerateTask(taskDefinition string, checkType common.CheckType) KeptnTask {
+func (w KeptnWorkloadInstance) GenerateTask(taskDefinition KeptnTaskDefinition, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      common.GenerateTaskName(checkType, taskDefinition),
+			Name:      common.GenerateTaskName(checkType, taskDefinition.Name),
 			Namespace: w.Namespace,
 		},
 		Spec: KeptnTaskSpec{
 			AppName:          w.GetAppName(),
 			WorkloadVersion:  w.GetVersion(),
 			Workload:         w.GetParentName(),
-			TaskDefinition:   taskDefinition,
+			TaskDefinition:   taskDefinition.Name,
 			Parameters:       TaskParameters{},
 			SecureParameters: SecureParameters{},
 			Type:             checkType,
+			Retries:          taskDefinition.Spec.Retries,
+			Timeout:          taskDefinition.Spec.Timeout,
 		},
 	}
 }
 
-func (w KeptnWorkloadInstance) GenerateEvaluation(evaluationDefinition string, checkType common.CheckType) KeptnEvaluation {
+func (w KeptnWorkloadInstance) GenerateEvaluation(evaluationDefinition KeptnEvaluationDefinition, checkType common.CheckType) KeptnEvaluation {
 	return KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      common.GenerateEvaluationName(checkType, evaluationDefinition),
+			Name:      common.GenerateEvaluationName(checkType, evaluationDefinition.Name),
 			Namespace: w.Namespace,
 		},
 		Spec: KeptnEvaluationSpec{
 			AppName:              w.GetAppName(),
 			WorkloadVersion:      w.GetVersion(),
 			Workload:             w.GetParentName(),
-			EvaluationDefinition: evaluationDefinition,
+			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
 			RetryInterval: metav1.Duration{
 				Duration: 5 * time.Second,

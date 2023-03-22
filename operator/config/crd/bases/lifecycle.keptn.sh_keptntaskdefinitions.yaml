@@ -225,6 +225,13 @@ spec:
                         type: string
                     type: object
                 type: object
+              retries:
+                default: 10
+                type: integer
+              timeout:
+                default: 5m
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             type: object
           status:
             description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition

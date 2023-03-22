@@ -7,12 +7,16 @@ on:
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - '**.md'
+      - 'operator/apis'
+      - 'metrics-operator/api'
   pull_request:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - '**.md'
+      - 'operator/apis'
+      - 'metrics-operator/api'
 
 env:
   GO_VERSION: "~1.19"

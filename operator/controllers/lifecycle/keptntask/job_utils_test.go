@@ -93,7 +93,11 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
-	job.Status.Failed = 1
+	job.Status.Conditions = []batchv1.JobCondition{
+		{
+			Type: batchv1.JobFailed,
+		},
+	}
 
 	err = fakeClient.Status().Update(context.TODO(), job)
 	require.Nil(t, err)

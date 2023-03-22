@@ -357,6 +357,8 @@ spec:
                 type: string
               message:
                 type: string
+              reason:
+                type: string
               startTime:
                 format: date-time
                 type: string

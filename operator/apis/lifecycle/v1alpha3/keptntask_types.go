@@ -76,6 +76,7 @@ type KeptnTaskStatus struct {
 	Message   string            `json:"message,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
+	Reason    string            `json:"reason,omitempty"`
 }
 
 // +kubebuilder:object:root=true

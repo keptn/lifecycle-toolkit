@@ -43,7 +43,7 @@ checks
 ### Keptn Certificate Operator controller
 
 | Name                                                   | Description                                                       | Value                                      |
-| ------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------ |
+| ------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------ |
 | `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                        |                                            |
 | `certificateOperator.manager.image.repository`         | specify repo for manager image                                    | `ghcr.keptn.sh/keptn/certificate-operator` |
 | `certificateOperator.manager.image.tag`                | select tag for manager container <!---x-release-please-version--> | `v0.7.0`                                   |

@@ -22,6 +22,8 @@ jobs:
           node-version: 16
 
       - name: Generate helm charts
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh
         run: make helm-package
 
       - name: Install readme generator

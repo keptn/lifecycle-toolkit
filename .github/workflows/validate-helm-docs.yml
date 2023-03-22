@@ -23,7 +23,7 @@ jobs:
 
       - name: Generate helm charts
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
         run: make helm-package
 
       - name: Install readme generator

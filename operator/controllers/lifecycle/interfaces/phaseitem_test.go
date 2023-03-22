@@ -95,10 +95,10 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1alpha3.ItemStatus {
 			return nil
 		},
-		GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) v1alpha3.KeptnTask {
+		GenerateTaskFunc: func(taskDefinition v1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) v1alpha3.KeptnTask {
 			return v1alpha3.KeptnTask{}
 		},
-		GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) v1alpha3.KeptnEvaluation {
+		GenerateEvaluationFunc: func(evaluationDefinition v1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) v1alpha3.KeptnEvaluation {
 			return v1alpha3.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
@@ -175,10 +175,10 @@ func TestPhaseItem(t *testing.T) {
 	_ = wrapper.GetPostDeploymentEvaluationTaskStatus()
 	require.Len(t, phaseItemMock.GetPostDeploymentEvaluationTaskStatusCalls(), 1)
 
-	_ = wrapper.GenerateTask("", apicommon.PostDeploymentCheckType)
+	_ = wrapper.GenerateTask(v1alpha3.KeptnTaskDefinition{}, apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateTaskCalls(), 1)
 
-	_ = wrapper.GenerateEvaluation("", apicommon.PostDeploymentCheckType)
+	_ = wrapper.GenerateEvaluation(v1alpha3.KeptnEvaluationDefinition{}, apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateEvaluationCalls(), 1)
 
 	wrapper.SetSpanAttributes(nil)

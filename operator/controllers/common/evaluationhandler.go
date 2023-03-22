@@ -29,8 +29,14 @@ type EvaluationHandler struct {
 	SpanHandler ISpanHandler
 }
 
+type CreateEvaluationAttributes struct {
+	SpanName   string
+	Definition klcv1alpha3.KeptnEvaluationDefinition
+	CheckType  apicommon.CheckType
+}
+
 //nolint:gocognit,gocyclo
-func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -107,7 +113,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 }
 
 //nolint:dupl
-func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateAttributes) (string, error) {
+func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -143,7 +149,7 @@ func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha3.K
 	RecordEvent(r.Recorder, apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "Failed", k8sEventMessage, piWrapper.GetVersion())
 }
 
-func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha3.ItemStatus) {
+func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateEvaluationAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha3.ItemStatus) {
 	var evaluations []string
 	var statuses []klcv1alpha3.ItemStatus
 
@@ -158,8 +164,8 @@ func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateAtt
 	return evaluations, statuses
 }
 
-func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1alpha3.KeptnEvaluation, evaluationStatus *klcv1alpha3.ItemStatus) error {
-	evaluationCreateAttributes.Definition = evaluationName
+func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateEvaluationAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1alpha3.KeptnEvaluation, evaluationStatus *klcv1alpha3.ItemStatus) error {
+	evaluationCreateAttributes.Definition.Name = evaluationName
 	evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
 	if err != nil {
 		return err

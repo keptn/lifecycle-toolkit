@@ -24,10 +24,10 @@ import (
 // 			DeprecateRemainingPhasesFunc: func(phase apicommon.KeptnPhaseType)  {
 // 				panic("mock out the DeprecateRemainingPhases method")
 // 			},
-// 			GenerateEvaluationFunc: func(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
+// 			GenerateEvaluationFunc: func(evaluationDefinition klcv1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
 // 				panic("mock out the GenerateEvaluation method")
 // 			},
-// 			GenerateTaskFunc: func(taskDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
+// 			GenerateTaskFunc: func(taskDefinition klcv1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
 // 				panic("mock out the GenerateTask method")
 // 			},
 // 			GetAppNameFunc: func() string {
@@ -110,10 +110,10 @@ type PhaseItemMock struct {
 	DeprecateRemainingPhasesFunc func(phase apicommon.KeptnPhaseType)
 
 	// GenerateEvaluationFunc mocks the GenerateEvaluation method.
-	GenerateEvaluationFunc func(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation
+	GenerateEvaluationFunc func(evaluationDefinition klcv1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation
 
 	// GenerateTaskFunc mocks the GenerateTask method.
-	GenerateTaskFunc func(taskDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnTask
+	GenerateTaskFunc func(taskDefinition klcv1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnTask
 
 	// GetAppNameFunc mocks the GetAppName method.
 	GetAppNameFunc func() string
@@ -194,14 +194,14 @@ type PhaseItemMock struct {
 		// GenerateEvaluation holds details about calls to the GenerateEvaluation method.
 		GenerateEvaluation []struct {
 			// EvaluationDefinition is the evaluationDefinition argument value.
-			EvaluationDefinition string
+			EvaluationDefinition klcv1alpha3.KeptnEvaluationDefinition
 			// CheckType is the checkType argument value.
 			CheckType apicommon.CheckType
 		}
 		// GenerateTask holds details about calls to the GenerateTask method.
 		GenerateTask []struct {
 			// TaskDefinition is the taskDefinition argument value.
-			TaskDefinition string
+			TaskDefinition klcv1alpha3.KeptnTaskDefinition
 			// CheckType is the checkType argument value.
 			CheckType apicommon.CheckType
 		}
@@ -364,12 +364,12 @@ func (mock *PhaseItemMock) DeprecateRemainingPhasesCalls() []struct {
 }
 
 // GenerateEvaluation calls GenerateEvaluationFunc.
-func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
+func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition klcv1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
 	if mock.GenerateEvaluationFunc == nil {
 		panic("PhaseItemMock.GenerateEvaluationFunc: method is nil but PhaseItem.GenerateEvaluation was just called")
 	}
 	callInfo := struct {
-		EvaluationDefinition string
+		EvaluationDefinition klcv1alpha3.KeptnEvaluationDefinition
 		CheckType            apicommon.CheckType
 	}{
 		EvaluationDefinition: evaluationDefinition,
@@ -385,11 +385,11 @@ func (mock *PhaseItemMock) GenerateEvaluation(evaluationDefinition string, check
 // Check the length with:
 //     len(mockedPhaseItem.GenerateEvaluationCalls())
 func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
-	EvaluationDefinition string
+	EvaluationDefinition klcv1alpha3.KeptnEvaluationDefinition
 	CheckType            apicommon.CheckType
 } {
 	var calls []struct {
-		EvaluationDefinition string
+		EvaluationDefinition klcv1alpha3.KeptnEvaluationDefinition
 		CheckType            apicommon.CheckType
 	}
 	mock.lockGenerateEvaluation.RLock()
@@ -399,12 +399,12 @@ func (mock *PhaseItemMock) GenerateEvaluationCalls() []struct {
 }
 
 // GenerateTask calls GenerateTaskFunc.
-func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
+func (mock *PhaseItemMock) GenerateTask(taskDefinition klcv1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
 	if mock.GenerateTaskFunc == nil {
 		panic("PhaseItemMock.GenerateTaskFunc: method is nil but PhaseItem.GenerateTask was just called")
 	}
 	callInfo := struct {
-		TaskDefinition string
+		TaskDefinition klcv1alpha3.KeptnTaskDefinition
 		CheckType      apicommon.CheckType
 	}{
 		TaskDefinition: taskDefinition,
@@ -420,11 +420,11 @@ func (mock *PhaseItemMock) GenerateTask(taskDefinition string, checkType apicomm
 // Check the length with:
 //     len(mockedPhaseItem.GenerateTaskCalls())
 func (mock *PhaseItemMock) GenerateTaskCalls() []struct {
-	TaskDefinition string
+	TaskDefinition klcv1alpha3.KeptnTaskDefinition
 	CheckType      apicommon.CheckType
 } {
 	var calls []struct {
-		TaskDefinition string
+		TaskDefinition klcv1alpha3.KeptnTaskDefinition
 		CheckType      apicommon.CheckType
 	}
 	mock.lockGenerateTask.RLock()

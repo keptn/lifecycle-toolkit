@@ -178,21 +178,29 @@ func TestKeptnAppVersion(t *testing.T) {
 
 	require.Equal(t, "trace1.appname.version.phase", app.GetSpanKey("phase"))
 
-	task := app.GenerateTask("taskdef", common.PostDeploymentCheckType)
+	task := app.GenerateTask(KeptnTaskDefinition{
+		ObjectMeta: v1.ObjectMeta{
+			Name: "task-def",
+		},
+	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnTaskSpec{
 		AppVersion:       app.GetVersion(),
 		AppName:          app.GetParentName(),
-		TaskDefinition:   "taskdef",
+		TaskDefinition:   "task-def",
 		Parameters:       TaskParameters{},
 		SecureParameters: SecureParameters{},
 		Type:             common.PostDeploymentCheckType,
 	}, task.Spec)
 
-	evaluation := app.GenerateEvaluation("taskdef", common.PostDeploymentCheckType)
+	evaluation := app.GenerateEvaluation(KeptnEvaluationDefinition{
+		ObjectMeta: v1.ObjectMeta{
+			Name: "eval-def",
+		},
+	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnEvaluationSpec{
 		AppVersion:           app.GetVersion(),
 		AppName:              app.GetParentName(),
-		EvaluationDefinition: "taskdef",
+		EvaluationDefinition: "eval-def",
 		Type:                 common.PostDeploymentCheckType,
 		RetryInterval: metav1.Duration{
 			Duration: 5 * time.Second,

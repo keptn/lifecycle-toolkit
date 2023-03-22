@@ -20,7 +20,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 		SpanHandler: r.SpanHandler,
 	}
 
-	evaluationCreateAttributes := controllercommon.CreateAttributes{
+	evaluationCreateAttributes := controllercommon.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateAppEvalSpanName, checkType),
 		CheckType: checkType,
 	}

@@ -24,7 +24,7 @@ func TestTaskHandler(t *testing.T) {
 	tests := []struct {
 		name            string
 		object          client.Object
-		createAttr      CreateAttributes
+		createAttr      CreateTaskAttributes
 		wantStatus      []v1alpha3.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		taskObj         v1alpha3.KeptnTask
@@ -36,7 +36,7 @@ func TestTaskHandler(t *testing.T) {
 			name:            "cannot unwrap object",
 			object:          &v1alpha3.KeptnTask{},
 			taskObj:         v1alpha3.KeptnTask{},
-			createAttr:      CreateAttributes{},
+			createAttr:      CreateTaskAttributes{},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
@@ -47,9 +47,9 @@ func TestTaskHandler(t *testing.T) {
 			name:    "no tasks",
 			object:  &v1alpha3.KeptnAppVersion{},
 			taskObj: v1alpha3.KeptnTask{},
-			createAttr: CreateAttributes{
+			createAttr: CreateTaskAttributes{
 				SpanName:   "",
-				Definition: "",
+				Definition: v1alpha3.KeptnTaskDefinition{},
 				CheckType:  apicommon.PreDeploymentCheckType,
 			},
 			wantStatus:      []v1alpha3.ItemStatus(nil),
@@ -68,10 +68,14 @@ func TestTaskHandler(t *testing.T) {
 				},
 			},
 			taskObj: v1alpha3.KeptnTask{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "task-def",
-				CheckType:  apicommon.PreDeploymentCheckType,
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -105,10 +109,14 @@ func TestTaskHandler(t *testing.T) {
 				},
 			},
 			taskObj: v1alpha3.KeptnTask{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "task-def",
-				CheckType:  apicommon.PreDeploymentCheckType,
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -153,10 +161,14 @@ func TestTaskHandler(t *testing.T) {
 					Status: apicommon.StateFailed,
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "task-def",
-				CheckType:  apicommon.PreDeploymentCheckType,
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -201,10 +213,14 @@ func TestTaskHandler(t *testing.T) {
 					Status: apicommon.StateSucceeded,
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "task-def",
-				CheckType:  apicommon.PreDeploymentCheckType,
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -262,14 +278,14 @@ func TestTaskHandler_createTask(t *testing.T) {
 	tests := []struct {
 		name       string
 		object     client.Object
-		createAttr CreateAttributes
+		createAttr CreateTaskAttributes
 		wantName   string
 		wantErr    error
 	}{
 		{
 			name:       "cannot unwrap object",
 			object:     &v1alpha3.KeptnEvaluation{},
-			createAttr: CreateAttributes{},
+			createAttr: CreateTaskAttributes{},
 			wantName:   "",
 			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
@@ -285,10 +301,14 @@ func TestTaskHandler_createTask(t *testing.T) {
 					},
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				CheckType:  apicommon.PreDeploymentCheckType,
-				Definition: "task-def",
+			createAttr: CreateTaskAttributes{
+				SpanName:  "",
+				CheckType: apicommon.PreDeploymentCheckType,
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
 			},
 			wantName: "pre-task-def-",
 			wantErr:  nil,

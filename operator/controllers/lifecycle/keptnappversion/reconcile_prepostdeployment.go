@@ -20,7 +20,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Conte
 		SpanHandler: r.SpanHandler,
 	}
 
-	taskCreateAttributes := controllercommon.CreateAttributes{
+	taskCreateAttributes := controllercommon.CreateTaskAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateAppTaskSpanName, checkType),
 		CheckType: checkType,
 	}

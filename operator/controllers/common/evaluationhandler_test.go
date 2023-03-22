@@ -24,7 +24,7 @@ func TestEvaluationHandler(t *testing.T) {
 	tests := []struct {
 		name            string
 		object          client.Object
-		createAttr      CreateAttributes
+		createAttr      CreateEvaluationAttributes
 		wantStatus      []v1alpha3.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		evalObj         v1alpha3.KeptnEvaluation
@@ -37,7 +37,7 @@ func TestEvaluationHandler(t *testing.T) {
 			name:            "cannot unwrap object",
 			object:          &v1alpha3.KeptnEvaluation{},
 			evalObj:         v1alpha3.KeptnEvaluation{},
-			createAttr:      CreateAttributes{},
+			createAttr:      CreateEvaluationAttributes{},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
@@ -48,10 +48,14 @@ func TestEvaluationHandler(t *testing.T) {
 			name:    "no evaluations",
 			object:  &v1alpha3.KeptnAppVersion{},
 			evalObj: v1alpha3.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus:      []v1alpha3.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
@@ -69,10 +73,14 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 			},
 			evalObj: v1alpha3.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -106,10 +114,14 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 			},
 			evalObj: v1alpha3.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -161,10 +173,14 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -212,10 +228,14 @@ func TestEvaluationHandler(t *testing.T) {
 					OverallStatus: apicommon.StateSucceeded,
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantStatus: []v1alpha3.ItemStatus{
 				{
@@ -287,14 +307,14 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 	tests := []struct {
 		name       string
 		object     client.Object
-		createAttr CreateAttributes
+		createAttr CreateEvaluationAttributes
 		wantName   string
 		wantErr    error
 	}{
 		{
 			name:       "cannot unwrap object",
 			object:     &v1alpha3.KeptnEvaluation{},
-			createAttr: CreateAttributes{},
+			createAttr: CreateEvaluationAttributes{},
 			wantName:   "",
 			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
@@ -310,10 +330,14 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 					},
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantName: "pre-eval-eval-def-",
 			wantErr:  nil,

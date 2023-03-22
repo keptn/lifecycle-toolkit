@@ -41,6 +41,8 @@ type KeptnTaskSpec struct {
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
+	Retries          int              `json:"retries,omitempty"`
+	Timeout          metav1.Duration  `json:"timeout,omitempty"`
 }
 
 type TaskContext struct {
@@ -68,18 +70,19 @@ type KeptnTaskStatus struct {
 	Message   string            `json:"message,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// +kubebuilder:default:=0
+	RetryCount int `json:"retryCount"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:storageversion
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
 // +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`
+// +kubebuilder:printcolumn:name="RetryCount",type=string,JSONPath=`.status.retryCount`
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.status`
 
 // KeptnTask is the Schema for the keptntasks API

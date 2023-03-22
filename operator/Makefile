@@ -7,8 +7,9 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?=latest
+TAG?="v0.7.0" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
+CHART_APPVERSION?=""
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -149,9 +150,9 @@ uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube
 
 .PHONY: release-manifests
 release-manifests: manifests
-	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	echo "building default overlay"
 	kustomize build config/default > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml
 
 .PHONY: deploy
 deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/config.

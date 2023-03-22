@@ -11,12 +11,15 @@
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
-        "examples/support/argo/Makefile",
-        "examples/support/observability/Makefile",
         "helm/chart/Chart.yaml",
-        ".github/workflows/validate-helm-docs.yml",
         "Makefile",
-        "docs/content/en/docs/snippets/tasks/install.md"
+        "operator/Makefile",
+        "scheduler/Makefile",
+        "klt-cert-manager/Makefile",
+        "metrics-operator/Makefile",
+        "docs/content/en/docs/snippets/tasks/install.md",
+        "helm/chart/values.yaml",
+        "helm/chart/README.md"
       ],
       "changelog-sections": [
         {

@@ -493,7 +493,7 @@ Instead, if you want to build and deploy the operator into your cluster directly
 ```bash
 RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 # (optional)ARCH=<amd64(default)|arm64v8>
-# (optional)TAG=<YOUR_PREFERRED_TAG (defaulting to current time)>
+# (optional)CHART_APPVERSION=<YOUR_PREFERRED_TAG (defaulting to current time)>
 
 # Build and deploy the dev images to the current kubernetes cluster
 make build-deploy-dev-environment

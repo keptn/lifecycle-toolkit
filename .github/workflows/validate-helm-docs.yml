@@ -8,8 +8,6 @@ on:
 defaults:
   run:
     shell: bash
-env:
-  CHART_APPVERSION: "0.6.0" # x-release-please-version
 jobs:
   check-helm-docs:
     name: Check helm documentation values
@@ -24,7 +22,9 @@ jobs:
           node-version: 16
 
       - name: Generate helm charts
-        run: make helm-package TAG="${{ env.CHART_APPVERSION }}"
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+        run: make helm-package
 
       - name: Install readme generator
         run: |

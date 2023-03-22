@@ -9,7 +9,12 @@ configMapGenerator:
   name: metrics-manager-config
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-images:
-- name: controller
-  newName: ghcr.keptn.sh/keptn/metrics-operator
-  newTag: v0.7.0
+patches:
+  - patch: |
+      - op: replace
+        path: '/spec/template/spec/containers/0/image'
+        value: '${RELEASE_REGISTRY}/metrics-operator:${CHART_APPVERSION}'
+    target:
+      kind: Deployment
+      name: metrics-operator
+      namespace: system

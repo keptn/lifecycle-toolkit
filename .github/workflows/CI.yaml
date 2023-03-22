@@ -320,7 +320,7 @@ jobs:
       run: make helm-package
 
     - name: Copy charts from klt to helm repo
-      run: rsync -av --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
+      run: rsync -av --delete --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4

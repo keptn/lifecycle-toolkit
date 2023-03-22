@@ -11,8 +11,8 @@ certificateOperator:
       seccompProfile:
         type: RuntimeDefault
     image:
-      repository: ghcr.io/keptn/certificate-operator
-      tag: 0.6.0
+      repository: ghcr.keptn.sh/keptn/certificate-operator
+      tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -64,7 +64,7 @@ lifecycleOperator:
       seccompProfile:
         type: RuntimeDefault
     env:
-      functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0
+      functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0
       keptnAppControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"
       keptnEvaluationControllerLogLevel: "0"
@@ -75,8 +75,8 @@ lifecycleOperator:
       optionsControllerLogLevel: "0"
       otelCollectorUrl: otel-collector:4317
     image:
-      repository: ghcr.io/keptn/lifecycle-operator
-      tag: 0.6.0
+      repository: ghcr.keptn.sh/keptn/lifecycle-operator
+      tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -101,6 +101,13 @@ lifecycleOperator:
   replicas: 1
   tolerations: []
   topologySpreadConstraints: []
+lifecycleOperatorMetricsService:
+  ports:
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  type: ClusterIP
 lifecycleWebhookService:
   ports:
   - port: 443
@@ -129,8 +136,8 @@ metricsOperator:
       exposeKeptnMetrics: "true"
       metricsControllerLogLevel: "0"
     image:
-      repository: ghcr.io/keptn/metrics-operator
-      tag: 0.6.0
+      repository: ghcr.keptn.sh/keptn/metrics-operator
+      tag: v0.7.0
     livenessProbe:
       httpGet:
         path: /healthz
@@ -192,8 +199,8 @@ scheduler:
     env:
       otelCollectorUrl: otel-collector:4317
     image:
-      repository: ghcr.io/keptn/scheduler
-      tag: 0.6.0
+      repository: ghcr.keptn.sh/keptn/scheduler
+      tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

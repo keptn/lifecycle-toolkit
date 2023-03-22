@@ -58,6 +58,7 @@ spec:
       code: |
         console.log("Deployment Task has been executed");
     ```
+
   * **httpRef** - Specify a Deno script to be executed at runtime
     from the remote webserver that is specified.
     For example:
@@ -69,12 +70,14 @@ spec:
           httpRef:
             url: <url>
     ```
+
   * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
     Populate this field with the value of the `name` field
     for the `KeptnTaskDefinition` to be called.
     This is commonly used to call a general function
     that is used in multiple places, possibly with different parameters.
     An example is:
+
      ```yaml
      spec:
        function:
@@ -98,6 +101,7 @@ spec:
   as a JSON object.
   At the moment, multi-level maps are not supported.
   For example:
+
    ```spec:
        parameters:
          map:
@@ -123,10 +127,6 @@ spec:
 A Task is responsible for executing the TaskDefinition of a workload.
 The execution is done by spawning a K8s Job to handle a single Task.
 In its state, it keeps track of the current status of the K8s Job created.
-
-<!-- How this CRD is "activated".  For example, which event uses this CRD -->
-<!-- Can I execute tasks in parallel? -->
-<!-- Instructions and guidelines for when and how to customize a CRD -->
 
 ## Examples
 

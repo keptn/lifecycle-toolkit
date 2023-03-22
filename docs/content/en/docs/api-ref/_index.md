@@ -24,11 +24,6 @@ Keptn APIs follow API versioning conventions recommended by Kubernetes.
 For more information, see the Kubernetes documentation:
 
 * [API Overview](https://kubernetes.io/docs/reference/using-api/)
-
 * [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-
 * [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
-
 * [Understanding Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
-
-

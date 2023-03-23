@@ -163,7 +163,7 @@ jobs:
       - name: Create manifests
         env:
           RELEASE_REGISTRY: ghcr.keptn.sh/keptn
-          TAG: ${{ needs.release-please.outputs.tag_name }}
+          CHART_APPVERSION: ${{ needs.release-please.outputs.tag_name }}
         run: |
           cd scheduler
           make release-manifests

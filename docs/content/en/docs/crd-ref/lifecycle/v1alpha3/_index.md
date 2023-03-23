@@ -505,6 +505,8 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `function` _[FunctionSpec](#functionspec)_ |  |
+| `retries` _integer_ |  |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ |  |
 
 
 
@@ -545,6 +547,8 @@ _Appears in:_
 | `parameters` _[TaskParameters](#taskparameters)_ |  |
 | `secureParameters` _[SecureParameters](#secureparameters)_ |  |
 | `checkType` _CheckType_ |  |
+| `retries` _integer_ |  |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ |  |
 
 
 

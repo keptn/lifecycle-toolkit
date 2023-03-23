@@ -30,7 +30,7 @@ RUN controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..." && 
     -X common.buildVersion=${RELEASE_VERSION}" \
     -o bin/manager main.go
 
-FROM gcr.io/distroless/base-debian11:debug-nonroot AS debug
+FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

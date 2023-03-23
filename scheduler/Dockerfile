@@ -24,7 +24,7 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
     -w" \
     -o bin/kube-scheduler cmd/scheduler/main.go
 
-FROM gcr.io/distroless/base-debian11:debug-nonroot AS debug
+FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

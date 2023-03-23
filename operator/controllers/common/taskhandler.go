@@ -163,7 +163,7 @@ func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.C
 	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: piWrapper.GetNamespace()}, definition)
 	if err != nil {
 		r.Log.Error(err, "could not find KeptnTaskDefinition")
-		return err
+		return controllererrors.ErrCannotGetKeptnTaskDefinition
 	}
 	taskCreateAttributes.Definition = *definition
 	taskName, err = r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)

@@ -284,6 +284,11 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
+	if err = (&optionsv1alpha1.KeptnConfig{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnConfig")
+		os.Exit(1)
+	}
+
 	// +kubebuilder:scaffold:builder
 
 	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())

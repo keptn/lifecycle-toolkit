@@ -56,8 +56,7 @@ install-prometheus:
 	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
-	kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
-	kubectl -n monitoring port-forward svc/node-exporter 9100 &
+
 
 
 .PHONY: cleanup-manifests

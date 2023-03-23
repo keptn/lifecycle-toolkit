@@ -323,23 +323,12 @@ rules:
   - keptnconfigs
   verbs:
   - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs/finalizers
-  verbs:
-  - update
 - apiGroups:
   - options.keptn.sh
   resources:
   - keptnconfigs/status
   verbs:
   - get
-  - patch
-  - update

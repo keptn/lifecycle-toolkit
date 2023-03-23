@@ -1,4 +1,4 @@
-name: Release Documentation
+name: Release Examples
 
 on:
   workflow_call:

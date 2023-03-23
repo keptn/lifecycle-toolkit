@@ -13,7 +13,7 @@ YAMLLINT_VERSION ?= alpine-1-0.14
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
-RELEASE_REGISTRY?=ghcr.io/keptn
+RELEASE_REGISTRY?=ghcr.keptn.sh/keptn
 ARCH?=amd64
 TAG ?= "$(shell date +%Y%m%d%s)"
 TAG := $(TAG)

@@ -2,5 +2,6 @@ apiVersion: options.keptn.sh/v1alpha1
 kind: KeptnConfig
 metadata:
   name: "some-config"
+  namespace: "keptn-lifecycle-toolkit-system"
 spec:
   OTelCollectorUrl: "some-url"

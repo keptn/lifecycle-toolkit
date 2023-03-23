@@ -38,6 +38,7 @@ type KeptnConfigReconciler struct {
 	Scheme          *runtime.Scheme
 	Log             logr.Logger
 	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	Namespace       string
 }
 
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create;update;patch;delete
@@ -47,6 +48,11 @@ type KeptnConfigReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	if req.Namespace != r.Namespace {
+		// we don't want to reconcile this resource since it doesn't belong to our ns
+		r.Log.Info(fmt.Sprintf("KeptnConfig %s/%s doesn't belong to the operator namespace %s", req.Namespace, req.Name, r.Namespace))
+		return reconcile.Result{}, nil
+	}
 	r.Log.Info("Searching for KeptnConfig")
 
 	config := &optionsv1alpha1.KeptnConfig{}

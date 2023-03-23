@@ -17,16 +17,25 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+	"errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
 // log is for logging in this package.
-var keptnconfiglog = logf.Log.WithName("keptnconfig-resource")
+var logger = logf.Log.WithName("keptnconfig-resource")
 
-func (r *KeptnConfig) SetupWebhookWithManager(mgr ctrl.Manager) error {
+// client to fetch other KeptnConfig from the APIs
+var _client client.Reader = nil
+var _ns string
+
+func (r *KeptnConfig) SetupWebhookWithManager(mgr ctrl.Manager, namespace string) error {
+	_client = mgr.GetAPIReader()
+	_ns = namespace
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
 		Complete()
@@ -38,24 +47,24 @@ var _ webhook.Validator = &KeptnConfig{}
 
 // ValidateCreate checks that there is not yet another KetpnConfig active
 func (r *KeptnConfig) ValidateCreate() error {
-	keptnconfiglog.Info("validate create", "name", r.Name)
-
-	// TODO:
-	// 1. Collect all KeptnConfig
-	// 2. Check if # > 1 - error
-	// 3. if # < 1 ok
-	// 4. if # == 1 -> same name, otherwise error
+	logger.Info("Validating KeptnConfig", "name", r.Name)
+	configs := &KeptnConfigList{}
+	if err := _client.List(context.TODO(), configs, client.InNamespace(_ns)); err != nil {
+		logger.Error(err, "Impossible collecting all KeptnConfig")
+		return err
+	}
+	if len(configs.Items) > 0 {
+		return errors.New("only a single KeptnConfig can be applied")
+	}
 	return nil
 }
 
 // ValidateUpdate immediately returns since there is nothing to validate
 func (r *KeptnConfig) ValidateUpdate(old runtime.Object) error {
-	keptnconfiglog.Info("validate update", "name", r.Name)
 	return nil
 }
 
 // ValidateDelete immediately returns since there is nothing to validate
 func (r *KeptnConfig) ValidateDelete() error {
-	keptnconfiglog.Info("validate delete", "name", r.Name)
 	return nil
 }

@@ -259,9 +259,10 @@ func main() {
 
 	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    configLogger.V(env.KptnOptionsControllerLogLevel),
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       configLogger.V(env.KptnOptionsControllerLogLevel),
+		Namespace: env.PodNamespace,
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
@@ -284,7 +285,7 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
-	if err = (&optionsv1alpha1.KeptnConfig{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&optionsv1alpha1.KeptnConfig{}).SetupWebhookWithManager(mgr, env.PodNamespace); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnConfig")
 		os.Exit(1)
 	}

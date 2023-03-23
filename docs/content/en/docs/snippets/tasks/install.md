@@ -63,6 +63,7 @@ You can install *cert-manager* with the following commands:
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
 ```
+
 </details>
 
 <details>
@@ -74,6 +75,7 @@ You can install the Lifecycle Toolkit with manifests using the following command
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/<oldversion>/manifest.yaml
 kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
+
 </oldversion>details>
 
 </details>

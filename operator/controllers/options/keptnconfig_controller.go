@@ -40,7 +40,7 @@ type KeptnConfigReconciler struct {
 	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
 }
 
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create
+// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to

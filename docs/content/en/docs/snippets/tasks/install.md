@@ -41,18 +41,6 @@ The full list of available flags can be found in the [helm-charts](https://githu
 Installation of the Lifecycle Toolkit version 0.6.0 and lower is not supported via helm charts.
 
 <details>
-<summary>Install Cert-Manager (0.6.0 and earlier)</summary>
-
-You can install *cert-manager* with the following commands:
-
-```shell
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
-```
-
-</details>
-
-<details>
 <summary>Install Keptn using Manifests</summary>
 
 All versions of the Lifecycle Toolkit can be installed using manifests,

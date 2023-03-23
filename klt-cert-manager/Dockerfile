@@ -45,7 +45,7 @@ COPY --from=builder /workspace/manager .
 
 ENTRYPOINT ["/manager"]
 
-FROM gcr.io/distroless/static:nonroot AS production
+FROM gcr.io/distroless/static-debian11:nonroot AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/klt-cert-manager" \
     org.opencontainers.image.url="https://keptn.sh" \

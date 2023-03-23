@@ -25,15 +25,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Checkout - page branch
+      - name: Checkout examples repo
         uses: actions/checkout@v3
         with:
           repository: keptn-sandbox/lifecycle-toolkit-examples
-          path: ${{ inputs.page_dir }}
+          path: ${{ inputs.examples_dir }}
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
       - name: Get Latest Release Information
-        uses: octokit/request-action@v2.x
+        uses: octokit/request-action@v2.1.7
         id: latest_release
         with:
           route: GET /repos/:owner/:repository/releases/latest
@@ -42,12 +42,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Move old latest release documentation folder
+      - name: Move old latest release examples folder
         if: ${{ fromJson(steps.latest_release.outputs.data).tag_name ==  inputs.tag_name }}
         run: cp -R ./examples/* "${{ inputs.examples_dir }}"
 
       - name: Push content
-        if: ${{ inputs.dry_run != true }}
+        if: inputs.dry_run != true
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions

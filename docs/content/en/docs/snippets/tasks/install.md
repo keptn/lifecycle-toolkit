@@ -37,20 +37,6 @@ available [here](https://helm.sh/docs/helm/helm_get_values/)).
 
 The full list of available flags can be found in the [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md).
 
-All versions of the Lifecycle Toolkit can be installed using manifests,
-with a command like the following:
-
-<!---x-release-please-start-version-->
-
-```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.0/manifest.yaml
-kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
-```
-
-<!---x-release-please-end-->
-
-The Lifecycle Toolkit and its dependencies are now installed and ready to use.
-
 > **Note:**
 Installation of the Lifecycle Toolkit version 0.6.0 and lower is not supported via helm charts.
 
@@ -69,13 +55,20 @@ kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-m
 <details>
 <summary>Install Keptn using Manifests</summary>
 
-You can install the Lifecycle Toolkit with manifests using the following commands:
+All versions of the Lifecycle Toolkit can be installed using manifests,
+with a command like the following:
+
+<!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/<oldversion>/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.0/manifest.yaml
 kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
 
-</oldversion>details>
+<!---x-release-please-end-->
+
+The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 
 </details>
+
+

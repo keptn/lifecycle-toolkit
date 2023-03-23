@@ -32,33 +32,30 @@ func (r *KeptnConfig) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-options-keptn-sh-v1alpha1-keptnconfig,mutating=false,failurePolicy=fail,sideEffects=None,groups=options.keptn.sh,resources=keptnconfigs,verbs=create;update,versions=v1alpha1,name=vkeptnconfig.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &KeptnConfig{}
 
-// ValidateCreate implements webhook.Validator so a webhook will be registered for the type
+// ValidateCreate checks that there is not yet another KetpnConfig active
 func (r *KeptnConfig) ValidateCreate() error {
 	keptnconfiglog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
+	// TODO:
+	// 1. Collect all KeptnConfig
+	// 2. Check if # > 1 - error
+	// 3. if # < 1 ok
+	// 4. if # == 1 -> same name, otherwise error
 	return nil
 }
 
-// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
+// ValidateUpdate immediately returns since there is nothing to validate
 func (r *KeptnConfig) ValidateUpdate(old runtime.Object) error {
 	keptnconfiglog.Info("validate update", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object update.
 	return nil
 }
 
-// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
+// ValidateDelete immediately returns since there is nothing to validate
 func (r *KeptnConfig) ValidateDelete() error {
 	keptnconfiglog.Info("validate delete", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
 }

@@ -54,18 +54,26 @@ The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 > **Note:**
 Installation of the Lifecycle Toolkit version 0.6.0 and lower is not supported via helm charts.
 
-## Install version 0.6.0 and earlier
+<details>
+<summary>Install Cert-Manager (0.6.0 and earlier)</summary>
 
-You must first install *cert-manager* with the following commands:
+You can install *cert-manager* with the following commands:
 
 ```shell
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
 ```
+</details>
 
-After that, you can install the Lifecycle Toolkit `<oldversion>` with:
+<details>
+<summary>Install Keptn using Manifests</summary>
+
+You can install the Lifecycle Toolkit with manifests using the following commands:
 
 ```shell
 kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/<oldversion>/manifest.yaml
 kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
+</oldversion>details>
+
+</details>

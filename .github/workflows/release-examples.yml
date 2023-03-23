@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       tag_name:
-        description: "Tag for the functions runner image"
+        description: "Tag for the release being created"
         type: "string"
         required: true
       examples_dir:
@@ -19,7 +19,7 @@ on:
         required: false
 
 jobs:
-  release-docs:
+  release-examples:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Move old latest release examples folder
-        if: ${{ fromJson(steps.latest_release.outputs.data).tag_name ==  inputs.tag_name }}
+        if: ${{ fromJson(steps.latest_release.outputs.data).tag_name == inputs.tag_name }}
         run: cp -R ./examples/* "${{ inputs.examples_dir }}"
 
       - name: Push content

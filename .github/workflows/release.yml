@@ -202,3 +202,13 @@ jobs:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
     uses: ./.github/workflows/release-docs.yml
     secrets: inherit
+
+  update-examples:
+    name: Update examples
+    needs:
+      - release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    with:
+      tag_name: ${{ needs.release-please.outputs.tag_name }}
+    uses: ./.github/workflows/release-examples.yml
+    secrets: inherit

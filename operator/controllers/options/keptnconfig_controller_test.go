@@ -274,9 +274,10 @@ func setupReconciler() *KeptnConfigReconciler {
 	fakeClient := fake.NewClient(emptyConfig, config1, config2)
 
 	r := &KeptnConfigReconciler{
-		Client: fakeClient,
-		Scheme: fakeClient.Scheme(),
-		Log:    ctrl.Log.WithName("test-keptnconfig-controller"),
+		Client:    fakeClient,
+		Scheme:    fakeClient.Scheme(),
+		Log:       ctrl.Log.WithName("test-keptnconfig-controller"),
+		Namespace: "keptn-lifecycle-toolkit-system",
 	}
 	return r
 }

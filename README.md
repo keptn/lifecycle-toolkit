@@ -59,7 +59,7 @@ For installing the Lifecycle Toolkit via manifests use:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.6.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.0/manifest.yaml
 ```
 
 <!---x-release-please-end-->
@@ -493,7 +493,7 @@ Instead, if you want to build and deploy the operator into your cluster directly
 ```bash
 RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 # (optional)ARCH=<amd64(default)|arm64v8>
-# (optional)TAG=<YOUR_PREFERRED_TAG (defaulting to current time)>
+# (optional)CHART_APPVERSION=<YOUR_PREFERRED_TAG (defaulting to current time)>
 
 # Build and deploy the dev images to the current kubernetes cluster
 make build-deploy-dev-environment

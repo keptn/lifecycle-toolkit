@@ -1,0 +1,30 @@
+name: YAML checks
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+      - 'epic/*'
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '.yamllint' 
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
+      - 'epic/*'
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '.yamllint'   
+jobs:
+  yamllint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Lint YAML files
+        run: make yamllint
+

@@ -621,7 +621,7 @@
             "operation": "AppPreDeployTasks",
             "queryType": "search",
             "refId": "A",
-            "service": "keptn-lifecycle-operator",
+            "service": "lifecycle-operator",
             "tags": "keptn.deployment.app.name=$Application"
           }
         ],

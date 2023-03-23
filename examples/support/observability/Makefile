@@ -1,11 +1,11 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger
-JAEGER_VERSION ?= v1.41.0
+JAEGER_VERSION ?= v1.43.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
-install:
+install: install-cert-manager
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"
@@ -51,6 +51,14 @@ install:
 	@echo "- Install PodTatoHead: make deploy-podtatohead"
 	@echo "- Port-Forward Grafana: make port-forward-grafana"
 	@echo "#######################################################"
+
+.PHONY: install-cert-manager
+install-cert-manager:
+	@echo "-----------------------------------"
+	@echo "Create Namespace and install CertManager"
+	@echo "-----------------------------------"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+	kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
 
 .PHONY: port-forward-jaeger
 port-forward-jaeger:

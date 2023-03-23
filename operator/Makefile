@@ -7,8 +7,9 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?=latest
+TAG?="v0.7.0" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
+CHART_APPVERSION?=""
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -97,7 +98,24 @@ test: manifests fmt vet generate envtest ## Run tests.
 
 .PHONY: component-test
 component-test: manifests generate envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/... -v -timeout 30m -coverprofile cover.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/app/... -v -timeout 30m -coverprofile cover-app.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/appversion/... -v -timeout 30m -coverprofile cover-appversion.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/evaluation/... -v -timeout 30m -coverprofile cover-evaluation.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/load/... -v -timeout 30m
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/task/... -v -timeout 30m -coverprofile cover-task.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/taskdefinition/... -v -timeout 30m -coverprofile cover-taskdefinition.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workload/... -v -timeout 30m -coverprofile cover-workload.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workloadinstance/... -v -timeout 30m -coverprofile cover-workloadinstance.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance/..."
+	sed -i '/mode: set/d' "cover-app.out"
+	sed -i '/mode: set/d' "cover-appversion.out"
+	sed -i '/mode: set/d' "cover-evaluation.out"
+	sed -i '/mode: set/d' "cover-task.out"
+	sed -i '/mode: set/d' "cover-taskdefinition.out"
+	sed -i '/mode: set/d' "cover-workload.out"
+	sed -i '/mode: set/d' "cover-workloadinstance.out"
+	echo "mode: set" > cover.out
+	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out >> cover.out
+	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.
@@ -132,9 +150,9 @@ uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube
 
 .PHONY: release-manifests
 release-manifests: manifests
-	cd config/manager && kustomize edit set image controller=$(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 	echo "building default overlay"
 	kustomize build config/default > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml
 
 .PHONY: deploy
 deploy: manifests ## Deploy controller to the K8s cluster specified in ~/.kube/config.

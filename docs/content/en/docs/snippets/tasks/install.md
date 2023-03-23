@@ -70,5 +70,3 @@ kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-li
 The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 
 </details>
-
-

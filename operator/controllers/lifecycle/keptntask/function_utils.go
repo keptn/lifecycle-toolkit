@@ -35,7 +35,7 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
 				Spec: corev1.PodSpec{
-					RestartPolicy: "Never",
+					RestartPolicy: "OnFailure",
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,

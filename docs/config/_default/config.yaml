@@ -1,11 +1,11 @@
 _merge: deep
-title: keptn
+title: Keptn
 
 module:
   hugoVersion:
     extended: true
   imports:
-  - path: github.com/keptn-sandbox/lifecycle-toolkit-docs
+  - path: github.com/keptn/docs-tooling
     ignoreConfig: false
     mounts:
     - source: static
@@ -21,4 +21,7 @@ module:
     - source: content/en/_index.md
       target: content/en/_index.md
   proxy: direct
-  
+languages:
+  en:
+    title: Keptn
+    contentDir: "content/en"

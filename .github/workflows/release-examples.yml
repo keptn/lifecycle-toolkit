@@ -8,7 +8,7 @@ on:
         type: "string"
         required: true
       examples_dir:
-        description: "Root directory of the website"
+        description: "Root directory of the examples"
         type: "string"
         required: false
         default: "./tmp/examples/"

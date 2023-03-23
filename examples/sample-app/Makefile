@@ -18,17 +18,14 @@ port-forward-grafana:
 
 .PHONY: deploy-version-1
 deploy-version-1:
-	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k version-1
 
 .PHONY: deploy-version-2
 deploy-version-2:
-	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k version-2
 
 .PHONY: deploy-version-3
 deploy-version-3:
-	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k version-3
 
 .PHONY: undeploy-podtatohead

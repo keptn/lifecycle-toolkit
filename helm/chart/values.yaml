@@ -73,7 +73,6 @@ lifecycleOperator:
       keptnWorkloadControllerLogLevel: "0"
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
-      otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.keptn.sh/keptn/lifecycle-operator
       tag: v0.7.0

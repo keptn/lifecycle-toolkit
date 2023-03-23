@@ -1,5 +1,4 @@
-
 versions:
-- url: https://main-lifecycle-toolkit.keptn.sh
-  version: development
-github_branch: page
+  - url: https://main.lifecycle.keptn.sh/docs
+    version: development
+github_branch: pages

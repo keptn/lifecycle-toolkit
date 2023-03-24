@@ -112,7 +112,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.13.3
+        uses: anchore/sbom-action@v0.13.4
         with:
           image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}

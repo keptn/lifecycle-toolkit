@@ -90,10 +90,14 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 		}
 		return err
 	}
-	if job.Status.Succeeded > 0 {
-		task.Status.Status = apicommon.StateSucceeded
-	} else if job.Status.Failed > 0 {
-		task.Status.Status = apicommon.StateFailed
+	if len(job.Status.Conditions) > 0 {
+		if job.Status.Conditions[0].Type == batchv1.JobComplete {
+			task.Status.Status = apicommon.StateSucceeded
+		} else if job.Status.Conditions[0].Type == batchv1.JobFailed {
+			task.Status.Status = apicommon.StateFailed
+			task.Status.Message = job.Status.Conditions[0].Message
+			task.Status.Reason = job.Status.Conditions[0].Reason
+		}
 	}
 	return nil
 }

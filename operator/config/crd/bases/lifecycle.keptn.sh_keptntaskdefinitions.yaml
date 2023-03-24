@@ -227,6 +227,7 @@ spec:
                 type: object
               retries:
                 default: 10
+                format: int32
                 type: integer
               timeout:
                 default: 5m

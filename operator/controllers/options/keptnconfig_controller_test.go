@@ -97,6 +97,21 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			want:    ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: true,
 		},
+		{
+			name: "continue if request in a different ns",
+			args: args{
+				ctx: context.TODO(),
+				req: ctrl.Request{
+					NamespacedName: types.NamespacedName{
+						Namespace: "defenetly-not-keptn-lifecycle-toolkit-system",
+						Name:      "empty-config",
+					},
+				},
+			},
+			lastAppliedConfig: &optionsv1alpha1.KeptnConfigSpec{},
+			want:              ctrl.Result{},
+			wantErr:           false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

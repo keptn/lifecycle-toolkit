@@ -28,6 +28,7 @@ func TestTaskHandler(t *testing.T) {
 		wantStatus      []v1alpha3.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		taskObj         v1alpha3.KeptnTask
+		taskDef         *v1alpha3.KeptnTaskDefinition
 		wantErr         error
 		getSpanCalls    int
 		unbindSpanCalls int
@@ -59,12 +60,49 @@ func TestTaskHandler(t *testing.T) {
 			unbindSpanCalls: 0,
 		},
 		{
-			name: "task not started",
+			name: "task not started - could not find taskDefinition",
 			object: &v1alpha3.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
 				Spec: v1alpha3.KeptnAppVersionSpec{
 					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
+				},
+			},
+			taskObj: v1alpha3.KeptnTask{},
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
+			},
+			wantStatus:      nil,
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 0},
+			wantErr:         controllererrors.ErrCannotGetKeptnTaskDefinition,
+			getSpanCalls:    0,
+			unbindSpanCalls: 0,
+		},
+		{
+			name: "task not started",
+			object: &v1alpha3.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
+						PreDeploymentTasks: []string{"task-def"},
+					},
+				},
+			},
+			taskDef: &v1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+					Name:      "task-def",
 				},
 			},
 			taskObj: v1alpha3.KeptnTask{},
@@ -248,11 +286,15 @@ func TestTaskHandler(t *testing.T) {
 					return nil
 				},
 			}
+			initObjs := []client.Object{&tt.taskObj}
+			if tt.taskDef != nil {
+				initObjs = append(initObjs, tt.taskDef)
+			}
 			handler := TaskHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
 				Recorder:    record.NewFakeRecorder(100),
-				Client:      fake.NewClientBuilder().WithObjects(&tt.taskObj).Build(),
+				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}

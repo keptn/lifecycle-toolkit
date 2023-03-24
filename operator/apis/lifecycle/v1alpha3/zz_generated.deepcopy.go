@@ -821,6 +821,11 @@ func (in *KeptnTaskDefinitionList) DeepCopyObject() runtime.Object {
 func (in *KeptnTaskDefinitionSpec) DeepCopyInto(out *KeptnTaskDefinitionSpec) {
 	*out = *in
 	in.Function.DeepCopyInto(&out.Function)
+	if in.Retries != nil {
+		in, out := &in.Retries, &out.Retries
+		*out = new(int32)
+		**out = **in
+	}
 	out.Timeout = in.Timeout
 }
 
@@ -888,6 +893,11 @@ func (in *KeptnTaskSpec) DeepCopyInto(out *KeptnTaskSpec) {
 	out.Context = in.Context
 	in.Parameters.DeepCopyInto(&out.Parameters)
 	out.SecureParameters = in.SecureParameters
+	if in.Retries != nil {
+		in, out := &in.Retries, &out.Retries
+		*out = new(int32)
+		**out = **in
+	}
 	out.Timeout = in.Timeout
 }
 

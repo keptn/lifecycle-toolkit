@@ -41,8 +41,14 @@ type KeptnTaskSpec struct {
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
-	Retries          int              `json:"retries,omitempty"`
-	Timeout          metav1.Duration  `json:"timeout,omitempty"`
+	// +kubebuilder:default:=10
+	Retries *int32 `json:"retries,omitempty"`
+	// +optional
+	// +kubebuilder:default:="5m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
 type TaskContext struct {
@@ -70,8 +76,7 @@ type KeptnTaskStatus struct {
 	Message   string            `json:"message,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
-	// +kubebuilder:default:=0
-	RetryCount int `json:"retryCount"`
+	Reason    string            `json:"reason,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -82,7 +87,6 @@ type KeptnTaskStatus struct {
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
 // +kubebuilder:printcolumn:name="WorkloadVersion",type=string,JSONPath=`.spec.workloadVersion`
 // +kubebuilder:printcolumn:name="Job Name",type=string,JSONPath=`.status.jobName`
-// +kubebuilder:printcolumn:name="RetryCount",type=string,JSONPath=`.status.retryCount`
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.status`
 
 // KeptnTask is the Schema for the keptntasks API
@@ -210,4 +214,10 @@ func (t KeptnTask) GetEventAnnotations() map[string]string {
 		"taskName":           t.Name,
 		"taskDefinitionName": t.Spec.TaskDefinition,
 	}
+}
+
+func (t KeptnTask) GetActiveDeadlineSeconds() *int64 {
+	deadline, _ := time.ParseDuration(t.Spec.Timeout.Duration.String())
+	seconds := int64(deadline.Seconds())
+	return &seconds
 }

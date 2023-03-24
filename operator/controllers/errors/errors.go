@@ -13,6 +13,7 @@ var ErrNoValues = fmt.Errorf("no values")
 var ErrInvalidOperator = fmt.Errorf("invalid operator")
 var ErrCannotMarshalParams = fmt.Errorf("could not marshal parameters")
 var ErrUnsupportedWorkloadInstanceResourceReference = fmt.Errorf("unsupported Resource Reference")
+var ErrCannotGetKeptnTaskDefinition = fmt.Errorf("cannot retrieve KeptnTaskDefinition")
 
 var ErrCannotRetrieveConfigMsg = "could not retrieve KeptnConfig: %w"
 var ErrCannotRetrieveInstancesMsg = "could not retrieve instances: %w"

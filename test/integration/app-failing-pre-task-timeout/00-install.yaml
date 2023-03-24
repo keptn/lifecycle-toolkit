@@ -1,0 +1,59 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: podtato-head
+spec:
+  version: "1.3"
+  workloads:
+    - name: podtato-head-entry
+      version: 0.1.0
+  preDeploymentTasks:
+    - pre-task-timeout
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/entry:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-task-timeout
+spec:
+  function:
+    inline:
+      code: |
+        const runLater = (delay) => {
+          setTimeout(() => {
+            console.log('bar');
+          }, delay)
+        }
+        console.log('foo')
+        runLater(100000);
+        console.log('baz')
+  timeout: "30s"

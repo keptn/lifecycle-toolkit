@@ -61,7 +61,11 @@ var _ = Describe("Task", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Setting the Job Status to failed")
-				createdJob.Status.Failed = 1
+				createdJob.Status.Conditions = []batchv1.JobCondition{
+					{
+						Type: batchv1.JobFailed,
+					},
+				}
 
 				err = k8sClient.Status().Update(context.TODO(), createdJob)
 				Expect(err).To(BeNil())

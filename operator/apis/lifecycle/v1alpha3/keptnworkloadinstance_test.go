@@ -182,9 +182,16 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 
 	require.Equal(t, "trace1.workloadname.version.phase", workload.GetSpanKey("phase"))
 
+	retries := int32(5)
 	task := workload.GenerateTask(KeptnTaskDefinition{
 		ObjectMeta: v1.ObjectMeta{
 			Name: "task-def",
+		},
+		Spec: KeptnTaskDefinitionSpec{
+			Timeout: v1.Duration{
+				Duration: 5 * time.Second,
+			},
+			Retries: &retries,
 		},
 	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnTaskSpec{
@@ -195,6 +202,10 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		Parameters:       TaskParameters{},
 		SecureParameters: SecureParameters{},
 		Type:             common.PostDeploymentCheckType,
+		Timeout: v1.Duration{
+			Duration: 5 * time.Second,
+		},
+		Retries: &retries,
 	}, task.Spec)
 
 	evaluation := workload.GenerateEvaluation(KeptnEvaluationDefinition{

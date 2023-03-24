@@ -46,7 +46,7 @@ func (r *KeptnConfig) SetupWebhookWithManager(mgr ctrl.Manager, namespace string
 
 var _ webhook.Validator = &KeptnConfig{}
 
-// ValidateCreate checks that there is not yet another KetpnConfig active
+// ValidateCreate checks that there is not yet another KeptnConfig active
 func (r *KeptnConfig) ValidateCreate() error {
 	logger.Info("Validating KeptnConfig", "name", r.Name)
 	configs := &KeptnConfigList{}

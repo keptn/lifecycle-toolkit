@@ -12,4 +12,4 @@ metadata:
   namespace: system
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
-  KeptnAppCreationRequestTimeout: 30
+  keptnAppCreationRequestTimeoutSeconds: 30

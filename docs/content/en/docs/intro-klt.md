@@ -111,8 +111,8 @@ the Keptn Lifecycle Toolkit:
   The README file in that repo gives instructions for installing the software
   either automatically or manually.
 
-* [What is the Keptn Lifecycle Toolkit?](https://isitobservable.io/observability/kubernetes/what-is-the-keptn-lifecycle-toolkit) blog
-  discusses KLT as part of the "Is It Observable?" series.
+* [What is the Keptn Lifecycle Toolkit?](https://isitobservable.io/observability/kubernetes/what-is-the-keptn-lifecycle-toolkit)
+  blog discusses KLT as part of the "Is It Observable?" series.
   This links to:
 
   * [What is Keptn Lifecycle Toolkit?](https://www.youtube.com/watch?v=Uvg4uG8AbFg)

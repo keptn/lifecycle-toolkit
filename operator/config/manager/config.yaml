@@ -10,6 +10,9 @@ metadata:
     control-plane: lifecycle-operator
   name: keptnconfig
   namespace: system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-failed
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 30

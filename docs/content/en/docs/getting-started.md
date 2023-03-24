@@ -91,7 +91,7 @@ make restart-lifecycle-toolkit
 > **Note:**
 To export traces to the OpenTelemetry Collector, you need a
  [KeptnConfig Resource](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/support/keptn/keptnconfig.yaml)
- in the `keptn-lifecycle-toolkit` namespace.
+ in the namespace where KLT is installed.
 
 ## The Demo Application
 

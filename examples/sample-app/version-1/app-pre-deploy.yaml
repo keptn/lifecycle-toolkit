@@ -1,7 +1,7 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
-  name: pre-deployment-check-entry
+  name: pre-deployment-check-frontend
   namespace: podtato-kubectl
 spec:
   function:
@@ -9,4 +9,4 @@ spec:
       url: https://raw.githubusercontent.com/keptn-sandbox/lifecycle-controller/main/functions-runtime/samples/ts/http.ts
     parameters:
       map:
-        url: http://podtato-head-entry.podtato-kubectl.svc.cluster.local:9000
+        url: http://podtato-head-frontend.podtato-kubectl.svc.cluster.local:8080

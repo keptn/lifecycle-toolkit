@@ -1,5 +1,5 @@
-# renovate: datasource=github-tags depName=jaegertracing/jaeger
-JAEGER_VERSION ?= v1.43.0
+# renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
+JAEGER_VERSION ?= v1.42.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -11,7 +11,8 @@ install: install-observability install-argo
 	@echo "-----------------------------------"
 	helm repo add klt https://charts.lifecycle.keptn.sh
 	helm repo update
-	helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+	helm upgrade --install keptn klt/klt -n $(TOOLKIT_NAMESPACE) --create-namespace --wait
+	kubectl apply -f support/keptn/keptnconfig.yaml -n $(TOOLKIT_NAMESPACE)
 
 .PHONY: install-observability
 install-observability:
@@ -56,6 +57,18 @@ undeploy-podtatohead:
 .PHONY: uninstall-observability
 uninstall-observability: undeploy-podtatohead
 	make -C support/observability uninstall
+
+.PHONY: uninstall-argo
+uninstall-argo: undeploy-podtatohead
+	make -C support/argo uninstall
+
+.PHONY: uninstall
+uninstall: uninstall-observability uninstall-argo
+	@echo "-----------------------------------"
+	@echo "Uninstall Keptn-lifecycle-toolkit"
+	@echo "-----------------------------------"
+	helm uninstall keptn -n $(TOOLKIT_NAMESPACE)
+	kubectl delete ns $(TOOLKIT_NAMESPACE) --ignore-not-found=true
 
 .PHONY: port-forward-argocd
 port-forward-argocd:

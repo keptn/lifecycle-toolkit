@@ -21,7 +21,7 @@ data:
             - job_name: 'otel-collector'
               scrape_interval: 5s
               static_configs:
-                - targets: ['lifecycle-operator-metrics-service:2222']
+                - targets: ['keptn-klt-lifecycle-operator-metrics-service:2222']
     processors:
     extensions:
       health_check: {}

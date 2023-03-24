@@ -261,9 +261,6 @@ spec:
     - jsonPath: .status.jobName
       name: Job Name
       type: string
-    - jsonPath: .status.retryCount
-      name: RetryCount
-      type: string
     - jsonPath: .status.status
       name: Status
       type: string
@@ -323,6 +320,8 @@ spec:
                     type: object
                 type: object
               retries:
+                default: 10
+                format: int32
                 type: integer
               secureParameters:
                 properties:
@@ -332,6 +331,8 @@ spec:
               taskDefinition:
                 type: string
               timeout:
+                default: 5m
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
                 type: string
@@ -355,17 +356,14 @@ spec:
                 type: string
               message:
                 type: string
-              retryCount:
-                default: 0
-                type: integer
+              reason:
+                type: string
               startTime:
                 format: date-time
                 type: string
               status:
                 default: Pending
                 type: string
-            required:
-            - retryCount
             type: object
         type: object
     served: true

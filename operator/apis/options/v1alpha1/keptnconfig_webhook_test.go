@@ -1,12 +1,13 @@
 package v1alpha1
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	fakeClient "sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"testing"
 )
 
 func TestValidateCreate(t *testing.T) {

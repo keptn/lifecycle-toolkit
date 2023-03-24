@@ -342,7 +342,6 @@ spec:
             - app
             - appVersion
             - context
-            - retries
             - taskDefinition
             - workload
             - workloadVersion

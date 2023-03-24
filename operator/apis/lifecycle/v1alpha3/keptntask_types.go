@@ -42,13 +42,13 @@ type KeptnTaskSpec struct {
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
 	// +kubebuilder:default:=10
-	Retries *int32 `json:"retries"`
+	Retries *int32 `json:"retries,omitempty"`
 	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	Timeout metav1.Duration `json:"timeout"`
+	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
 type TaskContext struct {

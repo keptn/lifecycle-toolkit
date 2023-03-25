@@ -59,9 +59,13 @@ please create an issue on the GitHub repository:
   include that information in your description of the issue
   or in a comment to the issue.
 
-## [Building the documentation locally](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/builddocslocally.md)
+## Building the documentation locally
+ * For more information on this:  
+      - [read here](docs/builddocslocally.md)
 
-## [Building markdown files without Hugo](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/builddocslocally.md)
+## Building markdown files without Hugo
+ * For more information on this:  
+      - [read here](docs/builddocslocally.md)
 
 ## Interacting with github
 
@@ -336,7 +340,9 @@ If you've pushed your changes to GitHub already you'll need to force push your b
 * <https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5>
 * <https://thesofproject.github.io/latest/contribute/contribute_guidelines.html>
 
-## [Source file structure](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/source-file.md)
+## Source file structure
+* For more information on this:  
+   - [read here](docs/source-file.md)
 
 ## Guidelines for working on documentation in development versus already released documentation
 

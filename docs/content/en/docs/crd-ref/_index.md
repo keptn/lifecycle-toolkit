@@ -6,7 +6,6 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 This section provides comprehensive reference information about the
-YAML files that create the
 [Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 that are defined for the Keptn Lifecycle Toolkit.
 

@@ -29,7 +29,7 @@ spec:
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- CRD type.  Must be set to `KeptnTaskDefinition`
+* **kind** -- Resource type.  Must be set to `KeptnTaskDefinition`
 
 * **name** -- Unique name of this task.
   * Must be an alphanumeric string and, by convention, is all lowercase.
@@ -48,10 +48,11 @@ spec:
     that is included in this file.
     For example:
 
-    ```function:
-    inline:
-      code: |
-        console.log("Deployment Task has been executed");
+    ```yaml
+    function:
+      inline:
+        code: |
+          console.log("Deployment Task has been executed");
     ```
 
   * **httpRef** - Specify a Deno script to be executed at runtime
@@ -63,7 +64,7 @@ spec:
       spec:
         function:
           httpRef:
-            url: <url>
+            url: "https://www.example.com/yourscript.js"
     ```
 
   * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
@@ -81,7 +82,7 @@ spec:
      ```
 
     This can also be used to group a set of tasks
-    into a single `KeptnTaskDefinitions`,
+    into a single `KeptnTaskDefinition`,
     such as defining a `KeptnTaskDefinition` for testing.
     In this case, it other, existing `KeptnTaskDefinition`s
     for each type of test to be run,
@@ -92,11 +93,11 @@ spec:
   as a JSON object.
   For example:
 
-   ```spec:
-       parameters:
-         map:
-           textMessage: "This is my configuration"
-   ```
+   ```yaml
+   spec:
+     parameters:
+       map:
+         textMessage: "This is my configuration"
 
    The JSON object can be read
    through the `DATA` environment variable using `Deno.env.get("DATA");`.
@@ -115,9 +116,8 @@ spec:
   For example:
 
   ```yaml
-      secureParameters:
-        secret: slack-token
-   ```
+  secureParameters:
+    secret: slack-token
 
    See [Create secret text](#create-secret-text) for details.
 
@@ -152,7 +152,7 @@ if (contextdata.objectType == "Workload") {
 ```yaml
 # kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: dummy-task
@@ -174,7 +174,7 @@ by creating a Kubernetes secret with a JSON string:
 # kubectl create secret generic my-secret \
 # --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
 
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: dummy-task
@@ -193,11 +193,11 @@ spec:
 
 ## Examples
 
-**Example 1** defines a full-fletched Deno script
+**Example 1** defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-inline
@@ -217,7 +217,7 @@ spec:
 **Example 2** fetches the Deno script from a remote webserver at runtime:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
@@ -228,7 +228,7 @@ spec:
 ```
 
 See the
-[sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+[sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
 PodtatoHead example for a more complete example.
 
 **Example 3** calls another defined task,
@@ -238,7 +238,7 @@ In this case, it calls `slack-notification-dev`,
 passing `parameters` and `secureParameters` to that other task:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev

@@ -6,7 +6,6 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 This section provides comprehensive reference information about the
-YAML files that create the
 [Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 that are defined for the Keptn Lifecycle Toolkit.
 
@@ -17,10 +16,9 @@ but the format and content is still evolving.
 We welcome your input!**
 
 Each CRD is an object of an
-[API library](../../docs/api-ref/)
-Keptn APIs follow the Kubernetes API versioning scheme.
-and are themselves composed of objects and sub-objects.
+[API group](../../docs/api-ref/).
 By introducing CRDs, Keptn is extending the base Kubernetes API with new objects and functionality.
+Keptn APIs follow API versioning conventions recommended by Kubernetes and are themselves composed of objects and sub-objects.
 Keptn APIs follow API versioning conventions recommended by Kubernetes.
 
 For more information, see the Kubernetes documentation:

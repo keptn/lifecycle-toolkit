@@ -64,7 +64,7 @@ spec:
       spec:
         function:
           httpRef:
-            url: <url>
+            url: "https://www.example.com/yourscript.js"
     ```
 
   * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.

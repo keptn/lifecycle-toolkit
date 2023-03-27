@@ -230,7 +230,7 @@ spec:
 ```
 
 See the
-[sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+[sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
 PodtatoHead example for a more complete example.
 
 **Example 3** calls another defined task,

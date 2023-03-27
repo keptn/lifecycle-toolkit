@@ -19,12 +19,25 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappcreationrequest"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/kelseyhightower/envconfig"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
+	"go.opentelemetry.io/otel/sdk/metric"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	ctrl "sigs.k8s.io/controller-runtime"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -40,17 +53,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
-	"go.opentelemetry.io/otel/sdk/metric"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	ctrl "sigs.k8s.io/controller-runtime"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/healthz"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
 var (
@@ -72,14 +74,15 @@ type envConfig struct {
 	PodNamespace string `envconfig:"POD_NAMESPACE" default:""`
 	PodName      string `envconfig:"POD_NAME" default:""`
 
-	KeptnAppControllerLogLevel              int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnAppVersionControllerLogLevel       int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnEvaluationControllerLogLevel       int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskControllerLogLevel             int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskDefinitionControllerLogLevel   int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadControllerLogLevel         int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnOptionsControllerLogLevel          int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppControllerLogLevel                int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppCreationRequestControllerLogLevel int `envconfig:"KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppVersionControllerLogLevel         int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnEvaluationControllerLogLevel         int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
@@ -198,6 +201,17 @@ func main() {
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
+		os.Exit(1)
+	}
+
+	appCreationRequestLogger := ctrl.Log.WithName("KeptnAppCreationRequest Controller")
+	appCreationRequestReconciler := &keptnappcreationrequest.KeptnAppCreationRequestReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
+	}
+	if err := appCreationRequestReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppCreationRequest")
 		os.Exit(1)
 	}
 

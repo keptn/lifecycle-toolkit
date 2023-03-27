@@ -88,6 +88,32 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - keptnappcreationrequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
   - keptnapps
   verbs:
   - create

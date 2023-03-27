@@ -5,7 +5,7 @@ weight: 89
 ---
 
 A `KeptnTaskDefinition` defines tasks
-that can be run by the Keptn Lifecycle Toolkit
+that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a `KeptnApp`.
 
 ## Yaml Synopsis

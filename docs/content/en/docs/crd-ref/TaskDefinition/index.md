@@ -93,11 +93,11 @@ spec:
   as a JSON object.
   For example:
 
-   ```spec:
-       parameters:
-         map:
-           textMessage: "This is my configuration"
-   ```
+   ```yaml
+   spec:
+     parameters:
+       map:
+         textMessage: "This is my configuration"
 
    The JSON object can be read
    through the `DATA` environment variable using `Deno.env.get("DATA");`.

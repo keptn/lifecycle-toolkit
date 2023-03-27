@@ -35,9 +35,10 @@ import (
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme          *runtime.Scheme
-	Log             logr.Logger
-	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	Scheme              *runtime.Scheme
+	Log                 logr.Logger
+	LastAppliedSpec     *optionsv1alpha1.KeptnConfigSpec
+	DefaultCollectorURL string
 }
 
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
@@ -87,7 +88,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 
 func (r *KeptnConfigReconciler) initConfig() {
 	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
-		OTelCollectorUrl: "",
+		OTelCollectorUrl: r.DefaultCollectorURL,
 	}
 }
 

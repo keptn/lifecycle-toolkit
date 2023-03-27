@@ -7,6 +7,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     app.kuberentes.io/managed-by: kustomize
     app.kubernetes.io/created-by: keptn-lifecycle-toolkit
+    control-plane: lifecycle-operator
   name: keptnconfig-sample
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
+  keptnAppCreationRequestTimeoutSeconds: 30

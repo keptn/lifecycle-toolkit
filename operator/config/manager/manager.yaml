@@ -67,10 +67,10 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: OTEL_COLLECTOR_URL
-            value: otel-collector:4317
           - name: FUNCTION_RUNNER_IMAGE
             value: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0 #x-release-please-version
+          - name: OTEL_COLLECTOR_URL
+            value: otel-collector:4317
           - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
             value: "0"
           - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL

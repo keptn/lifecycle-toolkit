@@ -29,7 +29,7 @@ spec:
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- CRD type.  Must be set to `KeptnTaskDefinition`
+* **kind** -- Resource type.  Must be set to `KeptnTaskDefinition`
 
 * **name** -- Unique name of this task.
   * Must be an alphanumeric string and, by convention, is all lowercase.

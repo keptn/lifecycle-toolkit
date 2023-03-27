@@ -197,7 +197,7 @@ spec:
 within the `KeptnTaskDefinition` YAML file:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-inline

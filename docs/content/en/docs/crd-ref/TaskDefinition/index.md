@@ -152,7 +152,7 @@ if (contextdata.objectType == "Workload") {
 ```yaml
 # kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: dummy-task

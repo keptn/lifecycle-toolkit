@@ -82,7 +82,7 @@ spec:
      ```
 
     This can also be used to group a set of tasks
-    into a single `KeptnTaskDefinitions`,
+    into a single `KeptnTaskDefinition`,
     such as defining a `KeptnTaskDefinition` for testing.
     In this case, it other, existing `KeptnTaskDefinition`s
     for each type of test to be run,

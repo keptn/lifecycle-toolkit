@@ -50,10 +50,11 @@ spec:
     that is included in this file.
     For example:
 
-    ```function:
-    inline:
-      code: |
-        console.log("Deployment Task has been executed");
+    ```yaml
+    function:
+      inline:
+        code: |
+          console.log("Deployment Task has been executed");
     ```
 
   * **httpRef** - Specify a Deno script to be executed at runtime

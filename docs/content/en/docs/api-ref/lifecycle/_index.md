@@ -1,4 +1,4 @@
 ---
 title: Lifecycle API
-description: Reference information about the Lifecycle API
+description: Reference information about the Lifecycle API group
 ---

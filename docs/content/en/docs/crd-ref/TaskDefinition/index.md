@@ -40,8 +40,6 @@ spec:
   expressed as a [Deno](https://deno.land/) script.
   Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
   for more information about the runtime.
-  In the future, we intend to support additional runtimes,
-  especially running a container image directly.
 
   The `function` can be defined as one of the following:
 

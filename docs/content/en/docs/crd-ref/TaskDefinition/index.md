@@ -219,7 +219,7 @@ spec:
 **Example 2** fetches the Deno script from a remote webserver at runtime:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http

@@ -195,7 +195,7 @@ spec:
 
 ## Examples
 
-**Example 1** defines a full-fletched Deno script
+**Example 1** defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
 
 ```yaml

@@ -238,7 +238,7 @@ In this case, it calls `slack-notification-dev`,
 passing `parameters` and `secureParameters` to that other task:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev

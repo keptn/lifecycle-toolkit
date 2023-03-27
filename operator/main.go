@@ -79,7 +79,9 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel   int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel         int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadInstanceControllerLogLevel int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
-	KptnOptionsControllerLogLevel           int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnOptionsControllerLogLevel          int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+
+	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -259,9 +261,10 @@ func main() {
 
 	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    configLogger.V(env.KptnOptionsControllerLogLevel),
+		Client:              mgr.GetClient(),
+		Scheme:              mgr.GetScheme(),
+		Log:                 configLogger.V(env.KeptnOptionsControllerLogLevel),
+		DefaultCollectorURL: env.KeptnOptionsCollectorURL,
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")

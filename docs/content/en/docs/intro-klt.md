@@ -21,7 +21,7 @@ The Keptn Lifecycle Toolkit "wraps" a standard Kubernetes GitOps deployment
 with the capability to automatically handle issues
 before and after the actual deployment.
 
-Pre-deployment issues:
+Pre-deployment issues that Keptn Lifecycle Toolkit can handle:
 
 * Send appropriate notifications that this deployment is about to happen
 * Check that downstream services meet their SLOs
@@ -29,13 +29,14 @@ Pre-deployment issues:
 * Ensure that your infrastructure
   has the resources necessary for a successful deployment
 
-Post-deployment issues:
+Post-deployment issues that Keptn Lifecycle Toolkit can handle:
 
 * Integrate with tooling beyond the standard Kubernetes probes
 * Automatically test the deployment
 * Ensure that the deployment is meeting its SLOs
 * Identify any downstream issues that may be caused by this deployment
-* Send appropriate notifications about whether the deployment was successful or unsuccessful
+* Send appropriate notifications
+  about whether the deployment was successful or unsuccessful
 
 KLT can evaluate both workload (single service) tests
 and SLO evaluations before and after the actual deployment.
@@ -58,8 +59,7 @@ It supports the following steps:
 * Post-Deployment Evaluations: e.g. evaluate the deployment,
   evaluate the test results, etc.
 
-All of these things can be executed for a workload or for a KeptnApp,
-which is a collection of multiple workloads.
+All of these things can be executed for a workload or for a KeptnApp.
 
 ## Compare Keptn Lifecycle Toolkit and Keptn LTS
 
@@ -77,6 +77,13 @@ can accomodate complex scoring algorithms for SLO evaluations,
 and can implement remediations (self-healing) for problems discovered
 on the production site.
 
+Keptn Lifecycle Toolkit includes multiple features
+that can be implemented independently or together.
+Different features are at different levels of stability.
+See the [Keptn Lifecycle Toolkit README file]
+for a list of the features that have been implemented to date
+and their level of stability.
+
 In a December 2022 Keptn Community meeting,
 we discussed the differences and similarities
 between Keptn and the Keptn Lifecycle Toolkit
@@ -86,15 +93,34 @@ View the recording:
 
 ## Overviews of Keptn Lifecycle Toolkit
 
-A number of presentations are available to give an overview
-of the Keptn Lifecycle Toolkit:
+A number of presentations are available to help you understand
+the Keptn Lifecycle Toolkit:
 
-* [What is keptn, how it works, and how to get started!](https://www.dynatrace.com/news/blog/what-is-keptn-how-it-works-and-how-to-get-started/)
+* [Orchestrating and Observing GitOps Deployments with Keptn](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=11s)
+  discusses the evolution of Keptn
+  and the concepts that drive the Keptn Lifecycle Toolkit,
+  then gives a simple demonstration of a Keptn Lifecycle Controller implementation.
 
-* [Observability and Orchestration of your Deployment](https://www.youtube.com/watch?v=0nCbrG_RFos)
+* [Keptn Lifecycle Toolkit in a Nutshell](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+  gives an overview of what KLT does and how to implement it.
 
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)
+  is a short video demonstration of how the Keptn Lifecycle Toolkit works.
+  You can download the exercise and run it for yourself;
+  notes below the video give a link to the github repo.
+  The README file in that repo gives instructions for installing the software
+  either automatically or manually.
 
-* The "IsItObservable Tutorial for KLT" will be released to YouTube soon.
+* [What is the Keptn Lifecycle Toolkit?](https://isitobservable.io/observability/kubernetes/what-is-the-keptn-lifecycle-toolkit)
+  blog discusses KLT as part of the "Is It Observable?" series.
+  This links to:
+
+  * [What is Keptn Lifecycle Toolkit?](https://www.youtube.com/watch?v=Uvg4uG8AbFg)
+    is a video that steps through the process of integrating KLT
+    with your existing cloud native cluster.
+
+* [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+  demonstrates how to install KLT and create your first KeptnTask in less than ten minutes.
+  
 * You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit)
-* that accompanies this video in the meantime.
+  for more information.

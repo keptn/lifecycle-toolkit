@@ -116,9 +116,8 @@ spec:
   For example:
 
   ```yaml
-      secureParameters:
-        secret: slack-token
-   ```
+  secureParameters:
+    secret: slack-token
 
    See [Create secret text](#create-secret-text) for details.
 

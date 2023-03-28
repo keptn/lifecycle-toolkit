@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230323144902-720e9e9b7040
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230327141700-f5fb9ead9a53
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.2
 	github.com/onsi/gomega v1.27.5

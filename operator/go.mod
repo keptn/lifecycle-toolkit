@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/go-logr/logr v1.2.3
 	github.com/hashicorp/go-version v1.6.0
-	github.com/imdario/mergo v0.3.14
+	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230323144902-720e9e9b7040
 	github.com/magiconair/properties v1.8.7

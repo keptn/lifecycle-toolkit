@@ -1,0 +1,11 @@
+---
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetric
+metadata:
+  name: cpu-throttling
+  namespace: podtato-kubectl
+spec:
+  provider:
+    name: prometheus
+  query: """
+  fetchIntervalSeconds: 60

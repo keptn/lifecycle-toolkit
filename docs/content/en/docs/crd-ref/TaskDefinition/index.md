@@ -261,7 +261,7 @@ spec:
 directory for more example `KeptnTaskDefinition` YAML files.
 Separate examples are provided for each API version.
 For example, the `lifecycle_v1alpha3_keptntaskdefinition` file
-contains examples for the `v1alpha3` library.
+contains examples for the `v1alpha3` version of the lifecycle API group.
 
 >>>>>>> 0333070 (library -> API)
 ## Files

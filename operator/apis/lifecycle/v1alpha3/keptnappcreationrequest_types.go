@@ -25,9 +25,6 @@ import (
 
 // KeptnAppCreationRequestSpec defines the desired state of KeptnAppCreationRequest
 type KeptnAppCreationRequestSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// AppName is the name of the KeptnApp the KeptnAppCreationRequest should create if no user-defined object with that name is found.
 	AppName string `json:"appName"`
 }

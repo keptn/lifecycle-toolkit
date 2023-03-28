@@ -25,6 +25,14 @@ Copy this template to create a new CRD reference page.
 
 ## Examples
 
+**Example 1**
+
+* See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples) 
+directory for more example `CRD` YAML files.
+Separate examples are provided for each library version.
+For example, the `lifecycle_v1alpha3_crd` file
+contains examples for the `v1alpha3` library.
+
 ## Files
 
 ## Differences between versions

@@ -26,7 +26,7 @@ patches:
   - patch: |
       - op: replace
         path: '/spec/service/namespace'
-        value: '{{ .Release.Namespace }}'      
+        value: '{{ .Release.Namespace }}'
       - op: replace
         path: '/spec/service/name'
         value: '{{ include "chart.fullname" . }}-metrics-operator-service'

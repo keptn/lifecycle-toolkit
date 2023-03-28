@@ -4,17 +4,17 @@ kind: ClusterRole
 metadata:
   name: keptnmetricsprovider-viewer-role
 rules:
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders/status
-  verbs:
-  - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders/status
+    verbs:
+      - get

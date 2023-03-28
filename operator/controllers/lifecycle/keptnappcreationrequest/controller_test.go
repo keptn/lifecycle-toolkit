@@ -2,6 +2,8 @@ package keptnappcreationrequest
 
 import (
 	"context"
+	"testing"
+
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/stretchr/testify/require"
@@ -9,7 +11,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	controllerruntime "sigs.k8s.io/controller-runtime"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"testing"
 )
 
 func TestKeptnAppCreationRequestReconciler_Reconcile(t *testing.T) {

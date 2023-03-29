@@ -39,7 +39,7 @@ type DynatraceData struct {
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	qURL := baseURL + "/v2/metrics/query?metricSelector=" + metric.Spec.Query
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + metric.Spec.Query
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

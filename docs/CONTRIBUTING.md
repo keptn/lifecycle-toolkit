@@ -145,13 +145,11 @@ to check your formatting, you have the following options:
      The document updates automatically
      each time you write your changes to disk.
 
-## Interacting with github
+## [Interacting with github](content/en/contribute/general/github/_index.md)
 
 The documentation source is stored on github.com
 and you use the standard github facilities to modify it.
 The following notes are provided for people who need a little help.
-
-[Interacting with github](content/en/contribute/general/github/_index.md)
 
 ## Source file structure
 

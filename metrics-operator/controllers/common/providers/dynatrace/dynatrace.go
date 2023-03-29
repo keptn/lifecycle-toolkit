@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -37,7 +38,8 @@ type DynatraceData struct {
 
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	qURL := provider.Spec.TargetServer + "/api/v2/metrics/query?metricSelector=" + metric.Spec.Query
+	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + metric.Spec.Query
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
@@ -77,6 +79,17 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 
 	r := fmt.Sprintf("%f", d.getSingleValue(result))
 	return r, b, nil
+}
+
+func (d *KeptnDynatraceProvider) normalizeAPIURL(url string) string {
+	out := url
+	if !strings.HasSuffix(out, "/") {
+		out = out + "/"
+	}
+	if !strings.HasSuffix(out, "api/") {
+		out = out + "api/"
+	}
+	return out
 }
 
 func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float64 {

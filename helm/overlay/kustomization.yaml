@@ -44,4 +44,3 @@ patches:
     target:
       kind: APIService
       name: "(v1beta1.custom.metrics.k8s.io)"
-

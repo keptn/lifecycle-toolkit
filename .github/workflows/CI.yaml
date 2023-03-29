@@ -55,11 +55,13 @@ jobs:
       - name: Get workflow run type
         id: get_run_type
         run: |
-          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && \
+            ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
           echo "github.actor != 'renovate[bot]' = ${{ github.actor != 'renovate[bot]' }}"
           echo "github.actor != 'dependabot[bot]' = ${{ github.actor != 'dependabot[bot]' }}"
           echo "github.event_name == 'push' = ${{ github.event_name == 'push' }}"
-          echo "github.event.pull_request.head.repo.full_name == github.repository = ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+          echo "github.event.pull_request.head.repo.full_name == github.repository = \
+            ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
@@ -217,7 +219,8 @@ jobs:
   upload_images:
     name: Upload images to ghcr registry
     needs: [prepare_ci_run, test, component_tests, integration_tests, e2e_tests, performance_tests]
-    if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true' # only run on push to main/maintenance branches
+    # only run on push to main/maintenance branches
+    if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     runs-on: ubuntu-22.04
     env:
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}

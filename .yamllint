@@ -8,6 +8,9 @@ ignore: |
   examples/support/observability/config/prometheus
   dashboards/grafana
   operator/config/crd/bases
+  metrics-operator/config/crd/bases
+  helm/chart/templates
+  helm/chart/rendered.yaml
 
 rules:
   braces: enable
@@ -36,3 +39,4 @@ rules:
   trailing-spaces: enable
   truthy:
     level: error
+    allowed-values: ['true', 'false', 'on']

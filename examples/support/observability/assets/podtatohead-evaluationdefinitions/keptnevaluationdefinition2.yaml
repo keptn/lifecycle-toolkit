@@ -9,4 +9,3 @@ spec:
         name: consumed-memory
         namespace: podtato-kubectl
       evaluationTarget: "<1000000000000"
-

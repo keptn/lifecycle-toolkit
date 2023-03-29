@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CRD docs auto generation script
+# API docs auto generation script
 #
 # This script goes through all API definitions in the operator/apis folder
 # and generates docs from code for each API group and version
@@ -23,7 +23,7 @@ else
   echo "Docs generator is installed, continuing..."
 fi
 
-echo "Running CRD docs auto-generator..."
+echo "Running API docs auto-generator..."
 
 for api_group in "$API_ROOT"*; do
   sanitized_api_group="${api_group#$API_ROOT}"
@@ -55,7 +55,7 @@ for api_group in "$API_ROOT"*; do
     echo "Creating docs folder $OUTPUT_PATH..."
     mkdir -p "$OUTPUT_PATH"
 
-    echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
+    echo "Generating API docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
     api-ref-docs \
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \

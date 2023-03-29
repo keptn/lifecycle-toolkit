@@ -73,18 +73,18 @@ jobs:
 
       - name: Copy old docs
         run: |
-          cp -R ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old
+          cp -R ./docs/content/en/docs/api-ref ./docs/content/en/docs/api-ref-old
 
       - name: Run docs generator
         run: ./.github/scripts/generate-crd-docs/generate-crd-docs.sh
 
       - name: Check if docs are up to date
         run: |
-          if ! diff -rq ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old &>/dev/null; then
+          if ! diff -rq ./docs/content/en/docs/api-ref ./docs/content/en/docs/api-ref-old &>/dev/null; then
             echo "The CRD docs have changes that are not reflected in the docs pages. Please use ./.github/scripts/generate-crd-docs/generate-crd-docs.sh to re-generate the docs."
             echo ""
             echo "=========== Diff ==========="
-            diff -ru ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old
+            diff -ru ./docs/content/en/docs/api-ref ./docs/content/en/docs/api-ref-old
             exit 1
           else
             echo ""

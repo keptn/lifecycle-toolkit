@@ -1,12 +1,11 @@
 ---
-title: Keptn's Lifecycle Operator
+title: Keptn Lifecycle Operator
 linktitle: Lifecycle Operator
-description: Basic understanding of Lifecycle Operator
+description: Basic understanding of Keptn's Lifecycle Operator
 weight: 80
 cascade:
 ---
 
-### Lifecycle Operator
 
 **Keptn's Lifecycle Operator** is
 a Kubernetes [operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)

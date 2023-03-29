@@ -1,12 +1,11 @@
 ---
-title: Keptn's Metrics Operator
+title: Keptn Metrics Operator
 linktitle: Metrics Operator
-description: Basic understanding of KLT Metrics Operator
+description: Basic understanding of Keptn's Metrics Operator
 weight: 80
 cascade:
 ---
 
-### Metrics Operator
 
 **Metrics Operator** collects, processes, and analyzes metrics data from a variety of sources. Once collected, this data, can be used to generate a variety of reports and dashboards that provide insights into the health and performance of the application and infrastructure.
 

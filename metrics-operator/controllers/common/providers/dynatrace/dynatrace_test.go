@@ -102,6 +102,44 @@ func TestGetSingleValue(t *testing.T) {
 	}
 }
 
+func TestNormalizeURL(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		result string
+	}{
+		{
+			name:   "happy path",
+			input:  "http://mydttenant.com/api/",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "missing final /",
+			input:  "http://mydttenant.com/api",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "missing final /api",
+			input:  "http://mydttenant.com/",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "base url",
+			input:  "http://mydttenant.com",
+			result: "http://mydttenant.com/api/",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kdp := KeptnDynatraceProvider{}
+			r := kdp.normalizeAPIURL(tt.input)
+			require.Equal(t, tt.result, r)
+		})
+
+	}
+}
+
 func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 	const query = "my-query"
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

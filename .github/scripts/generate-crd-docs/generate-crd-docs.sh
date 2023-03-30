@@ -16,7 +16,12 @@ RENDERER='markdown'
 RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
 
 echo "Checking if code generator tool is installed..."
-test -s crd-ref-docs || go install github.com/elastic/crd-ref-docs@${GENERATOR_VERSION}
+if ! test -s crd-ref-docs; then
+  echo "Docs generator is not installed, installing now..."
+  go install github.com/elastic/crd-ref-docs@${GENERATOR_VERSION}
+else
+  echo "Docs generator is installed, continuing..."
+fi
 
 echo "Running CRD docs auto-generator..."
 

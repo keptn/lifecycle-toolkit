@@ -20,7 +20,7 @@ To list available versions:
 
 ```shell
 helm repo update
-helm search repo keptn-lifecycle-toolkit
+helm search repo klt
 ```
 
 The `helm upgrade --install` command offers a flag called `--set`, which can be used to specify

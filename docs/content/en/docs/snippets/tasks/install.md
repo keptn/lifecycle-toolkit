@@ -24,7 +24,7 @@ helm search repo klt
 ```
 
 The `helm upgrade --install` command offers a flag called `--set`, which can be used to specify
-configuration options using the format key1=value1,key2=value2,....
+configuration options using the format `--set key1=value1,key2=value2,...`
 
 Or you could download the chart value file and modify it using
 

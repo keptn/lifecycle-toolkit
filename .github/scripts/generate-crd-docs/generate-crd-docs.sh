@@ -7,7 +7,7 @@
 #
 # Inputs: None
 
-# renovate: datasource=github-releases depName=elastic/crd-ref-docs
+# renovate: datasource=github-releases depName=elastic/api-ref-docs
 GENERATOR_VERSION=master
 API_DOMAIN="keptn.sh"
 API_ROOT='operator/apis/'
@@ -27,7 +27,7 @@ echo "Running CRD docs auto-generator..."
 
 for api_group in "$API_ROOT"*; do
   sanitized_api_group="${api_group#$API_ROOT}"
-  INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
+  INDEX_PATH="./docs/content/en/docs/api-ref/$sanitized_api_group/_index.md"
 
   if [ ! -f "$INDEX_PATH" ]; then
     echo "API group index file doesn't exist for group $sanitized_api_group. Creating it now..."
@@ -41,7 +41,7 @@ for api_group in "$API_ROOT"*; do
   for api_version in "$api_group"/*; do
     sanitized_api_version="${api_version#$API_ROOT$sanitized_api_group/}"
 
-    OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
+    OUTPUT_PATH="./docs/content/en/docs/api-ref/$sanitized_api_group/$sanitized_api_version"
 
     echo "Arguments:"
     echo "TEMPLATE_DIR: $TEMPLATE_DIR"
@@ -56,7 +56,7 @@ for api_group in "$API_ROOT"*; do
     mkdir -p "$OUTPUT_PATH"
 
     echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
-    crd-ref-docs \
+    api-ref-docs \
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \
       --renderer="$RENDERER" \

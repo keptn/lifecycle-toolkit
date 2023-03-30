@@ -64,7 +64,7 @@ git clone https://github.com/keptn/lifecycle-toolkit
 cd lifecycle-toolkit/examples
 ```
 
-## Install the required observability features
+## Install observability features
 
 The Keptn Lifecycle Toolkit emits OpenTelemetry data as standard
 but the toolkit does not come pre-bundled with Observability backend tooling.

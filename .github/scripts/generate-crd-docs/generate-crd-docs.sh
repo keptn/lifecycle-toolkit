@@ -7,7 +7,7 @@
 #
 # Inputs: None
 
-# renovate: datasource=github-releases depName=elastic/api-ref-docs
+# renovate: datasource=github-releases depName=elastic/crd-ref-docs
 GENERATOR_VERSION=master
 API_DOMAIN="keptn.sh"
 API_ROOT='operator/apis/'
@@ -56,7 +56,7 @@ for api_group in "$API_ROOT"*; do
     mkdir -p "$OUTPUT_PATH"
 
     echo "Generating API docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
-    api-ref-docs \
+    crd-ref-docs \
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \
       --renderer="$RENDERER" \

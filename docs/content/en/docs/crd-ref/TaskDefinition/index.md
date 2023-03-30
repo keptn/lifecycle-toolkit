@@ -253,6 +253,17 @@ spec:
       secret: slack-token
 ```
 
+<<<<<<< HEAD
+=======
+**More examples**
+
+* See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples)
+directory for more example `KeptnTaskDefinition` YAML files.
+Separate examples are provided for each API version.
+For example, the `lifecycle_v1alpha3_keptntaskdefinition` file
+contains examples for the `v1alpha3` library.
+
+>>>>>>> 0333070 (library -> API)
 ## Files
 
 API Reference:

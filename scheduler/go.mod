@@ -21,7 +21,7 @@ require (
 	k8s.io/component-base v0.25.8
 	k8s.io/klog/v2 v2.90.1
 	k8s.io/kubernetes v1.25.8
-	sigs.k8s.io/controller-runtime v0.13.1
+	sigs.k8s.io/controller-runtime v0.14.6
 )
 
 require (

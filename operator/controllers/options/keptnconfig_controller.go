@@ -35,14 +35,14 @@ import (
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme          *runtime.Scheme
-	Log             logr.Logger
-	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	Scheme              *runtime.Scheme
+	Log                 logr.Logger
+	LastAppliedSpec     *optionsv1alpha1.KeptnConfigSpec
+	DefaultCollectorURL string
 }
 
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/finalizers,verbs=update
+// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
+// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -88,7 +88,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 
 func (r *KeptnConfigReconciler) initConfig() {
 	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
-		OTelCollectorUrl: "",
+		OTelCollectorUrl: r.DefaultCollectorURL,
 	}
 }
 

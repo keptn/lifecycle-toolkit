@@ -17,7 +17,7 @@ metadata:
   name: <task-name>
 spec:
   function:
-    inline: | httpRef | functionRef
+    inline | httpRef | functionRef:
     [parameters:
       map:
         textMessage: "This is my configuration"]

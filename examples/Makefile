@@ -89,8 +89,8 @@ restart-lifecycle-toolkit:
 	@echo "----------------------------------"
 	@echo "Restart Keptn Lifecycle Controller"
 	@echo "----------------------------------"
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" scheduler -n keptn-lifecycle-toolkit-system
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" scheduler --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler --watch
 

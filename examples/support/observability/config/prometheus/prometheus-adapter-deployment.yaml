@@ -9,7 +9,7 @@ metadata:
   name: prometheus-adapter
   namespace: monitoring
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: metrics-adapter

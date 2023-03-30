@@ -60,8 +60,8 @@ These things can be found in our Getting Started repository
 which can be checked out as follows:
 
 ```shell
-git clone https://github.com/keptn-sandbox/lifecycle-toolkit-examples.git
-cd lifecycle-toolkit-examples
+git clone https://github.com/keptn/lifecycle-toolkit
+cd lifecycle-toolkit/examples
 ```
 
 ## Install the required observability features

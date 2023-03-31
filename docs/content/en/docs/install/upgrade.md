@@ -19,7 +19,7 @@ helm upgrade --install keptn klt/klt \
 
 Use the `--set` flag or download and edit the `values.yaml` file
 to modify the configuration as discused on the
-[Install the Lifecycle Toolkit](install) page.
+[Install the Lifecycle Toolkit](../install) page.
 
 ## Migrate from V 0.6.0 to V 0.7.0
 

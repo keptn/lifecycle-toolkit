@@ -14,7 +14,7 @@ Two methods are supported for installing the Keptn Lifecycle Toolkit:
   This is the preferred strategy because it allows you to customize your cluster..
 
 * All releases can be installed using
-  the [manifest](#use-manifest).
+  the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
 
 ## Use Helm Chart

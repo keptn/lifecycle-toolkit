@@ -47,7 +47,7 @@ To modify configuration options, use the `--set` flag
 to the `helm upgrade --install` command.
 Configuration options are specified using the format:
 
-```
+```shell
 key1=value1,key2=value2,....
 ```
 
@@ -65,7 +65,7 @@ file, modify some values, and use the modified file to install KLT:
 
 1. Install KLT by adding the following string to your `helm upgrade` command line:
 
-   ```
+   ```shell
    --values=values.yaml
    ```
 

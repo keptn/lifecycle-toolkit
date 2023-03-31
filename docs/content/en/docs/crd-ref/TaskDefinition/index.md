@@ -17,7 +17,7 @@ metadata:
   name: <task-name>
 spec:
   function:
-    inline: | httpRef | functionRef
+    inline | httpRef | functionRef:
     [parameters:
       map:
         textMessage: "This is my configuration"]
@@ -253,8 +253,6 @@ spec:
       secret: slack-token
 ```
 
-<<<<<<< HEAD
-=======
 **More examples**
 
 * See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples)
@@ -264,6 +262,8 @@ For example, the `lifecycle_v1alpha3_keptntaskdefinition` file
 contains examples for the `v1alpha3` version of the lifecycle API group.
 
 >>>>>>> 0333070 (library -> API)
+=======
+>>>>>>> 5b91097b2033a9e3c9fceefbbcca62544f9ab209
 ## Files
 
 API Reference:

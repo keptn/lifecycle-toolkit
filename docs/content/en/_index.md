@@ -34,7 +34,7 @@ cascade:
  </a>
     <a class="btn btn-lg btn-primary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
   Releases <i class="fab fa-github ml-2 "></i>
- </a>
+ </a>   
 </div>
 {{< /blocks/cover >}}
 <!-- markdownlint-enable MD033 -->
@@ -44,18 +44,28 @@ cascade:
 {{% /blocks/lead %}}
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
-See Keptn [in Action](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ)
+See Keptn in Action
+
+<a class="btn btn-light rounded-lg" href="https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ">
+  Youtube
+ </a>
 {{% /blocks/feature %}}
 
-<!-- markdownlint-disable-next-line line-length no-bare-urls -->
-{{% blocks/feature icon="fab fa-github" title="Contributions welcome!" url="https://github.com/keptn/lifecycle-toolkit" %}}
+{{% blocks/feature icon="fab fa-github" title="Contributions welcome!" %}}
 We do a [Pull Request](https://github.com/keptn/lifecycle-toolkit/pulls) contributions workflow on **GitHub**.
 New users are always welcome!
+
+<a class="btn btn-light rounded-lg" href="https://github.com/keptn/lifecycle-toolkit">
+  GitHub
+ </a>
 {{% /blocks/feature %}}
 
-<!-- markdownlint-disable-next-line line-length no-bare-urls -->
-{{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" url="https://twitter.com/keptnProject" %}}
+{{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" %}}
 For announcement of latest features etc.
+
+<a class="btn btn-light rounded-lg" href="https://twitter.com/keptnProject">
+  Twitter
+ </a>
 {{% /blocks/feature %}}
 
 {{< /blocks/section >}}

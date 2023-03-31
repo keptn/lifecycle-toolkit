@@ -118,6 +118,7 @@
 ## @param   lifecycleOperator.manager.containerSecurityContext.seccompProfile.type
 
 ## @param   lifecycleOperator.manager.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+## @param   lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
 ## @param   lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
 ## @param   lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
 ## @param   lifecycleOperator.manager.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller

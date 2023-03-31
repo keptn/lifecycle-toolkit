@@ -1,0 +1,6 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppCreationRequest
+metadata:
+  name: my-kacr
+spec:
+  appName: my-app

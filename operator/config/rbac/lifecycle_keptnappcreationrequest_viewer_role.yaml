@@ -1,0 +1,27 @@
+# permissions for end users to view keptnappcreationrequests.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: keptnappcreationrequest-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/managed-by: kustomize
+  name: keptnappcreationrequest-viewer-role
+rules:
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/status
+  verbs:
+  - get

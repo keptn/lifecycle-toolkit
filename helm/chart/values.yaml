@@ -66,6 +66,7 @@ lifecycleOperator:
     env:
       functionRunnerImage: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0
       keptnAppControllerLogLevel: "0"
+      keptnAppCreationRequestControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"
       keptnEvaluationControllerLogLevel: "0"
       keptnTaskControllerLogLevel: "0"

@@ -73,6 +73,8 @@ spec:
             value: otel-collector:4317
           - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
             value: "0"
+          - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
+            value: "0"
           - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
             value: "0"
           - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL

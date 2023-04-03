@@ -21,7 +21,7 @@ that can be used for testing, study, and demonstration purposes.
 
 You can use tools such as
 [KinD](https://kind.sigs.k8s.io/),
-[k3d](https://k3d.io/v5.4.9/),
+[k3d](https://k3d.io/),
 [k3s](https://k3s.io/),
 and [Minikube](https://minikube.sigs.k8s.io/docs/)
 to set up a local, lightweight Kubernetes cluster

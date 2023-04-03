@@ -39,7 +39,7 @@ curl -sL https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/.github/
 ```
 
 This fetches and migrates all `KeptnEvaluationProvider` CRs
-for the cluster at which your `kubecon` text is pointing.
+for the cluster at which your kubernetes  context is pointing.
 If you have multiple clusters,
 you must run this command for each one.
 

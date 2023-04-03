@@ -21,5 +21,4 @@ or as part of an existing production cluster.
 1. [Bring or create your Kubernetes cluster](k8s/)
 1. [Install the Keptn Lifecycle Controller](install/)
 1. [Integrate the Keptn Lifecycle Controller into your Kubernetes cluster](integrate/)
-1. ...
 1. [Upgrade](upgrade/) to a new version of the Keptn Lifecycle Toolkit

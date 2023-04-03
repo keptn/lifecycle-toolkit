@@ -73,7 +73,7 @@ For more information,see
 * The [Helm Get Values](https://helm.sh/docs/helm/helm_get_values/)) document
 
 * The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md) page
-  contains the full list of available flags.
+  contains the full list of available values.
 
 ## Use manifests
 

@@ -37,7 +37,7 @@ The basic steps are:
 1. Download [KinD](https://kind.sigs.k8s.io/)
 1. Create the local KinD cluster with the following command:
 
-   ```sh
+   ```shell
    kind create cluster
    ```
 

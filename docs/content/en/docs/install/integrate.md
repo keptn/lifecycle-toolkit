@@ -1,5 +1,5 @@
 ---
-title: Integrate KLT
+title: Integrate KLT with your applications
 description: How to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster
 icon: concepts
 layout: quickstart

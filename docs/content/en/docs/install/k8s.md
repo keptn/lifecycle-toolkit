@@ -46,6 +46,6 @@ The basic steps are:
    and that it is running a supported version of Kubernetes
    with the following command:
 
-   ```sh
+   ```shell
    kubectl version --short
    ```

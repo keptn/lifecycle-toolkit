@@ -30,7 +30,7 @@ helm upgrade --install keptn klt/klt \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-Note that the `helm update` command is used for fresh installs
+Note that the `helm repo update` command is used for fresh installs
 as well as for upgrades.
 
 Use the `--version <version>` flag on the

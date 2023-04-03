@@ -34,7 +34,7 @@ Consequently, you must manually migrate the existing functionality
 to the `KeptnMetricsProvider` CRD.
 Execute the following external bash script to do this:
 
-```sh
+```shell
 curl -sL https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/.github/scripts/keptnevaluationprovider_migrator.sh | bash
 ```
 

@@ -100,7 +100,7 @@ specifying the version you want to install.
 ```shell
 kubectl apply \
    -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.6.0/manifest.yaml
-kubectl wait --for=condition=Available deployment/lifecycle-operator\
+kubectl wait --for=condition=Available deployment/lifecycle-operator \
    -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
 

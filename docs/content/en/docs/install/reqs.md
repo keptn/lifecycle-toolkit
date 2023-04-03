@@ -9,6 +9,6 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 ## Supported Kubernetes versions
 
-The Keptn Lifecycle Controller requires Kubernetes 0.24.0 and later.
+The Keptn Lifecycle Controller requires Kubernetes v1.24.0 and later.
 
 ## Resource requirements

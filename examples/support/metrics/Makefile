@@ -21,3 +21,7 @@ get-raw-metric:
 .PHONY: get-hpa-status
 get-hpa-status:
 	kubectl describe  horizontalpodautoscalers.autoscaling -n podtato-metrics podtato-metrics-hpa
+
+.PHONY: cleanup
+cleanup:
+	kubectl delete namespace podtato-metrics

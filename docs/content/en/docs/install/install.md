@@ -40,7 +40,7 @@ Use the following command sequence to see a list of available versions:
 
 ```shell
 helm repo update
-helm search repo keptn-lifecycle-toolkit
+helm search repo klt
 ```
 
 To modify configuration options, use the `--set` flag

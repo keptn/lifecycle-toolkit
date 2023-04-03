@@ -46,8 +46,8 @@ cascade:
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
 See Keptn in Action
 
-<a class="btn btn-light rounded-lg" href="https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ">
-  Youtube
+<a class="btn -bg-white rounded-lg" href="https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ">
+  Watch now!
  </a>
 {{% /blocks/feature %}}
 
@@ -55,16 +55,16 @@ See Keptn in Action
 We do a [Pull Request](https://github.com/keptn/lifecycle-toolkit/pulls) contributions workflow on **GitHub**.
 New users are always welcome!
 
-<a class="btn btn-light rounded-lg" href="https://github.com/keptn/lifecycle-toolkit">
-  GitHub
+<a class="btn -bg-white rounded-lg" href="https://github.com/keptn/lifecycle-toolkit">
+  Contribute on GitHub
  </a>
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" %}}
 For announcement of latest features etc.
 
-<a class="btn btn-light rounded-lg" href="https://twitter.com/keptnProject">
-  Twitter
+<a class="btn -bg-white rounded-lg" href="https://twitter.com/keptnProject">
+  Follow us!
  </a>
 {{% /blocks/feature %}}
 

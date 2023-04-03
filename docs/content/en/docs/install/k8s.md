@@ -28,7 +28,7 @@ to set up a local, lightweight Kubernetes cluster
 where you can install the Keptn Lifecycle Toolkit
 for personal study, demonstrations, and testing.
 
-The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video  demonstrates how to create a KinD cluster.
 on which you can install the Lifecycle Toolkit.
 The basic steps are:

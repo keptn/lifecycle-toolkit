@@ -9,7 +9,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 Two methods are supported for installing the Keptn Lifecycle Toolkit:
 
-* Releases 0.7.0 and later can be installed using
+* Releases v0.7.0 and later can be installed using
   the [Helm Chart](#use-helm-chart).
   This is the preferred strategy because it allows you to customize your cluster..
 

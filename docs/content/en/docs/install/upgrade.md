@@ -23,7 +23,7 @@ to modify the configuration as discused on the
 
 ## Migrate from v0.6.0 to v0.7.0
 
-Keptn Lifecycle Toolkit Version 0.7.0
+Keptn Lifecycle Toolkit Version v0.7.0
 introduces the `metrics-operator`,
 which is now separate from the `lifecycle-operator`.
 Some functionality and behavior has been moved, changed, or renamed.

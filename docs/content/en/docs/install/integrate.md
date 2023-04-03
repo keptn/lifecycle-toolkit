@@ -92,7 +92,7 @@ kubectl apply -f .
 
 Afterward, you can monitor the status of the deployment using
 
-```bash
+```shell
 kubectl get keptnworkloadinstance -n podtato-kubectl -w
 ```
 

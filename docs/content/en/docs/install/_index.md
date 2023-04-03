@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Learn how to install, configure, and upgrade  the Keptn Lifecycle Toolkit
+description: Learn how to install, configure, and upgrade the Keptn Lifecycle Toolkit
 icon: concepts
 layout: quickstart
 weight: 15

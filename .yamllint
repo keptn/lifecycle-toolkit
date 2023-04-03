@@ -11,6 +11,7 @@ ignore: |
   metrics-operator/config/crd/bases
   helm/chart/templates
   helm/chart/rendered.yaml
+  helmchart.yaml
 
 rules:
   braces: enable

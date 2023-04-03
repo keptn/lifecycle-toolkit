@@ -21,14 +21,14 @@ that can be used for testing, study, and demonstration purposes.
 
 You can use tools such as
 [KinD](https://kind.sigs.k8s.io/),
-[k3d](https://k3d.io/v5.4.9/),
+[k3d](https://k3d.io/),
 [k3s](https://k3s.io/),
 and [Minikube](https://minikube.sigs.k8s.io/docs/)
 to set up a local, lightweight Kubernetes cluster
 where you can install the Keptn Lifecycle Toolkit
 for personal study, demonstrations, and testing.
 
-The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video  demonstrates how to create a KinD cluster.
 on which you can install the Lifecycle Toolkit.
 The basic steps are:
@@ -37,7 +37,7 @@ The basic steps are:
 1. Download [KinD](https://kind.sigs.k8s.io/)
 1. Create the local KinD cluster with the following command:
 
-   ```sh
+   ```shell
    kind create cluster
    ```
 

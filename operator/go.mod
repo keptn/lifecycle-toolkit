@@ -10,7 +10,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230331075749-6b58da3c907a
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.2
-	github.com/onsi/gomega v1.27.5
+	github.com/onsi/gomega v1.27.6
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/afero v1.9.5

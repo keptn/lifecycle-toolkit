@@ -34,7 +34,7 @@ Note that the `helm repo update` command is used for fresh installs
 as well as for upgrades.
 
 Use the `--version <version>` flag on the
-`helm upgrade --install` command line to specify a different KLT version..
+`helm upgrade --install` command line to specify a different KLT version.
 
 Use the following command sequence to see a list of available versions:
 

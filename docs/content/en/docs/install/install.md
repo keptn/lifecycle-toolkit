@@ -19,7 +19,7 @@ Two methods are supported for installing the Keptn Lifecycle Toolkit:
 
 ## Use Helm Chart
 
-Version 0.7.0 and later of the Lifecycle Toolkit
+Version v0.7.0 and later of the Lifecycle Toolkit
 should be installed using Helm Charts.
 The command sequence to fetch and install the latest release is:
 

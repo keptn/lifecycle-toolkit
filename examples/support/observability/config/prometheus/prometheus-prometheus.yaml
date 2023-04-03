@@ -34,7 +34,10 @@ spec:
   probeSelector: {}
   replicas: 1
   resources:
+    limits:
+      cpu: 250m
     requests:
+      cpu: 75m
       memory: 400Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}

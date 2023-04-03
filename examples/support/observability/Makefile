@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.43.0
+JAEGER_VERSION ?= v1.42.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -19,8 +19,8 @@ install: install-cert-manager
 	@echo "Configure Prometheus"
 	@echo "------------------"
 	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply --server-side -f config/prometheus/setup
-	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
+#	kubectl apply --server-side -f config/prometheus/setup
+#	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
 
 	@echo ""
 	@echo "-------------------------------"
@@ -35,15 +35,24 @@ install: install-cert-manager
 	kubectl wait --for=condition=available deployment/jaeger -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
 	kubectl wait --for=condition=available deployment/otel-collector -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
 
+#	@echo ""
+#	@echo "------------------"
+#	@echo "Install Prometheus"
+#	@echo "------------------"
+#	kubectl apply -f config/prometheus/
+#	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+#	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+#	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+#	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+
 	@echo ""
 	@echo "------------------"
-	@echo "Install Prometheus"
+	@echo "Install Prometheus Mockserver"
 	@echo "------------------"
-	kubectl apply -f config/prometheus/
-	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
-	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+	kubectl apply -n "$(TOOLKIT_NAMESPACE)" -f config/prometheus-mock/mockserver-config.yaml
+	helm repo add mockserver "https://www.mock-server.com"
+	helm upgrade --install -n "$(TOOLKIT_NAMESPACE)" --version 5.13.0 mockserver mockserver/mockserver --set service.type=ClusterIP --wait
+
 
 	@echo ""
 	@echo "#######################################################"
@@ -99,8 +108,8 @@ import-grafana-dashboard:
 uninstall:
 	kubectl delete -f config/jaeger.yaml -n "$(TOOLKIT_NAMESPACE)" --ignore-not-found=true
 	kubectl delete -f https://github.com/jaegertracing/jaeger-operator/releases/download/$(JAEGER_VERSION)/jaeger-operator.yaml -n observability --ignore-not-found=true
-	kubectl delete -f config/prometheus/ --ignore-not-found=true
-	kubectl delete -f config/prometheus/setup --ignore-not-found=true
+	#kubectl delete -f config/prometheus/ --ignore-not-found=true
+	#kubectl delete -f config/prometheus/setup --ignore-not-found=true
 	kubectl delete ns observability --ignore-not-found=true
 	kubectl delete ns monitoring --ignore-not-found=true
 	@echo ""

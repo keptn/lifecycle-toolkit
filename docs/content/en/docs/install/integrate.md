@@ -85,7 +85,7 @@ to run some simple pre-deployment checks.
 
 To run the example, use the following commands:
 
-```bash
+```shell
 cd ./examples/podtatohead-deployment/
 kubectl apply -f .
 ```

@@ -36,7 +36,7 @@ spec:
         name: kube-state-metrics
         resources:
           limits:
-            cpu: 100m
+            cpu: 20m
             memory: 250Mi
           requests:
             cpu: 10m
@@ -60,10 +60,10 @@ spec:
           name: https-main
         resources:
           limits:
-            cpu: 40m
+            cpu: 20m
             memory: 40Mi
           requests:
-            cpu: 20m
+            cpu: 10m
             memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false

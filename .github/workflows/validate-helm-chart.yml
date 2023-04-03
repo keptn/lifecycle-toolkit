@@ -17,11 +17,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     
-    - name: Install Helm
-      uses: Azure/setup-helm@v3
-      with:
-        token: ${{ secrets.HELM_TOKEN }}
-
     - name: Generate current YAML
       run: |
         helm template helm/chart > current.yaml

@@ -48,8 +48,7 @@ to the `helm upgrade --install` command.
 Configuration options are specified using the format:
 
 ```shell
-key1=value1,key2=value2,....
-```
+--set key1=value1,key2=value2,....
 
 You can instead download a copy of the
 [helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)

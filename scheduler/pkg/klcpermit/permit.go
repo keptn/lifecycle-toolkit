@@ -57,9 +57,6 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 
 	for {
 		switch pl.workloadManager.Permit(ctx, p) {
-		case Failure:
-			waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
-			return
 		case Success:
 			waitingPodHandler.Allow(PluginName)
 			return

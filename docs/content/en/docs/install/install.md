@@ -62,7 +62,7 @@ file, modify some values, and use the modified file to install KLT:
    ```
 
 You can instead use the `--set` flag
-to the `helm upgrade --install` command.
+to specify a value change for the `helm upgrade --install` command.
 Configuration options are specified using the format:
 
 ```shell

@@ -28,7 +28,7 @@ introduces the `metrics-operator`,
 which is now separate from the `lifecycle-operator`.
 Some functionality and behavior has been moved, changed, or renamed.
 
-Specifically, the `KeptnMetricProvider` CRD replaces
+Specifically, the `KeptnMetricsProvider` CRD replaces
 the now-deprecated `KeptnEvaluationProvider` CRD.
 Consequently, you must manually migrate the existing functionality
 to the `KeptnMetricsProvider` CRD.

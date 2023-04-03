@@ -40,6 +40,7 @@ jobs:
             metrics-operator
             functions-runtime
             dashboards
+            examples
           # Configure that a scope must always be provided.
           requireScope: false
           # When using "Squash and merge" on a PR with only one commit, GitHub

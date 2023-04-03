@@ -107,11 +107,11 @@ spec:
           name: otel-collector
           resources:
             limits:
-              cpu: 1
-              memory: 2Gi
+              cpu: 400m
+              memory: 1Gi
             requests:
-              cpu: 200m
-              memory: 400Mi
+              cpu: 75m
+              memory: 200Mi
           ports:
             - containerPort: 4317 # Default endpoint for otlp receiver.
             - containerPort: 8889 # Default endpoint for querying metrics.
@@ -134,22 +134,22 @@ spec:
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
 ---
-
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  labels:
-    serviceapp: otel-collector
-  name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
-spec:
-  endpoints:
-    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-      interval: 30s
-      port: metrics
-  namespaceSelector:
-    matchNames:
-      - keptn-lifecycle-toolkit-system
-  selector:
-    matchLabels:
-      app: opentelemetry
+#
+#apiVersion: monitoring.coreos.com/v1
+#kind: ServiceMonitor
+#metadata:
+#  labels:
+#    serviceapp: otel-collector
+#  name: otel-collector
+#  namespace: keptn-lifecycle-toolkit-system
+#spec:
+#  endpoints:
+#    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+#      interval: 30s
+#      port: metrics
+#  namespaceSelector:
+#    matchNames:
+#      - keptn-lifecycle-toolkit-system
+#  selector:
+#    matchLabels:
+#      app: opentelemetry

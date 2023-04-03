@@ -13,6 +13,15 @@ to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster.
 The Keptn Lifecycle Toolkit monitors manifests
 that have been applied against the Kubernetes API
 and reacts if it finds a workload with special annotations/labels.
+This is a four-step process:
+
+* Annotate your workload(s)
+* Create a `KeptnApp` custom resource that references those workloads
+* Create the `KeptnTaskDefinition`s you need
+* Enable the target namespace by annotating it
+
+## Annotate workload(s)
+
 For this, you should annotate your
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with (at least) the following annotations:
@@ -42,8 +51,14 @@ Note the following:
   the Lifecycle Toolkit takes the image tag as version
   (if it is not "latest").
 
+This process is demonstrated in the
+[Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+video.
+
+## Pre- and post-deployment checks
+
 Further annotations are necessary
-toto run pre- and post-deployment checks:
+to run pre- and post-deployment checks:
 
 ```yaml
 keptn.sh/pre-deployment-tasks: verify-infrastructure-problems
@@ -85,4 +100,3 @@ The deployment for a Workload stays in a `Pending`
 state until the respective pre-deployment check is completed.
 Afterward, the deployment starts and when it is marked  `Succeeded`,
 the post-deployment checks start.
-

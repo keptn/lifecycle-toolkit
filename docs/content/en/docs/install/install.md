@@ -43,14 +43,7 @@ helm repo update
 helm search repo klt
 ```
 
-To modify configuration options, use the `--set` flag
-to the `helm upgrade --install` command.
-Configuration options are specified using the format:
-
-```shell
---set key1=value1,key2=value2,....
-
-You can instead download a copy of the
+To modify configuration options, download a copy of the
 [helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
 file, modify some values, and use the modified file to install KLT:
 
@@ -67,6 +60,14 @@ file, modify some values, and use the modified file to install KLT:
    ```shell
    --values=values.yaml
    ```
+
+You can instead use the `--set` flag
+to the `helm upgrade --install` command.
+Configuration options are specified using the format:
+
+```shell
+--set key1=value1,key2=value2,....
+```
 
 For more information,see
 

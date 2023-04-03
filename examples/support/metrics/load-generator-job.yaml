@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: podtato-load
-  namespace: podtato-kubectl
+  namespace: podtato-metrics
 spec:
   selector:
     matchLabels:

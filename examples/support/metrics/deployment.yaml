@@ -1,15 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: podtato-metrics
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-head-entry
-  namespace: podtato-kubectl
+  namespace: podtato-metrics
   labels:
     app: podtato-head
 spec:
   selector:
     matchLabels:
       component: podtato-head-entry
+  replicas: 1
   template:
     metadata:
       labels:
@@ -37,7 +42,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-head-entry
-  namespace: podtato-kubectl
+  namespace: podtato-metrics
   labels:
     app: podtato-head
 spec:

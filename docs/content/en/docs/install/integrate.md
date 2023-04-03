@@ -85,14 +85,14 @@ to run some simple pre-deployment checks.
 
 To run the example, use the following commands:
 
-```bash
+```shell
 cd ./examples/podtatohead-deployment/
 kubectl apply -f .
 ```
 
 Afterward, you can monitor the status of the deployment using
 
-```bash
+```shell
 kubectl get keptnworkloadinstance -n podtato-kubectl -w
 ```
 

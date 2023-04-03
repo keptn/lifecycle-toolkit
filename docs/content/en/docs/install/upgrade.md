@@ -23,23 +23,23 @@ to modify the configuration as discused on the
 
 ## Migrate from v0.6.0 to v0.7.0
 
-Keptn Lifecycle Toolkit Version 0.7.0
+Keptn Lifecycle Toolkit Version v0.7.0
 introduces the `metrics-operator`,
 which is now separate from the `lifecycle-operator`.
 Some functionality and behavior has been moved, changed, or renamed.
 
-Specifically, the `KeptnMetricProvider` CRD replaces
+Specifically, the `KeptnMetricsProvider` CRD replaces
 the now-deprecated `KeptnEvaluationProvider` CRD.
 Consequently, you must manually migrate the existing functionality
 to the `KeptnMetricsProvider` CRD.
 Execute the following external bash script to do this:
 
-```sh
+```shell
 curl -sL https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/.github/scripts/keptnevaluationprovider_migrator.sh | bash
 ```
 
 This fetches and migrates all `KeptnEvaluationProvider` CRs
-for the cluster at which your `kubecon` text is pointing.
+for the cluster at which your kubernetes  context is pointing.
 If you have multiple clusters,
 you must run this command for each one.
 

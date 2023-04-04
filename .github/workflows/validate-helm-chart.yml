@@ -31,7 +31,7 @@ jobs:
     - name: Compare YAML files
       run: |
         if ! diff -rq current.yaml new.yaml &>/dev/null; then 
-          echo "Helm charts were not re-generated. Please regenerate them using make helm-template"
+          echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
           exit 
         else
           echo ""

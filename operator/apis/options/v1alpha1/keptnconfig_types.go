@@ -29,11 +29,13 @@ type KeptnConfigSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// OTelCollectorUrl can be used to set the Open Telemetry collector that the operator should use
+	// +optional
 	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
-	// KeptnAppCreationRequestTimeout is used to set the interval in which automatic app discovery
+	// KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
 	// searches for workload to put into the same auto-generated KeptnApp
 	// +kubebuilder:default:=30
-	KeptnAppCreationRequestTimeout uint `json:"keptnAppCreationRequestTimeout,omitempty"`
+	// +optional
+	KeptnAppCreationRequestTimeoutSeconds uint `json:"keptnAppCreationRequestTimeoutSeconds,omitempty"`
 }
 
 // KeptnConfigStatus defines the observed state of KeptnConfig
@@ -42,8 +44,8 @@ type KeptnConfigStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // KeptnConfig is the Schema for the keptnconfigs API
 type KeptnConfig struct {
@@ -54,7 +56,7 @@ type KeptnConfig struct {
 	Status KeptnConfigStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnConfigList contains a list of KeptnConfig
 type KeptnConfigList struct {

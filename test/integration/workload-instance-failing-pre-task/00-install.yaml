@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -10,7 +10,7 @@ spec:
   postDeploymentTasks:
     - post-deployment-hello
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
@@ -43,13 +43,9 @@ spec:
         keptn.sh/pre-deployment-tasks: check-entry-service  # this will check itself for being available and thus will fail
     spec:
       terminationGracePeriodSeconds: 5
-      initContainers:
-        - name: init-myservice
-          image: busybox:1.32.1
-          command: ['sh', '-c', 'sleep 30']
       containers:
         - name: server
-          image: ghcr.io/podtato-head/entry:latest
+          image: ghcr.io/podtato-head/entry:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

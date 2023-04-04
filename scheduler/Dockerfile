@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.20.1-alpine3.16 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.20.2-alpine3.16 AS builder
 
 ENV CGO_ENABLED=0
 
@@ -24,7 +24,7 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
     -w" \
     -o bin/kube-scheduler cmd/scheduler/main.go
 
-FROM gcr.io/distroless/base-debian11:debug-nonroot AS debug
+FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
@@ -37,7 +37,7 @@ COPY --from=builder /scheduler/bin/kube-scheduler /bin/kube-scheduler
 WORKDIR /bin
 CMD ["kube-scheduler"]
 
-FROM gcr.io/distroless/base-debian11:nonroot AS production
+FROM gcr.io/distroless/static-debian11:nonroot AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

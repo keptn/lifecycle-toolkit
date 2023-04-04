@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/stretchr/testify/require"
@@ -24,10 +24,10 @@ func TestEvaluationHandler(t *testing.T) {
 	tests := []struct {
 		name            string
 		object          client.Object
-		createAttr      CreateAttributes
-		wantStatus      []v1alpha2.ItemStatus
+		createAttr      CreateEvaluationAttributes
+		wantStatus      []v1alpha3.ItemStatus
 		wantSummary     apicommon.StatusSummary
-		evalObj         v1alpha2.KeptnEvaluation
+		evalObj         v1alpha3.KeptnEvaluation
 		wantErr         error
 		getSpanCalls    int
 		unbindSpanCalls int
@@ -35,9 +35,9 @@ func TestEvaluationHandler(t *testing.T) {
 	}{
 		{
 			name:            "cannot unwrap object",
-			object:          &v1alpha2.KeptnEvaluation{},
-			evalObj:         v1alpha2.KeptnEvaluation{},
-			createAttr:      CreateAttributes{},
+			object:          &v1alpha3.KeptnEvaluation{},
+			evalObj:         v1alpha3.KeptnEvaluation{},
+			createAttr:      CreateEvaluationAttributes{},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         controllererrors.ErrCannotWrapToPhaseItem,
@@ -46,14 +46,18 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 		{
 			name:    "no evaluations",
-			object:  &v1alpha2.KeptnAppVersion{},
-			evalObj: v1alpha2.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			object:  &v1alpha3.KeptnAppVersion{},
+			evalObj: v1alpha3.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus:      []v1alpha2.ItemStatus(nil),
+			wantStatus:      []v1alpha3.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
@@ -61,20 +65,24 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 		{
 			name: "evaluation not started",
-			object: &v1alpha2.KeptnAppVersion{
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+			object: &v1alpha3.KeptnAppVersion{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
 			},
-			evalObj: v1alpha2.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			evalObj: v1alpha3.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.ItemStatus{
+			wantStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "eval-def",
 					Status:         apicommon.StatePending,
@@ -88,15 +96,15 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 		{
 			name: "already done evaluation",
-			object: &v1alpha2.KeptnAppVersion{
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+			object: &v1alpha3.KeptnAppVersion{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
-				Status: v1alpha2.KeptnAppVersionStatus{
+				Status: v1alpha3.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "eval-def",
 							Status:         apicommon.StateSucceeded,
@@ -105,13 +113,17 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 			},
-			evalObj: v1alpha2.KeptnEvaluation{},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			evalObj: v1alpha3.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.ItemStatus{
+			wantStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "eval-def",
 					Status:         apicommon.StateSucceeded,
@@ -125,18 +137,18 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 		{
 			name: "failed evaluation",
-			object: &v1alpha2.KeptnAppVersion{
+			object: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
-				Status: v1alpha2.KeptnAppVersionStatus{
+				Status: v1alpha3.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "eval-def",
 							Status:         apicommon.StateProgressing,
@@ -145,14 +157,14 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 			},
-			evalObj: v1alpha2.KeptnEvaluation{
+			evalObj: v1alpha3.KeptnEvaluation{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 					Name:      "pre-eval-eval-def-",
 				},
-				Status: v1alpha2.KeptnEvaluationStatus{
+				Status: v1alpha3.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
-					EvaluationStatus: map[string]v1alpha2.EvaluationStatusItem{
+					EvaluationStatus: map[string]v1alpha3.EvaluationStatusItem{
 						"my-target": {
 							Value:   "1",
 							Status:  apicommon.StateFailed,
@@ -161,12 +173,16 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.ItemStatus{
+			wantStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "eval-def",
 					Status:         apicommon.StateFailed,
@@ -183,18 +199,18 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 		{
 			name: "succeeded evaluation",
-			object: &v1alpha2.KeptnAppVersion{
+			object: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
-				Status: v1alpha2.KeptnAppVersionStatus{
+				Status: v1alpha3.KeptnAppVersionStatus{
 					PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-					PreDeploymentEvaluationTaskStatus: []v1alpha2.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 						{
 							DefinitionName: "eval-def",
 							Status:         apicommon.StateProgressing,
@@ -203,21 +219,25 @@ func TestEvaluationHandler(t *testing.T) {
 					},
 				},
 			},
-			evalObj: v1alpha2.KeptnEvaluation{
+			evalObj: v1alpha3.KeptnEvaluation{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 					Name:      "pre-eval-eval-def-",
 				},
-				Status: v1alpha2.KeptnEvaluationStatus{
+				Status: v1alpha3.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateSucceeded,
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
-			wantStatus: []v1alpha2.ItemStatus{
+			wantStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "eval-def",
 					Status:         apicommon.StateSucceeded,
@@ -236,7 +256,7 @@ func TestEvaluationHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := v1alpha2.AddToScheme(scheme.Scheme)
+			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			spanHandlerMock := kltfake.ISpanHandlerMock{
 				GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
@@ -287,33 +307,37 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 	tests := []struct {
 		name       string
 		object     client.Object
-		createAttr CreateAttributes
+		createAttr CreateEvaluationAttributes
 		wantName   string
 		wantErr    error
 	}{
 		{
 			name:       "cannot unwrap object",
-			object:     &v1alpha2.KeptnEvaluation{},
-			createAttr: CreateAttributes{},
+			object:     &v1alpha3.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{},
 			wantName:   "",
 			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
 		{
 			name: "created evaluation",
-			object: &v1alpha2.KeptnAppVersion{
+			object: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1alpha2.KeptnAppVersionSpec{
-					KeptnAppSpec: v1alpha2.KeptnAppSpec{
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
 			},
-			createAttr: CreateAttributes{
-				SpanName:   "",
-				Definition: "eval-def",
-				CheckType:  apicommon.PreDeploymentEvaluationCheckType,
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
 			},
 			wantName: "pre-eval-eval-def-",
 			wantErr:  nil,
@@ -322,7 +346,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := v1alpha2.AddToScheme(scheme.Scheme)
+			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			handler := EvaluationHandler{
 				SpanHandler: &kltfake.ISpanHandlerMock{},

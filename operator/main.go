@@ -17,36 +17,30 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/metrics/v1alpha1"
+	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/metrics/adapter"
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappcreationrequest"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
-	keptnmetric "github.com/keptn/lifecycle-toolkit/operator/controllers/metrics"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
-	keptnserver "github.com/keptn/lifecycle-toolkit/operator/pkg/metrics"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -58,38 +52,38 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	//+kubebuilder:scaffold:imports
 )
 
 var (
-	scheme                     = runtime.NewScheme()
-	setupLog                   = ctrl.Log.WithName("setup")
-	metricServerTickerInterval = 10 * time.Second
+	scheme   = runtime.NewScheme()
+	setupLog = ctrl.Log.WithName("setup")
 )
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
-	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
+	utilruntime.Must(metricsapi.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
 type envConfig struct {
-	PodNamespace       string `envconfig:"POD_NAMESPACE" default:""`
-	PodName            string `envconfig:"POD_NAME" default:""`
-	ExposeKeptnMetrics bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	PodNamespace string `envconfig:"POD_NAMESPACE" default:""`
+	PodName      string `envconfig:"POD_NAME" default:""`
 
-	KeptnAppControllerLogLevel              int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnAppVersionControllerLogLevel       int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnEvaluationControllerLogLevel       int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskControllerLogLevel             int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskDefinitionControllerLogLevel   int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadControllerLogLevel         int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnMetricControllerLogLevel           int `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
-	KptnOptionsControllerLogLevel           int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppControllerLogLevel                int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppCreationRequestControllerLogLevel int `envconfig:"KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppVersionControllerLogLevel         int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnEvaluationControllerLogLevel         int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+
+	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -120,9 +114,6 @@ func main() {
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()
-
-	// Start the custom metrics adapter
-	go startCustomMetricsAdapter(env.PodNamespace)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -164,10 +155,6 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	// Enabling OTel
 	err = controllercommon.GetOtelInstance().InitOtelCollector("")
@@ -213,6 +200,17 @@ func main() {
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
+		os.Exit(1)
+	}
+
+	appCreationRequestLogger := ctrl.Log.WithName("KeptnAppCreationRequest Controller")
+	appCreationRequestReconciler := &keptnappcreationrequest.KeptnAppCreationRequestReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
+	}
+	if err := appCreationRequestReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppCreationRequest")
 		os.Exit(1)
 	}
 
@@ -274,49 +272,35 @@ func main() {
 		os.Exit(1)
 	}
 
-	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
-	metricsReconciler := &keptnmetric.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
-	}
-	if err = (metricsReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
-		os.Exit(1)
-	}
-
 	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    configLogger.V(env.KptnOptionsControllerLogLevel),
+		Client:              mgr.GetClient(),
+		Scheme:              mgr.GetScheme(),
+		Log:                 configLogger.V(env.KeptnOptionsControllerLogLevel),
+		DefaultCollectorURL: env.KeptnOptionsCollectorURL,
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)
 	}
 
-	if err = (&lifecyclev1alpha2.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1alpha3.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha2.KeptnEvaluationProvider{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1alpha3.KeptnEvaluationProvider{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnEvaluationProvider")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha2.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1alpha3.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha2.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1alpha3.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha1.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
-		os.Exit(1)
-	}
-	//+kubebuilder:scaffold:builder
+	// +kubebuilder:scaffold:builder
 
 	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
 
@@ -361,12 +345,4 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
-}
-
-func startCustomMetricsAdapter(namespace string) {
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
-	defer cancel()
-
-	adapter := adapter.MetricsAdapter{KltNamespace: namespace}
-	adapter.RunAdapter(ctx)
 }

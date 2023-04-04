@@ -1,0 +1,56 @@
+name: Release Examples
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: "Tag for the release being created"
+        type: "string"
+        required: true
+      examples_dir:
+        description: "Root directory of the examples"
+        type: "string"
+        required: false
+        default: "./tmp/examples/"
+      dry_run:
+        description: "Flag for testing"
+        type: "boolean"
+        default: false
+        required: false
+
+jobs:
+  release-examples:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Checkout examples repo
+        uses: actions/checkout@v3
+        with:
+          repository: keptn-sandbox/lifecycle-toolkit-examples
+          path: ${{ inputs.examples_dir }}
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
+
+      - name: Get Latest Release Information
+        uses: octokit/request-action@v2.1.7
+        id: latest_release
+        with:
+          route: GET /repos/:owner/:repository/releases/latest
+          repository: lifecycle-toolkit
+          owner: keptn
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Move old latest release examples folder
+        if: ${{ fromJson(steps.latest_release.outputs.data).tag_name == inputs.tag_name }}
+        run: cp -R ./examples/* "${{ inputs.examples_dir }}"
+
+      - name: Push content
+        if: inputs.dry_run != true
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          cwd: ${{ inputs.examples_dir }}
+          message: "feat: release examples ${{ inputs.tag_name }}"
+          tag: "${{ inputs.tag_name }}"

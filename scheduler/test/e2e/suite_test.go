@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	testv1alpha2 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha2"
+	testv1alpha3 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
@@ -35,7 +35,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	//+kubebuilder:scaffold:imports
+	// nolint:gci
+	// +kubebuilder:scaffold:imports
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
@@ -71,7 +72,7 @@ var _ = BeforeSuite(func() {
 	}
 
 	apiServerArgs := testEnv.ControlPlane.GetAPIServer().Configure()
-	//apiServerArgs.Append("disable-admission-plugins", "TaintNodesByCondition", "Priority")
+	// apiServerArgs.Append("disable-admission-plugins", "TaintNodesByCondition", "Priority")
 	apiServerArgs.Append("runtime-config", "api/all=true")
 
 	var err error
@@ -80,8 +81,8 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
 
-	//+kubebuilder:scaffold:scheme
-	err = testv1alpha2.AddToScheme(kscheme.Scheme)
+	// +kubebuilder:scaffold:scheme
+	err = testv1alpha3.AddToScheme(kscheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 	k8sClient, err = client.New(cfg, client.Options{Scheme: kscheme.Scheme})
 	Expect(err).NotTo(HaveOccurred())
@@ -90,7 +91,7 @@ var _ = BeforeSuite(func() {
 
 	go func() {
 		defer GinkgoRecover()
-		time.Sleep(30 * time.Second) //wait for test to start
+		time.Sleep(30 * time.Second) // wait for test to start
 		wg.Wait()
 		fmt.Println("SUITE FINISHED")
 		err := testEnv.Stop()

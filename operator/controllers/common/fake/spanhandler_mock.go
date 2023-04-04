@@ -5,9 +5,10 @@ package fake
 
 import (
 	"context"
+	"sync"
+
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sync"
 )
 
 // ISpanHandlerMock is a mock implementation of common.ISpanHandler.

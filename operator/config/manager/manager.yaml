@@ -2,14 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: lifecycle-operator
   namespace: system
   labels:
-    control-plane: controller-manager
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: lifecycle-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: lifecycle-operator
   replicas: 1
   template:
     metadata:
@@ -17,9 +18,8 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         metrics.dynatrace.com/scrape: 'true'
         metrics.dynatrace.com/port: '2222'
-        openfeature.dev/enabled: "true"
       labels:
-        control-plane: controller-manager
+        control-plane: lifecycle-operator
     spec:
       securityContext:
         runAsNonRoot: true
@@ -54,12 +54,6 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
-          - name: keptn-metrics
-            containerPort: 9999
-            protocol: TCP
-          - name: custom-metrics
-            containerPort: 6443
-            protocol: TCP
           - name: metrics
             containerPort: 2222
             protocol: TCP
@@ -73,10 +67,28 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: EXPOSE_KEPTN_METRICS
-            value: "true"
           - name: FUNCTION_RUNNER_IMAGE
-            value: ghcr.keptn.sh/keptn/functions-runtime:v0.6.0 #x-release-please-version
+            value: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0 #x-release-please-version
+          - name: OTEL_COLLECTOR_URL
+            value: otel-collector:4317
+          - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+            value: "0"
+          - name: OPTIONS_CONTROLLER_LOG_LEVEL
+            value: "0"
         securityContext:
           seccompProfile:
             type: RuntimeDefault
@@ -114,5 +126,5 @@ spec:
             mountPath: /tmp/k8s-webhook-server/serving-certs/
           - name: adapter-certs-dir
             mountPath: /tmp/metrics-adapter/serving-certs
-      serviceAccountName: controller-manager
+      serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

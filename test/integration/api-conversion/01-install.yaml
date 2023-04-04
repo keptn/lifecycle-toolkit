@@ -58,5 +58,15 @@ metadata:
 spec:
   targetServer: http://my-server-url
   secretName: my-secret-name
+---
+apiVersion: metrics.keptn.sh/v1alpha1
+kind: KeptnMetric
+metadata:
+  name: my-metric-2
+spec:
+  fetchIntervalSeconds: 60
+  provider:
+    name: prometheus
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
 
 

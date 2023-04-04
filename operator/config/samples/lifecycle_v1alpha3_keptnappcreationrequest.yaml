@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppCreationRequest
+metadata:
+  labels:
+    app.kubernetes.io/name: keptnappcreationrequest
+    app.kubernetes.io/instance: keptnappcreationrequest-sample
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: keptn-lifecycle-toolkit
+  name: keptnappcreationrequest-sample
+spec:
+  appName: my-app

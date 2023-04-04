@@ -1,0 +1,26 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-1.3-1
+status:
+  currentPhase: AppPreDeployTasks
+  postDeploymentEvaluationStatus: Deprecated
+  postDeploymentStatus: Deprecated
+  preDeploymentEvaluationStatus: Deprecated
+  preDeploymentStatus: Failed
+  status: Failed
+  workloadOverallStatus: Deprecated
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTask
+spec:
+  app: podtato-head
+  appVersion: '1.3'
+  checkType: pre
+  retries: 2
+  taskDefinition: pre-task-retries
+  timeout: 5m0s
+status:
+  message: Job has reached the specified backoff limit
+  reason: BackoffLimitExceeded
+  status: Failed

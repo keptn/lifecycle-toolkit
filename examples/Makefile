@@ -1,5 +1,5 @@
-# renovate: datasource=github-tags depName=jaegertracing/jaeger
-JAEGER_VERSION ?= v1.39.0
+# renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
+JAEGER_VERSION ?= v1.43.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -9,8 +9,10 @@ install: install-observability install-argo
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
-	kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.5.0/manifest.yaml #x-release-please-version
-	kubectl wait --for=condition=available deployment/klc-controller-manager -n keptn-lifecycle-toolkit-system --timeout=300s
+	helm repo add klt https://charts.lifecycle.keptn.sh
+	helm repo update
+	helm upgrade --install keptn klt/klt -n $(TOOLKIT_NAMESPACE) --create-namespace --wait
+	kubectl apply -f support/keptn/keptnconfig.yaml -n $(TOOLKIT_NAMESPACE)
 
 .PHONY: install-observability
 install-observability:
@@ -56,6 +58,18 @@ undeploy-podtatohead:
 uninstall-observability: undeploy-podtatohead
 	make -C support/observability uninstall
 
+.PHONY: uninstall-argo
+uninstall-argo: undeploy-podtatohead
+	make -C support/argo uninstall
+
+.PHONY: uninstall
+uninstall: uninstall-observability uninstall-argo
+	@echo "-----------------------------------"
+	@echo "Uninstall Keptn-lifecycle-toolkit"
+	@echo "-----------------------------------"
+	helm uninstall keptn -n $(TOOLKIT_NAMESPACE)
+	kubectl delete ns $(TOOLKIT_NAMESPACE) --ignore-not-found=true
+
 .PHONY: port-forward-argocd
 port-forward-argocd:
 	@echo ""
@@ -75,7 +89,8 @@ restart-lifecycle-toolkit:
 	@echo "----------------------------------"
 	@echo "Restart Keptn Lifecycle Controller"
 	@echo "----------------------------------"
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" klc-controller-manager --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler -n keptn-lifecycle-toolkit-system
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" keptn-scheduler --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler --watch
+

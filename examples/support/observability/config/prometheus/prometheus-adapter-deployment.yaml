@@ -9,7 +9,7 @@ metadata:
   name: prometheus-adapter
   namespace: monitoring
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: metrics-adapter
@@ -63,7 +63,7 @@ spec:
             cpu: 250m
             memory: 180Mi
           requests:
-            cpu: 102m
+            cpu: 75m
             memory: 180Mi
         securityContext:
           allowPrivilegeEscalation: false

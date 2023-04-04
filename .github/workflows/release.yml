@@ -43,13 +43,15 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     runs-on: ubuntu-22.04
     permissions:
@@ -57,7 +59,8 @@ jobs:
       packages: write
       id-token: write
     env:
-      IMAGE_TAG: ghcr.io/keptn/${{ matrix.config.name }}:${{ needs.release-please.outputs.tag_name }}
+      IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
+      IMAGE_TAG: ${{ needs.release-please.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,16 +79,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v2.8.1
+        uses: sigstore/cosign-installer@v3.0.1
 
       - name: Build Docker Image
+        id: docker_build_image
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -97,15 +101,20 @@ jobs:
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
-      - name: Sign container images
+      - name: Sign container image
         env:
-          COSIGN_EXPERIMENTAL: 1
-        run: cosign sign ${{ env.IMAGE_TAG }}
+          IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
+        run: |
+          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.13.3
+        uses: anchore/sbom-action@v0.13.4
         with:
-          image: ${{ env.IMAGE_TAG }}
+          image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
@@ -147,14 +156,14 @@ jobs:
           key: build-tools-${{ github.ref_name }}
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Create manifests
         env:
           RELEASE_REGISTRY: ghcr.keptn.sh/keptn
-          TAG: ${{ needs.release-please.outputs.tag_name }}
+          CHART_APPVERSION: ${{ needs.release-please.outputs.tag_name }}
         run: |
           cd scheduler
           make release-manifests
@@ -162,9 +171,12 @@ jobs:
           make controller-gen release-manifests
           cd ../klt-cert-manager
           make controller-gen release-manifests
+          cd ../metrics-operator
+          make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
+          echo "---" >> klt-cert-manager/config/rendered/release.yaml
           cat >> namespace.yaml << EOF
           ---
           apiVersion: v1
@@ -173,7 +185,7 @@ jobs:
             name: keptn-lifecycle-toolkit-system
           ---
           EOF
-          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml > manifest.yaml
+          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1
@@ -186,15 +198,17 @@ jobs:
     needs:
       - release-please
     if: needs.release-please.outputs.releases_created == 'true'
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+    with:
+      tag_name: ${{ needs.release-please.outputs.tag_name }}
+    uses: ./.github/workflows/release-docs.yml
+    secrets: inherit
 
-      - name: Update Documentation
-        uses: ./.github/actions/update-documentation
-        with:
-          version: ${{ needs.release-please.outputs.tag_name }}
-          klt-repo: ${{ github.workspace }}
-          token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
-          update-main: true
+  update-examples:
+    name: Update examples
+    needs:
+      - release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    with:
+      tag_name: ${{ needs.release-please.outputs.tag_name }}
+    uses: ./.github/workflows/release-examples.yml
+    secrets: inherit

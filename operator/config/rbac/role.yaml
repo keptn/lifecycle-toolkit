@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: manager-role
+  name: lifecycle-operator-role
 rules:
 - apiGroups:
   - apps
@@ -79,6 +79,38 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
@@ -312,64 +344,16 @@ rules:
   - list
   - watch
 - apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - providers
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
   - options.keptn.sh
   resources:
   - keptnconfigs
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - options.keptn.sh
   resources:
-  - keptnconfigs/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - options.keptn.sh
-  resources:
   - keptnconfigs/status
-  verbs:
-  - get
-  - patch
-  - update
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  creationTimestamp: null
-  name: manager-role
-  namespace: keptn-lifecycle-toolkit-system
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
   verbs:
   - get

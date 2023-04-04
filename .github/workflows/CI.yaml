@@ -12,6 +12,8 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
+      - "netlify.toml"
+
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
@@ -68,18 +70,20 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -107,13 +111,15 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
@@ -157,7 +163,7 @@ jobs:
           path: /tmp/${{ matrix.config.name }}-image.tar
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator'
+        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
@@ -165,7 +171,7 @@ jobs:
         if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
-          TAG: dev-${{ env.DATETIME }}
+          CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml for tests
@@ -220,13 +226,15 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: "keptn-lifecycle-operator"
+          - name: "lifecycle-operator"
             folder: "operator/"
+          - name: "metrics-operator"
+            folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
-          - name: "klt-cert-manager"
+          - name: "certificate-operator"
             folder: "klt-cert-manager/"
     permissions:
       packages: write # Needed for pushing images to the registry
@@ -272,7 +280,7 @@ jobs:
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
       - name: Install controller-gen
-        if: matrix.config.name == 'keptn-lifecycle-operator' || matrix.config.name == 'klt-cert-manager'
+        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'certificate-operator' || matrix.config.name == 'metrics-operator'
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
@@ -280,7 +288,7 @@ jobs:
         if: matrix.config.name != 'functions-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
-          TAG: dev-${{ env.DATETIME }}
+          CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml
@@ -289,23 +297,6 @@ jobs:
         with:
           name: ${{ matrix.config.name }}-manifest
           path: ${{ matrix.config.folder }}/config/rendered/release.yaml
-
-  update-docs:
-    name: Update Documentation
-    needs:
-      - prepare_ci_run
-    if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Update Documentation
-        uses: ./.github/actions/update-documentation
-        with:
-          version: "dev"
-          klt-repo: ${{ github.workspace }}
-          token: ${{ secrets.KEPTN_SANDBOX_BOT_TOKEN }}
 
   helm_charts_build:
     name: Publish helm chart changes to charts repo
@@ -324,21 +315,21 @@ jobs:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
     - name: Generate helm charts
+      env:
+        RELEASE_REGISTRY: ghcr.keptn.sh/keptn
       run: make helm-package
 
     - name: Copy charts from klt to helm repo
-      run: rsync -av --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
+      run: rsync -av --delete --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
-      env:
-        GIT_SHA: ${{ needs.prepare_ci_run.outputs.GIT_SHA }}
       with:
         token: ${{ secrets.KEPTN_BOT_TOKEN }}
         path: ./helm-charts-repository
-        commit-message: "Update KLT chart"
+        commit-message: "feat: update KLT chart"
         signoff: true
-        branch: klt-chart-update-${{ env.GIT_SHA }}
+        branch: klt-chart-update-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}
         delete-branch: true
         base: main
         title: "Update KLT Helm chart"

@@ -79,7 +79,7 @@ Otherwise, the deployment is kept in a pending state
 until the infrastructure is capable of accepting deployments again.
 
 A more comprehensive example can be found in our
-[examples folder](./examples/sample-app/),
+[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks.
 

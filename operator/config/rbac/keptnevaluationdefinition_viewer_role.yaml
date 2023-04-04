@@ -4,17 +4,17 @@ kind: ClusterRole
 metadata:
   name: keptnevaluationdefinition-viewer-role
 rules:
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnevaluationdefinitions
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnevaluationdefinitions/status
-  verbs:
-  - get
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationdefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationdefinitions/status
+    verbs:
+      - get

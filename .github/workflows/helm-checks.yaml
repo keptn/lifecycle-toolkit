@@ -45,11 +45,13 @@ jobs:
       - name: Get workflow run type
         id: get_run_type
         run: |
-          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
+          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && \
+            ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
           echo "github.actor != 'renovate[bot]' = ${{ github.actor != 'renovate[bot]' }}"
           echo "github.actor != 'dependabot[bot]' = ${{ github.actor != 'dependabot[bot]' }}"
           echo "github.event_name == 'push' = ${{ github.event_name == 'push' }}"
-          echo "github.event.pull_request.head.repo.full_name == github.repository = ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+          echo "github.event.pull_request.head.repo.full_name == github.repository = \
+            ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
           echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
           echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
@@ -120,7 +122,7 @@ jobs:
 
   build_helm_chart:
     name: Build Helm Chart
-    needs: [ prepare_ci_run, build_image ]
+    needs: [prepare_ci_run, build_image]
     runs-on: ubuntu-22.04
     env:
       RELEASE_REGISTRY: "localhost:5000/keptn"
@@ -151,7 +153,7 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: [  prepare_ci_run, build_helm_chart ]
+    needs: [prepare_ci_run, build_helm_chart]
     with:
       functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: true

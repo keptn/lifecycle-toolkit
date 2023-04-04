@@ -66,4 +66,3 @@ spec:
         - name: scheduler-config
           configMap:
             name: scheduler-config
-

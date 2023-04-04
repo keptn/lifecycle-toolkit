@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,100 +30,100 @@ spec:
         # seccompProfile:
         #   type: RuntimeDefault
       volumes:
-        - emptyDir: { }
+        - emptyDir: {}
           name: certs-dir
-        - emptyDir: { }
+        - emptyDir: {}
           name: adapter-certs-dir
       containers:
-      - command:
-          - /manager
-        args:
-          - webhook-server
-          # OLM mounts the certificates here, so we reuse it for simplicity
-          - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
-          - --leader-elect
-          # Secure port for the metrics adapter
-          - --adapter-port=6443
-          - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
-          # Log level for the metrics adapter
-          - --v=10
-        image: controller:latest
-        name: manager
-        ports:
-          - containerPort: 9443
-            name: webhook-server
-            protocol: TCP
-          - name: metrics
-            containerPort: 2222
-            protocol: TCP
-        imagePullPolicy: Always
-        env:
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: FUNCTION_RUNNER_IMAGE
-            value: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0 #x-release-please-version
-          - name: OTEL_COLLECTOR_URL
-            value: otel-collector:4317
-          - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
-            value: "0"
-          - name: OPTIONS_CONTROLLER_LOG_LEVEL
-            value: "0"
-        securityContext:
-          seccompProfile:
-            type: RuntimeDefault
-          privileged: false
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 65532
-          runAsGroup: 65532
-          capabilities:
-            drop:
-              - "ALL"
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        # TODO(user): Configure the resources accordingly based on the project requirements.
-        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-        resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 5m
-            memory: 64Mi
-        volumeMounts:
-          - name: certs-dir
-            mountPath: /tmp/k8s-webhook-server/serving-certs/
-          - name: adapter-certs-dir
-            mountPath: /tmp/metrics-adapter/serving-certs
+        - command:
+            - /manager
+          args:
+            - webhook-server
+            # OLM mounts the certificates here, so we reuse it for simplicity
+            - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
+            - --leader-elect
+            # Secure port for the metrics adapter
+            - --adapter-port=6443
+            - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+            # Log level for the metrics adapter
+            - --v=10
+          image: controller:latest
+          name: manager
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+            - name: metrics
+              containerPort: 2222
+              protocol: TCP
+          imagePullPolicy: Always
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: FUNCTION_RUNNER_IMAGE
+              value: ghcr.keptn.sh/keptn/functions-runtime:v0.7.0 # x-release-please-version
+            - name: OTEL_COLLECTOR_URL
+              value: otel-collector:4317
+            - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: OPTIONS_CONTROLLER_LOG_LEVEL
+              value: "0"
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop:
+                - "ALL"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # TODO(user): Configure the resources accordingly based on the project requirements.
+          # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 5m
+              memory: 64Mi
+          volumeMounts:
+            - name: certs-dir
+              mountPath: /tmp/k8s-webhook-server/serving-certs/
+            - name: adapter-certs-dir
+              mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

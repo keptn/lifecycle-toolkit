@@ -58,7 +58,8 @@ jobs:
 
       - name: Check TOC
         run: |
-          git diff --exit-code '*.md' || (echo "Table of Contents is out of date. Please update the following files: $(git diff --name-status --exit-code)" && exit 1)
+          git diff --exit-code '*.md' || \
+            (echo "Table of Contents is out of date. Please update the following files: $(git diff --name-status --exit-code)" && exit 1)
 
       - name: Lint Markdown files
         run: make markdownlint
@@ -85,7 +86,8 @@ jobs:
       - name: Check if docs are up to date
         run: |
           if ! diff -rq ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old &>/dev/null; then
-            echo "The CRD docs have changes that are not reflected in the docs pages. Please use ./.github/scripts/generate-crd-docs/generate-crd-docs.sh to re-generate the docs."
+            echo "The CRD docs have changes that are not reflected in the docs pages."
+            echo "Please use ./.github/scripts/generate-crd-docs/generate-crd-docs.sh to re-generate the docs."
             echo ""
             echo "=========== Diff ==========="
             diff -ru ./docs/content/en/docs/crd-ref ./docs/content/en/docs/crd-ref-old
@@ -94,4 +96,3 @@ jobs:
             echo ""
             echo "CRD docs are up to date!"
           fi
-

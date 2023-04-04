@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: keptnmetricsprovider-editor-role
 rules:
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders/status
-  verbs:
-  - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders/status
+    verbs:
+      - get

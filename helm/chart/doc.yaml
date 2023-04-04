@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 ## @section Keptn Scheduler
 ## @extra scheduler.scheduler.containerSecurityContext Sets security context
 ## @skip scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
@@ -130,7 +131,7 @@
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
 ## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime <!---x-release-please-version-->
 
-## @param   lifecycleOperator.manager.image.repository specify registry for manager image 
+## @param   lifecycleOperator.manager.image.repository specify registry for manager image
 ## @param   lifecycleOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
 ## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image
 

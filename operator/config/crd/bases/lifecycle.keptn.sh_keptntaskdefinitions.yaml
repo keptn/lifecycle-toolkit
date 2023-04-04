@@ -15,242 +15,242 @@ spec:
     singular: keptntaskdefinition
   scope: Namespaced
   versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
+            API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
-            properties:
-              function:
-                properties:
-                  configMapRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  functionRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  httpRef:
-                    properties:
-                      url:
-                        type: string
-                    type: object
-                  inline:
-                    properties:
-                      code:
-                        type: string
-                    type: object
-                  parameters:
-                    properties:
-                      map:
-                        additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
+              properties:
+                function:
+                  properties:
+                    configMapRef:
+                      properties:
+                        name:
                           type: string
-                        type: object
-                    type: object
-                  secureParameters:
-                    properties:
-                      secret:
-                        type: string
-                    type: object
-                type: object
-            type: object
-          status:
-            description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
-            properties:
-              function:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                      type: object
+                    functionRef:
+                      properties:
+                        name:
+                          type: string
+                      type: object
+                    httpRef:
+                      properties:
+                        url:
+                          type: string
+                      type: object
+                    inline:
+                      properties:
+                        code:
+                          type: string
+                      type: object
+                    parameters:
+                      properties:
+                        map:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
+                    secureParameters:
+                      properties:
+                        secret:
+                          type: string
+                      type: object
+                  type: object
+              type: object
+            status:
+              description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+              properties:
+                function:
+                  description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
-                properties:
-                  configMap:
-                    description: 'INSERT ADDITIONAL STATUS FIELD - define observed
+                  properties:
+                    configMap:
+                      description: 'INSERT ADDITIONAL STATUS FIELD - define observed
                       state of cluster Important: Run "make" to regenerate code after
                       modifying this file'
-                    type: string
-                type: object
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+                      type: string
+                  type: object
+              type: object
+          type: object
+      served: true
+      storage: false
+      subresources:
+        status: {}
+    - name: v1alpha2
+      schema:
+        openAPIV3Schema:
+          description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
+            API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
-            properties:
-              function:
-                properties:
-                  configMapRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  functionRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  httpRef:
-                    properties:
-                      url:
-                        type: string
-                    type: object
-                  inline:
-                    properties:
-                      code:
-                        type: string
-                    type: object
-                  parameters:
-                    properties:
-                      map:
-                        additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
+              properties:
+                function:
+                  properties:
+                    configMapRef:
+                      properties:
+                        name:
                           type: string
-                        type: object
-                    type: object
-                  secureParameters:
-                    properties:
-                      secret:
-                        type: string
-                    type: object
-                type: object
-            type: object
-          status:
-            description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
-            properties:
-              function:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                      type: object
+                    functionRef:
+                      properties:
+                        name:
+                          type: string
+                      type: object
+                    httpRef:
+                      properties:
+                        url:
+                          type: string
+                      type: object
+                    inline:
+                      properties:
+                        code:
+                          type: string
+                      type: object
+                    parameters:
+                      properties:
+                        map:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
+                    secureParameters:
+                      properties:
+                        secret:
+                          type: string
+                      type: object
+                  type: object
+              type: object
+            status:
+              description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+              properties:
+                function:
+                  description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
-                properties:
-                  configMap:
-                    description: 'INSERT ADDITIONAL STATUS FIELD - define observed
+                  properties:
+                    configMap:
+                      description: 'INSERT ADDITIONAL STATUS FIELD - define observed
                       state of cluster Important: Run "make" to regenerate code after
                       modifying this file'
-                    type: string
-                type: object
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+                      type: string
+                  type: object
+              type: object
+          type: object
+      served: true
+      storage: false
+      subresources:
+        status: {}
+    - name: v1alpha3
+      schema:
+        openAPIV3Schema:
+          description: KeptnTaskDefinition is the Schema for the keptntaskdefinitions
+            API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
-            properties:
-              function:
-                properties:
-                  configMapRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  functionRef:
-                    properties:
-                      name:
-                        type: string
-                    type: object
-                  httpRef:
-                    properties:
-                      url:
-                        type: string
-                    type: object
-                  inline:
-                    properties:
-                      code:
-                        type: string
-                    type: object
-                  parameters:
-                    properties:
-                      map:
-                        additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
+              properties:
+                function:
+                  properties:
+                    configMapRef:
+                      properties:
+                        name:
                           type: string
-                        type: object
-                    type: object
-                  secureParameters:
-                    properties:
-                      secret:
-                        type: string
-                    type: object
-                type: object
-              retries:
-                default: 10
-                format: int32
-                type: integer
-              timeout:
-                default: 5m
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
-            type: object
-          status:
-            description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
-            properties:
-              function:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                      type: object
+                    functionRef:
+                      properties:
+                        name:
+                          type: string
+                      type: object
+                    httpRef:
+                      properties:
+                        url:
+                          type: string
+                      type: object
+                    inline:
+                      properties:
+                        code:
+                          type: string
+                      type: object
+                    parameters:
+                      properties:
+                        map:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
+                    secureParameters:
+                      properties:
+                        secret:
+                          type: string
+                      type: object
+                  type: object
+                retries:
+                  default: 10
+                  format: int32
+                  type: integer
+                timeout:
+                  default: 5m
+                  pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                  type: string
+              type: object
+            status:
+              description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+              properties:
+                function:
+                  description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
-                properties:
-                  configMap:
-                    description: 'INSERT ADDITIONAL STATUS FIELD - define observed
+                  properties:
+                    configMap:
+                      description: 'INSERT ADDITIONAL STATUS FIELD - define observed
                       state of cluster Important: Run "make" to regenerate code after
                       modifying this file'
-                    type: string
-                type: object
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
+                      type: string
+                  type: object
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}

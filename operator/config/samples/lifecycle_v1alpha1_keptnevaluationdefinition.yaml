@@ -7,5 +7,4 @@ spec:
   objectives:
     - name: prometheus
       query: "sum(prometheus_engine_query_duration_seconds_count)"
-      evaluationTarget: ">1000" #string: can only be starting with < or >
-
+      evaluationTarget: ">1000" # string: can only be starting with < or >

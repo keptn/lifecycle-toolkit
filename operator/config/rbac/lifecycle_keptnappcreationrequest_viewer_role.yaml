@@ -11,17 +11,17 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: keptnappcreationrequest-viewer-role
 rules:
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappcreationrequests
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappcreationrequests/status
-  verbs:
-  - get
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcreationrequests
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcreationrequests/status
+    verbs:
+      - get

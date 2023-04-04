@@ -98,7 +98,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/hat:0.2.7
+          image: ghcr.io/podtato-head/hat:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -145,7 +145,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-leg:0.2.7
+          image: ghcr.io/podtato-head/left-leg:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -192,7 +192,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-arm:0.2.7
+          image: ghcr.io/podtato-head/left-arm:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -239,7 +239,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:0.2.7
+          image: ghcr.io/podtato-head/right-leg:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -286,7 +286,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-arm:0.2.7
+          image: ghcr.io/podtato-head/right-arm:0.2.7
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -331,4 +331,3 @@ spec:
     parameters:
       map:
         url: http://podtato-head-entry:9000
-

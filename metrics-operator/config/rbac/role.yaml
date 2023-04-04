@@ -5,55 +5,55 @@ metadata:
   creationTimestamp: null
   name: metrics-operator-role
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - providers
-  verbs:
-  - get
-  - list
-  - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - providers
+    verbs:
+      - get
+      - list
+      - watch

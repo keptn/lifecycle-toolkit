@@ -7,4 +7,3 @@ spec:
     name: "keptn-metric"
   query: "query"
   fetchIntervalSeconds: 5
-

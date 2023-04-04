@@ -7,6 +7,6 @@ roleRef:
   kind: Role
   name: lifecycle-operator-leader-election-role
 subjects:
-- kind: ServiceAccount
-  name: lifecycle-operator
-  namespace: system
+  - kind: ServiceAccount
+    name: lifecycle-operator
+    namespace: system

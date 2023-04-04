@@ -15,155 +15,155 @@ spec:
     singular: keptnmetric
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    - jsonPath: .spec.query
-      name: Query
-      type: string
-    - jsonPath: .status.value
-      name: Value
-      type: string
-    name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetric is the Schema for the keptnmetrics API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+    - additionalPrinterColumns:
+        - jsonPath: .spec.provider.name
+          name: Provider
+          type: string
+        - jsonPath: .spec.query
+          name: Query
+          type: string
+        - jsonPath: .status.value
+          name: Value
+          type: string
+      name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: KeptnMetric is the Schema for the keptnmetrics API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricSpec defines the desired state of KeptnMetric
-            properties:
-              fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency
-                  in seconds that is used to update the metric
-                type: integer
-              provider:
-                description: Provider represents the provider object
-                properties:
-                  name:
-                    description: Name of the provider
-                    type: string
-                required:
-                - name
-                type: object
-              query:
-                description: Query represents the query to be run
-                type: string
-            required:
-            - fetchIntervalSeconds
-            - provider
-            - query
-            type: object
-          status:
-            description: KeptnMetricStatus defines the observed state of KeptnMetric
-            properties:
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              value:
-                description: Value represents the resulting value
-                type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - value
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    - jsonPath: .spec.query
-      name: Query
-      type: string
-    - jsonPath: .status.value
-      name: Value
-      type: string
-    name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetric is the Schema for the keptnmetrics API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnMetricSpec defines the desired state of KeptnMetric
+              properties:
+                fetchIntervalSeconds:
+                  description: FetchIntervalSeconds represents the update frequency
+                    in seconds that is used to update the metric
+                  type: integer
+                provider:
+                  description: Provider represents the provider object
+                  properties:
+                    name:
+                      description: Name of the provider
+                      type: string
+                  required:
+                    - name
+                  type: object
+                query:
+                  description: Query represents the query to be run
+                  type: string
+              required:
+                - fetchIntervalSeconds
+                - provider
+                - query
+              type: object
+            status:
+              description: KeptnMetricStatus defines the observed state of KeptnMetric
+              properties:
+                lastUpdated:
+                  description: LastUpdated represents the time when the status data
+                    was last updated
+                  format: date-time
+                  type: string
+                rawValue:
+                  description: RawValue represents the resulting value in raw format
+                  format: byte
+                  type: string
+                value:
+                  description: Value represents the resulting value
+                  type: string
+              required:
+                - lastUpdated
+                - rawValue
+                - value
+              type: object
+          type: object
+      served: true
+      storage: false
+      subresources:
+        status: {}
+    - additionalPrinterColumns:
+        - jsonPath: .spec.provider.name
+          name: Provider
+          type: string
+        - jsonPath: .spec.query
+          name: Query
+          type: string
+        - jsonPath: .status.value
+          name: Value
+          type: string
+      name: v1alpha2
+      schema:
+        openAPIV3Schema:
+          description: KeptnMetric is the Schema for the keptnmetrics API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricSpec defines the desired state of KeptnMetric
-            properties:
-              fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency
-                  in seconds that is used to update the metric
-                type: integer
-              provider:
-                description: Provider represents the provider object
-                properties:
-                  name:
-                    description: Name of the provider
-                    type: string
-                required:
-                - name
-                type: object
-              query:
-                description: Query represents the query to be run
-                type: string
-            required:
-            - fetchIntervalSeconds
-            - provider
-            - query
-            type: object
-          status:
-            description: KeptnMetricStatus defines the observed state of KeptnMetric
-            properties:
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              value:
-                description: Value represents the resulting value
-                type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - value
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnMetricSpec defines the desired state of KeptnMetric
+              properties:
+                fetchIntervalSeconds:
+                  description: FetchIntervalSeconds represents the update frequency
+                    in seconds that is used to update the metric
+                  type: integer
+                provider:
+                  description: Provider represents the provider object
+                  properties:
+                    name:
+                      description: Name of the provider
+                      type: string
+                  required:
+                    - name
+                  type: object
+                query:
+                  description: Query represents the query to be run
+                  type: string
+              required:
+                - fetchIntervalSeconds
+                - provider
+                - query
+              type: object
+            status:
+              description: KeptnMetricStatus defines the observed state of KeptnMetric
+              properties:
+                lastUpdated:
+                  description: LastUpdated represents the time when the status data
+                    was last updated
+                  format: date-time
+                  type: string
+                rawValue:
+                  description: RawValue represents the resulting value in raw format
+                  format: byte
+                  type: string
+                value:
+                  description: Value represents the resulting value
+                  type: string
+              required:
+                - lastUpdated
+                - rawValue
+                - value
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}

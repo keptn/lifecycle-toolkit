@@ -30,21 +30,23 @@ jobs:
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
           functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
-          helm-install:  ${{ inputs.helm-install }}
-      
+          helm-install: ${{ inputs.helm-install }}
+
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Download KUTTL
+        env:
+          BASE_URL: "https://github.com/kudobuilder/kuttl/releases"
         run: |
-          curl -fL https://github.com/kudobuilder/kuttl/releases/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64 -o kubectl-kuttl
+          curl -fL "${BASE_URL}/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64" -o kubectl-kuttl
           chmod +x kubectl-kuttl
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Integration Tests
         working-directory: .
         run: make integration-test
-      
+
       - name: Create reports
         if: always()
         working-directory: ./.github/scripts

@@ -5,21 +5,21 @@ module:
   hugoVersion:
     extended: true
   imports:
-  - path: github.com/keptn/docs-tooling
-    ignoreConfig: false
-    mounts:
-    - source: static
-      target: static
-    - source: layouts
-      target: layouts
-    - source: data
-      target: data
-    - source: assets
-      target: assets
-    - source: archetypes
-      target: archetypes
-    - source: content/en/_index.md
-      target: content/en/_index.md
+    - path: github.com/keptn/docs-tooling
+      ignoreConfig: false
+      mounts:
+        - source: static
+          target: static
+        - source: layouts
+          target: layouts
+        - source: data
+          target: data
+        - source: assets
+          target: assets
+        - source: archetypes
+          target: archetypes
+        - source: content/en/_index.md
+          target: content/en/_index.md
   proxy: direct
 languages:
   en:

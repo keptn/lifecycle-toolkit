@@ -3,5 +3,5 @@ kind: KeptnEvaluationProvider
 metadata:
   name: prometheus
 spec:
-  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090" #string
-  secretName: prometheusLoginCredentials #secret name, optional
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090" # string
+  secretName: prometheusLoginCredentials # secret name, optional

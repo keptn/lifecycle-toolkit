@@ -1,7 +1,0 @@
-docs/content/en/_index.md:28:77 MD034/no-bare-urls Bare URL used [Context: "https://github.com/keptn/lifec..."]
-docs/content/en/_index.md:33:77 MD034/no-bare-urls Bare URL used [Context: "https://twitter.com/keptnProje..."]
-README.md:494 MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
-README.md:495 MD001/heading-increment/header-increment Heading levels should only increment by one level at a time [Expected: h4; Actual: h5]
-README.md:495 MD022/blanks-around-headings/blanks-around-headers Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: "##### asdf"]
-README.md:497 MD024/no-duplicate-heading/no-duplicate-header Multiple headings with the same content [Context: "### asdf"]
-make: *** [docs/Makefile:45: markdownlint] Error 1

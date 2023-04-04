@@ -7,8 +7,9 @@ weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-To upgrade from the previous version of the Keptn Lifecycle Toolkit to the latest,
-run the same command sequence used to install KLT:
+If you installed the previous version of the Lifecycle Toolkit using `helm`,
+you can upgrade to the latest version
+by running the same command sequence used to install KLT:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -20,6 +21,11 @@ helm upgrade --install keptn klt/klt \
 Use the `--set` flag or download and edit the `values.yaml` file
 to modify the configuration as discused on the
 [Install the Lifecycle Toolkit](../install/) page.
+
+**Warning:**
+If you installed your Lifecycle Toolkit instance from the Manifest,
+additional steps are required to use the Helm Chart to upgrade.
+Contact us on Slack for assistance.
 
 ## Migrate from v0.6.0 to v0.7.0
 

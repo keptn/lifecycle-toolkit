@@ -1,37 +1,43 @@
 extends: default
 
+ignore: |
+  docs/tmp/
+  docs/public/
+  test/prometheus
+  **/rendered/release.yaml
+  examples/support/observability/config/prometheus
+  dashboards/grafana
+  operator/config/crd/bases
+  metrics-operator/config/crd/bases
+  helm/chart/templates
+  helm/chart/rendered.yaml
+  helmchart.yaml
+
 rules:
-  braces:
-    level: warning
-    max-spaces-inside: 1
-  brackets:
-    level: warning
-    max-spaces-inside: 1
-  colons: 
-    level: warning
-  commas:
-    level: warning
-  comments: disable 
-  comments-indentation: disable
+  braces: enable
+  brackets: enable
+  colons: enable
+  commas: enable
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: enable
   document-end: disable
   document-start: disable
-  empty-lines: 
-    level: warning
-  hyphens: 
-    level: warning
+  empty-lines: enable
+  hyphens: enable
   indentation:
-    level: warning
-    spaces: consistent
-    indent-sequences: consistent
-  key-duplicates:
-    level: warning
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+  key-duplicates: enable
+  key-ordering: disable
   line-length:
-    level: warning
-    max: 150  
-  new-line-at-end-of-file: 
-    level: warning
-  new-lines: 
-    level: warning
-  trailing-spaces: disable
-  truthy: disable
-
+    max: 150
+  new-line-at-end-of-file: enable
+  new-lines: enable
+  octal-values: enable
+  quoted-strings: disable
+  trailing-spaces: enable
+  truthy:
+    level: error
+    allowed-values: ['true', 'false', 'on']

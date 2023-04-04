@@ -132,4 +132,3 @@ status:
     - status: Succeeded
       definitionName: check-entry-service
   status: Succeeded
-

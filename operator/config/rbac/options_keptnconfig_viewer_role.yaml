@@ -11,17 +11,17 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: keptnconfig-viewer-role
 rules:
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs/status
-  verbs:
-  - get
+  - apiGroups:
+      - options.keptn.sh
+    resources:
+      - keptnconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - options.keptn.sh
+    resources:
+      - keptnconfigs/status
+    verbs:
+      - get

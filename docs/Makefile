@@ -15,7 +15,7 @@ shell:
 	$(DOCKER_CMD) -i $(VOLUMES) $(IMAGE) shell
 
 server:
-	$(DOCKER_CMD) $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT) --disableFastRender
+	$(DOCKER_CMD) $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
 
 clean:
 	$(DOCKER_CMD) $(VOLUMES) $(IMAGE) --cleanDestinationDir
@@ -35,15 +35,14 @@ lint: lint-fix
 #
 # - .markdownlintignore holds the configuration for files to be ignored
 # - .markdownlint.yaml contains the rules for markdownfiles
-#davidanson/markdownlint-cli2-rules:next
-# renovate: datasource=docker depName=ghcr.io/igorshubovych/markdownlint-cli
-MDL_DOCKER_VERSION := v0.33.0
-#MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm  ghcr.io/igorshubovych/markdownlint-cli:$(MDL_DOCKER_VERSION)  "**/*.md" 
+# renovate: datasource=docker depName=davidanson/markdownlint-cli2-rules
+MDL_DOCKER_VERSION := v0.6.0 # TODO: remove next line on version increase from v0.6.0
+MDL_DOCKER_VERSION := next
 MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm 
 
 .PHONY: markdownlint markdownlint-fix
 markdownlint:
-	$(MDL_CMD) davidanson/markdownlint-cli2-rules:next "**/*.md" 
+	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
 
 markdownlint-fix:
-	$(MDL_CMD) --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2-rules:next "**/*.md" 
+	$(MDL_CMD) --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 

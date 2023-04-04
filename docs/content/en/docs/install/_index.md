@@ -16,9 +16,9 @@ the components of the Keptn Lifecycle Toolkit
 either as a local cluster you use for study, testing, and demonstrations
 or as part of an existing production cluster.
 
-1. Understand the [Software versions and resources](reqs/)
+1. Understand the [Software versions and resources](reqs.md)
    that are required
-1. [Bring or create your Kubernetes cluster](k8s/)
-1. [Install the Keptn Lifecycle Controller](install/)
-1. [Integrate the Keptn Lifecycle Controller into your Kubernetes cluster](integrate/)
-1. [Upgrade](upgrade/) to a new version of the Keptn Lifecycle Toolkit
+1. [Bring or create your Kubernetes cluster](k8s.md)
+1. [Install the Keptn Lifecycle Controller](install.md)
+1. [Integrate the Keptn Lifecycle Controller into your Kubernetes cluster](integrate.md)
+1. [Upgrade](upgrade.md) to a new version of the Keptn Lifecycle Toolkit

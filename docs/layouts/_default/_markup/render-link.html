@@ -1,0 +1,13 @@
+{{- if or (strings.HasPrefix .Destination "http") (strings.HasPrefix .Destination "#") -}} 
+<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- else -}}
+{{- $link := . -}}
+{{- $internal := urls.Parse .Destination -}}
+{{- if $internal.Path -}}
+{{- $fragment := "" }}
+{{- with $internal.Fragment }}{{ $fragment = printf "#%s" . }}{{ end -}}
+{{- with .Page.GetPage $internal.Path }}{{ $internal = printf "%s%s" .RelPermalink $fragment }}
+<a href="{{ $internal }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ $link.Text | safeHTML }}</a>
+{{- end -}}
+{{- end -}}
+{{- end -}}

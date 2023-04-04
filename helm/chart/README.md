@@ -80,6 +80,7 @@ checks
 | `lifecycleOperator.manager.containerSecurityContext.runAsUser`                |                                                                 | `65532`                                        |
 | `lifecycleOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                                 | `RuntimeDefault`                               |
 | `lifecycleOperator.manager.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                      | `0`                                            |
+| `lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller     | `0`                                            |
 | `lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller               | `0`                                            |
 | `lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel`             | sets the log level of Keptn Evaluation Controller               | `0`                                            |
 | `lifecycleOperator.manager.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                     | `0`                                            |

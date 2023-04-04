@@ -11,21 +11,21 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: keptnconfig-editor-role
 rules:
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs/status
-  verbs:
-  - get
+  - apiGroups:
+      - options.keptn.sh
+    resources:
+      - keptnconfigs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - options.keptn.sh
+    resources:
+      - keptnconfigs/status
+    verbs:
+      - get

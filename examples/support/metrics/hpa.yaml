@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: podtato-metrics-hpa
+  namespace: podtato-metrics
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podtato-head-entry
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Object
+      object:
+        metric:
+          name: cpu-throttling
+        describedObject:
+          apiVersion: metrics.keptn.sh/v1alpha2
+          kind: KeptnMetric
+          name: cpu-throttling
+        target:
+          type: Value
+          value: "0.05"

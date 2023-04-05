@@ -31,5 +31,3 @@ For more information, see the Kubernetes documentation:
 * [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
 
 * [Understanding Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
-
-

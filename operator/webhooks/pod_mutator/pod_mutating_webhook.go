@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strings"
 
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -184,8 +185,13 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 			return false, nil
 		}
 
+		if rsOwner.Kind == "Rollout" {
+			ro := &argov1alpha1.Rollout{}
+			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ro)
+		}
 		dp := &appsv1.Deployment{}
 		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
+
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
@@ -496,7 +502,7 @@ func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) meta
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
-			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" {
+			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout" {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name

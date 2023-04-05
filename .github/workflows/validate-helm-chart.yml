@@ -1,4 +1,4 @@
-name: Validate Helm Docs
+name: Validate Helm Chart
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ on:
 defaults:
   run:
     shell: bash
-jobs:
+jobs: 
   check-helm-docs:
     name: Check helm documentation values
     runs-on: ubuntu-22.04
@@ -59,26 +59,26 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    
-    - name: Generate current YAML
-      run: |
-        helm template helm/chart > current.yaml
-    
-    - name: Generate new Helm Chart
-      run: make helm-package
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Generate current YAML
+        run: |
+          helm template helm/chart > current.yaml
+      
+      - name: Generate new Helm Chart
+        run: make helm-package
 
-    - name: Generate new YAML
-      run: |
-        helm template helm/chart > new.yaml
-        
-    - name: Compare YAML files
-      run: |
-        if ! diff -rq current.yaml new.yaml &>/dev/null; then 
-          echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
-          exit 
-        else
-          echo ""
-          echo "There are no changes in the manifests"
-        fi
+      - name: Generate new YAML
+        run: |
+          helm template helm/chart > new.yaml
+          
+      - name: Compare YAML files
+        run: |
+          if ! diff -rq current.yaml new.yaml &>/dev/null; then 
+            echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
+            exit 
+          else
+            echo ""
+            echo "There are no changes in the manifests"
+          fi

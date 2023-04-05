@@ -85,5 +85,5 @@ This is important so we do know which version it contains - specifically importa
 
 `Docsy` offers a mechanism to build a version menu based on Hugo's configuration.
 We extended this mechanism and enhanced it with a check for directories starting with `docs` and containing a `version` file.
-For more details inspect the [layout file with adaptions](layouts/partials/navbar-version-selector.html).
+For more details inspect [our theme with a layout file with adaptations](https://github.com/keptn/docs-tooling).
 This way we do not need to adapt the configuration all the time we are releasing a new version.

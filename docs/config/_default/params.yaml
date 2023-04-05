@@ -11,6 +11,12 @@ versions:
   - url: https://lifecycle.keptn.sh/docs
     version: latest
 
-
 mermaid:
   enable: true
+
+links:
+  developer:
+    - desc: Development takes place here!
+      icon: fab fa-github
+      name: Keptn Lifecycle Toolkit GitHub Repository
+      url: https://github.com/keptn/lifecycle-toolkit

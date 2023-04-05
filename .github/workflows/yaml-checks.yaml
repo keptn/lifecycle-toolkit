@@ -9,7 +9,7 @@ on:
     paths:
       - '**.yaml'
       - '**.yml'
-      - '.yamllint' 
+      - '.yamllint'
   pull_request:
     branches:
       - 'main'
@@ -18,7 +18,7 @@ on:
     paths:
       - '**.yaml'
       - '**.yml'
-      - '.yamllint'   
+      - '.yamllint'
 jobs:
   yamllint:
     runs-on: ubuntu-22.04
@@ -27,4 +27,3 @@ jobs:
 
       - name: Lint YAML files
         run: make yamllint
-

@@ -28,4 +28,4 @@ spec:
   secretKeyRef:
     key: DT_TOKEN
     name: dynatrace
-  targetServer: "http://localhost:8080" #string
+  targetServer: "http://localhost:8080"  # string

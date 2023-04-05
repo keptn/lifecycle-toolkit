@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: keptnworkload-editor-role
 rules:
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloads
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloads/status
-  verbs:
-  - get
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloads
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloads/status
+    verbs:
+      - get

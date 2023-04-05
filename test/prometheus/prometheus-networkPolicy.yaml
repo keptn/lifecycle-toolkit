@@ -11,31 +11,31 @@ metadata:
   namespace: monitoring
 spec:
   egress:
-  - {}
+    - {}
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: prometheus
-    ports:
-    - port: 9090
-      protocol: TCP
-    - port: 8080
-      protocol: TCP
-  - from:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: grafana
-    ports:
-    - port: 9090
-      protocol: TCP
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: keptn-lifecycle-toolkit-system
-    ports:
-      - port: 9090
-        protocol: TCP
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      ports:
+        - port: 9090
+          protocol: TCP
+        - port: 8080
+          protocol: TCP
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: grafana
+      ports:
+        - port: 9090
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: keptn-lifecycle-toolkit-system
+      ports:
+        - port: 9090
+          protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/component: prometheus
@@ -43,4 +43,4 @@ spec:
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
   policyTypes:
-  - Egress
+    - Egress

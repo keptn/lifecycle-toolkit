@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: keptnapp-editor-role
 rules:
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnapps
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnapps/status
-  verbs:
-  - get
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapps
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnapps/status
+    verbs:
+      - get

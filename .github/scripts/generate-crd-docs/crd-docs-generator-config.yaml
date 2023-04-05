@@ -1,6 +1,6 @@
 processor:
   useRawDocstring: true
-  ignoreTypes: [ ]
+  ignoreTypes: []
   ignoreFields:
     - "status$"
     - "TypeMeta$"

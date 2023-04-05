@@ -365,6 +365,7 @@ func makeDaemonSet(name string, namespace string, wanted int32, available int32)
 }
 
 func Test_getAppVersionForWorkloadInstance(t *testing.T) {
+	now := time.Now()
 	tests := []struct {
 		name           string
 		wli            *klcv1alpha3.KeptnWorkloadInstance
@@ -412,8 +413,9 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 				Items: []klcv1alpha3.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
-							Name:      "my-app",
-							Namespace: "default",
+							Name:              "my-app",
+							Namespace:         "default",
+							CreationTimestamp: metav1.Time{Time: now},
 						},
 						Spec: klcv1alpha3.KeptnAppVersionSpec{
 							KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
@@ -430,8 +432,9 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 					},
 					{
 						ObjectMeta: metav1.ObjectMeta{
-							Name:      "my-app2",
-							Namespace: "default",
+							Name:              "my-app2",
+							Namespace:         "default",
+							CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 						},
 						Spec: klcv1alpha3.KeptnAppVersionSpec{
 							KeptnAppSpec: klcv1alpha3.KeptnAppSpec{

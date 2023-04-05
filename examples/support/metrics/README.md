@@ -12,11 +12,11 @@ scale workloads up or down. To demonstrate this, the following steps will be cov
 
 To deploy the application, you can run the following command:
 
-````shell
+```shell
 make 1-deploy-app
-````
+```
 
-This will create a namespace called `podtato-metrics`, and a deployment called `podtato-head-entry` that's
+This will create a namespace called `podtato-metrics`, and a deployment called `podtato-head-entry` that is
 accessible via a `ClusterIP` service. After executing the command, you should see one
 pod running the application we just created:
 
@@ -53,7 +53,7 @@ cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total
 ## Generating Load
 
 Now that we have our application up and running, and can retrieve the `KeptnMetric` value,
-it is time to generate some load. To do so, we will create  `Job` that regularly
+it is time to generate some load. To do so, we will create a `Job` that regularly
 sends a request to our application. The Job can be created using the following command:
 
 ```shell
@@ -114,7 +114,7 @@ state of the `podtato-metrics-hpa` autoscaler:
 
 ```shell
 $ make get-hpa-status
-kubectl describe  horizontalpodautoscalers.autoscaling -n podtato-kubectl podtato-mint
+kubectl describe  horizontalpodautoscalers.autoscaling -n podtato-metrics podtato-metrics-hpa
 Warning: autoscaling/v2beta2 HorizontalPodAutoscaler is deprecated in v1.23+, unavailable in v1.26+; use autoscaling/v2 HorizontalPodAutoscaler
 Name:                                                             podtato-metrics-hpa
 Namespace:                                                        podtato-metrics

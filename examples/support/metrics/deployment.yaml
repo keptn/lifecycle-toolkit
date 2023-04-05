@@ -54,6 +54,4 @@ spec:
       protocol: TCP
       nodePort: 30900
       targetPort: 9000
-  type: NodePort
-  # change to NodePort if no LoadBalancer controller is available
-  # type: NodePort
+  type: ClusterIP

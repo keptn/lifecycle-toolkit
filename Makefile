@@ -9,7 +9,7 @@ HELM_VERSION ?= v3.11.2
 CHART_APPVERSION ?= v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
-YAMLLINT_VERSION ?= alpine-1-0.14
+YAMLLINT_VERSION ?= alpine
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
@@ -37,7 +37,7 @@ integration-test:
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
-integration-test-local:
+integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
 .PHONY: load-test
@@ -45,6 +45,19 @@ load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
 	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
+
+.PHONY: install-prometheus
+install-prometheus:
+	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply --server-side -f test/prometheus/setup
+	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
+	kubectl apply -f test/prometheus/
+	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
+
+
 
 .PHONY: cleanup-manifests
 cleanup-manifests:
@@ -67,7 +80,6 @@ release-helm-manifests: helmify
 helm-package:
 	$(MAKE) build-release-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
 	$(MAKE) release-helm-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-
 
 .PHONY: build-release-manifests
 build-release-manifests:
@@ -119,4 +131,4 @@ build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator bui
 include docs/Makefile
 
 yamllint:
-	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .github docs
+	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

@@ -34,6 +34,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappcreationrequest"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnevaluation"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
@@ -74,14 +75,17 @@ type envConfig struct {
 	PodNamespace string `envconfig:"POD_NAMESPACE" default:""`
 	PodName      string `envconfig:"POD_NAME" default:""`
 
-	KeptnAppControllerLogLevel              int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnAppVersionControllerLogLevel       int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnEvaluationControllerLogLevel       int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskControllerLogLevel             int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskDefinitionControllerLogLevel   int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadControllerLogLevel         int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
-	KptnOptionsControllerLogLevel           int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppControllerLogLevel                int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppCreationRequestControllerLogLevel int `envconfig:"KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppVersionControllerLogLevel         int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnEvaluationControllerLogLevel         int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+
+	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 //nolint:funlen,gocognit,gocyclo
@@ -201,6 +205,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	appCreationRequestLogger := ctrl.Log.WithName("KeptnAppCreationRequest Controller")
+	appCreationRequestReconciler := &keptnappcreationrequest.KeptnAppCreationRequestReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
+	}
+	if err := appCreationRequestReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppCreationRequest")
+		os.Exit(1)
+	}
+
 	workloadLogger := ctrl.Log.WithName("KeptnWorkload Controller")
 	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
 		Client:        mgr.GetClient(),
@@ -261,9 +276,10 @@ func main() {
 
 	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    configLogger.V(env.KptnOptionsControllerLogLevel),
+		Client:              mgr.GetClient(),
+		Scheme:              mgr.GetScheme(),
+		Log:                 configLogger.V(env.KeptnOptionsControllerLogLevel),
+		DefaultCollectorURL: env.KeptnOptionsCollectorURL,
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")

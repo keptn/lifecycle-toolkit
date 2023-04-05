@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: keptntaskdefinition-editor-role
 rules:
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntaskdefinitions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntaskdefinitions/status
-  verbs:
-  - get
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntaskdefinitions
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptntaskdefinitions/status
+    verbs:
+      - get

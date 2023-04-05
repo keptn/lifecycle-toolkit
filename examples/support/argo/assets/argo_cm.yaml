@@ -21,7 +21,7 @@ data:
       hs.message = "KeptnAppVersion is degraded"
     end
     return hs
-    
+
   resource.customizations.health.lifecycle.keptn.sh_KeptnWorkloadInstance: |
     hs = {}
     hs.status = "Progressing"

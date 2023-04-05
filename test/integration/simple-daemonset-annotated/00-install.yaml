@@ -34,4 +34,3 @@ spec:
         - image: busybox
           name: busybox
           command: ['sh', '-c', 'echo The app is running! && sleep infinity']
-

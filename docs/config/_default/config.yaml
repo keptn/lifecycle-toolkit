@@ -18,8 +18,6 @@ module:
           target: assets
         - source: archetypes
           target: archetypes
-        - source: content/en/_index.md
-          target: content/en/_index.md
   proxy: direct
 languages:
   en:

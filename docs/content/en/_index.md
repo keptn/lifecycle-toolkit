@@ -1,5 +1,15 @@
 ---
 title: Home
+cascade:
+  - _target:
+      path: "/docs/**"
+    sitemap:
+      priority: 1.0
+
+  - _target:
+      path: "/docs-*/**"
+    sitemap:
+      priority: 0.1
 ---
 
 <!-- markdownlint-disable MD033 -->

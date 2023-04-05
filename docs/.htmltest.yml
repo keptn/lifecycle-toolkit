@@ -7,7 +7,4 @@ IgnoreDirs:
 IgnoreURLs:
   - "linkedin.com"
   - "localhost"
-  # our edit links in the sidebar might not work for newly created pages
-  - "github.com/keptn/lifecycle-toolkit/tree/main"
-  - "github.com/keptn/lifecycle-toolkit/edit/main"
 StripQueryString: false

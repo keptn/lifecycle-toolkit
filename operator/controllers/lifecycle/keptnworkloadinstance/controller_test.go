@@ -609,6 +609,11 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 			found, gotAppVersion, err := r.getAppVersionForWorkloadInstance(context.TODO(), tt.wli)
 			require.Equal(t, tt.wantErr, err != nil)
 			require.Equal(t, tt.wantFound, found)
+			if tt.wantFound {
+				// set the creation timestamp of the returned appVersion to the time zero value because this is
+				// set internally by the fake client
+				gotAppVersion.ObjectMeta.CreationTimestamp = metav1.Time{Time: time.Time{}}
+			}
 			require.Equal(t, tt.wantAppVersion, gotAppVersion)
 		})
 	}

@@ -325,7 +325,7 @@ func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3
 				if workloadMatchesApp(appWorkload, wli, app) {
 					workloadFound = true
 
-					if app.ObjectMeta.CreationTimestamp.Time.After(latestVersion.ObjectMeta.CreationTimestamp.Time) {
+					if app.ObjectMeta.CreationTimestamp.Time.After(latestVersion.ObjectMeta.CreationTimestamp.Time) || latestVersion.CreationTimestamp.Time.IsZero() {
 						latestVersion = app
 					}
 				}

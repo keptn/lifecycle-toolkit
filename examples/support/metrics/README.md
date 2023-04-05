@@ -38,7 +38,6 @@ This will create a `KeptnMetricsProvider` pointing to Prometheus
 (`http://prometheus-k8s.monitoring.svc.cluster.local:9090`), and a `KeptnMetric` that retrieves
 the value of the following query:
 
-
 ```shell
 avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))
 ```

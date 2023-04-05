@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -611,6 +612,8 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 }
 
 func Test_getLatestAppVersion(t *testing.T) {
+
+	now := time.Now()
 	type args struct {
 		apps *klcv1alpha3.KeptnAppVersionList
 		wli  *klcv1alpha3.KeptnWorkloadInstance
@@ -629,8 +632,9 @@ func Test_getLatestAppVersion(t *testing.T) {
 					Items: []klcv1alpha3.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "my-app",
-								Namespace: "default",
+								Name:              "my-app",
+								Namespace:         "default",
+								CreationTimestamp: metav1.Time{Time: now},
 							},
 							Spec: klcv1alpha3.KeptnAppVersionSpec{
 								KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
@@ -647,8 +651,9 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 						{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "my-app",
-								Namespace: "default",
+								Name:              "my-app",
+								Namespace:         "default",
+								CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 							},
 							Spec: klcv1alpha3.KeptnAppVersionSpec{
 								KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
@@ -682,8 +687,9 @@ func Test_getLatestAppVersion(t *testing.T) {
 			wantFound: true,
 			wantAppVersion: klcv1alpha3.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "my-app",
-					Namespace: "default",
+					Name:              "my-app",
+					Namespace:         "default",
+					CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 				},
 				Spec: klcv1alpha3.KeptnAppVersionSpec{
 					KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
@@ -742,49 +748,6 @@ func Test_getLatestAppVersion(t *testing.T) {
 			wantFound:      false,
 			wantAppVersion: klcv1alpha3.KeptnAppVersion{},
 			wantErr:        false,
-		},
-		{
-			name: "app version with invalid version",
-			args: args{
-				apps: &klcv1alpha3.KeptnAppVersionList{
-					Items: []klcv1alpha3.KeptnAppVersion{
-						{
-							ObjectMeta: metav1.ObjectMeta{
-								Name:      "my-app",
-								Namespace: "default",
-							},
-							Spec: klcv1alpha3.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
-									Version: "",
-									Workloads: []klcv1alpha3.KeptnWorkloadRef{
-										{
-											Name:    "my-workload",
-											Version: "1.0",
-										},
-									},
-								},
-								AppName: "my-app",
-							},
-						},
-					},
-				},
-				wli: &klcv1alpha3.KeptnWorkloadInstance{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-workloadinstance",
-						Namespace: "default",
-					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
-						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-							AppName: "my-app",
-							Version: "1.0",
-						},
-						WorkloadName: "my-app-my-workload",
-					},
-				},
-			},
-			wantFound:      false,
-			wantAppVersion: klcv1alpha3.KeptnAppVersion{},
-			wantErr:        true,
 		},
 		{
 			name: "app version list empty",

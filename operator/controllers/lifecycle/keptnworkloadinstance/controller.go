@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	version "github.com/hashicorp/go-version"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -318,9 +317,6 @@ func (r *KeptnWorkloadInstanceReconciler) getTracer() controllercommon.ITracer {
 
 func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3.KeptnWorkloadInstance) (bool, klcv1alpha3.KeptnAppVersion, error) {
 	latestVersion := klcv1alpha3.KeptnAppVersion{}
-	// ignore the potential error since this can not return an error with 0.0.0
-	oldVersion, _ := version.NewVersion("0.0.0")
-	var err error
 
 	workloadFound := false
 	for _, app := range apps.Items {
@@ -328,9 +324,9 @@ func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3
 			for _, appWorkload := range app.Spec.Workloads {
 				if workloadMatchesApp(appWorkload, wli, app) {
 					workloadFound = true
-					latestVersion, oldVersion, err = setupLatestVersion(appWorkload, wli, app, latestVersion, oldVersion)
-					if err != nil {
-						return false, klcv1alpha3.KeptnAppVersion{}, err
+
+					if app.ObjectMeta.CreationTimestamp.Time.After(latestVersion.ObjectMeta.CreationTimestamp.Time) {
+						latestVersion = app
 					}
 				}
 			}
@@ -341,16 +337,4 @@ func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3
 
 func workloadMatchesApp(appWorkload klcv1alpha3.KeptnWorkloadRef, wli *klcv1alpha3.KeptnWorkloadInstance, app klcv1alpha3.KeptnAppVersion) bool {
 	return appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName
-}
-
-func setupLatestVersion(appWorkload klcv1alpha3.KeptnWorkloadRef, wli *klcv1alpha3.KeptnWorkloadInstance, app klcv1alpha3.KeptnAppVersion, latestVersion klcv1alpha3.KeptnAppVersion, oldVersion *version.Version) (klcv1alpha3.KeptnAppVersion, *version.Version, error) {
-	newVersion, err := version.NewVersion(app.Spec.Version)
-	if err != nil {
-		return latestVersion, oldVersion, err
-	}
-	if newVersion.GreaterThan(oldVersion) {
-		return app, newVersion, nil
-	}
-
-	return latestVersion, oldVersion, nil
 }

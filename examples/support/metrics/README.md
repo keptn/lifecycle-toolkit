@@ -1,7 +1,7 @@
 # AutoScaling with HPA and KeptnMetrics
 
-This example shows how `KeptnMetrics` can be used as a reference for a `HorizontalPodAutoscaler` to decide when to scale 
-workloads up or down. To demonstrate this, the following steps will be covered in this example:
+This example shows how `KeptnMetrics` can be used as a reference for a `HorizontalPodAutoscaler` to decide when to
+scale workloads up or down. To demonstrate this, the following steps will be covered in this example:
 
 1. Deploy a sample application
 2. Create a `KeptnMetric` to monitor the throttled CPU of all pods serving our application
@@ -16,8 +16,9 @@ To deploy the application, you can run the following command:
 make 1-deploy-app
 ````
 
-This will create a namespace called `podtato-metrics`, and a deployment called `podtato-head-entry` that's accessible via a `ClusterIP` service.
-After executing the command, you should see one pod running the application we just created:
+This will create a namespace called `podtato-metrics`, and a deployment called `podtato-head-entry` that's
+accessible via a `ClusterIP` service. After executing the command, you should see one
+pod running the application we just created:
 
 ```shell
 $kubectl get pods -n podtato-metrics
@@ -33,11 +34,12 @@ To create the metric that keeps track of the throttled CPU of our application, r
 make 2-create-metric
 ```
 
-This will create a `KeptnMetricsProvider` pointing to Prometheus (`http://prometheus-k8s.monitoring.svc.cluster.local:9090`), and a `KeptnMetric` that retrieves 
+This will create a `KeptnMetricsProvider` pointing to Prometheus
+(`http://prometheus-k8s.monitoring.svc.cluster.local:9090`), and a `KeptnMetric` that retrieves
 the value of the following query:
 
 
-```
+```shell
 avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))
 ```
 
@@ -51,8 +53,9 @@ cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total
 
 ## Generating Load
 
-Now that we have our application up and running, and can retrieve the `KeptnMetric` value, it is time to generate some load. 
-To do so, we will create  `Job` that regularly sends a request to our application. The Job can be created using the following command:
+Now that we have our application up and running, and can retrieve the `KeptnMetric` value,
+it is time to generate some load. To do so, we will create  `Job` that regularly
+sends a request to our application. The Job can be created using the following command:
 
 ```shell
 make 3-generate-load
@@ -68,10 +71,10 @@ cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total
 
 ## Deploying the HorizontalPodAutoscaler
 
-Now, to meet the demand of our application, we will deploy a `HorizontalPodAutoscaler` that will observe the value of the
-`cpu-throttling` metric, and scale the demo application up or down, based on the target we have specified for our metric.
-In our case, we want to ensure that the value of our metric stays below `0.05`, and we are willing to scale up to 10 replicas of
-our demo application:
+Now, to meet the demand of our application, we will deploy a `HorizontalPodAutoscaler` that will
+observe the value of the `cpu-throttling` metric, and scale the demo application up or down, based on the target
+we have specified for our metric. In our case, we want to ensure that the value of our metric stays
+below `0.05`, and we are willing to scale up to 10 replicas of our demo application:
 
 ```yaml
 apiVersion: autoscaling/v2
@@ -106,8 +109,9 @@ The HPA can be deployed using the following command:
 make 4-deploy-hpa
 ```
 
-Once the HPA has been deployed, we should immediately see it scaling up the replica count of our application, since the metric
-value was already above our target. You can also verify this by inspecting the current state of the `podtato-metrics-hpa` autoscaler:
+Once the HPA has been deployed, we should immediately see it scaling up the replica count of our application,
+since the metric value was already above our target. You can also verify this by inspecting the current
+state of the `podtato-metrics-hpa` autoscaler:
 
 ```shell
 $ make get-hpa-status

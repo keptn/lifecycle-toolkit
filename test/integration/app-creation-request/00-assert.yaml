@@ -4,3 +4,12 @@ metadata:
   name: my-kacr
 spec:
   appName: my-app
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: my-app
+spec:
+  workloads:
+    - name: my-workload
+      version: 1.0.0

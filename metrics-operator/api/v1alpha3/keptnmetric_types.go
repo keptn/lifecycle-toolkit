@@ -23,23 +23,40 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+func (*KeptnMetric) Hub() {}
+
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of KeptnMetric. Edit keptnmetric_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Provider represents the provider object
+	Provider ProviderRef `json:"provider"`
+	// Query represents the query to be run
+	Query string `json:"query"`
+	// FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric
+	FetchIntervalSeconds uint `json:"fetchIntervalSeconds"`
 }
 
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Value represents the resulting value
+	Value string `json:"value"`
+	// RawValue represents the resulting value in raw format
+	RawValue []byte `json:"rawValue"`
+	// LastUpdated represents the time when the status data was last updated
+	LastUpdated metav1.Time `json:"lastUpdated"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// ProviderRef represents the provider object
+type ProviderRef struct {
+	// Name of the provider
+	Name string `json:"name"`
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
+// +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
+// +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
+// +kubebuilder:storageversion
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {
@@ -50,7 +67,7 @@ type KeptnMetric struct {
 	Status KeptnMetricStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnMetricList contains a list of KeptnMetric
 type KeptnMetricList struct {
@@ -61,4 +78,8 @@ type KeptnMetricList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnMetric{}, &KeptnMetricList{})
+}
+
+func (s *KeptnMetric) IsStatusSet() bool {
+	return s.Status.Value != ""
 }

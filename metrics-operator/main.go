@@ -43,7 +43,6 @@ import (
 	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 )
@@ -137,15 +136,8 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha2.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
-		os.Exit(1)
-	}
-	if err = (&controllers.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

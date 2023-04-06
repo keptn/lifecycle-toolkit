@@ -17,29 +17,26 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"strings"
+
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 type KeptnMetricsProviderSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of KeptnMetricsProvider. Edit keptnmetricsprovider_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	TargetServer string                   `json:"targetServer"`
+	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
 // KeptnMetricsProviderStatus defines the observed state of KeptnMetricsProvider
 type KeptnMetricsProviderStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=keptnmetricsproviders,shortName=kmp
+// +kubebuilder:storageversion
 
 // KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 type KeptnMetricsProvider struct {
@@ -50,7 +47,7 @@ type KeptnMetricsProvider struct {
 	Status KeptnMetricsProviderStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 type KeptnMetricsProviderList struct {
@@ -61,4 +58,14 @@ type KeptnMetricsProviderList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnMetricsProvider{}, &KeptnMetricsProviderList{})
+}
+
+func (p *KeptnMetricsProvider) HasSecretDefined() bool {
+	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
+		return false
+	}
+	if strings.TrimSpace(p.Spec.SecretKeyRef.Name) == "" || strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
+		return false
+	}
+	return true
 }

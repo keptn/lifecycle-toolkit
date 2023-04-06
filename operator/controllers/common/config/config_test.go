@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestConfig_GetDefaultCreationRequestTimeout(t *testing.T) {

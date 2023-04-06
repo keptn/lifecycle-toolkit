@@ -1,9 +1,10 @@
 package v1alpha3
 
 import (
+	"testing"
+
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {

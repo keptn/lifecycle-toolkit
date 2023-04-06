@@ -20,23 +20,21 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/benbjohnson/clock"
+	"github.com/go-logr/logr"
+	lifecycle "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-	"strings"
-	"time"
-
-	"github.com/go-logr/logr"
-	lifecycle "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
-
-const ownerKind = "KeptnAppCreationRequest"
 
 // KeptnAppCreationRequestReconciler reconciles a KeptnAppCreationRequest object
 type KeptnAppCreationRequestReconciler struct {

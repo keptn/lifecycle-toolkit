@@ -69,6 +69,8 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
+//
+//nolint:gocyclo
 func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	creationRequest := &lifecycle.KeptnAppCreationRequest{}
 

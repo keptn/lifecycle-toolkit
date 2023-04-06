@@ -36,6 +36,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const ownerKind = "KeptnAppCreationRequest"
+
 // KeptnAppCreationRequestReconciler reconciles a KeptnAppCreationRequest object
 type KeptnAppCreationRequestReconciler struct {
 	client.Client
@@ -94,7 +96,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	// if the found app has not been created by this controller, we are done at this point - we don't want to mess with what the user has created
-	if appFound && len(keptnApp.OwnerReferences) == 0 {
+	if appFound && !isAppControlledByCreationRequest(keptnApp, creationRequest) {
 		r.Log.Info("User defined KeptnApp found for KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
 		if err := r.Delete(ctx, creationRequest); err != nil {
 			r.Log.Error(err, "Could not delete KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
@@ -137,6 +139,13 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	return ctrl.Result{}, nil
 }
 
+func isAppControlledByCreationRequest(keptnApp *lifecycle.KeptnApp, request *lifecycle.KeptnAppCreationRequest) bool {
+	if len(keptnApp.OwnerReferences) == 0 {
+		return false
+	}
+	return keptnApp.OwnerReferences[0].Kind == request.Kind && keptnApp.OwnerReferences[0].Name == request.Name
+}
+
 func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
 	discoveryDeadline := config.Instance().GetCreationRequestTimeout()
 	return creationRequest.IsSingleService() || r.clock.Now().After(creationRequest.CreationTimestamp.Add(discoveryDeadline))
@@ -151,8 +160,8 @@ func (r *KeptnAppCreationRequestReconciler) SetupWithManager(mgr ctrl.Manager) e
 
 func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *lifecycle.KeptnApp, workloads *lifecycle.KeptnWorkloadList) error {
 
-	updatedVersion := false
-	addedWorkload := false
+	updated := false
+
 	for _, workload := range workloads.Items {
 		foundWorkload := false
 		workloadName := strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", keptnApp.Name))
@@ -162,7 +171,7 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 				if keptnApp.Spec.Workloads[index].Version != workload.Spec.Version {
 					keptnApp.Spec.Workloads[index].Version = workload.Spec.Version
 					// we may also want to increase the version of the app if any version has been changed
-					updatedVersion = true
+					updated = true
 				}
 				foundWorkload = true
 				break
@@ -174,17 +183,15 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 				Name:    workloadName,
 				Version: workload.Spec.Version,
 			})
-			addedWorkload = true
+			updated = true
 		}
 	}
 
-	if !updatedVersion && !addedWorkload {
+	if !updated {
 		return nil
 	}
 
-	if updatedVersion {
-		keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
-	}
+	keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
 
 	return r.Update(ctx, keptnApp)
 }

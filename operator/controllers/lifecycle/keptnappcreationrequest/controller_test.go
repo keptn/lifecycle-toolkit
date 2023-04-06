@@ -3,6 +3,7 @@ package keptnappcreationrequest
 import (
 	"context"
 	"github.com/benbjohnson/clock"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
@@ -69,7 +70,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 		},
 	}
 	// invoke the first reconciliation
-	res, err := r.Reconcile(context.Background(), request)
+	res, err := r.Reconcile(context.TODO(), request)
 
 	require.Nil(t, err)
 	require.NotZero(t, res.RequeueAfter)
@@ -78,7 +79,224 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	theClock.Add(1 * time.Minute)
 
 	// reconcile again - now we should get a KeptnApp as a result
-	res, err = r.Reconcile(context.Background(), request)
+	res, err = r.Reconcile(context.TODO(), request)
+
+	require.Nil(t, err)
+	require.False(t, res.Requeue)
+	require.Zero(t, res.RequeueAfter)
+
+	kApp := &klcv1alpha3.KeptnApp{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, kApp)
+	require.Len(t, kApp.OwnerReferences, 1)
+	require.True(t, *kApp.OwnerReferences[0].Controller)
+	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
+	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+	require.NotEmpty(t, kApp.Spec.Version)
+	require.Len(t, kApp.Spec.Workloads, 2)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload1.Name,
+		Version: workload1.Spec.Version,
+	})
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload2.Name,
+		Version: workload2.Spec.Version,
+	})
+
+	// verify that the creationRequest has been deleted
+	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
+
+	require.True(t, errors.IsNotFound(err))
+}
+
+func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *testing.T) {
+	r, fakeClient, theClock := setupReconcilerAndClient(t)
+	const namespace = "my-namespace"
+	const appName = "my-app"
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "my-kacr",
+			Namespace:         namespace,
+			CreationTimestamp: metav1.Time{Time: theClock.Now()},
+		},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+			AppName: appName,
+		},
+	}
+
+	err := fakeClient.Create(context.TODO(), kacr)
+	require.Nil(t, err)
+
+	workload1 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "w1",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "1.0",
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), workload1)
+	require.Nil(t, err)
+
+	request := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: kacr.Namespace,
+			Name:      kacr.Name,
+		},
+	}
+
+	// turn the clock forward
+	theClock.Add(1 * time.Minute)
+
+	// reconcile again - now we should get a KeptnApp as a result
+	res, err := r.Reconcile(context.TODO(), request)
+
+	require.Nil(t, err)
+	require.False(t, res.Requeue)
+	require.Zero(t, res.RequeueAfter)
+
+	kApp := &klcv1alpha3.KeptnApp{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, kApp)
+	require.Len(t, kApp.OwnerReferences, 1)
+	require.True(t, *kApp.OwnerReferences[0].Controller)
+	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
+	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+	require.NotEmpty(t, kApp.Spec.Version)
+	require.Len(t, kApp.Spec.Workloads, 1)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload1.Name,
+		Version: workload1.Spec.Version,
+	})
+
+	firstVersion := kApp.Spec.Version
+
+	// verify that the creationRequest has been deleted
+	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
+
+	require.True(t, errors.IsNotFound(err))
+
+	// create a new workload
+
+	workload2 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "w2",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "2.0",
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), workload2)
+	require.Nil(t, err)
+
+	// create a new instance of a CreationRequest
+	newKACR := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "my-kacr",
+			Namespace:         namespace,
+			CreationTimestamp: metav1.Time{Time: theClock.Now()},
+		},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+			AppName: appName,
+		},
+	}
+	err = fakeClient.Create(context.TODO(), newKACR)
+	require.Nil(t, err)
+
+	// turn the clock forward
+	theClock.Add(1 * time.Minute)
+
+	// reconcile again - now we should get an updated KeptnApp as a result
+	res, err = r.Reconcile(context.TODO(), request)
+
+	require.Nil(t, err)
+	require.False(t, res.Requeue)
+	require.Zero(t, res.RequeueAfter)
+
+	kApp = &klcv1alpha3.KeptnApp{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, kApp)
+	require.Len(t, kApp.OwnerReferences, 1)
+	require.True(t, *kApp.OwnerReferences[0].Controller)
+	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
+	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+	require.NotEmpty(t, kApp.Spec.Version)
+	require.NotEqual(t, firstVersion, kApp.Spec.Version)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload1.Name,
+		Version: workload1.Spec.Version,
+	})
+	// now we should see the new workload as well
+	require.Len(t, kApp.Spec.Workloads, 2)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload2.Name,
+		Version: workload2.Spec.Version,
+	})
+}
+
+func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testing.T) {
+	r, fakeClient, theClock := setupReconcilerAndClient(t)
+	const namespace = "my-namespace"
+	const appName = "my-app"
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "my-kacr",
+			Namespace:         namespace,
+			CreationTimestamp: metav1.Time{Time: theClock.Now()},
+		},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+			AppName: appName,
+		},
+	}
+
+	err := fakeClient.Create(context.TODO(), kacr)
+	require.Nil(t, err)
+
+	existingApp := &klcv1alpha3.KeptnApp{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      appName,
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnAppSpec{
+			Version: "1.0",
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), existingApp)
+
+	require.Nil(t, err)
+
+	request := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: kacr.Namespace,
+			Name:      kacr.Name,
+		},
+	}
+
+	// turn the clock forward
+	theClock.Add(1 * time.Minute)
+
+	// reconcile - this should not result in the creation of a KeptnApp
+	res, err := r.Reconcile(context.Background(), request)
 
 	require.Nil(t, err)
 	require.False(t, res.Requeue)
@@ -90,16 +308,16 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 
 	require.Nil(t, err)
 	require.NotEmpty(t, kApp)
-	require.NotEmpty(t, kApp.Spec.Version)
-	require.Len(t, kApp.Spec.Workloads, 2)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
-		Name:    workload1.Name,
-		Version: workload1.Spec.Version,
-	})
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
-		Name:    workload2.Name,
-		Version: workload2.Spec.Version,
-	})
+	// verify that the existing app has not been modified
+	require.Empty(t, kApp.OwnerReferences)
+	require.Equal(t, existingApp.Spec.Version, kApp.Spec.Version)
+
+	// verify that the creationRequest has been deleted
+	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
+
+	require.True(t, errors.IsNotFound(err))
 }
 
 func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler, client.Client, *clock.Mock) {

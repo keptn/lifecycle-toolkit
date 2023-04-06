@@ -7,6 +7,12 @@ import (
 
 const defaultKeptnAppCreationRequestTimeout = 30 * time.Second
 
+//go:generate moq -pkg fake -skip-ensure -out ./fake/config_mock.go . IConfig:MockConfig
+type IConfig interface {
+	SetCreationRequestTimeout(value time.Duration)
+	GetCreationRequestTimeout() time.Duration
+}
+
 type Config struct {
 	keptnAppCreationRequestTimeout time.Duration
 }

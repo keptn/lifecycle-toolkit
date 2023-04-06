@@ -22,6 +22,8 @@ const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluations"
 const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluations"
 const TaskNameAnnotation = "keptn.sh/task-name"
 const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-toolkit"
+const AppTypeAnnotation = "keptn.sh/app-type"
+
 const CreateAppTaskSpanName = "create_%s_app_task"
 const CreateWorkloadTaskSpanName = "create_%s_deployment_task"
 const CreateAppEvalSpanName = "create_%s_app_evaluation"
@@ -36,6 +38,13 @@ var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot cast KeptnEvaluati
 var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1alpha3")
 var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha3")
 var ErrCannotCastKeptnWorkloadInstance = errors.New("cannot cast KeptnWorkloadInstance to v1alpha3")
+
+type AppType string
+
+const (
+	AppTypeSingleService AppType = "single-service"
+	AppTypeMultiService  AppType = "multi-service"
+)
 
 type KeptnState string
 

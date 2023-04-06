@@ -19,6 +19,7 @@ package keptnappcreationrequest
 import (
 	"context"
 	"fmt"
+	"github.com/benbjohnson/clock"
 	"github.com/hashicorp/go-version"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -39,6 +40,18 @@ type KeptnAppCreationRequestReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
+	clock  clock.Clock
+	config config.IConfig
+}
+
+func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger) *KeptnAppCreationRequestReconciler {
+	return &KeptnAppCreationRequestReconciler{
+		Client: client,
+		Scheme: scheme,
+		Log:    log,
+		config: config.Instance(),
+		clock:  clock.New(),
+	}
 }
 
 //+kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappcreationrequests,verbs=get;list;watch;create;update;patch;delete
@@ -88,11 +101,8 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 		return ctrl.Result{}, nil
 	}
 
-	// TODO check annotation: if the KeptnAppCreationRequest annotation keptn.sh/app-type has value single-service -> it's single-service app and the timeout is set to 0
-
-	// check if discovery deadline has expired
-	discoveryDeadline := config.Instance().GetCreationRequestTimeout() // TODO this needs to be retrieved from the KeptnConfig Object
-	if !time.Now().After(creationRequest.CreationTimestamp.Add(discoveryDeadline)) {
+	// check if discovery deadline has expired or if the application is a single service app
+	if !r.shouldCreateApp(creationRequest) {
 		r.Log.Info("Discovery deadline not expired yet", "KeptnAppCreationRequest", creationRequest)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
@@ -118,6 +128,11 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+}
+
+func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
+	discoveryDeadline := config.Instance().GetCreationRequestTimeout()
+	return creationRequest.IsSingleService() || r.clock.Now().After(creationRequest.CreationTimestamp.Add(discoveryDeadline))
 }
 
 // SetupWithManager sets up the controller with the Manager.

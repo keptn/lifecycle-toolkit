@@ -1,0 +1,56 @@
+package v1alpha3
+
+import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"testing"
+)
+
+func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {
+	type fields struct {
+		ObjectMeta v1.ObjectMeta
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{
+			name: "single-service application",
+			fields: fields{ObjectMeta: v1.ObjectMeta{
+				Annotations: map[string]string{
+					common.AppTypeAnnotation: string(common.AppTypeSingleService),
+				},
+			}},
+			want: true,
+		},
+		{
+			name: "multi-service application",
+			fields: fields{ObjectMeta: v1.ObjectMeta{
+				Annotations: map[string]string{
+					common.AppTypeAnnotation: string(common.AppTypeMultiService),
+				},
+			}},
+			want: false,
+		},
+		{
+			name: "anything else",
+			fields: fields{ObjectMeta: v1.ObjectMeta{
+				Annotations: map[string]string{
+					common.AppTypeAnnotation: "",
+				},
+			}},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kacr := &KeptnAppCreationRequest{
+				ObjectMeta: tt.fields.ObjectMeta,
+			}
+			if got := kacr.IsSingleService(); got != tt.want {
+				t.Errorf("IsSingleService() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/argoproj/argo-rollouts v1.4.1
+	github.com/benbjohnson/clock v1.3.0
 	github.com/go-logr/logr v1.2.4
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.15

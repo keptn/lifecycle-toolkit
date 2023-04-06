@@ -11,7 +11,7 @@ on:
 defaults:
   run:
     shell: bash
-jobs: 
+jobs:
   check-helm-docs:
     name: Check helm documentation values
     runs-on: ubuntu-22.04
@@ -77,7 +77,7 @@ jobs:
         run: |
           if ! diff -rq current.yaml new.yaml &>/dev/null; then 
             echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
-            exit 
+            exit 1
           else
             echo ""
             echo "There are no changes in the manifests"

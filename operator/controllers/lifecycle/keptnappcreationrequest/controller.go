@@ -18,9 +18,10 @@ package keptnappcreationrequest
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
 	"github.com/benbjohnson/clock"
-	"github.com/hashicorp/go-version"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -107,13 +108,19 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 
-	// look up all the KeptnWorkloads referencing the KeptnApp
+	// at this point we know that the creation request will be deleted at the end
+	defer func() {
+		if err := r.Delete(ctx, creationRequest); err != nil {
+			r.Log.Error(err, "Could not delete", "KeptnAppCreationRequest", creationRequest)
+		}
+	}()
 
+	// look up all the KeptnWorkloads referencing the KeptnApp
 	workloads := &lifecycle.KeptnWorkloadList{}
 	if err := r.Client.List(ctx, workloads, client.InNamespace(creationRequest.Namespace), client.MatchingFields{
 		"spec.app": creationRequest.Spec.AppName,
 	}); err != nil {
-		return ctrl.Result{RequeueAfter: 10 * time.Second}, fmt.Errorf("could not retrieve KeptnWorkloads: %w", err)
+		return ctrl.Result{}, fmt.Errorf("could not retrieve KeptnWorkloads: %w", err)
 	}
 
 	var err error
@@ -127,7 +134,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 		return ctrl.Result{}, fmt.Errorf("could not update: %w", err)
 	}
 
-	return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+	return ctrl.Result{}, nil
 }
 
 func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
@@ -176,8 +183,7 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 	}
 
 	if updatedVersion {
-		oldVersion, _ := version.NewVersion(keptnApp.Spec.Version)
-		keptnApp.Spec.Version = fmt.Sprintf("%d.0.0", oldVersion.Segments()[0]+1)
+		keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
 	}
 
 	return r.Update(ctx, keptnApp)
@@ -190,7 +196,7 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Namespace: creationRequest.Namespace,
 		},
 		Spec: lifecycle.KeptnAppSpec{
-			Version:                   "1.0.0",
+			Version:                   computeVersionFromWorkloads(workloads.Items),
 			PreDeploymentTasks:        []string{},
 			PostDeploymentTasks:       []string{},
 			PreDeploymentEvaluations:  []string{},
@@ -211,4 +217,20 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 	}
 
 	return r.Create(ctx, keptnApp)
+}
+
+func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
+	versionString := ""
+
+	// iterate over all workloads and add their names + version
+	for _, workload := range workloads {
+		versionString += workload.Name + "-" + workload.Spec.Version
+	}
+
+	// take the string containing all workloads/versions and compute a hash
+	hash := sha256.New()
+	hash.Write([]byte(versionString))
+	hashValue := fmt.Sprintf("%x", hash.Sum(nil))
+
+	return common.TruncateString(hashValue, 10)
 }

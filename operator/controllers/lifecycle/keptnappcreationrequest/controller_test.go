@@ -2,7 +2,11 @@ package keptnappcreationrequest
 
 import (
 	"context"
+	"github.com/benbjohnson/clock"
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
+	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -13,37 +17,110 @@ import (
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func TestKeptnAppCreationRequestReconciler_Reconcile(t *testing.T) {
-	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
+func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
+	r, fakeClient, theClock := setupReconcilerAndClient(t)
+	const namespace = "my-namespace"
+	const appName = "my-app"
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-kacr",
-			Namespace: "my-namespace",
+			Name:              "my-kacr",
+			Namespace:         namespace,
+			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
 		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
-			AppName: "my-app",
+			AppName: appName,
 		},
 	}
 
-	err = fakeClient.Create(context.TODO(), kacr)
+	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	r := &KeptnAppCreationRequestReconciler{
-		Client: fakeClient,
-		Scheme: fakeClient.Scheme(),
-		Log:    logr.Logger{},
+	workload1 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "w1",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "1.0",
+		},
 	}
 
-	_, err = r.Reconcile(context.Background(), controllerruntime.Request{
+	workload2 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "w2",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "2.0",
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), workload1)
+	require.Nil(t, err)
+	err = fakeClient.Create(context.TODO(), workload2)
+	require.Nil(t, err)
+
+	request := controllerruntime.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: kacr.Namespace,
 			Name:      kacr.Name,
 		},
-	})
+	}
+	// invoke the first reconciliation
+	res, err := r.Reconcile(context.Background(), request)
 
 	require.Nil(t, err)
+	require.NotZero(t, res.RequeueAfter)
+
+	// turn the clock forward
+	theClock.Add(1 * time.Minute)
+
+	// reconcile again - now we should get a KeptnApp as a result
+	res, err = r.Reconcile(context.Background(), request)
+
+	require.Nil(t, err)
+	require.False(t, res.Requeue)
+	require.Zero(t, res.RequeueAfter)
+
+	kApp := &klcv1alpha3.KeptnApp{}
+
+	err = fakeClient.Get(context.Background(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, kApp)
+	require.NotEmpty(t, kApp.Spec.Version)
+	require.Len(t, kApp.Spec.Workloads, 2)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload1.Name,
+		Version: workload1.Spec.Version,
+	})
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload2.Name,
+		Version: workload2.Spec.Version,
+	})
+}
+
+func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler, client.Client, *clock.Mock) {
+	scheme := runtime.NewScheme()
+
+	err := klcv1alpha3.AddToScheme(scheme)
+	require.Nil(t, err)
+
+	workloadAppIndexer := func(obj client.Object) []string {
+		workload, _ := obj.(*klcv1alpha3.KeptnWorkload)
+		return []string{workload.Spec.AppName}
+	}
+
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects().WithIndex(&klcv1alpha3.KeptnWorkload{}, "spec.app", workloadAppIndexer).Build()
+
+	theClock := clock.NewMock()
+	r := &KeptnAppCreationRequestReconciler{
+		Client: fakeClient,
+		Scheme: fakeClient.Scheme(),
+		Log:    logr.Logger{},
+		clock:  theClock,
+	}
+	return r, fakeClient, theClock
 }

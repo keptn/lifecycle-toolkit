@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: podtato-load
+  namespace: podtato-metrics
+spec:
+  selector:
+    matchLabels:
+      job-name: podtato-load
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        job-name: podtato-load
+    spec:
+      containers:
+        - name: podtato-load
+          image: curlimages/curl
+          command:
+            - "sh"
+            - "-c"
+            - "while true; do curl http://podtato-head-entry:9000; sleep 1; done"
+      restartPolicy: Never

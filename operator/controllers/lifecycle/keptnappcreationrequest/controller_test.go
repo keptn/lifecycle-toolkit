@@ -91,10 +91,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 
 	require.Nil(t, err)
 	require.NotEmpty(t, kApp)
-	require.Len(t, kApp.OwnerReferences, 1)
-	require.True(t, *kApp.OwnerReferences[0].Controller)
-	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
-	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 2)
 	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
@@ -169,10 +166,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 
 	require.Nil(t, err)
 	require.NotEmpty(t, kApp)
-	require.Len(t, kApp.OwnerReferences, 1)
-	require.True(t, *kApp.OwnerReferences[0].Controller)
-	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
-	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
 	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
@@ -235,10 +229,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 
 	require.Nil(t, err)
 	require.NotEmpty(t, kApp)
-	require.Len(t, kApp.OwnerReferences, 1)
-	require.True(t, *kApp.OwnerReferences[0].Controller)
-	require.Equal(t, kacr.Name, kApp.OwnerReferences[0].Name)
-	require.Equal(t, "KeptnAppCreationRequest", kApp.OwnerReferences[0].Kind)
+
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.NotEqual(t, firstVersion, kApp.Spec.Version)
 	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
@@ -309,7 +300,6 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 	require.Nil(t, err)
 	require.NotEmpty(t, kApp)
 	// verify that the existing app has not been modified
-	require.Empty(t, kApp.OwnerReferences)
 	require.Equal(t, existingApp.Spec.Version, kApp.Spec.Version)
 
 	// verify that the creationRequest has been deleted

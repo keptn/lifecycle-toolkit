@@ -25,11 +25,20 @@ const CreateAppTaskSpanName = "create_%s_app_task"
 const CreateWorkloadTaskSpanName = "create_%s_deployment_task"
 const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
+const AppTypeAnnotation = "keptn.sh/app-type"
+const AutoCreatedAppAnnotation = "keptn.sh/auto-created-app"
 
 const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25
 const MaxTaskNameLength = 25
 const MaxVersionLength = 12
+
+type AppType string
+
+const (
+	AppTypeSingleService AppType = "single-service"
+	AppTypeMultiService  AppType = "multi-service"
+)
 
 type KeptnState string
 

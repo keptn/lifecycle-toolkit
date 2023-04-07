@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 // KeptnAppCreationRequestReconciler reconciles a KeptnAppCreationRequest object
@@ -140,10 +139,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 }
 
 func isAppControlledByCreationRequest(keptnApp *lifecycle.KeptnApp, request *lifecycle.KeptnAppCreationRequest) bool {
-	if len(keptnApp.OwnerReferences) == 0 {
-		return false
-	}
-	return keptnApp.OwnerReferences[0].Kind == request.Kind && keptnApp.OwnerReferences[0].Name == request.Name
+	return keptnApp.Labels[common.AutoCreatedAppAnnotation] != ""
 }
 
 func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
@@ -201,6 +197,9 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      creationRequest.Spec.AppName,
 			Namespace: creationRequest.Namespace,
+			Labels: map[string]string{
+				common.AutoCreatedAppAnnotation: "true",
+			},
 		},
 		Spec: lifecycle.KeptnAppSpec{
 			Version:                   computeVersionFromWorkloads(workloads.Items),
@@ -210,10 +209,6 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			PostDeploymentEvaluations: []string{},
 			Workloads:                 []lifecycle.KeptnWorkloadRef{},
 		},
-	}
-
-	if err := controllerutil.SetOwnerReference(creationRequest, keptnApp, r.Scheme); err != nil {
-		r.Log.Error(err, "could not set owner reference for KeptnApp: "+keptnApp.Name)
 	}
 
 	for _, workload := range workloads.Items {

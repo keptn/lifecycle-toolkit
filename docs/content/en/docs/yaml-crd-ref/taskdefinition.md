@@ -109,7 +109,6 @@ spec:
    It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
    See [Context](#context) for details.
 
-
 * **secureParameters** -- An optional field used to pass a Kubernetes secret.
   The `secret` value is the Kubernetes secret name
   that is mounted into the runtime and made available to functions
@@ -170,7 +169,6 @@ spec:
 
 This methodology supports multiple variables
 by creating a Kubernetes secret with a JSON string:
-
 
 ```yaml
 # kubectl create secret generic my-secret \
@@ -262,6 +260,7 @@ directory for more example `KeptnTaskDefinition` YAML files.
 Separate examples are provided for each API version.
 For example, the `lifecycle_v1alpha3_keptntaskdefinition` file
 contains examples for the `v1alpha3` version of the lifecycle API group.
+
 ## Files
 
 API Reference:
@@ -284,4 +283,3 @@ all `v1alpha?` library versions.
 
 * Link to "use-case" guide pages that do something interesting with this CRD
 * Link to reference pages for any related CRDs
-

@@ -1,10 +1,5 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnAppCreationRequest
-metadata:
-  name: my-kacr
-spec:
-  appName: my-app
----
+# Check for the KeptnApp to be created - the KeptnAppCreateionRequest will not be here anymore as it is
+# deleted after reconciliation
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:

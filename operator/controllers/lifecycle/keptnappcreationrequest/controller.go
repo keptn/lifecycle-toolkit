@@ -212,8 +212,8 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 		},
 	}
 
-	if err := controllerutil.SetControllerReference(creationRequest, keptnApp, r.Scheme); err != nil {
-		r.Log.Error(err, "could not set controller reference for KeptnApp: "+keptnApp.Name)
+	if err := controllerutil.SetOwnerReference(creationRequest, keptnApp, r.Scheme); err != nil {
+		r.Log.Error(err, "could not set owner reference for KeptnApp: "+keptnApp.Name)
 	}
 
 	for _, workload := range workloads.Items {

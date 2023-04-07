@@ -95,7 +95,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	// if the found app has not been created by this controller, we are done at this point - we don't want to mess with what the user has created
-	if appFound && !isAppControlledByCreationRequest(keptnApp, creationRequest) {
+	if appFound && keptnApp.Labels[common.AutoCreatedAppAnnotation] == "" {
 		r.Log.Info("User defined KeptnApp found for KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
 		if err := r.Delete(ctx, creationRequest); err != nil {
 			r.Log.Error(err, "Could not delete KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
@@ -136,10 +136,6 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	return ctrl.Result{}, nil
-}
-
-func isAppControlledByCreationRequest(keptnApp *lifecycle.KeptnApp, request *lifecycle.KeptnAppCreationRequest) bool {
-	return keptnApp.Labels[common.AutoCreatedAppAnnotation] != ""
 }
 
 func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {

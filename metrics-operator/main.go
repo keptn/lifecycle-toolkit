@@ -26,6 +26,14 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
+	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,15 +44,6 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
-	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 )
 
 var (

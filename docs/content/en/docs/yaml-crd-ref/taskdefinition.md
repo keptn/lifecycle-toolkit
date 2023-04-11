@@ -6,7 +6,8 @@ weight: 89
 
 A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
-as part of the pre- and post-deployment phases of a `KeptnApp`.
+as part of the pre- and post-deployment phases of a
+[KeptnApp](./app).
 
 ## Yaml Synopsis
 
@@ -98,6 +99,7 @@ spec:
      parameters:
        map:
          textMessage: "This is my configuration"
+   ```
 
    The JSON object can be read
    through the `DATA` environment variable using `Deno.env.get("DATA");`.
@@ -123,11 +125,19 @@ spec:
 
 ## Usage
 
-A Task is responsible for executing the TaskDefinition of a workload.
-The execution is done by spawning a Kubernetes Job to handle a single Task.
+A Task is responsible for executing the TaskDefinition of a
+[workload](https://kubernetes.io/docs/concepts/workloads/)..
+The execution is done by spawning a Kubernetes
+[Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
 ### Context
+
+A Kubernetes context is a set of access parameters
+that contains a Kubernetes cluster, a user, and a namespace.
+For more information, see
+[Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
 A context environment variable is available via `Deno.env.get("CONTEXT")`.
 It can be used like this:
@@ -193,7 +203,9 @@ spec:
 
 ## Examples
 
-**Example 1** defines a full-fledged Deno script
+### Example 1: inline script
+
+This example defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
 
 ```yaml
@@ -214,7 +226,9 @@ spec:
         console.log("Hello, " + name + " new");
 ```
 
-**Example 2** fetches the Deno script from a remote webserver at runtime:
+### Example 2: httpRef script
+
+This example fetches the Deno script from a remote webserver at runtime:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -227,11 +241,16 @@ spec:
       url: <url>
 ```
 
+For another example, see the
+[sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+
 See the
 [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
 PodtatoHead example for a more complete example.
 
-**Example 3** calls another defined task,
+### Example 3: functionRef
+
+This example calls another defined task,
 illustrating how one `KeptnTaskDefinition` can build
 on top of other `KeptnTaskDefinition`s.
 In this case, it calls `slack-notification-dev`,

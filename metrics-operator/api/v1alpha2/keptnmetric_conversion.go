@@ -1,11 +1,11 @@
-package v1alpha1
+package v1alpha2
 
 import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts this KeptnMetric to the Hub version (v1alpha2)
+// ConvertTo converts this KeptnMetric to the Hub version (v1alpha3)
 func (src *KeptnMetric) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1alpha3.KeptnMetric)
 

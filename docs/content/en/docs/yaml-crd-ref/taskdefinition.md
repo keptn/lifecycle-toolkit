@@ -284,14 +284,14 @@ contains examples for the `v1alpha3` version of the lifecycle API group.
 
 API Reference:
 
-* [KeptnTaskDefinition](../../api-ref/lifecycle/v1alpha3/#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../../api-ref/lifecycle/v1alpha3/#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../../api-ref/lifecycle/v1alpha3/#keptntaskdefinitionspec)
-* [FunctionReference](../../api-ref/lifecycle/v1alpha3/#functionreference)
-* [FunctionSpec](../../api-ref/lifecycle/v1alpha3/#functionspec)
-* [FunctionStatus](../../api-ref/lifecycle/v1alpha3/#functionstatus)
-* [HttpReference](../../api-ref/lifecycle/v1alpha3/#httpreference)
-* [Inline](../../api-ref/lifecycle/v1alpha3/#inline)
+* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinitionspec)
+* [FunctionReference](../../crd-ref/lifecycle/v1alpha3/#functionreference)
+* [FunctionSpec](../../crd-ref/lifecycle/v1alpha3/#functionspec)
+* [FunctionStatus](../../crd-ref/lifecycle/v1alpha3/#functionstatus)
+* [HttpReference](../../crd-ref/lifecycle/v1alpha3/#httpreference)
+* [Inline](../../crd-ref/lifecycle/v1alpha3/#inline)
 
 ## Differences between versions
 

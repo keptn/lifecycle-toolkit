@@ -66,7 +66,7 @@ jobs:
         id: cache-build-tools
         uses: actions/cache@v3
         with:
-          path: ./${{ matrix.config.folder }}bin
+          path: ./bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Generate current YAML

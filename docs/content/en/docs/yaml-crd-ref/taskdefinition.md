@@ -34,7 +34,7 @@ spec:
 
 * **name** -- Unique name of this task.
   * Must be an alphanumeric string and, by convention, is all lowercase.
-  * Can include the special characters `_`, `-`, <what others>.
+  * Can include the special characters `_`, `-`, (others?)
   * Should not include spaces.
 
 * **function** -- Code to be executed,

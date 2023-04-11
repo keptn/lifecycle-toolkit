@@ -9,4 +9,8 @@ metadata:
     app.kubernetes.io/created-by: metrics-operator
   name: keptnmetricsprovider-sample
 spec:
-# TODO(user): Add fields here
+  type: "prometheus"
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090" # string
+  secretKeyRef:
+    name: "prometheusLoginCredentials" # secret name, optional
+    key: "my-credentials"

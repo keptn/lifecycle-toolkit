@@ -42,16 +42,16 @@ type KeptnMetricReconciler struct {
 	Log    logr.Logger
 }
 
-//clusterrole
-//+kubebuilder:rbac:groups=metrics.keptn.sh,resources=providers,verbs=get;list;watch
-//+kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics,verbs=get;list;watch;
-//+kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics/finalizers,verbs=update
-//+kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetricsproviders,verbs=get;list;watch;
-//+kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch
+// clusterrole
+// +kubebuilder:rbac:groups=metrics.keptn.sh,resources=providers,verbs=get;list;watch
+// +kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics,verbs=get;list;watch;
+// +kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetrics/finalizers,verbs=update
+// +kubebuilder:rbac:groups=metrics.keptn.sh,resources=keptnmetricsproviders,verbs=get;list;watch;
+// +kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch
 
-//role
-//+kubebuilder:rbac:groups=core,resources=secrets,verbs=get
+// role
+// +kubebuilder:rbac:groups=core,resources=secrets,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

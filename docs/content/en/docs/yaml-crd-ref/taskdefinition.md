@@ -300,5 +300,5 @@ all `v1alpha?` library versions.
 
 ## See also
 
-* Link to "use-case" guide pages that do something interesting with this CRD
+* [Working with tasks](../implementing/tasks)
 * Link to reference pages for any related CRDs

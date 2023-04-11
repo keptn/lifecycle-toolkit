@@ -20,10 +20,8 @@ inputs:
     default: "test-cluster"
   helm-install:
     required: false
-    type: boolean
     description: "Install KLT via helm instead of manifest if true"
-    # renovate: datasource=github-releases depName=kubernetes-sigs/kind
-    default: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -34,7 +32,7 @@ runs:
         cache: true
         cache-dependency-path: '**/go.sum'
 
-    - name: Download manifests
+    - name: Download artifacts
       uses: actions/download-artifact@v3
       with:
         path: ~/download/artifacts
@@ -88,9 +86,9 @@ runs:
         echo "Installing KLT using helm"
         helm version
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz \
-        --set scheduler.scheduler.imagePullPolicy=Never \
-        --set lifecycleOperator.manager.imagePullPolicy=Never \
-        --set metricsOperator.manager.imagePullPolicy=Never \
-        --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.functions_runtime_tag }} \
-        --set certificateOperator.manager.imagePullPolicy=Never \
-        --debug --wait --timeout 1m
+          --set scheduler.scheduler.imagePullPolicy=Never \
+          --set lifecycleOperator.manager.imagePullPolicy=Never \
+          --set metricsOperator.manager.imagePullPolicy=Never \
+          --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.functions_runtime_tag }} \
+          --set certificateOperator.manager.imagePullPolicy=Never \
+          --debug --wait --timeout 1m

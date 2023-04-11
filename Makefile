@@ -23,6 +23,20 @@ LOCALBIN ?= $(shell pwd)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
+CRDOC_VERSION ?= v0.6.2
+.PHONY: crdocs
+crdocs: $(CRDOC) ## Download crdoc locally if necessary.
+$(CRDOC): $(LOCALBIN)
+	GOBIN=$(LOCALBIN) go install fybrik.io/crdoc@$(CRDOC_VERSION)
+
+.PHONY: generate-crdocs
+generate-crdocs: kustomize crdocs
+	crdoc --resources ./helm/chart/templates/keptnconfig-crd.yaml --output ./docs/content/en/docs/crd-ref/lifecycle/crds1.md
+
+	crdoc --resources ./helm/chart/templates/keptnevaluation-crd.yaml --output ./docs/content/en/docs/crd-ref/lifecycle/crds2.md
+	crdoc --resources ./helm/chart/templates/keptnevaluationdefinition-crd.yaml --output ./docs/content/en/docs/crd-ref/lifecycle/crds3.md
+
+
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 HELMIFY ?=  $(LOCALBIN)/helmify

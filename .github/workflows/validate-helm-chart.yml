@@ -57,7 +57,7 @@ jobs:
 
   helm-generation-check:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -79,10 +79,10 @@ jobs:
       - name: Generate new YAML
         run: |
           helm template helm/chart > new.yaml
-          
+
       - name: Compare YAML files
         run: |
-          if ! diff -rq current.yaml new.yaml &>/dev/null; then 
+          if ! diff -rq current.yaml new.yaml &>/dev/null; then
             echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
             exit 1
           else

@@ -17,17 +17,17 @@ func TestFactory(t *testing.T) {
 		err      bool
 	}{
 		{
-			name:     PrometheusProviderName,
+			name:     PrometheusProviderType,
 			provider: &prometheus.KeptnPrometheusProvider{},
 			err:      false,
 		},
 		{
-			name:     DynatraceProviderName,
+			name:     DynatraceProviderType,
 			provider: &dynatrace.KeptnDynatraceProvider{},
 			err:      false,
 		},
 		{
-			name:     DataDogProviderName,
+			name:     DataDogProviderType,
 			provider: &datadog.KeptnDataDogProvider{},
 			err:      false,
 		},

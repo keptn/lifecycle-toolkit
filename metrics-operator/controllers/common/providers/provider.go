@@ -20,31 +20,31 @@ type KeptnSLIProvider interface {
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
-func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
-	switch strings.ToLower(provider) {
-	case PrometheusProviderName:
+func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
+	switch strings.ToLower(providerType) {
+	case PrometheusProviderType:
 		return &prometheus.KeptnPrometheusProvider{
 			HttpClient: http.Client{},
 			Log:        log,
 		}, nil
-	case DynatraceProviderName:
+	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{
 			HttpClient: http.Client{},
 			Log:        log,
 			K8sClient:  k8sClient,
 		}, nil
-	case DynatraceDQLProviderName:
+	case DynatraceDQLProviderType:
 		return dynatrace.NewKeptnDynatraceDQLProvider(
 			k8sClient,
 			dynatrace.WithLogger(log),
 		), nil
-	case DataDogProviderName:
+	case DataDogProviderType:
 		return &datadog.KeptnDataDogProvider{
 			Log:        log,
 			HttpClient: http.Client{},
 			K8sClient:  k8sClient,
 		}, nil
 	default:
-		return nil, fmt.Errorf("provider %s not supported", provider)
+		return nil, fmt.Errorf("provider %s not supported", providerType)
 	}
 }

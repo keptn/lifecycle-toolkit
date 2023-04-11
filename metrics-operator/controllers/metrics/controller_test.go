@@ -26,7 +26,9 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 			Name:      "myprovider",
 			Namespace: "default",
 		},
-		Spec:   metricsapi.KeptnMetricsProviderSpec{},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type: "prometheus",
+		},
 		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
@@ -43,7 +45,7 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, provider, *got)
 
-	//fetch unexisting provider
+	// fetch unexisting provider
 
 	namespacedProvider2 := types.NamespacedName{Namespace: "default", Name: "myunexistingprovider"}
 	got, err = r.fetchProvider(context.TODO(), namespacedProvider2)
@@ -113,7 +115,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 		Spec: metricsapi.KeptnMetricSpec{
 			Provider: metricsapi.ProviderRef{
-				Name: "prometheus",
+				Name: "provider-name",
 			},
 			Query:                "",
 			FetchIntervalSeconds: 10,
@@ -127,17 +129,20 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 
 	provider := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
-		Spec:       metricsapi.KeptnMetricsProviderSpec{},
-		Status:     metricsapi.KeptnMetricsProviderStatus{},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type: "unsupported-type",
+		},
+		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
 	supportedprov := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "prometheus",
+			Name:      "provider-name",
 			Namespace: "default",
 		},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			TargetServer: "http://keptn.sh",
+			Type:         "prometheus",
 		},
 		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
@@ -191,7 +196,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
 			},
 			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
-			wantErr: fmt.Errorf("provider myprov not supported"),
+			wantErr: fmt.Errorf("provider unsupported-type not supported"),
 		},
 
 		{

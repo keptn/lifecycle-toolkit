@@ -9,7 +9,7 @@ that should be executed at the Keptn application level.
 It contains information about all workloads and checks
 that are associated with a Keptn application.
 
-##Synopsis
+## Synopsis
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?

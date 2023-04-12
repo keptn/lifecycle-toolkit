@@ -69,7 +69,9 @@ jobs:
           path: ./bin
           key: build-tools-${{ github.ref_name }}
 
-      - name: Generate new Helm Chart
+      - name: Generate helm charts
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
         run: make helm-package
 
       - name: Compare YAML file changes
@@ -79,6 +81,6 @@ jobs:
             echo "There are no changes in the manifests"
           else
             echo ""
-            echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
+            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.keptn.sh/keptn"
             exit 1
           fi

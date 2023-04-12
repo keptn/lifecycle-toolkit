@@ -56,7 +56,7 @@ spec:
           command: ['sh', '-c', 'sleep 30']
       containers:
         - name: server
-          image: ghcr.io/podtato-head/entry:0.2.7
+          image: ghcr.io/podtato-head/entry:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

@@ -4,7 +4,7 @@
 
 .PHONY: 2-create-metric
 2-create-metric:
-	kubectl apply -f load-generator-job.yaml
+	kubectl apply -f metric.yaml
 
 .PHONY: 3-generate-load
 3-generate-load:

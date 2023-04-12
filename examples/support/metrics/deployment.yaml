@@ -52,6 +52,5 @@ spec:
     - name: http
       port: 9000
       protocol: TCP
-      nodePort: 30900
       targetPort: 9000
   type: ClusterIP

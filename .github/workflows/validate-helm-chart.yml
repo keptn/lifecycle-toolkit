@@ -1,10 +1,13 @@
-name: Validate Helm Docs
+name: Validate Helm Chart
 on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[1-9][0-9]*.x'
   pull_request:
     branches:
       - 'main'
-    paths:
-      - 'helm/**'
+      - '[0-9]+.[1-9][0-9]*.x'
 defaults:
   run:
     shell: bash
@@ -50,4 +53,34 @@ jobs:
           else
             echo ""
             echo "Helm values documentation is correct!"
+          fi
+
+  helm-generation-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache build tools
+        id: cache-build-tools
+        uses: actions/cache@v3
+        with:
+          path: ./bin
+          key: build-tools-${{ github.ref_name }}
+
+      - name: Generate helm charts
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+        run: make helm-package
+
+      - name: Compare YAML file changes
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo ""
+            echo "There are no changes in the manifests"
+          else
+            echo ""
+            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.keptn.sh/keptn"
+            exit 1
           fi

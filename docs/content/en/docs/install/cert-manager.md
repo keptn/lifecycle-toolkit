@@ -1,5 +1,5 @@
 ---
-title: Implement your own cert-manager (optional)
+title: Use your own cert-manager (optional)
 description: Replace the default KLT cert-manager
 weight: 30
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html

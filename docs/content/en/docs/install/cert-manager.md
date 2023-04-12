@@ -42,8 +42,8 @@ and **replace** the following `volumes` definition
    ```yaml
    - name: cert
      secret:
-     defaultMode: 420
-     secretName: webhook-server-cert
+       defaultMode: 420
+       secretName: webhook-server-cert
    ```
 
 Each manifest must have the following special annotation:

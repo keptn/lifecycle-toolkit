@@ -4,6 +4,7 @@ IgnoreDirectoryMissingTrailingSlash: true
 IgnoreDirs:
   - favicons
   - docs/crd-ref/lifecycle/
+  - community/
 IgnoreURLs:
   - "linkedin.com"
   - "localhost"

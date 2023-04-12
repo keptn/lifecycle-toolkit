@@ -46,7 +46,7 @@ and **replace** the following `volumes` definition
      secretName: webhook-server-cert
    ```
 
-The manifests must have the following special annotation:
+Each manifest must have the following special annotation:
 
 ```yaml
 cert-manager.io/inject-ca-from=klt-serving-cert/keptn-lifecycle-toolkit-system

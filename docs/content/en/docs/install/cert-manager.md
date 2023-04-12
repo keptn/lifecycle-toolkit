@@ -7,7 +7,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 The Keptn Lifecycle Toolkit includes
 a light-weight, customized cert-manager
-that is used for installation and to implement Webhooks.
+that is used to register Webhooks to the [KubeAPI](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/).
 Bundling the cert-manager simplifies the installation for new users
 and provides the functionality KLT needs
 without the overhead of other cert-managers.

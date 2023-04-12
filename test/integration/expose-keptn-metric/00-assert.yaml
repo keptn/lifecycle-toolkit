@@ -1,9 +1,4 @@
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: test
-status:
-  conditions:
-    - type: Complete
-      status: 'True'
-  succeeded: 1
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+commands:
+  - script: PREFIX="kuttl-test-" && NAME=$(echo $NAMESPACE | sed "s/^$PREFIX//" ) && kubectl wait --for=condition=complete job $NAME-1

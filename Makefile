@@ -31,8 +31,8 @@ $(HELMIFY): $(LOCALBIN)
 	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@b1da2bb756ec4328bac7645da037a6fb4e6f30cf
 
 .PHONY: integration-test #these tests should run on a real cluster!
-integration-test:
-	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
+integration-test:																	   #example to run a single test by name
+	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml #--test=expose-keptn-metric
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus

@@ -35,6 +35,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const (
+	managedByKLT = "klt"
+)
+
 // KeptnAppCreationRequestReconciler reconciles a KeptnAppCreationRequest object
 type KeptnAppCreationRequestReconciler struct {
 	client.Client
@@ -95,7 +99,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	// if the found app has not been created by this controller, we are done at this point - we don't want to mess with what the user has created
-	if appFound && keptnApp.Labels[common.AutoCreatedAppAnnotation] == "" {
+	if appFound && keptnApp.Labels[common.K8sRecommendedManagedByAnnotations] != managedByKLT {
 		r.Log.Info("User defined KeptnApp found for KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
 		if err := r.Delete(ctx, creationRequest); err != nil {
 			r.Log.Error(err, "Could not delete KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
@@ -194,7 +198,7 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Name:      creationRequest.Spec.AppName,
 			Namespace: creationRequest.Namespace,
 			Labels: map[string]string{
-				common.AutoCreatedAppAnnotation: "true",
+				common.K8sRecommendedManagedByAnnotations: managedByKLT,
 			},
 		},
 		Spec: lifecycle.KeptnAppSpec{

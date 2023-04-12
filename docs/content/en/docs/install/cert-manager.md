@@ -70,7 +70,7 @@ spec:
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  :secretName webhook-server-cert // this has to match the name of the "secretName" field in the volume definition of step 1
+  secretName webhook-server-cert // this has to match the name of the "secretName" field in the volume definition 
 ```
 
 Note the following about these fields:

@@ -4,7 +4,7 @@ metadata:
   name: available-cpus
   namespace: podtato-kubectl
 spec:
-  provider: 
+  provider:
     name: prometheus
   query: "sum(kube_node_status_capacity{resource='cpu'})"
   fetchIntervalSeconds: 10

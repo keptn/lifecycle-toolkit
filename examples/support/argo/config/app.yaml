@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: podtato-head 
+  name: podtato-head
   namespace: argocd
 spec:
   project: default
@@ -9,7 +9,7 @@ spec:
     repoURL: https://github.com/keptn-sandbox/keptn-lifecycle-toolkit-examples
     targetRevision: main
     path: sample-app/version-2
-  destination: 
+  destination:
     server: https://kubernetes.default.svc
     namespace: podtato-kubectl
   syncPolicy:

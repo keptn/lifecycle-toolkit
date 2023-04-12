@@ -2,10 +2,10 @@
 namespace: keptn-lifecycle-toolkit-system
 
 bases:
-- ../crd
-- ../rbac
-- ../manager
-- ../webhook
+  - ../crd
+  - ../rbac
+  - ../manager
+  - ../webhook
 
 patchesStrategicMerge:
-- webhooknamespaces_patch.yaml
+  - webhooknamespaces_patch.yaml

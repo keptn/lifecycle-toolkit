@@ -3,14 +3,15 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.19
 
 require (
-	github.com/go-logr/logr v1.2.3
+	github.com/argoproj/argo-rollouts v1.4.1
+	github.com/go-logr/logr v1.2.4
 	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230327141700-f5fb9ead9a53
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230403122034-b32d753af54e
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.2
-	github.com/onsi/gomega v1.27.5
+	github.com/onsi/gomega v1.27.6
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/afero v1.9.5
@@ -29,14 +30,14 @@ require (
 	k8s.io/apimachinery v0.26.3
 	k8s.io/apiserver v0.26.3
 	k8s.io/client-go v0.26.3
-	sigs.k8s.io/controller-runtime v0.14.5
+	sigs.k8s.io/controller-runtime v0.14.6
 )
 
 require (
-	github.com/prometheus/common v0.40.0 // indirect
+	github.com/prometheus/common v0.42.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/oauth2 v0.4.0 // indirect
+	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
@@ -50,7 +51,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
-	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
+	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

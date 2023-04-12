@@ -68,5 +68,3 @@ spec:
   provider:
     name: prometheus
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
-
-

@@ -19,7 +19,7 @@ spec:
               if grep -Fxq "# HELP $NAME $NAME" ~/out.txt
               then
                 cat ~/out.txt
-                sleep 55 
+                sleep 55
                 exit 1
               fi
               exit 0
@@ -34,7 +34,7 @@ spec:
               if grep -F "$NAME" ~/out.txt
               then
                 cat ~/out.txt
-                sleep 55 
+                sleep 55
                 exit 1
               fi
               exit 0

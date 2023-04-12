@@ -102,7 +102,11 @@ Note the following about these fields:
 * The `apiVersion` field refers to the API for the cert-manager.
 * The `metadata` section includes two fields.
   The value of these fields must match the annotations
+<<<<<<< HEAD
   used in the KLT operator manifests.
+=======
+  used in the manifests.
+>>>>>>> bc83733 (annotations match above)
 * The value of the `secretName` field
   must match the value of the `secretName` field used
   in the `volumes` definition section of the KLT operator manifests above.

@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-releases depName=cert-manager/cert-manager
-CERT_MANAGER_VERSION ?= v1.11.0
+CERT_MANAGER_VERSION ?= v1.11.1
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v4.5.7
 # renovate: datasource=github-tags depName=helm/helm

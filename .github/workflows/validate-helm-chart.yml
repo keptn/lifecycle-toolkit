@@ -71,6 +71,7 @@ jobs:
 
       - name: Generate current YAML
         run: |
+          make release-helm-manifests
           helm template helm/chart > current.yaml
 
       - name: Generate new Helm Chart
@@ -82,8 +83,11 @@ jobs:
 
       - name: Compare YAML files
         run: |
-          if ! diff -rq current.yaml new.yaml &>/dev/null; then
+          if ! cmp --quiet ./current.yaml ./new.yaml; then
             echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
+            echo ""
+            echo "=========== Diff ==========="
+            diff -u ./current.yaml ./new.yaml
             exit 1
           else
             echo ""

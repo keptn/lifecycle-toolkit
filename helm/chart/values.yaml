@@ -4,14 +4,14 @@ certificateOperator:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-          - ALL
+        - ALL
       readOnlyRootFilesystem: true
       runAsGroup: 65532
       runAsUser: 65532
       seccompProfile:
         type: RuntimeDefault
     image:
-      repository: ghcr.keptn.sh/keptn/certificate-operator
+      repository: ghcr.io/keptn/certificate-operator
       tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
@@ -56,7 +56,7 @@ lifecycleOperator:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-          - ALL
+        - ALL
       privileged: false
       runAsGroup: 65532
       runAsNonRoot: true
@@ -76,7 +76,7 @@ lifecycleOperator:
       optionsControllerLogLevel: "0"
       otelCollectorUrl: otel-collector:4317
     image:
-      repository: ghcr.keptn.sh/keptn/lifecycle-operator
+      repository: ghcr.io/keptn/lifecycle-operator
       tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
@@ -104,16 +104,16 @@ lifecycleOperator:
   topologySpreadConstraints: []
 lifecycleOperatorMetricsService:
   ports:
-    - name: metrics
-      port: 2222
-      protocol: TCP
-      targetPort: metrics
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
   type: ClusterIP
 lifecycleWebhookService:
   ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 9443
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
   type: ClusterIP
 metricsManagerConfig:
   controllerManagerConfigYaml:
@@ -132,12 +132,12 @@ metricsOperator:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-          - ALL
+        - ALL
     env:
       exposeKeptnMetrics: "true"
       metricsControllerLogLevel: "0"
     image:
-      repository: ghcr.keptn.sh/keptn/metrics-operator
+      repository: ghcr.io/keptn/metrics-operator
       tag: v0.7.0
     livenessProbe:
       httpGet:
@@ -164,23 +164,23 @@ metricsOperator:
   topologySpreadConstraints: []
 metricsOperatorService:
   ports:
-    - name: https
-      port: 8443
-      protocol: TCP
-      targetPort: https
-    - name: custom-metrics
-      port: 443
-      targetPort: custom-metrics
-    - name: metrics
-      port: 9999
-      protocol: TCP
-      targetPort: metrics
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  - name: custom-metrics
+    port: 443
+    targetPort: custom-metrics
+  - name: metrics
+    port: 9999
+    protocol: TCP
+    targetPort: metrics
   type: ClusterIP
 metricsWebhookService:
   ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 9443
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
   type: ClusterIP
 scheduler:
   nodeSelector: {}
@@ -190,7 +190,7 @@ scheduler:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-          - ALL
+        - ALL
       privileged: false
       readOnlyRootFilesystem: true
       runAsNonRoot: true
@@ -200,7 +200,7 @@ scheduler:
     env:
       otelCollectorUrl: otel-collector:4317
     image:
-      repository: ghcr.keptn.sh/keptn/scheduler
+      repository: ghcr.io/keptn/scheduler
       tag: v0.7.0
     imagePullPolicy: Always
     livenessProbe:
@@ -228,8 +228,8 @@ schedulerConfig:
     leaderElection:
       leaderElect: false
     profiles:
-      - plugins:
-          permit:
-            enabled:
-              - name: KLCPermit
-        schedulerName: keptn-scheduler
+    - plugins:
+        permit:
+          enabled:
+          - name: KLCPermit
+      schedulerName: keptn-scheduler

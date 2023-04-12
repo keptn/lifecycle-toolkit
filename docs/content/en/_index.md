@@ -10,6 +10,19 @@ cascade:
       path: "/docs-*/**"
     sitemap:
       priority: 0.1
+
+  - _target:
+      path: "/community/**"
+    type: docs
+  - _target:
+      path: "/community/readme.md"
+    draft: true
+  - _target:
+      path: "/community/_index.md"
+    title: Community
+    menu:
+      main:
+        weight: 20
 ---
 
 <!-- markdownlint-disable MD033 -->
@@ -29,7 +42,7 @@ cascade:
 {{% blocks/lead color="white" %}}
 [![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
 {{% /blocks/lead %}}
-
+git add
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
 See Keptn [in Action](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ)

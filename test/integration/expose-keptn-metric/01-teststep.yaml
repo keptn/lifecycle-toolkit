@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands: #generating job and metric based on namespace to avoid interference between runs
+  - script: PREFIX="kuttl-test-" && NAME=$(echo $NAMESPACE | sed "s/^$PREFIX//" ) && envsubst < metrics.yaml > tmp.yaml;
+  - script: kubectl apply -f tmp.yaml;
+

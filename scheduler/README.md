@@ -8,7 +8,8 @@
 
 ## Getting Started
 
-You’ll need a Kubernetes cluster v0.24.0 or higher to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a
+You’ll need a Kubernetes cluster v0.24.0 or higher to run against.
+You can use [KIND](https://sigs.k8s.io/kind) to get a
 local cluster for testing, or run against a remote cluster.
 
 > **Note**

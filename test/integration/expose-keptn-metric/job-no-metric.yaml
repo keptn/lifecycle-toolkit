@@ -4,7 +4,7 @@ metadata:
   name: $NAME-job1
   namespace: $NAMESPACE
 spec:
-  backoffLimit: 3
+  backoffLimit: 0
   template:
     spec:
       containers:
@@ -19,7 +19,6 @@ spec:
               then
                 exit 1
               fi
-              exit 0
         - name: test-api-endpoint
           image: curlimages/curl:8.00.1
           args:
@@ -31,5 +30,4 @@ spec:
               then
                 exit 1
               fi
-              exit 0
       restartPolicy: Never

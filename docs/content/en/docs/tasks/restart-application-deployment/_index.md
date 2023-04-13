@@ -15,7 +15,8 @@ This could happen because of, e.g., a misconfigured target value of a `KeptnEval
 checked in a pre deployment check.
 
 To retry a `KeptnApp` deployment without incrementing the version of the `KeptnApp`, we introduced the concept of **
-revisions** for a `KeptnAppVersion`. This means that
+revisions** for a `KeptnAppVersion`.
+This means that
 whenever the spec of a `KeptnApp` changes, even though the version stays the same, the KLT Operator will create a new
 revision of the `KeptnAppVersion` referring to the `KeptnApp`.
 

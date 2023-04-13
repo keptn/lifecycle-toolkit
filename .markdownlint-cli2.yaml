@@ -1,0 +1,20 @@
+config:
+  line-length:
+    line_length: 120
+    tables: false
+    code_blocks: false
+  no-inline-html:
+    allowed_elements:
+      - details
+      - summary
+  github-admonition: true
+  max-one-sentence-per-line: true
+
+customRules:
+  - "./docs/rules/admonition.js"
+  - "./docs/rules/max-one-sentence-per-line.js"
+
+ignores:
+  - "CHANGELOG.md"
+  - "node_modules"
+  - "docs/tmp"

@@ -21,4 +21,5 @@ The Lifecycle Toolkit operator waits for a valid certificate to be ready.
 The certificate is mounted on an empty dir volume in the operator.
 
 When a certificate is left over from an older version, the webhook or the operator may generate errors because of an
-invalid certificate. To solve this, delete the certificate and restart the operator.
+invalid certificate.
+To solve this, delete the certificate and restart the operator.

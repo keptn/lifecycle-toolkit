@@ -4,8 +4,10 @@ This folder contains the Grafana dashboards for the Keptn Lifecycle Toolkit.
 
 ## Installing the dashboards
 
-It is assumed, that there is a Grafana Instance available. In our provided examples, the dashboards are automatically
-provisioned. If you want to install the dashboards manually, you can use the following steps:
+It is assumed, that there is a Grafana Instance available.
+In our provided examples, the dashboards are automatically
+provisioned.
+If you want to install the dashboards manually, you can use the following steps:
 
 ```shell
 # This defaults to http://localhost:3000, but can be changed by setting the GRAFANA_SCHEME, GRAFANA_URL and GRAFANA_PORT environment variable
@@ -15,7 +17,8 @@ make install
 
 ## Changing the dashboards
 
-The dashboards can be changed in the Grafana UI. To export dashboards, export them using the share button and replace
+The dashboards can be changed in the Grafana UI.
+To export dashboards, export them using the share button and replace
 them in this folder.
 
 ## Exporting the dashboards for the Examples

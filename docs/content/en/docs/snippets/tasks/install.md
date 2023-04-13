@@ -37,7 +37,7 @@ available [here](https://helm.sh/docs/helm/helm_get_values/)).
 
 The full list of available flags can be found in the [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md).
 
-> **Note:**
+> **Note**
 Installation of the Lifecycle Toolkit version 0.6.0 and lower is not supported via helm charts.
 
 <details>

@@ -85,7 +85,7 @@ because the Helm Charts allow you to customize your configuration.
 
 Versions 0.6.0 and earlier can only be installed using manifests.
 
-**Note:** When installing Version 0.6.0,
+> **Note** When installing Version 0.6.0,
 you must first install the `cert-manager` with the following command sequence:
 
 ```shell

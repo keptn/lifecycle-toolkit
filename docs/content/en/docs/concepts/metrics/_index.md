@@ -9,8 +9,10 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 ### Keptn Metric
 
-A `KeptnMetric` is a CRD representing a metric. The metric will be collected from the provider specified in the
-specs.provider.name field. The query is a string in the provider-specific query language, used to obtain a metric.
+A `KeptnMetric` is a CRD representing a metric.
+The metric will be collected from the provider specified in the
+specs.provider.name field.
+The query is a string in the provider-specific query language, used to obtain a metric.
 Providing the metrics as CRD into a K8s cluster will facilitate the reusability of this data across multiple components.
 Furthermore, this allows using multiple observability platforms for different metrics.
 
@@ -67,9 +69,12 @@ spec:
   targetServer: "<dynatrace-third-gen-target-server>"
 ````
 
-Keptn metrics can be exposed as OTel metrics via port `9999` of the KLT metrics-operator. To expose them, the env
-variable `EXPOSE_KEPTN_METRICS` in the metrics-operator manifest needs to be set to `true`. The default value of this variable
-is `true`. To access the metrics, use the following command:
+Keptn metrics can be exposed as OTel metrics via port `9999` of the KLT metrics-operator.
+To expose them, the env
+variable `EXPOSE_KEPTN_METRICS` in the metrics-operator manifest needs to be set to `true`.
+The default value of this variable
+is `true`.
+To access the metrics, use the following command:
 
 ```shell
 kubectl port-forward deployment/metrics-operator 9999 -n keptn-lifecycle-toolkit-system
@@ -144,7 +149,8 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
 }
 ```
 
-You can also filter based on matching labels. So to e.g. retrieve all metrics that are labelled with `app=frontend`, you
+You can also filter based on matching labels.
+So to e.g. retrieve all metrics that are labelled with `app=frontend`, you
 can use the following command:
 
 ```shell

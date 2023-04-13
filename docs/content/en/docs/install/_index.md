@@ -7,7 +7,7 @@ weight: 15
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-**Note** This section is under development.
+> **Note** This section is under development.
 All material presented here has been reviewed for accuracy
 but the content is not yet complete.
 

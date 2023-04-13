@@ -52,11 +52,11 @@ spec:
     Currently, you can only access one occurrance of each type of data provider
     in your KLT cluster.
 
-   * **objectives** -- define the evaluations to be performed.
+  * **objectives** -- define the evaluations to be performed.
      Each objective is expressed as a `query` and an `evaluationTarget` value.
 
-     * **query** -- Any query that is supported by the data provider.
-     * **value** -- Desired value of the query,
+    * **query** -- Any query that is supported by the data provider.
+    * **value** -- Desired value of the query,
        expressed as an arithmatic formula,
        usually less than (`<`) or greater than (`>`)
 

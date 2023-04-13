@@ -1,9 +1,0 @@
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: test2
-status:
-  conditions:
-    - type: Complete
-      status: 'True'
-  succeeded: 1

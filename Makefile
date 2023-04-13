@@ -31,7 +31,7 @@ $(HELMIFY): $(LOCALBIN)
 	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@b1da2bb756ec4328bac7645da037a6fb4e6f30cf
 
 .PHONY: integration-test #these tests should run on a real cluster!
-integration-test:
+integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
 
 .PHONY: integration-test-local #these tests should run on a real cluster!

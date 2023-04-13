@@ -11,25 +11,31 @@ that is used to register Webhooks to the [KubeAPI](https://kubernetes.io/docs/re
 Bundling the cert-manager simplifies the installation for new users
 and provides the functionality KLT needs
 without the overhead of other cert-managers.
+For a description of the architecture, see
+[Keptn Certificate Manager](../concepts/architecture/cert-manager).
 
-However, KLT works well with standard cert-managers.
-You can redefine the cert-manager that KLT uses *before* you install KLT.
+KLT, however, works well with standard cert-managers.
+If you are already using a different cert-manager,
+you can configure KLT to instead use that cert-manager,
+but you must do this *before* you install KLT.
 
 The steps are:
 
-* Install the cert-manager of your choice.
-* Modify the `Deployment` manifest of each KLT component.
+* Install the cert-manager of your choice
+  if it is not already installed.
+* Modify the `Deployment` manifest of each KLT operator component.
 * Add the `Certificate` CRD for the cert-manager you are using.
 
 ## Modify the KLT manifest
 
-You must modify the KLT manifest for each KLT component
+You must modify the KLT manifest for each KLT operator component
 to make it aware of the cert-manager you are using.
-The instructions here are for implementing
+These instructions implement
 [cert-manager.io](https://cert-manager.io/);
 the process is similar for other cert-managers.
 
-To do this, change the `Deployment` manifest of each KLT component
+To configure KLT to use your cert-manager,
+change the `Deployment` manifest of each KLT operator component
 and **replace** the following `volumes` definition
 
    ```yaml
@@ -42,8 +48,8 @@ and **replace** the following `volumes` definition
    ```yaml
    - name: cert
      secret:
-     defaultMode: 420
-     secretName: webhook-server-cert
+       defaultMode: 420
+       secretName: webhook-server-cert
    ```
 
 Each manifest must have the following special annotation:
@@ -56,6 +62,8 @@ The value of the annotation must match the
 `name/namespace` of the cert-manager CRD discussed below.
 
 ## Add the CRD for your cert-manager
+
+This is the CRD for `cert-manager.io`:
 
 ```yaml
 apiVersion: cert-manager.io/v1
@@ -70,7 +78,7 @@ spec:
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  secretName webhook-server-cert // this has to match the name of the "secretName" field in the volume definition 
+  secretName webhook-server-cert
 ```
 
 Note the following about these fields:
@@ -78,10 +86,10 @@ Note the following about these fields:
 * The `apiVersion` field refers to the API for the cert-manager.
 * The `metadata` section includes two fields.
   The value of these fields must match the annotations
-  used in the manifests.
+  used in the KLT operator manifests.
 * The value of the `secretName` field
   must match the value of the `secretName` field used
-  in the `volumes` definition section of the KLT manifests above.
+  in the `volumes` definition section of the KLT operator manifests above.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
 documentation for more details.

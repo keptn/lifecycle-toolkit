@@ -40,4 +40,3 @@ However, KLT is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
 See [Use your own cert-manager](../../install/cert-manager)
 for instructions.
-

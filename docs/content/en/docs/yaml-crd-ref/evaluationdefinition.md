@@ -68,8 +68,6 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
-
 ## Differences between versions
 
 The `KeptnTaskDefinition` is the same for

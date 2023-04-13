@@ -48,8 +48,6 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationProvider](../../crd-ref/lifecycle/v1alpha3/#keptnevaluationprovider)
-
 ## Differences between versions
 
 The `KeptnEvaluationProvider` CRD is the same for

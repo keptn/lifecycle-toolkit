@@ -423,7 +423,7 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-> **Note:**
+> **Note**
 The KeptnMetricsProvider is a new resource in KLT 0.7.0.
 The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
 provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
@@ -456,7 +456,7 @@ of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRe
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
 resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
 
-> **Note:**
+> **Note**
 Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
 resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.

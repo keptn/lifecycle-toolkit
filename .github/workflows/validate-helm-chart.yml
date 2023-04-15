@@ -69,23 +69,18 @@ jobs:
           path: ./bin
           key: build-tools-${{ github.ref_name }}
 
-      - name: Generate current YAML
-        run: |
-          helm template helm/chart > current.yaml
-
-      - name: Generate new Helm Chart
+      - name: Generate helm charts
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
         run: make helm-package
 
-      - name: Generate new YAML
+      - name: Compare YAML file changes
         run: |
-          helm template helm/chart > new.yaml
-
-      - name: Compare YAML files
-        run: |
-          if ! diff -rq current.yaml new.yaml &>/dev/null; then
-            echo "Helm charts were not re-generated. Please regenerate them using make helm-package"
-            exit 1
-          else
+          if [ -z "$(git status --porcelain)" ]; then
             echo ""
             echo "There are no changes in the manifests"
+          else
+            echo ""
+            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.keptn.sh/keptn"
+            exit 1
           fi

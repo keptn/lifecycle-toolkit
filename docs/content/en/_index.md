@@ -10,10 +10,23 @@ cascade:
       path: "/docs-*/**"
     sitemap:
       priority: 0.1
+
+  - _target:
+      path: "/community/**"
+    type: docs
+  - _target:
+      path: "/community/readme.md"
+    draft: true
+  - _target:
+      path: "/community/_index.md"
+    title: Community
+    menu:
+      main:
+        weight: 20
 ---
 
 <!-- markdownlint-disable MD033 -->
-<!-- markdownlint-disable-next-line MD013 -->
+<!-- markdownlint-disable-next-line line-length -->
 {{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
 <div class="mx-auto">
  <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
@@ -29,17 +42,19 @@ cascade:
 {{% blocks/lead color="white" %}}
 [![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
 {{% /blocks/lead %}}
-
+git add
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
 See Keptn [in Action](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ)
 {{% /blocks/feature %}}
 
+<!-- markdownlint-disable-next-line line-length no-bare-urls -->
 {{% blocks/feature icon="fab fa-github" title="Contributions welcome!" url="https://github.com/keptn/lifecycle-toolkit" %}}
 We do a [Pull Request](https://github.com/keptn/lifecycle-toolkit/pulls) contributions workflow on **GitHub**.
 New users are always welcome!
 {{% /blocks/feature %}}
 
+<!-- markdownlint-disable-next-line line-length no-bare-urls -->
 {{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" url="https://twitter.com/keptnProject" %}}
 For announcement of latest features etc.
 {{% /blocks/feature %}}

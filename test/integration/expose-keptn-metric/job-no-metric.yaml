@@ -1,7 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: test
+  name: $NAME-job1
+  namespace: $NAMESPACE
 spec:
   backoffLimit: 0
   template:
@@ -14,7 +15,7 @@ spec:
             - -ec
             - |
               curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/metrics > ~/out.txt
-              if grep -Fxq "# HELP keptnmetric_sample keptnmetric-sample" ~/out.txt
+              if grep -Fxq "# HELP $NAME $NAME" ~/out.txt
               then
                 exit 1
               fi
@@ -24,8 +25,8 @@ spec:
             - /bin/sh
             - -ec
             - |
-              curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/api/v1/metrics//keptnmetric-sample > ~/out.txt
-              if grep -F "keptnmetric-sample" ~/out.txt
+              curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/api/v1/metrics/$NAMESPACE/$NAME > ~/out.txt
+              if grep -F "$NAME" ~/out.txt
               then
                 exit 1
               fi

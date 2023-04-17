@@ -36,13 +36,17 @@ Bundling the cert-manager simplifies the installation for new users
 and provides the functionality KLT needs
 without the overhead of other cert-managers.
 For a description of the architecture, see
-[Keptn Certificate Manager](../concepts/architecture/cert-manager).
+[Keptn Certificate Manager](../concepts/architecture/cert-manager.md).
 
 KLT, however, works well with standard cert-managers.
+The KLT cert-manager can also coexist with another cert-manager.
 If you are already using a different cert-manager,
-you can configure KLT to instead use that cert-manager,
-but you must do this *before* you install KLT.
+you can continue to use that cert-manager for other components
+and use the KLT cert-manager just for KLT activities
+or you can configure KLT to use that cert-manager.
 
+If you want KLT to use your cert-manager,
+you must configure it *before* you install KLT.
 The steps are:
 
 * Install the cert-manager of your choice

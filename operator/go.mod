@@ -5,10 +5,9 @@ go 1.19
 require (
 	github.com/argoproj/argo-rollouts v1.4.1
 	github.com/go-logr/logr v1.2.4
-	github.com/hashicorp/go-version v1.6.0
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230403122034-b32d753af54e
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230413082525-dd15d4a0e0e4
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.2
 	github.com/onsi/gomega v1.27.6

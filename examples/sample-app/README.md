@@ -10,7 +10,8 @@ This section describes how to **prepare and enable** post-deployment tasks to se
 
 ### Create Slack Webhook
 
-In the first step, create an incoming slack webhook. Necessary information is available in the [slack api page](https://api.slack.com/messaging/webhooks).
+In the first step, create an incoming slack webhook.
+Necessary information is available in the [slack api page](https://api.slack.com/messaging/webhooks).
 Once you create the webhook, you will get a URL similar to below example.
 
 `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
@@ -55,7 +56,8 @@ Now watch the progress on the cluster
 ```kubectl get keptnworkloadinstances```
 ```kubectl get keptnappversions```
 
-You could also open up a browser and watch the progress in Jaeger. You can find the Context ID in the "TraceId" Field of
+You could also open up a browser and watch the progress in Jaeger.
+You can find the Context ID in the "TraceId" Field of
 the KeptnAppVersion
 
 The deployment should fail because of too few cpu resources

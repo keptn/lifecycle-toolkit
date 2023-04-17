@@ -4,7 +4,7 @@ description: Learn how the cert-manager works
 icon: concepts
 layout: quickstart
 weight: 100
-hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
+hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 ### Keptn Cert Manager
@@ -27,11 +27,6 @@ renews it.
 * When the certificate is ready,
   it is mounted on an empty dir volume in the operator.
 
-When a certificate is left over from an older version,
-the webhook or the operator may generate errors
-because of an invalid certificate.
-To solve this, delete the certificate and restart the operator.
-
 `klt-cert-manager` is a customized certificate manager
 that is installed with the Lifecycle Toolkit by default.
 It is included to simplify installation for new users
@@ -40,3 +35,30 @@ However, KLT is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
 See [Use your own cert-manager](../../install/cert-manager)
 for instructions.
+
+## Invalid certificate errors
+
+When a certificate is left over from an older version,
+the webhook or the operator may generate errors
+because of an invalid certificate.
+To solve this, delete the certificate and restart the operator.
+
+The KLT cert-manager certificate is stored as a secret in the `klt` namespace.
+To retrieve it:
+
+```shell
+kubectl get secrets -n keptn-lifecycle-toolkit-system
+```
+
+This returns something like:
+```shell
+NAME                        TYPE                 DATA   AGE
+klt-certs                   Opaque               5      4d23h
+```
+
+Specify the `NAME` of the KLT certificate (`klt-certs` in this case)
+to delete the KLT certificate:
+
+```shell
+kubectl delete secret klt-certs -n keptn-lifecycle-toolkit-system
+```

@@ -47,6 +47,7 @@ However, KLT is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
 See [Use your own cert-manager](../../install/cert-manager)
 for instructions.
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 ## Invalid certificate errors
@@ -77,3 +78,5 @@ kubectl delete secret klt-certs -n keptn-lifecycle-toolkit-system
 ```
 =======
 >>>>>>> 35df1d8 (Add architectural description of cert-manager)
+=======
+>>>>>>> 2cd118e (markdownlint-fix)

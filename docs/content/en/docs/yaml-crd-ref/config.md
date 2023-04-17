@@ -7,7 +7,6 @@ weight: 20
 `KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit.
 Currently, it is used to configure the URL of the OpenTelemetry collector.
 
-
 ## Yaml Synopsis
 
 ```yaml
@@ -23,7 +22,8 @@ spec:
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- Resource type.  Must be set to `KeptnConfig`.`
+* **kind** -- Resource type.
+   Must be set to `KeptnConfig`.`
 
 * **metadata**
   * **name** -- Unique name of this collector.
@@ -56,4 +56,3 @@ API Reference:
 * [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
 
 ## See also
-

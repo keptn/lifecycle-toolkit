@@ -11,14 +11,17 @@ Controller and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`
   * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
-* Watch the progress on your ArgoUI: `http://localhost:8080`. Use the `admin` user and the password
+* Watch the progress on your ArgoUI: `http://localhost:8080`.
+  Use the `admin` user and the password
   from `make argo-get-password`.
 
 ## Prerequisites
 
 This tutorial assumes, that you already installed the Keptn Lifecycle Controller (
-see <https://github.com/keptn/lifecycle-toolkit>). The installation instructions can be
-found [here](https://github.com/keptn/lifecycle-toolkit#deploy-the-latest-release). Furthermore, you have to install
+see <https://github.com/keptn/lifecycle-toolkit>).
+The installation instructions can be
+found [here](https://github.com/keptn/lifecycle-toolkit#deploy-the-latest-release).
+Furthermore, you have to install
 ArgoCD, as in the following their [installation instructions](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 .
 
@@ -60,7 +63,8 @@ apply [this manifest](https://raw.githubusercontent.com/keptn/lifecycle-toolkit/
 kubectl apply -f https://raw.githubusercontent.com/keptn-sandbox/lifecycle-toolkit-examples/main/support/argo/config/app.yaml
 ```
 
-You will see that the application will be deployed using ArgoCD. You can watch the progress on the ArgoCD UI and should
+You will see that the application will be deployed using ArgoCD.
+You can watch the progress on the ArgoCD UI and should
 see the following:
 ![img.png](assets/argo-screen.png)
 
@@ -82,7 +86,8 @@ In the meanwhile you can watch the progress of the deployment using:
 
 * See in which phase your application deployment is at the moment
 
-After some time all resources should be in a succeeded state. In the Argo-UI you will see that the application is in
+After some time all resources should be in a succeeded state.
+In the Argo-UI you will see that the application is in
 sync.
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

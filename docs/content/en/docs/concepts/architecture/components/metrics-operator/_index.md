@@ -39,7 +39,7 @@ It is an important component of the metrics operator as it allows for the collec
 which can be used to gain insight into the behavior and performance of applications running on a Kubenetes cluster.
 
 **Metrics controller** is used to fetch metrics from a SLI provider.
-The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric) CR and
+The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric.md) CR and
 updates its status with the metric value provided by the selected SLI provider.
 The steps in which the controller fetches metrics are given below:
 

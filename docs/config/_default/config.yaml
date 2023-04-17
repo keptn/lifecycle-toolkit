@@ -22,7 +22,7 @@ module:
       ignoreConfig: false
       mounts:
         - source: ./
-          target: ./content/en/community
+          target: ./content/community
           excludeFiles:
             - "mentorship"
         - source: "README.md"

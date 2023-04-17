@@ -97,7 +97,11 @@ spec:
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
+<<<<<<< HEAD
   secretName webhook-server-cert
+=======
+  secretName webhook-server-cert // this has to match the name of the "secretName" field in the volume definition 
+>>>>>>> fdac309 (Update docs/content/en/docs/install/cert-manager.md)
 ```
 
 Note the following about these fields:

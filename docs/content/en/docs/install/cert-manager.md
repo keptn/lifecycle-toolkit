@@ -28,7 +28,19 @@ The steps are:
 * Install the cert-manager of your choice
   if it is not already installed.
 * Modify the `Deployment` manifest of each KLT operator component.
-* Add the `Certificate` CRD for the cert-manager you are using.
+that is used for installation and to implement Webhooks.
+Bundling the cert-manager simplifies the installation for new users
+and provides the functionality KLT needs
+without the overhead of other cert-managers.
+
+However, KLT works well with standard cert-managers.
+You can redefine the cert-manager that KLT uses *before* you install KLT.
+
+The steps are:
+
+* Install the cert-manager of your choice
+* Modify the `Deployment` manifest of each KLT component
+* Add the `Certificate` CRD for the cert-manager you are using
 
 ## Modify the KLT manifest
 

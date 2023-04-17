@@ -13,24 +13,24 @@ type IConfig interface {
 	GetCreationRequestTimeout() time.Duration
 }
 
-type Config struct {
+type ControllerConfig struct {
 	keptnAppCreationRequestTimeout time.Duration
 }
 
-var instance *Config
+var instance *ControllerConfig
 var once = sync.Once{}
 
-func Instance() *Config {
+func Instance() *ControllerConfig {
 	once.Do(func() {
-		instance = &Config{keptnAppCreationRequestTimeout: defaultKeptnAppCreationRequestTimeout}
+		instance = &ControllerConfig{keptnAppCreationRequestTimeout: defaultKeptnAppCreationRequestTimeout}
 	})
 	return instance
 }
 
-func (o *Config) SetCreationRequestTimeout(value time.Duration) {
+func (o *ControllerConfig) SetCreationRequestTimeout(value time.Duration) {
 	o.keptnAppCreationRequestTimeout = value
 }
 
-func (o *Config) GetCreationRequestTimeout() time.Duration {
+func (o *ControllerConfig) GetCreationRequestTimeout() time.Duration {
 	return o.keptnAppCreationRequestTimeout
 }

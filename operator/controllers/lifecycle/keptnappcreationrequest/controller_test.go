@@ -2,6 +2,7 @@ package keptnappcreationrequest
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config/fake"
 	"testing"
 	"time"
 
@@ -20,6 +21,7 @@ import (
 
 func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
+
 	const namespace = "my-namespace"
 	const appName = "my-app"
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{
@@ -73,7 +75,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	res, err := r.Reconcile(context.TODO(), request)
 
 	require.Nil(t, err)
-	require.NotZero(t, res.RequeueAfter)
+	require.Equal(t, 30*time.Second, res.RequeueAfter)
 
 	// turn the clock forward
 	theClock.Add(1 * time.Minute)
@@ -329,6 +331,11 @@ func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler,
 		Scheme: fakeClient.Scheme(),
 		Log:    logr.Logger{},
 		clock:  theClock,
+		config: &fake.MockConfig{
+			GetCreationRequestTimeoutFunc: func() time.Duration {
+				return 30 * time.Second
+			},
+		},
 	}
 	return r, fakeClient, theClock
 }

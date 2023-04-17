@@ -110,15 +110,8 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	// check if discovery deadline has expired or if the application is a single service app
 	if !r.shouldCreateApp(creationRequest) {
 		r.Log.Info("Discovery deadline not expired yet", "KeptnAppCreationRequest", creationRequest)
-		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+		return ctrl.Result{RequeueAfter: r.getCreationRequestExpirationDuration(creationRequest)}, nil
 	}
-
-	// at this point we know that the creation request will be deleted at the end
-	defer func() {
-		if err := r.Delete(ctx, creationRequest); err != nil {
-			r.Log.Error(err, "Could not delete", "KeptnAppCreationRequest", creationRequest)
-		}
-	}()
 
 	// look up all the KeptnWorkloads referencing the KeptnApp
 	workloads := &lifecycle.KeptnWorkloadList{}
@@ -138,12 +131,27 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update: %w", err)
 	}
-
+	if err := r.Delete(ctx, creationRequest); err != nil {
+		r.Log.Error(err, "Could not delete", "KeptnAppCreationRequest", creationRequest)
+	}
 	return ctrl.Result{}, nil
 }
 
+func (r *KeptnAppCreationRequestReconciler) getCreationRequestExpirationDuration(cr *lifecycle.KeptnAppCreationRequest) time.Duration {
+	creationRequestTimeout := r.config.GetCreationRequestTimeout()
+	deadline := cr.CreationTimestamp.Add(creationRequestTimeout)
+
+	duration := deadline.Sub(r.clock.Now())
+
+	// make sure we return a non-negative duration
+	if duration >= 0 {
+		return duration
+	}
+	return 0
+}
+
 func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
-	discoveryDeadline := config.Instance().GetCreationRequestTimeout()
+	discoveryDeadline := r.config.GetCreationRequestTimeout()
 	return creationRequest.IsSingleService() || r.clock.Now().After(creationRequest.CreationTimestamp.Add(discoveryDeadline))
 }
 

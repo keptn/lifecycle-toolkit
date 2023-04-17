@@ -11,9 +11,10 @@ The Keptn Metrics Operator collects, processes, and analyzes metrics data from a
 Once collected, this data, can be used to generate a variety of reports and dashboards
 that provide insights into the health and performance of the application and infrastructure.
 
-While Kubernetes does have two metrics servers, they have limitations. The custom and external APIs only
-allow you to use a single observability platform. The Keptn Metrics Operator solves this problem by
-providing a single entry point for all your metrics data, regardless of its source.
+While Kubernetes does have two metrics servers, they have limitations.
+The custom and external APIs only allow you to use a single observability platform.
+The Keptn Metrics Operator solves this problem by providing a single entry point for
+all your metrics data, regardless of its source.
 Furthermore, due to the integration with the Kubernetes custom metrics API, these metrics are also
 compatible with the Kubernetes HorizontalPodAutoscaler (HPA) which enables the horizontal scaling of workloads
 based on metrics collected from multiple observability platforms such as Prometheus, Dynatrace or Datadog.
@@ -37,9 +38,9 @@ The adapter exposes custom metrics on a specific endpoint where external monitor
 It is an important component of the metrics operator as it allows for the collection and exposure of custom metrics,
 which can be used to gain insight into the behavior and performance of applications running on a Kubenetes cluster.
 
-**Metrics controller** is used to fetch metrics from a SLI provider. The controller reconciles a
-[`KeptnMetric`](../../../../yaml-crd-ref/metric) CR and updates its status with the metric value
-provided by the selected SLI provider.
+**Metrics controller** is used to fetch metrics from a SLI provider.
+The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric) CR and
+updates its status with the metric value provided by the selected SLI provider.
 The steps in which the controller fetches metrics are given below:
 
 * It first fetches the `KeptnMetric` object to reconcile.

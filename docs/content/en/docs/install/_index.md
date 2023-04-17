@@ -19,7 +19,7 @@ or as part of an existing production cluster.
 1. Understand the [Software versions and resources](reqs.md)
    that are required
 1. [Bring or create your Kubernetes cluster](k8s.md)
-1. [Replace the default cert-manager](cert-manager.md) (optional)
+1. [Replace the default cert-manager](cert-manager.md) (optional).
    This step is only required if you want to replace the default KLT cert-manager
    with another cert-manager.
 1. [Install the Keptn Lifecycle Controller](install.md)

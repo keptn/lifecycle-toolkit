@@ -35,15 +35,25 @@ that is used for installation and to implement Webhooks.
 Bundling the cert-manager simplifies the installation for new users
 and provides the functionality KLT needs
 without the overhead of other cert-managers.
+For a description of the architecture, see
+[Keptn Certificate Manager](../concepts/architecture/cert-manager).
 
-However, KLT works well with standard cert-managers.
-You can redefine the cert-manager that KLT uses *before* you install KLT.
+KLT, however, works well with standard cert-managers.
+If you are already using a different cert-manager,
+you can configure KLT to instead use that cert-manager,
+but you must do this *before* you install KLT.
 
 The steps are:
 
 * Install the cert-manager of your choice
+<<<<<<< HEAD
 * Modify the `Deployment` manifest of each KLT component
 * Add the `Certificate` CRD for the cert-manager you are using
+=======
+  if it is not already installed.
+* Modify the `Deployment` manifest of each KLT operator component.
+* Add the `Certificate` CRD for the cert-manager you are using.
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)
 
 ## Modify the KLT manifest
 
@@ -98,10 +108,14 @@ spec:
     kind: Issuer
     name: klt-selfsigned-issuer
 <<<<<<< HEAD
+<<<<<<< HEAD
   secretName webhook-server-cert
 =======
   secretName webhook-server-cert // this has to match the name of the "secretName" field in the volume definition 
 >>>>>>> fdac309 (Update docs/content/en/docs/install/cert-manager.md)
+=======
+  secretName webhook-server-cert
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)
 ```
 
 Note the following about these fields:
@@ -110,10 +124,14 @@ Note the following about these fields:
 * The `metadata` section includes two fields.
   The value of these fields must match the annotations
 <<<<<<< HEAD
+<<<<<<< HEAD
   used in the KLT operator manifests.
 =======
   used in the manifests.
 >>>>>>> bc83733 (annotations match above)
+=======
+  used in the KLT operator manifests.
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)
 * The value of the `secretName` field
   must match the value of the `secretName` field used
   in the `volumes` definition section of the KLT operator manifests above.

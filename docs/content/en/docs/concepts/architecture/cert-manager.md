@@ -4,7 +4,11 @@ description: Learn how the cert-manager works
 icon: concepts
 layout: quickstart
 weight: 100
+<<<<<<< HEAD
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+=======
+hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)
 ---
 
 ### Keptn Cert Manager
@@ -27,6 +31,14 @@ renews it.
 * When the certificate is ready,
   it is mounted on an empty dir volume in the operator.
 
+<<<<<<< HEAD
+=======
+When a certificate is left over from an older version,
+the webhook or the operator may generate errors
+because of an invalid certificate.
+To solve this, delete the certificate and restart the operator.
+
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)
 `klt-cert-manager` is a customized certificate manager
 that is installed with the Lifecycle Toolkit by default.
 It is included to simplify installation for new users
@@ -36,6 +48,7 @@ and can be configured to use another certificate manager if you prefer.
 See [Use your own cert-manager](../../install/cert-manager)
 for instructions.
 
+<<<<<<< HEAD
 ## Invalid certificate errors
 
 When a certificate is left over from an older version,
@@ -62,3 +75,5 @@ to delete the KLT certificate:
 ```shell
 kubectl delete secret klt-certs -n keptn-lifecycle-toolkit-system
 ```
+=======
+>>>>>>> 35df1d8 (Add architectural description of cert-manager)

@@ -25,7 +25,8 @@ console.log(data);
 console.log(secret);
 ```
 
-`KeptnTask`s can be tested locally with the runtime using the following command:
+`KeptnTask`s can be tested locally with the runtime using the following command.
+Replace `${VERSION}` with the KLT version of your choice.
 
 ```sh
 docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/functions-runtime:${VERSION}

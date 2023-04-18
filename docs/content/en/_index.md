@@ -34,7 +34,7 @@ cascade:
  </a>
     <a class="btn btn-lg btn-primary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
   Releases <i class="fab fa-github ml-2 "></i>
- </a>   
+ </a>
 </div>
 {{< /blocks/cover >}}
 <!-- markdownlint-enable MD033 -->

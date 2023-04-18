@@ -2,13 +2,13 @@ package keptnappcreationrequest
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config/fake"
 	"testing"
 	"time"
 
 	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/config/fake"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

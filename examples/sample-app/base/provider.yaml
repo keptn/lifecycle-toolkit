@@ -4,4 +4,4 @@ metadata:
   name: prometheus
   namespace: podtato-kubectl
 spec:
-  targetServer: "http://mockserver.keptn-lifecycle-toolkit-system.svc.cluster.local:1080"
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

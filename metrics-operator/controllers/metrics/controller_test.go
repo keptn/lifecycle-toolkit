@@ -127,7 +127,26 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	provider := &metricsapi.KeptnMetricsProvider{
+	metric5 := &metricsapi.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric5",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+		},
+		Status: metricsapi.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
+	unsupportedProvider := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			Type: "unsupported-type",
@@ -135,7 +154,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
-	supportedprov := &metricsapi.KeptnMetricsProvider{
+	supportedProvider := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "provider-name",
 			Namespace: "default",
@@ -147,7 +166,18 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
-	client := fake.NewClient(metric, metric2, metric3, metric4, provider, supportedprov)
+	oldSupportedProvider := &metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "prometheus",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: "http://keptn.sh",
+		},
+		Status: metricsapi.KeptnMetricsProviderStatus{},
+	}
+
+	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, unsupportedProvider, supportedProvider, oldSupportedProvider)
 
 	r := &KeptnMetricReconciler{
 		Client: client,
@@ -204,6 +234,16 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
+			},
+			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			wantErr: fmt.Errorf("client_error: client error: 404"),
+		},
+
+		{
+			name: "metric exists, needs to fetch, using old provider API, bad query",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
 			},
 			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
 			wantErr: fmt.Errorf("client_error: client error: 404"),

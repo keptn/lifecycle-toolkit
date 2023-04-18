@@ -52,11 +52,8 @@ func NewProvider(providerName string, providerType string, log logr.Logger, k8sC
 }
 
 func getTypeOrName(providerName string, providerType string) string {
-	providerTypeString := ""
 	if providerType != "" {
-		providerTypeString = providerType
-	} else {
-		providerTypeString = providerName
+		return providerType
 	}
-	return providerTypeString
+	return providerName
 }

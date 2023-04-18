@@ -3,3 +3,4 @@ kind: TestStep
 apply:
   - goodmetric1.yaml
   - goodmetric2.yaml
+  - goodmetric3.yaml

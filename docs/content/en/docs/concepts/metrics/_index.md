@@ -35,7 +35,7 @@ In this example, the provider is set to `prometheus`, which is one of the curren
 The provider tells the metrics-operator where to get the value for the `KeptnMetric`, and its configuration looks follows:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus
@@ -46,7 +46,7 @@ spec:
 Other supported providers are `dynatrace`, and `dql`:
 
 ````yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace
@@ -57,7 +57,7 @@ spec:
     name: dt-api-token
     key: DT_TOKEN
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: dql

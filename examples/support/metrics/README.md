@@ -99,7 +99,7 @@ spec:
         metric:
           name: cpu-throttling
         describedObject:
-          apiVersion: metrics.keptn.sh/v1alpha2
+          apiVersion: metrics.keptn.sh/v1alpha3
           kind: KeptnMetric
           name: cpu-throttling
         target:

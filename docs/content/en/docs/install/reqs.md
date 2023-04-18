@@ -12,3 +12,12 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 The Keptn Lifecycle Controller requires Kubernetes v1.24.0 or later.
 
 ## Resource requirements
+
+## cert-manager
+
+KLT includes a lightweight cert-manager
+that is used for installation and Webhooks.
+You can configure a different cert-manager
+before you install KLT.
+See [Implement your own cert-manager](cert-manager.md)
+for instructions.

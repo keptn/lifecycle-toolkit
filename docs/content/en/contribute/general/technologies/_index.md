@@ -30,7 +30,8 @@ please submit an issue.
 * **Isitobservable**
   * [ ] Keptn has tight integrations with Observability tools and therefore knowing how to _Observe a System_ is important.
   * [ ] [Isitobservable website](https://isitobservable.io/)
-  * [ ] [Is it Observable? with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
+  * [ ] [Is it Observable?
+    with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
 
 ### Understanding SLO, SLA, SLIs
 

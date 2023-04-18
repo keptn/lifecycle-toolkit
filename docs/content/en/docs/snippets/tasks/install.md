@@ -2,8 +2,7 @@
 
 ## Install version 0.7.0 and above
 
-In version 0.7.0 and later, you can install the Lifecycle Toolkit using helm charts,
-or manifests.
+In version 0.7.0 and later, you can install the Lifecycle Toolkit using either helm charts or manifests.
 
 For installing the Lifecycle Toolkit via Helm chart:
 

@@ -65,14 +65,16 @@ kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0
 <!---x-release-please-end-->
 
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
-process and export telemetry data. To install it, follow
+process and export telemetry data.
+To install it, follow
 their [installation instructions](https://opentelemetry.io/docs/collector/getting-started/).
 We provide some information about this in our [observability example](./examples/support/observability/).
 
 The Lifecycle Toolkit includes a Mutating Webhook which requires TLS certificates to be mounted as a volume in its pod.
 The certificate creation
 is handled automatically
-by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md). Versions 0.5.0
+by [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md).
+Versions 0.6.0
 and earlier have a hard dependency on the [cert-manager](https://cert-manager.io).
 See [installation guideline](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/en/docs/snippets/tasks/install.md)
 for more info.
@@ -117,7 +119,8 @@ app.kubernetes.io/name: myAwesomeWorkload
 app.kubernetes.io/version: myAwesomeWorkloadVersion
 ```
 
-In general, the Keptn Annotations/Labels take precedence over the Kubernetes recommended labels. If there is no version
+In general, the Keptn Annotations/Labels take precedence over the Kubernetes recommended labels.
+If there is no version
 annotation/label and there is only one container in the pod, the Lifecycle Toolkit will take the image tag as version (
 if it is not "latest").
 
@@ -130,12 +133,16 @@ keptn.sh/post-deployment-tasks: slack-notification,performance-test
 
 The value of these annotations are
 Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-called [KeptnTaskDefinition](#keptntaskdefinition)s. These CRDs contains re-usable "functions" that can
-executed before and after the deployment. In this example, before the deployment starts, a check for open problems in
+called [KeptnTaskDefinition](#keptntaskdefinition)s.
+These CRDs contains re-usable "functions" that can
+executed before and after the deployment.
+In this example, before the deployment starts, a check for open problems in
 your infrastructure
-is performed. If everything is fine, the deployment continues and afterward, a slack notification is sent with the
+is performed.
+If everything is fine, the deployment continues and afterward, a slack notification is sent with the
 result of
-the deployment and a pipeline to run performance tests is invoked. Otherwise, the deployment is kept in a pending state
+the deployment and a pipeline to run performance tests is invoked.
+Otherwise, the deployment is kept in a pending state
 until
 the infrastructure is capable to accept deployments again.
 
@@ -208,7 +215,8 @@ When the webhook receives a request for a new pod, it will look for the workload
 keptn.sh/workload: "some-workload-name"
 ```
 
-The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler. Webhook then creates a
+The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
+Webhook then creates a
 workload and app resource per annotated resource.
 You can also specify a custom app definition with the annotation:
 
@@ -246,12 +254,14 @@ scheduled.
 
 ### Scheduler
 
-After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources. The scheduling flow follows the
+After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources.
+The scheduling flow follows the
 default scheduler behavior,
 since it implements a scheduler plugin based on
 the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have
-terminated, by retrieving the current status of the WorkloadInstance. Only if that is successful, the pod is bound to a
+terminated, by retrieving the current status of the WorkloadInstance.
+Only if that is successful, the pod is bound to a
 node.
 
 ### KeptnApp
@@ -287,17 +297,20 @@ new execution of app level checks.
 
 A Workload contains information about which tasks should be performed during the `preDeployment` as well as
 the `postDeployment`
-phase of a deployment. In its state it keeps track of the currently active `Workload Instances`, which are responsible
+phase of a deployment.
+In its state it keeps track of the currently active `Workload Instances`, which are responsible
 for doing those checks for
 a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version).
 
 ### KeptnWorkloadInstance
 
-A Workload Instance is responsible for executing the pre- and post deployment checks of a workload. In its state, it
+A Workload Instance is responsible for executing the pre- and post deployment checks of a workload.
+In its state, it
 keeps track of the current status of all checks, as well as the overall state of
 the Pre Deployment phase, which can be used by the scheduler to tell that a pod can be allowed to be placed on a node.
 Workload Instances have a reference to the respective Deployment/StatefulSet/ReplicaSet, to check if it has reached the
-desired state. If it detects that the referenced object has reached
+desired state.
+If it detects that the referenced object has reached
 its desired state (e.g. all pods of a deployment are up and running), it will be able to tell that
 a `PostDeploymentCheck` can be triggered.
 
@@ -332,7 +345,8 @@ spec:
 In the code section, it is possible to define a full-fletched Deno script.
 A further example, is available [here](./examples/taskonly-hello-keptn/inline/taskdefinition.yaml).
 
-To runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the
+To runtime can also fetch the script on the fly from a remote webserver.
+For this, the CRD should look like the
 following:
 
 ```yaml
@@ -423,7 +437,7 @@ spec:
     key: prometheusLoginCredentials
 ```
 
-> **Note:**
+> **Note**
 The KeptnMetricsProvider is a new resource in KLT 0.7.0.
 The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
 provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
@@ -452,11 +466,13 @@ spec:
 To use `KeptnMetric` as part of your evaluation, you must set the
 `.spec.objectives[i].keptnMetricRef.name` and `.spec.objectives[i].keptnMetricRef.namespace` of
 `KeptnEvaluationDefiniton` resource to the same value that is stored in `.metadata.name` and `metadata.namespace`
-of the `KeptnMetric` resource. Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
+of the `KeptnMetric` resource.
+Specifying the `.spec.objectives[i].keptnMetricRef.namespace` is optional.
 If it's not specified, KLT searches for the `KeptnMetric` resource in the namespace where `KeptnEvaluationDefinition`
-resource is stored. If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
+resource is stored.
+If the `KeptnMetric` resource cannot be found there, it searches in the default KLT namespace (`keptn-lifecycle-toolkit-system`).
 
-> **Note:**
+> **Note**
 Please be aware that, if
  the `.spec.objectives[i].keptnMetricRef.namespace` of `KeptnEvaluationDefinition`
 resource is specified and the `KeptnMetric` resource does not exist in this namespace, the evaluation fails.

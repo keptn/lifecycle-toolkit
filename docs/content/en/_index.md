@@ -26,7 +26,7 @@ cascade:
 ---
 
 <!-- markdownlint-disable MD033 -->
-<!-- markdownlint-disable-next-line MD013 -->
+<!-- markdownlint-disable-next-line line-length -->
 {{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
 <div class="mx-auto">
  <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
@@ -48,11 +48,13 @@ git add
 See Keptn [in Action](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ)
 {{% /blocks/feature %}}
 
+<!-- markdownlint-disable-next-line line-length no-bare-urls -->
 {{% blocks/feature icon="fab fa-github" title="Contributions welcome!" url="https://github.com/keptn/lifecycle-toolkit" %}}
 We do a [Pull Request](https://github.com/keptn/lifecycle-toolkit/pulls) contributions workflow on **GitHub**.
 New users are always welcome!
 {{% /blocks/feature %}}
 
+<!-- markdownlint-disable-next-line line-length no-bare-urls -->
 {{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" url="https://twitter.com/keptnProject" %}}
 For announcement of latest features etc.
 {{% /blocks/feature %}}

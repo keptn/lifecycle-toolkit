@@ -82,7 +82,7 @@ To set up a local Docsy build:
    make build
    ```
 
-   > **Note:**
+   > **Note**
    To utilize the `Makefile`, you must have GNU **make**
    available on your local machine.
    Versions are available for all the usual Operating Systems.
@@ -102,7 +102,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
     `http://localhost:1314/docs-dev/`
 
-   > **Note:**
+   > **Note**
    By default, Hugo serves the local docs on port 1313.
    We have modified that port for the lifecycle-toolkit docs
    to avoid conflicts with the keptn.github.io docs, which use
@@ -243,7 +243,8 @@ it is generally better to work on files in your local clone.
 1. When you have completed the writing you want to do, close all files in your branch and run `git status` to confirm
    that it correctly reflects the files you have modified, added, and deleted.
 
-1. Add and commit your changes.  Here, we commit all modified files but you can specify individual files to the
+1. Add and commit your changes.
+   Here, we commit all modified files but you can specify individual files to the
    `git add` command.
 The `git commit -s` command commits the files and signs that you are contributing this intellectual property to the
 Keptn project.
@@ -303,7 +304,8 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
       You may want to record the PR number somewhere for future reference although you can always find the PR in the
       GitHub lists of open and closed PRs.
    * GitHub automatically populates the "Reviewers" block.
-   * If this PR is not ready for review, click the "Still in progress? Convert to draft" string under the list of
+   * If this PR is not ready for review, click the "Still in progress?
+  Convert to draft" string under the list of
       reviewers.
       People can still review the content but can not merge the PR until you remove the "Draft" status.
    * The block of the PR that reports on checks will include the following item:
@@ -314,9 +316,11 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
      ```
 
    * When the PR is ready to be reviewed, approved, and merged, click the "Ready to review" button to remove the "Draft"
-      status. Then, if you added "WIP" or "Draft" to the PR title, remove it now.
+      status.
+  Then, if you added "WIP" or "Draft" to the PR title, remove it now.
 
-1. Your PR should be reviewed within a few days.  Watch for any comments that may be added by reviewers and implement or
+1. Your PR should be reviewed within a few days.
+   Watch for any comments that may be added by reviewers and implement or
    respond to the recommended changes as soon as possible.
 
    * If a reviewer makes a GitHub suggestion and you agree with the change, just click "Accept this change" to create a
@@ -341,7 +345,8 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
 
 ### Developer Certification of Origin (DCO)
 
-Licensing is very important to open source projects. It helps ensure the software continues to be available under the
+Licensing is very important to open source projects.
+It helps ensure the software continues to be available under the
 terms that the author desired.
 
 Keptn uses [Apache License 2.0](https://github.com/keptn/lifecycle-toolkit/blob/main/LICENSE) to strike a balance

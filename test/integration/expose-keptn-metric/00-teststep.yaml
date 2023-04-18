@@ -1,0 +1,11 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands: # generating job and metric based on namespace to avoid interference between runs
+  - script: |
+      export NAME=$( echo $NAMESPACE | tr -d -)
+      echo "installing first job"
+      envsubst < job-no-metric.yaml | kubectl apply -f -
+  - script: |
+      export NAME=$( echo $NAMESPACE | tr -d -)
+      echo "asserting first job"
+      kubectl wait --for=condition=complete job $NAME-job1 -n $NAMESPACE

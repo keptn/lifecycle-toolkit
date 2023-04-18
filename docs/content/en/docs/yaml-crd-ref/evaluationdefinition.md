@@ -30,7 +30,8 @@ spec:
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- Resource type.  Must be set to `KeptnEvaluationDefinition`
+* **kind** -- Resource type.
+   Must be set to `KeptnEvaluationDefinition`
 
 * **metadata**
   * **name** -- Unique name of this evaluation

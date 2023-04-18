@@ -21,14 +21,9 @@ type KeptnSLIProvider interface {
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
 func NewProvider(providerName string, providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
-	nameToTest := ""
-	if providerType != "" {
-		nameToTest = providerType
-	} else {
-		nameToTest = providerName
-	}
+	providerTypeString := getTypeOrName(providerName, providerType)
 
-	switch strings.ToLower(nameToTest) {
+	switch strings.ToLower(providerTypeString) {
 	case PrometheusProviderType:
 		return &prometheus.KeptnPrometheusProvider{
 			HttpClient: http.Client{},
@@ -54,4 +49,14 @@ func NewProvider(providerName string, providerType string, log logr.Logger, k8sC
 	default:
 		return nil, fmt.Errorf("provider %s not supported", providerType)
 	}
+}
+
+func getTypeOrName(providerName string, providerType string) string {
+	providerTypeString := ""
+	if providerType != "" {
+		providerTypeString = providerType
+	} else {
+		providerTypeString = providerName
+	}
+	return providerTypeString
 }

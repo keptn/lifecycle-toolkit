@@ -149,7 +149,7 @@ kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podta
 ```
 
 > **Note**
-The event stream of the object contains more detailed informatio
+The event stream of the object contains more detailed information
 
 <details>
 <summary>Watch application state</summary>

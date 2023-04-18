@@ -54,6 +54,12 @@ func TestFactory(t *testing.T) {
 			err:          false,
 		},
 		{
+			name:         DynatraceProviderType,
+			providerType: PrometheusProviderType,
+			provider:     &prometheus.KeptnPrometheusProvider{},
+			err:          false,
+		},
+		{
 			name:         "invalid",
 			providerType: "invalid",
 			provider:     nil,

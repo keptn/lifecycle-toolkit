@@ -5,7 +5,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts this KeptnMetric to the Hub version (v1alpha2)
+// ConvertTo converts this KeptnMetric to the Hub version (v1alpha3)
 func (src *KeptnMetric) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1alpha3.KeptnMetric)
 

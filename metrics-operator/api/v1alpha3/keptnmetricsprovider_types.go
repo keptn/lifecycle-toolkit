@@ -76,3 +76,10 @@ func (p *KeptnMetricsProvider) HasSecretDefined() bool {
 	}
 	return true
 }
+
+func (p *KeptnMetricsProvider) GetType() string {
+	if p.Spec.Type != "" {
+		return p.Spec.Type
+	}
+	return p.Name
+}

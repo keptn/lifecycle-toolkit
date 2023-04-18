@@ -7,7 +7,7 @@ weight: 89
 A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
-[KeptnApp](./app).
+[KeptnApp](./app.md).
 
 ## Yaml Synopsis
 
@@ -284,14 +284,14 @@ contains examples for the `v1alpha3` version of the lifecycle API group.
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinitionspec)
-* [FunctionReference](../../crd-ref/lifecycle/v1alpha3/#functionreference)
-* [FunctionSpec](../../crd-ref/lifecycle/v1alpha3/#functionspec)
-* [FunctionStatus](../../crd-ref/lifecycle/v1alpha3/#functionstatus)
-* [HttpReference](../../crd-ref/lifecycle/v1alpha3/#httpreference)
-* [Inline](../../crd-ref/lifecycle/v1alpha3/#inline)
+* [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
+* [FunctionReference](../crd-ref/lifecycle/v1alpha3/_index.md#functionreference)
+* [FunctionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#functionspec)
+* [FunctionStatus](../crd-ref/lifecycle/v1alpha3/_index.md#functionstatus)
+* [HttpReference](../crd-ref/lifecycle/v1alpha3/_index.md#httpreference)
+* [Inline](../crd-ref/lifecycle/v1alpha3/_index.md#inline)
 
 ## Differences between versions
 
@@ -300,5 +300,5 @@ all `v1alpha?` library versions.
 
 ## See also
 
-* [Working with tasks](../implementing/tasks)
+* [Working with tasks](../implementing/tasks.md)
 * Link to reference pages for any related CRDs

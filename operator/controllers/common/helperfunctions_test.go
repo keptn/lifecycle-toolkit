@@ -262,7 +262,7 @@ func Test_setAnnotations(t *testing.T) {
 				"phase":       "AppDeploy",
 				"appName":     "app",
 				"appVersion":  "1.0.0",
-				"appRevision": "1",
+				"appRevision": "6b86b273",
 				"traceparent": "",
 			},
 		},

@@ -121,7 +121,7 @@ func AssertResourceUpdated(ctx context.Context, k8sClient client.Client, instanc
 func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1alpha3.KeptnApp) *klcv1alpha3.KeptnAppVersion {
 	appvName := types.NamespacedName{
 		Namespace: instance.Namespace,
-		Name:      fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation),
+		Name:      instance.GetAppVersionName(),
 	}
 
 	appVersion := &klcv1alpha3.KeptnAppVersion{}

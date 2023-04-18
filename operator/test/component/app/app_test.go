@@ -64,7 +64,7 @@ func assertAppSpan(instance *klcv1alpha3.KeptnApp, spanRecorder *sdktest.SpanRec
 		return len(spans) >= 3
 	}, "10s").Should(BeTrue())
 
-	Expect(spans[0].Name()).To(Equal(fmt.Sprintf("%s-%s-%d", instance.Name, instance.Spec.Version, instance.Generation)))
+	Expect(spans[0].Name()).To(Equal(instance.GetAppVersionName()))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 

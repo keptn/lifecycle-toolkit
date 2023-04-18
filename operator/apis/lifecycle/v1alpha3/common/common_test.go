@@ -82,6 +82,27 @@ func TestKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
+func TestHash(t *testing.T) {
+	tests := []struct {
+		in  int64
+		out string
+	}{
+		{
+			in:  int64(1),
+			out: "6b86b273",
+		},
+		{
+			in:  int64(2),
+			out: "d4735e3a",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, tt.out, Hash(tt.in))
+		})
+	}
+}
+
 func TestKeptnState_IsDeprecated(t *testing.T) {
 	tests := []struct {
 		State KeptnState

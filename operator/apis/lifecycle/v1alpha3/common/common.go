@@ -1,8 +1,11 @@
 package common
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"math/rand"
+	"strconv"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
@@ -118,6 +121,13 @@ func TruncateString(s string, max int) string {
 		return s[:max]
 	}
 	return s
+}
+
+func Hash(num int64) string {
+	// generate the SHA-256 hash of the bytes
+	hash := sha256.Sum256([]byte(strconv.FormatInt(num, 10)))
+	// take the first 4 bytes of the hash and convert to hex
+	return hex.EncodeToString(hash[:4])
 }
 
 type CheckType string

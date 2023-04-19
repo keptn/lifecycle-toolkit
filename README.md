@@ -215,7 +215,7 @@ When the webhook receives a request for a new pod, it will look for the workload
 keptn.sh/workload: "some-workload-name"
 ```
 
-The mutation consists in changing the scheduler used for the deployment with the Keptn Scheduler.
+The mutation consists in gating the deployment or pod so that the kubernetes Scheduler will not yet deploy them.
 Webhook then creates a
 workload and app resource per annotated resource.
 You can also specify a custom app definition with the annotation:
@@ -252,7 +252,7 @@ and for the Evaluations:
 After either one of those actions has been taken, the webhook will set the scheduler of the pod and allow the pod to be
 scheduled.
 
-### Scheduler
+### Scheduler ##TODO
 
 After the Webhook mutation, the Keptn-Scheduler will handle the annotated resources.
 The scheduling flow follows the
@@ -512,8 +512,7 @@ The [GitHub CLI](https://cli.github.com/) can be used to download the manifests 
 ```bash
 gh run list --repo keptn/lifecycle-toolkit # find the id of a run
 gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
-kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
-kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
+kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operators
 ```
 
 Instead, if you want to build and deploy the operator into your cluster directly from the code, you can type:

@@ -80,8 +80,6 @@ jobs:
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
@@ -121,8 +119,6 @@ jobs:
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
           - name: "certificate-operator"

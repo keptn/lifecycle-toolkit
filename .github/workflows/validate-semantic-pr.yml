@@ -34,7 +34,6 @@ jobs:
             deps
           scopes: |
             helm-chart
-            scheduler
             operator
             cert-manager
             metrics-operator

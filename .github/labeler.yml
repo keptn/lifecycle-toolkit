@@ -5,9 +5,6 @@ documentation:
 operator:
   - operator/**/*
 
-scheduler:
-  - scheduler/**/*
-
 metrics-operator:
   - metrics-operator/**/*
 

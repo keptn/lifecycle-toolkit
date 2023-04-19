@@ -151,15 +151,13 @@ jobs:
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
           echo "---" >> /tmp/crds.yaml
           cd ../crd && kustomize build ./ >> /tmp/crds.yaml
-          cd ../../../scheduler/manifests/install && kustomize build ./ > /tmp/scheduler-manifest.yaml
 
           curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
           cd .. && \
             echo "---" >> operator-manifest.yaml && \
-            echo "---" >> scheduler-manifest.yaml && \
-            cat operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
+            cat operator-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
           kubeconform \
             -schema-location default \
             -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
@@ -194,7 +192,6 @@ jobs:
           - "functions-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
-          - "scheduler"
           - "certificate-operator"
     steps:
       - name: Download images
@@ -220,7 +217,6 @@ jobs:
         artifact:
           - "operator"
           - "metrics-operator"
-          - "scheduler"
           - "klt-cert-manager"
 
     steps:

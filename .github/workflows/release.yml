@@ -47,8 +47,6 @@ jobs:
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
           - name: "certificate-operator"
@@ -141,13 +139,6 @@ jobs:
           path: ./operator/bin
           key: build-tools-${{ github.ref_name }}
 
-      - name: Cache build tools scheduler
-        id: cache-build-tools-scheduler
-        uses: actions/cache@v3
-        with:
-          path: ./scheduler/bin
-          key: build-tools-${{ github.ref_name }}
-
       - name: Cache build tools cert-manager
         id: cache-build-tools-klt-cert-manager
         uses: actions/cache@v3
@@ -165,8 +156,6 @@ jobs:
           RELEASE_REGISTRY: ghcr.keptn.sh/keptn
           CHART_APPVERSION: ${{ needs.release-please.outputs.tag_name }}
         run: |
-          cd scheduler
-          make release-manifests
           cd ../operator
           make controller-gen release-manifests
           cd ../klt-cert-manager
@@ -175,7 +164,6 @@ jobs:
           make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
-          echo "---" >> scheduler/config/rendered/release.yaml
           echo "---" >> klt-cert-manager/config/rendered/release.yaml
           cat >> namespace.yaml << EOF
           ---
@@ -187,7 +175,6 @@ jobs:
           EOF
           cat namespace.yaml \
               operator/config/rendered/release.yaml \
-              scheduler/config/rendered/release.yaml \
               klt-cert-manager/config/rendered/release.yaml \
               metrics-operator/config/rendered/release.yaml > manifest.yaml
 

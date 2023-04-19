@@ -21,8 +21,7 @@ jobs:
         config:
           - name: "lifecycle-operator"
             folder: "operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3

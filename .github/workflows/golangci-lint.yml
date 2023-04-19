@@ -31,8 +31,6 @@ jobs:
             folder: "operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:

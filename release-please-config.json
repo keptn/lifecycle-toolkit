@@ -14,7 +14,6 @@
         "helm/chart/Chart.yaml",
         "Makefile",
         "operator/Makefile",
-        "scheduler/Makefile",
         "klt-cert-manager/Makefile",
         "metrics-operator/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",

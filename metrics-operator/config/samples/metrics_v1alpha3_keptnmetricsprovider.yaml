@@ -1,0 +1,16 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  labels:
+    app.kubernetes.io/name: keptnmetricsprovider
+    app.kubernetes.io/instance: keptnmetricsprovider-sample
+    app.kubernetes.io/part-of: metrics-operator
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: metrics-operator
+  name: keptnmetricsprovider-sample
+spec:
+  type: "prometheus"
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090" # string
+  secretKeyRef:
+    name: "prometheusLoginCredentials" # secret name, optional
+    key: "my-credentials"

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-METRIC_NAME="podtato-head"
-NAMESPACE="keptn-lifecycle-toolkit-system"
+METRIC_NAME=$1
 RETRY_COUNT=3
 SLEEP_TIME=5
 

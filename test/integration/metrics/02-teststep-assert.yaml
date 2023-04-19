@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+assert: # this checks that kubectl get resource succeeds
+  - goodmetric1.yaml
+  - goodmetric2.yaml
+  - goodmetric3.yaml

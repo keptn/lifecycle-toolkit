@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
@@ -20,31 +20,32 @@ type KeptnSLIProvider interface {
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
-func NewProvider(provider string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
-	switch strings.ToLower(provider) {
-	case PrometheusProviderName:
+func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
+
+	switch strings.ToLower(providerType) {
+	case PrometheusProviderType:
 		return &prometheus.KeptnPrometheusProvider{
 			HttpClient: http.Client{},
 			Log:        log,
 		}, nil
-	case DynatraceProviderName:
+	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{
 			HttpClient: http.Client{},
 			Log:        log,
 			K8sClient:  k8sClient,
 		}, nil
-	case DynatraceDQLProviderName:
+	case DynatraceDQLProviderType:
 		return dynatrace.NewKeptnDynatraceDQLProvider(
 			k8sClient,
 			dynatrace.WithLogger(log),
 		), nil
-	case DataDogProviderName:
+	case DataDogProviderType:
 		return &datadog.KeptnDataDogProvider{
 			Log:        log,
 			HttpClient: http.Client{},
 			K8sClient:  k8sClient,
 		}, nil
 	default:
-		return nil, fmt.Errorf("provider %s not supported", provider)
+		return nil, fmt.Errorf("provider %s not supported", providerType)
 	}
 }

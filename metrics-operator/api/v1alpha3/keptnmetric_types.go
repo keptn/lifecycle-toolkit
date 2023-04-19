@@ -1,5 +1,5 @@
 /*
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha3
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -54,6 +54,7 @@ type ProviderRef struct {
 // +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
 // +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
 // +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
+// +kubebuilder:storageversion
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {

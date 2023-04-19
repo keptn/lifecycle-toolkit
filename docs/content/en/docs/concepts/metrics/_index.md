@@ -48,7 +48,7 @@ As you can see, the provider type is set to `prometheus`, which is one of the cu
 By using different names for different providers of the same type, you can fetch metrics from multiple
 provider instances at the same time.
 
-Other supported provider types are `dynatrace`, and `dql`:
+Other supported provider types are `dynatrace`, `datadog`, and `dql`:
 
 ````yaml
 apiVersion: metrics.keptn.sh/v1alpha3

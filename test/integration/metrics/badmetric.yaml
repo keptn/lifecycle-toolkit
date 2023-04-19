@@ -1,9 +1,0 @@
-apiVersion: metrics.keptn.sh/v1alpha2
-kind: KeptnMetric
-metadata:
-  name: badmetric
-spec:
-  provider:
-    name: "keptn-metric"
-  query: "query"
-  fetchIntervalSeconds: 5

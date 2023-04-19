@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	"github.com/go-logr/logr/testr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -14,17 +15,10 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
 func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
-	reconciler := setupReconciler()
-
-	// set up logger
-	opts := zap.Options{
-		Development: true,
-	}
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+	reconciler := setupReconciler(t)
 
 	type args struct {
 		ctx context.Context
@@ -147,11 +141,6 @@ func TestKeptnConfigReconciler_initConfig(t *testing.T) {
 }
 
 func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
-	// set up logger
-	opts := zap.Options{
-		Development: true,
-	}
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	type fields struct {
 		Client          client.Client
@@ -174,7 +163,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 			fields: fields{
 				Client: nil,
 				Scheme: nil,
-				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
+				Log:    testr.New(t),
 				LastAppliedSpec: &optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
 				},
@@ -197,7 +186,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 			fields: fields{
 				Client: nil,
 				Scheme: nil,
-				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
+				Log:    testr.New(t),
 			},
 			args: args{
 				config: &optionsv1alpha1.KeptnConfig{
@@ -233,7 +222,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 	}
 }
 
-func setupReconciler() *KeptnConfigReconciler {
+func setupReconciler(t *testing.T) *KeptnConfigReconciler {
 	emptyConfig := &optionsv1alpha1.KeptnConfig{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "empty-config",
@@ -262,18 +251,12 @@ func setupReconciler() *KeptnConfigReconciler {
 		},
 	}
 
-	//setup logger
-	opts := zap.Options{
-		Development: true,
-	}
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-
 	fakeClient := fake.NewClient(emptyConfig, config1, config2)
 
 	r := &KeptnConfigReconciler{
 		Client: fakeClient,
 		Scheme: fakeClient.Scheme(),
-		Log:    ctrl.Log.WithName("test-keptnconfig-controller"),
+		Log:    testr.New(t),
 	}
 	return r
 }

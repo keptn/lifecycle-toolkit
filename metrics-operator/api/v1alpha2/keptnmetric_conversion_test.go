@@ -1,9 +1,9 @@
-package v1alpha1
+package v1alpha2
 
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
@@ -21,7 +21,7 @@ func TestKeptnMetric_ConvertTo(t *testing.T) {
 		name       string
 		fields     fields
 		wantErr    bool
-		wantResult *v1alpha2.KeptnMetric
+		wantResult *v1alpha3.KeptnMetric
 	}{
 		{
 			name: "convert to hub",
@@ -45,19 +45,19 @@ func TestKeptnMetric_ConvertTo(t *testing.T) {
 			},
 			wantErr: false,
 
-			wantResult: &v1alpha2.KeptnMetric{
+			wantResult: &v1alpha3.KeptnMetric{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "my-metric",
 					Namespace: "my-namespace",
 				},
-				Spec: v1alpha2.KeptnMetricSpec{
-					Provider: v1alpha2.ProviderRef{
+				Spec: v1alpha3.KeptnMetricSpec{
+					Provider: v1alpha3.ProviderRef{
 						Name: "my-provider",
 					},
 					Query:                "my-query",
 					FetchIntervalSeconds: 10,
 				},
-				Status: v1alpha2.KeptnMetricStatus{
+				Status: v1alpha3.KeptnMetricStatus{
 					Value:       "10.0",
 					RawValue:    []byte("10.0"),
 					LastUpdated: now,
@@ -73,7 +73,7 @@ func TestKeptnMetric_ConvertTo(t *testing.T) {
 				Spec:       tt.fields.Spec,
 				Status:     tt.fields.Status,
 			}
-			dst := &v1alpha2.KeptnMetric{}
+			dst := &v1alpha3.KeptnMetric{}
 			err := src.ConvertTo(dst)
 
 			if tt.wantErr {
@@ -102,19 +102,19 @@ func TestKeptnMetric_ConvertFrom(t *testing.T) {
 		{
 			name: "convert from hub",
 			args: args{
-				srcRaw: &v1alpha2.KeptnMetric{
+				srcRaw: &v1alpha3.KeptnMetric{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "my-metric",
 						Namespace: "my-namespace",
 					},
-					Spec: v1alpha2.KeptnMetricSpec{
-						Provider: v1alpha2.ProviderRef{
+					Spec: v1alpha3.KeptnMetricSpec{
+						Provider: v1alpha3.ProviderRef{
 							Name: "my-provider",
 						},
 						Query:                "my-query",
 						FetchIntervalSeconds: 10,
 					},
-					Status: v1alpha2.KeptnMetricStatus{
+					Status: v1alpha3.KeptnMetricStatus{
 						Value:       "10.0",
 						RawValue:    []byte("10.0"),
 						LastUpdated: now,

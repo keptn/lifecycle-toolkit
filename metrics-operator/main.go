@@ -28,6 +28,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
@@ -54,9 +55,10 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
-	//+kubebuilder:scaffold:scheme
+	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
+	utilruntime.Must(metricsv1alpha3.AddToScheme(scheme))
+	// +kubebuilder:scaffold:scheme
 }
 
 type envConfig struct {
@@ -133,11 +135,11 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha2.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

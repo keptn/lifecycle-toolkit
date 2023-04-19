@@ -12,35 +12,35 @@ import (
 
 func TestFactory(t *testing.T) {
 	tests := []struct {
-		name     string
-		provider interface{}
-		err      bool
+		providerType string
+		provider     interface{}
+		err          bool
 	}{
 		{
-			name:     PrometheusProviderName,
-			provider: &prometheus.KeptnPrometheusProvider{},
-			err:      false,
+			providerType: PrometheusProviderType,
+			provider:     &prometheus.KeptnPrometheusProvider{},
+			err:          false,
 		},
 		{
-			name:     DynatraceProviderName,
-			provider: &dynatrace.KeptnDynatraceProvider{},
-			err:      false,
+			providerType: DynatraceProviderType,
+			provider:     &dynatrace.KeptnDynatraceProvider{},
+			err:          false,
 		},
 		{
-			name:     DataDogProviderName,
-			provider: &datadog.KeptnDataDogProvider{},
-			err:      false,
+			providerType: DataDogProviderType,
+			provider:     &datadog.KeptnDataDogProvider{},
+			err:          false,
 		},
 		{
-			name:     "invalid",
-			provider: nil,
-			err:      true,
+			providerType: "invalid",
+			provider:     nil,
+			err:          true,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p, e := NewProvider(tt.name, logr.Logger{}, nil)
+		t.Run(tt.providerType, func(t *testing.T) {
+			p, e := NewProvider(tt.providerType, logr.Logger{}, nil)
 			require.IsType(t, tt.provider, p)
 			if tt.err {
 				require.NotNil(t, e)

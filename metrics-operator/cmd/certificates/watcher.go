@@ -94,10 +94,7 @@ func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, f
 	f := filepath.Join(watcher.certificateDirectory, filename)
 	data, err := afero.ReadFile(watcher.fs, f)
 	if os.IsNotExist(err) || !bytes.Equal(data, secret.Data[filename]) {
-		if err := afero.WriteFile(watcher.fs, f, secret.Data[filename], 0666); err != nil {
-			return err
-		}
-		return nil
+		return afero.WriteFile(watcher.fs, f, secret.Data[filename], 0666)
 	}
 	return err
 

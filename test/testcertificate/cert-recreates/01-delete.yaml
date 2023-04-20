@@ -1,0 +1,6 @@
+# second scenario: certificate is removed with no restart
+apiVersion: v1
+kind: Secret
+metadata:
+  name: klt-certs
+  namespace: keptn-lifecycle-toolkit-system

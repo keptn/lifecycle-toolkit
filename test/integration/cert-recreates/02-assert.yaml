@@ -5,7 +5,7 @@ metadata:
   name: klt-certs
   namespace: keptn-lifecycle-toolkit-system
   annotations:
-    mycert: "true"  #make sure this is the latest secret
+    mycert: "true"  # make sure this is the latest secret
 ---
 apiVersion: apps/v1
 kind: Deployment

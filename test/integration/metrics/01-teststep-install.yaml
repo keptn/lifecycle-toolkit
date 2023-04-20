@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+apply:
+  - goodmetric1.yaml
+  - goodmetric2.yaml
+  - goodmetric3.yaml

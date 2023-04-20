@@ -4,4 +4,6 @@ metadata:
   name: keptnmetricsprovider-sample
 spec:
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090" # string
-  secretName: prometheusLoginCredentials # secret name, optional
+  secretKeyRef:
+    name: "prometheusLoginCredentials" # secret name, optional
+    key: "my-credentials"

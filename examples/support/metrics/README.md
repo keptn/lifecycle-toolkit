@@ -49,7 +49,7 @@ To verify that the metric is wired up properly, we can retrieve it via `kubectl`
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.01433336027598159
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.01433336027598159
 ```
 
 ## Generating Load
@@ -69,7 +69,7 @@ Once the Job is running, we will see that our `KeptnMetric`'s value will increas
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.25475392739204
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.25475392739204
 ```
 
 ## Deploying the HorizontalPodAutoscaler
@@ -99,7 +99,7 @@ spec:
         metric:
           name: cpu-throttling
         describedObject:
-          apiVersion: metrics.keptn.sh/v1alpha2
+          apiVersion: metrics.keptn.sh/v1alpha3
           kind: KeptnMetric
           name: cpu-throttling
         target:
@@ -150,5 +150,5 @@ As a consequence of that, you should eventually see a decrease of the `cpu-throt
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.036489273639926
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.036489273639926
 ```

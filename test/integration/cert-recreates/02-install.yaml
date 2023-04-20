@@ -1,4 +1,4 @@
-# certificate is invalid
+# third scenario: certificate is invalid/expired
 apiVersion: v1
 kind: Secret
 metadata:

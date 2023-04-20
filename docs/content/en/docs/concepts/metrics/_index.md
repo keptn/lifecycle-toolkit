@@ -10,7 +10,7 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ### Keptn Metric
 
 A `KeptnMetric` is a CRD representing a metric.
-The metric will be collected from the provider specified in the
+The metric is collected from the provider specified in the
 `spec.provider.name` field.
 The query is a string in the provider-specific query language, used to obtain a metric.
 Providing the metrics as CRDs in a K8s cluster facilitates the reusability of this data across multiple components.

@@ -50,7 +50,7 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts from last successful build of main branch
-        uses: dawidd6/action-download-artifact@v2.26.1
+        uses: dawidd6/action-download-artifact@v2.27.0
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
@@ -204,7 +204,7 @@ jobs:
           path: images
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.9.2
+        uses: aquasecurity/trivy-action@0.10.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'

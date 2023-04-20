@@ -3,8 +3,6 @@ package certificates
 import (
 	"bytes"
 	"context"
-	"crypto/x509"
-	"encoding/pem"
 	"errors"
 	"fmt"
 	"os"
@@ -16,14 +14,13 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-// TODO: refactor code below to be testable and also tested: https://github.com/keptn/lifecycle-toolkit/issues/640
 const (
 	certificateRenewalInterval = 6 * time.Hour
 	ServerKey                  = "tls.key"
 	ServerCert                 = "tls.crt"
+	CertThreshold              = 5 * time.Minute
 )
 
 type CertificateWatcher struct {
@@ -32,16 +29,20 @@ type CertificateWatcher struct {
 	certificateDirectory  string
 	namespace             string
 	certificateSecretName string
-	Log                   logr.Logger
+	certificateTreshold   time.Duration
+	ICertificateHandler
+	Log logr.Logger
 }
 
-func NewCertificateWatcher(mgr manager.Manager, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
+func NewCertificateWatcher(reader client.Reader, certDir string, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
 	return &CertificateWatcher{
-		apiReader:             mgr.GetAPIReader(),
+		apiReader:             reader,
 		fs:                    afero.NewOsFs(),
-		certificateDirectory:  mgr.GetWebhookServer().CertDir,
+		certificateDirectory:  certDir,
 		namespace:             namespace,
 		certificateSecretName: secretName,
+		ICertificateHandler:   defaultCertificateHandler{},
+		certificateTreshold:   CertThreshold,
 		Log:                   log,
 	}
 }
@@ -76,7 +77,7 @@ func (watcher *CertificateWatcher) updateCertificatesFromSecret() error {
 	}
 
 	for _, filename := range []string{ServerCert, ServerKey} {
-		if _, err = watcher.ensureCertificateFile(secret, filename); err != nil {
+		if err = watcher.ensureCertificateFile(secret, filename); err != nil {
 			return err
 		}
 	}
@@ -89,22 +90,18 @@ func (watcher *CertificateWatcher) updateCertificatesFromSecret() error {
 	return nil
 }
 
-func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, filename string) (bool, error) {
+func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, filename string) error {
 	f := filepath.Join(watcher.certificateDirectory, filename)
-
 	data, err := afero.ReadFile(watcher.fs, f)
 	if os.IsNotExist(err) || !bytes.Equal(data, secret.Data[filename]) {
-		if err := afero.WriteFile(watcher.fs, f, secret.Data[filename], 0666); err != nil {
-			return false, err
-		}
-	} else {
-		return false, err
+		return afero.WriteFile(watcher.fs, f, secret.Data[filename], 0666)
 	}
-	return true, nil
+	return err
+
 }
 
 func (watcher *CertificateWatcher) WaitForCertificates() {
-	for threshold := time.Now().Add(5 * time.Minute); time.Now().Before(threshold); {
+	for threshold := time.Now().Add(watcher.certificateTreshold); time.Now().Before(threshold); {
 
 		if err := watcher.updateCertificatesFromSecret(); err != nil {
 			if k8serrors.IsNotFound(err) {
@@ -121,10 +118,10 @@ func (watcher *CertificateWatcher) WaitForCertificates() {
 }
 
 func (watcher *CertificateWatcher) ValidateCertificateExpiration(certData []byte, renewalThreshold time.Duration, now time.Time) (bool, error) {
-	if block, _ := pem.Decode(certData); block == nil {
+	if block, _ := watcher.Decode(certData); block == nil {
 		watcher.Log.Error(errors.New("can't decode PEM file"), "failed to parse certificate")
 		return false, nil
-	} else if cert, err := x509.ParseCertificate(block.Bytes); err != nil {
+	} else if cert, err := watcher.Parse(block.Bytes); err != nil {
 		watcher.Log.Error(err, "failed to parse certificate")
 		return false, err
 	} else if now.After(cert.NotAfter.Add(-renewalThreshold)) {

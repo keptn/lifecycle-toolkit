@@ -72,7 +72,7 @@ func (builder Builder) Run(webhookManager manager.Manager) error {
 	builder.GetManagerProvider().SetupWebhookServer(webhookManager)
 
 	certificates.
-		NewCertificateWatcher(webhookManager, builder.namespace, webhooks.SecretCertsName, ctrl.Log.WithName("Webhook Cert Manager")).
+		NewCertificateWatcher(webhookManager.GetAPIReader(), webhookManager.GetWebhookServer().CertDir, builder.namespace, webhooks.SecretCertsName, ctrl.Log.WithName("Webhook Cert Manager")).
 		WaitForCertificates()
 
 	webhookManager.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{

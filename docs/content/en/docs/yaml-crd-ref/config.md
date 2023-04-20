@@ -26,9 +26,7 @@ spec:
    Must be set to `KeptnConfig`.`
 
 * **metadata**
-  * **name** -- Unique name of this collector.
-    This is the name that identifies this collector
-    in the `KeptnConfigList` CR.
+  * **name** -- Unique name of this set of configuration.
     * Must be an alphanumeric string and, by convention, is all lowercase.
     * Can include the special characters `_`, `-`, (others?)
     * Should not include spaces.

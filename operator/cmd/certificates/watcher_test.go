@@ -6,8 +6,6 @@ import (
 	"encoding/pem"
 	"os"
 	"path/filepath"
-	"reflect"
-	"strings"
 	"testing"
 	"time"
 
@@ -16,6 +14,7 @@ import (
 	fakeclient "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -77,6 +76,8 @@ TnTYWRNvo2svX69TriL+CkHY9O1Hkwf2It5zHl3gNiKTJVaak8AuEz/CKWZneovt
 yYLwhUhg3PX5Co1VKYE+9TxloiE=
 -----END CERTIFICATE-----`
 
+var ERR_BAD_CERT = errors.New("bad cert")
+
 var emptySecret = v1.Secret{
 	TypeMeta: metav1.TypeMeta{},
 	ObjectMeta: metav1.ObjectMeta{
@@ -122,14 +123,14 @@ func TestCertificateWatcher_ValidateCertificateExpiration(t *testing.T) {
 			name: "certificate cannot be parsed",
 			certHandler: &fake.ICertificateHandlerMock{
 				DecodeFunc: func(data []byte) (p *pem.Block, rest []byte) {
-					return nil, nil //fake a failure in the decoding
+					return &pem.Block{Type: "test", Bytes: []byte("testdata")}, nil
 				},
 				ParseFunc: func(der []byte) (*x509.Certificate, error) {
-					return nil, errors.New("bad cert")
+					return nil, ERR_BAD_CERT
 				},
 			},
 			want:    false,
-			wantErr: errors.New("bad cert"),
+			wantErr: ERR_BAD_CERT,
 		},
 		{
 			name:        "good certificate - unexpired",
@@ -152,13 +153,12 @@ func TestCertificateWatcher_ValidateCertificateExpiration(t *testing.T) {
 				Log:                 testr.New(t),
 			}
 			got, err := watcher.ValidateCertificateExpiration(tt.certData, tt.renewalThreshold, tt.now)
-			if (err != nil) && !errors.Is(tt.wantErr, err) {
-				t.Errorf("ValidateCertificateExpiration() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if tt.wantErr != nil {
+				require.Error(t, err)
+				t.Log("want:", tt.wantErr, "got:", err)
+				require.True(t, errors.Is(tt.wantErr, err))
 			}
-			if got != tt.want {
-				t.Errorf("ValidateCertificateExpiration() got = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, got, tt.want)
 		})
 	}
 }
@@ -167,12 +167,12 @@ func TestCertificateWatcher_ensureCertificateFile(t *testing.T) {
 
 	certdir := t.TempDir()
 	f := filepath.Join(certdir, ServerCert)
-	os.WriteFile(f, goodSecret.Data[ServerCert], 0666)
-
+	err := os.WriteFile(f, goodSecret.Data[ServerCert], 0666)
+	require.Nil(t, err)
 	baddir := t.TempDir()
 	f = filepath.Join(baddir, ServerCert)
-	os.WriteFile(f, goodSecret.Data[ServerKey], 0666)
-
+	err = os.WriteFile(f, goodSecret.Data[ServerKey], 0666)
+	require.Nil(t, err)
 	tests := []struct {
 		name     string
 		fs       afero.Fs
@@ -214,17 +214,8 @@ func TestCertificateWatcher_ensureCertificateFile(t *testing.T) {
 				certificateDirectory: tt.certDir,
 			}
 			err := watcher.ensureCertificateFile(tt.secret, tt.filename)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ensureCertificateFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-
-			if err != nil && !strings.Contains(err.Error(), tt.err) {
-				t.Errorf("ensureCertificateFile() gotError = %v, want %v", err, tt.err)
-				return
-			}
-
-			if err == nil {
+			if !tt.wantErr {
+				require.Nil(t, err)
 				f = filepath.Join(tt.certDir, ServerCert)
 				data, err := os.ReadFile(f)
 				if err != nil {
@@ -232,8 +223,9 @@ func TestCertificateWatcher_ensureCertificateFile(t *testing.T) {
 				}
 				if !bytes.Equal(data, tt.secret.Data[tt.filename]) {
 					t.Errorf("ensureCertificateFile()data %v was not replaced with %v", data, tt.secret.Data[tt.filename])
-					return
 				}
+			} else {
+				require.Contains(t, err.Error(), tt.err)
 			}
 		})
 	}
@@ -297,11 +289,11 @@ func TestCertificateWatcher_updateCertificatesFromSecret(t *testing.T) {
 				Log:                   testr.New(t),
 			}
 			err := watcher.updateCertificatesFromSecret()
-			if err == nil && tt.wantErr != nil {
-				t.Errorf("updateCertificatesFromSecret() no error matched wantErr %v", tt.wantErr)
-			}
-			if (err != nil) && !strings.Contains(err.Error(), tt.wantErr.Error()) {
-				t.Errorf("updateCertificatesFromSecret() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr == nil {
+				require.Nil(t, err)
+			} else {
+				require.NotNil(t, err)
+				require.Contains(t, err.Error(), tt.wantErr.Error())
 			}
 		})
 	}
@@ -320,7 +312,7 @@ func TestNewCertificateWatcher(t *testing.T) {
 		ICertificateHandler:   defaultCertificateHandler{},
 		Log:                   testr.New(t),
 	}
-	if got := NewCertificateWatcher(client, "test", "default", "my-secret", logger); !reflect.DeepEqual(got, want) {
-		t.Errorf("newCertificatesWatcher() generated %v did not match %v", got, want)
-	}
+	got := NewCertificateWatcher(client, "test", "default", "my-secret", logger)
+	require.EqualValues(t, got, want)
+
 }

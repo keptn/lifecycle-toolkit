@@ -14,14 +14,14 @@ require (
 	github.com/prometheus/common v0.42.0
 	github.com/spf13/afero v1.9.5
 	github.com/stretchr/testify v1.8.2
-	k8s.io/api v0.26.3
-	k8s.io/apiextensions-apiserver v0.26.3
-	k8s.io/apimachinery v0.26.3
-	k8s.io/apiserver v0.26.3
-	k8s.io/client-go v0.26.3
-	k8s.io/component-base v0.26.3
+	k8s.io/api v0.26.4
+	k8s.io/apiextensions-apiserver v0.26.4
+	k8s.io/apimachinery v0.26.4
+	k8s.io/apiserver v0.26.4
+	k8s.io/client-go v0.26.4
+	k8s.io/component-base v0.26.4
 	k8s.io/klog/v2 v2.90.1
-	k8s.io/metrics v0.26.3
+	k8s.io/metrics v0.26.4
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 )
@@ -108,7 +108,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/kms v0.26.3 // indirect
+	k8s.io/kms v0.26.4 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
 	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.36 // indirect

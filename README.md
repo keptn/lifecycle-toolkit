@@ -280,14 +280,18 @@ spec:
   version: "1.3"
   revision: 1
   workloads:
-  - name: podtato-head-left-arm
-    version: 0.1.0
-  - name: podtato-head-left-leg
-    version: 1.2.3
+    - name: podtato-head-left-arm
+      version: 0.1.0
+    - name: podtato-head-left-leg
+      version: 1.2.3
+  preDeploymentTasks:
+    - pre-deployment-hello
   postDeploymentTasks:
-  - post-deployment-hello
-  preDeploymentEvaluations:    
-  - my-prometheus-definition
+    - post-deployment-hello
+  preDeploymentEvaluations:
+    - my-prometheus-definition
+  postDeploymentEvaluations:
+    - my-prometheus-definition
 ```
 
 While changes in the workload version will affect only workload checks, a change in the app version will also cause a

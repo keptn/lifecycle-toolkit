@@ -1,7 +1,8 @@
 # AutoScaling with HPA and KeptnMetrics
 
 This example shows how `KeptnMetrics` can be used as a reference for a `HorizontalPodAutoscaler` to decide when to
-scale workloads up or down. To demonstrate this, the following steps will be covered in this example:
+scale workloads up or down.
+To demonstrate this, the following steps will be covered in this example:
 
 1. Deploy a sample application
 2. Create a `KeptnMetric` to monitor the throttled CPU of all pods serving our application
@@ -17,7 +18,8 @@ make 1-deploy-app
 ```
 
 This will create a namespace called `podtato-metrics`, and a deployment called `podtato-head-entry` that is
-accessible via a `ClusterIP` service. After executing the command, you should see one
+accessible via a `ClusterIP` service.
+After executing the command, you should see one
 pod running the application we just created:
 
 ```shell
@@ -47,14 +49,16 @@ To verify that the metric is wired up properly, we can retrieve it via `kubectl`
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.01433336027598159
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.01433336027598159
 ```
 
 ## Generating Load
 
 Now that we have our application up and running, and can retrieve the `KeptnMetric` value,
-it is time to generate some load. To do so, we will create a `Job` that regularly
-sends a request to our application. The Job can be created using the following command:
+it is time to generate some load.
+To do so, we will create a `Job` that regularly
+sends a request to our application.
+The Job can be created using the following command:
 
 ```shell
 make 3-generate-load
@@ -65,14 +69,15 @@ Once the Job is running, we will see that our `KeptnMetric`'s value will increas
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.25475392739204
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.25475392739204
 ```
 
 ## Deploying the HorizontalPodAutoscaler
 
 Now, to meet the demand of our application, we will deploy a `HorizontalPodAutoscaler` that will
 observe the value of the `cpu-throttling` metric, and scale the demo application up or down, based on the target
-we have specified for our metric. In our case, we want to ensure that the value of our metric stays
+we have specified for our metric.
+In our case, we want to ensure that the value of our metric stays
 below `0.05`, and we are willing to scale up to 10 replicas of our demo application:
 
 ```yaml
@@ -94,7 +99,7 @@ spec:
         metric:
           name: cpu-throttling
         describedObject:
-          apiVersion: metrics.keptn.sh/v1alpha2
+          apiVersion: metrics.keptn.sh/v1alpha3
           kind: KeptnMetric
           name: cpu-throttling
         target:
@@ -109,7 +114,8 @@ make 4-deploy-hpa
 ```
 
 Once the HPA has been deployed, we should immediately see it scaling up the replica count of our application,
-since the metric value was already above our target. You can also verify this by inspecting the current
+since the metric value was already above our target.
+You can also verify this by inspecting the current
 state of the `podtato-metrics-hpa` autoscaler:
 
 ```shell
@@ -144,5 +150,5 @@ As a consequence of that, you should eventually see a decrease of the `cpu-throt
 ```shell
 $kubectl get keptnmetrics.metrics.keptn.sh -n podtato-metrics cpu-throttling
 NAME             PROVIDER     QUERY                                                                                                       VALUE
-cpu-throttling   prometheus   avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.036489273639926
+cpu-throttling   my-provider  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))   0.036489273639926
 ```

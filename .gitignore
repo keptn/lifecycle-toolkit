@@ -39,6 +39,10 @@ manifests/
 ## Kubebuilder
 **/kubebuilder
 /docs/tmp/
+/docs/.hugo_build.lock
+/docs/resources/_gen
+/docs/public
+node_modules
 
 # Helm readme generator project
 readme-generator-for-helm/

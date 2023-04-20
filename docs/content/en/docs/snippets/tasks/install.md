@@ -2,8 +2,7 @@
 
 ## Install version 0.7.0 and above
 
-In version 0.7.0 and later, you can install the Lifecycle Toolkit using helm charts,
-or manifests.
+In version 0.7.0 and later, you can install the Lifecycle Toolkit using either helm charts or manifests.
 
 For installing the Lifecycle Toolkit via Helm chart:
 
@@ -37,7 +36,7 @@ available [here](https://helm.sh/docs/helm/helm_get_values/)).
 
 The full list of available flags can be found in the [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md).
 
-> **Note:**
+> **Note**
 Installation of the Lifecycle Toolkit version 0.6.0 and lower is not supported via helm charts.
 
 <details>

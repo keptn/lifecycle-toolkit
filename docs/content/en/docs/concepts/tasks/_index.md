@@ -56,7 +56,8 @@ spec:
         console.log("Hello, " + name + " new");
 ```
 
-The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the
+The runtime can also fetch the script on the fly from a remote webserver.
+For this, the CRD should look like the
 following:
 
 ```yaml
@@ -95,7 +96,8 @@ spec:
 
 ## Context
 
-A context environment variable is available via `Deno.env.get("CONTEXT")`. It can be used like this:
+A context environment variable is available via `Deno.env.get("CONTEXT")`.
+It can be used like this:
 
 ```javascript
 let context = Deno.env.get("CONTEXT");
@@ -119,7 +121,8 @@ The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
-Currently only one secret can be passed. The secret must have a `key` called `SECURE_DATA`.
+Currently only one secret can be passed.
+The secret must have a `key` called `SECURE_DATA`.
 It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
 For example:

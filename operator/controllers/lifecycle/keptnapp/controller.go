@@ -19,7 +19,6 @@ package keptnapp
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -186,9 +185,9 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 	lastResultErr = nil
 	for i := app.Generation - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha3.KeptnAppVersion{}
-		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + strconv.FormatInt(i, 10)}, deprecatedAppVersion); err != nil {
+		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + common.Hash(i)}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {
-				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+strconv.FormatInt(i, 10)))
+				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+common.Hash(i)))
 				lastResultErr = err
 			}
 		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {

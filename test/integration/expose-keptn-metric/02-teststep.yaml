@@ -1,4 +1,0 @@
-apiVersion: kuttl.dev/v1
-kind: TestStep
-commands:
-  - script: kubectl delete keptnmetric.metrics.keptn.sh/keptnmetric-sample -n keptn-lifecycle-toolkit-system

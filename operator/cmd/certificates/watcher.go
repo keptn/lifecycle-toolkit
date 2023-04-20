@@ -16,7 +16,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// TODO: refactor code below to be testable and also tested: https://github.com/keptn/lifecycle-toolkit/issues/640
 const (
 	certificateRenewalInterval = 6 * time.Hour
 	ServerKey                  = "tls.key"

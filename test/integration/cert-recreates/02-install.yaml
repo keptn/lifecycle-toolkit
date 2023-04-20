@@ -1,0 +1,11 @@
+# certificate is invalid
+apiVersion: v1
+kind: Secret
+metadata:
+  name: klt-certs
+  namespace: keptn-lifecycle-toolkit-system
+  annotations:
+    mycert: "true"
+data:
+  tls.crt: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNkekNDQWg2Z0F3SUJBZ0lRZUpBWkJMcmxCY2VqNzh3cm4wV1ZIekFLQmdncWhrak9QUVFEQWpDQmlURUwKa0ZGY1FpY29hdE8yRFJnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
+  tls.key: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNkekNDQWg2Z0F3SUJBZ0lRZUpBWkJMcmxCY2VqNzh3cm4wV1ZIekFLQmdncWhrak9QUVFEQWpDQmlURUwKa0ZGY1FpY29hdE8yRFJnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"

@@ -13,7 +13,7 @@ A `KeptnMetric` is a CRD representing a metric.
 The metric will be collected from the provider specified in the
 specs.provider.name field.
 The query is a string in the provider-specific query language, used to obtain a metric.
-Providing the metrics as CRDs in a K8s cluster will facilitate the reusability of this data across multiple components.
+Providing the metrics as CRDs in a K8s cluster facilitates the reusability of this data across multiple components.
 Furthermore, this allows using multiple observability platforms for different metrics at the same time.
 
 A `KeptnMetric` looks like the following:

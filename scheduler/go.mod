@@ -14,10 +14,10 @@ require (
 	go.opentelemetry.io/otel/sdk v0.20.0
 	go.opentelemetry.io/otel/trace v0.20.0
 	google.golang.org/grpc v1.54.0
-	k8s.io/api v0.25.8
-	k8s.io/apimachinery v0.25.8
+	k8s.io/api v0.25.9
+	k8s.io/apimachinery v0.25.9
 	k8s.io/apiserver v0.25.8
-	k8s.io/client-go v0.25.8
+	k8s.io/client-go v0.25.9
 	k8s.io/component-base v0.25.8
 	k8s.io/klog/v2 v2.90.1
 	k8s.io/kubernetes v1.25.8

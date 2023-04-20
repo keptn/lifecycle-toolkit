@@ -13,7 +13,7 @@ Currently, it is used to configure the URL of the OpenTelemetry collector.
 apiVersion: options.keptn.sh/v?alpha?
 kind: KeptnConfig
 metadata:
-  name: <collector-name>
+  name: <configuration-name>
 spec:
   OTelCollectorUrl: '<otelurl:port>'
 ```

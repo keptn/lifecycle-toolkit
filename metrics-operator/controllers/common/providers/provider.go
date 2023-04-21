@@ -23,7 +23,7 @@ type KeptnSLIProvider interface {
 func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 
 	switch strings.ToLower(providerType) {
-	case PrometheusProviderType:
+	case PrometheusProviderType, ThanosProviderType:
 		return &prometheus.KeptnPrometheusProvider{
 			HttpClient: http.Client{},
 			Log:        log,

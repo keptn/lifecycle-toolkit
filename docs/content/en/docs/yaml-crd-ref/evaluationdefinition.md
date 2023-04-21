@@ -1,5 +1,11 @@
 ---
 title: KeptnEvaluationDefinition
+description: Define all workloads and checks associated with an application
+weight: 20
+---
+---
+
+title: KeptnEvaluationDefinition
 description: Define all evaluations associated with an application
 weight: 30
 ---
@@ -11,19 +17,16 @@ as part of pre- and post-analysis phases of a workload or application.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
-  name: <evaluation-name>
+  name: pre-deployment-hello
 spec:
-  source: prometheus | dynatrace | datadog
   objectives:
-    - name: query-1
-      query: "xxxx"
-      evaluationTarget: <20
-    - name: query-2
-      query: "yyyy"
-      evaluationTarget: >4
+    - evaluationTarget: ">1"
+      keptnMetricRef:
+        name: available-cpus
+        namespace: some-namespace
 ```
 
 ## Fields
@@ -71,9 +74,37 @@ API Reference:
 
 ## Differences between versions
 
-The `KeptnTaskDefinition` is the same for
-all `v1alpha?` library versions.
+In the `v1alpha1` and `v1alpha2` API versions,
+`KeptnEvaluationDefinition` references the `KeptnEvaluationProvider` CRD
+to identify the data source associated with this definition
+and itself contained the queries
+that are now taken from the specified [KeptnMetric](metric.md) CRD.
+The synopsis was:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnEvaluationDefinition
+metadata:
+  name: <evaluation-name>
+spec:
+  source: prometheus | dynatrace | datadog
+  objectives:
+    - name: query-1
+      query: "xxxx"
+      evaluationTarget: <20
+    - name: query-2
+      query: "yyyy"
+      evaluationTarget: >4
+```
+
+Beginning with `v1alpha3` API version,
+`KeptnEvaluationDefinition` references the data source defined
+in the [KeptnMetricsProvider](metricsprovider.md)
+and the queries are specified in the corresponding
+[KeptnMetric](metric.md) CRD
+although the `evaluationTarget` is defined in this CRD.
 
 ## See also
 
-* [KeptnEvaluationProvider](evaluationprovider.md)
+* [KeptnMetricsProvider](metricsprovider.md)
+* [KeptnMetric](metric.md)

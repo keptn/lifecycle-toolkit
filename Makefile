@@ -1,9 +1,9 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v4.5.7
+KUSTOMIZE_VERSION?=v5.0.1
 # renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.11.2
+HELM_VERSION ?= v3.11.3
 CHART_APPVERSION ?= v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
@@ -33,10 +33,13 @@ $(HELMIFY): $(LOCALBIN)
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
+	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
+
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
+	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
 
 .PHONY: load-test
 load-test:

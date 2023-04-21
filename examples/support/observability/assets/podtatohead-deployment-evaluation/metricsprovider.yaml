@@ -1,7 +1,8 @@
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
-  name: prometheus
+  name: my-provider
   namespace: podtato-kubectl
 spec:
+  type: prometheus
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

@@ -46,7 +46,7 @@ spec:
   template:
     metadata:
       labels:
-        app: test
+        app: test2
       annotations:
         keptn.sh/workload: my-workload-2
         keptn.sh/version: "1.0.0"

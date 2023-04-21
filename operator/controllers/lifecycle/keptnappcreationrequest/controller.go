@@ -164,8 +164,20 @@ func (r *KeptnAppCreationRequestReconciler) SetupWithManager(mgr ctrl.Manager) e
 
 func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *lifecycle.KeptnApp, workloads *lifecycle.KeptnWorkloadList) error {
 
-	updated := false
+	addOrUpdatedWorkload := r.addOrUpdateWorkloads(workloads, keptnApp)
+	removedWorkload := r.cleanupWorkloads(workloads, keptnApp)
 
+	if !addOrUpdatedWorkload && !removedWorkload {
+		return nil
+	}
+
+	keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
+
+	return r.Update(ctx, keptnApp)
+}
+
+func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads *lifecycle.KeptnWorkloadList, keptnApp *lifecycle.KeptnApp) bool {
+	updated := false
 	for _, workload := range workloads.Items {
 		foundWorkload := false
 		workloadName := strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", keptnApp.Name))
@@ -190,14 +202,27 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 			updated = true
 		}
 	}
+	return updated
+}
 
-	if !updated {
-		return nil
+func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads *lifecycle.KeptnWorkloadList, keptnApp *lifecycle.KeptnApp) bool {
+	updated := false
+	for index, appWorkload := range keptnApp.Spec.Workloads {
+		foundWorkload := false
+		for _, workload := range workloads.Items {
+			workloadName := strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", keptnApp.Name))
+			if appWorkload.Name == workloadName {
+				foundWorkload = true
+				break
+			}
+		}
+
+		if !foundWorkload {
+			keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads[:index], keptnApp.Spec.Workloads[index+1:]...)
+			updated = true
+		}
 	}
-
-	keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
-
-	return r.Update(ctx, keptnApp)
+	return updated
 }
 
 func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest, workloads *lifecycle.KeptnWorkloadList) error {

@@ -322,7 +322,7 @@ func Test_otelConfig_InitOtelCollector_ReInitWithDifferentURL(t *testing.T) {
 	require.NotNil(t, tracer)
 	require.Len(t, o.tracers, 1)
 
-	// init with the same URL again
+	// init with a different URL
 	err = o.InitOtelCollector("localhost:9001")
 
 	require.Nil(t, err)

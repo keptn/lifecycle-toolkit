@@ -4,8 +4,9 @@
 package fake
 
 import (
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sync"
+
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // MockWebhookManager is a mock implementation of manager.Provider.

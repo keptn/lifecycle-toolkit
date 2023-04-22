@@ -1,0 +1,12 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:
+  - script: |     # make sure secret is updated from the bad one to a proper one
+      str1=$(kubectl get secret  klt-certs  -n keptn-lifecycle-toolkit-system -o=go-template='{{index .data "tls.crt"}}')
+      str2="LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNkekNDQWg2Z0F3SUJBZ0lRZUpBWkJMcmxCY2VqNzh3cm4wV1ZIekFLQmdncWhrak9QUVFEQWpDQmlURUwKa0ZGY1FpY29hdE8yRFJnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
+      if [ "$str1" == "$str2" ]; then
+      echo "Strings are equal" $str1
+      exit 1
+      else
+      echo "Strings are not equal" $str1 "!=" $str2
+      fi

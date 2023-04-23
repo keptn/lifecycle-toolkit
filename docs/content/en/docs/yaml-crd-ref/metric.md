@@ -36,17 +36,18 @@ spec:
 
 * **metadata**
   * **name** -- Unique name of this metric.
-    * Must be an alphanumeric string and, by convention, is all lowercase.
-    * Can include the special characters `_`, `-`, (others?)
-    * Should not include spaces.
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
   * **namespace** -- namespace of the application using this metric
 
 * **spec**
   * **provider.name** --
     Name of this instance of the data source
     from which the metric is collected.
-    This value must match the value of the `spec.provider.name` field
+    This value must match the value of the `metadata.name` field
     of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD
+
     Assigning your own name to the provider
     rather than just the type of provider
     enables you to support multiple instances of a data provider.
@@ -56,7 +57,7 @@ spec:
     that monitors the production deployment
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
-  * **fetchIntervalSeconds** -- Number of seconds between ??
+  * **fetchIntervalSeconds** -- Number of seconds between updates of the metric
 
 ## Usage
 

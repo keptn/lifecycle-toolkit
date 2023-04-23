@@ -1,13 +1,7 @@
 ---
 title: KeptnEvaluationDefinition
-description: Define all workloads and checks associated with an application
+description: Define an evaluation query
 weight: 20
----
----
-
-title: KeptnEvaluationDefinition
-description: Define all evaluations associated with an application
-weight: 30
 ---
 
 A `KeptnEvaluationDefinition` defines evaluation tasks
@@ -20,7 +14,7 @@ as part of pre- and post-analysis phases of a workload or application.
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
-  name: pre-deployment-hello
+  name: <evaluation-name>
 spec:
   objectives:
     - evaluationTarget: ">1"
@@ -39,9 +33,9 @@ spec:
 * **metadata**
   * **name** -- Unique name of this evaluation
     such as `pre-deploy-eval` or `post-deploy-resource-eval`.
-    * Must be an alphanumeric string and, by convention, is all lowercase.
-    * Can include the special characters `_`, `-`, (others?)
-    * Should not include spaces.
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
 
 * **spec**
   * **source** -- Name of the data provider being used for this evaluation.
@@ -57,10 +51,11 @@ spec:
     in your KLT cluster.
 
   * **objectives** -- define the evaluations to be performed.
-     Each objective is expressed as a `query` and an `evaluationTarget` value.
+     Each objective is expressed as a `keptnMetricRef`
+     and an `evaluationTarget` value.
 
     * **query** -- Any query that is supported by the data provider.
-    * **value** -- Desired value of the query,
+    * **evaluationTarget** -- Desired value of the query,
        expressed as an arithmatic formula,
        usually less than (`<`) or greater than (`>`)
 

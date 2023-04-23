@@ -14,7 +14,7 @@ used by [KeptnEvaluationDefinition](
 apiVersion: lifecycle.keptn.sh/v?alpha?
 kind: KeptnTaskDefinition
 metadata:
-  name: <task-name>
+  name: <provider-name>
 ```
 
 ## Fields
@@ -25,9 +25,9 @@ metadata:
    Must be set to `KeptnTaskDefinition`
 
 * **name** -- Unique name of this task.
-  * Must be an alphanumeric string and, by convention, is all lowercase.
-  * Can include the special characters `_`, `-`, (others?)
-  * Should not include spaces.
+  Names must comply with the
+  [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+  specification.
 
 ## Usage
 
@@ -39,7 +39,7 @@ metadata:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
+* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition.md)
 
 ## Differences between versions
 
@@ -49,4 +49,4 @@ The `KeptnEvaluationProvider` is deprecated in the v1alpha3 API version.
 
 ## See also
 
-* [KeptnEvaluationDefinition](evaluationdefinition)
+* [KeptnEvaluationDefinition](evaluationdefinition.md)

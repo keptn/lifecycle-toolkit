@@ -26,6 +26,7 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
+  Must be `v1alpha3` or later for this syntax.
 `
 * **kind** -- Resource type.
    Must be set to `KeptnEvaluationDefinition`
@@ -38,23 +39,14 @@ spec:
     specification.
 
 * **spec**
-  * **source** -- Name of the data provider being used for this evaluation.
-    The value of the `source` field must match
-    the string used for the `name` field
-    in the corresponding [KeptnEvaluationProvider](evaluationprovider.md) CRD.
-
-    Each `KeptnEvaluationDefinition` CRD can use only one data provider;
-    if you are using multiple data provider, you must create
-    `KeptnEvaluationProvider` and `KeptnEvaluationDefinition` CRDs for each.
-
-    Currently, you can only access one occurrance of each type of data provider
-    in your KLT cluster.
 
   * **objectives** -- define the evaluations to be performed.
      Each objective is expressed as a `keptnMetricRef`
      and an `evaluationTarget` value.
 
-    * **query** -- Any query that is supported by the data provider.
+    * **KeptnMericRef** -- A reference to the
+      [KeptnMetric](metric) object that contains the value,
+      identified by `name` and `namespace`
     * **evaluationTarget** -- Desired value of the query,
        expressed as an arithmatic formula,
        usually less than (`<`) or greater than (`>`)
@@ -70,14 +62,14 @@ API Reference:
 ## Differences between versions
 
 In the `v1alpha1` and `v1alpha2` API versions,
-`KeptnEvaluationDefinition` references the `KeptnEvaluationProvider` CRD
+`KeptnEvaluationDefinition` referenced the `KeptnEvaluationProvider` CRD
 to identify the data source associated with this definition
 and itself contained the queries
 that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
@@ -93,11 +85,10 @@ spec:
 ```
 
 Beginning with `v1alpha3` API version,
-`KeptnEvaluationDefinition` references the data source defined
-in the [KeptnMetricsProvider](metricsprovider.md)
-and the queries are specified in the corresponding
-[KeptnMetric](metric.md) CRD
-although the `evaluationTarget` is defined in this CRD.
+`KeptnEvaluationDefinition` references a `keptnMetricRef`
+that points to a [KeptnMetric](metric.md) CRD,
+that defines the data source, the query and the namespace to use.
+The `KeptnEvaluationDefinition` merely specifies the evaluation target.
 
 ## See also
 

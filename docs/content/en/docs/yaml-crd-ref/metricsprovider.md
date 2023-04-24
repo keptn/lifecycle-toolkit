@@ -10,10 +10,10 @@ that is used by the [KeptnMetric](metric.md)
 and [KeptnEvaluationDefinition](evaluationdefinition.md) CRDs.
 One Keptn application can perform evaluations and metrics
 from more than one data provider
-and, beginning in V0.8.0,
-more than one instance of each data provider.
+and, beginning with the v1alpha3 API version,
+can use more than one instance of each data provider.
 To implement this, create a `KeptnMetricsProvider` CRD
-for each instance of each data provider being used
+for each instance of each data provider being used,
 then reference the appropriate provider
 for each evaluation or metric definition.
 
@@ -47,6 +47,13 @@ spec:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
+
+    For example, you might define `dev-prometheus`
+    for the Prometheus instance that monitors the development deployment,
+    and `qa-prometheus` for the Prometheus instance
+    that monitors the Prometheus instance that monitors the QA deployment,
+    and `prod-dynatrace` for the Dynatrace instance
+    that monitors the production deployment.
 
   * **namespace** -- Namespace where this provider is used.
 

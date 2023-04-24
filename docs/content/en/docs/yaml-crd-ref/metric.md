@@ -10,8 +10,6 @@ facilitates the reusability of this data across multiple components
 and allows using multiple observability platforms
 for different metrics at the same time.
 
-A `KeptnMetric` looks like the following:
-
 ## Yaml Synopsis
 
 ```yaml
@@ -32,14 +30,14 @@ spec:
 * **apiVersion** -- API version being used.
 `
 * **kind** -- Resource type.
-   Must be set to `KeptnTaskDefinition`
+   Must be set to `KeptnMetric`
 
 * **metadata**
   * **name** -- Unique name of this metric.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-  * **namespace** -- namespace of the application using this metric
+  * **namespace** -- Namespace of the application using this metric
 
 * **spec**
   * **provider.name** --

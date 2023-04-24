@@ -18,8 +18,9 @@ multiple instances of any observability platform.
 Keptn Metrics are also application aware
 so report data for all workflows that are included in the Keptn application.
 
-This data can be presented on Grafana
-or any standard dashboard application that you configure.
+This data can be displayed on Grafana
+or another standard dashboard application that you configure
+or can be retrieved using standard Kubernetes commands.
 
 [More introductory info to come]
 

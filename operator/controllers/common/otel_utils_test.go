@@ -34,6 +34,8 @@ func TestGetOTelTracerProviderOptions(t *testing.T) {
 		}
 	}()
 
+	defer s.Stop()
+
 	type args struct {
 		oTelCollectorUrl string
 	}
@@ -239,4 +241,93 @@ func Test_otelConfig_GetTracer(t *testing.T) {
 	otelConfig.cleanTracers()
 
 	require.Empty(t, otelConfig.tracers)
+}
+
+func Test_otelConfig_InitOtelCollector_ReInitWithSameURL(t *testing.T) {
+
+	listener, err := net.Listen("tcp", ":9000")
+	if err != nil {
+		panic(err)
+	}
+
+	s := grpc.NewServer()
+	go func() {
+		err := s.Serve(listener)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	defer s.Stop()
+
+	o := GetOtelInstance()
+	err = o.InitOtelCollector("localhost:9000")
+
+	require.Nil(t, err)
+
+	require.Equal(t, "localhost:9000", o.lastAppliedCollectorURL)
+
+	tracer := o.GetTracer("my-tracer")
+	require.NotNil(t, tracer)
+	require.Len(t, o.tracers, 1)
+
+	// init with the same URL again
+	err = o.InitOtelCollector("localhost:9000")
+
+	require.Nil(t, err)
+
+	// in this case the init function should NOT have changed any internal state,
+	// i.e. the tracers should NOT have been cleaned up
+	require.Len(t, o.tracers, 1)
+}
+
+func Test_otelConfig_InitOtelCollector_ReInitWithDifferentURL(t *testing.T) {
+
+	listener, err := net.Listen("tcp", ":9000")
+	if err != nil {
+		panic(err)
+	}
+
+	listener2, err := net.Listen("tcp", ":9001")
+	if err != nil {
+		panic(err)
+	}
+
+	s := grpc.NewServer()
+	go func() {
+		err := s.Serve(listener)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	s2 := grpc.NewServer()
+	go func() {
+		err := s2.Serve(listener2)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	defer s.Stop()
+
+	o := GetOtelInstance()
+	err = o.InitOtelCollector("localhost:9000")
+
+	require.Nil(t, err)
+
+	require.Equal(t, "localhost:9000", o.lastAppliedCollectorURL)
+
+	tracer := o.GetTracer("my-tracer")
+	require.NotNil(t, tracer)
+	require.Len(t, o.tracers, 1)
+
+	// init with a different URL
+	err = o.InitOtelCollector("localhost:9001")
+
+	require.Nil(t, err)
+
+	// in this case the init function should have changed any internal state,
+	// i.e. the tracers should have been cleaned up
+	require.Empty(t, o.tracers)
 }

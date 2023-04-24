@@ -50,6 +50,9 @@ spec:
     * **evaluationTarget** -- Desired value of the query,
        expressed as an arithmatic formula,
        usually less than (`<`) or greater than (`>`)
+       This is used to define success or failure criteria
+       for the referenced `KeptnMetric` in order to pass or fail
+       the pre- and post-evaluation stages
 
 ## Usage
 

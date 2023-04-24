@@ -1,13 +1,13 @@
 
 ## Deployment Check Orchestration
 
-### orchestrating deployment checks as part of scheduler
+### Orchestrating deployment checks
 
 To reduce complexity of custom checks use Keptn to:
 
 * Pre-Deploy:
-  * validate external dependenicies
-  * confiorm images are scanned
+  * Validate external dependencies
+  * Confirm images are scanned
   * ...
 * Post-Deploy:
   * Execute tests

@@ -1,9 +1,9 @@
 
 ## Data Access
 
-### standardizing access for all Observability Data for K8s
+### Standardizing access for all Observability Data for K8s
 
-To drive decisions based on metrics use Keptn Metrics Server to:
+The Keptn Metrics Server provides:
 
 * Define Keptn Metrics once for Dynatrace, DataDog, AWS, Azure, GCP, ...
 * Access all those metrics via Prometheus or K8s Metric API

@@ -632,6 +632,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 
 _Appears in:_
 - [KeptnAppSpec](#keptnappspec)
+- [KeptnAppVersionSpec](#keptnappversionspec)
 - [WorkloadStatus](#workloadstatus)
 
 | Field | Description |
@@ -686,6 +687,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
 
 | Field | Description |

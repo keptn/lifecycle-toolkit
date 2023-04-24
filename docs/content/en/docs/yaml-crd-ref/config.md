@@ -4,7 +4,7 @@ description: Define configuration values
 weight: 20
 ---
 
-`KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit.
+`KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit
 
 ## Yaml Synopsis
 
@@ -27,18 +27,18 @@ spec:
 
 * **metadata**
   * **name** -- Unique name of this set of configurations.
-    * Must be an alphanumeric string and, by convention, is all lowercase.
-    * Can include the special characters `_`, `-`, (others?)
-    * Should not include spaces.
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
 
 * **spec**
   * **oTelCollectorUrl** -- The URL and port of the OpenTelemtry collector
   * **keptnAppCreationRequestTimeoutSeconds** --
-     interval in which automatic app discovery searches for workloads
-     to put into the same auto-generated [KeptnApp](app.md).
+    interval in which automatic app discovery searches for workloads
+    to put into the same auto-generated [KeptnApp](app.md).
 
-    Both values can be defined in one CRD
-    or you can create separate `KeptnApp` CRDs for each one.
+Each [KeptnApp](app.md) should have a single `KeptnConfig` CRD
+that describes all configurations for that application.
 
 ## Usage
 
@@ -46,27 +46,15 @@ spec:
 
 ### oTel example
 
-This example specifies the URL of the OpenTelemetry collector:
-
-```yaml
-apiVersion: options.keptn.sh/v1alpha2
-kind: KeptnConfig
-metadata:
-  name: otel-url
-spec:
-  OTelCollectorUrl: 'otel-collector:4317'
-```
-
-### App collection example
-
-This example specifies the interval for
+This example specifies the URL of the OpenTelemetry collector
+and the interval for
 running the automatic app discovery:
 
 ```yaml
 apiVersion: options.keptn.sh/v1alpha2
 kind: KeptnConfig
 metadata:
-  name: app-collection-timeout
+  name: otel-url
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 40

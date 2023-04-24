@@ -36,7 +36,7 @@ type CertificateReconcilerConfig struct {
 	CancelMgrFunc  context.CancelFunc
 }
 
-func NewKeptnWebhookCertificateReconciler(config CertificateReconcilerConfig) *KeptnWebhookCertificateReconciler {
+func NewReconciler(config CertificateReconcilerConfig) *KeptnWebhookCertificateReconciler {
 	return &KeptnWebhookCertificateReconciler{
 		Client:            config.Client,
 		Scheme:            config.Scheme,
@@ -76,17 +76,17 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	r.Log.Info("reconciling webhook certificates",
 		"namespace", request.Namespace, "name", request.Name)
 
-	mutatingWebhookConfigurations, err := r.getMutatingWebhookConfigurations(ctx)
+	mutatingWebhookConfigurations, err := r.ResourceRetriever.GetMutatingWebhooks(ctx)
 	if err != nil {
 		r.Log.Error(err, "could not find mutating webhook configuration")
 	}
 
-	validatingWebhookConfigurations, err := r.getValidatingWebhookConfigurations(ctx)
+	validatingWebhookConfigurations, err := r.ResourceRetriever.GetValidatingWebhooks(ctx)
 	if err != nil {
 		r.Log.Error(err, "could not find validating webhook configuration")
 	}
 
-	crds, err := r.getCRDConfigurations(ctx)
+	crds, err := r.ResourceRetriever.GetCRDs(ctx)
 	if err != nil {
 		r.Log.Error(err, "could not find CRDs")
 	}
@@ -183,26 +183,6 @@ func (r *KeptnWebhookCertificateReconciler) cancelMgr() {
 	}
 }
 
-func (r *KeptnWebhookCertificateReconciler) getMutatingWebhookConfigurations(ctx context.Context) (
-	*admissionregistrationv1.MutatingWebhookConfigurationList, error) {
-	var mutatingWebhooks admissionregistrationv1.MutatingWebhookConfigurationList
-
-	if err := r.Client.List(ctx, &mutatingWebhooks, client.MatchingLabels(r.MatchLabels)); err != nil {
-		return nil, err
-	}
-	return &mutatingWebhooks, nil
-}
-
-func (r *KeptnWebhookCertificateReconciler) getValidatingWebhookConfigurations(ctx context.Context) (
-	*admissionregistrationv1.ValidatingWebhookConfigurationList, error) {
-	var validatingWebhooks admissionregistrationv1.ValidatingWebhookConfigurationList
-
-	if err := r.Client.List(ctx, &validatingWebhooks, client.MatchingLabels(r.MatchLabels)); err != nil {
-		return nil, err
-	}
-	return &validatingWebhooks, nil
-}
-
 func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(ctx context.Context, bundle []byte,
 	webhookClientConfigs []*admissionregistrationv1.WebhookClientConfig, webhookConfig client.Object) error {
 	if webhookConfig == nil || reflect.ValueOf(webhookConfig).IsNil() {
@@ -217,17 +197,6 @@ func (r *KeptnWebhookCertificateReconciler) updateClientConfigurations(ctx conte
 		return err
 	}
 	return nil
-}
-
-func (r *KeptnWebhookCertificateReconciler) getCRDConfigurations(ctx context.Context) (
-	*apiv1.CustomResourceDefinitionList, error) {
-	var crds apiv1.CustomResourceDefinitionList
-	opt := client.MatchingLabels(r.MatchLabels)
-	if err := r.Client.List(ctx, &crds, opt); err != nil {
-		return nil, err
-	}
-
-	return &crds, nil
 }
 
 func (r *KeptnWebhookCertificateReconciler) updateCRDsConfiguration(ctx context.Context, crds *apiv1.CustomResourceDefinitionList, bundle []byte) error {

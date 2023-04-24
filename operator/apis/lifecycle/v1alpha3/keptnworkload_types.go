@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -116,4 +117,8 @@ func (w KeptnWorkload) GetEventAnnotations() map[string]string {
 		"workloadName":    w.Name,
 		"workloadVersion": w.Spec.Version,
 	}
+}
+
+func (w KeptnWorkload) GetNameWithoutAppPrefix() string {
+	return strings.TrimPrefix(w.Name, fmt.Sprintf("%s-", w.Spec.AppName))
 }

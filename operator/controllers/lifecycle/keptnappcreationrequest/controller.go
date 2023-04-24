@@ -180,7 +180,7 @@ func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads *life
 	updated := false
 	for _, workload := range workloads.Items {
 		foundWorkload := false
-		workloadName := strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", keptnApp.Name))
+		workloadName := workload.GetNameWithoutAppPrefix()
 		for index, appWorkload := range keptnApp.Spec.Workloads {
 			if appWorkload.Name == workloadName {
 				// make sure the version matches the current version of the workload
@@ -210,8 +210,7 @@ func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads *lifecycl
 	for index, appWorkload := range keptnApp.Spec.Workloads {
 		foundWorkload := false
 		for _, workload := range workloads.Items {
-			workloadName := strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", keptnApp.Name))
-			if appWorkload.Name == workloadName {
+			if appWorkload.Name == workload.GetNameWithoutAppPrefix() {
 				foundWorkload = true
 				break
 			}

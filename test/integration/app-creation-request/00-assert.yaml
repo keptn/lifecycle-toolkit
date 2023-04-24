@@ -1,6 +1,12 @@
+# Check for the KeptnApp to be created - the KeptnAppCreateionRequest will not be here anymore as it is
+# deleted after reconciliation
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnAppCreationRequest
+kind: KeptnApp
 metadata:
-  name: my-kacr
+  name: my-app
+  labels:
+    app.kubernetes.io/managed-by: "klt"
 spec:
-  appName: my-app
+  workloads:
+    - name: my-workload
+      version: 1.0.0

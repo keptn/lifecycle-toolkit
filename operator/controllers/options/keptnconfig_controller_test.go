@@ -198,9 +198,6 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 				Client: nil,
 				Scheme: nil,
 				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
-				LastAppliedSpec: &optionsv1alpha1.KeptnConfigSpec{
-					OTelCollectorUrl: "some-url",
-				},
 			},
 			args: args{
 				config: &optionsv1alpha1.KeptnConfig{
@@ -208,7 +205,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 						Name: "test-config",
 					},
 					Spec: optionsv1alpha1.KeptnConfigSpec{
-						OTelCollectorUrl: "some-url",
+						OTelCollectorUrl: "",
 					},
 				},
 			},

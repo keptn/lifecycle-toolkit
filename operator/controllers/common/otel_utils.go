@@ -39,6 +39,8 @@ type otelConfig struct {
 	TracerProvider *trace.TracerProvider
 	OtelExporter   *trace.SpanExporter
 
+	lastAppliedCollectorURL string
+
 	mtx     sync.RWMutex
 	tracers map[string]ITracer
 }
@@ -58,6 +60,9 @@ func GetOtelInstance() *otelConfig {
 }
 
 func (o *otelConfig) InitOtelCollector(otelCollectorUrl string) error {
+	if o.lastAppliedCollectorURL == otelCollectorUrl {
+		return nil
+	}
 	tpOptions, otelExporter, err := GetOTelTracerProviderOptions(otelCollectorUrl)
 	if err != nil {
 		return err
@@ -68,6 +73,7 @@ func (o *otelConfig) InitOtelCollector(otelCollectorUrl string) error {
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	o.OtelExporter = &otelExporter
 	o.cleanTracers()
+	o.lastAppliedCollectorURL = otelCollectorUrl
 	logger.Info("Successfully initialized OTel collector")
 	return nil
 }

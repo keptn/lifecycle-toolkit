@@ -309,13 +309,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `version` _string_ |  |
-| `revision` _integer_ |  |
-| `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  |
-| `preDeploymentTasks` _string array_ |  |
-| `postDeploymentTasks` _string array_ |  |
-| `preDeploymentEvaluations` _string array_ |  |
-| `postDeploymentEvaluations` _string array_ |  |
+| `KeptnAppSpec` _[KeptnAppSpec](#keptnappspec)_ |  |
 | `appName` _string_ |  |
 | `previousVersion` _string_ |  |
 | `traceId` _object (keys:string, values:string)_ |  |
@@ -665,13 +659,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `app` _string_ |  |
-| `version` _string_ |  |
-| `preDeploymentTasks` _string array_ |  |
-| `postDeploymentTasks` _string array_ |  |
-| `preDeploymentEvaluations` _string array_ |  |
-| `postDeploymentEvaluations` _string array_ |  |
-| `resourceReference` _[ResourceReference](#resourcereference)_ |  |
+| `KeptnWorkloadSpec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ |  |
 | `workloadName` _string_ |  |
 | `previousVersion` _string_ |  |
 | `traceId` _object (keys:string, values:string)_ |  |

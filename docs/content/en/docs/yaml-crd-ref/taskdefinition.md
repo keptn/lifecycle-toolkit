@@ -30,7 +30,8 @@ spec:
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- Resource type.  Must be set to `KeptnTaskDefinition`
+* **kind** -- Resource type.
+   Must be set to `KeptnTaskDefinition`
 
 * **name** -- Unique name of this task.
   * Must be an alphanumeric string and, by convention, is all lowercase.
@@ -67,6 +68,9 @@ spec:
           httpRef:
             url: "https://www.example.com/yourscript.js"
     ```
+
+    Note that the file referenced is actually JavaScript,
+    which is essentially the same as a Deno script.
 
   * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
     Populate this field with the value of the `name` field
@@ -238,7 +242,7 @@ metadata:
 spec:
   function:
     httpRef:
-      url: <url>
+      url: "https://www.example.com/yourscript.js"
 ```
 
 For another example, see the

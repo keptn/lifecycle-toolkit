@@ -207,20 +207,21 @@ func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads *life
 
 func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads *lifecycle.KeptnWorkloadList, keptnApp *lifecycle.KeptnApp) bool {
 	updated := false
+	updatedWorkloads := []lifecycle.KeptnWorkloadRef{}
 	for index, appWorkload := range keptnApp.Spec.Workloads {
 		foundWorkload := false
 		for _, workload := range workloads.Items {
 			if appWorkload.Name == workload.GetNameWithoutAppPrefix() {
-				foundWorkload = true
+				updatedWorkloads = append(updatedWorkloads, keptnApp.Spec.Workloads[index])
 				break
 			}
 		}
 
 		if !foundWorkload {
-			keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads[:index], keptnApp.Spec.Workloads[index+1:]...)
 			updated = true
 		}
 	}
+	keptnApp.Spec.Workloads = updatedWorkloads
 	return updated
 }
 

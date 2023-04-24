@@ -1,9 +1,10 @@
 package v1alpha3
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestKeptnWorkload_GetNameWithoutAppPrefix(t *testing.T) {

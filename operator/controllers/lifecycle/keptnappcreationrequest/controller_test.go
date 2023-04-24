@@ -2,6 +2,7 @@ package keptnappcreationrequest
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -589,4 +590,13 @@ func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler,
 		},
 	}
 	return r, fakeClient, theClock
+}
+
+func TestKeptnAppCreationRequestReconciler_cleanupWorkloads(t *testing.T) {
+	mySlice := []string{"a", "b", "c", "d"}
+
+	res := append(mySlice[:2], mySlice[2+1:]...)
+
+	fmt.Println(cap(mySlice))
+	fmt.Println(cap(res))
 }

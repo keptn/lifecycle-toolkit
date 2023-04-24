@@ -4,7 +4,7 @@ description: Define configuration values
 weight: 20
 ---
 
-`KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit
+`KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit.
 
 ## Yaml Synopsis
 
@@ -32,13 +32,13 @@ spec:
     specification.
 
 * **spec**
-  * **oTelCollectorUrl** -- The URL and port of the OpenTelemtry collector
+  * **oTelCollectorUrl** -- The URL and port of the OpenTelemetry collector
   * **keptnAppCreationRequestTimeoutSeconds** --
     interval in which automatic app discovery searches for workloads
     to put into the same auto-generated [KeptnApp](app.md).
 
-Each [KeptnApp](app.md) should have a single `KeptnConfig` CRD
-that describes all configurations for that application.
+Each cluster should have a single `KeptnConfig` CRD
+that describes all configurations for that cluster.
 
 ## Usage
 
@@ -54,7 +54,7 @@ running the automatic app discovery:
 apiVersion: options.keptn.sh/v1alpha2
 kind: KeptnConfig
 metadata:
-  name: otel-url
+  name: klt-config
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 40
@@ -65,7 +65,7 @@ spec:
 API Reference:
 
 * [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
-* [KeptApp](app.md)
+* [KeptnApp](app.md)
 
 ## Differences between versions
 

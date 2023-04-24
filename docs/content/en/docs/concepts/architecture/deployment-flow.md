@@ -5,15 +5,22 @@ description: Understand the execution flow of a deployment
 weight: 25
 ---
 
-A deployment is started by the following command:
+A Kubernetes deployment is started by the following command:
 
 ```bash
 kubectl apply -f deployment.yaml
 ```
 
-This executes a series of
-Kubernetes [events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/).
-Events are resources such as Deployments or Pods.
+This begins a deployment by triggering the kubernetes pod scheduler.
+
+During this process, events are omitted.
+
+The Keptn Lifecycle Toolkit implements a
+[Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
+that executes a series of Kubernetes
+[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/).
+which are resources such as Deployments or Pods.
+The KLT permit scheduler blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 A user can view these events by executing:
 
@@ -21,14 +28,11 @@ A user can view these events by executing:
 kubectl get events -n <namespace> . 
 ```
 
-The `kubectl apply` occurs at beginning of the deployment
+The `kubectl apply` occurs at the beginning of the deployment
 but the created pods are blocked and in pending state
 until all the required pre-deployment tasks/evaluation
 defined on either the KeptnApp or Workload level pass.
 Only then are the pods bound to a node and deployed.
-
-The Keptn Lifecycle Toolkit implements a [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
-that blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 ## Summary of deployment flow
 

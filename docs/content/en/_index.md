@@ -42,6 +42,85 @@ cascade:
 {{% blocks/lead color="white" %}}
 [![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
 {{% /blocks/lead %}}
+
+{{% blocks/lead color="primary" %}}
+## Use Cases
+We extend the K8s Pod Scheduler with following Use Cases:
+
+{{% /blocks/lead %}}
+
+{{< blocks/section color="dark" >}}
+{{% blocks/feature icon="fa-lightbulb" title="Deployment Observability" %}}
+making ANY K8s Deployment OBSERVABLE
+
+[read more](#deployment-observability)
+
+{{% /blocks/feature %}}
+{{% blocks/feature icon="fa-lightbulb" title="Deployment Data Access" %}}
+standardizing access for all Observability Data for K8s
+
+[read more](#data-access)
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="fa-lightbulb" title="Orchestrate Deployment Checks" %}}
+orchestrating deployment checks as part of scheduler
+
+[read more](#deployment-check-orchestration)
+
+{{% /blocks/feature %}}
+
+{{< /blocks/section >}}
+
+
+
+{{% blocks/lead color="gray" title="" %}}
+## Deployment Observability
+### making ANY K8s Deployment OBSERVABLE
+<div style="text-align: left">
+
+If you deploy with ArcoCD, Flux, GitLab, kubectl ... we provide you:
+
+* Automated **App-Aware DORA** metrics (OTel Metrics)
+* Troubleshoort failed deployments  (OTel Traces)
+* Trace deployments from git to cloud  (traces accross stages)
+</div>
+{{% /blocks/lead %}}
+
+
+{{% blocks/lead color="white" %}}
+## Data Access
+### standardizing access for all Observability Data for K8s
+<div style="text-align: left"> 
+
+To drive decisions based on metrics use Keptn Metrics Server to:
+
+* Define Keptn Metrics once for Dynatrace, DataDog, AWS, Azure, GCP, ...
+* Access all those metrics via Prometheus or K8s Metric API
+* Eliminate the need of multiple plugins for Argo Roolouts, KEDA, HPA, ...
+</div>
+{{% /blocks/lead %}}
+
+{{% blocks/lead %}}
+## Deployment Check Orchestration
+### orchestrating deployment checks as part of scheduler
+<div style="text-align: left"> 
+
+To reduce complexity of custom checks use Keptn to:
+
+* Pre-Deploy:
+  * validate external dependenicies
+  * confiorm images are scanned
+  * ...
+* Post-Deploy:
+  * Execute tests
+  * Notify Stakeholders
+  * Promote to next stage
+  * ...
+* Automatically validate against your SLO (Service Level Objectives)
+
+</div>
+{{% /blocks/lead %}}
+
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
 See Keptn in Action

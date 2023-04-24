@@ -25,7 +25,7 @@ cascade:
         weight: 20
 ---
 
-<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable no-inline-html -->
 <!-- markdownlint-disable-next-line line-length -->
 {{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
 <div class="mx-auto">
@@ -37,19 +37,17 @@ cascade:
  </a>
 </div>
 {{< /blocks/cover >}}
-<!-- markdownlint-enable MD033 -->
-
-{{% blocks/lead color="white" %}}
-[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
-{{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
 
 {{% blocks/lead color="primary" %}}
+
 ## Use Cases
+
 We extend the K8s Pod Scheduler with following Use Cases:
 
 {{% /blocks/lead %}}
 
-{{< blocks/section color="dark" >}}
+{{< blocks/section color="gray" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Deployment Observability" %}}
 making ANY K8s Deployment OBSERVABLE
 
@@ -71,39 +69,63 @@ orchestrating deployment checks as part of scheduler
 
 {{< /blocks/section >}}
 
+{{% blocks/lead color="blue" %}}
+[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+{{% /blocks/lead %}}
 
+<!-- markdownlint-disable no-inline-html -->
+{{% blocks/lead color="primary" title="" %}}
 
-{{% blocks/lead color="gray" title="" %}}
 ## Deployment Observability
+
 ### making ANY K8s Deployment OBSERVABLE
+
 <div style="text-align: left">
 
-If you deploy with ArcoCD, Flux, GitLab, kubectl ... we provide you:
+If you deploy with ArcoCD, Flux, GitLab, kubectl ...
+we provide you:
 
 * Automated **App-Aware DORA** metrics (OTel Metrics)
 * Troubleshoort failed deployments  (OTel Traces)
 * Trace deployments from git to cloud  (traces accross stages)
+
 </div>
+<a class="btn -bg-green" href="./docs/quickstart/">
+    Get Started!
+</a>
 {{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
 
-
+<!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="white" %}}
+
 ## Data Access
+
 ### standardizing access for all Observability Data for K8s
-<div style="text-align: left"> 
+
+<div style="text-align: left">
 
 To drive decisions based on metrics use Keptn Metrics Server to:
 
 * Define Keptn Metrics once for Dynatrace, DataDog, AWS, Azure, GCP, ...
 * Access all those metrics via Prometheus or K8s Metric API
 * Eliminate the need of multiple plugins for Argo Roolouts, KEDA, HPA, ...
-</div>
-{{% /blocks/lead %}}
 
-{{% blocks/lead %}}
+</div>
+<a class="btn -bg-green" href="./docs/quickstart/">
+    Get Started!
+</a>
+{{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
+
+<!-- markdownlint-disable no-inline-html -->
+{{% blocks/lead color="primary" %}}
+
 ## Deployment Check Orchestration
+
 ### orchestrating deployment checks as part of scheduler
-<div style="text-align: left"> 
+
+<div style="text-align: left">
 
 To reduce complexity of custom checks use Keptn to:
 
@@ -119,7 +141,11 @@ To reduce complexity of custom checks use Keptn to:
 * Automatically validate against your SLO (Service Level Objectives)
 
 </div>
+<a class="btn -bg-green" href="./docs/quickstart/">
+    Get Started!
+</a>
 {{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
 
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}

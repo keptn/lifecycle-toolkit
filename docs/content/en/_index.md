@@ -76,21 +76,12 @@ orchestrating deployment checks as part of scheduler
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="light"%}}
 <div class="mx-auto">
-<div class="whykeptn d-flex flex-row flex-wrap" >
-<div>
-<h2>Deployment Observability</h2>
-
-<h3>making ANY K8s Deployment OBSERVABLE</h3>
-<div>
-
-If you deploy with ArcoCD, Flux, GitLab, kubectl ...
-we provide you:
-
-* Automated **App-Aware DORA** metrics (OTel Metrics)
-* Troubleshoort failed deployments  (OTel Traces)
-* Trace deployments from git to cloud  (traces accross stages)
-
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left">
+{{% readfile "_index-observability-left.md" %}}
 </div>
+<div class="whykeptn whykeptn-right w-25">
+{{% readfile "_index-observability-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">
@@ -104,54 +95,30 @@ we provide you:
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="white" %}}
 <div class="mx-auto">
-<div class="whykeptn d-flex flex-row flex-wrap" >
-<div>
-<h2>Data Access</h2>
-
-<h3>standardizing access for all Observability Data for K8s</h3>
-<div>
-
-To drive decisions based on metrics use Keptn Metrics Server to:
-
-* Define Keptn Metrics once for Dynatrace, DataDog, AWS, Azure, GCP, ...
-* Access all those metrics via Prometheus or K8s Metric API
-* Eliminate the need of multiple plugins for Argo Roolouts, KEDA, HPA, ...
-
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left w-25">
+{{% readfile "_index-data-access-left.md" %}}
 </div>
+<div class="whykeptn whykeptn-right ">
+{{% readfile "_index-data-access-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">
     Get Started!
 </a>
 </div>
-
 {{% /blocks/lead %}}
 <!-- markdownlint-enable no-inline-html -->
 
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="light" %}}
 <div class="mx-auto">
-<div class="whykeptn d-flex flex-row flex-wrap" >
-<div>
-<h2>Deployment Check Orchestration</h2>
-
-<h3>orchestrating deployment checks as part of scheduler</h3>
-<div>
-
-To reduce complexity of custom checks use Keptn to:
-
-* Pre-Deploy:
-  * validate external dependenicies
-  * confiorm images are scanned
-  * ...
-* Post-Deploy:
-  * Execute tests
-  * Notify Stakeholders
-  * Promote to next stage
-  * ...
-* Automatically validate against your SLO (Service Level Objectives)
-
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left">
+{{% readfile "_index-deployment-checks-left.md" %}}
 </div>
+<div class="whykeptn whykeptn-right w-25">
+{{% readfile "_index-deployment-checks-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">

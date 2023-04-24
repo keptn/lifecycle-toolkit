@@ -43,7 +43,7 @@ cascade:
 
 ## Use Cases
 
-We extend the K8s APIs with following Use Cases:
+We extend the K8s APIs with the following Use Cases:
 
 {{% /blocks/lead %}}
 

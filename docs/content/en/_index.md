@@ -6,10 +6,10 @@ title: Home
 <!-- markdownlint-disable-next-line line-length -->
 {{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
 <div class="mx-auto">
- <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
+ <a class="btn btn-lg -bg-green mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
-    <a class="btn btn-lg btn-primary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
+    <a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
   Releases <i class="fab fa-github ml-2 "></i>
  </a>
 </div>
@@ -20,7 +20,7 @@ title: Home
 
 ## Use Cases
 
-We extend the K8s Pod Scheduler with following Use Cases:
+We extend the K8s APIs with following Use Cases:
 
 {{% /blocks/lead %}}
 
@@ -51,13 +51,14 @@ orchestrating deployment checks as part of scheduler
 {{% /blocks/lead %}}
 
 <!-- markdownlint-disable no-inline-html -->
-{{% blocks/lead color="primary" title="" %}}
+{{% blocks/lead color="light"%}}
+<div class="mx-auto">
+<div class="whykeptn d-flex flex-row flex-wrap" >
+<div>
+<h2>Deployment Observability</h2>
 
-## Deployment Observability
-
-### making ANY K8s Deployment OBSERVABLE
-
-<div style="text-align: left">
+<h3>making ANY K8s Deployment OBSERVABLE</h3>
+<div>
 
 If you deploy with ArcoCD, Flux, GitLab, kubectl ...
 we provide you:
@@ -67,20 +68,25 @@ we provide you:
 * Trace deployments from git to cloud  (traces accross stages)
 
 </div>
-<a class="btn -bg-green" href="./docs/quickstart/">
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
     Get Started!
 </a>
+</div>
+
 {{% /blocks/lead %}}
 <!-- markdownlint-enable no-inline-html -->
 
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="white" %}}
+<div class="mx-auto">
+<div class="whykeptn d-flex flex-row flex-wrap" >
+<div>
+<h2>Data Access</h2>
 
-## Data Access
-
-### standardizing access for all Observability Data for K8s
-
-<div style="text-align: left">
+<h3>standardizing access for all Observability Data for K8s</h3>
+<div>
 
 To drive decisions based on metrics use Keptn Metrics Server to:
 
@@ -89,20 +95,25 @@ To drive decisions based on metrics use Keptn Metrics Server to:
 * Eliminate the need of multiple plugins for Argo Roolouts, KEDA, HPA, ...
 
 </div>
-<a class="btn -bg-green" href="./docs/quickstart/">
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
     Get Started!
 </a>
+</div>
+
 {{% /blocks/lead %}}
 <!-- markdownlint-enable no-inline-html -->
 
 <!-- markdownlint-disable no-inline-html -->
-{{% blocks/lead color="primary" %}}
+{{% blocks/lead color="light" %}}
+<div class="mx-auto">
+<div class="whykeptn d-flex flex-row flex-wrap" >
+<div>
+<h2>Deployment Check Orchestration</h2>
 
-## Deployment Check Orchestration
-
-### orchestrating deployment checks as part of scheduler
-
-<div style="text-align: left">
+<h3>orchestrating deployment checks as part of scheduler</h3>
+<div>
 
 To reduce complexity of custom checks use Keptn to:
 
@@ -118,9 +129,13 @@ To reduce complexity of custom checks use Keptn to:
 * Automatically validate against your SLO (Service Level Objectives)
 
 </div>
-<a class="btn -bg-green" href="./docs/quickstart/">
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
     Get Started!
 </a>
+</div>
+
 {{% /blocks/lead %}}
 <!-- markdownlint-enable no-inline-html -->
 

@@ -39,9 +39,9 @@ spec:
 
 * **metadata**
   * **name** -- Unique name of this application.
-    * Must be an alphanumeric string and, by convention, is all lowercase
-    * Can include the special characters `_`, `-`, (others?)
-    * Should not include spaces
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
 
 * **spec**
   * **version** -- version of the Keptn application.

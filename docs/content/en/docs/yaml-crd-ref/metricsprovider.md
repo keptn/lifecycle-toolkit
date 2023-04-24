@@ -90,7 +90,7 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
+* [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
 
 ## Differences between versions
 

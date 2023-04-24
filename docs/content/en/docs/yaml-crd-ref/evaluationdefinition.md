@@ -45,7 +45,7 @@ spec:
      and an `evaluationTarget` value.
 
     * **KeptnMericRef** -- A reference to the
-      [KeptnMetric](metric) object that contains the value,
+      [KeptnMetric](metric.md) object that contains the value,
       identified by `name` and `namespace`
     * **evaluationTarget** -- Desired value of the query,
        expressed as an arithmatic formula,

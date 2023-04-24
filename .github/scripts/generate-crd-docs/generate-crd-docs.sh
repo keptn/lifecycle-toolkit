@@ -15,6 +15,7 @@ METRICS_API_ROOT='metrics-operator/api/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'
 RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
+PATH=$PATH:$(go env GOPATH)/bin
 
 echo "Checking if code generator tool is installed..."
 if ! test -s crd-ref-docs; then

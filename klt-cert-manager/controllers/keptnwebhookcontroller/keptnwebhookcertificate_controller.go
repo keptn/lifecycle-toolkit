@@ -20,6 +20,33 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+type ObservedObjects struct {
+	MutatingWebhooks          []string
+	ValidatingWebhooks        []string
+	CustomResourceDefinitions []string
+}
+
+type CertificateReconcilerConfig struct {
+	WatchResources *ObservedObjects
+	MatchLabels    labels.Set
+	Namespace      string
+	Log            logr.Logger
+	Client         client.Client
+	Scheme         *runtime.Scheme
+	CancelMgrFunc  context.CancelFunc
+}
+
+func NewKeptnWebhookCertificateReconciler(config CertificateReconcilerConfig) *KeptnWebhookCertificateReconciler {
+	return &KeptnWebhookCertificateReconciler{
+		Client:        config.Client,
+		Scheme:        config.Scheme,
+		CancelMgrFunc: config.CancelMgrFunc,
+		Log:           config.Log,
+		Namespace:     config.Namespace,
+		MatchLabels:   config.MatchLabels,
+	}
+}
+
 // KeptnWebhookCertificateReconciler reconciles a KeptnWebhookCertificate object
 type KeptnWebhookCertificateReconciler struct {
 	Client        client.Client

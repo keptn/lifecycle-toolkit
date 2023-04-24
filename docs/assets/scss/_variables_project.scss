@@ -12,7 +12,7 @@ $light: #c9e0f1;
 }
 
 
-.capability::before {
+.home::before {
   content: '';
   height: 128px;
   width: 170px;
@@ -20,22 +20,15 @@ $light: #c9e0f1;
   background-position: center;
 }
 
-.capability01::before {
-  background: url('/images/home/capabilities/capabilities-01.svg');
-}
-.capability02::before {
-  background: url('/images/home/capabilities/capabilities-02.svg');
-}
-.capability03::before {
+.homeorchestrate::before {
   background: url('/images/home/capabilities/capabilities-03.svg');
 }
-.capability04::before {
+.homeobservability::before {
   background: url('/images/home/capabilities/capabilities-04.svg');
 }
-.capability05::before {
-  background: url('/images/home/capabilities/capabilities-05.svg');
+.homedata::before {
+  background: url('/images/home/capabilities/capabilities-01.svg');
 }
-
 .td-overlay--dark::after {
   background-color: transparent !important;
 }

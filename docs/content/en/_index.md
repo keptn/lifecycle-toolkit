@@ -81,10 +81,10 @@ orchestrating deployment checks as part of scheduler
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left">
-{{% readfile "_index-observability-left.md" %}}
+{{% readfile "partials/_index-observability-left.md" %}}
 </div>
 <div class="whykeptn whykeptn-right w-25">
-{{% readfile "_index-observability-right.md" %}}
+{{% readfile "partials/_index-observability-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">
@@ -100,10 +100,10 @@ orchestrating deployment checks as part of scheduler
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left w-25">
-{{% readfile "_index-data-access-left.md" %}}
+{{% readfile "partials/_index-data-access-left.md" %}}
 </div>
 <div class="whykeptn whykeptn-right ">
-{{% readfile "_index-data-access-right.md" %}}
+{{% readfile "partials/_index-data-access-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">
@@ -118,10 +118,10 @@ orchestrating deployment checks as part of scheduler
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left">
-{{% readfile "_index-deployment-checks-left.md" %}}
+{{% readfile "partials/_index-deployment-checks-left.md" %}}
 </div>
 <div class="whykeptn whykeptn-right w-25">
-{{% readfile "_index-deployment-checks-right.md" %}}
+{{% readfile "partials/_index-deployment-checks-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">

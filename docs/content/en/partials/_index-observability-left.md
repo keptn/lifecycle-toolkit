@@ -1,4 +1,4 @@
-<!-- markdownlint-disable first-line-heading -->
+
 ## Deployment Observability
 
 ### making ANY K8s Deployment OBSERVABLE

@@ -27,8 +27,7 @@ until all the required pre-deployment tasks/evaluation
 defined on either the KeptnApp or Workload level pass.
 Only then are the pods bound to a node and deployed.
 
-The Keptn Lifecycle Toolkit has its own custom
-[scheduler](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+The Keptn Lifecycle Toolkit implements a [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
 that blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 ## Summary of deployment flow

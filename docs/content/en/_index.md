@@ -48,19 +48,19 @@ We extend the K8s APIs with following Use Cases:
 {{% /blocks/lead %}}
 
 {{< blocks/section color="gray" >}}
-{{% blocks/feature icon="fa-lightbulb" title="Deployment Observability" %}}
+{{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
 making ANY K8s Deployment OBSERVABLE
 
 [read more](#deployment-observability)
 
 {{% /blocks/feature %}}
-{{% blocks/feature icon="fa-lightbulb" title="Deployment Data Access" %}}
+{{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
 standardizing access for all Observability Data for K8s
 
 [read more](#data-access)
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fa-lightbulb" title="Orchestrate Deployment Checks" %}}
+{{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
 orchestrating deployment checks as part of scheduler
 
 [read more](#deployment-check-orchestration)

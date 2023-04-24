@@ -15,6 +15,20 @@ type IResourceRetriever interface {
 	GetCRDs(ctx context.Context) (*apiv1.CustomResourceDefinitionList, error)
 }
 
+func NewResourceRetriever(config CertificateReconcilerConfig) IResourceRetriever {
+	if config.WatchResources != nil {
+		return &ResourceNameRetriever{
+			Client:         config.Client,
+			WatchResources: *config.WatchResources,
+			Log:            config.Log,
+		}
+	}
+	return &LabelSelectorRetriever{
+		MatchLabels: config.MatchLabels,
+		Client:      config.Client,
+	}
+}
+
 type LabelSelectorRetriever struct {
 	MatchLabels labels.Set
 	Client      client.Client
@@ -56,7 +70,7 @@ type ResourceNameRetriever struct {
 
 func (r ResourceNameRetriever) GetMutatingWebhooks(ctx context.Context) (*admissionregistrationv1.MutatingWebhookConfigurationList, error) {
 	result := &admissionregistrationv1.MutatingWebhookConfigurationList{
-		Items: make([]admissionregistrationv1.MutatingWebhookConfiguration, len(r.WatchResources.MutatingWebhooks)),
+		Items: []admissionregistrationv1.MutatingWebhookConfiguration{},
 	}
 	for _, mwhName := range r.WatchResources.MutatingWebhooks {
 		mwh := &admissionregistrationv1.MutatingWebhookConfiguration{}
@@ -72,7 +86,7 @@ func (r ResourceNameRetriever) GetMutatingWebhooks(ctx context.Context) (*admiss
 
 func (r ResourceNameRetriever) GetValidatingWebhooks(ctx context.Context) (*admissionregistrationv1.ValidatingWebhookConfigurationList, error) {
 	result := &admissionregistrationv1.ValidatingWebhookConfigurationList{
-		Items: make([]admissionregistrationv1.ValidatingWebhookConfiguration, len(r.WatchResources.ValidatingWebhooks)),
+		Items: []admissionregistrationv1.ValidatingWebhookConfiguration{},
 	}
 	for _, vwhName := range r.WatchResources.ValidatingWebhooks {
 		vwh := &admissionregistrationv1.ValidatingWebhookConfiguration{}
@@ -87,6 +101,17 @@ func (r ResourceNameRetriever) GetValidatingWebhooks(ctx context.Context) (*admi
 }
 
 func (r ResourceNameRetriever) GetCRDs(ctx context.Context) (*apiv1.CustomResourceDefinitionList, error) {
-	//TODO implement me
-	panic("implement me")
+	result := &apiv1.CustomResourceDefinitionList{
+		Items: []apiv1.CustomResourceDefinition{},
+	}
+	for _, crdName := range r.WatchResources.CustomResourceDefinitions {
+		crd := &apiv1.CustomResourceDefinition{}
+		if err := r.Client.Get(ctx, client.ObjectKey{Name: crdName}, crd); err != nil {
+			r.Log.Error(err, "Could not retrieve ValidatingWebhookConfiguration", "ValidatingWebhookConfiguration", crdName)
+		} else {
+			result.Items = append(result.Items, *crd)
+		}
+	}
+
+	return result, nil
 }

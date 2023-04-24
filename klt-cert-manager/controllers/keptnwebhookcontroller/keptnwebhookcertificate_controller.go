@@ -38,23 +38,25 @@ type CertificateReconcilerConfig struct {
 
 func NewKeptnWebhookCertificateReconciler(config CertificateReconcilerConfig) *KeptnWebhookCertificateReconciler {
 	return &KeptnWebhookCertificateReconciler{
-		Client:        config.Client,
-		Scheme:        config.Scheme,
-		CancelMgrFunc: config.CancelMgrFunc,
-		Log:           config.Log,
-		Namespace:     config.Namespace,
-		MatchLabels:   config.MatchLabels,
+		Client:            config.Client,
+		Scheme:            config.Scheme,
+		CancelMgrFunc:     config.CancelMgrFunc,
+		Log:               config.Log,
+		Namespace:         config.Namespace,
+		MatchLabels:       config.MatchLabels,
+		ResourceRetriever: NewResourceRetriever(config),
 	}
 }
 
 // KeptnWebhookCertificateReconciler reconciles a KeptnWebhookCertificate object
 type KeptnWebhookCertificateReconciler struct {
-	Client        client.Client
-	Scheme        *runtime.Scheme
-	CancelMgrFunc context.CancelFunc
-	Log           logr.Logger
-	Namespace     string
-	MatchLabels   labels.Set
+	Client            client.Client
+	Scheme            *runtime.Scheme
+	CancelMgrFunc     context.CancelFunc
+	Log               logr.Logger
+	Namespace         string
+	MatchLabels       labels.Set
+	ResourceRetriever IResourceRetriever
 }
 
 //clusterrole

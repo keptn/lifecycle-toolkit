@@ -6,8 +6,7 @@ weight: 55
 
 `KeptnMetricsProvider` defines an instance of the data provider
 (such as Prometheus, Dynatrace, or Datadog)
-that is used by the [KeptnMetric](metric.md)
-and [KeptnEvaluationDefinition](evaluationdefinition.md) CRDs.
+that is used by the [KeptnMetric](metric.md) CRD.
 One Keptn application can perform evaluations and metrics
 from more than one data provider
 and, beginning with the v1alpha3 API version,

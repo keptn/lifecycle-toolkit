@@ -77,7 +77,6 @@ spec:
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
 
-
 ## Files
 
 API Reference:

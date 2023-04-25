@@ -22,7 +22,7 @@ This data can be displayed on Grafana
 or another standard dashboard application that you configure
 or can be retrieved using standard Kubernetes commands.
 
-[More introductory info to come]
+TODO: Add more introductory info
 
 ## Keptn metrics basics
 

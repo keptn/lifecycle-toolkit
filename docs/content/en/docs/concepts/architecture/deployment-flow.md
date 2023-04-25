@@ -12,9 +12,8 @@ The execution flow goes through six main phases:
 pre-deployments-tasks, pre-deployment-evaluation, deployment,
 post-deployments-tasks, post-deployment-evaluation, completed.
 
-The KLT permit scheduler blocks the creation of the pods until all the pre-conditions are fulfilled.
-6 main phases (pre-deployments-tasks, pre-deployment-evaluation, deployment,
-post-deployments-tasks, post-deployment-evaluation, completed.
+The Keptn Lifecycle Toolkit implements a
+[Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit) that blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 A Kubernetes deployment is started by the following command:
 

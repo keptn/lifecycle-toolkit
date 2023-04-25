@@ -13,7 +13,7 @@ for different metrics at the same time.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v?alpha?
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetric
 metadata:
   name: <metric-name>

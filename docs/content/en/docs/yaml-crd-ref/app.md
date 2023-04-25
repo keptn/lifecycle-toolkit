@@ -12,7 +12,7 @@ that are associated with a Keptn application.
 ## Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: <app-name>

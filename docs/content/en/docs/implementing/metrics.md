@@ -59,7 +59,7 @@ You can access the metrics from your browser at:
 ### Using the HorizontalPodAutoscaler
 
 Use the Kubernetes Custom Metrics API
-to refer to Keptnmetrics via the
+to refer to `KeptnMetric` via the
 [Kubernetes HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA),
 as in the following example:

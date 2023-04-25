@@ -4,7 +4,7 @@ description: Define the evaluation provider
 weight: 13
 ---
 
-In earlier releases of the Lifecycle Toolkit,
+In earlier releases of the Keptn Lifecycle Toolkit,
 `KeptnEvaluationProvider` defined the data provider
 used by [KeptnEvaluationDefinition](
 

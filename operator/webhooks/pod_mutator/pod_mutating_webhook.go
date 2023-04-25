@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/semconv"
 	"hash/fnv"
 	"net/http"
 	"reflect"
@@ -13,7 +14,6 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/semconv"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -110,17 +110,17 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 			span.SetStatus(codes.Error, InvalidAnnotationMessage)
 			return admission.Errored(http.StatusBadRequest, err)
 		}
-		if err := a.handleApp(ctx, logger, pod, req.Namespace, isAppAnnotationPresent); err != nil {
-			logger.Error(err, "Could not handle App")
-			span.SetStatus(codes.Error, err.Error())
-			return admission.Errored(http.StatusBadRequest, err)
-		}
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
-
 		logger.Info("Attributes from annotations set")
 
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
 			logger.Error(err, "Could not handle Workload")
+			span.SetStatus(codes.Error, err.Error())
+			return admission.Errored(http.StatusBadRequest, err)
+		}
+
+		if err := a.handleApp(ctx, logger, pod, req.Namespace, isAppAnnotationPresent); err != nil {
+			logger.Error(err, "Could not handle App")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}

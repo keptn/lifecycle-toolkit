@@ -28,7 +28,7 @@ spec:
   type: prometheus | dynatrace | dql
   targetServer: "<data-source-url>"
   secretKeyRef:
-    name: <token>
+    name: <secret-name>
     key: <TOKEN>
 
 

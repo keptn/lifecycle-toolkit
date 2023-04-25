@@ -39,6 +39,7 @@ kubectl get events -n <namespace> .
 ```
 
 ### Pre-deployment phase
+
 ```bash
 AppPreDeployTasks
   AppPreDeployTasksStarted

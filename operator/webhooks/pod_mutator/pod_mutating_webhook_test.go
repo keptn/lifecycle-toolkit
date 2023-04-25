@@ -1064,9 +1064,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 
 	// Convert the Pod object to a byte array
 	podBytes, err := json.Marshal(pod)
-	if err != nil {
-		// handle error
-	}
+	require.Nil(t, err)
 
 	// Create an AdmissionRequest object
 	request := admissionv1.AdmissionRequest{
@@ -1143,9 +1141,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 
 	// Convert the Pod object to a byte array
 	podBytes, err := json.Marshal(pod)
-	if err != nil {
-		// handle error
-	}
+	require.Nil(t, err)
 
 	// Create an AdmissionRequest object
 	request := admissionv1.AdmissionRequest{
@@ -1266,9 +1262,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 
 	// Convert the Pod object to a byte array
 	podBytes, err := json.Marshal(pod)
-	if err != nil {
-		// handle error
-	}
+	require.Nil(t, err)
 
 	// Create an AdmissionRequest object
 	request := admissionv1.AdmissionRequest{

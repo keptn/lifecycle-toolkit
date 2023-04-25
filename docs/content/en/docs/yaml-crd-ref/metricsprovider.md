@@ -73,7 +73,7 @@ spec:
 ### Example 1: Dynatrace data provider
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace

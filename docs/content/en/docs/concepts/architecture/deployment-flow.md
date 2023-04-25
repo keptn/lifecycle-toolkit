@@ -5,12 +5,9 @@ description: Understand the execution flow of a deployment
 weight: 25
 ---
 
-The Keptn Lifecycle Toolkit deploys a Keptn application
-([KeptnApp](../../yaml-crd-ref.md) or a
+The Keptn Lifecycle Toolkit (KLT) deploys a
 [Kubernetes Workload](https://kubernetes.io/docs/concepts/workloads/)
-by executing a series of Kubernetes
-[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/).
-which are resources such as Deployments or Pods.
+by passing through a well-defined execution flow.
 The execution flow goes through six main phases:
 pre-deployments-tasks, pre-deployment-evaluation, deployment,
 post-deployments-tasks, post-deployment-evaluation, completed.

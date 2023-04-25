@@ -5,28 +5,35 @@ description: Understand the execution flow of a deployment
 weight: 25
 ---
 
+The Keptn Lifecycle Toolkit deploys a Keptn application
+([KeptnApp](../../yaml-crd-ref.md) or a
+[Kubernetes Workload](https://kubernetes.io/docs/concepts/workloads/)
+by executing a series of Kubernetes
+[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/).
+which are resources such as Deployments or Pods.
+The execution flow goes through six main phases:
+pre-deployments-tasks, pre-deployment-evaluation, deployment,
+post-deployments-tasks, post-deployment-evaluation, completed.
+
+The KLT permit scheduler blocks the creation of the pods until all the pre-conditions are fulfilled.
+6 main phases (pre-deployments-tasks, pre-deployment-evaluation, deployment,
+post-deployments-tasks, post-deployment-evaluation, completed.
+
 A Kubernetes deployment is started by the following command:
 
 ```bash
 kubectl apply -f deployment.yaml
 ```
 
-This begins a deployment by triggering the kubernetes pod scheduler.
-
+This begins a deployment of a workload by triggering the kubernetes pod scheduler.
 During this process, events are omitted.
 
 The Keptn Lifecycle Toolkit implements a
 [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
 that executes a series of Kubernetes
-[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/).
+[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 which are resources such as Deployments or Pods.
 The KLT permit scheduler blocks the creation of the pods until all the pre-conditions are fulfilled.
-
-A user can view these events by executing:
-
-```bash
-kubectl get events -n <namespace> . 
-```
 
 The `kubectl apply` occurs at the beginning of the deployment
 but the created pods are blocked and in pending state
@@ -36,13 +43,42 @@ Only then are the pods bound to a node and deployed.
 
 ## Summary of deployment flow
 
+To view these events on your cluster, execute:
+
+```bash
+kubectl get events -n <namespace> . 
+```
+
+### Pre-deployment phase
 ```bash
 AppPreDeployTasks
   AppPreDeployTasksStarted
   AppPreDeployTasksSucceeded OR AppPreDeployTasksErrored
+```
+
+### Pre-deployment evaluation phase
+
+```bash
 AppPreDeployEvaluations
   AppPreDeployEvaluationsStarted
   AppPreDeployEvaluationsSucceeded OR AppPreDeployEvaluationsErrored
+```
+
+### Deployment phase
+
+The `AppDeploy` phase basically covers
+the entire deployment and check phase of the workloads.
+The `KeptnApp` just observes whether
+all pre and post-deployment tasks/evaluation are successful
+and that the pods are deployed successfully.
+When all activities are successful,
+the KeptnApp issues the `AppPostDeployEvaluationsSucceeded` event
+and continues to the next phase.
+If any of these activities fail,
+the KeptnApp issues the `AppPostDeployEvaluationsErrored` event
+and terminates the deployment.
+
+```bash
 AppDeploy
   AppDeployStarted
   WorkloadPreDeployTasks
@@ -54,6 +90,11 @@ AppDeploy
   WorkloadDeploy
     WorkloadDeployStarted
     WorkloadDeploySucceeded OR WorkloadDeployErrored
+```
+
+### Post-deployment phase
+
+```bash
   WorkloadPostDeployTasks
     WorkloadPostDeployTasksStarted
     WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored
@@ -62,45 +103,29 @@ AppDeploy
     WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
 AppDeploy
   AppDeploySucceeded OR AppDeployErrored
+  
+### Post-deployment evaluation phase
+
+```bash
 AppPostDeployTasks
   AppPostDeployTasksStarted
   AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
+```
+
+```bash
 AppPostDeployEvaluations
   AppPostDeployEvaluationsStarted
   AppPostDeployEvaluationsSucceeded OR AppPostDeployEvaluationsErrored
 ```
+### Completed phase
 
-## Pre-deployment phase
-
-## Pre-deployment evaluation phase
-
-## Deployment phase
-
-The `AppDeploy` phase basically covers
-the entire deployment and check phase of the workloads.
-The KeptnApp just observes whether
-all pre and post-deployment tasks/evaluation are successful
-and that the pods are deployed successfully.
-When all activities are successful,
-the KeptnApp issues the `AppPostDeployEvaluationsSucceeded` event
-and continues to the next phase.
-If any of these activities fail,
-the KeptnApp issues the `AppPostDeployEvaluationsErrored` event
-and terminates the deployment.
-
-## Post-deployment phase
-
-## Post-deployment evaluation phase
-
-## Completed phase
+## Events that are not part of the deployment flow
 
 Additional phases/states exist,
 such as those that describe what happens when something fails.
 
-## Events that are not part of the deployment flow
-
 Whenever something in the system happens (we create a new resource, etc.)
-we genereta a Kubernetes event.
+a Kubernetes event is generated.
 The following events are defined as part of the Keptn Lifecycle Toolkit
 but they are not part of the deployment flow.
 These include:
@@ -119,10 +144,3 @@ Deprecated
 WorkloadDeployReconcile
   WorkloadDeployReconcileErrored
 ```
-
-## Other phases
-
-## More source (to be written up)
-
-6 main phases (pre-deployments-tasks, pre-deployment-evaluation, deployment,
-post-deployments-tasks, post-deployment-evaluation, completed)

@@ -11,7 +11,7 @@ used by [KeptnEvaluationDefinition](evaluationdefinition.md)
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnTaskDefinition
 metadata:
   name: <provider-name>

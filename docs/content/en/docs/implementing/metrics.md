@@ -151,7 +151,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
         "kind": "KeptnMetric",
         "namespace": "keptn-lifecycle-toolkit-system",
         "name": "keptnmetric-sample",
-        "apiVersion": "metrics.keptn.sh/v1alpha1"
+        "apiVersion": "metrics.keptn.sh/v1alpha3"
       },
       "metric": {
         "name": "keptnmetric-sample",

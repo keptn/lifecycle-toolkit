@@ -22,15 +22,6 @@ A Kubernetes deployment is started by the following command:
 kubectl apply -f deployment.yaml
 ```
 
-This begins a deployment of a workload by triggering the kubernetes pod scheduler.
-During this process, events are omitted.
-
-The Keptn Lifecycle Toolkit implements a
-[Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
-that executes a series of Kubernetes
-[events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
-which are resources such as Deployments or Pods.
-The KLT permit scheduler blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 The `kubectl apply` occurs at the beginning of the deployment
 but the created pods are blocked and in pending state

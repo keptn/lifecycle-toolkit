@@ -103,7 +103,7 @@ spec:
 ## Differences between versions
 
 The `KeptnApp` CRD is the same for
-all `v1alpha?` library versions.
+all lifecycle API versions.
 
 ## See also
 

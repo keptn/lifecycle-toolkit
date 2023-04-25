@@ -1,6 +1,6 @@
 ---
 title: KeptnMetricsProvider
-description: Define data provider used for metrics and evaluations
+description: Define a data provider used for metrics and evaluations
 weight: 55
 ---
 
@@ -14,12 +14,12 @@ can use more than one instance of each data provider.
 To implement this, create a `KeptnMetricsProvider` CRD
 for each instance of each data provider being used,
 then reference the appropriate provider
-for each evaluation or metric definition.
+for each evaluation or metric definition by its name.
 
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: <data-source-instance-name>
@@ -28,9 +28,8 @@ spec:
   type: prometheus | dynatrace | dql
   targetServer: "<data-source-url>"
   secretKeyRef:
-    name: <token>
-    key: <TOKEN>
-```
+    name: <secret-name>
+    key: <secret-key-that-holds-token>
 
 ## Fields
 
@@ -72,7 +71,7 @@ spec:
 ### Example 1: Dynatrace data provider
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace

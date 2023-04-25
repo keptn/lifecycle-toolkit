@@ -91,7 +91,7 @@ Keptn allows you to define multiple instances of the same data source.
 In earlier versions, you could use multiple data sources
 but only one instance of each.
 Consequently the `v1alpha1` and `v1alpha2` library versions
-define the `provider` field with the name of the data provider
+define the `provider` field with the type of the data provider
 (`prometheus`, `dynatrace`, or `dql`)
 rather than the particular name assigned
 to the instance of the data provider

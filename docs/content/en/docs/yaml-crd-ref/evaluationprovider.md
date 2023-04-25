@@ -6,7 +6,7 @@ weight: 13
 
 In earlier releases of the Keptn Lifecycle Toolkit,
 `KeptnEvaluationProvider` defined the data provider
-used by [KeptnEvaluationDefinition](
+used by [KeptnEvaluationDefinition](evaluationdefinition.md)
 
 ## Yaml Synopsis
 

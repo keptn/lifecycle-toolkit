@@ -96,7 +96,7 @@ blog post
 for a detailed discussion of doing this with Dynatrace metrics.
 A similar approach could be used to implement HPA with other data providers.
 
-### Retrieve KeptnMetric values with kubectl raw
+### Retrieve KeptnMetric values with kubectl
 
 Use the `kubectl raw` command
 to retrieve the values of a `KeptnMetric`, as in the following example:

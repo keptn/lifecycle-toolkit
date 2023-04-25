@@ -88,6 +88,11 @@ make install-observability
 make restart-lifecycle-toolkit
 ```
 
+> **Note**
+To export traces to the OpenTelemetry Collector, you need a
+ [KeptnConfig Resource](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/support/keptn/keptnconfig.yaml)
+ in the namespace where KLT is installed.
+
 ## The Demo Application
 
 For this demonstration, we use a slightly modified version of
@@ -143,8 +148,8 @@ by describing one of the resources:
 kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
 ```
 
-Note that the event stream of the object contains more detailed information.
-</details>
+> **Note**
+The event stream of the object contains more detailed information
 
 <details>
 <summary>Watch application state</summary>
@@ -217,5 +222,6 @@ and that the trace is also updated.
 You should also see in the Grafana Dashboards
 that the deployment was successful.
 
-Congratulations! You have successfully deployed an application
+Congratulations!
+You have successfully deployed an application
 using the Keptn Lifecycle Toolkit!

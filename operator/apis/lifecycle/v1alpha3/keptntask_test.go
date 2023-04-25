@@ -2,6 +2,7 @@ package v1alpha3
 
 import (
 	"testing"
+	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/stretchr/testify/require"
@@ -19,6 +20,9 @@ func TestKeptnTask(t *testing.T) {
 			AppVersion:     "appversion",
 			Type:           common.PostDeploymentCheckType,
 			TaskDefinition: "def",
+			Timeout: metav1.Duration{
+				Duration: time.Duration(5 * time.Minute),
+			},
 		},
 		Status: KeptnTaskStatus{
 			Status: common.StateFailed,
@@ -35,6 +39,9 @@ func TestKeptnTask(t *testing.T) {
 			AppVersion:     "appversion",
 			Type:           common.PostDeploymentCheckType,
 			TaskDefinition: "def",
+			Timeout: metav1.Duration{
+				Duration: time.Duration(5 * time.Minute),
+			},
 		},
 		Status: KeptnTaskStatus{
 			Status: common.StateFailed,
@@ -105,6 +112,8 @@ func TestKeptnTask(t *testing.T) {
 		"taskName":           "task",
 		"taskDefinitionName": "def",
 	}, task.GetEventAnnotations())
+
+	require.Equal(t, int64(300), *task.GetActiveDeadlineSeconds())
 
 }
 

@@ -1,17 +1,22 @@
 namespace: keptn-lifecycle-toolkit-system
 resources:
-- base/deployment.yaml
-- base/rbac.yaml
-- base/serviceaccount.yaml
+  - base/deployment.yaml
+  - base/rbac.yaml
+  - base/serviceaccount.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-- files:
-  - base/scheduler-config.yaml
-  name: scheduler-config
+  - files:
+      - base/scheduler-config.yaml
+    name: scheduler-config
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-images:
-- name: scheduler
-  newName: ghcr.io/keptn/scheduler
-  newTag: 0.6.0
+patches:
+  - patch: |
+      - op: replace
+        path: '/spec/template/spec/containers/0/image'
+        value: '${RELEASE_REGISTRY}/scheduler:${CHART_APPVERSION}'
+    target:
+      kind: Deployment
+      name: scheduler
+      namespace: keptn-lifecycle-toolkit-system

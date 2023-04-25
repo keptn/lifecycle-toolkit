@@ -36,8 +36,8 @@ type PhaseItem interface {
 	GetPostDeploymentEvaluations() []string
 	GetPreDeploymentEvaluationTaskStatus() []klcv1alpha3.ItemStatus
 	GetPostDeploymentEvaluationTaskStatus() []klcv1alpha3.ItemStatus
-	GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnTask
-	GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation
+	GenerateTask(taskDefinition klcv1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnTask
+	GenerateEvaluation(evaluationDefinition klcv1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation
 	GetSpanAttributes() []attribute.KeyValue
 	SetSpanAttributes(span trace.Span)
 	DeprecateRemainingPhases(phase apicommon.KeptnPhaseType)
@@ -139,11 +139,11 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1alpha3
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GenerateTask(taskDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
+func (pw PhaseItemWrapper) GenerateTask(taskDefinition klcv1alpha3.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnTask {
 	return pw.Obj.GenerateTask(taskDefinition, checkType)
 }
 
-func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition string, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
+func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition klcv1alpha3.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1alpha3.KeptnEvaluation {
 	return pw.Obj.GenerateEvaluation(evaluationDefinition, checkType)
 }
 

@@ -41,6 +41,14 @@ type KeptnTaskSpec struct {
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
+	// +kubebuilder:default:=10
+	Retries *int32 `json:"retries,omitempty"`
+	// +optional
+	// +kubebuilder:default:="5m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
 type TaskContext struct {
@@ -68,13 +76,12 @@ type KeptnTaskStatus struct {
 	Message   string            `json:"message,omitempty"`
 	StartTime metav1.Time       `json:"startTime,omitempty"`
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Reason    string            `json:"reason,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:storageversion
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workload`
@@ -207,4 +214,10 @@ func (t KeptnTask) GetEventAnnotations() map[string]string {
 		"taskName":           t.Name,
 		"taskDefinitionName": t.Spec.TaskDefinition,
 	}
+}
+
+func (t KeptnTask) GetActiveDeadlineSeconds() *int64 {
+	deadline, _ := time.ParseDuration(t.Spec.Timeout.Duration.String())
+	seconds := int64(deadline.Seconds())
+	return &seconds
 }

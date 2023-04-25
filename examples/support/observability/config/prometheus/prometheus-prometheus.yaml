@@ -12,10 +12,10 @@ metadata:
 spec:
   alerting:
     alertmanagers:
-    - apiVersion: v2
-      name: alertmanager-main
-      namespace: monitoring
-      port: web
+      - apiVersion: v2
+        name: alertmanager-main
+        namespace: monitoring
+        port: web
   enableFeatures: []
   externalLabels: {}
   image: quay.io/prometheus/prometheus:v2.39.1
@@ -32,9 +32,12 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  replicas: 2
+  replicas: 1
   resources:
+    limits:
+      cpu: 250m
     requests:
+      cpu: 75m
       memory: 400Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}

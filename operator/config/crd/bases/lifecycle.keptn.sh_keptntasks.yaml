@@ -319,12 +319,20 @@ spec:
                       type: string
                     type: object
                 type: object
+              retries:
+                default: 10
+                format: int32
+                type: integer
               secureParameters:
                 properties:
                   secret:
                     type: string
                 type: object
               taskDefinition:
+                type: string
+              timeout:
+                default: 5m
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
                 type: string
@@ -347,6 +355,8 @@ spec:
               jobName:
                 type: string
               message:
+                type: string
+              reason:
                 type: string
               startTime:
                 format: date-time

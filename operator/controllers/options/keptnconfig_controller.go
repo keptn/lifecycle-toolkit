@@ -35,14 +35,14 @@ import (
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme          *runtime.Scheme
-	Log             logr.Logger
-	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	Scheme              *runtime.Scheme
+	Log                 logr.Logger
+	LastAppliedSpec     *optionsv1alpha1.KeptnConfigSpec
+	DefaultCollectorURL string
 }
 
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/finalizers,verbs=update
+// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
+// +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -76,19 +76,16 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 	r.Log.Info(fmt.Sprintf("reconciling Keptn Config: %s", config.Name))
 	otelConfig := controllercommon.GetOtelInstance()
 
-	// collector URL changed, so we need to re-initialize the exporter
-	if r.LastAppliedSpec.OTelCollectorUrl != config.Spec.OTelCollectorUrl {
-		if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
-			r.Log.Error(err, "unable to initialize OTel tracer options")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
+	if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
+		r.Log.Error(err, "unable to initialize OTel tracer options")
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 	return ctrl.Result{}, nil
 }
 
 func (r *KeptnConfigReconciler) initConfig() {
 	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
-		OTelCollectorUrl: "",
+		OTelCollectorUrl: r.DefaultCollectorURL,
 	}
 }
 

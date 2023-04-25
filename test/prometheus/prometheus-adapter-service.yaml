@@ -10,9 +10,9 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - name: https
-    port: 443
-    targetPort: 6443
+    - name: https
+      port: 443
+      targetPort: 6443
   selector:
     app.kubernetes.io/component: metrics-adapter
     app.kubernetes.io/name: prometheus-adapter

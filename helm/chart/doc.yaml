@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 ## @section Keptn Scheduler
 ## @extra scheduler.scheduler.containerSecurityContext Sets security context
 ## @skip scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
@@ -11,7 +12,7 @@
 ## @param scheduler.scheduler.env.otelCollectorUrl sets url for open telemetry collector
 
 ## @param scheduler.scheduler.image.repository set image repository for scheduler
-## @param scheduler.scheduler.image.tag set image tag for scheduler
+## @param scheduler.scheduler.image.tag set image tag for scheduler <!---x-release-please-version-->
 ## @param scheduler.scheduler.imagePullPolicy set image pull policy for scheduler
 
 ## @extra scheduler.scheduler.livenessProbe customizable liveness probe for the scheduler
@@ -65,7 +66,7 @@
 ## @skip     certificateOperator.manager.containerSecurityContext.seccompProfile.type
 
 ## @param     certificateOperator.manager.image.repository specify repo for manager image
-## @param     certificateOperator.manager.image.tag select tag for manager container
+## @param     certificateOperator.manager.image.tag select tag for manager container <!---x-release-please-version-->
 ## @param     certificateOperator.manager.imagePullPolicy select image pull policy for manager container
 
 ## @extra     certificateOperator.manager.livenessProbe custom RBAC proxy liveness probe
@@ -90,7 +91,14 @@
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 
-## @extra Mutating Webhook Configurations for lifecycle Operator
+## @extra   lifecycleOperatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
+## @skip    lifecycleOperatorMetricsService.ports[0].name
+## @skip    lifecycleOperatorMetricsService.ports[0].port
+## @skip    lifecycleOperatorMetricsService.ports[0].protocol
+## @skip    lifecycleOperatorMetricsService.ports[0].targetPort
+## @skip    lifecycleOperatorMetricsService.type
+
+## @extra    lifecycleWebhookService Mutating Webhook Configurations for lifecycle Operator
 ## @param    lifecycleWebhookService.ports[0].port
 ## @param    lifecycleWebhookService.ports[0].protocol
 ## @param    lifecycleWebhookService.ports[0].targetPort
@@ -111,6 +119,7 @@
 ## @param   lifecycleOperator.manager.containerSecurityContext.seccompProfile.type
 
 ## @param   lifecycleOperator.manager.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+## @param   lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
 ## @param   lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
 ## @param   lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
 ## @param   lifecycleOperator.manager.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
@@ -120,11 +129,11 @@
 ## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
-## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime
+## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime <!---x-release-please-version-->
 
-## @param   lifecycleOperator.manager.image.repository specify registry for manager image 
-## @param   lifecycleOperator.manager.image.tag  select tag for manager image 
-## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image 
+## @param   lifecycleOperator.manager.image.repository specify registry for manager image
+## @param   lifecycleOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image
 
 ## @extra  lifecycleOperator.manager.livenessProbe custom livenessprobe for manager container
 ## @skip   lifecycleOperator.manager.livenessProbe.httpGet.path
@@ -188,7 +197,7 @@
 
 
 ## @param   metricsOperator.manager.image.repository specify registry for manager image
-## @param   metricsOperator.manager.image.tag  select tag for manager image
+## @param   metricsOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
 
 ## @param   metricsOperator.manager.env.exposeKeptnMetrics enable metrics exporter
 ## @param   metricsOperator.manager.env.metricsControllerLogLevel sets the log level of Metrics Controller

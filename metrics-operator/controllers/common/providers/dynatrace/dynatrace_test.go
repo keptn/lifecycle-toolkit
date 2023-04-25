@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -96,6 +96,44 @@ func TestGetSingleValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			kdp := KeptnDynatraceProvider{}
 			r := kdp.getSingleValue(tt.input)
+			require.Equal(t, tt.result, r)
+		})
+
+	}
+}
+
+func TestNormalizeURL(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		result string
+	}{
+		{
+			name:   "happy path",
+			input:  "http://mydttenant.com/api/",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "missing final /",
+			input:  "http://mydttenant.com/api",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "missing final /api",
+			input:  "http://mydttenant.com/",
+			result: "http://mydttenant.com/api/",
+		},
+		{
+			name:   "base url",
+			input:  "http://mydttenant.com",
+			result: "http://mydttenant.com/api/",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kdp := KeptnDynatraceProvider{}
+			r := kdp.normalizeAPIURL(tt.input)
 			require.Equal(t, tt.result, r)
 		})
 

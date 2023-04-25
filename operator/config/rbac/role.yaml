@@ -17,6 +17,14 @@ rules:
   - list
   - watch
 - apiGroups:
+  - argoproj.io
+  resources:
+  - rollouts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - batch
   resources:
   - jobs
@@ -85,6 +93,32 @@ rules:
   - secrets
   verbs:
   - get
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcreationrequests/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
@@ -322,24 +356,12 @@ rules:
   resources:
   - keptnconfigs
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - options.keptn.sh
-  resources:
-  - keptnconfigs/finalizers
-  verbs:
-  - update
 - apiGroups:
   - options.keptn.sh
   resources:
   - keptnconfigs/status
   verbs:
   - get
-  - patch
-  - update

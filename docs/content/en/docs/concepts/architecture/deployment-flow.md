@@ -108,7 +108,6 @@ AppPostDeployEvaluations
 ```
 ### Completed phase
 
-
 ## Events that are not part of the deployment flow
 
 Additional phases/states exist,

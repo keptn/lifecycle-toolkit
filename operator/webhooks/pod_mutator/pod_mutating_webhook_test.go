@@ -1315,3 +1315,113 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		},
 	}, workload.Spec)
 }
+
+func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
+	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "default",
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	})
+
+	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	recorder := record.NewFakeRecorder(100)
+
+	decoder, err := admission.NewDecoder(runtime.NewScheme())
+	require.Nil(t, err)
+
+	wh := &PodMutatingWebhook{
+		Client:   fakeClient,
+		Tracer:   tr,
+		decoder:  decoder,
+		Recorder: recorder,
+		Log:      testr.New(t),
+	}
+
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: "default",
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.VersionAnnotation:  "0.1",
+				apicommon.AppAnnotation:      "my-app",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: "v1",
+					Kind:       "Deployment",
+					Name:       "my-deployment",
+					UID:        "1234",
+				},
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "example-container",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+
+	// Convert the Pod object to a byte array
+	podBytes, err := json.Marshal(pod)
+	require.Nil(t, err)
+
+	// Create an AdmissionRequest object
+	request := admissionv1.AdmissionRequest{
+		UID:       "12345",
+		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
+		Operation: admissionv1.Create,
+		Object: runtime.RawExtension{
+			Raw: podBytes,
+		},
+		Namespace: "default",
+	}
+
+	resp := wh.Handle(context.TODO(), admission.Request{
+		AdmissionRequest: request,
+	})
+
+	require.NotNil(t, resp)
+	require.True(t, resp.Allowed)
+
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-app",
+	}, kacr)
+
+	require.Nil(t, err)
+
+	require.Equal(t, "my-app", kacr.Spec.AppName)
+	// here we do not want a single-service annotation
+	require.Empty(t, kacr.Labels[apicommon.AppTypeAnnotation])
+
+	workload := &klcv1alpha3.KeptnWorkload{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-app-my-workload",
+	}, workload)
+
+	require.Nil(t, err)
+
+	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+		AppName: kacr.Spec.AppName,
+		Version: "0.1",
+		ResourceReference: klcv1alpha3.ResourceReference{
+			UID:  "1234",
+			Kind: "Deployment",
+			Name: "my-deployment",
+		},
+	}, workload.Spec)
+}

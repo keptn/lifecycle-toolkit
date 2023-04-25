@@ -24,7 +24,7 @@ or can be retrieved using standard Kubernetes commands.
 
 TODO: Add more introductory info
 
-## Keptn metrics basics
+## Keptn metric basics
 
 Keptn metrics are implemented with two CRDs:
 
@@ -50,7 +50,6 @@ kubectl port-forward deployment/metrics-operator 9999 -n keptn-lifecycle-toolkit
 ```
 
 You can access the metrics from your browser at:
-
 
 ## Accessing Metrics via the Kubernetes Custom Metrics API
 

@@ -30,13 +30,14 @@ spec:
   secretKeyRef:
     name: <token>
     key: <TOKEN>
-
+```
 
 ## Fields
 
 * **apiVersion** -- API version being used.
 `
-* **kind** -- Resource type.  Must be set to `KeptnMetricsProvider`
+* **kind** -- Resource type.
+   Must be set to `KeptnMetricsProvider`
 
 * **metadata**
   * **name** -- Unique name of this provider,
@@ -64,9 +65,7 @@ spec:
     * **name:** -- Name of the token for this data provider
     * **key:** -- Key for this data provider
 
-
 ## Usage
-
 
 ## Examples
 

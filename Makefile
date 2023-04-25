@@ -39,8 +39,8 @@ integration-test:	# to run a single test by name use --test eg. --test=expose-ke
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
-	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
+	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
 
 .PHONY: load-test
 load-test:

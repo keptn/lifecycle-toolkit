@@ -14,7 +14,7 @@ can use more than one instance of each data provider.
 To implement this, create a `KeptnMetricsProvider` CRD
 for each instance of each data provider being used,
 then reference the appropriate provider
-for each evaluation or metric definition.
+for each evaluation or metric definition by its name.
 
 ## Yaml Synopsis
 

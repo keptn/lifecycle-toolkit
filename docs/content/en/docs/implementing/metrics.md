@@ -11,7 +11,7 @@ only allow you to release a single service on a API;
 you cannot use multiple observability platforms
 in one namespace for one API.
 
-Keptn Metrics provides a single entry point to all metrics in the cluster
+The Keptn Metrics Operator provides a single entry point to all metrics in the cluster
 and allows you to use multiple observability platforms
 and, beginning with V0.8.0,
 multiple instances of any observability platform.

@@ -35,7 +35,7 @@ spec:
 * **apiVersion** -- API version being used.
 `
 * **kind** -- Resource type.
-   Must be set to `KeptnTaskDefinition`
+   Must be set to `KeptnApp`
 
 * **metadata**
   * **name** -- Unique name of this application.

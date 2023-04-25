@@ -11,6 +11,7 @@ by passing through a well-defined execution flow.
 The execution flow goes through six main phases:
 pre-deployments-tasks, pre-deployment-evaluation, deployment,
 post-deployments-tasks, post-deployment-evaluation, completed.
+A [Kubernetes Event](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/) is at each phase emitted to provide additional Observability of the execution flow. 
 
 The Keptn Lifecycle Toolkit implements a
 [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit) that blocks the creation of the pods until all the pre-conditions are fulfilled.

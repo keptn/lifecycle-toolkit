@@ -72,7 +72,6 @@ Kubernetes defines
 but does not define applications.
 The Keptn Lifecycle Toolkit adds the concept of applications
 defined as a set of workloads that can be executed.
-.
 A Keptn application is a file that is inserted
 into the repository of the deployment engine
 (ArgoCD, Flux, etc)

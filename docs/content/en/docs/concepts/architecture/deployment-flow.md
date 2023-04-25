@@ -106,7 +106,6 @@ AppPostDeployTasks
 AppPostDeployEvaluations
   AppPostDeployEvaluationsStarted
   AppPostDeployEvaluationsSucceeded OR AppPostDeployEvaluationsErrored
-```
 ### Completed phase
 
 ## Events that are not part of the deployment flow

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"reflect"
 	"time"
 
@@ -76,7 +77,7 @@ func (certSecret *certificateSecret) setCertificates(namespace string) error {
 }
 
 func buildSecretName() string {
-	return secretName
+	return common.SecretName
 }
 
 func getDomain(namespace string) string {
@@ -117,7 +118,7 @@ func (certSecret *certificateSecret) createOrUpdateIfNecessary(ctx context.Conte
 func (certSecret *certificateSecret) loadCombinedBundle() ([]byte, error) {
 	data, hasData := certSecret.secret.Data[RootCert]
 	if !hasData {
-		return nil, errors.New(certificatesSecretEmptyErr)
+		return nil, errors.New(common.CertificatesSecretEmptyErr)
 	}
 
 	if oldData, hasOldData := certSecret.secret.Data[RootCertOld]; hasOldData {

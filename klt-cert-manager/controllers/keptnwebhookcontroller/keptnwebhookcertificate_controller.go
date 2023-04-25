@@ -3,6 +3,7 @@ package keptnwebhookcontroller
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"reflect"
 
 	"github.com/go-logr/logr"
@@ -109,7 +110,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	if isCertSecretRecent && areMutatingWebhookConfigsValid && areValidatingWebhookConfigsValid && areCRDConversionsConfigValid {
 		r.Log.Info("secret for certificates up to date, skipping update")
 		r.cancelMgr()
-		return reconcile.Result{RequeueAfter: successDuration}, nil
+		return reconcile.Result{RequeueAfter: common.SuccessDuration}, nil
 	}
 
 	if err = r.updateConfigurations(ctx, certSecret, crds, mutatingWebhookConfigs, mutatingWebhookConfigurations, validatingWebhookConfigs, validatingWebhookConfigurations); err != nil {
@@ -117,7 +118,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	}
 
 	r.cancelMgr()
-	return reconcile.Result{RequeueAfter: successDuration}, nil
+	return reconcile.Result{RequeueAfter: common.SuccessDuration}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -208,7 +209,7 @@ func (r *KeptnWebhookCertificateReconciler) updateCRDsConfiguration(ctx context.
 
 	}
 	if fail {
-		return fmt.Errorf(couldNotUpdateCRDErr)
+		return common.ErrCouldNotUpdateCRD
 	}
 	return nil
 }

@@ -2,6 +2,7 @@ package keptnwebhookcontroller
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"testing"
 	"time"
 
@@ -20,7 +21,7 @@ import (
 
 const (
 	testDomain         = "my-domain." + testnamespace + ".svc"
-	expectedSecretName = secretName
+	expectedSecretName = common.SecretName
 	strategyWebhook    = "webhook"
 	testBytes          = 123
 	testnamespace      = "keptn-ns"
@@ -34,7 +35,7 @@ func TestReconcileCertificate_Create(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -61,7 +62,7 @@ func TestReconcileCertificate_Update(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -88,7 +89,7 @@ func TestReconcileCertificate_ExistingSecretWithValidCertificate(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)

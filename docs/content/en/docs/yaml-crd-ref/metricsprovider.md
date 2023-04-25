@@ -29,7 +29,7 @@ spec:
   targetServer: "<data-source-url>"
   secretKeyRef:
     name: <secret-name>
-    key: <TOKEN>
+    key: <secret-key-that-holds-token>
 
 
 ## Fields

@@ -1,6 +1,6 @@
 ---
 title: KeptnMetricsProvider
-description: Define data provider used for metrics and evaluations
+description: Define a data provider used for metrics and evaluations
 weight: 55
 ---
 

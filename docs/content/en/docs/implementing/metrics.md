@@ -98,7 +98,7 @@ A similar approach could be used to implement HPA with other data providers.
 
 ### Retrieve KeptnMetric values with kubectl
 
-Use the `kubectl raw` command
+Use the `kubectl get --raw` command
 to retrieve the values of a `KeptnMetric`, as in the following example:
 
 ```shell

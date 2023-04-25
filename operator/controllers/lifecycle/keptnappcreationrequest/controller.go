@@ -233,6 +233,8 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Labels: map[string]string{
 				common.K8sRecommendedManagedByAnnotations: managedByKLT,
 			},
+			// pass through the annotations since those contain the trace context
+			Annotations: creationRequest.Annotations,
 		},
 		Spec: lifecycle.KeptnAppSpec{
 			Version:                   computeVersionFromWorkloads(workloads.Items),

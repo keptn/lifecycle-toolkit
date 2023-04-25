@@ -58,10 +58,17 @@ $light: #d8e6f4;
   text-align: left;
 }
 
+@font-face {
+  font-family: 'Ubuntu';
+  src: url("/Ubuntu-Medium.ttf");
+ }
+
+ .td-main h1, .styled {
+  font-family: Ubuntu
+ }
 .usecasebox {
   margin-top: 50px;
   background-image: linear-gradient(180deg, rgba(0, 107, 184, 0.0), rgba(0, 107, 184, 0.50));
   border-radius: 25px;
-  padding: 20px
-
+  padding: 20px;
 }

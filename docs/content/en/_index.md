@@ -31,10 +31,11 @@ cascade:
 <div class="mx-auto">
 <div class="mb-4 d-none d-md-block " >
 <picture >
-    <img src="/images/home/hero/keptn-logo-white.svg">
+    <img alt="keptn" src="/images/home/hero/keptn-logo-white.svg">
 </picture> 
 </div>
   <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
+  <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
 <div>
  <a class="btn btn-lg -bg-green mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>

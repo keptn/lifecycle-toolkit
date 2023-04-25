@@ -27,8 +27,15 @@ cascade:
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- markdownlint-disable-next-line line-length -->
-{{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit" image_anchor="top" height="half" color="primary" >}}
+{{< blocks/cover title="" image_anchor="top" height="full" color="primary" >}}
 <div class="mx-auto">
+<div class="mb-4 d-none d-md-block " >
+<picture >
+    <img src="/images/home/hero/keptn-logo-white.svg">
+</picture> 
+</div>
+  <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
+<div>
  <a class="btn btn-lg -bg-green mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
@@ -36,43 +43,54 @@ cascade:
   Releases <i class="fab fa-github ml-2 "></i>
  </a>
 </div>
-
-[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
-{{< /blocks/cover >}}
-<!-- markdownlint-enable no-inline-html -->
-
-{{% blocks/lead color="secondary" %}}
+</div>
+<div class="usecasebox">
 
 ## Use Cases
 
 We extend the K8s APIs with the following Use Cases:
 
-{{% /blocks/lead %}}
-
-{{< blocks/section color="light" >}}
+<div class="row usecases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
-making ANY K8s Deployment OBSERVABLE
+make ANY Kubernetes Deployment OBSERVABLE
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#deployment-observability)
-
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-observability">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 {{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
-standardizing access for all Observability Data for K8s
+standardize access for all Observability Data for K8s
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#data-access)
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#data-access">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
-orchestrating deployment checks as part of scheduler
+orchestrate deployment checks as part of scheduler
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#deployment-check-orchestration)
-
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 
-{{< /blocks/section >}}
+</div>
+</div>
+
+
+{{< /blocks/cover >}}
+<!-- markdownlint-enable no-inline-html -->
+
+
+{{% blocks/lead color="light" %}}
+
+{{< youtube K-cvnZ8EtGc >}}
+
+{{% /blocks/lead %}}
+
 
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="white"%}}

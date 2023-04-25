@@ -4,7 +4,7 @@
 
 $primary: #006bb8;
 $secondary: #469bdd;
-$light: #c9e0f1;
+$light: #d8e6f4;
 
 #td-cover-block-0 {
   background-size: 100% auto;
@@ -17,22 +17,23 @@ $light: #c9e0f1;
   height: 128px;
   width: 170px;
   display: block;
-  background-position: center;
+  background-position: center middle;
+  background-color: #d8e6f4;
+  border-radius: 25px;
 }
 
 .homeorchestrate::before {
-  background: url('/images/home/capabilities/capabilities-03.svg');
+  background-image: url('/images/home/capabilities/capabilities-03.svg');
 }
 .homeobservability::before {
-  background: url('/images/home/capabilities/capabilities-04.svg');
+  background-image: url('/images/home/capabilities/capabilities-04.svg');
 }
 .homedata::before {
-  background: url('/images/home/capabilities/capabilities-01.svg');
+  background-image: url('/images/home/capabilities/capabilities-01.svg');
 }
 .td-overlay--dark::after {
   background-color: transparent !important;
 }
-
 
 .whykeptn img {
   width: 100%;
@@ -55,4 +56,12 @@ $light: #c9e0f1;
 }
 .whykeptn-right {
   text-align: left;
+}
+
+.usecasebox {
+  margin-top: 50px;
+  background-image: linear-gradient(180deg, rgba(0, 107, 184, 0.0), rgba(0, 107, 184, 0.50));
+  border-radius: 25px;
+  padding: 20px
+
 }

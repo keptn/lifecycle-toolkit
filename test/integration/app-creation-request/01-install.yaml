@@ -12,6 +12,10 @@ metadata:
 spec:
   app: my-app
   version: "2.0.0"
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkload
@@ -20,3 +24,7 @@ metadata:
 spec:
   app: my-app
   version: "1.0.0"
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set-2
+    uid: 857f825e-4025-4ea8-ad22-9292877ff7eb

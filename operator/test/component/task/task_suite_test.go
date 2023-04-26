@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"

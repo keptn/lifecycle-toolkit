@@ -13,8 +13,7 @@ in one namespace for one API.
 
 The Keptn Metrics Operator provides a single entry point to all metrics in the cluster
 and allows you to use multiple observability platforms
-and, beginning with v0.8.0,
-multiple instances of any observability platform.
+and multiple instances of any observability platform.
 Keptn Metrics are also application aware
 so they report data for all workflows that are included in the Keptn application.
 

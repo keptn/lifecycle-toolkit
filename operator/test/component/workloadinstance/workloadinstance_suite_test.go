@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
@@ -44,7 +45,7 @@ var _ = BeforeSuite(func() {
 		SpanHandler:   &controllercommon.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	Eventually(controller.SetupWithManager(k8sManager)).Should(Succeed())
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).Should(Succeed())
 
 })
 

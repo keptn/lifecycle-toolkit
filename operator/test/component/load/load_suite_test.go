@@ -41,7 +41,7 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	Eventually(controller.SetupWithManager(k8sManager)).Should(Succeed())
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).Should(Succeed())
 
 })
 

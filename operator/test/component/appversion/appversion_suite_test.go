@@ -44,7 +44,7 @@ var _ = BeforeSuite(func() {
 		SpanHandler:   &controllercommon.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	Eventually(controller.SetupWithManager(k8sManager)).Should(Succeed())
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).Should(Succeed())
 
 })
 

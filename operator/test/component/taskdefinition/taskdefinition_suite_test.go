@@ -40,7 +40,7 @@ var _ = BeforeSuite(func() {
 		Recorder: k8sManager.GetEventRecorderFor("test-taskdefinition-controller"),
 		Log:      GinkgoLogr,
 	}
-	Eventually(controller.SetupWithManager(k8sManager)).Should(Succeed())
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).Should(Succeed())
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

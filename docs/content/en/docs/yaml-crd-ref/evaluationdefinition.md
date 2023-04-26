@@ -27,7 +27,6 @@ spec:
 
 * **apiVersion** -- API version being used.
   Must be `v1alpha3` or later for this syntax.
-`
 * **kind** -- Resource type.
    Must be set to `KeptnEvaluationDefinition`
 

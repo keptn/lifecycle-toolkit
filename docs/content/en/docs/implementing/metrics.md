@@ -93,7 +93,7 @@ spec:
 See the [Scaling Kubernetes Workloads based on Dynatrace Metrics](https://www.linkedin.com/pulse/scaling-kubernetes-workloads-based-dynatrace-metrics-keptnproject/)
 blog post
 for a detailed discussion of doing this with Dynatrace metrics.
-A similar approach could be used to implement HPA with other data providers.
+The same approach could be used to implement HPA with other data providers.
 
 ### Retrieve KeptnMetric values with kubectl
 

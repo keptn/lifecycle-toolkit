@@ -47,8 +47,7 @@ var _ = BeforeSuite(func() {
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 		Namespace:     KLTnamespace,
 	}
-	err := controller.SetupWithManager(k8sManager)
-	Expect(err).To(BeNil())
+	Eventually(controller.SetupWithManager(k8sManager)).Should(Succeed())
 
 	ns = common.MakeKLTDefaultNamespace(k8sClient, KLTnamespace)
 

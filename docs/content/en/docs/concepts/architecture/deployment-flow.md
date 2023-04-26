@@ -33,7 +33,7 @@ kubectl apply -f deployment.yaml
 
 The `kubectl apply` occurs at the beginning of the deployment
 but the created pods are blocked and in pending state
-until all the required pre-deployment tasks/evaluation
+until all the required pre-deployment tasks/evaluations
 defined on either the KeptnApp or KeptnWorkload level pass.
 Only then are the pods bound to a node and deployed.
 

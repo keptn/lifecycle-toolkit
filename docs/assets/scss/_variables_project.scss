@@ -11,6 +11,18 @@ $light: #d8e6f4;
   background-position-y: bottom;
 }
 
+a.btn-primary {
+  background: #28a745 linear-gradient(180deg, #30c953, #28a745) repeat-x;
+  border-color: #28a745;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+  color: #ffffff !important
+}
+
+a.btn-primary:hover {
+  color: #fff;
+  background: #23923d linear-gradient(180deg, #28a745, #23923d) repeat-x;
+  border-color: #23923d;
+}
 
 .home::before {
   content: '';

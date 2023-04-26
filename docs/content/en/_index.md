@@ -37,7 +37,7 @@ cascade:
   <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
   <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
 <div>
- <a class="btn btn-lg -bg-green mr-3 mb-4" href="{{< relref "/docs" >}}">
+ <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
     <a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">

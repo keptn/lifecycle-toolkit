@@ -27,7 +27,7 @@ that blocks the creation of the pods until all the pre-conditions are fulfilled.
 
 A Kubernetes deployment is started by the following command:
 
-```bash
+```shell
 kubectl apply -f deployment.yaml
 ```
 
@@ -41,13 +41,13 @@ Only then are the pods bound to a node and deployed.
 
 To view these events on your cluster, execute:
 
-```bash
+```shell
 kubectl get events -n <namespace> . 
 ```
 
 ### Pre-deployment phase
 
-```bash
+```shell
 AppPreDeployTasks
   AppPreDeployTasksStarted
   AppPreDeployTasksSucceeded OR AppPreDeployTasksErrored
@@ -55,7 +55,7 @@ AppPreDeployTasks
 
 ### Pre-deployment evaluation phase
 
-```bash
+```shell
 AppPreDeployEvaluations
   AppPreDeployEvaluationsStarted
   AppPreDeployEvaluationsSucceeded OR AppPreDeployEvaluationsErrored
@@ -75,7 +75,7 @@ If any of these activities fail,
 the KeptnApp issues the `AppPostDeployEvaluationsErrored` event
 and terminates the deployment.
 
-```bash
+```shell
 AppDeploy
   AppDeployStarted
   WorkloadPreDeployTasks
@@ -91,7 +91,7 @@ AppDeploy
 
 ### Post-deployment phase
 
-```bash
+```shell
   WorkloadPostDeployTasks
     WorkloadPostDeployTasksStarted
     WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored
@@ -103,16 +103,18 @@ AppDeploy
   
 ### Post-deployment evaluation phase
 
-```bash
+```shell
 AppPostDeployTasks
   AppPostDeployTasksStarted
   AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
 ```
 
-```bash
+```shell
 AppPostDeployEvaluations
   AppPostDeployEvaluationsStarted
   AppPostDeployEvaluationsSucceeded OR AppPostDeployEvaluationsErrored
+```
+
 ### Completed phase
 
 ## Events that are not part of the deployment flow
@@ -126,7 +128,7 @@ The following events are defined as part of the Keptn Lifecycle Toolkit
 but they are not part of the deployment flow.
 These include:
 
-```bash
+```shell
 CreateEvaluation
 ReconcileEvaluation
 ReconcileTask

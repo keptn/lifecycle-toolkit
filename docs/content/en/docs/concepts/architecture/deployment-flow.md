@@ -8,9 +8,16 @@ weight: 25
 The Keptn Lifecycle Toolkit (KLT) deploys a
 [Kubernetes Workload](https://kubernetes.io/docs/concepts/workloads/)
 by passing through a well-defined execution flow.
+
 The execution flow goes through six main phases:
-pre-deployments-tasks, pre-deployment-evaluation, deployment,
-post-deployments-tasks, post-deployment-evaluation, completed.
+
+* Pre-deployments-tasks
+* Pre-deployment-evaluation
+* Deployment
+* Post-deployment-tasks
+* Post-deployment-evaluation
+* Completed
+
 A [Kubernetes Event](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 is emitted at each phase to provide additional Observability of the execution flow.
 
@@ -27,7 +34,7 @@ kubectl apply -f deployment.yaml
 The `kubectl apply` occurs at the beginning of the deployment
 but the created pods are blocked and in pending state
 until all the required pre-deployment tasks/evaluation
-defined on either the KeptnApp or Workload level pass.
+defined on either the KeptnApp or KeptnWorkload level pass.
 Only then are the pods bound to a node and deployed.
 
 ## Summary of deployment flow

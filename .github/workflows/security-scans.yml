@@ -123,7 +123,7 @@ jobs:
 
       - name: KICS Scan
         if: matrix.tool == 'kics'
-        uses: Checkmarx/kics-github-action@v1.6
+        uses: Checkmarx/kics-github-action@v1.6.3
         with:
           path: scans
           config_path: .github/kics-config.yml
@@ -173,7 +173,8 @@ jobs:
           FAILURE_PERCENTAGE: 10
         run: |
           echo "::group::Kubescape installation"
-          curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+          curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash
+          export PATH=$PATH:/home/runner/.kubescape/bin
           echo "::endgroup::"
           # Docs on how to configure exceptions: https://hub.armosec.io/docs/exceptions
           kubescape scan framework ${{ matrix.kubescape-framework }} \

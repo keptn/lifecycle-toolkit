@@ -321,8 +321,10 @@ func (w KeptnWorkloadInstance) GetVersion() string {
 func (w KeptnWorkloadInstance) GenerateTask(taskDefinition KeptnTaskDefinition, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      common.GenerateTaskName(checkType, taskDefinition.Name),
-			Namespace: w.Namespace,
+			Name:        common.GenerateTaskName(checkType, taskDefinition.Name),
+			Namespace:   w.Namespace,
+			Labels:      taskDefinition.Labels,
+			Annotations: taskDefinition.Annotations,
 		},
 		Spec: KeptnTaskSpec{
 			AppName:          w.GetAppName(),

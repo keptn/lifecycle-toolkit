@@ -32,7 +32,7 @@ cascade:
 <div class="mb-4 d-none d-md-block " >
 <picture >
     <img alt="keptn" src="/images/home/hero/keptn-logo-white.svg">
-</picture> 
+</picture>
 </div>
   <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
   <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
@@ -81,17 +81,14 @@ orchestrate deployment checks as part of scheduler
 </div>
 </div>
 
-
 {{< /blocks/cover >}}
 <!-- markdownlint-enable no-inline-html -->
-
 
 {{% blocks/lead color="light" %}}
 
 {{< youtube K-cvnZ8EtGc >}}
 
 {{% /blocks/lead %}}
-
 
 <!-- markdownlint-disable no-inline-html -->
 {{% blocks/lead color="white"%}}

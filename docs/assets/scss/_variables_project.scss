@@ -63,12 +63,26 @@ $light: #d8e6f4;
   src: url("/Ubuntu-Medium.ttf");
  }
 
- .td-main h1, .styled {
-  font-family: Ubuntu
+
+$fontFamilyStyled: Ubuntu, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+.td-main h1, .styled {
+  font-family: $fontFamilyStyled
  }
 .usecasebox {
   margin-top: 50px;
   background-image: linear-gradient(180deg, rgba(0, 107, 184, 0.0), rgba(0, 107, 184, 0.50));
   border-radius: 25px;
   padding: 20px;
+}
+
+.navbar-logo::after {
+  content: "Lifecycle Toolkit";
+  font-size: 23px;
+  font-weight: 700;
+  font-family: $fontFamilyStyled;
+  line-height: 30px;
+  height: 30px;
+  vertical-align: bottom;
+  padding-top: 2px;
+  display: inline-block
 }

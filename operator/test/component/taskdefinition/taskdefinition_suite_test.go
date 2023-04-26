@@ -43,7 +43,7 @@ var _ = BeforeSuite(func() {
 		Log:      GinkgoLogr,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
-	readyToStart <- struct{}{}
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

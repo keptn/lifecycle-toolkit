@@ -52,7 +52,7 @@ var _ = BeforeSuite(func() {
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
 	ns = common.MakeKLTDefaultNamespace(k8sClient, KLTnamespace)
-	readyToStart <- struct{}{}
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

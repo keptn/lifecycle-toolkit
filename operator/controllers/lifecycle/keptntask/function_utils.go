@@ -28,12 +28,17 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      jobId,
-			Namespace: task.Namespace,
-			Labels:    task.CreateKeptnLabels(),
+			Name:        jobId,
+			Namespace:   task.Namespace,
+			Labels:      task.CreateKeptnLabels(),
+			Annotations: task.Annotations,
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels:      task.Labels,
+					Annotations: task.Annotations,
+				},
 				Spec: corev1.PodSpec{
 					RestartPolicy: "OnFailure",
 				},

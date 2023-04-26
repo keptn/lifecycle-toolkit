@@ -70,7 +70,7 @@ standardize access for all Observability Data for K8s
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
-orchestrate deployment checks as part of scheduler
+gain confidence in your work with pre-/post-deployment checks
 
 <!-- markdownlint-disable-next-line link-fragments -->
  <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">

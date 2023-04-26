@@ -49,7 +49,7 @@ To access the metrics, use the following command:
 kubectl port-forward deployment/metrics-operator 9999 -n keptn-lifecycle-toolkit-system
 ```
 
-You can access the metrics from your browser at:
+You can access the metrics from your browser at: `http://localhost:9999`
 
 ## Accessing Metrics via the Kubernetes Custom Metrics API
 

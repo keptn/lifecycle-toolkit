@@ -36,7 +36,7 @@ var (
 const KLTnamespace = "keptnlifecycle"
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, _, _ = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptnevaluation.KeptnEvaluationReconciler{

@@ -185,3 +185,14 @@ func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
 }
+
+func MergeMaps(m1 map[string]string, m2 map[string]string) map[string]string {
+	merged := make(map[string]string, len(m1)+len(m2))
+	for k, v := range m1 {
+		merged[k] = v
+	}
+	for key, value := range m2 {
+		merged[key] = value
+	}
+	return merged
+}

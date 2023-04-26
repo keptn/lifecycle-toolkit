@@ -33,7 +33,7 @@ var (
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _, readyToStart = common.InitSuite()
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptntaskdefinition.KeptnTaskDefinitionReconciler{

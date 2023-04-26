@@ -3,12 +3,6 @@ title: KeptnEvaluationDefinition
 description: Define all workloads and checks associated with an application
 weight: 20
 ---
----
-
-title: KeptnEvaluationDefinition
-description: Define all evaluations associated with an application
-weight: 30
----
 
 A `KeptnEvaluationDefinition` defines evaluation tasks
 that can be run by the Keptn Lifecycle Toolkit

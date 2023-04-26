@@ -42,3 +42,4 @@ configurations:
 commonLabels:
   crdGroup: lifecycle.keptn.sh
   app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  keptn.sh/inject-cert: "true"

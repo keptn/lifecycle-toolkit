@@ -36,8 +36,8 @@ func init() {
 
 type envConfig struct {
 	KLTNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
-	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"app.kubernetes.io/part-of"`
-	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"keptn-lifecycle-toolkit"`
+	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
+	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
 }
 
 func main() {

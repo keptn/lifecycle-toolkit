@@ -14,8 +14,8 @@ in one namespace for one API.
 The Keptn Metrics Operator provides a single entry point to all metrics in the cluster
 and allows you to use multiple observability platforms
 and multiple instances of any observability platform.
-Keptn Metrics are also application aware
-so they report data for all workflows that are included in the Keptn application.
+Metrics are fetched independently
+and can be used for an evaluation at workload- and application-level.
 
 This data can be displayed on Grafana
 or another standard dashboard application that you configure
@@ -31,6 +31,9 @@ Keptn metrics are implemented with two CRDs:
   define the metric to report
 * [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) --
   define the configuration for a data provider
+
+A Metric can be created with a query that fetches data for a property
+that describes some quality of the application, but this is not done automatically.
 
 ## Using OpenTelemetry with Keptn metrics
 

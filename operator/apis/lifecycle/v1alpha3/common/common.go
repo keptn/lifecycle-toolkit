@@ -186,10 +186,12 @@ func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
 }
 
+// MergeMaps merges two maps into a new map. If a key exists in both maps, the
+// value of the second map is picked.
 func MergeMaps(m1 map[string]string, m2 map[string]string) map[string]string {
 	merged := make(map[string]string, len(m1)+len(m2))
-	for k, v := range m1 {
-		merged[k] = v
+	for key, value := range m1 {
+		merged[key] = value
 	}
 	for key, value := range m2 {
 		merged[key] = value

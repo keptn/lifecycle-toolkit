@@ -6,17 +6,17 @@ metadata:
     app.kubernetes.io/managed-by: "klt"
 spec:
   revision: 1
-  version: 'c7241621cb'
+  version: '95a0b0ddca'
   workloads:
+    - name: podtato-head-entry
+      version: 0.1.0
+    - name: podtato-head-hat
+      version: 0.1.0
     - name: podtato-head-left-arm
       version: 0.1.0
     - name: podtato-head-left-leg
       version: 0.1.0
-    - name: podtato-head-entry
-      version: 0.1.0
     - name: podtato-head-right-arm
       version: 0.1.0
     - name: podtato-head-right-leg
-      version: 0.1.0
-    - name: podtato-head-hat
       version: 0.1.0

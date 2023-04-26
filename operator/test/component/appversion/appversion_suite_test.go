@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappversion"
@@ -44,8 +45,7 @@ var _ = BeforeSuite(func() {
 		SpanHandler:   &controllercommon.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	err := controller.SetupWithManager(k8sManager)
-	Expect(err).To(BeNil())
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
 })
 

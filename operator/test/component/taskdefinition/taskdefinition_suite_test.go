@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
@@ -40,9 +41,7 @@ var _ = BeforeSuite(func() {
 		Recorder: k8sManager.GetEventRecorderFor("test-taskdefinition-controller"),
 		Log:      GinkgoLogr,
 	}
-	err := controller.SetupWithManager(k8sManager)
-	Expect(err).To(BeNil())
-
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

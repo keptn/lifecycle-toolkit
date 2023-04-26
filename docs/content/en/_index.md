@@ -53,7 +53,7 @@ We extend the K8s APIs with the following Use Cases:
 
 <div class="row usecases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
-make ANY Kubernetes Deployment OBSERVABLE
+Make ANY Kubernetes Deployment observable
 
 <!-- markdownlint-disable-next-line link-fragments -->
  <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-observability">
@@ -61,7 +61,7 @@ make ANY Kubernetes Deployment OBSERVABLE
  </a>
 {{% /blocks/feature %}}
 {{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
-standardize access for all Observability Data for K8s
+Standardize access for all Observability Data for K8s
 
 <!-- markdownlint-disable-next-line link-fragments -->
  <a class="btn btn-lg -bg-light mr-3 mb-4" href="#data-access">
@@ -70,7 +70,7 @@ standardize access for all Observability Data for K8s
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
-gain confidence in your work with pre-/post-deployment checks
+Gain confidence in your work with pre-/post-deployment checks
 
 <!-- markdownlint-disable-next-line link-fragments -->
  <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">

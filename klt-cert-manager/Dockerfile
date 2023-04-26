@@ -13,7 +13,7 @@ RUN go mod download
 COPY ./ ./
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.11.3
+ARG CONTROLLER_TOOLS_VERSION=v0.11.4
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 ARG GIT_HASH

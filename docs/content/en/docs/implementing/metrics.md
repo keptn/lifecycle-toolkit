@@ -31,7 +31,7 @@ Keptn metrics are implemented with two CRDs:
 * [KeptnMetric](../yaml-crd-ref/metric.md) --
   define the metric to report
 * [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) --
-  define the data provider to be used for this metric
+  define the configuration for a data provider
 
 ## Using OpenTelemetry with Keptn metrics
 

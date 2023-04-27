@@ -95,11 +95,6 @@ AppDeploy
   WorkloadPostDeployTasks
     WorkloadPostDeployTasksStarted
     WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored
-  WorkloadPostDeployEvaluations
-    WorkloadPostDeployEvaluationsStarted
-    WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
-AppDeploy
-  AppDeploySucceeded OR AppDeployErrored
 ```
   
 ### Post-deployment evaluation phase
@@ -117,6 +112,14 @@ AppPostDeployEvaluations
 ```
 
 ### Completed phase
+
+```shell
+  WorkloadPostDeployEvaluations
+    WorkloadPostDeployEvaluationsStarted
+    WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
+AppDeploy
+  AppDeploySucceeded OR AppDeployErrored
+```
 
 ## Events that are not part of the deployment flow
 

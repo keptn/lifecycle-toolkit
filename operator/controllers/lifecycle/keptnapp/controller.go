@@ -22,7 +22,6 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
@@ -160,9 +159,8 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
-	maxVersionLen := apicommon.MaxVersionLength
-	if len(appVersion.ObjectMeta.Name) > maxVersionLen {
-		appVersion.ObjectMeta.Name = apicommon.TruncateString(appVersion.ObjectMeta.Name, maxVersionLen)
+	if len(appVersion.ObjectMeta.Name) > common.MaxVersionLength {
+		appVersion.ObjectMeta.Name = common.TruncateString(appVersion.ObjectMeta.Name, common.MaxVersionLength)
 	}
 	appVersion.Spec.TraceId = appTraceContextCarrier
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)

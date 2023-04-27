@@ -380,24 +380,6 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
 	}
 
-	if reflect.DeepEqual(appCreationRequest.Spec, newAppCreationRequest.Spec) {
-		logger.Info("Pod not changed, not updating anything")
-		return nil
-	}
-
-	logger.Info("Pod changed, updating app")
-	appCreationRequest.Spec = newAppCreationRequest.Spec
-
-	err = a.Client.Update(ctx, appCreationRequest)
-	if err != nil {
-		logger.Error(err, "Could not update App")
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotUpdated", "could not update KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
-		span.SetStatus(codes.Error, err.Error())
-		return err
-	}
-
-	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestUpdated", "updated KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
-
 	return nil
 }
 

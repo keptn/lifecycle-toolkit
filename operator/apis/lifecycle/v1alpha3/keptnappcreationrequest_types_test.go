@@ -1,6 +1,7 @@
 package v1alpha3
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -54,4 +55,19 @@ func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestKeptnAppCreationRequest_GetSpanAttributes(t *testing.T) {
+	kacr := KeptnAppCreationRequest{
+		ObjectMeta: v1.ObjectMeta{
+			Name: "my-app",
+		},
+		Spec: KeptnAppCreationRequestSpec{},
+	}
+
+	spanAttrs := kacr.GetSpanAttributes()
+
+	require.Equal(t, map[string]string{
+		"appName": "my-app",
+	}, spanAttrs)
 }

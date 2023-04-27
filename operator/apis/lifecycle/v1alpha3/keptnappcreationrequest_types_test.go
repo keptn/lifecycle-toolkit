@@ -1,10 +1,10 @@
 package v1alpha3
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

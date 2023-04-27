@@ -72,7 +72,7 @@ When all activities are successful,
 the KeptnApp issues the `AppDeploySucceeded` event
 and continues to the next phase.
 If any of these activities fail,
-the KeptnApp issues the `AppPostDeployEvaluationsErrored` event
+the KeptnApp issues the `AppDeployErrored` event
 and terminates the deployment.
 
 ```shell

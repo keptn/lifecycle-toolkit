@@ -69,6 +69,9 @@
 ## @param     certificateOperator.manager.image.tag select tag for manager container <!---x-release-please-version-->
 ## @param     certificateOperator.manager.imagePullPolicy select image pull policy for manager container
 
+## @param     certificateOperator.manager.env.labelSelectorKey specify the label selector to find resources to generate certificates for
+## @param     certificateOperator.manager.env.labelSelectorValue specify the value for the label selector
+
 ## @extra     certificateOperator.manager.livenessProbe custom RBAC proxy liveness probe
 ## @skip     certificateOperator.manager.livenessProbe.httpGet.path
 ## @skip     certificateOperator.manager.livenessProbe.httpGet.port

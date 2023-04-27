@@ -4,6 +4,8 @@ kind: MutatingWebhookConfiguration
 metadata:
   creationTimestamp: null
   name: lifecycle-mutating-webhook-configuration
+  labels:
+    keptn.sh/inject-cert: "true"
 webhooks:
   - admissionReviewVersions:
       - v1

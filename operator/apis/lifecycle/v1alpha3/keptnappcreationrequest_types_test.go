@@ -1,6 +1,7 @@
 package v1alpha3
 
 import (
+	"go.opentelemetry.io/otel/attribute"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -67,7 +68,7 @@ func TestKeptnAppCreationRequest_GetSpanAttributes(t *testing.T) {
 
 	spanAttrs := kacr.GetSpanAttributes()
 
-	require.Equal(t, map[string]string{
-		"appName": "my-app",
+	require.Equal(t, []attribute.KeyValue{
+		common.AppName.String(kacr.Name),
 	}, spanAttrs)
 }

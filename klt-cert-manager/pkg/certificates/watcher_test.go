@@ -6,19 +6,18 @@ import (
 	"encoding/pem"
 	"os"
 	"path/filepath"
-	fakeClient "sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"testing"
 	"time"
 
 	"github.com/go-logr/logr/testr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates/fake"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	fakeClient "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 const CACERT = `-----BEGIN CERTIFICATE-----

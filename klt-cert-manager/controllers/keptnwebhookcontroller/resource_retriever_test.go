@@ -1,7 +1,10 @@
+// nolint: dupl
 package keptnwebhookcontroller
 
 import (
 	"context"
+	"testing"
+
 	"github.com/go-logr/logr/testr"
 	"github.com/stretchr/testify/require"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -9,7 +12,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"testing"
 )
 
 func TestLabelSelectorRetriever_GetCRDs(t *testing.T) {
@@ -32,7 +34,8 @@ func TestLabelSelectorRetriever_GetCRDs(t *testing.T) {
 		Spec: apiv1.CustomResourceDefinitionSpec{},
 	}
 	scheme := runtime.NewScheme()
-	apiv1.AddToScheme(scheme)
+	err := apiv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(crd1, crd2).Build()
 
@@ -60,7 +63,8 @@ func TestLabelSelectorRetriever_GetCRDs_ReturnEmptyListIfNothingMatches(t *testi
 		Spec: apiv1.CustomResourceDefinitionSpec{},
 	}
 	scheme := runtime.NewScheme()
-	apiv1.AddToScheme(scheme)
+	err := apiv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(crd1).Build()
 
@@ -97,7 +101,8 @@ func TestLabelSelectorRetriever_GetMutatingWebhooks(t *testing.T) {
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(mwh1, mwh2).Build()
 
@@ -125,7 +130,8 @@ func TestLabelSelectorRetriever_GetMutatingWebhook_ReturnEmptyListIfNothingMatch
 	}
 
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(mwh1).Build()
 
@@ -162,7 +168,8 @@ func TestLabelSelectorRetriever_GetValidatingWebhooks(t *testing.T) {
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(vwh1, vwh2).Build()
 
@@ -190,7 +197,8 @@ func TestLabelSelectorRetriever_GetValidatingWebhook_ReturnEmptyListIfNothingMat
 	}
 
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(vwh1).Build()
 
@@ -267,7 +275,8 @@ func TestResourceNameRetriever_GetCRDs(t *testing.T) {
 		Spec: apiv1.CustomResourceDefinitionSpec{},
 	}
 	scheme := runtime.NewScheme()
-	apiv1.AddToScheme(scheme)
+	err := apiv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(crd1, crd2).Build()
 
@@ -306,7 +315,8 @@ func TestResourceNameRetriever_GetCRDs_ContinueIfOneNotFound(t *testing.T) {
 		Spec: apiv1.CustomResourceDefinitionSpec{},
 	}
 	scheme := runtime.NewScheme()
-	apiv1.AddToScheme(scheme)
+	err := apiv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(crd1, crd2).Build()
 
@@ -337,7 +347,8 @@ func TestResourceNameRetriever_GetMutatingWebhooks(t *testing.T) {
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(mwh1, mwh2).Build()
 
@@ -374,7 +385,8 @@ func TestResourceNameRetriever_GetMutatingWebhooks_ContinueIfOneNotFound(t *test
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(mwh1, mwh2).Build()
 
@@ -405,7 +417,8 @@ func TestResourceNameRetriever_GetValidatingWebhooks(t *testing.T) {
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(vwh1, vwh2).Build()
 
@@ -436,7 +449,8 @@ func TestResourceNameRetriever_GetValidatingWebhooks_ContinueIfOneNotFound(t *te
 		},
 	}
 	scheme := runtime.NewScheme()
-	admissionregistrationv1.AddToScheme(scheme)
+	err := admissionregistrationv1.AddToScheme(scheme)
+	require.Nil(t, err)
 
 	fakeClient := fake.NewClientBuilder().WithScheme(scheme).WithObjects(mwh1, mwh2).Build()
 

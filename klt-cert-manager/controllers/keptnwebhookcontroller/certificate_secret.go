@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/kubeutils"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"

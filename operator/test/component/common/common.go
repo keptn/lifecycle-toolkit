@@ -133,7 +133,7 @@ func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1
 	return appVersion
 }
 
-func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdktest.SpanRecorder, client.Client, context.CancelFunc) {
+func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdktest.SpanRecorder, client.Client, chan struct{}) {
 	var (
 		cfg          *rest.Config
 		k8sClient    client.Client
@@ -142,11 +142,10 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 		k8sManager   ctrl.Manager
 		spanRecorder *sdktest.SpanRecorder
 		tracer       *otelsdk.TracerProvider
-		cancel       context.CancelFunc
 	)
 
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
-	ctx, cancel = context.WithCancel(context.TODO())
+	ctx = context.TODO()
 	By("bootstrapping test environment")
 
 	if os.Getenv("USE_EXISTING_CLUSTER") == "true" {
@@ -185,8 +184,10 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 	})
 	Expect(err).ToNot(HaveOccurred())
 
+	readyToStart := make(chan struct{})
 	go func() {
 		defer GinkgoRecover()
+		<-readyToStart
 		err = k8sManager.Start(ctx)
 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
 		gexec.KillAndWait(4 * time.Second)
@@ -203,7 +204,7 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 	spanRecorder = sdktest.NewSpanRecorder()
 	tracer = otelsdk.NewTracerProvider(otelsdk.WithSpanProcessor(spanRecorder))
 
-	return ctx, k8sManager, tracer, spanRecorder, k8sClient, cancel
+	return ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart
 }
 
 func WriteReport(specReport ginkgotypes.SpecReport, f *os.File) {

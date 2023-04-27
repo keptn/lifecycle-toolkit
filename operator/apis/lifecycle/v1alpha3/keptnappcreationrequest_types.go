@@ -63,7 +63,7 @@ func init() {
 	SchemeBuilder.Register(&KeptnAppCreationRequest{}, &KeptnAppCreationRequestList{})
 }
 
-func (kacr *KeptnAppCreationRequest) IsSingleService() bool {
+func (kacr KeptnAppCreationRequest) IsSingleService() bool {
 	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
 }
 

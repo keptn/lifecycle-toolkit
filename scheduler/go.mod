@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/scheduler
 
-go 1.19
+go 1.20
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -122,6 +122,7 @@ require (
 
 replace (
 	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
+	golang.org/x/net => golang.org/x/net v0.8.0
 	k8s.io/api => k8s.io/api v0.25.9
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.9
 	k8s.io/apimachinery => k8s.io/apimachinery v0.25.9

@@ -69,7 +69,7 @@ The `KeptnApp` just observes whether
 all pre and post-deployment tasks/evaluation are successful
 and that the pods are deployed successfully.
 When all activities are successful,
-the KeptnApp issues the `AppPostDeployEvaluationsSucceeded` event
+the KeptnApp issues the `AppDeploySucceeded` event
 and continues to the next phase.
 If any of these activities fail,
 the KeptnApp issues the `AppPostDeployEvaluationsErrored` event

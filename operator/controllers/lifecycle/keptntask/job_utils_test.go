@@ -78,6 +78,16 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
+	require.Equal(t, map[string]string{
+		"label1":             "label2",
+		"keptn.sh/app":       "my-app",
+		"keptn.sh/task-name": "my-task",
+		"keptn.sh/version":   "",
+		"keptn.sh/workload":  "my-workload",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1": "annotation2",
+	}, resultingJob.Annotations)
 }
 
 func TestKeptnTaskReconciler_updateJob(t *testing.T) {
@@ -158,6 +168,12 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: klcv1alpha3.KeptnTaskSpec{
 			Workload:       "my-workload",
@@ -173,6 +189,12 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 			Function: klcv1alpha3.FunctionSpec{

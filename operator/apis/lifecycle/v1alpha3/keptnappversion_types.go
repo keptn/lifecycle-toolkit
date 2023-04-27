@@ -313,8 +313,10 @@ func (a KeptnAppVersion) GetVersion() string {
 func (a KeptnAppVersion) GenerateTask(taskDefinition KeptnTaskDefinition, checkType common.CheckType) KeptnTask {
 	return KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      common.GenerateTaskName(checkType, taskDefinition.Name),
-			Namespace: a.Namespace,
+			Name:        common.GenerateTaskName(checkType, taskDefinition.Name),
+			Namespace:   a.Namespace,
+			Labels:      taskDefinition.Labels,
+			Annotations: taskDefinition.Annotations,
 		},
 		Spec: KeptnTaskSpec{
 			AppVersion:       a.GetVersion(),

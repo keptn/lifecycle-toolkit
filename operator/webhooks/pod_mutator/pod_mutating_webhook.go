@@ -467,7 +467,6 @@ func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod
 			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
-			Labels:      map[string]string{},
 		},
 		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
 			AppName: appName,
@@ -475,7 +474,7 @@ func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod
 	}
 
 	if !isAppAnnotationPresent {
-		kacr.Labels[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
+		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}
 
 	return kacr

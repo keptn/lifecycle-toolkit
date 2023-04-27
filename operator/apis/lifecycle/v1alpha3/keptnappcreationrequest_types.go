@@ -64,7 +64,7 @@ func init() {
 }
 
 func (kacr *KeptnAppCreationRequest) IsSingleService() bool {
-	return kacr.Labels[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
+	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
 }
 
 func (kacr KeptnAppCreationRequest) SetSpanAttributes(span trace.Span) {

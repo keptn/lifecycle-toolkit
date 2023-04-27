@@ -31,7 +31,7 @@ A Kubernetes deployment is started by the following command:
 kubectl apply -f deployment.yaml
 ```
 
-The `kubectl apply` occurs at the beginning of the deployment
+The deployment is created
 but the created pods are blocked and in pending state
 until all the required pre-deployment tasks/evaluations
 defined on either the KeptnApp or KeptnWorkload level pass.

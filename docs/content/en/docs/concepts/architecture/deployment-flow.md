@@ -23,7 +23,7 @@ is emitted at each phase to provide additional Observability of the execution fl
 
 The Keptn Lifecycle Toolkit implements a
 [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
-that blocks the creation of the pods until all the pre-conditions are fulfilled.
+that blocks the binding of the pods to a node until all the pre-conditions are fulfilled.
 
 A Kubernetes deployment is started by the following command:
 

@@ -32,7 +32,8 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
+	var readyToStart chan struct{}
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image")
 
@@ -46,7 +47,7 @@ var _ = BeforeSuite(func() {
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
-
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

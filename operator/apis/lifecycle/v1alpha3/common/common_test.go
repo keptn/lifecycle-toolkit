@@ -331,3 +331,60 @@ func Test_GenerateEvaluationName(t *testing.T) {
 		})
 	}
 }
+
+func Test_MergeMaps(t *testing.T) {
+	tests := []struct {
+		In1  map[string]string
+		In2  map[string]string
+		Want map[string]string
+	}{
+		{
+			In1:  nil,
+			In2:  nil,
+			Want: map[string]string{},
+		},
+		{
+			In1: nil,
+			In2: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+		},
+		{
+			In1: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			In2: nil,
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+		},
+		{
+			In1: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			In2: map[string]string{
+				"ll5": "ll6",
+				"ll7": "ll8",
+			},
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+				"ll5": "ll6",
+				"ll7": "ll8",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, MergeMaps(tt.In1, tt.In2), tt.Want)
+		})
+	}
+}

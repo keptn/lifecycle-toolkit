@@ -7,7 +7,7 @@ on:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.3"
+  CONTROLLER_TOOLS_VERSION: "v0.11.4"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -24,7 +24,6 @@ jobs:
       BRANCH_SLUG: ${{ steps.extract_branch.outputs.BRANCH_SLUG }}
       DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
-      NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
       - name: Check out code
@@ -41,19 +40,6 @@ jobs:
           BUILD_TIME=$(date -u "+%F_%T")
           echo "DATETIME=$DATETIME" >> "$GITHUB_OUTPUT"
           echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
-
-      - name: Get workflow run type
-        id: get_run_type
-        run: |
-          NON_FORKED_AND_NON_ROBOT_RUN=${{ ( github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]' ) && \
-            ( github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository ) }}
-          echo "github.actor != 'renovate[bot]' = ${{ github.actor != 'renovate[bot]' }}"
-          echo "github.actor != 'dependabot[bot]' = ${{ github.actor != 'dependabot[bot]' }}"
-          echo "github.event_name == 'push' = ${{ github.event_name == 'push' }}"
-          echo "github.event.pull_request.head.repo.full_name == github.repository = \
-            ${{ github.event.pull_request.head.repo.full_name == github.repository }}"
-          echo "NON_FORKED_AND_NON_ROBOT_RUN = $NON_FORKED_AND_NON_ROBOT_RUN"
-          echo "NON_FORKED_AND_NON_ROBOT_RUN=$NON_FORKED_AND_NON_ROBOT_RUN" >> "$GITHUB_OUTPUT"
 
   build_image:
     name: Build Docker Image

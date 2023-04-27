@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
@@ -32,7 +33,8 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
+	var readyToStart chan struct{}
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
@@ -44,9 +46,8 @@ var _ = BeforeSuite(func() {
 		SpanHandler:   &controllercommon.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	err := controller.SetupWithManager(k8sManager)
-	Expect(err).To(BeNil())
-
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

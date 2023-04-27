@@ -206,11 +206,11 @@ func main() {
 	}
 
 	appCreationRequestLogger := ctrl.Log.WithName("KeptnAppCreationRequest Controller")
-	appCreationRequestReconciler := &keptnappcreationrequest.KeptnAppCreationRequestReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
-	}
+	appCreationRequestReconciler := keptnappcreationrequest.NewReconciler(
+		mgr.GetClient(),
+		mgr.GetScheme(),
+		appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
+	)
 	if err := appCreationRequestReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppCreationRequest")
 		os.Exit(1)

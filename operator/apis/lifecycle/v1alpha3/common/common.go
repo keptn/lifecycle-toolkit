@@ -20,6 +20,7 @@ const PostDeploymentTaskAnnotation = "keptn.sh/post-deployment-tasks"
 const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
+const K8sRecommendedManagedByAnnotations = "app.kubernetes.io/managed-by"
 const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluations"
 const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluations"
 const TaskNameAnnotation = "keptn.sh/task-name"
@@ -28,11 +29,19 @@ const CreateAppTaskSpanName = "create_%s_app_task"
 const CreateWorkloadTaskSpanName = "create_%s_deployment_task"
 const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
+const AppTypeAnnotation = "keptn.sh/app-type"
 
 const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25
 const MaxTaskNameLength = 25
 const MaxVersionLength = 12
+
+type AppType string
+
+const (
+	AppTypeSingleService AppType = "single-service"
+	AppTypeMultiService  AppType = "multi-service"
+)
 
 type KeptnState string
 
@@ -175,4 +184,17 @@ func GenerateTaskName(checkType CheckType, taskName string) string {
 func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
 	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
+}
+
+// MergeMaps merges two maps into a new map. If a key exists in both maps, the
+// value of the second map is picked.
+func MergeMaps(m1 map[string]string, m2 map[string]string) map[string]string {
+	merged := make(map[string]string, len(m1)+len(m2))
+	for key, value := range m1 {
+		merged[key] = value
+	}
+	for key, value := range m2 {
+		merged[key] = value
+	}
+	return merged
 }

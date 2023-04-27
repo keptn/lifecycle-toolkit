@@ -42,15 +42,17 @@ checks
 
 ### Keptn Certificate Operator controller
 
-| Name                                                   | Description                                                       | Value                                      |
-| ------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------ |
-| `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                        |                                            |
-| `certificateOperator.manager.image.repository`         | specify repo for manager image                                    | `ghcr.keptn.sh/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container <!---x-release-please-version--> | `v0.7.0`                                   |
-| `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                    | `Always`                                   |
-| `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                                  |                                            |
-| `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                                    |                                            |
-| `certificateOperator.manager.resources`                | custom limits and requests for manager container                  |                                            |
+| Name                                                   | Description                                                               | Value                                      |
+| ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------ |
+| `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                                |                                            |
+| `certificateOperator.manager.image.repository`         | specify repo for manager image                                            | `ghcr.keptn.sh/keptn/certificate-operator` |
+| `certificateOperator.manager.image.tag`                | select tag for manager container <!---x-release-please-version-->         | `v0.7.0`                                   |
+| `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                            | `Always`                                   |
+| `certificateOperator.manager.env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`                     |
+| `certificateOperator.manager.env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                                     |
+| `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                                          |                                            |
+| `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                                            |                                            |
+| `certificateOperator.manager.resources`                | custom limits and requests for manager container                          |                                            |
 
 ### Keptn Lifecycle Operator common
 

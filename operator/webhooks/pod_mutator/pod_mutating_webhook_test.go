@@ -1171,7 +1171,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	require.Nil(t, err)
 
 	require.Equal(t, "my-workload", kacr.Spec.AppName)
-	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Labels[apicommon.AppTypeAnnotation])
+	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 
@@ -1206,9 +1206,11 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "default",
-			Labels: map[string]string{
-				"donotchange":               "true",
+			Annotations: map[string]string{
 				apicommon.AppTypeAnnotation: string(apicommon.AppTypeSingleService),
+			},
+			Labels: map[string]string{
+				"donotchange": "true",
 			},
 		},
 		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
@@ -1292,7 +1294,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 	require.Nil(t, err)
 
 	require.Equal(t, "my-workload", kacr.Spec.AppName)
-	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Labels[apicommon.AppTypeAnnotation])
+	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 	// verify that the previously created KACR has not been changed
 	require.Equal(t, "true", kacr.Labels["donotchange"])
 
@@ -1404,7 +1406,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	require.Equal(t, "my-app", kacr.Spec.AppName)
 	// here we do not want a single-service annotation
-	require.Empty(t, kacr.Labels[apicommon.AppTypeAnnotation])
+	require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation])
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 

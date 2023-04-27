@@ -1,11 +1,11 @@
 package v1alpha3
 
 import (
-	"go.opentelemetry.io/otel/attribute"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel/attribute"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

@@ -3,8 +3,6 @@ package keptnwebhookcontroller
 import (
 	"context"
 	"fmt"
-	"reflect"
-
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/eventfilter"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
@@ -16,8 +14,10 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
@@ -25,6 +25,7 @@ type ObservedObjects struct {
 	MutatingWebhooks          []string
 	ValidatingWebhooks        []string
 	CustomResourceDefinitions []string
+	Deployments               []string
 }
 
 type CertificateReconcilerConfig struct {
@@ -45,8 +46,16 @@ func NewReconciler(config CertificateReconcilerConfig) *KeptnWebhookCertificateR
 		Log:               config.Log,
 		Namespace:         config.Namespace,
 		MatchLabels:       config.MatchLabels,
+		FilterPredicate:   getFilterPredicate(config),
 		ResourceRetriever: NewResourceRetriever(config),
 	}
+}
+
+func getFilterPredicate(config CertificateReconcilerConfig) predicate.Predicate {
+	if config.WatchResources != nil && len(config.WatchResources.Deployments) > 0 {
+		return eventfilter.ForNamesAndNamespace(config.WatchResources.Deployments, config.Namespace)
+	}
+	return eventfilter.ForLabelsAndNamespace(labels.SelectorFromSet(config.MatchLabels), config.Namespace)
 }
 
 // KeptnWebhookCertificateReconciler reconciles a KeptnWebhookCertificate object
@@ -57,6 +66,7 @@ type KeptnWebhookCertificateReconciler struct {
 	Log               logr.Logger
 	Namespace         string
 	MatchLabels       labels.Set
+	FilterPredicate   predicate.Predicate
 	ResourceRetriever IResourceRetriever
 }
 
@@ -123,12 +133,14 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if r.FilterPredicate == nil {
+		return errors.New("KeptnWebhookCertificateReconciler requires a FilterPredicate to be set")
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
-		WithEventFilter(eventfilter.ForLabelsAndNamespace(labels.SelectorFromSet(r.MatchLabels), r.Namespace)).
+		WithEventFilter(r.FilterPredicate).
 		Owns(&corev1.Secret{}).
 		Complete(r)
-
 }
 
 func (r *KeptnWebhookCertificateReconciler) setCertificates(ctx context.Context, certSecret *certificateSecret) error {

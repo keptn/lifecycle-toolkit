@@ -58,3 +58,21 @@ func TestForNamespace(t *testing.T) {
 	assert.False(t, isInNamespace(deployment, testNamespace1))
 	assert.True(t, isInNamespace(deployment, testNamespace2))
 }
+
+func Test_matchesName(t *testing.T) {
+	deployment := &v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-deployment",
+		},
+	}
+
+	assert.True(t, matchesName(deployment, []string{"my-deployment"}))
+
+	deployment = &v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-other-deployment",
+		},
+	}
+
+	assert.False(t, matchesName(deployment, []string{"my-deployment"}))
+}

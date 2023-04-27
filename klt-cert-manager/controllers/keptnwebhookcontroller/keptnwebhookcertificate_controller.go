@@ -3,6 +3,8 @@ package keptnwebhookcontroller
 import (
 	"context"
 	"fmt"
+	"reflect"
+
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/eventfilter"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
@@ -14,7 +16,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"

@@ -19,7 +19,7 @@ func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {
 		{
 			name: "single-service application",
 			fields: fields{ObjectMeta: v1.ObjectMeta{
-				Labels: map[string]string{
+				Annotations: map[string]string{
 					common.AppTypeAnnotation: string(common.AppTypeSingleService),
 				},
 			}},
@@ -28,7 +28,7 @@ func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {
 		{
 			name: "multi-service application",
 			fields: fields{ObjectMeta: v1.ObjectMeta{
-				Labels: map[string]string{
+				Annotations: map[string]string{
 					common.AppTypeAnnotation: string(common.AppTypeMultiService),
 				},
 			}},
@@ -37,7 +37,7 @@ func TestKeptnAppCreationRequest_IsSingleService(t *testing.T) {
 		{
 			name: "anything else",
 			fields: fields{ObjectMeta: v1.ObjectMeta{
-				Labels: map[string]string{
+				Annotations: map[string]string{
 					common.AppTypeAnnotation: "",
 				},
 			}},

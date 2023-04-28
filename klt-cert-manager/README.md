@@ -48,18 +48,20 @@ import (
 	"flag"
 	"log"
 	"os"
-	
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
+
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
 	// +kubebuilder:scaffold:imports
 )
 
 func main() {
 	// operator setup ... 
 	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
-		Namespace:     "my-namespace",
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Log:       ctrl.Log.WithName("KeptnWebhookCert Controller"),
+		Namespace: "my-namespace",
 		MatchLabels: map[string]string{
 			"inject-cert": "true",
 		},
@@ -69,6 +71,19 @@ func main() {
 		os.Exit(1)
 	}
 	//...
+	// register mutating/validating webhooks
+	webhookBuilder := webhook.NewWebhookBuilder().
+		SetNamespace(env.PodNamespace).
+		SetPodName(env.PodName).
+		SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+
+	setupLog.Info("starting webhook and manager")
+	if err := webhookBuilder.Run(mgr, map[string]*admission.Webhook{
+		    "/webhook-path": &webhook.Admission{},
+        }}); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
+	}
 }
 ```
 

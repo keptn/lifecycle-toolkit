@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
@@ -69,6 +70,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "f9d59293.keptn.sh",
+		ClientDisableCacheFor:  []client.Object{&corev1.Secret{}},
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly

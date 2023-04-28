@@ -64,7 +64,6 @@ rules:
   resources:
   - secrets
   verbs:
-  - delete
   - get
   - patch
   - update

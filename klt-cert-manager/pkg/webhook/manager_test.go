@@ -3,8 +3,7 @@ package webhook
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/fake"
-	cmdManager "github.com/keptn/lifecycle-toolkit/operator/cmd/manager"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/fake"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -13,7 +12,7 @@ import (
 func TestCreateOptions(t *testing.T) {
 
 	t.Run("implements interface", func(t *testing.T) {
-		var provider cmdManager.Provider = NewWebhookManagerProvider("certs-dir", "key-file", "cert-file")
+		var provider Provider = NewWebhookManagerProvider("certs-dir", "key-file", "cert-file")
 
 		providerImpl := provider.(WebhookProvider)
 		assert.Equal(t, "certs-dir", providerImpl.certificateDirectory)

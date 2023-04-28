@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	fake2 "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/fake"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/fake"
+	fake2 "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates/fake"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/fake"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/controller-runtime/pkg/client"

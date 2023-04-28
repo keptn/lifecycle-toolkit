@@ -23,7 +23,7 @@ const (
 	CertThreshold              = 5 * time.Minute
 )
 
-//go:generate moq -pkg fake -skip-ensure -out ../fake/manager_mock.go . ICertificateWatcher:MockCertificateWatcher
+//go:generate moq -pkg fake -skip-ensure -out ./fake/watcher_mock.go . ICertificateWatcher:MockCertificateWatcher
 type ICertificateWatcher interface {
 	WaitForCertificates()
 }

@@ -309,10 +309,6 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	if latestVersion.Spec.Version == "" || !workloadFound {
 		return false, klcv1alpha3.KeptnAppVersion{}, nil
 	}
-	// If the latest version's name is longer than the maximum allowed length, truncate it
-	if len(latestVersion.ObjectMeta.Name) > apicommon.MaxVersionLength {
-		latestVersion.ObjectMeta.Name = apicommon.TruncateString(latestVersion.ObjectMeta.Name, apicommon.MaxVersionLength)
-	}
 	return true, latestVersion, nil
 }
 

@@ -51,14 +51,20 @@ metadata:
 rules:
 - apiGroups:
   - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - list
+  - watch
+- apiGroups:
+  - ""
   resourceNames:
   - klt-certs
   resources:
   - secrets
   verbs:
-  - create
   - delete
   - get
   - patch
   - update
-  - watch

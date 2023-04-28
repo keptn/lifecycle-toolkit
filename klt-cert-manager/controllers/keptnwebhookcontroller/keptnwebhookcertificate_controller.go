@@ -3,6 +3,7 @@ package keptnwebhookcontroller
 import (
 	"context"
 	"fmt"
+	corev1 "k8s.io/api/core/v1"
 	"reflect"
 
 	"github.com/go-logr/logr"
@@ -10,7 +11,6 @@ import (
 	"github.com/pkg/errors"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,8 @@ type KeptnWebhookCertificateReconciler struct {
 // +kubebuilder:rbac:groups="apps",resources=deployments,verbs=get;list;watch;
 
 //role
-// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;watch;create;update;patch;delete,resourceNames=klt-certs
+// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;update;patch;delete,resourceNames=klt-certs
+// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=create;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -98,7 +99,6 @@ func (r *KeptnWebhookCertificateReconciler) SetupWithManager(mgr ctrl.Manager) e
 		WithEventFilter(eventfilter.ForLabelsAndNamespace(labels.SelectorFromSet(r.MatchLabels), r.Namespace)).
 		Owns(&corev1.Secret{}).
 		Complete(r)
-
 }
 
 func (r *KeptnWebhookCertificateReconciler) setCertificates(ctx context.Context, certSecret *certificateSecret) error {

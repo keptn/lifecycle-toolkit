@@ -14,6 +14,12 @@ func TestKeptnTask(t *testing.T) {
 	task := &KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: KeptnTaskSpec{
 			AppName:        "app",
@@ -33,6 +39,12 @@ func TestKeptnTask(t *testing.T) {
 	require.Equal(t, KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "task",
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: KeptnTaskSpec{
 			AppName:        "app",
@@ -83,6 +95,7 @@ func TestKeptnTask(t *testing.T) {
 		"keptn.sh/app":       "app",
 		"keptn.sh/task-name": "task",
 		"keptn.sh/version":   "appversion",
+		"label1":             "label2",
 	}, task.CreateKeptnLabels())
 
 	task.Spec.Workload = "workload"
@@ -93,6 +106,7 @@ func TestKeptnTask(t *testing.T) {
 		"keptn.sh/workload":  "workload",
 		"keptn.sh/task-name": "task",
 		"keptn.sh/version":   "workloadversion",
+		"label1":             "label2",
 	}, task.CreateKeptnLabels())
 
 	require.Equal(t, []attribute.KeyValue{

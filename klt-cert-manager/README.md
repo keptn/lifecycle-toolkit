@@ -32,7 +32,7 @@ metadata:
 ## Using the klt-cert-manager library
 
 The functionality provided by this operator can also be added to other operators by using the `klt-cert-manager` as
-a library. 
+a library.
 To do this, add the library as a dependency to your application:
 
 ```shell
@@ -80,10 +80,10 @@ func main() {
 
     setupLog.Info("starting webhook and manager")
     if err := webhookBuilder.Run(mgr, map[string]*admission.Webhook{
-    	    "/webhook-path": &webhook.Admission{},
+            "/webhook-path": &webhook.Admission{},
         }); err != nil {
-    	setupLog.Error(err, "problem running manager")
-    	os.Exit(1)
+        setupLog.Error(err, "problem running manager")
+        os.Exit(1)
     }
 }
 ```
@@ -173,24 +173,24 @@ import (
 )
 
 func main() {
-	// operator setup ... 
-	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
-		Namespace:     "my-namespace",
-		WatchResources: &keptnwebhookcontroller.ObservedObjects{
-			MutatingWebhooks:          []string{"my-mwh-1", "my-mwh-2"},
-			ValidatingWebhooks:        []string{"my-vwh-1", "my-vwh-2"},
-			CustomResourceDefinitions: []string{"my-crd-1", "my-crd-2"},
-			Deployments:               []string{"my-operator-deployment"},
-		},
-	})
-	if err = certificateReconciler.SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
-		os.Exit(1)
-	}
-	//...
+    // operator setup ... 
+    certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
+        Client:        mgr.GetClient(),
+        Scheme:        mgr.GetScheme(),
+        Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
+        Namespace:     "my-namespace",
+        WatchResources: &keptnwebhookcontroller.ObservedObjects{
+            MutatingWebhooks:          []string{"my-mwh-1", "my-mwh-2"},
+            ValidatingWebhooks:        []string{"my-vwh-1", "my-vwh-2"},
+            CustomResourceDefinitions: []string{"my-crd-1", "my-crd-2"},
+            Deployments:               []string{"my-operator-deployment"},
+        },
+    })
+    if err = certificateReconciler.SetupWithManager(mgr); err != nil {
+        setupLog.Error(err, "unable to create controller", "controller", "Deployment")
+        os.Exit(1)
+    }
+    //...
 }
 ```
 

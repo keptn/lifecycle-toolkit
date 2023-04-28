@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"os"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
@@ -17,6 +16,7 @@ import (
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	// nolint:gci

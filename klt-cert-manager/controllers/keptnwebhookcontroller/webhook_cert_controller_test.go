@@ -377,7 +377,7 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 
 func getMatchLabel() map[string]string {
 	return map[string]string{
-		"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit",
+		"keptn.sh/inject-cert": "true",
 	}
 }
 
@@ -411,10 +411,10 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
 	rec := NewReconciler(CertificateReconcilerConfig{
-		MatchLabels: map[string]string{"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit"},
 		Client:      clt,
 		Log:         testr.New(t),
 		Namespace:   testnamespace,
+		MatchLabels: map[string]string{"keptn.sh/inject-cert": "true"},
 	})
 
 	request := reconcile.Request{

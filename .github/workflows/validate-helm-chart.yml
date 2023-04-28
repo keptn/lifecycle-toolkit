@@ -82,5 +82,8 @@ jobs:
           else
             echo ""
             echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.keptn.sh/keptn"
+            echo ""
+            echo "=========== Diff ==========="
+            git diff
             exit 1
           fi

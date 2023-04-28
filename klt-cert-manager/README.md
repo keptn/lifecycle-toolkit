@@ -12,7 +12,7 @@ operator deployment changes.
 THe `klt-cert-manager` retrieves all `MutatingWebhookConfigurations`, `ValidatingWebhookConfigurations` and
 `CustomResourceDefinitions` based on a label selector that can be defined using the following environment variables:
 
-- `LABEL_SELECTOR_KEY`: Label key used or identifying resources for certificate injection. 
+- `LABEL_SELECTOR_KEY`: Label key used or identifying resources for certificate injection.
 Default: `keptn.sh/inject-cert`
 - `LABEL_SELECTOR_VALUE`: Label value used for identifying resources for certificate injection.
 Default: `true`.
@@ -32,7 +32,8 @@ metadata:
 ## Using the klt-cert-manager library
 
 The functionality provided by this operator can also be added to other operators by using the `klt-cert-manager` as
-a library. To do this, add the library as a dependency to your application:
+a library. 
+To do this, add the library as a dependency to your application:
 
 ```shell
 go get github.com/keptn/lifecycle-toolkit/klt-cert-manager
@@ -45,45 +46,45 @@ created and registered to your operator's controller manager:
 package main
 
 import (
-	"flag"
-	"log"
-	"os"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
+    "flag"
+    "log"
+    "os"
+    "sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
-	// +kubebuilder:scaffold:imports
+    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+    // +kubebuilder:scaffold:imports
 )
 
 func main() {
-	// operator setup ... 
-	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
-		Client:    mgr.GetClient(),
-		Scheme:    mgr.GetScheme(),
-		Log:       ctrl.Log.WithName("KeptnWebhookCert Controller"),
-		Namespace: "my-namespace",
-		MatchLabels: map[string]string{
-			"inject-cert": "true",
-		},
-	})
-	if err = certificateReconciler.SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
-		os.Exit(1)
-	}
-	//...
-	// register mutating/validating webhooks
-	webhookBuilder := webhook.NewWebhookBuilder().
-		SetNamespace(env.PodNamespace).
-		SetPodName(env.PodName).
-		SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+    // operator setup ... 
+    certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
+        Client:    mgr.GetClient(),
+        Scheme:    mgr.GetScheme(),
+        Log:       ctrl.Log.WithName("KeptnWebhookCert Controller"),
+        Namespace: "my-namespace",
+        MatchLabels: map[string]string{
+            "inject-cert": "true",
+        },
+    })
+    if err = certificateReconciler.SetupWithManager(mgr); err != nil {
+        setupLog.Error(err, "unable to create controller", "controller", "Deployment")
+        os.Exit(1)
+    }
+    //...
+    // register mutating/validating webhooks
+    webhookBuilder := webhook.NewWebhookBuilder().
+        SetNamespace(env.PodNamespace).
+        SetPodName(env.PodName).
+        SetConfigProvider(cmdConfig.NewKubeConfigProvider())
 
-	setupLog.Info("starting webhook and manager")
-	if err := webhookBuilder.Run(mgr, map[string]*admission.Webhook{
-		    "/webhook-path": &webhook.Admission{},
-        }}); err != nil {
-		setupLog.Error(err, "problem running manager")
-		os.Exit(1)
-	}
+    setupLog.Info("starting webhook and manager")
+    if err := webhookBuilder.Run(mgr, map[string]*admission.Webhook{
+    	    "/webhook-path": &webhook.Admission{},
+        }); err != nil {
+    	setupLog.Error(err, "problem running manager")
+    	os.Exit(1)
+    }
 }
 ```
 

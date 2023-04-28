@@ -1,10 +1,10 @@
 module github.com/keptn/lifecycle-toolkit/operator
 
-go 1.19
+go 1.20
 
 require (
 	github.com/argoproj/argo-rollouts v1.4.1
-	github.com/benbjohnson/clock v1.3.0
+	github.com/benbjohnson/clock v1.3.3
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -101,3 +101,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace golang.org/x/net => golang.org/x/net v0.8.0

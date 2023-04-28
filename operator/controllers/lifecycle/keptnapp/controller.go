@@ -160,7 +160,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 
 	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
 	if len(appVersion.ObjectMeta.Name) > 253 {
-		appVersion.ObjectMeta.Name = common.TruncateString(appVersion.ObjectMeta.Name, common.MaxVersionLength)
+		appVersion.ObjectMeta.Name = common.TruncateString(appVersion.ObjectMeta.Name, 253)
 	}
 	appVersion.Spec.TraceId = appTraceContextCarrier
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)

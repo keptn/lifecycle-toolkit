@@ -27,6 +27,3 @@ If you prefer,
 [Getting started with Lifecycle Toolkit](generic-gs)
 provides an exercise that introduces you to
 all the things KLT can do.
-
-
-

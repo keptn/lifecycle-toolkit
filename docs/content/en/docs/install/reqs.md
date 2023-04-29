@@ -15,14 +15,14 @@ In this example, both client and server are at v1.24.0
 so the Keptn Lifecycle Toolkit will work.
 
 ```shell
-$ kubectl version --short
+kubectl version --short
 ```
+
 ```shell
 Client Version: v1.24.0
 Kustomize Version: v4.5.4
 Server Version: v1.24.0
 ```
-
 
 ## Resource requirements
 

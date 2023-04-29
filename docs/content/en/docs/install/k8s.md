@@ -39,6 +39,7 @@ The basic steps are:
    ```shell
    kind create cluster
    ```
+
    See the
    [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)
    for more information
@@ -51,6 +52,7 @@ The basic steps are:
    ```shell
    kubectl version --short
    ```
+
 ## Prepare your cluster for KLT
 
 The Keptn Lifecycle Toolkit installs into an existing deployment cluster.

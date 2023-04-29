@@ -36,8 +36,9 @@ In this example, both client and server are at v1.24.0
 so are appropriate for the Keptn Lifecycle Toolkit.
 
 ```shell
-$ kubectl version --short
+kubectl version --short
 ```
+
 ```shell
 Client Version: v1.24.0
 Kustomize Version: v4.5.4

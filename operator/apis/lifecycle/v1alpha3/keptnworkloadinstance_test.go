@@ -186,6 +186,12 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	task := workload.GenerateTask(KeptnTaskDefinition{
 		ObjectMeta: v1.ObjectMeta{
 			Name: "task-def",
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: KeptnTaskDefinitionSpec{
 			Timeout: v1.Duration{
@@ -207,6 +213,14 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 		Retries: &retries,
 	}, task.Spec)
+
+	require.Equal(t, map[string]string{
+		"label1": "label2",
+	}, task.Labels)
+
+	require.Equal(t, map[string]string{
+		"annotation1": "annotation2",
+	}, task.Annotations)
 
 	evaluation := workload.GenerateEvaluation(KeptnEvaluationDefinition{
 		ObjectMeta: v1.ObjectMeta{

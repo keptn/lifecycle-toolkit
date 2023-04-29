@@ -19,8 +19,8 @@ install: install-cert-manager
 	@echo "Configure Prometheus"
 	@echo "------------------"
 	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-#	kubectl apply --server-side -f config/prometheus/setup
-#	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
+	kubectl apply --server-side -f config/prometheus/setup
+	kubectl wait --for=condition=Established --all CustomResourceDefinition --namespace=monitoring
 
 	@echo ""
 	@echo "-------------------------------"
@@ -35,23 +35,23 @@ install: install-cert-manager
 	kubectl wait --for=condition=available deployment/jaeger -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
 	kubectl wait --for=condition=available deployment/otel-collector -n "$(TOOLKIT_NAMESPACE)" --timeout=120s
 
-#	@echo ""
-#	@echo "------------------"
-#	@echo "Install Prometheus"
-#	@echo "------------------"
-#	kubectl apply -f config/prometheus/
-#	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
-#	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
-#	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
-#	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
-
 	@echo ""
 	@echo "------------------"
-	@echo "Install Prometheus Mockserver"
+	@echo "Install Prometheus"
 	@echo "------------------"
-	kubectl apply -n "$(TOOLKIT_NAMESPACE)" -f config/prometheus-mock/mockserver-config.yaml
-	helm repo add mockserver "https://www.mock-server.com"
-	helm upgrade --install -n "$(TOOLKIT_NAMESPACE)" --version 5.13.0 mockserver mockserver/mockserver --set service.type=ClusterIP --wait
+	kubectl apply -f config/prometheus/
+	kubectl wait --for=condition=available deployment/prometheus-operator -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
+	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+
+	# @echo ""
+	# @echo "------------------"
+	# @echo "Install Prometheus Mockserver"
+	# @echo "------------------"
+	# kubectl apply -n "$(TOOLKIT_NAMESPACE)" -f config/prometheus-mock/mockserver-config.yaml
+	# helm repo add mockserver "https://www.mock-server.com"
+	# helm upgrade --install -n "$(TOOLKIT_NAMESPACE)" --version 5.13.0 mockserver mockserver/mockserver --set service.type=ClusterIP --wait
 
 
 	@echo ""

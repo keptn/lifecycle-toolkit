@@ -174,7 +174,8 @@ git push --set-upstream origin feature/123/foo
 > Note:
 All PRs must include a commit message with a description of the changes made!
 
-Make sure you **sign off your commits**. To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
+Make sure you **sign off your commits**.
+To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
 Finally, go to GitHub and create a Pull Request.
 There should be a PR template already prepared for you.
 If not, you will find it at `.github/pull_request_template.md`.

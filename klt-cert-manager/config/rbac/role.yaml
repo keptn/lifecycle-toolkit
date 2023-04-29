@@ -2,7 +2,6 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   name: certificate-operator-role
 rules:
 - apiGroups:
@@ -47,7 +46,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  creationTimestamp: null
   name: certificate-operator-role
   namespace: keptn-lifecycle-toolkit-system
 rules:
@@ -57,9 +55,15 @@ rules:
   - secrets
   verbs:
   - create
-  - delete
-  - get
   - list
+  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - klt-certs
+  resources:
+  - secrets
+  verbs:
+  - get
   - patch
   - update
-  - watch

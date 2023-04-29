@@ -82,6 +82,27 @@ func TestKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
+func TestHash(t *testing.T) {
+	tests := []struct {
+		in  int64
+		out string
+	}{
+		{
+			in:  int64(1),
+			out: "6b86b273",
+		},
+		{
+			in:  int64(2),
+			out: "d4735e3a",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, tt.out, Hash(tt.in))
+		})
+	}
+}
+
 func TestKeptnState_IsDeprecated(t *testing.T) {
 	tests := []struct {
 		State KeptnState
@@ -307,6 +328,63 @@ func Test_GenerateEvaluationName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.True(t, strings.HasPrefix(GenerateEvaluationName(tt.Check, tt.Name), tt.Want))
+		})
+	}
+}
+
+func Test_MergeMaps(t *testing.T) {
+	tests := []struct {
+		In1  map[string]string
+		In2  map[string]string
+		Want map[string]string
+	}{
+		{
+			In1:  nil,
+			In2:  nil,
+			Want: map[string]string{},
+		},
+		{
+			In1: nil,
+			In2: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+		},
+		{
+			In1: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			In2: nil,
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+		},
+		{
+			In1: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+			},
+			In2: map[string]string{
+				"ll5": "ll6",
+				"ll7": "ll8",
+			},
+			Want: map[string]string{
+				"ll1": "ll2",
+				"ll3": "ll4",
+				"ll5": "ll6",
+				"ll7": "ll8",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, MergeMaps(tt.In1, tt.In2), tt.Want)
 		})
 	}
 }

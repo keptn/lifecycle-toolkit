@@ -22,7 +22,11 @@ Use the `--set` flag or download and edit the `values.yaml` file
 to modify the configuration as discused on the
 [Install the Lifecycle Toolkit](../install/) page.
 
+<<<<<<< HEAD
 **Warning:**
+=======
+> **Warning**
+>>>>>>> ba7b679b0781de5558777fc93b8e9deb4ff6406a
 If you installed your Lifecycle Toolkit instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.

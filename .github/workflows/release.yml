@@ -14,7 +14,7 @@ defaults:
 env:
   GO_VERSION: "~1.19"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.3"
+  CONTROLLER_TOOLS_VERSION: "v0.11.4"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 
 jobs:
@@ -79,7 +79,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v3.0.1
+        uses: sigstore/cosign-installer@v3.0.2
 
       - name: Build Docker Image
         id: docker_build_image
@@ -112,7 +112,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.13.4
+        uses: anchore/sbom-action@v0.14.1
         with:
           image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
@@ -185,7 +185,11 @@ jobs:
             name: keptn-lifecycle-toolkit-system
           ---
           EOF
-          cat namespace.yaml operator/config/rendered/release.yaml scheduler/config/rendered/release.yaml klt-cert-manager/config/rendered/release.yaml metrics-operator/config/rendered/release.yaml > manifest.yaml
+          cat namespace.yaml \
+              operator/config/rendered/release.yaml \
+              scheduler/config/rendered/release.yaml \
+              klt-cert-manager/config/rendered/release.yaml \
+              metrics-operator/config/rendered/release.yaml > manifest.yaml
 
       - name: Attach release assets
         uses: softprops/action-gh-release@v1
@@ -200,7 +204,7 @@ jobs:
     if: needs.release-please.outputs.releases_created == 'true'
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
-    uses: ./.github/workflows/release-docs.yml
+    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.0.2-beta1
     secrets: inherit
 
   update-examples:

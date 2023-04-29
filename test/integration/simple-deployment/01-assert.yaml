@@ -35,4 +35,4 @@ metadata:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
-  name: waiter-0.4-1
+  name: waiter-0.4-6b86b273

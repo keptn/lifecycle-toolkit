@@ -18,7 +18,6 @@ package v1alpha3
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -79,7 +78,7 @@ func init() {
 }
 
 func (a KeptnApp) GetAppVersionName() string {
-	return strings.ToLower(fmt.Sprintf("%s-%s-%d", a.Name, a.Spec.Version, a.Generation))
+	return strings.ToLower(fmt.Sprintf("%s-%s-%s", a.Name, a.Spec.Version, common.Hash(a.Generation)))
 }
 
 func (a KeptnApp) SetSpanAttributes(span trace.Span) {
@@ -112,6 +111,6 @@ func (a KeptnApp) GetEventAnnotations() map[string]string {
 	return map[string]string{
 		"appName":     a.Name,
 		"appVersion":  a.Spec.Version,
-		"appRevision": strconv.FormatInt(a.Generation, 10),
+		"appRevision": common.Hash(a.Generation),
 	}
 }

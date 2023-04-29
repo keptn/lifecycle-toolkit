@@ -4,24 +4,26 @@ kind: MutatingWebhookConfiguration
 metadata:
   creationTimestamp: null
   name: lifecycle-mutating-webhook-configuration
+  labels:
+    keptn.sh/inject-cert: "true"
 webhooks:
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: lifecycle-webhook-service
-      namespace: system
-      path: /mutate-v1-pod
-  failurePolicy: Fail
-  name: mpod.keptn.sh
-  rules:
-  - apiGroups:
-    - ""
-    apiVersions:
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - pods
-  sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: lifecycle-webhook-service
+        namespace: system
+        path: /mutate-v1-pod
+    failurePolicy: Fail
+    name: mpod.keptn.sh
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - pods
+    sideEffects: None

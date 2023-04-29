@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
@@ -31,7 +32,8 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
+	var readyToStart chan struct{}
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptnapp.KeptnAppReconciler{
@@ -41,9 +43,8 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
-	err := controller.SetupWithManager(k8sManager)
-	Expect(err).To(BeNil())
-
+	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

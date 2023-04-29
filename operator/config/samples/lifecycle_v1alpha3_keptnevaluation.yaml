@@ -3,4 +3,4 @@ kind: KeptnEvaluation
 metadata:
   name: keptnevaluation-sample
 spec:
-  # TODO(user): Add fields here
+# TODO(user): Add fields here

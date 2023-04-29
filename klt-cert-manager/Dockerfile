@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM --platform=$BUILDPLATFORM golang:1.20.2-alpine3.16 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.20.3-alpine3.16 AS builder
 
 ENV CGO_ENABLED=0
 
@@ -13,7 +13,7 @@ RUN go mod download
 COPY ./ ./
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.11.3
+ARG CONTROLLER_TOOLS_VERSION=v0.11.4
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 ARG GIT_HASH

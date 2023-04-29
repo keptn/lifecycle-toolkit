@@ -8,4 +8,3 @@ spec:
       name: slack-notification
     secureParameters:
       secret: slack_secret
-

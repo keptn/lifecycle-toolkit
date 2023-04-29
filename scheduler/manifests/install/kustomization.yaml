@@ -1,14 +1,14 @@
 namespace: keptn-lifecycle-toolkit-system
 resources:
-- base/deployment.yaml
-- base/rbac.yaml
-- base/serviceaccount.yaml
+  - base/deployment.yaml
+  - base/rbac.yaml
+  - base/serviceaccount.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-- files:
-  - base/scheduler-config.yaml
-  name: scheduler-config
+  - files:
+      - base/scheduler-config.yaml
+    name: scheduler-config
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 patches:

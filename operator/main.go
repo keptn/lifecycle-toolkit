@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/kelseyhightower/envconfig"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
@@ -66,6 +67,7 @@ func init() {
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(metricsapi.AddToScheme(scheme))
+	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -204,11 +206,11 @@ func main() {
 	}
 
 	appCreationRequestLogger := ctrl.Log.WithName("KeptnAppCreationRequest Controller")
-	appCreationRequestReconciler := &keptnappcreationrequest.KeptnAppCreationRequestReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
-	}
+	appCreationRequestReconciler := keptnappcreationrequest.NewReconciler(
+		mgr.GetClient(),
+		mgr.GetScheme(),
+		appCreationRequestLogger.V(env.KeptnAppCreationRequestControllerLogLevel),
+	)
 	if err := appCreationRequestReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppCreationRequest")
 		os.Exit(1)

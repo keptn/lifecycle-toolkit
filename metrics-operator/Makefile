@@ -25,9 +25,9 @@ ENVTEST_K8S_VERSION=1.24.2
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v4.5.7
+KUSTOMIZE_VERSION?=v5.0.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION?=v0.11.3
+CONTROLLER_TOOLS_VERSION?=v0.11.4
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))

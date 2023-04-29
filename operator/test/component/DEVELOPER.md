@@ -86,27 +86,35 @@ var _ = Describe("KeptnAppController", func() {
 
 You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test
 with ```make performance-test``` the file
-"load_test.go" contains examples of such tests, including a simple reporter. The report "MetricForLoadTestSuite" is
+"load_test.go" contains examples of such tests, including a simple reporter.
+The report "MetricForLoadTestSuite" is
 generated for every run of the load test.
 
 ## Contributing Tips
 
-1. Keep in mind to clean up after each test since the environment is shared. E.g. if you plan assertions on events or
+1. Keep in mind to clean up after each test since the environment is shared.
+  E.g. if you plan assertions on events or
    spans, make sure your specs are either ordered or assigned to their own controller
 2. Namespaces do not get cleaned up by EnvTest, so do not make assertion based on the idea that the namespace has been
    deleted, and make sure to use `ignoreAlreadyExists(err error)` when creating a new one
-3. EnvTest is a lightweight control plane only meant for testing purposes. This means it does not contain inbuilt
+3. EnvTest is a lightweight control plane only meant for testing purposes.
+  This means it does not contain inbuilt
    Kubernetes controllers like deployment controllers, ReplicaSet controllers, etc. You cannot assert/verify for pods
    being created or not for created deployment.
 4. You should generally try to use Gomega’s Eventually to make asynchronous assertions, especially in the case of Get
    and Update calls to API Server.
 5. Use ginkgo --until-it-fails to identify flaky tests.
-6. Avoid general utility packages. Packages called "util" are suspect. Instead, derive a name that describes your
-   desired function. For example, the utility functions dealing with waiting for operations are in the wait package and
-   include functionality like Poll. The full name is wait.Poll.
+6. Avoid general utility packages.
+  Packages called "util" are suspect.
+  Instead, derive a name that describes your
+   desired function.
+  For example, the utility functions dealing with waiting for operations are in the wait package and
+   include functionality like Poll.
+  The full name is wait.Poll.
 7. All filenames should be lowercase.
 8. Go source files and directories use underscores, not dashes.
-9. Package directories should generally avoid using separators as much as possible. When package names are multiple
+9. Package directories should generally avoid using separators as much as possible.
+  When package names are multiple
    words, they usually should be in nested subdirectories.
 10. Document directories and filenames should use dashes rather than underscores.
 11. Examples should also illustrate best practices for configuration and using

@@ -3,6 +3,7 @@ package keptnworkloadinstance
 import (
 	"context"
 
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
@@ -51,6 +52,13 @@ func (r *KeptnWorkloadInstanceReconciler) isReplicaSetRunning(ctx context.Contex
 	if err != nil {
 		return false, err
 	}
+
+	for _, ownerRef := range rep.OwnerReferences {
+		if ownerRef.Kind == "Rollout" {
+			return r.isRolloutRunning(ctx, klcv1alpha3.ResourceReference{Name: ownerRef.Name, UID: ownerRef.UID}, namespace)
+		}
+	}
+
 	return *rep.Spec.Replicas == rep.Status.AvailableReplicas, nil
 }
 
@@ -86,4 +94,13 @@ func (r *KeptnWorkloadInstanceReconciler) isStatefulSetRunning(ctx context.Conte
 		return false, err
 	}
 	return *sts.Spec.Replicas == sts.Status.AvailableReplicas, nil
+}
+
+func (r *KeptnWorkloadInstanceReconciler) isRolloutRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+	rollout := argov1alpha1.Rollout{}
+	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rollout)
+	if err != nil {
+		return false, err
+	}
+	return rollout.Status.Replicas == rollout.Status.UpdatedReplicas && rollout.Status.Phase == argov1alpha1.RolloutPhaseHealthy, nil
 }

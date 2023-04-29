@@ -79,10 +79,56 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateFailed))
 				}, "10s").Should(Succeed())
 			})
+			It("should propagate labels and annotations to the job and job pod", func() {
+				By("Verifying that a job has been created")
+
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespace,
+						Name:      task.Name,
+					}, task)
+					g.Expect(err).To(BeNil())
+					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
+				}, "10s").Should(Succeed())
+
+				createdJob := &batchv1.Job{}
+
+				err := k8sClient.Get(context.TODO(), types.NamespacedName{
+					Namespace: namespace,
+					Name:      task.Status.JobName,
+				}, createdJob)
+
+				Expect(err).To(BeNil())
+
+				Expect(createdJob.Annotations).To(Equal(map[string]string{
+					"annotation1": "annotation2",
+				}))
+
+				Expect(createdJob.Labels).To(Equal(map[string]string{
+					"keptn.sh/task-name": task.Name,
+					"keptn.sh/version":   "",
+					"keptn.sh/workload":  "my-workload",
+					"label1":             "label2",
+					"keptn.sh/app":       "my-app",
+				}))
+
+				val, ok := createdJob.Spec.Template.Labels["label1"]
+				Expect(ok && val == "label2").To(BeTrue())
+
+				val, ok = createdJob.Spec.Template.Annotations["annotation1"]
+				Expect(ok && val == "annotation2").To(BeTrue())
+			})
 			AfterEach(func() {
 				err := k8sClient.Delete(context.TODO(), taskDefinition)
 				common.LogErrorIfPresent(err)
 				err = k8sClient.Delete(context.TODO(), task)
+				common.LogErrorIfPresent(err)
+				err = k8sClient.Delete(context.TODO(), &v1.ConfigMap{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinition.Status.Function.ConfigMap,
+						Namespace: namespace,
+					},
+				})
 				common.LogErrorIfPresent(err)
 			})
 		})
@@ -94,6 +140,12 @@ func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha3.Ke
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
 		},
 		Spec: klcv1alpha3.KeptnTaskSpec{
 			Workload:       "my-workload",

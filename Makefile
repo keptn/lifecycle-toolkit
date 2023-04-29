@@ -1,15 +1,13 @@
 # Image URL to use all building/pushing image targets
 
-# renovate: datasource=github-releases depName=cert-manager/cert-manager
-CERT_MANAGER_VERSION ?= v1.11.0
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v4.5.7
+KUSTOMIZE_VERSION?=v5.0.1
 # renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.11.2
+HELM_VERSION ?= v3.11.3
 CHART_APPVERSION ?= v0.7.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
-YAMLLINT_VERSION ?= alpine-1-0.14
+YAMLLINT_VERSION ?= alpine
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
@@ -30,15 +28,19 @@ HELMIFY ?=  $(LOCALBIN)/helmify
 .PHONY: helmify
 helmify: $(HELMIFY) ## Download helmify locally if necessary.
 $(HELMIFY): $(LOCALBIN)
-	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@b1da2bb756ec4328bac7645da037a6fb4e6f30cf
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@1060b5d08806e40bfd9f38c3e8a9a302ab38e71a
 
 .PHONY: integration-test #these tests should run on a real cluster!
-integration-test:
+integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
+	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
+
+
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
+	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
 
 .PHONY: load-test
 load-test:
@@ -131,4 +133,4 @@ build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator bui
 include docs/Makefile
 
 yamllint:
-	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .github docs
+	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

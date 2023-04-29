@@ -6,8 +6,7 @@
 #
 # Learn about CODEOWNERS file format:
 #  https://help.github.com/en/articles/about-code-owners
-#
-*   @thisthat @thschue @bacherfl
-/.github/ @thisthat @thschue @bacherfl @mowies @philipp-hinteregger
-/scheduler/ @thisthat @thschue @bacherfl @RealAnna
-/docs @thisthat @thschue @bacherfl @StackScribe
+* @keptn/lifecycle-toolkit-maintainers
+
+# The Documentation workgroup should also be able to approve documentation pullrequests
+/docs @keptn/lifecycle-toolkit-maintainers @keptn/docs-maintainers

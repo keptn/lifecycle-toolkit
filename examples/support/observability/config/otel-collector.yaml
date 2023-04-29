@@ -134,22 +134,21 @@ spec:
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
 ---
-#
-#apiVersion: monitoring.coreos.com/v1
-#kind: ServiceMonitor
-#metadata:
-#  labels:
-#    serviceapp: otel-collector
-#  name: otel-collector
-#  namespace: keptn-lifecycle-toolkit-system
-#spec:
-#  endpoints:
-#    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-#      interval: 30s
-#      port: metrics
-#  namespaceSelector:
-#    matchNames:
-#      - keptn-lifecycle-toolkit-system
-#  selector:
-#    matchLabels:
-#      app: opentelemetry
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    serviceapp: otel-collector
+  name: otel-collector
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 30s
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - keptn-lifecycle-toolkit-system
+  selector:
+    matchLabels:
+      app: opentelemetry

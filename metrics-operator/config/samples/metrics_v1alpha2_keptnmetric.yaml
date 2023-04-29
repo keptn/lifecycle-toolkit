@@ -3,7 +3,7 @@ kind: KeptnMetric
 metadata:
   name: available-cpus
 spec:
-  provider: 
+  provider:
     name: prometheus
   query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
   fetchIntervalSeconds: 10

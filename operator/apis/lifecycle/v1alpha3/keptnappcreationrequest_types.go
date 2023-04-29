@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -58,4 +59,8 @@ type KeptnAppCreationRequestList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnAppCreationRequest{}, &KeptnAppCreationRequestList{})
+}
+
+func (kacr *KeptnAppCreationRequest) IsSingleService() bool {
+	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
 }

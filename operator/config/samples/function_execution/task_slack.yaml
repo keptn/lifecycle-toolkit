@@ -9,4 +9,3 @@ spec:
   app: my-app
   secureParameters:
     secret: slack-notification
-

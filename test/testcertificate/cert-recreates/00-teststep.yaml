@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:   # first scenario: the toolkit is restarted after removing the certificate
+  - script: kubectl delete secret klt-certs -n keptn-lifecycle-toolkit-system
+  - script: kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator
+  - script: kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l control-plane=metrics-operator

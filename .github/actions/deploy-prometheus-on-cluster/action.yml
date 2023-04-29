@@ -7,16 +7,16 @@ runs:
       shell: bash
       run: |
         make install-prometheus
-        
+
         kubectl -n monitoring port-forward svc/prometheus-k8s 9090 &
         kubectl -n monitoring port-forward svc/node-exporter 9100 &
-        
+
         # wait for port 9090 to become available
         while ! nc -vz localhost 9090 > /dev/null 2>&1 ; do
         echo "Sleeping until port-forward for Prometheus at port 9090 is ready..."
         sleep 5
         done
-        
+
         # wait until node exporter is available
         while ! nc -vz localhost 9100 > /dev/null 2>&1 ; do
         echo "Sleeping until port-forward for node exporter at port 9100 is ready..."

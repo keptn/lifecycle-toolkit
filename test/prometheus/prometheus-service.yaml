@@ -11,12 +11,12 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - name: web
-    port: 9090
-    targetPort: web
-  - name: reloader-web
-    port: 8080
-    targetPort: reloader-web
+    - name: web
+      port: 9090
+      targetPort: web
+    - name: reloader-web
+      port: 8080
+      targetPort: reloader-web
   selector:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/instance: k8s

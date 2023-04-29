@@ -9,4 +9,3 @@ spec:
         name: available-cpus
         namespace: podtato-kubectl
       evaluationTarget: ">1"
-

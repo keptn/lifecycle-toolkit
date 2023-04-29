@@ -83,8 +83,6 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
-
 ## Differences between versions
 
 For the `v1alpha1` and `v1alpha2` API versions,

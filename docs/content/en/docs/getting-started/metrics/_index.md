@@ -31,6 +31,7 @@ You can install the Keptn Metrics Server completely stand-alone
 or as part of the toolkit
 
 Demo:
+
 * Kubernetes cluster installed
 * Install full KLT or modify Helm chart to only install the Keptn Metrics Server
 
@@ -50,7 +51,7 @@ Andi's demo environment: my-klt-demo-with-argo/simplenode-dev
 
 ### Define metrics providers
 
-**Need to redo these to use the v1alpha3 synatax**
+TODO: Need to redo these to use the v1alpha3 synatax
 
 ```yaml
 kind: KeptnMetricsProvider
@@ -83,11 +84,11 @@ and multiple instances of each provider
 
 All in one `keptn-metric.yaml` file
 
-**Terminology question: is this one file that includes
+TODO: Terminology question: is this one file that includes
 two CRD's or one CRD that includes multiple metrics?
-What if one did multiple queries for a metric provider?**
+What if one did multiple queries for a metric provider?
 
-**Need to redo these to use the v1alpha3 synatax**
+TODO: Need to redo these to use the v1alpha3 synatax
 
 Check available CPUs using Prometheus
 
@@ -131,6 +132,7 @@ from any data source
 ```shell
 get KeptnMetrics -A
 ```
+
 ```shell
 NAMESPACE       NAME              PROVIDER   QUERY
 simplenode-dev  availability-slo  dynatrace  func:slo.availability_simplenodeservice
@@ -139,13 +141,13 @@ simplenode-dev  available-cpus    prometheus sum(kube_node_status_capacity{resou
 
 ## Run the metrics
 
-* Do I need to start and stop anything to start gathering metrics
-  or could I theoretically just put these pieces into my cluster
-  and would it start gathering metrics that I could then view?
+TODO: Do I need to start and stop anything to start gathering metrics
+or could I theoretically just put these pieces into my cluster
+and would it start gathering metrics that I could then view?
 
 ## Observing the metrics
 
-Do we want to do anything about running these metrics,
+TODO: Do we want to say anything about running these metrics,
 viewing the results, perhaps from CLI and from Grafana?
 
 ## Implementing autoscaling with HPA
@@ -156,4 +158,3 @@ HPA can retrieve KeptnMetrics and use it to implement HPA.
 
 TODO: Link to HPA section in "Implementing"
 (which includes link to Flo's blog post)
-

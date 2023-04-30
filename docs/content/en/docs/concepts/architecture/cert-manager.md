@@ -51,6 +51,7 @@ kubectl get secrets -n keptn-lifecycle-toolkit-system
 ```
 
 This returns something like:
+
 ```shell
 NAME                        TYPE                 DATA   AGE
 klt-certs                   Opaque               5      4d23h

@@ -24,10 +24,15 @@ spec:
     version: 0.1.0
   - name: podtato-head-left-leg
     version: 1.2.3
+  # The following are optional
+  preDeploymentTasks:
+  - pre-deployment-hello
+  preDeploymentEvaluations:    
+  - my-pre-deploy-evaluation
   postDeploymentTasks:
   - post-deployment-hello
-  preDeploymentEvaluations:    
-  - my-prometheus-definition
+  postDeploymentEvaluations:
+  - my-post-deploy-evaluation
 ```
 
 While changes in the workload version will affect only workload checks, a change in the app version will also cause a

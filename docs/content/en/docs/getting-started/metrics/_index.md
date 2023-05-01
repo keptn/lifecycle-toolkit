@@ -4,36 +4,56 @@ description: Learn how Keptn metrics enhances your deployment
 weight: 25
 ---
 
-Intro points:
-
-* Standardize way you can access observability data
-in your Kubernetes cluster.
-* May have tools like Argo, Flux, KEDA, HBA, Keptn
+The Keptn metrics component of the Keptn Lifecycle Toolkit
+allow you to define any type of metric
+from multiple instances of any type of data source in your Kubernetes cluster.
+You may have tools like Argo, Flux, KEDA, HBA, Keptn
 that need observability data to make automated decisions.
 Whether a rollout is good, whether to scale up or down.
-* If you have only one data source such as Prometheus
-for your observability data, not the greatest use case.
-But, if you have multiple observability solution --
-Datadog, Dynatrace, data in AWS, Google, and Azure.
-Data in Lifestep (?) and Honeycomb or Splunk.
+Your observability data may come
+from multiple observability solutions --
+Datadog, Dynatrace, data in AWS, Google, and Azure --
+and include data in Lifestep (?) and Honeycomb or Splunk.
 
-  * In Kubernetes, you would need to maintain point-to-point integrations
+The [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
+requires that you maintain point-to-point integrations
 from Argo Rollouts, Flux, KEDA, and HPA.
-  * They all have some plugins but really hard to maintain,
-especially as you move from one tool to another,
-one observability platform to another,
-it's really hard to maintain this.
-  * The Keptn Metrics Server unifies and standardizes access to this data.
+Each has plugins but it is difficult to maintain them,
+especially if you are using multiple tools
+and multible observability platforms.
+The Keptn Metrics Server unifies and standardizes access to this data.
+
+This guide walks you through the steps required
+to implement Keptn metrics:
+
+1. Install the Keptn Lifecycle Toolkit
+   or just the Keptn Metrics Server in your cluster.
+1. Create a CRD to define each observability platform
+   that is implemented in this namespace.
+   You can define a mix of platforms --
+   Prometheus, Dynatrace, Datadog, etc. --
+   and multiple instances of each.
+1. Create a CRD that Defines
+   the type of data to pull from each observability platform.
+   This data is pulled and fetched continuously
+   at an interval you specify for each data query.
+1. Run the metrics
+1. View metrics
+
+Andi's demo environment: my-klt-demo-with-argo/simplenode-dev
 
 ## Install KLT or just metrics server
 
-You can install the Keptn Metrics Server completely stand-alone
-or as part of the toolkit
+Use the Helm Chart to install the Keptn Metrics Server
+as part of the Lifecycle Toolkit
+or completely stand-alone.  See
+[Install KLT using the Helm Chart](../../install/install.md/#use-helm-chart).
 
-Demo:
+## Set up secret data providers?
 
-* Kubernetes cluster installed
-* Install full KLT or modify Helm chart to only install the Keptn Metrics Server
+## Define metrics to use
+
+### Define metrics providers
 
 Specify metrics I want to pull in from an external observability platfor
 
@@ -42,14 +62,6 @@ Specify through a CRD the type of data I want to input to my Keptn Metrics Serve
 I can pull and fetch that data continuously into Prometheus
 Data is available through the CRD and through Prometheus itself
 as well as the Kubernetes CLI
-
-## Set up secret for Dynatrace
-
-Andi's demo environment: my-klt-demo-with-argo/simplenode-dev
-
-## Define metrics to use
-
-### Define metrics providers
 
 TODO: Need to redo these to use the v1alpha3 synatax
 
@@ -158,3 +170,12 @@ HPA can retrieve KeptnMetrics and use it to implement HPA.
 
 TODO: Link to HPA section in "Implementing"
 (which includes link to Flo's blog post)
+
+## Learn more
+
+To learn more about the Keptn Metrics Server, see:
+
+* Architecture:
+  [Keptn Metrics Operator](../../concepts/architecture/components/metrics-operator/)
+* More information about implementing Keptn Metrics:
+  [Keptn Metrics](../../implementing/metrics.md/)

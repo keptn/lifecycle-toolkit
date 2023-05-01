@@ -46,7 +46,8 @@ Andi's demo environment: my-klt-demo-with-argo/simplenode-dev
 
 Use the Helm Chart to install the Keptn Metrics Server
 as part of the Lifecycle Toolkit
-or completely stand-alone.  See
+or completely stand-alone.
+ See
 [Install KLT using the Helm Chart](../../install/install.md/#use-helm-chart).
 
 ## Set up secret data providers?

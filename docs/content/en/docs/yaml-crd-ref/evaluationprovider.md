@@ -39,8 +39,6 @@ metadata:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/#keptntaskdefinition)
-
 ## Differences between versions
 
 The `KeptnEvaluationProvider` is deprecated in the v1alpha3 API version.
@@ -49,4 +47,4 @@ The `KeptnEvaluationProvider` is deprecated in the v1alpha3 API version.
 
 ## See also
 
-* [KeptnEvaluationDefinition](evaluationdefinition)
+* [KeptnEvaluationDefinition](evaluationdefinition.md)

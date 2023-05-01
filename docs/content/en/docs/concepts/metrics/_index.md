@@ -44,7 +44,9 @@ spec:
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
 ```
 
-As you can see, the provider type is set to `prometheus`, which is one of the currently supported `KeptnMetricProviders`.
+### Keptn Metrics Provider
+
+As you can see, the provider type is set to `prometheus`, which is one of the currently supported `KeptnMetricsProvider`.
 By using different names for different providers of the same type, you can fetch metrics from multiple
 provider instances at the same time.
 

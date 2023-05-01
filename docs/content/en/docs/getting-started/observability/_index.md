@@ -59,7 +59,7 @@ use the following syntax to reference the
 [KeptnApp](../../yaml-crd-ref/app.md)
 CRD:
 
-```
+```yaml
 app.kubernetes.io/part-of: simpleapp
 ```
 
@@ -132,4 +132,4 @@ that happens in your deployment.
 ## For more information
 
 For more information, see
-[Integrate KLT with your applications](../../implementing/integrate)
+[Integrate KLT with your applications](../../implementing/integrate.md)

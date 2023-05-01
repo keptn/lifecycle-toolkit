@@ -19,10 +19,8 @@ The following topics are covered:
 
 * Workloads, Applications, and Deployments
 
-* Observability
-
-  * Evaluations
-  * [Metrics](metrics.md) that provides a single entry-point
-    to site metrics at the application or workload level,
-    based on one or more standard data providers
+* Evaluations
+* [Metrics](metrics.md) that provides a single entry-point
+  to site metrics at the application or workload level,
+  based on one or more standard data providers
   * Tracing

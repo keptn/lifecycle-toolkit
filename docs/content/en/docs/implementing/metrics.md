@@ -4,16 +4,10 @@ description: Implement Keptn site metrics
 weight: 130
 ---
 
-Kubernetes provides two metrics servers,
-one that is custom, the other external.
-However, the Kubernetes metrics servers
-only allow you to release a single service on a API;
-you cannot use multiple observability platforms
-in one namespace for one API.
-
-The Keptn Metrics Operator provides a single entry point to all metrics in the cluster
-and allows you to use multiple observability platforms
-and multiple instances of any observability platform.
+The Keptn Metrics Operator provides a single entry point
+to all metrics in the cluster
+and allows you to define metrics based on multiple data platforms
+and multiple instances of any data platform.
 Metrics are fetched independently
 and can be used for an evaluation at workload- and application-level.
 
@@ -33,7 +27,8 @@ Keptn metrics are implemented with two CRDs:
   define the configuration for a data provider
 
 A Metric can be created with a query that fetches data for a property
-that describes some quality of the application, but this is not done automatically.
+that describes some quality of the application,
+but this is not done automatically.
 
 ## Using OpenTelemetry with Keptn metrics
 

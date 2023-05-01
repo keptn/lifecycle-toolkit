@@ -24,9 +24,13 @@ spec:
     version: x.y.z
   - name: podtato-head-left-leg
     version: x.y.z
+  preDeploymentTasks:
+  - <list of tasks>
   postDeploymentTasks:
   - <list of tasks>
   preDeploymentEvaluations:
+  - <list of evaluations>
+  postDeploymentEvaluations:
   - <list of evaluations>
 ```
 

@@ -36,7 +36,8 @@ var (
 const KLTnamespace = "keptnlifecycle"
 
 var _ = BeforeSuite(func() {
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, _ = common.InitSuite()
+	var readyToStart chan struct{}
+	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
@@ -51,7 +52,7 @@ var _ = BeforeSuite(func() {
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
 	ns = common.MakeKLTDefaultNamespace(k8sClient, KLTnamespace)
-
+	close(readyToStart)
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {

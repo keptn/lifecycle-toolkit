@@ -25,23 +25,127 @@ cascade:
         weight: 20
 ---
 
-<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable no-inline-html -->
 <!-- markdownlint-disable-next-line line-length -->
-{{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
+{{< blocks/cover title="" image_anchor="top" height="full" color="primary" >}}
 <div class="mx-auto">
+<div class="mb-4 d-none d-md-block " >
+<picture >
+    <img alt="keptn" src="/images/home/hero/keptn-logo-white.svg">
+</picture>
+</div>
+  <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
+  <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
+<div>
  <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
-    <a class="btn btn-lg btn-primary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
+    <a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
   Releases <i class="fab fa-github ml-2 "></i>
  </a>
 </div>
-{{< /blocks/cover >}}
-<!-- markdownlint-enable MD033 -->
+</div>
+<div class="usecasebox">
 
-{{% blocks/lead color="white" %}}
-[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+## Use Cases
+
+We extend the K8s APIs with the following Use Cases:
+
+<div class="row usecases">
+{{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
+Make ANY Kubernetes Deployment observable
+
+<!-- markdownlint-disable-next-line link-fragments -->
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-observability">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
+{{% /blocks/feature %}}
+{{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
+Standardize access for all Observability Data for K8s
+
+<!-- markdownlint-disable-next-line link-fragments -->
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#data-access">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
+Gain confidence in your work with pre-/post-deployment checks
+
+<!-- markdownlint-disable-next-line link-fragments -->
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
+{{% /blocks/feature %}}
+
+</div>
+</div>
+
+{{< /blocks/cover >}}
+<!-- markdownlint-enable no-inline-html -->
+
+{{% blocks/lead color="light" %}}
+
+{{< youtube K-cvnZ8EtGc >}}
+
 {{% /blocks/lead %}}
+
+<!-- markdownlint-disable no-inline-html -->
+{{% blocks/lead color="white"%}}
+<div class="mx-auto">
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left">
+{{% readfile "partials/_index-observability-left.md" %}}
+</div>
+<div class="whykeptn whykeptn-right w-25">
+{{% readfile "partials/_index-observability-right.md" %}}
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
+    Get Started!
+</a>
+</div>
+
+{{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
+
+<!-- markdownlint-disable no-inline-html -->
+{{% blocks/lead color="light" %}}
+<div class="mx-auto">
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left w-25">
+{{% readfile "partials/_index-data-access-left.md" %}}
+</div>
+<div class="whykeptn whykeptn-right ">
+{{% readfile "partials/_index-data-access-right.md" %}}
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
+    Get Started!
+</a>
+</div>
+{{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
+
+<!-- markdownlint-disable no-inline-html -->
+{{% blocks/lead color="white" %}}
+<div class="mx-auto">
+<div class="d-flex flex-row flex-wrap" >
+<div class="whykeptn whykeptn-left">
+{{% readfile "partials/_index-deployment-checks-left.md" %}}
+</div>
+<div class="whykeptn whykeptn-right w-25 text-center">
+{{% readfile "partials/_index-deployment-checks-right.md" %}}
+</div>
+</div>
+<a class="btn -bg-green" href="./docs/getting-started/">
+    Get Started!
+</a>
+</div>
+
+{{% /blocks/lead %}}
+<!-- markdownlint-enable no-inline-html -->
+
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
 See Keptn in Action

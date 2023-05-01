@@ -32,3 +32,11 @@ languages:
   en:
     title: Keptn
     contentDir: "content/en"
+
+menu:
+  main:
+    - name: Keptn v1
+      params:
+        rel: external
+      url: https://keptn.sh/
+      weight: 1

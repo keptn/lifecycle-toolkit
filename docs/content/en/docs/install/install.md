@@ -88,6 +88,7 @@ Versions 0.6.0 and earlier can only be installed using manifests.
 <<<<<<< HEAD
 **Note:** When installing Version 0.6.0,
 =======
+>
 > **Note** When installing Version 0.6.0,
 >>>>>>> ba7b679b0781de5558777fc93b8e9deb4ff6406a
 you must first install the `cert-manager` with the following command sequence:

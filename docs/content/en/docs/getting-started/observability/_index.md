@@ -17,7 +17,7 @@ and can display this information on dashboard tools
 such as Grafana and Jaeger.
 DORA metrics are implemented out of the box
 when the Lifecycle Toolkit is enabled
-and you can define additional metrics you want to monitor. 
+and you can define additional metrics you want to monitor.
 
 This exercise builds on what you did in the
 [Getting started with Keptn metrics](../metrics)

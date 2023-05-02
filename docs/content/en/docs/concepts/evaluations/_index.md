@@ -16,7 +16,7 @@ as part of pre- and post-analysis phases of a workload or application.
 A Keptn evaluation definition looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation

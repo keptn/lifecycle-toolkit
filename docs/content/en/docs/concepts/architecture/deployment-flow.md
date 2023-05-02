@@ -87,13 +87,13 @@ AppDeploy
   WorkloadDeploy
     WorkloadDeployStarted
     WorkloadDeploySucceeded OR WorkloadDeployErrored
-    WorkloadPostDeployTasks
-        WorkloadPostDeployTasksStarted
-        WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored 
-    WorkloadPostDeployEvaluations
-        WorkloadPostDeployEvaluationsStarted
-        WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
-    AppDeploySucceeded OR AppDeployErrored
+  WorkloadPostDeployTasks
+      WorkloadPostDeployTasksStarted
+      WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored 
+  WorkloadPostDeployEvaluations
+      WorkloadPostDeployEvaluationsStarted
+      WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
+  AppDeploySucceeded OR AppDeployErrored
 
 ### Post-deployment phase
 

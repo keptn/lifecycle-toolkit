@@ -40,7 +40,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadversion"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
@@ -82,7 +82,7 @@ type envConfig struct {
 	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
@@ -229,18 +229,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller")
-	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller")
+	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           workloadInstanceLogger.V(env.KeptnWorkloadInstanceControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		Log:           workloadVersionLogger.V(env.KeptnWorkloadVersionControllerLogLevel),
+		Recorder:      mgr.GetEventRecorderFor("keptnworkloadversion-controller"),
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 		SpanHandler:   spanHandler,
 	}
-	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
+	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
 		os.Exit(1)
 	}
 
@@ -298,8 +298,8 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
+	if err = (&lifecyclev1alpha3.KeptnWorkloadVersion{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadVersion")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

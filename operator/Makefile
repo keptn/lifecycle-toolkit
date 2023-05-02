@@ -105,17 +105,17 @@ component-test: manifests generate envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/task/... -v -timeout 30m -coverprofile cover-task.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask/..."
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/taskdefinition/... -v -timeout 30m -coverprofile cover-taskdefinition.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition/..."
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workload/... -v -timeout 30m -coverprofile cover-workload.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload/..."
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workloadinstance/... -v -timeout 30m -coverprofile cover-workloadinstance.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workloadversion/... -v -timeout 30m -coverprofile cover-workloadversion.out -coverpkg "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadversion/..."
 	sed -i '/mode: set/d' "cover-app.out"
 	sed -i '/mode: set/d' "cover-appversion.out"
 	sed -i '/mode: set/d' "cover-evaluation.out"
 	sed -i '/mode: set/d' "cover-task.out"
 	sed -i '/mode: set/d' "cover-taskdefinition.out"
 	sed -i '/mode: set/d' "cover-workload.out"
-	sed -i '/mode: set/d' "cover-workloadinstance.out"
+	sed -i '/mode: set/d' "cover-workloadversion.out"
 	echo "mode: set" > cover.out
-	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out >> cover.out
-	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out
+	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out >> cover.out
+	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.

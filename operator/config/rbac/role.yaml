@@ -2,6 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  creationTimestamp: null
   name: lifecycle-operator-role
 rules:
 - apiGroups:
@@ -293,32 +294,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloadinstances/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloadinstances/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptnworkloads
   verbs:
   - create
@@ -338,6 +313,32 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - keptnworkloads/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions/status
   verbs:
   - get
   - patch

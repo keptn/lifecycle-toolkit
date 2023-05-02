@@ -1,4 +1,4 @@
-package workloadinstance_test
+package workloadversion_test
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadversion"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -19,9 +19,9 @@ import (
 	// +kubebuilder:scaffold:imports
 )
 
-func TestWorkloadinstance(t *testing.T) {
+func TestWorkloadversion(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Workloadinstance Suite")
+	RunSpecs(t, "Workloadversion Suite")
 }
 
 var (
@@ -37,10 +37,10 @@ var _ = BeforeSuite(func() {
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
-	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+	controller := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		Recorder:      k8sManager.GetEventRecorderFor("test-workloadinstance-controller"),
+		Recorder:      k8sManager.GetEventRecorderFor("test-workloadversion-controller"),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		SpanHandler:   &controllercommon.SpanHandler{},
@@ -51,7 +51,7 @@ var _ = BeforeSuite(func() {
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {
-	f, err := os.Create("report.workloadinstance-operator")
+	f, err := os.Create("report.workloadversion-operator")
 	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
 	for _, specReport := range report.SpecReports {
 		common.WriteReport(specReport, f)

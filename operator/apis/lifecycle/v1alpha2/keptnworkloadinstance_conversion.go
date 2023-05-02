@@ -10,12 +10,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1alpha3.KeptnWorkloadInstance to the hub version (v1alpha3.KeptnWorkloadInstance)
-func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
-	dst, ok := dstRaw.(*v1alpha3.KeptnWorkloadInstance)
+// ConvertTo converts the src v1alpha3.KeptnWorkloadVersion to the hub version (v1alpha3.KeptnWorkloadVersion)
+func (src *KeptnWorkloadVersion) ConvertTo(dstRaw conversion.Hub) error {
+	dst, ok := dstRaw.(*v1alpha3.KeptnWorkloadVersion)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnWorkloadInstance)
+		return fmt.Errorf("type %T %w", dstRaw, common.ErrCannotCastKeptnWorkloadVersion)
 	}
 
 	// Copy equal stuff to new object
@@ -106,12 +106,12 @@ func (src *KeptnWorkloadInstance) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1alpha3.KeptnWorkloadInstance) to this version (v1alpha3.KeptnWorkloadInstance)
-func (dst *KeptnWorkloadInstance) ConvertFrom(srcRaw conversion.Hub) error {
-	src, ok := srcRaw.(*v1alpha3.KeptnWorkloadInstance)
+// ConvertFrom converts from the hub version (v1alpha3.KeptnWorkloadVersion) to this version (v1alpha3.KeptnWorkloadVersion)
+func (dst *KeptnWorkloadVersion) ConvertFrom(srcRaw conversion.Hub) error {
+	src, ok := srcRaw.(*v1alpha3.KeptnWorkloadVersion)
 
 	if !ok {
-		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnWorkloadInstance)
+		return fmt.Errorf("type %T %w", srcRaw, common.ErrCannotCastKeptnWorkloadVersion)
 	}
 
 	// Copy equal stuff to new object

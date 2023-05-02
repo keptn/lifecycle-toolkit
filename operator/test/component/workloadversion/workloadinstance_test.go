@@ -1,4 +1,4 @@
-package workloadinstance_test
+package workloadversion_test
 
 import (
 	"context"
@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var _ = Describe("Workloadinstance", Ordered, func() {
+var _ = Describe("Workloadversion", Ordered, func() {
 	var (
 		appName   string
 		namespace string
@@ -30,10 +30,10 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
 	})
-	Describe("Creation of WorkloadInstance", func() {
+	Describe("Creation of WorkloadVersion", func() {
 		var (
 			appVersion *klcv1alpha3.KeptnAppVersion
-			wi         *klcv1alpha3.KeptnWorkloadInstance
+			wi         *klcv1alpha3.KeptnWorkloadVersion
 		)
 		Context("with a new AppVersions CRD", func() {
 
@@ -44,28 +44,28 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 
 			It("should fail if Workload not found in AppVersion", func() {
 				wiName := "not-found"
-				wi = &klcv1alpha3.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{},
 						WorkloadName:      appName + "-wname-" + wiName,
 						TraceId:           map[string]string{"traceparent": "00-0f89f15e562489e2e171eca1cf9ba958-d2fa6dbbcbf7e29a-01"},
 					},
 				}
-				By("Creating WorkloadInstance")
+				By("Creating WorkloadVersion")
 				err := k8sClient.Create(context.TODO(), wi)
 				Expect(err).To(BeNil())
 
-				By("Ensuring WorkloadInstance does not progress to next phase")
+				By("Ensuring WorkloadVersion does not progress to next phase")
 				wiNameObj := types.NamespacedName{
 					Namespace: wi.Namespace,
 					Name:      wi.Name,
 				}
 				Consistently(func(g Gomega) {
-					wi := &klcv1alpha3.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadVersion{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))
@@ -126,13 +126,13 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, statefulSet)
 				Expect(err).To(BeNil())
 
-				By("Creating a WorkloadInstance that references the StatefulSet")
-				wi = &klcv1alpha3.KeptnWorkloadInstance{
+				By("Creating a WorkloadVersion that references the StatefulSet")
+				wi = &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							ResourceReference: klcv1alpha3.ResourceReference{
 								UID:  statefulSet.UID,
@@ -155,7 +155,7 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha3.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadVersion{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
@@ -211,13 +211,13 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, daemonSet)
 				Expect(err).To(BeNil())
 
-				By("Creating a WorkloadInstance that references the DaemonSet")
-				wi = &klcv1alpha3.KeptnWorkloadInstance{
+				By("Creating a WorkloadVersion that references the DaemonSet")
+				wi = &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							ResourceReference: klcv1alpha3.ResourceReference{
 								UID:  daemonSet.UID,
@@ -240,7 +240,7 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 					Name:      wi.Name,
 				}
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha3.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadVersion{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi.Status.DeploymentStatus).To(Equal(apicommon.StateSucceeded))
@@ -291,12 +291,12 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
-				wi = &klcv1alpha3.KeptnWorkloadInstance{
+				wi = &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName + "-wname-2.0",
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							Version:                  "2.0",
 							AppName:                  appVersion.GetAppName(),
@@ -305,18 +305,18 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 						WorkloadName: appName + "-wname",
 					},
 				}
-				By("Creating WorkloadInstance")
+				By("Creating WorkloadVersion")
 				err = k8sClient.Create(context.TODO(), wi)
 				Expect(err).To(BeNil())
 
 				time.Sleep(5 * time.Second)
 
-				wi2 := &klcv1alpha3.KeptnWorkloadInstance{}
+				wi2 := &klcv1alpha3.KeptnWorkloadVersion{}
 				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: wi.Namespace, Name: wi.Name}, wi2)
 				Expect(err).To(BeNil())
 				Expect(wi2).To(Not(BeNil()))
 
-				wi2.Status = klcv1alpha3.KeptnWorkloadInstanceStatus{
+				wi2.Status = klcv1alpha3.KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            apicommon.StateSucceeded,
 					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
 					DeploymentStatus:               apicommon.StatePending,
@@ -343,7 +343,7 @@ var _ = Describe("Workloadinstance", Ordered, func() {
 				}
 				//nolint:dupl
 				Eventually(func(g Gomega) {
-					wi := &klcv1alpha3.KeptnWorkloadInstance{}
+					wi := &klcv1alpha3.KeptnWorkloadVersion{}
 					err := k8sClient.Get(ctx, wiNameObj, wi)
 					g.Expect(err).To(BeNil())
 					g.Expect(wi).To(Not(BeNil()))

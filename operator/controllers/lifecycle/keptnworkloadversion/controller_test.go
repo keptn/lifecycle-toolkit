@@ -1,4 +1,4 @@
-package keptnworkloadinstance
+package keptnworkloadversion
 
 import (
 	"context"
@@ -27,7 +27,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *testing.T) {
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
@@ -37,21 +37,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
+	workloadVersion := makeWorkloadVersionWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
@@ -62,21 +62,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableReplicaS
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
+	workloadVersion := makeWorkloadVersionWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.NotNil(t, err)
 	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
 
 	rep := int32(1)
 	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
@@ -86,21 +86,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
+	workloadVersion := makeWorkloadVersionWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
 
 	rep := int32(1)
 	statefulSetFail := makeStatefulSet("mystat", "default", &rep, 0)
@@ -111,21 +111,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableStateful
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(statefulSetFail.ObjectMeta, "StatefulSet")
+	workloadVersion := makeWorkloadVersionWithRef(statefulSetFail.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.NotNil(t, err)
 	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
 
 	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
 
@@ -134,21 +134,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
+	workloadVersion := makeWorkloadVersionWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
 	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
 
 	// do not put the DaemonSet into the cluster
@@ -157,21 +157,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableDaemonSe
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
+	workloadVersion := makeWorkloadVersionWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.NotNil(t, err)
 	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
 
 	rep := int32(1)
 	replicaSet := makeReplicaSet("myrep", "default", &rep, 1)
@@ -181,21 +181,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(replicaSet.ObjectMeta, "ReplicaSet")
+	workloadVersion := makeWorkloadVersionWithRef(replicaSet.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
 
 	rep := int32(1)
 	statefulSet := makeStatefulSet("mystat", "default", &rep, 1)
@@ -205,21 +205,21 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(statefulSet.ObjectMeta, "StatefulSet")
+	workloadVersion := makeWorkloadVersionWithRef(statefulSet.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
 
 	daemonSet := makeDaemonSet("mystat", "default", 1, 1)
 
@@ -228,47 +228,47 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *t
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(daemonSet.ObjectMeta, "DaemonSet")
+	workloadVersion := makeWorkloadVersionWithRef(daemonSet.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	testrequire.Nil(t, err)
 	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
 
 	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	testrequire.Nil(t, err)
 
-	workloadInstance := makeWorkloadInstanceWithRef(metav1.ObjectMeta{}, "Unknown")
+	workloadVersion := makeWorkloadVersionWithRef(metav1.ObjectMeta{}, "Unknown")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
+	err = fakeClient.Create(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
 
-	keptnState, err := r.reconcileDeployment(context.TODO(), workloadInstance)
-	testrequire.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadInstanceResourceReference)
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
+	testrequire.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
 	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
-func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
 	p1 := makeNominatedPod("pod1", "node1", v1.PodRunning)
 	p2 := makeNominatedPod("pod2", "node1", v1.PodPending)
 	podList := &v1.PodList{Items: []v1.Pod{p1, p2}}
 	podList2 := &v1.PodList{Items: []v1.Pod{p2}}
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
 	}
 	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1alpha3.ResourceReference{UID: "pod1"}, "node1")
@@ -277,7 +277,7 @@ func TestKeptnWorkloadInstanceReconciler_IsPodRunning(t *testing.T) {
 		t.Errorf("Wrong!")
 	}
 
-	r2 := &KeptnWorkloadInstanceReconciler{
+	r2 := &KeptnWorkloadVersionReconciler{
 		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
 	}
 	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1alpha3.ResourceReference{UID: "pod1"}, "node1")
@@ -364,11 +364,11 @@ func makeDaemonSet(name string, namespace string, wanted int32, available int32)
 
 }
 
-func Test_getAppVersionForWorkloadInstance(t *testing.T) {
+func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 	now := time.Now()
 	tests := []struct {
 		name           string
-		wli            *klcv1alpha3.KeptnWorkloadInstance
+		wli            *klcv1alpha3.KeptnWorkloadVersion
 		list           *klcv1alpha3.KeptnAppVersionList
 		wantFound      bool
 		wantAppVersion klcv1alpha3.KeptnAppVersion
@@ -376,12 +376,12 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 	}{
 		{
 			name: "no appVersions",
-			wli: &klcv1alpha3.KeptnWorkloadInstance{
+			wli: &klcv1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "my-workloadinstance",
+					Name:      "my-workloadversion",
 					Namespace: "default",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
@@ -396,12 +396,12 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 		},
 		{
 			name: "appVersion found",
-			wli: &klcv1alpha3.KeptnWorkloadInstance{
+			wli: &klcv1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "my-workloadinstance",
+					Name:      "my-workloadversion",
 					Namespace: "default",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
@@ -475,12 +475,12 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 		},
 		{
 			name: "appVersion deprecated",
-			wli: &klcv1alpha3.KeptnWorkloadInstance{
+			wli: &klcv1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "my-workloadinstance",
+					Name:      "my-workloadversion",
 					Namespace: "default",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
@@ -540,12 +540,12 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 		},
 		{
 			name: "no workload for appversion",
-			wli: &klcv1alpha3.KeptnWorkloadInstance{
+			wli: &klcv1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "my-workloadinstance3",
+					Name:      "my-workloadversion3",
 					Namespace: "default",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "my-app333",
 						Version: "1.0.0",
@@ -603,10 +603,10 @@ func Test_getAppVersionForWorkloadInstance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := klcv1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			r := &KeptnWorkloadInstanceReconciler{
+			r := &KeptnWorkloadVersionReconciler{
 				Client: k8sfake.NewClientBuilder().WithLists(tt.list).Build(),
 			}
-			found, gotAppVersion, err := r.getAppVersionForWorkloadInstance(context.TODO(), tt.wli)
+			found, gotAppVersion, err := r.getAppVersionForWorkloadVersion(context.TODO(), tt.wli)
 			require.Equal(t, tt.wantErr, err != nil)
 			require.Equal(t, tt.wantFound, found)
 			if tt.wantFound {
@@ -624,7 +624,7 @@ func Test_getLatestAppVersion(t *testing.T) {
 	now := time.Now()
 	type args struct {
 		apps *klcv1alpha3.KeptnAppVersionList
-		wli  *klcv1alpha3.KeptnWorkloadInstance
+		wli  *klcv1alpha3.KeptnWorkloadVersion
 	}
 	tests := []struct {
 		name           string
@@ -678,12 +678,12 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1alpha3.KeptnWorkloadInstance{
+				wli: &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-workloadinstance",
+						Name:      "my-workloadversion",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
@@ -739,12 +739,12 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1alpha3.KeptnWorkloadInstance{
+				wli: &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-workloadinstance",
+						Name:      "my-workloadversion",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
@@ -763,12 +763,12 @@ func Test_getLatestAppVersion(t *testing.T) {
 				apps: &klcv1alpha3.KeptnAppVersionList{
 					Items: []klcv1alpha3.KeptnAppVersion{},
 				},
-				wli: &klcv1alpha3.KeptnWorkloadInstance{
+				wli: &klcv1alpha3.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-workloadinstance",
+						Name:      "my-workloadversion",
 						Namespace: "default",
 					},
-					Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+					Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 						KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
@@ -792,7 +792,7 @@ func Test_getLatestAppVersion(t *testing.T) {
 	}
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileNoActionRequired(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_ReconcileNoActionRequired(t *testing.T) {
 	r, _, _ := setupReconciler()
 
 	result, err := r.Reconcile(context.TODO(), ctrl.Request{})
@@ -801,18 +801,18 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileNoActionRequired(t *testing.T)
 	require.NotNil(t, result)
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotStartBeforeAppPreEvaluationIsDone(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_ReconcileDoNotStartBeforeAppPreEvaluationIsDone(t *testing.T) {
 	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1alpha3.KeptnWorkloadInstance{
+	wi := &klcv1alpha3.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
@@ -821,7 +821,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotStartBeforeAppPreEvaluati
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{},
+		Status: klcv1alpha3.KeptnWorkloadVersionStatus{},
 	}
 
 	err := r.Client.Create(context.TODO(), wi)
@@ -867,18 +867,18 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotStartBeforeAppPreEvaluati
 	}
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1alpha3.KeptnWorkloadInstance{
+	wi := &klcv1alpha3.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
@@ -887,7 +887,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{
+		Status: klcv1alpha3.KeptnWorkloadVersionStatus{
 			DeploymentStatus:               apicommon.StateSucceeded,
 			PreDeploymentStatus:            apicommon.StateSucceeded,
 			PostDeploymentStatus:           apicommon.StateSucceeded,
@@ -949,18 +949,18 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	}
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *testing.T) {
+func TestKeptnWorkloadVersionReconciler_ReconcileDoNotRetryAfterFailedPhase(t *testing.T) {
 	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1alpha3.KeptnWorkloadInstance{
+	wi := &klcv1alpha3.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
@@ -969,7 +969,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{
+		Status: klcv1alpha3.KeptnWorkloadVersionStatus{
 			CurrentPhase: apicommon.PhaseWorkloadPreDeployment.ShortName,
 			StartTime:    metav1.Time{},
 			EndTime:      metav1.Time{},
@@ -1018,7 +1018,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 
 }
 
-func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler() (*KeptnWorkloadVersionReconciler, chan string, *fake.ITracerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -1036,7 +1036,7 @@ func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITr
 
 	fakeClient := fake.NewClient()
 	recorder := record.NewFakeRecorder(100)
-	r := &KeptnWorkloadInstanceReconciler{
+	r := &KeptnWorkloadVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
 		Recorder:      recorder,
@@ -1048,13 +1048,13 @@ func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITr
 	return r, recorder.Events, tr
 }
 
-func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha3.KeptnWorkloadInstance {
-	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{
+func makeWorkloadVersionWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1alpha3.KeptnWorkloadVersion {
+	workloadVersion := &klcv1alpha3.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-wli",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 				ResourceReference: klcv1alpha3.ResourceReference{
 					UID:  objectMeta.UID,
@@ -1064,5 +1064,5 @@ func makeWorkloadInstanceWithRef(objectMeta metav1.ObjectMeta, refKind string) *
 			},
 		},
 	}
-	return workloadInstance
+	return workloadVersion
 }

@@ -1,5 +1,5 @@
 //nolint:dupl
-package keptnworkloadinstance
+package keptnworkloadversion
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 )
 
-func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1alpha3.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
 		Client:      r.Client,
 		Recorder:    r.Recorder,
@@ -25,7 +25,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := taskHandler.ReconcileTasks(ctx, phaseCtx, workloadInstance, taskCreateAttributes)
+	newStatus, state, err := taskHandler.ReconcileTasks(ctx, phaseCtx, workloadVersion, taskCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}
@@ -34,15 +34,15 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 
 	switch checkType {
 	case apicommon.PreDeploymentCheckType:
-		workloadInstance.Status.PreDeploymentStatus = overallState
-		workloadInstance.Status.PreDeploymentTaskStatus = newStatus
+		workloadVersion.Status.PreDeploymentStatus = overallState
+		workloadVersion.Status.PreDeploymentTaskStatus = newStatus
 	case apicommon.PostDeploymentCheckType:
-		workloadInstance.Status.PostDeploymentStatus = overallState
-		workloadInstance.Status.PostDeploymentTaskStatus = newStatus
+		workloadVersion.Status.PostDeploymentStatus = overallState
+		workloadVersion.Status.PostDeploymentTaskStatus = newStatus
 	}
 
 	// Write Status Field
-	err = r.Client.Status().Update(ctx, workloadInstance)
+	err = r.Client.Status().Update(ctx, workloadVersion)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

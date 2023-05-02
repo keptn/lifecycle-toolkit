@@ -47,7 +47,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: KeptnWorkloadInstance
+  kind: KeptnWorkloadVersion
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1
   version: v1alpha1
 - api:
@@ -130,7 +130,7 @@ resources:
   controller: true
   domain: keptn.sh
   group: lifecycle
-  kind: KeptnWorkloadInstance
+  kind: KeptnWorkloadVersion
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2
   version: v1alpha2
   webhooks:
@@ -247,7 +247,7 @@ resources:
     namespaced: true
   domain: keptn.sh
   group: lifecycle
-  kind: KeptnWorkloadInstance
+  kind: KeptnWorkloadVersion
   path: github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3
   version: v1alpha3
 - api:

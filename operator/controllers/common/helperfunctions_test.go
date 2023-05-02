@@ -313,13 +313,13 @@ func Test_setAnnotations(t *testing.T) {
 			},
 		},
 		{
-			name: "KeptnWorkloadInstance",
-			object: &klcv1alpha3.KeptnWorkloadInstance{
+			name: "KeptnWorkloadVersion",
+			object: &klcv1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
-					Name:      "workloadInstance",
+					Name:      "workloadVersion",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "app",
 						Version: "1.0.0",
@@ -328,14 +328,14 @@ func Test_setAnnotations(t *testing.T) {
 				},
 			},
 			want: map[string]string{
-				"namespace":            "namespace",
-				"name":                 "workloadInstance",
-				"phase":                "AppDeploy",
-				"appName":              "app",
-				"workloadVersion":      "1.0.0",
-				"workloadName":         "workload",
-				"workloadInstanceName": "workloadInstance",
-				"traceparent":          "",
+				"namespace":           "namespace",
+				"name":                "workloadVersion",
+				"phase":               "AppDeploy",
+				"appName":             "app",
+				"workloadVersion":     "1.0.0",
+				"workloadName":        "workload",
+				"workloadVersionName": "workloadVersion",
+				"traceparent":         "",
 			},
 		},
 		{

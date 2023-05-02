@@ -100,8 +100,8 @@ AppDeploy
 
 ```shell
 AppPostDeployTasks
-    AppPostDeployTasksStarted
-    AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
+  AppPostDeployTasksStarted
+  AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
 ```
   
 ### Post-deployment evaluation phase

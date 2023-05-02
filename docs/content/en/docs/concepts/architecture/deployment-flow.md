@@ -98,9 +98,9 @@ AppDeploy
 ### Post-deployment phase
 
 ```shell
-  WorkloadPostDeployTasks
-    WorkloadPostDeployTasksStarted
-    WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored
+  AppPostDeployTasks
+      AppPostDeployTasksStarted
+      AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
 ```
   
 ### Post-deployment evaluation phase

@@ -33,7 +33,7 @@ spec:
 While changes in the workload version will affect only workload checks, a change in the app version will also cause a
 new execution of app level checks.
 
-# Automatic App Discovery
+## Automatic App Discovery
 
 The Keptn Lifecycle Toolkit also provides the option to automatically discover `KeptnApp`s, based on the
 recommended Kubernetes labels `app.kubernetes.io/part-of`, `app.kubernetes.io/name` `app.kubernetes.io/version`.
@@ -51,7 +51,8 @@ specs of your Workloads (i.e. `Deployments`/`StatefulSets`/`DaemonSets`) within 
     Workload.
     - `app.kubernetes.io/version`: Determines the version of the `KeptnWorkload` representing the Workload.
     - `app.kubernetes.io/part-of`: Determines the name of the generated `KeptnApp` representing your
-    Application. All Workloads that share the same value for this label will be consolidated into the same `KeptnApp`.
+    Application. 
+    All Workloads that share the same value for this label will be consolidated into the same `KeptnApp`.
 
 As an example, consider the following application, consisting of several deployments, which is going to be
 deployed into a KLT-enabled namespace:

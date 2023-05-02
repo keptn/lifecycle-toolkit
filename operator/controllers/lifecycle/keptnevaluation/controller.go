@@ -18,6 +18,7 @@ package keptnevaluation
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -66,10 +67,6 @@ type KeptnEvaluationReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the KeptnEvaluation object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
@@ -196,17 +193,17 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	return evaluation
 }
 
-func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha3.EvaluationStatusItem, query klcv1alpha3.Objective, provider *keptnmetric.KeptnMetricProvider) (map[string]klcv1alpha3.EvaluationStatusItem, apicommon.StatusSummary) {
-	if _, ok := evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]; !ok {
-		evaluation.AddEvaluationStatus(query)
+func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, statusSummary apicommon.StatusSummary, newStatus map[string]klcv1alpha3.EvaluationStatusItem, objective klcv1alpha3.Objective, provider *keptnmetric.KeptnMetricProvider) (map[string]klcv1alpha3.EvaluationStatusItem, apicommon.StatusSummary) {
+	if _, ok := evaluation.Status.EvaluationStatus[objective.KeptnMetricRef.Name]; !ok {
+		evaluation.AddEvaluationStatus(objective)
 	}
-	if evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name].Status.IsSucceeded() {
+	if evaluation.Status.EvaluationStatus[objective.KeptnMetricRef.Name].Status.IsSucceeded() {
 		statusSummary = apicommon.UpdateStatusSummary(apicommon.StateSucceeded, statusSummary)
-		newStatus[query.KeptnMetricRef.Name] = evaluation.Status.EvaluationStatus[query.KeptnMetricRef.Name]
+		newStatus[objective.KeptnMetricRef.Name] = evaluation.Status.EvaluationStatus[objective.KeptnMetricRef.Name]
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, _, err := provider.FetchData(ctx, query, evaluation.Namespace)
+	value, _, err := provider.FetchData(ctx, objective, evaluation.Namespace)
 	statusItem := &klcv1alpha3.EvaluationStatusItem{
 		Value:  value,
 		Status: apicommon.StateFailed,
@@ -215,16 +212,19 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		statusItem.Message = err.Error()
 	}
 	// Evaluating SLO
-	check, err := checkValue(query, statusItem)
+	check, err := checkValue(objective, statusItem)
 	if err != nil {
 		statusItem.Message = err.Error()
-		r.Log.Error(err, "Could not check query result")
+		r.Log.Error(err, "Could not check objective result")
 	}
 	if check {
 		statusItem.Status = apicommon.StateSucceeded
+		statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
+	} else {
+		statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
 	}
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
-	newStatus[query.KeptnMetricRef.Name] = *statusItem
+	newStatus[objective.KeptnMetricRef.Name] = *statusItem
 
 	return newStatus, statusSummary
 }

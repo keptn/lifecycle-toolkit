@@ -83,6 +83,12 @@ spec:
             capabilities:
               drop:
                 - "ALL"
+            privileged: false
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /healthz

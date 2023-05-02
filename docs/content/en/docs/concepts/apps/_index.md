@@ -51,7 +51,7 @@ specs of your Workloads (i.e. `Deployments`/`StatefulSets`/`DaemonSets`) within 
     Workload.
     - `app.kubernetes.io/version`: Determines the version of the `KeptnWorkload` representing the Workload.
     - `app.kubernetes.io/part-of`: Determines the name of the generated `KeptnApp` representing your
-    Application. 
+    Application.
     All Workloads that share the same value for this label will be consolidated into the same `KeptnApp`.
 
 As an example, consider the following application, consisting of several deployments, which is going to be

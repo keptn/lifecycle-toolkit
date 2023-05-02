@@ -88,8 +88,8 @@ AppDeploy
     WorkloadDeployStarted
     WorkloadDeploySucceeded OR WorkloadDeployErrored
   WorkloadPostDeployTasks
-      WorkloadPostDeployTasksStarted
-      WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored 
+    WorkloadPostDeployTasksStarted
+    WorkloadPostDeployTasksSucceeded OR WorkloadPostDeployTasksErrored 
   WorkloadPostDeployEvaluations
       WorkloadPostDeployEvaluationsStarted
       WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored

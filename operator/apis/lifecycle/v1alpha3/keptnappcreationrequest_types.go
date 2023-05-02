@@ -18,6 +18,8 @@ package v1alpha3
 
 import (
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -61,6 +63,16 @@ func init() {
 	SchemeBuilder.Register(&KeptnAppCreationRequest{}, &KeptnAppCreationRequestList{})
 }
 
-func (kacr *KeptnAppCreationRequest) IsSingleService() bool {
+func (kacr KeptnAppCreationRequest) IsSingleService() bool {
 	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
+}
+
+func (kacr KeptnAppCreationRequest) SetSpanAttributes(span trace.Span) {
+	span.SetAttributes(kacr.GetSpanAttributes()...)
+}
+
+func (kacr KeptnAppCreationRequest) GetSpanAttributes() []attribute.KeyValue {
+	return []attribute.KeyValue{
+		common.AppName.String(kacr.Name),
+	}
 }

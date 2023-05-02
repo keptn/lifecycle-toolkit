@@ -5,54 +5,26 @@ metadata:
 spec:
   appName: my-app
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
 metadata:
-  labels:
-    app: test
-  name: test
+  name: my-app-my-workload
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: test
-  strategy: {}
-  template:
-    metadata:
-      labels:
-        app: test
-      annotations:
-        keptn.sh/workload: my-workload
-        keptn.sh/version: "2.0.0"
-        keptn.sh/app: "my-app"
-    spec:
-      containers:
-        - image: busybox
-          name: busybox
-          command: ['sh', '-c', 'echo The app is running! && sleep infinity']
+  app: my-app
+  version: "2.0.0"
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
 metadata:
-  labels:
-    app: test2
-  name: test2
+  name: my-app-my-workload-2
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: test2
-  strategy: {}
-  template:
-    metadata:
-      labels:
-        app: test2
-      annotations:
-        keptn.sh/workload: my-workload-2
-        keptn.sh/version: "1.0.0"
-        keptn.sh/app: "my-app"
-    spec:
-      containers:
-        - image: busybox
-          name: busybox
-          command: ['sh', '-c', 'echo The app is running! && sleep infinity']
+  app: my-app
+  version: "1.0.0"
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set-2
+    uid: 857f825e-4025-4ea8-ad22-9292877ff7eb

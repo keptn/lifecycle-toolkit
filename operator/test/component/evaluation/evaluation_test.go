@@ -97,8 +97,9 @@ var _ = Describe("Evaluation", Ordered, func() {
 					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
 					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha3.EvaluationStatusItem{
 						metricName: {
-							Value:  "5",
-							Status: apicommon.StateSucceeded,
+							Value:   "5",
+							Status:  apicommon.StateSucceeded,
+							Message: "value '5' met objective '<10'",
 						},
 					}))
 				}, "30s").Should(Succeed())

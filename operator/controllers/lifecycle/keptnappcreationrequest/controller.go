@@ -20,6 +20,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -114,14 +115,11 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	// look up all the KeptnWorkloads referencing the KeptnApp
-	workloads := &lifecycle.KeptnWorkloadList{}
-	if err := r.Client.List(ctx, workloads, client.InNamespace(creationRequest.Namespace), client.MatchingFields{
-		"spec.app": creationRequest.Spec.AppName,
-	}); err != nil {
+	workloads, err := r.getWorkloads(ctx, creationRequest)
+	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not retrieve KeptnWorkloads: %w", err)
 	}
 
-	var err error
 	if !appFound {
 		err = r.createKeptnApp(ctx, creationRequest, workloads)
 	} else {
@@ -135,6 +133,19 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 		r.Log.Error(err, "Could not delete", "KeptnAppCreationRequest", creationRequest)
 	}
 	return ctrl.Result{}, nil
+}
+
+func (r *KeptnAppCreationRequestReconciler) getWorkloads(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest) ([]lifecycle.KeptnWorkload, error) {
+	workloads := &lifecycle.KeptnWorkloadList{}
+	if err := r.Client.List(ctx, workloads, client.InNamespace(creationRequest.Namespace), client.MatchingFields{
+		"spec.app": creationRequest.Spec.AppName,
+	}); err != nil {
+		return nil, err
+	}
+	sort.Slice(workloads.Items, func(i, j int) bool {
+		return workloads.Items[i].Name < workloads.Items[j].Name
+	})
+	return workloads.Items, nil
 }
 
 func (r *KeptnAppCreationRequestReconciler) getCreationRequestExpirationDuration(cr *lifecycle.KeptnAppCreationRequest) time.Duration {
@@ -162,7 +173,7 @@ func (r *KeptnAppCreationRequestReconciler) SetupWithManager(mgr ctrl.Manager) e
 		Complete(r)
 }
 
-func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *lifecycle.KeptnApp, workloads *lifecycle.KeptnWorkloadList) error {
+func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *lifecycle.KeptnApp, workloads []lifecycle.KeptnWorkload) error {
 
 	addOrUpdatedWorkload := r.addOrUpdateWorkloads(workloads, keptnApp)
 	removedWorkload := r.cleanupWorkloads(workloads, keptnApp)
@@ -171,14 +182,14 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 		return nil
 	}
 
-	keptnApp.Spec.Version = computeVersionFromWorkloads(workloads.Items)
+	keptnApp.Spec.Version = computeVersionFromWorkloads(workloads)
 
 	return r.Update(ctx, keptnApp)
 }
 
-func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads *lifecycle.KeptnWorkloadList, keptnApp *lifecycle.KeptnApp) bool {
+func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads []lifecycle.KeptnWorkload, keptnApp *lifecycle.KeptnApp) bool {
 	updated := false
-	for _, workload := range workloads.Items {
+	for _, workload := range workloads {
 		foundWorkload := false
 		workloadName := workload.GetNameWithoutAppPrefix()
 		for index, appWorkload := range keptnApp.Spec.Workloads {
@@ -205,12 +216,12 @@ func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads *life
 	return updated
 }
 
-func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads *lifecycle.KeptnWorkloadList, keptnApp *lifecycle.KeptnApp) bool {
+func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads []lifecycle.KeptnWorkload, keptnApp *lifecycle.KeptnApp) bool {
 	updated := false
 	updatedWorkloads := []lifecycle.KeptnWorkloadRef{}
 	for index, appWorkload := range keptnApp.Spec.Workloads {
 		foundWorkload := false
-		for _, workload := range workloads.Items {
+		for _, workload := range workloads {
 			if appWorkload.Name == workload.GetNameWithoutAppPrefix() {
 				updatedWorkloads = append(updatedWorkloads, keptnApp.Spec.Workloads[index])
 				break
@@ -225,7 +236,7 @@ func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads *lifecycl
 	return updated
 }
 
-func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest, workloads *lifecycle.KeptnWorkloadList) error {
+func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest, workloads []lifecycle.KeptnWorkload) error {
 	keptnApp := &lifecycle.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      creationRequest.Spec.AppName,
@@ -233,9 +244,11 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Labels: map[string]string{
 				common.K8sRecommendedManagedByAnnotations: managedByKLT,
 			},
+			// pass through the annotations since those contain the trace context
+			Annotations: creationRequest.Annotations,
 		},
 		Spec: lifecycle.KeptnAppSpec{
-			Version:                   computeVersionFromWorkloads(workloads.Items),
+			Version:                   computeVersionFromWorkloads(workloads),
 			PreDeploymentTasks:        []string{},
 			PostDeploymentTasks:       []string{},
 			PreDeploymentEvaluations:  []string{},
@@ -244,7 +257,7 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 		},
 	}
 
-	for _, workload := range workloads.Items {
+	for _, workload := range workloads {
 		keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads, lifecycle.KeptnWorkloadRef{
 			Name:    strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", creationRequest.Spec.AppName)),
 			Version: workload.Spec.Version,

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"testing"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -8,7 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 func Test_GetItemStatus(t *testing.T) {
@@ -399,6 +402,87 @@ func Test_setAnnotations(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, setAnnotations(tt.object, apicommon.PhaseAppDeployment), tt.want)
+		})
+	}
+}
+
+func Test_GetTaskDefinition(t *testing.T) {
+	tests := []struct {
+		name             string
+		taskDef          *klcv1alpha3.KeptnTaskDefinition
+		taskDefName      string
+		taskDefNamespace string
+		out              *klcv1alpha3.KeptnTaskDefinition
+		wantError        bool
+	}{
+		{
+			name: "taskDef not found",
+			taskDef: &klcv1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "taskDef",
+					Namespace: "some-other-namespace",
+				},
+			},
+			taskDefName:      "taskDef",
+			taskDefNamespace: "some-namespace",
+			out:              nil,
+			wantError:        true,
+		},
+		{
+			name: "taskDef found",
+			taskDef: &klcv1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "taskDef",
+					Namespace: "some-namespace",
+				},
+			},
+			taskDefName:      "taskDef",
+			taskDefNamespace: "some-namespace",
+			out: &klcv1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "taskDef",
+					Namespace: "some-namespace",
+				},
+			},
+			wantError: false,
+		},
+		{
+			name: "taskDef found in default KLT namespace",
+			taskDef: &klcv1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "taskDef",
+					Namespace: KLTNamespace,
+				},
+			},
+			taskDefName:      "taskDef",
+			taskDefNamespace: "some-namespace",
+			out: &klcv1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "taskDef",
+					Namespace: KLTNamespace,
+				},
+			},
+			wantError: false,
+		},
+	}
+
+	err := klcv1alpha3.AddToScheme(scheme.Scheme)
+	require.Nil(t, err)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
+			d, err := GetTaskDefinition(client, context.TODO(), tt.taskDefName, tt.taskDefNamespace)
+			if tt.out != nil && d != nil {
+				require.Equal(t, tt.out.Name, d.Name)
+				require.Equal(t, tt.out.Namespace, d.Namespace)
+			} else if tt.out != d {
+				t.Errorf("want: %v, got: %v", tt.out, d)
+			}
+			if tt.wantError != (err != nil) {
+				t.Errorf("want error: %t, got: %v", tt.wantError, err)
+			}
+
 		})
 	}
 }

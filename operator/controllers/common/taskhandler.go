@@ -159,8 +159,7 @@ func (r TaskHandler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWra
 }
 
 func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateTaskAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) error {
-	definition := &klcv1alpha3.KeptnTaskDefinition{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: taskName, Namespace: piWrapper.GetNamespace()}, definition)
+	definition, err := GetTaskDefinition(r.Client, ctx, taskName, piWrapper.GetNamespace())
 	if err != nil {
 		r.Log.Error(err, "could not find KeptnTaskDefinition")
 		return controllererrors.ErrCannotGetKeptnTaskDefinition

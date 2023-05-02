@@ -217,6 +217,7 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		statusItem.Message = err.Error()
 		r.Log.Error(err, "Could not check objective result")
 	} else {
+		// if there is no error, we set the message depending on if the value passed the objective, or not
 		if check {
 			statusItem.Status = apicommon.StateSucceeded
 			statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)

@@ -46,7 +46,7 @@ be required:
 1. Make sure the namespace of your application is enabled to be managed by the Keptn Lifecycle Toolkit,
 by adding the annotation `keptn.sh/lifecycle-toolkit: "enabled"` to your namespace.
 2. Make sure the following labels and/or annotations are present in the pod template
-specs of your Workloads (i.e. `Deployments`/`StatefulSets`/`DaemonSets`) within your application:
+specs of your Workloads (i.e. `Deployments`/`StatefulSets`/`DaemonSets`/`ReplicaSets`) within your application:
     - `app.kubernetes.io/name`: Determines the name of the generated `KeptnWorkload` representing the
     Workload.
     - `app.kubernetes.io/version`: Determines the version of the `KeptnWorkload` representing the Workload.
@@ -124,4 +124,4 @@ spec:
 Due to the creation of this resource, you will now get observability of your application's deployments due to
 the OpenTelemetry tracing features provided by the Keptn Lifecycle Toolkit:
 
-![Application deployment trace](assets%2Ftrace.png)
+![Application deployment trace](assets/trace.png)

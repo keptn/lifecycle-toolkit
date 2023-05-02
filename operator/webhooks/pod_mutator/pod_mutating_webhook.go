@@ -110,19 +110,17 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 			span.SetStatus(codes.Error, InvalidAnnotationMessage)
 			return admission.Errored(http.StatusBadRequest, err)
 		}
-		if !isAppAnnotationPresent {
-			if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
-				logger.Error(err, "Could not handle App")
-				span.SetStatus(codes.Error, err.Error())
-				return admission.Errored(http.StatusBadRequest, err)
-			}
-		}
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
-
 		logger.Info("Attributes from annotations set")
 
 		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
 			logger.Error(err, "Could not handle Workload")
+			span.SetStatus(codes.Error, err.Error())
+			return admission.Errored(http.StatusBadRequest, err)
+		}
+
+		if err := a.handleApp(ctx, logger, pod, req.Namespace, isAppAnnotationPresent); err != nil {
+			logger.Error(err, "Could not handle App")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
@@ -349,56 +347,38 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 }
 
 //nolint:dupl
-func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string, isAppAnnotationPresent bool) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	newApp := a.generateApp(ctx, pod, namespace)
+	newAppCreationRequest := a.generateAppCreationRequest(ctx, pod, namespace, isAppAnnotationPresent)
 
-	newApp.SetSpanAttributes(span)
+	newAppCreationRequest.SetSpanAttributes(span)
 
-	logger.Info("Searching for app")
+	logger.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
 
-	app := &klcv1alpha3.KeptnApp{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newApp.Name}, app)
+	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
 	if errors.IsNotFound(err) {
-		logger.Info("Creating app", "app", app.Name)
-		app = newApp
-		err = a.Client.Create(ctx, app)
+		logger.Info("Creating app creation request", "appCreationRequest", appCreationRequest.Name)
+		appCreationRequest = newAppCreationRequest
+		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
 			logger.Error(err, "Could not create App")
-			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", app, "AppNotCreated", "could not create KeptnApp", app.Spec.Version)
+			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", app, "AppCreated", "created KeptnApp", app.Spec.Version)
+		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 		return nil
 	}
 
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch App"+": %+v", err)
+		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
 	}
-
-	if reflect.DeepEqual(app.Spec, newApp.Spec) {
-		logger.Info("Pod not changed, not updating anything")
-		return nil
-	}
-
-	logger.Info("Pod changed, updating app")
-	app.Spec = newApp.Spec
-
-	err = a.Client.Update(ctx, app)
-	if err != nil {
-		logger.Error(err, "Could not update App")
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", app, "AppNotUpdated", "could not update KeptnApp", app.Spec.Version)
-		span.SetStatus(codes.Error, err.Error())
-		return err
-	}
-
-	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", app, "AppUpdated", "updated KeptnApp", app.Spec.Version)
 
 	return nil
 }
@@ -456,8 +436,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	}
 }
 
-func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnApp {
-	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace string, isAppAnnotationPresent bool) *klcv1alpha3.KeptnAppCreationRequest {
 	appName := a.getAppName(pod)
 
 	// create TraceContext
@@ -465,26 +444,22 @@ func (a *PodMutatingWebhook) generateApp(ctx context.Context, pod *corev1.Pod, n
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	return &klcv1alpha3.KeptnApp{
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha3.KeptnAppSpec{
-			Version:                   version,
-			PreDeploymentTasks:        []string{},
-			PostDeploymentTasks:       []string{},
-			PreDeploymentEvaluations:  []string{},
-			PostDeploymentEvaluations: []string{},
-			Workloads: []klcv1alpha3.KeptnWorkloadRef{
-				{
-					Name:    appName,
-					Version: version,
-				},
-			},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+			AppName: appName,
 		},
 	}
+
+	if !isAppAnnotationPresent {
+		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
+	}
+
+	return kacr
 }
 
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {

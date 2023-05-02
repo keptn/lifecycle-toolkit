@@ -1,0 +1,282 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.36.0
+          command: ['sh', '-c', 'sleep 30']
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/entry:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-entry
+  ports:
+    - name: http
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  type: LoadBalancer
+  # change to NodePort if no LoadBalancer controller is available
+  # type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-hat
+  template:
+    metadata:
+      labels:
+        component: podtato-head-hat
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-hat
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/hat:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-hat
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-hat
+  ports:
+    - name: http
+      port: 9001
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-left-leg
+  template:
+    metadata:
+      labels:
+        component: podtato-head-left-leg
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-left-leg
+        keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-tasks: check-entry-service
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/left-leg:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-left-leg
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-left-leg
+  ports:
+    - name: http
+      port: 9002
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-arm
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-left-arm
+  template:
+    metadata:
+      labels:
+        component: podtato-head-left-arm
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-left-arm
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/left-arm:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-left-arml
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-left-arm
+  ports:
+    - name: http
+      port: 9003
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-leg
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-right-leg
+  template:
+    metadata:
+      labels:
+        component: podtato-head-right-leg
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-right-leg
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/right-leg:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-right-leg
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-right-leg
+  ports:
+    - name: http
+      port: 9004
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-arm
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-right-arm
+  template:
+    metadata:
+      labels:
+        component: podtato-head-right-arm
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-right-arm
+        keptn.sh/version: 0.1.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/right-arm:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-right-arm
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-right-arm
+  ports:
+    - name: http
+      port: 9005
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP

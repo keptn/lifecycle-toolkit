@@ -79,6 +79,131 @@
         "controlID": "C-0036"
       }
     ]
+  },
+  {
+    "name": "coreDNS poisoning",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": "metrics-operator"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": "lifecycle-operator"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": "certificate-operator"
+        }
+      }
+    ],
+    "posturePolicies": [
+        {
+            "controlID": "C-0037"
+        }
+    ]
+  },
+  {
+    "name": "data desctruction",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": "keptn-scheduler"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": "lifecycle-operator"
+        }
+      }
+    ],
+    "posturePolicies": [
+        {
+            "controlID": "C-0007"
+        }
+    ]
+  },
+  {
+    "name": "malicious webhooks",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "MutatingWebhookConfiguration",
+          "name": "lifecycle-mutating-webhook-configuration"
+        }
+      }
+    ],
+    "posturePolicies": [
+        {
+            "controlID": "C-0039"
+        }
+    ]
+  },
+  {
+    "name": "server running 2222",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "lifecycle-operator"
+        }
+      }
+    ],
+    "posturePolicies": [
+        {
+            "controlID": "C-0042"
+        }
+    ]
+  },
+  {
+    "name": "unsigned images",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment"
+        }
+      }
+    ],
+    "posturePolicies": [
+        {
+            "controlID": "C-0237"
+        }
+    ]
   }
 ]
 

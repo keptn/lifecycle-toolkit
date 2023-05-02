@@ -23,5 +23,4 @@ or as part of an existing production cluster.
    This step is only required if you want to replace the default KLT cert-manager
    with another cert-manager.
 1. [Install the Keptn Lifecycle Controller](install.md)
-1. [Integrate the Keptn Lifecycle Controller into your Kubernetes cluster](integrate.md)
 1. [Upgrade](upgrade.md) to a new version of the Keptn Lifecycle Toolkit

@@ -27,7 +27,7 @@ spec:
       version: 0.2.7
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   annotations:
     traceparent: my-trace-parent

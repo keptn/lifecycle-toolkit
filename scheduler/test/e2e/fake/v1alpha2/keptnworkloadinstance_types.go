@@ -26,16 +26,16 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
-type KeptnWorkloadInstanceSpec struct {
+// KeptnWorkloadVersionSpec defines the desired state of KeptnWorkloadVersion
+type KeptnWorkloadVersionSpec struct {
 	KeptnWorkloadSpec `json:",inline"`
 	WorkloadName      string            `json:"workloadName"`
 	PreviousVersion   string            `json:"previousVersion,omitempty"`
 	TraceId           map[string]string `json:"traceId,omitempty"`
 }
 
-// KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
-type KeptnWorkloadInstanceStatus struct {
+// KeptnWorkloadVersionStatus defines the observed state of KeptnWorkloadVersion
+type KeptnWorkloadVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
@@ -69,7 +69,7 @@ type ItemStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
+// +kubebuilder:resource:path=keptnworkloadversions,shortName=kwi
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="WorkloadName",type=string,JSONPath=`.spec.workloadName`
@@ -81,105 +81,105 @@ type ItemStatus struct {
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,priority=1,JSONPath=`.status.postDeploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
-// KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
-type KeptnWorkloadInstance struct {
+// KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
+type KeptnWorkloadVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnWorkloadInstanceSpec   `json:"spec,omitempty"`
-	Status KeptnWorkloadInstanceStatus `json:"status,omitempty"`
+	Spec   KeptnWorkloadVersionSpec   `json:"spec,omitempty"`
+	Status KeptnWorkloadVersionStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
-type KeptnWorkloadInstanceList struct {
+// KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
+type KeptnWorkloadVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KeptnWorkloadInstance `json:"items"`
+	Items           []KeptnWorkloadVersion `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KeptnWorkloadInstance{}, &KeptnWorkloadInstanceList{})
+	SchemeBuilder.Register(&KeptnWorkloadVersion{}, &KeptnWorkloadVersionList{})
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentCompleted() bool {
+func (i KeptnWorkloadVersion) IsPreDeploymentCompleted() bool {
 	return i.Status.PreDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationCompleted() bool {
+func (v KeptnWorkloadVersion) IsPreDeploymentEvaluationCompleted() bool {
 	return v.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentSucceeded() bool {
+func (i KeptnWorkloadVersion) IsPreDeploymentSucceeded() bool {
 	return i.Status.PreDeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPreDeploymentFailed() bool {
+func (i KeptnWorkloadVersion) IsPreDeploymentFailed() bool {
 	return i.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationSucceeded() bool {
+func (v KeptnWorkloadVersion) IsPreDeploymentEvaluationSucceeded() bool {
 	return v.Status.PreDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnWorkloadInstance) IsPreDeploymentEvaluationFailed() bool {
+func (v KeptnWorkloadVersion) IsPreDeploymentEvaluationFailed() bool {
 	return v.Status.PreDeploymentEvaluationStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentCompleted() bool {
+func (i KeptnWorkloadVersion) IsPostDeploymentCompleted() bool {
 	return i.Status.PostDeploymentStatus.IsCompleted()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationCompleted() bool {
+func (v KeptnWorkloadVersion) IsPostDeploymentEvaluationCompleted() bool {
 	return v.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentSucceeded() bool {
+func (i KeptnWorkloadVersion) IsPostDeploymentSucceeded() bool {
 	return i.Status.PostDeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsPostDeploymentFailed() bool {
+func (i KeptnWorkloadVersion) IsPostDeploymentFailed() bool {
 	return i.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationSucceeded() bool {
+func (v KeptnWorkloadVersion) IsPostDeploymentEvaluationSucceeded() bool {
 	return v.Status.PostDeploymentEvaluationStatus.IsSucceeded()
 }
 
-func (v KeptnWorkloadInstance) IsPostDeploymentEvaluationFailed() bool {
+func (v KeptnWorkloadVersion) IsPostDeploymentEvaluationFailed() bool {
 	return v.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentCompleted() bool {
+func (i KeptnWorkloadVersion) IsDeploymentCompleted() bool {
 	return i.Status.DeploymentStatus.IsCompleted()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentSucceeded() bool {
+func (i KeptnWorkloadVersion) IsDeploymentSucceeded() bool {
 	return i.Status.DeploymentStatus.IsSucceeded()
 }
 
-func (i KeptnWorkloadInstance) IsDeploymentFailed() bool {
+func (i KeptnWorkloadVersion) IsDeploymentFailed() bool {
 	return i.Status.DeploymentStatus.IsFailed()
 }
 
-func (i *KeptnWorkloadInstance) SetStartTime() {
+func (i *KeptnWorkloadVersion) SetStartTime() {
 	if i.Status.StartTime.IsZero() {
 		i.Status.StartTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnWorkloadInstance) SetEndTime() {
+func (i *KeptnWorkloadVersion) SetEndTime() {
 	if i.Status.EndTime.IsZero() {
 		i.Status.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 
-func (i *KeptnWorkloadInstance) IsStartTimeSet() bool {
+func (i *KeptnWorkloadVersion) IsStartTimeSet() bool {
 	return !i.Status.StartTime.IsZero()
 }
 
-func (i *KeptnWorkloadInstance) IsEndTimeSet() bool {
+func (i *KeptnWorkloadVersion) IsEndTimeSet() bool {
 	return !i.Status.EndTime.IsZero()
 }
 

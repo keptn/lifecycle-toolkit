@@ -53,7 +53,7 @@ If you want to port-forward to a different port, please execute:
 ```make deploy-version-1```
 
 Now watch the progress on the cluster
-```kubectl get keptnworkloadinstances```
+```kubectl get keptnworkloadversions```
 ```kubectl get keptnappversions```
 
 You could also open up a browser and watch the progress in Jaeger.

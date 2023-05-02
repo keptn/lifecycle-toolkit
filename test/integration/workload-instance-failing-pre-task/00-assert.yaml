@@ -12,7 +12,7 @@ status:
   workloadOverallStatus: Progressing
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-entry-0.1.0
 status:

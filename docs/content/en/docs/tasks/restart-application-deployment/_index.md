@@ -24,7 +24,7 @@ This way, when a `KeptnApp` failed due to a misconfigured pre-deployment check, 
 the `KeptnTaskDefinition`/`KeptnEvaluationDefinition`, then
 increase the value of `spec.revision` of the `KeptnApp` and finally apply the updated `KeptnApp` manifest.
 This will result in a restart of the `KeptnApp`.
-Afterwards, all related `KeptnWorkloadInstances` will automatically refer to the newly
+Afterwards, all related `KeptnWorkloadVersions` will automatically refer to the newly
 created revision of the `KeptnAppVersion` to determine whether they are allowed to enter their respective deployment
 phase.
 

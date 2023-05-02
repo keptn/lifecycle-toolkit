@@ -128,7 +128,7 @@
 ## @param   lifecycleOperator.manager.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
 ## @param   lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
 ## @param   lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
-## @param   lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   lifecycleOperator.manager.env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
 ## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector

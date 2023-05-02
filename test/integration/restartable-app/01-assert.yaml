@@ -25,7 +25,7 @@ status:
   workloadOverallStatus: Deprecated
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-entry-0.1.0
 status:
@@ -41,7 +41,7 @@ status:
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-hat-0.1.0
 status:
@@ -57,7 +57,7 @@ status:
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-left-arm-0.1.0
 status:
@@ -73,7 +73,7 @@ status:
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-left-leg-0.1.0
 status:
@@ -89,7 +89,7 @@ status:
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-right-arm-0.1.0
 status:
@@ -105,7 +105,7 @@ status:
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-right-leg-0.1.0
 status:

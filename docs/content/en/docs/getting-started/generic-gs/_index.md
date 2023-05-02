@@ -130,11 +130,11 @@ You can watch the progress of the deployment as follows:
 
 When the Lifecycle Toolkit detects workload labels
 ("app.kubernetes.io/name" or "keptn.sh/workload") on a resource,
-a KeptnWorkloadInstance (kwi) resource is created.
+a KeptnWorkloadVersion (kwi) resource is created.
 Using this resource you can watch the progress of the deployment.
 
 ```shell
-kubectl get keptnworkloadinstances -n podtato-kubectl
+kubectl get keptnworkloadversions -n podtato-kubectl
 ```
 
 This shows the current status of the Workloads
@@ -143,7 +143,7 @@ You can get more detailed information about the workloads
 by describing one of the resources:
 
 ```shell
-kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
+kubectl describe keptnworkloadversions podtato-head-podtato-head-entry -n podtato-kubectl
 ```
 
 > **Note**

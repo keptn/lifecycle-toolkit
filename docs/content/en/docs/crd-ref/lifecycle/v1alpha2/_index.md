@@ -28,8 +28,8 @@ Package v1alpha2 contains API Schema definitions for the lifecycle v1alpha2 API 
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
 - [KeptnTaskList](#keptntasklist)
 - [KeptnWorkload](#keptnworkload)
-- [KeptnWorkloadInstance](#keptnworkloadinstance)
-- [KeptnWorkloadInstanceList](#keptnworkloadinstancelist)
+- [KeptnWorkloadVersion](#keptnworkloadversion)
+- [KeptnWorkloadVersionList](#keptnworkloadversionlist)
 - [KeptnWorkloadList](#keptnworkloadlist)
 
 
@@ -148,7 +148,7 @@ _Appears in:_
 
 _Appears in:_
 - [KeptnAppVersionStatus](#keptnappversionstatus)
-- [KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)
+- [KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)
 
 | Field | Description |
 | --- | --- |
@@ -552,47 +552,47 @@ _Appears in:_
 | `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ |  |
 
 
-#### KeptnWorkloadInstance
+#### KeptnWorkloadVersion
 
 
 
-KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
+KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
 
 _Appears in:_
-- [KeptnWorkloadInstanceList](#keptnworkloadinstancelist)
+- [KeptnWorkloadVersionList](#keptnworkloadversionlist)
 
 | Field | Description |
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2`
-| `kind` _string_ | `KeptnWorkloadInstance`
+| `kind` _string_ | `KeptnWorkloadVersionvvv`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `spec` _[KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)_ |  |
+| `spec` _[KeptnWorkloadVersionSpec](#keptnworkloadversionspec)_ |  |
 
 
-#### KeptnWorkloadInstanceList
+#### KeptnWorkloadVersionList
 
 
 
-KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
+KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
 
 
 
 | Field | Description |
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2`
-| `kind` _string_ | `KeptnWorkloadInstanceList`
+| `kind` _string_ | `KeptnWorkloadVersionList`
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[KeptnWorkloadInstance](#keptnworkloadinstance) array_ |  |
+| `items` _[KeptnWorkloadVersion](#keptnworkloadversion) array_ |  |
 
 
-#### KeptnWorkloadInstanceSpec
+#### KeptnWorkloadVersionSpec
 
 
 
-KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
+KeptnWorkloadVersionSpec defines the desired state of KeptnWorkloadVersion
 
 _Appears in:_
-- [KeptnWorkloadInstance](#keptnworkloadinstance)
+- [KeptnWorkloadVersion](#keptnworkloadversion)
 
 | Field | Description |
 | --- | --- |
@@ -651,7 +651,7 @@ KeptnWorkloadSpec defines the desired state of KeptnWorkload
 
 _Appears in:_
 - [KeptnWorkload](#keptnworkload)
-- [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 
 | Field | Description |
 | --- | --- |
@@ -689,7 +689,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
 
 | Field | Description |

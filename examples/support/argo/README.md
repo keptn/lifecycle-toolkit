@@ -75,7 +75,7 @@ In the meanwhile you can watch the progress of the deployment using:
 * Pre-Deployment Tasks are started
 * Pods get scheduled
 
-```kubectl get keptnworkloadinstances -n podtato-kubectl```
+```kubectl get keptnworkloadversions -n podtato-kubectl```
 
 * Get the current status of the workloads
 * See in which phase your workload deployments are at the moment

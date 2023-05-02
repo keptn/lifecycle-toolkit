@@ -159,7 +159,7 @@ kubectl apply -f .
 Afterward, you can monitor the status of the deployment using
 
 ```bash
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The deployment for a Workload will stay in a `Pending` state until the respective pre-deployment check is completed.
@@ -260,7 +260,7 @@ default scheduler behavior,
 since it implements a scheduler plugin based on
 the [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 For each pod, at the very end of the scheduling cycle, the plugin verifies whether the pre deployment checks have
-terminated, by retrieving the current status of the WorkloadInstance.
+terminated, by retrieving the current status of the WorkloadVersion.
 Only if that is successful, the pod is bound to a
 node.
 
@@ -306,7 +306,7 @@ In its state it keeps track of the currently active `Workload Instances`, which 
 for doing those checks for
 a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version).
 
-### KeptnWorkloadInstance
+### KeptnWorkloadVersion
 
 A Workload Instance is responsible for executing the pre- and post deployment checks of a workload.
 In its state, it

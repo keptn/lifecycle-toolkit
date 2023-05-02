@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
@@ -86,12 +87,14 @@ func copyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 	}
 }
 
-func GetTaskDefinition(k8sclient client.Client, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnTaskDefinition, error) {
+func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnTaskDefinition, error) {
 	definition := &klcv1alpha3.KeptnTaskDefinition{}
 	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
 	if err != nil {
+		log.Error(err, "Failed to get KeptnTaskDefinition from application namespace")
 		if k8serrors.IsNotFound(err) {
 			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
+				log.Error(err, "Failed to get KeptnTaskDefinition from default KLT namespace")
 				return nil, err
 			}
 			return definition, nil

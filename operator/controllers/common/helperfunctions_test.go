@@ -10,6 +10,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -472,7 +473,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
-			d, err := GetTaskDefinition(client, context.TODO(), tt.taskDefName, tt.taskDefNamespace)
+			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)

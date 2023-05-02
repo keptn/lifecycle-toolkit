@@ -141,5 +141,5 @@ CreateWorkloadInstance
 Completed
 Deprecated
 WorkloadDeployReconcile
-  WorkloadDeployReconcileErrored
+WorkloadDeployReconcileErrored
 ```

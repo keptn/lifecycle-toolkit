@@ -94,6 +94,7 @@ AppDeploy
       WorkloadPostDeployEvaluationsStarted
       WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
   AppDeploySucceeded OR AppDeployErrored
+  ```
 
 ### Post-deployment phase
 

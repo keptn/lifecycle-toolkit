@@ -216,12 +216,13 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 	if err != nil {
 		statusItem.Message = err.Error()
 		r.Log.Error(err, "Could not check objective result")
-	}
-	if check {
-		statusItem.Status = apicommon.StateSucceeded
-		statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
 	} else {
-		statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
+		if check {
+			statusItem.Status = apicommon.StateSucceeded
+			statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
+		} else {
+			statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
+		}
 	}
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
 	newStatus[objective.KeptnMetricRef.Name] = *statusItem

@@ -113,11 +113,7 @@ AppPostDeployEvaluations
 ### Completed phase
 
 ```shell
-  WorkloadPostDeployEvaluations
-    WorkloadPostDeployEvaluationsStarted
-    WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
-AppDeploy
-  AppDeploySucceeded OR AppDeployErrored
+  Completed
 ```
 
 ## Events that are not part of the deployment flow

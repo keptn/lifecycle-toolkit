@@ -123,4 +123,4 @@ spec:
 Due to the creation of this resource, you will now get observability of your application's deployments due to
 the OpenTelemetry tracing features provided by the Keptn Lifecycle Toolkit:
 
-TODO: add screenshot of podtato head deployment trace in Jaeger/Grafana
+![Application deployment trace](assets%2Ftrace.png)

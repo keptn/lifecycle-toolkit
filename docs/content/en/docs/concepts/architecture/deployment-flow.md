@@ -114,7 +114,7 @@ AppPostDeployEvaluations
 ### Completed phase
 
 ```shell
-  Completed
+Completed
 ```
 
 ## Events that are not part of the deployment flow

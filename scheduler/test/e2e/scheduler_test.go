@@ -55,11 +55,11 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		Context("a new Pod ", func() {
 
-			It("should stay pending if no workload instance is available", func() {
+			It("should stay pending if no workload version is available", func() {
 				checkPending(pod)
 			})
 
-			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload version pre-evaluation checks are done", func() {
 				checkWorkload("myapp-myworkload-1.0.0", *pod, "Succeeded")
 			})
 		})
@@ -110,14 +110,14 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 		})
 
 		Context("a new Pod ", func() {
-			It("should stay pending if no workload instance is available", func() {
+			It("should stay pending if no workload version is available", func() {
 				checkPending(pod1)
 			})
-			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload version pre-evaluation checks are done", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.1", *pod1, "Succeeded")
 			})
 
-			It("should NOT be scheduled when workload instance pre-evaluation checks fails", func() {
+			It("should NOT be scheduled when workload version pre-evaluation checks fails", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.2", *pod2, "Failed")
 			})
 		})

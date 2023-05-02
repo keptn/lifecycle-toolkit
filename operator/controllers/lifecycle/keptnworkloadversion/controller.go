@@ -72,9 +72,9 @@ type KeptnWorkloadVersionReconciler struct {
 //
 //nolint:gocyclo
 func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for Keptn Workload Instance")
+	r.Log.Info("Searching for Keptn Workload Version")
 
-	// retrieve workload instance
+	// retrieve workload version
 	workloadVersion := &klcv1alpha3.KeptnWorkloadVersion{}
 	err := r.Get(ctx, req.NamespacedName, workloadVersion)
 	if errors.IsNotFound(err) {
@@ -82,7 +82,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	}
 
 	if err != nil {
-		r.Log.Error(err, "Workload Instance not found")
+		r.Log.Error(err, "Workload Version not found")
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadVersionsMsg, err)
 	}
 
@@ -247,7 +247,7 @@ func (r *KeptnWorkloadVersionReconciler) setupSpansContexts(ctx context.Context,
 
 func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadVersion *klcv1alpha3.KeptnWorkloadVersion, span trace.Span) (bool, error) {
 	// Wait for pre-evaluation checks of App
-	// Only check if we have not begun with the first phase of the workload instance, to avoid retrieving the KeptnAppVersion
+	// Only check if we have not begun with the first phase of the workload version, to avoid retrieving the KeptnAppVersion
 	// in each reconciliation loop
 	if workloadVersion.GetCurrentPhase() != "" {
 		return false, nil

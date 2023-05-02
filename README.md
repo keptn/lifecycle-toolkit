@@ -234,7 +234,7 @@ Next, it will look for an existing instance of a `Workload CRD` for the given wo
 - If it finds the `Workload`, it will update its version according to the previously computed version string.
   In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner),
   or the pod itself, if it does not have an owner.
-- If it does not find a workload instance, it will create one containing the previously computed version string.
+- If it does not find a workload verison, it will create one containing the previously computed version string.
   In addition, it will include a reference to the ReplicaSet UID of the pod (i.e. the Pods owner), or the pod itself, if
   it does not have an owner.
 
@@ -302,17 +302,17 @@ new execution of app level checks.
 A Workload contains information about which tasks should be performed during the `preDeployment` as well as
 the `postDeployment`
 phase of a deployment.
-In its state it keeps track of the currently active `Workload Instances`, which are responsible
+In its state it keeps track of the currently active `Workload Versions`, which are responsible
 for doing those checks for
 a particular instance of a Deployment/StatefulSet/ReplicaSet (e.g. a Deployment of a certain version).
 
 ### KeptnWorkloadVersion
 
-A Workload Instance is responsible for executing the pre- and post deployment checks of a workload.
+A Workload Version is responsible for executing the pre- and post deployment checks of a workload.
 In its state, it
 keeps track of the current status of all checks, as well as the overall state of
 the Pre Deployment phase, which can be used by the scheduler to tell that a pod can be allowed to be placed on a node.
-Workload Instances have a reference to the respective Deployment/StatefulSet/ReplicaSet, to check if it has reached the
+Workload Versions have a reference to the respective Deployment/StatefulSet/ReplicaSet, to check if it has reached the
 desired state.
 If it detects that the referenced object has reached
 its desired state (e.g. all pods of a deployment are up and running), it will be able to tell that

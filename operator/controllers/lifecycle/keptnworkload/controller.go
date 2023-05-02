@@ -92,9 +92,9 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	workloadVersion := &klcv1alpha3.KeptnWorkloadVersion{}
 
-	// Try to find the workload instance
+	// Try to find the workload version
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadVersionName()}, workloadVersion)
-	// If the workload instance does not exist, create it
+	// If the workload version does not exist, create it
 	if errors.IsNotFound(err) {
 		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
 		if err != nil {
@@ -103,7 +103,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		}
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
-			r.Log.Error(err, "could not create Workload Instance")
+			r.Log.Error(err, "could not create Workload Version")
 			span.SetStatus(codes.Error, err.Error())
 			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateWorklodInstance, "Warning", workloadVersion, "WorkloadVersionNotCreated", "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{}, err
@@ -117,7 +117,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
-		r.Log.Error(err, "could not get Workload Instance")
+		r.Log.Error(err, "could not get Workload Version")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{}, err
 	}

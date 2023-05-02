@@ -55,7 +55,33 @@ spec:
 
 ## Usage
 
-## Examples
+A `KeptnEvaluationDefinition` references one or more
+[KeptnMetric](metric.md) CRDs.
+When multiple `KeptnMetric`s are used,
+the Keptn Lifecycle Toolkit considers the evaluation successful
+if **all** metrics meet their `evaluationTarget`.
+
+
+## Example
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-evaluation
+  namespace: example
+spec:
+  source: prometheus
+  objectives:
+    - keptnMetricRef:
+        name: available-cpus
+        namespace: example
+      evaluationTarget: ">1"
+    - keptnMetricRef:
+        name: cpus-throttling
+        namespace: example
+      evaluationTarget: "<0.01"
+```
 
 ## Files
 

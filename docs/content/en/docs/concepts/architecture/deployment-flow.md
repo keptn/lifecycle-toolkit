@@ -104,13 +104,6 @@ AppDeploy
 ```
   
 ### Post-deployment evaluation phase
-
-```shell
-AppPostDeployTasks
-  AppPostDeployTasksStarted
-  AppPostDeployTasksSucceeded OR AppPostDeployTasksErrored
-```
-
 ```shell
 AppPostDeployEvaluations
   AppPostDeployEvaluationsStarted

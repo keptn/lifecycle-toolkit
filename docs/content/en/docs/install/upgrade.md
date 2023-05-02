@@ -25,6 +25,7 @@ to modify the configuration as discused on the
 <<<<<<< HEAD
 **Warning:**
 =======
+>
 > **Warning**
 >>>>>>> ba7b679b0781de5558777fc93b8e9deb4ff6406a
 If you installed your Lifecycle Toolkit instance from the Manifest,

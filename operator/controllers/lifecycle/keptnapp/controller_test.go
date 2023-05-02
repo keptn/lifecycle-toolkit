@@ -47,6 +47,27 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	assert.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
 }
 
+func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
+
+	longName:= `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremloremax`
+
+	trimmedName:= `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustrylorem`			
+
+	app := &lfcv1alpha3.KeptnApp{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: longName,
+		},
+	}
+	r, _, _ := setupReconciler()
+
+	appVersion, err := r.createAppVersion(context.Background(), app)
+	if err != nil {
+		t.Errorf("Error creating app version: %s", err.Error())
+	}
+	t.Log("Verifying app name length is not greater than MaxK8sObjectLen")
+	assert.Equal(t, appVersion.ObjectMeta.Name, trimmedName)
+}
+
 func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, tracer := setupReconciler()

@@ -8,6 +8,7 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-00010101000000-000000000000
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230413082525-dd15d4a0e0e4
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.2
@@ -103,3 +104,5 @@ require (
 )
 
 replace golang.org/x/net => golang.org/x/net v0.9.0
+
+replace github.com/keptn/lifecycle-toolkit/klt-cert-manager => ../klt-cert-manager

@@ -1,60 +1,97 @@
 ---
 title: Home
+cascade:
+  - _target:
+      path: "/docs/**"
+    sitemap:
+      priority: 1.0
+
+  - _target:
+      path: "/docs-*/**"
+    sitemap:
+      priority: 0.1
+
+  - _target:
+      path: "/community/**"
+    type: docs
+  - _target:
+      path: "/community/readme.md"
+    draft: true
+  - _target:
+      path: "/community/_index.md"
+    title: Community
+    menu:
+      main:
+        weight: 20
 ---
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- markdownlint-disable-next-line line-length -->
-{{< blocks/cover title="Welcome to the Keptn Lifecycle Toolkit Documentation" image_anchor="top" height="half" color="primary" >}}
+{{< blocks/cover title="" image_anchor="top" height="full" color="primary" >}}
 <div class="mx-auto">
- <a class="btn btn-lg -bg-green mr-3 mb-4" href="{{< relref "/docs" >}}">
+<div class="mb-4 d-none d-md-block " >
+<picture >
+    <img alt="keptn" src="/images/home/hero/keptn-logo-white.svg">
+</picture>
+</div>
+  <h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>
+  <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
+<div>
+ <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
     <a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
   Releases <i class="fab fa-github ml-2 "></i>
  </a>
 </div>
-{{< /blocks/cover >}}
-<!-- markdownlint-enable no-inline-html -->
-
-{{% blocks/lead color="primary" %}}
+</div>
+<div class="usecasebox">
 
 ## Use Cases
 
 We extend the K8s APIs with the following Use Cases:
 
-{{% /blocks/lead %}}
-
-{{< blocks/section color="gray" >}}
+<div class="row usecases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
-making ANY K8s Deployment OBSERVABLE
+Make ANY Kubernetes Deployment observable
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#deployment-observability)
-
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-observability">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 {{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
-standardizing access for all Observability Data for K8s
+Standardize access for all Observability Data for K8s
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#data-access)
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#data-access">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
-orchestrating deployment checks as part of scheduler
+Gain confidence in your work with pre-/post-deployment checks
 
 <!-- markdownlint-disable-next-line link-fragments -->
-[read more](#deployment-check-orchestration)
-
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">
+  read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+ </a>
 {{% /blocks/feature %}}
 
-{{< /blocks/section >}}
+</div>
+</div>
 
-{{% blocks/lead color="blue" %}}
-[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+{{< /blocks/cover >}}
+<!-- markdownlint-enable no-inline-html -->
+
+{{% blocks/lead color="light" %}}
+
+{{< youtube K-cvnZ8EtGc >}}
+
 {{% /blocks/lead %}}
 
 <!-- markdownlint-disable no-inline-html -->
-{{% blocks/lead color="light"%}}
+{{% blocks/lead color="white"%}}
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left">
@@ -73,7 +110,7 @@ orchestrating deployment checks as part of scheduler
 <!-- markdownlint-enable no-inline-html -->
 
 <!-- markdownlint-disable no-inline-html -->
-{{% blocks/lead color="white" %}}
+{{% blocks/lead color="light" %}}
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left w-25">
@@ -91,13 +128,13 @@ orchestrating deployment checks as part of scheduler
 <!-- markdownlint-enable no-inline-html -->
 
 <!-- markdownlint-disable no-inline-html -->
-{{% blocks/lead color="light" %}}
+{{% blocks/lead color="white" %}}
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left">
 {{% readfile "partials/_index-deployment-checks-left.md" %}}
 </div>
-<div class="whykeptn whykeptn-right w-25">
+<div class="whykeptn whykeptn-right w-25 text-center">
 {{% readfile "partials/_index-deployment-checks-right.md" %}}
 </div>
 </div>
@@ -111,16 +148,31 @@ orchestrating deployment checks as part of scheduler
 
 {{< blocks/section color="dark" >}}
 {{% blocks/feature icon="fa-lightbulb" title="Keptn Recordings" %}}
-See Keptn [in Action](https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ)
+See Keptn in Action
+
+<!-- markdownlint-disable-next-line no-inline-html -->
+<a class="btn -bg-white rounded-lg" href="https://youtube.com/playlist?list=PL6i801Rjt9DbikPPILz38U1TLMrEjppzZ">
+  Watch now!
+ </a>
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fab fa-github" title="Contributions welcome!" url="https://github.com/keptn/lifecycle-toolkit" %}}
+{{% blocks/feature icon="fab fa-github" title="Contributions welcome!" %}}
 We do a [Pull Request](https://github.com/keptn/lifecycle-toolkit/pulls) contributions workflow on **GitHub**.
 New users are always welcome!
+
+<!-- markdownlint-disable-next-line no-inline-html -->
+<a class="btn -bg-white rounded-lg" href="https://github.com/keptn/lifecycle-toolkit">
+  Contribute on GitHub
+ </a>
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" url="https://twitter.com/keptnProject" %}}
+{{% blocks/feature icon="fab fa-twitter" title="Follow us on Twitter!" %}}
 For announcement of latest features etc.
+
+<!-- markdownlint-disable-next-line no-inline-html -->
+<a class="btn -bg-white rounded-lg" href="https://twitter.com/keptnProject">
+  Follow us!
+ </a>
 {{% /blocks/feature %}}
 
 {{< /blocks/section >}}

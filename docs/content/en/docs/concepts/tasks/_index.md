@@ -11,6 +11,8 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
+`KeptnTaskDefinition` resource can be created in the namespace where the application is running, or
+in the default KLT namespace, which will be the fallback option for the system to search.
 The task definition is a [Deno](https://deno.land/) script
 Please, refer to the [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime) for more
 information about the runtime.
@@ -56,7 +58,8 @@ spec:
         console.log("Hello, " + name + " new");
 ```
 
-The runtime can also fetch the script on the fly from a remote webserver. For this, the CRD should look like the
+The runtime can also fetch the script on the fly from a remote webserver.
+For this, the CRD should look like the
 following:
 
 ```yaml
@@ -95,7 +98,8 @@ spec:
 
 ## Context
 
-A context environment variable is available via `Deno.env.get("CONTEXT")`. It can be used like this:
+A context environment variable is available via `Deno.env.get("CONTEXT")`.
+It can be used like this:
 
 ```javascript
 let context = Deno.env.get("CONTEXT");
@@ -119,7 +123,8 @@ The Lifecycle Toolkit passes the values defined inside the `map` field as a JSON
 At the moment, multi-level maps are not supported.
 The JSON object can be read through the environment variable `DATA` using `Deno.env.get("DATA");`.
 K8s secrets can also be passed to the function using the `secureParameters` field.
-Currently only one secret can be passed. The secret must have a `key` called `SECURE_DATA`.
+Currently only one secret can be passed.
+The secret must have a `key` called `SECURE_DATA`.
 It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
 For example:

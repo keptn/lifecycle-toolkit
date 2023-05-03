@@ -14,4 +14,4 @@ To reduce complexity of custom checks use Keptn to:
   * Notify Stakeholders
   * Promote to next stage
   * ...
-* Automatically validate against your SLO (Service Level Objectives)
+* Automatically validate against your SLOs (Service Level Objectives)

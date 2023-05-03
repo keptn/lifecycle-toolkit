@@ -5,23 +5,38 @@ module:
   hugoVersion:
     extended: true
   imports:
-  - path: github.com/keptn/docs-tooling
-    ignoreConfig: false
-    mounts:
-    - source: static
-      target: static
-    - source: layouts
-      target: layouts
-    - source: data
-      target: data
-    - source: assets
-      target: assets
-    - source: archetypes
-      target: archetypes
-    - source: content/en/_index.md
-      target: content/en/_index.md
+    - path: github.com/keptn/docs-tooling
+      ignoreConfig: false
+      mounts:
+        - source: static
+          target: static
+        - source: layouts
+          target: layouts
+        - source: data
+          target: data
+        - source: assets
+          target: assets
+        - source: archetypes
+          target: archetypes
+    - path: github.com/keptn/community
+      ignoreConfig: false
+      mounts:
+        - source: ./
+          target: ./content/community
+          excludeFiles:
+            - "mentorship"
+        - source: "README.md"
+          target: "./content/community/_index.md"
   proxy: direct
 languages:
   en:
     title: Keptn
     contentDir: "content/en"
+
+menu:
+  main:
+    - name: Keptn v1
+      params:
+        rel: external
+      url: https://keptn.sh/
+      weight: 1

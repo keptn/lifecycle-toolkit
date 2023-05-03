@@ -14,6 +14,8 @@ Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API 
 
 ### Resource Types
 - [KeptnApp](#keptnapp)
+- [KeptnAppCreationRequest](#keptnappcreationrequest)
+- [KeptnAppCreationRequestList](#keptnappcreationrequestlist)
 - [KeptnAppList](#keptnapplist)
 - [KeptnAppVersion](#keptnappversion)
 - [KeptnAppVersionList](#keptnappversionlist)
@@ -173,6 +175,55 @@ _Appears in:_
 | `kind` _string_ | `KeptnApp`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppSpec](#keptnappspec)_ |  |
+
+
+#### KeptnAppCreationRequest
+
+
+
+KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API
+
+_Appears in:_
+- [KeptnAppCreationRequestList](#keptnappcreationrequestlist)
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
+| `kind` _string_ | `KeptnAppCreationRequest`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KeptnAppCreationRequestSpec](#keptnappcreationrequestspec)_ |  |
+
+
+#### KeptnAppCreationRequestList
+
+
+
+KeptnAppCreationRequestList contains a list of KeptnAppCreationRequest
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
+| `kind` _string_ | `KeptnAppCreationRequestList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[KeptnAppCreationRequest](#keptnappcreationrequest) array_ |  |
+
+
+#### KeptnAppCreationRequestSpec
+
+
+
+KeptnAppCreationRequestSpec defines the desired state of KeptnAppCreationRequest
+
+_Appears in:_
+- [KeptnAppCreationRequest](#keptnappcreationrequest)
+
+| Field | Description |
+| --- | --- |
+| `appName` _string_ | AppName is the name of the KeptnApp the KeptnAppCreationRequest should create if no user-defined object with that name is found. |
+
+
 
 
 #### KeptnAppList
@@ -652,6 +703,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 
 _Appears in:_
 - [KeptnAppSpec](#keptnappspec)
+- [KeptnAppVersionSpec](#keptnappversionspec)
 - [WorkloadStatus](#workloadstatus)
 
 | Field | Description |
@@ -705,6 +757,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
 
 | Field | Description |

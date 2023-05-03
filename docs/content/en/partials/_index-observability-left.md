@@ -3,7 +3,7 @@
 
 ### Making ANY K8s Deployment OBSERVABLE
 
-If you deploy with ArcoCD, Flux, GitLab, kubectl ...
+If you deploy with ArcoCD, Flux, GitLab, kubectl, etc.
 we provide you:
 
 * Automated **App-Aware DORA** metrics (OTel Metrics)

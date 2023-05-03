@@ -4,35 +4,48 @@
 
 $primary: #006bb8;
 $secondary: #469bdd;
-$light: #c9e0f1;
+$light: #d8e6f4;
 
 #td-cover-block-0 {
   background-size: 100% auto;
   background-position-y: bottom;
 }
 
+a.btn-primary {
+  background: #28a745 linear-gradient(180deg, #30c953, #28a745) repeat-x;
+  border-color: #28a745;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+  color: #ffffff !important
+}
+
+a.btn-primary:hover {
+  color: #fff;
+  background: #23923d linear-gradient(180deg, #28a745, #23923d) repeat-x;
+  border-color: #23923d;
+}
 
 .home::before {
   content: '';
   height: 128px;
   width: 170px;
   display: block;
-  background-position: center;
+  background-position: center middle;
+  background-color: #d8e6f4;
+  border-radius: 25px;
 }
 
 .homeorchestrate::before {
-  background: url('/images/home/capabilities/capabilities-03.svg');
+  background-image: url('/images/home/capabilities/capabilities-03.svg');
 }
 .homeobservability::before {
-  background: url('/images/home/capabilities/capabilities-04.svg');
+  background-image: url('/images/home/capabilities/capabilities-04.svg');
 }
 .homedata::before {
-  background: url('/images/home/capabilities/capabilities-01.svg');
+  background-image: url('/images/home/capabilities/capabilities-01.svg');
 }
 .td-overlay--dark::after {
   background-color: transparent !important;
 }
-
 
 .whykeptn img {
   width: 100%;
@@ -55,4 +68,33 @@ $light: #c9e0f1;
 }
 .whykeptn-right {
   text-align: left;
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url("/Ubuntu-Medium.ttf");
+ }
+
+
+$fontFamilyStyled: Ubuntu, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+.td-main h1, .styled {
+  font-family: $fontFamilyStyled
+ }
+.usecasebox {
+  margin-top: 50px;
+  background-image: linear-gradient(180deg, rgba(0, 107, 184, 0.0), rgba(0, 107, 184, 0.50));
+  border-radius: 25px;
+  padding: 20px;
+}
+
+.navbar-logo::after {
+  content: "Lifecycle Toolkit";
+  font-size: 23px;
+  font-weight: 700;
+  font-family: $fontFamilyStyled;
+  line-height: 30px;
+  height: 30px;
+  vertical-align: bottom;
+  padding-top: 2px;
+  display: inline-block
 }

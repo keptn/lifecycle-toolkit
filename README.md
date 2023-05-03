@@ -485,9 +485,9 @@ resource is specified and the `KeptnMetric` resource does not exist in this name
 
 The `KeptnConfig` is a CRD defines configuration values for the Keptn Lifecycle Toolkit.
 Currently, it can be used to configure the URL of the OpenTelemetry collector.
-Additionally it can be sed to set the interval in which automatic app discovery
-searches for workload to put into the same auto-generated KeptnApp.
-When the parameter is not set the default value is 30 seconds.
+Additionally, it can be used to set the time interval in which automatic app discovery
+searches for workloads to put into the same auto-generated `KeptnApp`.
+When the parameter is not set, the default value is 30 seconds.
 
 A `KeptnConfig` looks like the following:
 

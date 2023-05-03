@@ -43,7 +43,7 @@ jobs:
 
       - name: Run release please again
         uses: google-github-actions/release-please-action@v3
-        id: release
+        id: release-helm
         with:
           command: manifest
           token: ${{ secrets.KEPTN_BOT_TOKEN }}

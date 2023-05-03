@@ -7,7 +7,7 @@ on:
         type: "string"
         required: true
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
   USE_EXISTING_CLUSTER: "true"
 defaults:
   run:

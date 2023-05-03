@@ -55,9 +55,15 @@ rules:
   - secrets
   verbs:
   - create
-  - delete
-  - get
   - list
+  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - klt-certs
+  resources:
+  - secrets
+  verbs:
+  - get
   - patch
   - update
-  - watch

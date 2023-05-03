@@ -1,14 +1,12 @@
 ---
-title: Getting Started
-linktitle: Getting Started
+title: Getting started with the Lifecycle Toolkit
 description: Learn how to use the Keptn Lifecycle Toolkit.
-weight: 15
+weight: 85
 ---
-
 
 This page gives instructions for installing the Keptn Lifecycle Toolkit
 and running a simple Keptn application to familiarize yourself
-with how KLT works.
+with how the Keptn Lifecycle Toolkit works.
 
 You will learn how to do the following:
 

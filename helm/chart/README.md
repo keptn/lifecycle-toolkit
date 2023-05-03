@@ -140,6 +140,11 @@ checks
 | `metricsOperator.manager.containerSecurityContext`                          | Sets security context privileges                              |                                        |
 | `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                               | `false`                                |
 | `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                               | `["ALL"]`                              |
+| `metricsOperator.manager.containerSecurityContext.privileged`               |                                                               | `false`                                |
+| `metricsOperator.manager.containerSecurityContext.runAsGroup`               |                                                               | `65532`                                |
+| `metricsOperator.manager.containerSecurityContext.runAsNonRoot`             |                                                               | `true`                                 |
+| `metricsOperator.manager.containerSecurityContext.runAsUser`                |                                                               | `65532`                                |
+| `metricsOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                               | `RuntimeDefault`                       |
 | `metricsOperator.manager.image.repository`                                  | specify registry for manager image                            | `ghcr.keptn.sh/keptn/metrics-operator` |
 | `metricsOperator.manager.image.tag`                                         | select tag for manager image <!---x-release-please-version--> | `v0.7.0`                               |
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                                       | `true`                                 |

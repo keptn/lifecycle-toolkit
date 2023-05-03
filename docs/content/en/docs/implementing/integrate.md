@@ -32,7 +32,7 @@ This is a four-step process:
     for existing applications,
     without requiring you to create any Keptn-related custom resources.
 
-##  Enable KLT in your cluster
+## Enable KLT in your cluster
 
 To enable the Keptn Lifecycle Controller in your cluster,
 annotate the Kubernetes
@@ -147,15 +147,16 @@ Afterwards, the deployment starts and when it is marked  `Succeeded`,
 the post-deployment checks start.
 
 ## Define a Keptn application
+
   You have two options:
 
-  * Create a [KeptnApp](../yaml-crd-ref/app.md) resource
+* Create a [KeptnApp](../yaml-crd-ref/app.md) resource
     that references the workloads that should be included
     along with any
     [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
     and [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
     CRDs that you want
-  * Use the Keptn automatic app discovery capability
+* Use the Keptn automatic app discovery capability
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
     without requiring you to create any Keptn-related custom resources.
@@ -187,11 +188,11 @@ the following steps are required:
    (`Deployments`, `StatefulSets`, `DaemonSets`, and `ReplicaSets`)
    within your application:
 
-    - `app.kubernetes.io/name`: Determines the name
+    * `app.kubernetes.io/name`: Determines the name
        of the generated `KeptnWorkload` representing the Workload.
-    - `app.kubernetes.io/version`: Determines the version
+    * `app.kubernetes.io/version`: Determines the version
        of the `KeptnWorkload` representing the Workload.
-    - `app.kubernetes.io/part-of`: Determines the name
+    * `app.kubernetes.io/part-of`: Determines the name
        of the generated `KeptnApp` representing your Application.
 
        All Workloads that share the same value for this label

@@ -7,6 +7,7 @@ import (
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -15,8 +16,6 @@ type KeptnMetricProvider struct {
 	Log       logr.Logger
 	K8sClient client.Client
 }
-
-const KLTNamespace = "keptn-lifecycle-toolkit-system"
 
 // FetchData fetches the SLI values from KeptnMetric resource
 func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error) {
@@ -45,8 +44,8 @@ func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv
 	} else {
 		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: namespace}, metric); err != nil {
 			p.Log.Error(err, "Failed to get KeptnMetric from KeptnEvaluation resource namespace")
-			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: KLTNamespace}, metric); err != nil {
-				p.Log.Error(err, "Failed to get KeptnMetric from "+KLTNamespace+" namespace")
+			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: common.KLTNamespace}, metric); err != nil {
+				p.Log.Error(err, "Failed to get KeptnMetric from "+common.KLTNamespace+" namespace")
 				return nil, err
 			}
 		}

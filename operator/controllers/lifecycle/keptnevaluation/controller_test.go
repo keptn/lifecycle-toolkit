@@ -11,7 +11,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/providers"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
@@ -25,50 +24,6 @@ import (
 )
 
 const KltNamespace = "klt-namespace"
-
-func setupEvalDefinitions() (*klcv1alpha3.KeptnEvaluationDefinition, *klcv1alpha3.KeptnEvaluationDefinition) {
-	metricEvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "myKeptn",
-		},
-		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Objectives: nil,
-		},
-		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
-	}
-
-	EvalDef := &klcv1alpha3.KeptnEvaluationDefinition{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: KltNamespace,
-			Name:      "mdef",
-		},
-		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
-			Objectives: nil,
-		},
-		Status: klcv1alpha3.KeptnEvaluationDefinitionStatus{},
-	}
-
-	return metricEvalDef, EvalDef
-}
-
-func setupProviders() (*metricsapi.KeptnMetricsProvider, *metricsapi.KeptnMetricsProvider) {
-	DTProv := &metricsapi.KeptnMetricsProvider{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      providers.DynatraceProviderName,
-			Namespace: KltNamespace,
-		},
-	}
-
-	PromProv := &metricsapi.KeptnMetricsProvider{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      providers.PrometheusProviderName,
-			Namespace: KltNamespace,
-		},
-	}
-
-	return DTProv, PromProv
-}
 
 func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 

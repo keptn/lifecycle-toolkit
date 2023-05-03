@@ -407,6 +407,7 @@ func Test_setAnnotations(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func Test_GetTaskDefinition(t *testing.T) {
 	tests := []struct {
 		name             string
@@ -488,6 +489,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func Test_GetevalDefinition(t *testing.T) {
 	tests := []struct {
 		name             string

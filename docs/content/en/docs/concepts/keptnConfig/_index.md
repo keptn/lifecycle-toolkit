@@ -12,6 +12,9 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 A `KeptnConfig` CRD defines configuration values for the Keptn Lifecycle Toolkit.
 Currently, it can be used to configure the URL of the OpenTelemetry collector.
+Additionally it can be sed to set the interval in which automatic app discovery
+searches for workload to put into the same auto-generated KeptnApp.
+When the parameter is not set the default value is 30 seconds.
 
 A `KeptnConfig` looks like the following:
 
@@ -22,4 +25,5 @@ metadata:
   name: keptnconfig-sample
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
+  keptnAppCreationRequestTimeoutSeconds: 30
 ```

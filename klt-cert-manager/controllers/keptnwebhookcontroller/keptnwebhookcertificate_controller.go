@@ -22,6 +22,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+// ObservedObjects contains information about which Kubernetes resources should be observed by the reconciler.
 type ObservedObjects struct {
 	MutatingWebhooks          []string
 	ValidatingWebhooks        []string

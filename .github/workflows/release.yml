@@ -36,6 +36,20 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
+      - name: Update value.yaml
+        env:
+          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+        run: make helm-package
+
+      - name: Run release please again
+        uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          command: manifest
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
+          default-branch: main
+          signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
+
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:

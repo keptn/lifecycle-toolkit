@@ -46,7 +46,9 @@ type KeptnAppCreationRequest struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnAppCreationRequestSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnAppCreationRequest
+	Spec KeptnAppCreationRequestSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnAppCreationRequest
 	Status KeptnAppCreationRequestStatus `json:"status,omitempty"`
 }
 

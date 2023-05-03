@@ -42,32 +42,48 @@ type KeptnAppVersionSpec struct {
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
 type KeptnAppVersionStatus struct {
+	// PreDeploymentStatus indicates the current status of the KeptnAppVersion's PreDeployment phase.
 	// +kubebuilder:default:=Pending
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
+	// PostDeploymentStatus indicates the current status of the KeptnAppVersion's PostDeployment phase.
 	// +kubebuilder:default:=Pending
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	// PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
+	// PostDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PostDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
+	// WorkloadOverallStatus indicates the current status of the KeptnAppVersion's Workload deployment phase.
 	// +kubebuilder:default:=Pending
-	WorkloadOverallStatus              common.KeptnState   `json:"workloadOverallStatus,omitempty"`
-	WorkloadStatus                     []WorkloadStatus    `json:"workloadStatus,omitempty"`
-	CurrentPhase                       string              `json:"currentPhase,omitempty"`
-	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
+	// WorkloadStatus contains the current status of each KeptnWorkload that is part of the KeptnAppVersion
+	WorkloadStatus []WorkloadStatus `json:"workloadStatus,omitempty"`
+	// CurrentPhase indicates the current phase of the KeptnAppVersion
+	CurrentPhase string `json:"currentPhase,omitempty"`
+	// PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnAppVersion
+	PreDeploymentTaskStatus []ItemStatus `json:"preDeploymentTaskStatus,omitempty"`
+	// PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnAppVersion
+	PostDeploymentTaskStatus []ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
+	// PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnAppVersion
+	PreDeploymentEvaluationTaskStatus []ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	// PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnAppVersion
+	PostDeploymentEvaluationTaskStatus []ItemStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	// PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnAppVersion
+	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 
+	// StartTime represents the time at which the deployment of the KeptnAppVersion started
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	EndTime   metav1.Time `json:"endTime,omitempty"`
+	// StartTime represents the time at which the deployment of the KeptnAppVersion finished
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 type WorkloadStatus struct {
+	// Workload refers to a KeptnWorkload that is part of the KeptnAppVersion
 	Workload KeptnWorkloadRef `json:"workload,omitempty"`
+	// Status indicates the current status of the KeptnWorkload.
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 }

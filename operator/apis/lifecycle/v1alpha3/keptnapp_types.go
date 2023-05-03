@@ -31,23 +31,47 @@ import (
 
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
+	// Version defines the version of the application. For automatically created KeptnApps,
+	// the version is a function of all KeptnWorkloads that are part of the KeptnApp.
 	Version string `json:"version"`
+	// Revision can be modified to trigger another deployment of a KeptnApp of the same version.
+	// This can be used for restarting a KeptnApp which failed to deploy,
+	// e.g. due to a failed preDeploymentEvaluation/preDeploymentTask
 	// +kubebuilder:default:=1
-	Revision                  uint               `json:"revision,omitempty"`
-	Workloads                 []KeptnWorkloadRef `json:"workloads,omitempty"`
-	PreDeploymentTasks        []string           `json:"preDeploymentTasks,omitempty"`
-	PostDeploymentTasks       []string           `json:"postDeploymentTasks,omitempty"`
-	PreDeploymentEvaluations  []string           `json:"preDeploymentEvaluations,omitempty"`
-	PostDeploymentEvaluations []string           `json:"postDeploymentEvaluations,omitempty"`
+	Revision uint `json:"revision,omitempty"`
+	// Workloads is a list of all KeptnWorkloads that are part of the KeptnApp
+	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
+	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp
+	// The items of this list refer to the names of KeptnTaskDefinitions
+	// located in the same namespace as the KeptnApp, or in the KLT namespace
+	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
+	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp
+	// The items of this list refer to the names of KeptnTaskDefinitions
+	// located in the same namespace as the KeptnApp, or in the KLT namespace
+	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
+	// PreDeploymentEvaluations is a list of all evaluations to be performed
+	// during the pre-deployment phase of the KeptnApp.
+	// The items of this list refer to the names of KeptnEvaluationDefinitions
+	// located in the same namespace as the KeptnApp, or in the KLT namespace
+	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
+	// PostDeploymentEvaluations is a list of all evaluations to be performed
+	// during the post-deployment phase of the KeptnApp.
+	// The items of this list refer to the names of KeptnEvaluationDefinitions
+	// located in the same namespace as the KeptnApp, or in the KLT namespace
+	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
+	// CurrentVersion indicates the version that is currently deployed or being reconciled
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
+// KeptnWorkloadRef refers to a KeptnWorkload that is part of a KeptnApp
 type KeptnWorkloadRef struct {
-	Name    string `json:"name"`
+	// Name is the name of the KeptnWorkload
+	Name string `json:"name"`
+	// Version is the version of the KeptnWorkload
 	Version string `json:"version"`
 }
 
@@ -60,7 +84,9 @@ type KeptnApp struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnAppSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnApp
+	Spec KeptnAppSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnApp
 	Status KeptnAppStatus `json:"status,omitempty"`
 }
 

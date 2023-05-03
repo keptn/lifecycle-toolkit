@@ -103,3 +103,20 @@ func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Con
 	}
 	return definition, nil
 }
+
+func GetEvaluationDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
+	definition := &klcv1alpha3.KeptnEvaluationDefinition{}
+	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
+	if err != nil {
+		log.Error(err, "Failed to get KeptnEvaluationDefinition from application namespace")
+		if k8serrors.IsNotFound(err) {
+			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
+				log.Error(err, "Failed to get KeptnEvaluationDefinition from default KLT namespace")
+				return nil, err
+			}
+			return definition, nil
+		}
+		return nil, err
+	}
+	return definition, nil
+}

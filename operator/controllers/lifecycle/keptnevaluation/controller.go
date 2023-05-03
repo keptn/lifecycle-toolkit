@@ -33,7 +33,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -94,11 +93,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		namespacedDefinition := types.NamespacedName{
-			Namespace: req.NamespacedName.Namespace,
-			Name:      evaluation.Spec.EvaluationDefinition,
-		}
-		evaluationDefinition, err := r.fetchDefinition(ctx, namespacedDefinition)
+		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
@@ -259,15 +254,6 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha3.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnEvaluationReconciler) fetchDefinition(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
-	evaluationDefinition := &klcv1alpha3.KeptnEvaluationDefinition{}
-	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
-		return nil, err
-	}
-
-	return evaluationDefinition, nil
 }
 
 func (r *KeptnEvaluationReconciler) getTracer() controllercommon.ITracer {

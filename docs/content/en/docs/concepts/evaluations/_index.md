@@ -12,6 +12,8 @@ hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
+`KeptnEvaluationDefinition` resource can be created in the namespace where the application is running, or
+in the default KLT namespace, which will be the fallback option for the system to search.
 
 A Keptn evaluation definition looks like the following:
 

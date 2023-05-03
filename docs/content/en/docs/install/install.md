@@ -93,6 +93,7 @@ kubectl apply \
    -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 kubectl wait \
    --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
+```
 
 Use a command sequence like the following
 to install the Lifecycle Toolkit from the manifest,

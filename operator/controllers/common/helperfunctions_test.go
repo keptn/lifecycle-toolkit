@@ -490,7 +490,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 }
 
 //nolint:dupl
-func Test_GetevalDefinition(t *testing.T) {
+func Test_GetEvaluationDefinition(t *testing.T) {
 	tests := []struct {
 		name             string
 		evalDef          *klcv1alpha3.KeptnEvaluationDefinition

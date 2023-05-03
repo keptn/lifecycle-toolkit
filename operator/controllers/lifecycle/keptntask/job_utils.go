@@ -16,7 +16,7 @@ import (
 
 func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
 	jobName := ""
-	definition, err := r.getTaskDefinition(ctx, task.Spec.TaskDefinition, req.Namespace)
+	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
 		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
@@ -129,7 +129,7 @@ func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
 
 func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, params FunctionExecutionParams) error {
 	var parentJobParams FunctionExecutionParams
-	parentDefinition, err := r.getTaskDefinition(ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
+	parentDefinition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
 	if err != nil {
 		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err

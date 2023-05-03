@@ -203,31 +203,38 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, _, err := provider.FetchData(ctx, objective, evaluation.Namespace)
 	statusItem := &klcv1alpha3.EvaluationStatusItem{
-		Value:  value,
 		Status: apicommon.StateFailed,
 	}
+
+	value, _, err := provider.FetchData(ctx, objective, evaluation.Namespace)
 	if err != nil {
 		statusItem.Message = err.Error()
+		r.Log.Error(err, "Could not fetch data")
+		return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
 	}
+
+	statusItem.Value = value
 	// Evaluating SLO
 	check, err := checkValue(objective, statusItem)
 	if err != nil {
 		statusItem.Message = err.Error()
 		r.Log.Error(err, "Could not check objective result")
-	} else {
-		// if there is no error, we set the message depending on if the value passed the objective, or not
-		if check {
-			statusItem.Status = apicommon.StateSucceeded
-			statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
-		} else {
-			statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
-		}
+		return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
 	}
+	// if there is no error, we set the message depending on if the value passed the objective, or not
+	if check {
+		statusItem.Status = apicommon.StateSucceeded
+		statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
+	} else {
+		statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
+	}
+	return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
+}
+
+func updateStatusSummary(statusSummary apicommon.StatusSummary, statusItem *klcv1alpha3.EvaluationStatusItem, newStatus map[string]klcv1alpha3.EvaluationStatusItem, objective klcv1alpha3.Objective) (map[string]klcv1alpha3.EvaluationStatusItem, apicommon.StatusSummary) {
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
 	newStatus[objective.KeptnMetricRef.Name] = *statusItem
-
 	return newStatus, statusSummary
 }
 

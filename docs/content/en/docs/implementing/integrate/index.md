@@ -15,24 +15,19 @@ that have been applied against the Kubernetes API
 and reacts if it finds a workload with special annotations/labels.
 This is a four-step process:
 
-* Enable KLT in your cluster
-* Annotate your workload(s)
-* Enable the target namespace by annotating it
+* [Enable the target namespace](#enable-target-namespace)
+* [Annotate your workload(s)](#annotate-workloads)
 * Define a Keptn application that references those workloads.
   You have two options:
 
-  * Create a [KeptnApp](../yaml-crd-ref/app.md) resource
-    that references the workloads that should be included
-    along with any
-    [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
-    and [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
-    CRDs that you want
-  * Use the Keptn automatic app discovery capability
+  * [Define Keptn custom resources](#define-keptn-custom-resources-for-the-application)
+    for the application
+  * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
     without requiring you to create any Keptn-related custom resources.
 
-## Enable KLT in your cluster
+## Enable target namespace
 
 To enable the Keptn Lifecycle Controller in your cluster,
 annotate the Kubernetes
@@ -69,7 +64,9 @@ If KLT finds any of hese CRDs and the CRD has either
 the keptn.sh or the kubernetes recommended labels,
 it creates a `KeptnWorkload` CRD for the version it detects.
 
-The keptn.sh annotations are:
+### Basic annotations
+
+The basic keptn.sh annotations are:
 
 ```yaml
 keptn.sh/app: myAwesomeAppName
@@ -100,7 +97,7 @@ This process is demonstrated in the
 [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video.
 
-## Pre- and post-deployment checks
+### Pre- and post-deployment checks
 
 Further annotations are necessary
 to run pre- and post-deployment checks:
@@ -163,9 +160,14 @@ the post-deployment checks start.
 
 ### Define Keptn custom resources for the application
 
-TODO: Provide instructions for defining a
-[KeptnApp](../../app.md)
-CRD
+Create a [KeptnApp](../yaml-crd-ref/app.md) resource
+that references the workloads that should be included
+along with any
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+and [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+CRDs that you want
+
+TODO: provide more details
 
 ### Use Keptn automatic app discovery
 

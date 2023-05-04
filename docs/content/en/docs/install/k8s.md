@@ -94,4 +94,3 @@ If you are using another cert-manager in the cluster,
 you can configure KLT to instead use your cert-manager.
 See [Use your own cert-manager](cert-manager.md)
 for detailed instructions.
-

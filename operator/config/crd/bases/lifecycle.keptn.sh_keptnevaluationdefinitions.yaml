@@ -139,19 +139,29 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationDefinitionSpec defines the desired state of
-              KeptnEvaluationDefinition
+            description: Spec describes the desired state of the KeptnEvaluationDefinition
             properties:
               objectives:
+                description: Objectives is a list of objectives that have to be met
+                  for a KeptnEvaluation referencing this KepttnEvaluationDefinition
+                  to be successful
                 items:
                   properties:
                     evaluationTarget:
+                      description: EvaluationTarget specifies the target value for
+                        the references KeptnMetric. Needs to start with either '<'
+                        or '>', followed by the target value. E.g. '<10'
                       type: string
                     keptnMetricRef:
+                      description: KeptnMetricRef references the KeptnMetric that
+                        should be evaluated
                       properties:
                         name:
+                          description: Name is the name of the referenced KeptnMetric
                           type: string
                         namespace:
+                          description: Namespace is the namespace where the referenced
+                            KeptnMetric is located
                           type: string
                       required:
                       - name
@@ -165,8 +175,7 @@ spec:
             - objectives
             type: object
           status:
-            description: KeptnEvaluationDefinitionStatus defines the observed state
-              of KeptnEvaluationDefinition
+            description: Status describes the current state of the KeptnEvaluationDefinition
             type: object
         type: object
     served: true

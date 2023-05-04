@@ -33,8 +33,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnAppCreationRequestSpec defines the desired state of
-              KeptnAppCreationRequest
+            description: Spec describes the desired state of the KeptnAppCreationRequest
             properties:
               appName:
                 description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
@@ -44,8 +43,7 @@ spec:
             - appName
             type: object
           status:
-            description: KeptnAppCreationRequestStatus defines the observed state
-              of KeptnAppCreationRequest
+            description: Status describes the current state of the KeptnAppCreationRequest
             type: object
         type: object
     served: true

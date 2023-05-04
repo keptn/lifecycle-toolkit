@@ -163,35 +163,63 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnAppSpec defines the desired state of KeptnApp
+            description: Spec describes the desired state of the KeptnApp
             properties:
               postDeploymentEvaluations:
+                description: PostDeploymentEvaluations is a list of all evaluations
+                  to be performed during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the KLT namespace
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
+                description: PostDeploymentTasks is a list of all tasks to be performed
+                  during the post-deployment phase of the KeptnApp The items of this
+                  list refer to the names of KeptnTaskDefinitions located in the same
+                  namespace as the KeptnApp, or in the KLT namespace
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the KLT namespace
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
+                description: PreDeploymentTasks is a list of all tasks to be performed
+                  during the pre-deployment phase of the KeptnApp The items of this
+                  list refer to the names of KeptnTaskDefinitions located in the same
+                  namespace as the KeptnApp, or in the KLT namespace
                 items:
                   type: string
                 type: array
               revision:
                 default: 1
+                description: Revision can be modified to trigger another deployment
+                  of a KeptnApp of the same version. This can be used for restarting
+                  a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask
                 type: integer
               version:
+                description: Version defines the version of the application. For automatically
+                  created KeptnApps, the version is a function of all KeptnWorkloads
+                  that are part of the KeptnApp.
                 type: string
               workloads:
+                description: Workloads is a list of all KeptnWorkloads that are part
+                  of the KeptnApp
                 items:
+                  description: KeptnWorkloadRef refers to a KeptnWorkload that is
+                    part of a KeptnApp
                   properties:
                     name:
+                      description: Name is the name of the KeptnWorkload
                       type: string
                     version:
+                      description: Version is the version of the KeptnWorkload
                       type: string
                   required:
                   - name
@@ -202,9 +230,11 @@ spec:
             - version
             type: object
           status:
-            description: KeptnAppStatus defines the observed state of KeptnApp
+            description: Status describes the current state of the KeptnApp
             properties:
               currentVersion:
+                description: CurrentVersion indicates the version that is currently
+                  deployed or being reconciled
                 type: string
             type: object
         type: object

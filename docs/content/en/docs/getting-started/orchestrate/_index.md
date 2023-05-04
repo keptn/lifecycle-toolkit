@@ -5,7 +5,7 @@ weight: 55
 ---
 
 In this exercise, we will configure the Keptn Lifecyle Toolkit
-to run deployment checks as part of your job scheduler.
+to run deployment checks as part of your deployment.
 Whether you are deploying your software with
 Argo, Flux, another deployment engine, or even `kubctl --apply`,
 the Lifecycle Toolkit can do the following:

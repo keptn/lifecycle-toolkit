@@ -75,4 +75,3 @@ The `keptnAppCreationRequestTimeoutSeconds` field
 is new in the `v1alpha2` App version.
 
 ## See also
-

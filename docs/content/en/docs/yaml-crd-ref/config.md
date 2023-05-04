@@ -22,7 +22,7 @@ spec:
 
 * **apiVersion** -- API version being used.
 * **kind** -- Resource type.
-   Must be set to `KeptnConfig`.`
+   Must be set to `KeptnConfig`.
 
 * **metadata**
   * **name** -- Unique name of this set of configurations.

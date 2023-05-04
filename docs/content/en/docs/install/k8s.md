@@ -13,13 +13,9 @@ that runs your deployment software.
 See [Requirements](reqs.md) for information about supported releases
 and advice about resources required.
 
-You can also create a local cluster using packages
-such as KinD, Minikube, K3s, and K3d
-that can be used for testing, study, and demonstration purposes.
-
 ## Create local Kubernetes cluster
 
-You can use tools such as
+You can also create a local cluster using packages such as
 [KinD](https://kind.sigs.k8s.io/),
 [k3d](https://k3d.io/),
 [k3s](https://k3s.io/),
@@ -27,6 +23,9 @@ and [Minikube](https://minikube.sigs.k8s.io/docs/)
 to set up a local, lightweight Kubernetes cluster
 where you can install the Keptn Lifecycle Toolkit
 for personal study, demonstrations, and testing.
+For more information, see the Kubernetes
+[Install Tools](https://kubernetes.io/docs/tasks/tools/)
+documentation.
 
 The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video  demonstrates how to create a KinD cluster.
@@ -41,6 +40,10 @@ The basic steps are:
    kind create cluster
    ```
 
+   See the
+   [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)
+   for more information
+
 1. When the cluster has been created,
    run the following to verify that the cluster is working
    and that it is running a supported version of Kubernetes
@@ -50,4 +53,45 @@ The basic steps are:
    kubectl version --short
    ```
 
-## Prepare cluster
+## Prepare your cluster for KLT
+
+The Keptn Lifecycle Toolkit installs into an existing deployment cluster.
+When setting up a local Kubernetes cluster
+to study or demonstrate the Lifecycle Toolkit,
+you need to provide these components.
+
+Your cluster should include the following:
+
+* A supported version of Kubernetes.
+  See [Supported Kubernetes versions[(reqs.md/#supported-kubernetes-versions)
+  for details.
+
+* [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+
+* Data source such as
+  [Prometheus](https://prometheus.io/),
+  [Dynatrace](https://www.dynatrace.com/),
+  or [Datadog](https://www.datadoghq.com/).
+  This is used for the metrics used for the observability features.
+
+* Deployment tools of your choice,
+  such as
+  [Argo CD](https://argo-cd.readthedocs.io/en/stable/) or
+  [Flux](https://fluxcd.io/).
+  KLT also works with just `kubctl -apply ...` for deployment.
+
+* For traces, install [Jaeger](https://jaegertracing.io)
+  or a similar tool.
+
+* If you want a dashboard for reviewing metrics and traces,
+  Install [Grafana](https://grafana.com/)
+  or the dashboard of your choice.
+
+Also note that the Keptn Lifecycle Toolkit includes
+a light-weight cert-manager that, by default, is installed
+as part of the KLT software.
+If you are using another cert-manager in the cluster,
+you can configure KLT to instead use your cert-manager.
+See [Use your own cert-manager](cert-manager.md)
+for detailed instructions.
+

@@ -89,16 +89,7 @@ func copyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 
 func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnTaskDefinition, error) {
 	definition := &klcv1alpha3.KeptnTaskDefinition{}
-	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
-	if err != nil {
-		log.Info("Failed to get KeptnTaskDefinition from application namespace", "KeptnTaskDefinition", definitionName, "namespace", namespace)
-		if k8serrors.IsNotFound(err) {
-			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
-				log.Info("Failed to get KeptnTaskDefinition from default KLT namespace", "KeptnTaskDefinition", definitionName)
-				return nil, err
-			}
-			return definition, nil
-		}
+	if err := getObject(k8sclient, log, ctx, definitionName, namespace, definition); err != nil {
 		return nil, err
 	}
 	return definition, nil
@@ -106,17 +97,24 @@ func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Con
 
 func GetEvaluationDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
 	definition := &klcv1alpha3.KeptnEvaluationDefinition{}
-	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
-	if err != nil {
-		log.Info("Failed to get KeptnEvaluationDefinition from application namespace", "KeptnEvaluationDefinition", definitionName, "namespace", namespace)
-		if k8serrors.IsNotFound(err) {
-			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
-				log.Info("Failed to get KeptnEvaluationDefinition from default KLT namespace", "KeptnEvaluationDefinition", definitionName)
-				return nil, err
-			}
-			return definition, nil
-		}
+	if err := getObject(k8sclient, log, ctx, definitionName, namespace, definition); err != nil {
 		return nil, err
 	}
 	return definition, nil
+}
+
+func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string, definition client.Object) error {
+	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
+	if err != nil {
+		log.Info("Failed to get resource from application namespace", "resource type", fmt.Sprintf("%T", definition), "Definition name", definitionName, "namespace", namespace)
+		if k8serrors.IsNotFound(err) {
+			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
+				log.Info("Failed to get KeptnEvaluationDefinition from default KLT namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+	return nil
 }

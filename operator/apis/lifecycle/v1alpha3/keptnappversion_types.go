@@ -106,7 +106,9 @@ type KeptnAppVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnAppVersionSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnAppVersion
+	Spec KeptnAppVersionSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnAppVersion
 	Status KeptnAppVersionStatus `json:"status,omitempty"`
 }
 

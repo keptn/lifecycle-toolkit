@@ -32,38 +32,64 @@ import (
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
-	Workload             string `json:"workload,omitempty"`
-	WorkloadVersion      string `json:"workloadVersion"`
-	AppName              string `json:"appName,omitempty"`
-	AppVersion           string `json:"appVersion,omitempty"`
+	// Workload defines the KeptnWorkload for which the KeptnEvaluation is done.
+	Workload string `json:"workload,omitempty"`
+	// WorkloadVersion defines the version of the KeptnWorkload for which the KeptnEvaluation is done.
+	WorkloadVersion string `json:"workloadVersion"`
+	// AppName defines the KeptnApp for which the KeptnEvaluation is done.
+	AppName string `json:"appName,omitempty"`
+	// AppVersion defines the version of the KeptnApp for which the KeptnEvaluation is done.
+	AppVersion string `json:"appVersion,omitempty"`
+	// EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
+	// which includes the objectives for the KeptnEvaluation.
+	// The KeptnEvaluationDefinition can be
+	// located in the same namespace as the KeptnEvaluation, or in the KLT namespace
 	EvaluationDefinition string `json:"evaluationDefinition"`
+	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+	// missed evaluation objective, before considering the KeptnEvaluation to be failed.
 	// +kubebuilder:default:=10
 	Retries int `json:"retries,omitempty"`
+	// RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+	// or a missed objective.
 	// +optional
 	// +kubebuilder:default:="5s"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	RetryInterval metav1.Duration  `json:"retryInterval,omitempty"`
-	FailAction    string           `json:"failAction,omitempty"`
-	Type          common.CheckType `json:"checkType,omitempty"`
+	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
+	FailAction    string          `json:"failAction,omitempty"`
+	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase
+	Type common.CheckType `json:"checkType,omitempty"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 type KeptnEvaluationStatus struct {
+	// RetryCount indicates how many times the KeptnEvaluation has been attempted already
 	// +kubebuilder:default:=0
-	RetryCount       int                             `json:"retryCount"`
+	RetryCount int `json:"retryCount"`
+	// EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition
+	// referenced by the KeptnEvaluation.
 	EvaluationStatus map[string]EvaluationStatusItem `json:"evaluationStatus"`
+	// OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived
+	// from the status of the individual objectives of the KeptnEvaluationDefinition
+	// referenced by the KeptnEvaluation.
 	// +kubebuilder:default:=Pending
 	OverallStatus common.KeptnState `json:"overallStatus"`
-	StartTime     metav1.Time       `json:"startTime,omitempty"`
-	EndTime       metav1.Time       `json:"endTime,omitempty"`
+	// StartTime represents the time at which the KeptnEvaluation started
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// EndTime represents the time at which the KeptnEvaluation finished
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 type EvaluationStatusItem struct {
-	Value   string            `json:"value"`
-	Status  common.KeptnState `json:"status"`
-	Message string            `json:"message,omitempty"`
+	// Value represents the value of the KeptnMetric being evaluated
+	Value string `json:"value"`
+	// Status indicates the status of the objective being evaluated
+	Status common.KeptnState `json:"status"`
+	// Message contains additional information about the evaluation of an objective.
+	// This can include explanations about why an evaluation has failed (e.g. due to a missed objective),
+	// or if there was any error during the evaluation of the objective.
+	Message string `json:"message,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -83,7 +109,9 @@ type KeptnEvaluation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnEvaluationSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnEvaluation
+	Spec KeptnEvaluationSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnEvaluation
 	Status KeptnEvaluationStatus `json:"status,omitempty"`
 }
 

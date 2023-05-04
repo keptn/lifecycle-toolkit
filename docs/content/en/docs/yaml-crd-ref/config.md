@@ -43,7 +43,7 @@ that describes all configurations for that cluster.
 
 ## Example
 
-### oTel example
+### OTel example
 
 This example specifies the URL of the OpenTelemetry collector
 and the interval for

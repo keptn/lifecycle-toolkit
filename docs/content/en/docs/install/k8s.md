@@ -55,7 +55,7 @@ The basic steps are:
 
 ## Prepare your cluster for KLT
 
-The Keptn Lifecycle Toolkit installs into an existing deployment cluster.
+The Keptn Lifecycle Toolkit installs into an existing Kubernetes cluster.
 When setting up a local Kubernetes cluster
 to study or demonstrate the Lifecycle Toolkit,
 you need to provide these components.

@@ -63,7 +63,7 @@ you need to provide these components.
 Your cluster should include the following:
 
 * A supported version of Kubernetes.
-  See [Supported Kubernetes versions[(reqs.md/#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](reqs.md/#supported-kubernetes-versions)
   for details.
 
 * [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)

@@ -58,7 +58,17 @@ The steps to implement pre- and post-deployment orchestration are:
 
 ## Bring or create a Kubernetes deployment cluster
 
+You can run this exercise on an existing Kubernetes cluster
+or you can create a new cluster.
+For personal study and demonstrations,
+this exercise runs well on a local Kubernetes cluster.
+See [Bring or Install a Kubernetes Cluster](../../install/k8s.md)
+
 ## Install KLT on your cluster
+
+Install the Keptn Lifecycle Toolkit on your cluster
+following the instructions in
+[Install KLT](../../install/install).
 
 ## Enable KLT for your cluster
 

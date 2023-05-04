@@ -9,7 +9,7 @@ This `klt-cert-manager` operator should only be installed when paired with the L
 or above.
 The TLS certificate is mounted as a volume in the LT operator pod and is renewed every 12 hours or every time the LT
 operator deployment changes.
-THe `klt-cert-manager` retrieves all `MutatingWebhookConfigurations`, `ValidatingWebhookConfigurations` and
+The `klt-cert-manager` retrieves all `MutatingWebhookConfigurations`, `ValidatingWebhookConfigurations` and
 `CustomResourceDefinitions` based on a label selector that can be defined using the following environment variables:
 
 - `LABEL_SELECTOR_KEY`: Label key used or identifying resources for certificate injection.

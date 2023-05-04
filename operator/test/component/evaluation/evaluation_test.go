@@ -2,6 +2,7 @@ package evaluation_test
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
@@ -217,7 +218,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "empty value for: metric1-lc4mb",
+							Message: fmt.Sprintf("empty value for: %s", metric.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())

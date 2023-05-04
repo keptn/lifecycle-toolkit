@@ -217,7 +217,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "no values",
+							Message: "empty value for: metric1-lc4mb",
 						},
 					}))
 				}, "30s").Should(Succeed())

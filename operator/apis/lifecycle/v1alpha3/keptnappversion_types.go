@@ -33,10 +33,12 @@ import (
 
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
-	KeptnAppSpec    `json:",inline"`
-	AppName         string `json:"appName"`
+	KeptnAppSpec `json:",inline"`
+	// AppName is the name of the KeptnApp
+	AppName string `json:"appName"`
+	// PreviousVersion is the version of the KeptnApp that has been deployed prior to this version
 	PreviousVersion string `json:"previousVersion,omitempty"`
-
+	// TraceId contains the OpenTelemetry trace ID
 	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
@@ -76,7 +78,7 @@ type KeptnAppVersionStatus struct {
 
 	// StartTime represents the time at which the deployment of the KeptnAppVersion started
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	// StartTime represents the time at which the deployment of the KeptnAppVersion finished
+	// EndTime represents the time at which the deployment of the KeptnAppVersion finished
 	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 

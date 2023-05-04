@@ -40,9 +40,9 @@ The output should look like this.
 In this example, both client and server are at v1.24.0
 so the Keptn Lifecycle Toolkit will work.
 
-{{% readfile file="./snippets/tasks/k8s_version_output.md" markdown="true" %}}
+{{% readfile file="../../snippets/tasks/k8s_version_output.md" markdown="true" %}}
 
-{{% readfile file="./snippets/tasks/install.md" markdown="true" %}}
+{{% readfile file="../../snippets/tasks/install.md" markdown="true" %}}
 
 ## Check out the Getting Started Repository
 

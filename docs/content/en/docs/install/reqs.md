@@ -22,6 +22,7 @@ kubectl version --short
 Client Version: v1.24.0
 Kustomize Version: v4.5.4
 Server Version: v1.24.0
+```
 
 ## Resource requirements
 

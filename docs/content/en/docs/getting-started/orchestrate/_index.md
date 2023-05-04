@@ -34,7 +34,7 @@ and has adequate resources before you begin the deployment.
 After the deployment succeeds,
 use Keptn metrics to confirm that your deployed software is really healthy --
 not just that the pods are running but validate against SLOs
-such as SLOs to measure performance and user experience.
+such as performance and user experience.
 You can also check for new logs that came in from a log monitoring solution.
 
 ## Using this exercise

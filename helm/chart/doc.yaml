@@ -197,6 +197,11 @@
 ## @extra   metricsOperator.manager.containerSecurityContext Sets security context privileges
 ## @param   metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation
 ## @param   metricsOperator.manager.containerSecurityContext.capabilities.drop
+## @param   metricsOperator.manager.containerSecurityContext.privileged
+## @param   metricsOperator.manager.containerSecurityContext.runAsGroup
+## @param   metricsOperator.manager.containerSecurityContext.runAsNonRoot
+## @param   metricsOperator.manager.containerSecurityContext.runAsUser
+## @param   metricsOperator.manager.containerSecurityContext.seccompProfile.type
 
 
 ## @param   metricsOperator.manager.image.repository specify registry for manager image

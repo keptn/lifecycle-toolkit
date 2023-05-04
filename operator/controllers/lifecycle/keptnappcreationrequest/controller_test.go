@@ -600,3 +600,93 @@ func TestKeptnAppCreationRequestReconciler_cleanupWorkloads(t *testing.T) {
 	fmt.Println(cap(mySlice))
 	fmt.Println(cap(res))
 }
+
+func TestKeptnAppCreationRequestReconciler_getWorkloads(t *testing.T) {
+	namespace := "my-namespace"
+
+	appName := "my-app"
+
+	workload1 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "workloadA",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "1.0",
+		},
+	}
+
+	workload2 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "workloadB",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "1.0",
+		},
+	}
+
+	type args struct {
+		ctx             context.Context
+		creationRequest *klcv1alpha3.KeptnAppCreationRequest
+	}
+	tests := []struct {
+		name               string
+		args               args
+		workloadsInCluster []klcv1alpha3.KeptnWorkload
+		want               []klcv1alpha3.KeptnWorkload
+		wantErr            bool
+	}{
+		{
+			name: "get workloads in alphabetical order - already sorted",
+			args: args{
+				ctx: context.Background(),
+				creationRequest: &klcv1alpha3.KeptnAppCreationRequest{
+					Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+						AppName: appName,
+					},
+				},
+			},
+			workloadsInCluster: []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
+			want:               []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
+			wantErr:            false,
+		},
+		{
+			name: "get workloads in alphabetical order - not sorted",
+			args: args{
+				ctx: context.Background(),
+				creationRequest: &klcv1alpha3.KeptnAppCreationRequest{
+					Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+						AppName: appName,
+					},
+				},
+			},
+			workloadsInCluster: []klcv1alpha3.KeptnWorkload{*workload2, *workload1},
+			want:               []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
+			wantErr:            false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, fakeClient, _ := setupReconcilerAndClient(t)
+
+			for _, workload := range tt.workloadsInCluster {
+				err := fakeClient.Create(context.Background(), &workload)
+				require.Nil(t, err)
+			}
+			got, err := c.getWorkloads(tt.args.ctx, tt.args.creationRequest)
+			if !tt.wantErr {
+				require.Nil(t, err)
+			} else {
+				require.NotNil(t, err)
+			}
+			require.Equal(t, len(tt.want), len(got))
+
+			for i, wantWorkload := range tt.want {
+				require.Equal(t, wantWorkload.Name, got[i].Name)
+			}
+		})
+	}
+}

@@ -41,6 +41,8 @@ type KeptnMetricStatus struct {
 	RawValue []byte `json:"rawValue"`
 	// LastUpdated represents the time when the status data was last updated
 	LastUpdated metav1.Time `json:"lastUpdated"`
+	// ErrMsg represents the error details when the query could not be evaluated
+	ErrMsg string `json:"errMsg,omitempty"`
 }
 
 // ProviderRef represents the provider object

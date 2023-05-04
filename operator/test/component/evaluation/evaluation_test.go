@@ -2,6 +2,7 @@ package evaluation_test
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
@@ -217,7 +218,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "no values",
+							Message: fmt.Sprintf("empty value for: %s", metric.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())
@@ -248,7 +249,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "no values",
+							Message: fmt.Sprintf("KeptnMetric.metrics.keptn.sh \"%s\" not found", evaluationDefinition.Spec.Objectives[0].KeptnMetricRef.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())

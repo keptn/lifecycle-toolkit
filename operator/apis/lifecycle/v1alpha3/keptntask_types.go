@@ -32,17 +32,34 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload"`
-	WorkloadVersion  string           `json:"workloadVersion"`
-	AppName          string           `json:"app"`
-	AppVersion       string           `json:"appVersion"`
-	TaskDefinition   string           `json:"taskDefinition"`
-	Context          TaskContext      `json:"context"`
-	Parameters       TaskParameters   `json:"parameters,omitempty"`
+	// Workload defines the KeptnWorkload for which the KeptnTask is executed.
+	Workload string `json:"workload"`
+	// WorkloadVersion defines the version of the KeptnWorkload for which the KeptnTask is executed.
+	WorkloadVersion string `json:"workloadVersion"`
+	// AppName defines the KeptnApp for which the KeptnTask is executed
+	AppName string `json:"app"`
+	// AppVersion defines the version of the KeptnApp for which the KeptnTask is executed
+	AppVersion string `json:"appVersion"`
+	// TaskDefinition refers to the name of the KeptnTaskDefinition
+	// which includes the specification for the task to be performed.
+	// The KeptnTaskDefinition can be
+	// located in the same namespace as the KeptnTask, or in the KLT namespace
+	TaskDefinition string `json:"taskDefinition"`
+	// Context contains contextual information about the task execution
+	Context TaskContext `json:"context"`
+	// Parameters contains parameters that will be passed to the job that executes the task
+	Parameters TaskParameters `json:"parameters,omitempty"`
+	// SecureParameters contains secure parameters that will be passed to the job that executes the task
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
-	Type             common.CheckType `json:"checkType,omitempty"`
+	// Type indicates whether the KeptnTask is part of the pre- or postDeployment phase
+	Type common.CheckType `json:"checkType,omitempty"`
+	// Retries indicates how many times the KeptnTask can be attempted in the case of an error
+	// before considering the KeptnTask to be failed.
 	// +kubebuilder:default:=10
 	Retries *int32 `json:"retries,omitempty"`
+	// Timeout specifies the maximum time to wait for the task to be completed successfully.
+	// If the task does not complete successfully within this time frame, it will be
+	// considered to be failed.
 	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
@@ -52,31 +69,51 @@ type KeptnTaskSpec struct {
 }
 
 type TaskContext struct {
-	WorkloadName    string `json:"workloadName"`
-	AppName         string `json:"appName"`
-	AppVersion      string `json:"appVersion"`
+	// WorkloadName the name of the KeptnWorkload the KeptnTask is being executed for
+	WorkloadName string `json:"workloadName"`
+	// AppName the name of the KeptnApp the KeptnTask is being executed for
+	AppName string `json:"appName"`
+	// AppVersion the version of the KeptnApp the KeptnTask is being executed for
+	AppVersion string `json:"appVersion"`
+	// WorkloadVersion the version of the KeptnWorkload the KeptnTask is being executed for
 	WorkloadVersion string `json:"workloadVersion"`
-	TaskType        string `json:"taskType"`
-	ObjectType      string `json:"objectType"`
+	// TaskType indicates whether the KeptnTask is part of the pre- or postDeployment phase.
+	TaskType string `json:"taskType"`
+	// ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload
+	ObjectType string `json:"objectType"`
 }
 
 type TaskParameters struct {
+	// Inline contains the parameters that will be made available to the job
+	// executing the KeptnTask via the 'DATA' environment variable.
+	// The 'DATA'  environment variable's content will be a json
+	// encoded string containing all properties of the map provided
 	Inline map[string]string `json:"map,omitempty"`
 }
 
 type SecureParameters struct {
+	// Secret contains the parameters that will be made available to the job
+	// executing the KeptnTask via the 'SECRET_DATA' environment variable.
+	// The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
+	// key of the referenced secret.
 	Secret string `json:"secret,omitempty"`
 }
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
+	// JobName is the name of the Job executing the Task
 	JobName string `json:"jobName,omitempty"`
+	// Status represents the overall state of the KeptnTask
 	// +kubebuilder:default:=Pending
-	Status    common.KeptnState `json:"status,omitempty"`
-	Message   string            `json:"message,omitempty"`
-	StartTime metav1.Time       `json:"startTime,omitempty"`
-	EndTime   metav1.Time       `json:"endTime,omitempty"`
-	Reason    string            `json:"reason,omitempty"`
+	Status common.KeptnState `json:"status,omitempty"`
+	// Message contains information about unexpected errors encountered during the execution of the KeptnTask
+	Message string `json:"message,omitempty"`
+	// StartTime represents the time at which the KeptnTask started
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// EndTime represents the time at which the KeptnTask finished
+	EndTime metav1.Time `json:"endTime,omitempty"`
+	// Reason contains more information about the reason for the last transition of the Job executing the KeptnTask
+	Reason string `json:"reason,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -94,7 +131,9 @@ type KeptnTask struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnTaskSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnTask
+	Spec KeptnTaskSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnTask
 	Status KeptnTaskStatus `json:"status,omitempty"`
 }
 

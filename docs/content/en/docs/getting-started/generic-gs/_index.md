@@ -220,4 +220,3 @@ that the deployment was successful.
 Congratulations!
 You have successfully deployed an application
 using the Keptn Lifecycle Toolkit!
-

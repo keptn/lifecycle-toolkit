@@ -49,3 +49,5 @@ The basic steps are:
    ```shell
    kubectl version --short
    ```
+
+## Prepare cluster

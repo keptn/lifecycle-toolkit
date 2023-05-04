@@ -6,7 +6,7 @@ weight: 85
 
 This page gives instructions for installing the Keptn Lifecycle Toolkit
 and running a simple Keptn application to familiarize yourself
-with how the Keptn Lifecycle Toolkit works
+with how the Keptn Lifecycle Toolkit works and
 implements full deployment orchestration.
 
 You will learn how to do the following:

@@ -22,7 +22,7 @@ the Lifecycle Toolkit can do the following:
 KLT sits in the job scheduler and can trace the deployment
 from start to end.
 KLT is also application aware,
-so we can extend the tasks that are scheduled
+so we can extend the deployment
 with tasks and evaluations that
 that are run either before or after the actual deployment.
 You can also validate any metric,

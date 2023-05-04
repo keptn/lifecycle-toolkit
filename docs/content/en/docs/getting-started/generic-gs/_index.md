@@ -39,6 +39,8 @@ so are appropriate for the Keptn Lifecycle Toolkit.
 kubectl version --short
 ```
 
+The output should look like the following
+
 ```shell
 Client Version: v1.24.0
 Kustomize Version: v4.5.4

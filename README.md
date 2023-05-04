@@ -59,7 +59,7 @@ For installing the Lifecycle Toolkit via manifests use:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.1/manifest.yaml
 ```
 
 <!---x-release-please-end-->
@@ -322,6 +322,8 @@ a `PostDeploymentCheck` can be triggered.
 
 A `KeptnTaskDefinition` is a CRD used to define tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-deployment phases of a deployment.
+`KeptnTaskDefinition` resource can be created in the namespace where the application is running, or
+in the default KLT namespace, which will be the fallback option for the system to search.
 The task definition is a [Deno](https://deno.land/) script
 Please, refer to the [function runtime](./functions-runtime/) folder for more information about the runtime.
 In the future, we also intend to support other runtimes, especially running a container image directly.
@@ -403,6 +405,8 @@ In its state, it keeps track of the current status of the K8s Job created.
 
 A `KeptnEvaluationDefinition` is a CRD used to define evaluation tasks that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
+`KeptnEvaluationDefinition` resource can be created in the namespace where the application is running, or
+in the default KLT namespace, which will be the fallback option for the system to search.
 
 A KeptnEvaluationDefinition looks like the following:
 
@@ -485,6 +489,9 @@ resource is specified and the `KeptnMetric` resource does not exist in this name
 
 The `KeptnConfig` is a CRD defines configuration values for the Keptn Lifecycle Toolkit.
 Currently, it can be used to configure the URL of the OpenTelemetry collector.
+Additionally, it can be used to set the time interval in which automatic app discovery
+searches for workloads to put into the same auto-generated `KeptnApp`.
+When the parameter is not set, the default value is 30 seconds.
 
 A `KeptnConfig` looks like the following:
 
@@ -495,6 +502,7 @@ metadata:
   name: keptnconfig-sample
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
+  keptnAppCreationRequestTimeoutSeconds: 30
 ```
 
 ## Install a dev build

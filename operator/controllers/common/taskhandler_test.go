@@ -88,6 +88,46 @@ func TestTaskHandler(t *testing.T) {
 			unbindSpanCalls: 0,
 		},
 		{
+			name: "task not started - taskDefinition in default KLT namespace",
+			object: &v1alpha3.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
+						PreDeploymentTasks: []string{"task-def"},
+					},
+				},
+			},
+			taskDef: &v1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: KLTNamespace,
+					Name:      "task-def",
+				},
+			},
+			taskObj: v1alpha3.KeptnTask{},
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
+			},
+			wantStatus: []v1alpha3.ItemStatus{
+				{
+					DefinitionName: "task-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-task-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
+			unbindSpanCalls: 0,
+		},
+		{
 			name: "task not started",
 			object: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{

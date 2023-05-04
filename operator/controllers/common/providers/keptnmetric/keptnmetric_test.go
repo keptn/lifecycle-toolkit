@@ -6,6 +6,7 @@ import (
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -170,14 +171,14 @@ func Test_Getkeptnmetric(t *testing.T) {
 			metric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: KLTNamespace,
+					Namespace: common.KLTNamespace,
 				},
 			},
 			namespace: "my-other-namespace",
 			out: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: KLTNamespace,
+					Namespace: common.KLTNamespace,
 				},
 			},
 			wantError: false,

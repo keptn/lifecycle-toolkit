@@ -2,11 +2,13 @@ package evaluation_test
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -107,7 +109,88 @@ var _ = Describe("Evaluation", Ordered, func() {
 				err = k8sClient.Delete(context.TODO(), metric)
 				common.LogErrorIfPresent(err)
 			})
+			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default KLT namespace", func() {
+				By("create default KLT namespace")
 
+				ns := &v1.Namespace{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: controllercommon.KLTNamespace,
+					},
+				}
+				err := k8sClient.Create(context.TODO(), ns)
+				Expect(err).To(BeNil())
+
+				By("Create EvaluationDefiniton")
+
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, controllercommon.KLTNamespace, metricName)
+
+				By("Create KeptnMetric")
+
+				metric := makeKeptnMetric(metricName, controllercommon.KLTNamespace)
+
+				By("Update KeptnMetric to have status")
+
+				metric2 := &metricsapi.KeptnMetric{}
+				err = k8sClient.Get(context.TODO(), types.NamespacedName{
+					Namespace: controllercommon.KLTNamespace,
+					Name:      metric.Name,
+				}, metric2)
+				Expect(err).To(BeNil())
+
+				metric2.Status = metricsapi.KeptnMetricStatus{
+					Value:       "5",
+					RawValue:    []byte("5"),
+					LastUpdated: metav1.NewTime(time.Now().UTC()),
+				}
+
+				err = k8sClient.Status().Update(context.TODO(), metric2)
+				Expect(err).To(BeNil())
+
+				evaluationdef := &klcv1alpha3.KeptnEvaluationDefinition{}
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: controllercommon.KLTNamespace,
+						Name:      evaluationDefinitionName,
+					}, evaluationdef)
+					g.Expect(err).To(BeNil())
+					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1alpha3.Objective{
+						KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+							Name:      metricName,
+							Namespace: controllercommon.KLTNamespace,
+						},
+						EvaluationTarget: "<10",
+					}))
+				}, "5s").Should(Succeed())
+
+				By("Create evaluation to start the process")
+
+				evaluation = makeEvaluation(evaluationName, namespaceName, evaluationDefinitionName)
+
+				By("Check that the evaluation passed")
+
+				evaluation2 := &klcv1alpha3.KeptnEvaluation{}
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespaceName,
+						Name:      evaluation.Name,
+					}, evaluation2)
+					g.Expect(err).To(BeNil())
+					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
+					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1alpha3.EvaluationStatusItem{
+						metricName: {
+							Value:   "5",
+							Status:  apicommon.StateSucceeded,
+							Message: "value '5' met objective '<10'",
+						},
+					}))
+				}, "30s").Should(Succeed())
+
+				err = k8sClient.Delete(context.TODO(), metric)
+				common.LogErrorIfPresent(err)
+
+				err = k8sClient.Delete(context.TODO(), ns)
+				common.LogErrorIfPresent(err)
+			})
 			It("KeptnEvaluationController Metric status does not exist", func() {
 				By("Create EvaluationDefiniton")
 
@@ -135,7 +218,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "no values",
+							Message: fmt.Sprintf("empty value for: %s", metric.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())
@@ -166,7 +249,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: "no values",
+							Message: fmt.Sprintf("KeptnMetric.metrics.keptn.sh \"%s\" not found", evaluationDefinition.Spec.Objectives[0].KeptnMetricRef.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())

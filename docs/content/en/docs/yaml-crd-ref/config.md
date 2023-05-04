@@ -21,7 +21,6 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
 * **kind** -- Resource type.
    Must be set to `KeptnConfig`.`
 

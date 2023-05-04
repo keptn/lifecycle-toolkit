@@ -109,7 +109,7 @@ func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, de
 		log.Info("Failed to get resource from application namespace", "resource type", fmt.Sprintf("%T", definition), "Definition name", definitionName, "namespace", namespace)
 		if k8serrors.IsNotFound(err) {
 			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
-				log.Info("Failed to get KeptnEvaluationDefinition from default KLT namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
+				log.Info("Failed to get resource from default KLT namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
 				return err
 			}
 			return nil

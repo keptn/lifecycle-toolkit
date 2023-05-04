@@ -31,7 +31,7 @@ spec:
     specification.
 
 * **spec**
-  * **oTelCollectorUrl** -- The URL and port of the OpenTelemetry collector
+  * **OTelCollectorUrl** -- The URL and port of the OpenTelemetry collector
   * **keptnAppCreationRequestTimeoutSeconds** --
     interval in which automatic app discovery searches for workloads
     to put into the same auto-generated [KeptnApp](app.md).

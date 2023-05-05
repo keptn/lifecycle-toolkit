@@ -46,7 +46,7 @@ spec:
           args:
             - webhook-server
             # OLM mounts the certificates here, so we reuse it for simplicity
-            - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
+            - --certs-dir=/tmp/webhook/certs/
             - --leader-elect
             # Secure port for the metrics adapter
             - --adapter-port=6443
@@ -110,7 +110,7 @@ spec:
               memory: 64Mi
           volumeMounts:
             - name: certs-dir
-              mountPath: /tmp/k8s-webhook-server/serving-certs/
+              mountPath: /tmp/webhook/certs/
             - name: adapter-certs-dir
               mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: metrics-operator

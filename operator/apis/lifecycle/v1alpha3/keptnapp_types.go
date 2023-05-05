@@ -41,7 +41,7 @@ type KeptnAppSpec struct {
 	Revision uint `json:"revision,omitempty"`
 	// Workloads is a list of all KeptnWorkloads that are part of the KeptnApp
 	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
-	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp
+	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the KLT namespace
 	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`

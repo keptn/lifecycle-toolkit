@@ -23,7 +23,7 @@ If you need help getting started,
 feel free to ask for help on the `#help-contributing` or `#keptn-docs` channels on the [Keptn Slack](https://keptn.sh/community/#slack).
 We were all new to this once and are happy to help you!
 
-## Guidelines for contributing
+## [Guidelines for contributing](docs/content/en/contribute/software/guidelines-for-contributing/_index.md)
 
 * Always fork the repository then clone that fork to your local system
   rather than clone `main` directly.

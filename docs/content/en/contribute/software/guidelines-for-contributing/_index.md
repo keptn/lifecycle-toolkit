@@ -4,9 +4,6 @@ description: Guidelines for contributing towards Keptn Lifecycle Toolkit
 weight: 300
 ---
 
-Before using the **Keptn Lifecycle Toolkit** 
-as a contributor to the Kepth Lifecycle Toolkit repository, it is expected that you comply with the guidelines while making contributions towards the repository.
-
 ## Guidelines for contributing
 
 * Always fork the repository then clone that fork to your local system

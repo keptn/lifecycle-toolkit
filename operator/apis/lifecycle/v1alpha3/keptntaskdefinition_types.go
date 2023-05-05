@@ -60,6 +60,7 @@ type FunctionSpec struct {
 	// Parameters contains parameters that will be passed to the job that executes the task.
 	Parameters TaskParameters `json:"parameters,omitempty"`
 	// SecureParameters contains secure parameters that will be passed to the job that executes the task.
+	// These will be stored and accessed as secrets in the cluster.
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 

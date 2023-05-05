@@ -247,7 +247,8 @@ spec:
                     type: object
                   secureParameters:
                     description: SecureParameters contains secure parameters that
-                      will be passed to the job that executes the task.
+                      will be passed to the job that executes the task. These will
+                      be stored and accessed as secrets in the cluster.
                     properties:
                       secret:
                         description: Secret contains the parameters that will be made

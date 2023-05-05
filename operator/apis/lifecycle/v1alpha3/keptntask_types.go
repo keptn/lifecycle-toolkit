@@ -50,6 +50,7 @@ type KeptnTaskSpec struct {
 	// Parameters contains parameters that will be passed to the job that executes the task.
 	Parameters TaskParameters `json:"parameters,omitempty"`
 	// SecureParameters contains secure parameters that will be passed to the job that executes the task.
+	// These will be stored and accessed as secrets in the cluster.
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	// Type indicates whether the KeptnTask is part of the pre- or postDeployment phase.
 	Type common.CheckType `json:"checkType,omitempty"`

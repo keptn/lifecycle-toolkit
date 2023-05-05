@@ -23,4 +23,4 @@ The following topics are covered:
 * [Metrics](metrics.md) that provides a single entry-point
   to site metrics at the application or workload level,
   based on one or more standard data providers
-  * Tracing
+* Tracing

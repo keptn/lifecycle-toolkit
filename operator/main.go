@@ -322,6 +322,10 @@ func main() {
 		webhookBuilder := webhook.NewWebhookBuilder().
 			SetNamespace(env.PodNamespace).
 			SetPodName(env.PodName).
+			SetManagerProvider(
+				webhook.NewWebhookManagerProvider(
+					mgr.GetWebhookServer().CertDir, "tls.key", "tls.cert"),
+			).
 			SetCertificateWatcher(
 				certificates.NewCertificateWatcher(
 					mgr.GetAPIReader(),

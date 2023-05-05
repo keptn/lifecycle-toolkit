@@ -26,6 +26,8 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
@@ -152,7 +154,16 @@ func main() {
 	if !disableWebhook {
 		webhookBuilder := webhook.NewWebhookBuilder().
 			SetNamespace(env.PodNamespace).
-			SetPodName(env.PodName)
+			SetPodName(env.PodName).
+			SetCertificateWatcher(
+				certificates.NewCertificateWatcher(
+					mgr.GetAPIReader(),
+					mgr.GetWebhookServer().CertDir,
+					env.PodNamespace,
+					certCommon.SecretName,
+					setupLog,
+				),
+			)
 
 		setupLog.Info("starting webhook and manager")
 		if err1 := webhookBuilder.Run(mgr, nil); err1 != nil {

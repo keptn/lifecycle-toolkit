@@ -19,12 +19,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
-	"go.opentelemetry.io/otel"
 	"log"
 	"net/http"
 	"os"
-	webhook2 "sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/kelseyhightower/envconfig"
@@ -44,7 +41,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
@@ -55,6 +54,7 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
 var (
@@ -322,7 +322,7 @@ func main() {
 			SetPodName(env.PodName)
 
 		setupLog.Info("starting webhook and manager")
-		if err1 := webhookBuilder.Run(mgr, map[string]*webhook2.Admission{
+		if err1 := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
 					Client:   mgr.GetClient(),

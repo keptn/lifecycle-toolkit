@@ -19,7 +19,7 @@ spec:
           image: 'odubajdt/python-runner:latest'
           env:
             - name: SCRIPT
-              value: /var/data/function.ts
+              value: /var/data/function.py
           resources: {}
           volumeMounts:
             - name: python-mount

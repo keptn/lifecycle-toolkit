@@ -160,7 +160,7 @@ func (r *KeptnTaskReconciler) generatePythonJob(task *klcv1alpha3.KeptnTask, par
 	// Mount the function code if a ConfigMap is provided
 	// The ConfigMap might be provided manually or created by the TaskDefinition controller
 	if params.ConfigMap != "" {
-		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: "/var/data/function.ts"})
+		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: "/var/data/function.py"})
 
 		job.Spec.Template.Spec.Volumes = []corev1.Volume{
 			{

@@ -65,13 +65,13 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	}
 
 	var job *batchv1.Job
-	if task.Spec.Runner == "js" {
-		job, err = r.generateFunctionJob(task, params)
+	if task.Spec.Runner == "python" {
+		job, err = r.generatePythonJob(task, params)
 		if err != nil {
 			return "", err
 		}
 	} else {
-		job, err = r.generatePythonJob(task, params)
+		job, err = r.generateFunctionJob(task, params)
 		if err != nil {
 			return "", err
 		}

@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-test-jon
+spec:
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 300
+  backoffLimit: 10
+  template:
+    spec:
+      volumes:
+        - name: python-mount
+          configMap:
+            name: python-test-cm
+            defaultMode: 420
+      containers:
+        - name: keptn-python-runner
+          image: 'odubajdt/python-runner:latest'
+          env:
+            - name: SCRIPT
+              value: /var/data/function.ts
+          resources: {}
+          volumeMounts:
+            - name: python-mount
+              readOnly: true
+              mountPath: /var/data/function.py
+              subPath: code
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+      terminationGracePeriodSeconds: 30

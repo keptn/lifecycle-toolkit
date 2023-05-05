@@ -407,6 +407,7 @@ func Test_setAnnotations(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func Test_GetTaskDefinition(t *testing.T) {
 	tests := []struct {
 		name             string
@@ -474,6 +475,88 @@ func Test_GetTaskDefinition(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
 			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace)
+			if tt.out != nil && d != nil {
+				require.Equal(t, tt.out.Name, d.Name)
+				require.Equal(t, tt.out.Namespace, d.Namespace)
+			} else if tt.out != d {
+				t.Errorf("want: %v, got: %v", tt.out, d)
+			}
+			if tt.wantError != (err != nil) {
+				t.Errorf("want error: %t, got: %v", tt.wantError, err)
+			}
+
+		})
+	}
+}
+
+//nolint:dupl
+func Test_GetEvaluationDefinition(t *testing.T) {
+	tests := []struct {
+		name             string
+		evalDef          *klcv1alpha3.KeptnEvaluationDefinition
+		evalDefName      string
+		evalDefNamespace string
+		out              *klcv1alpha3.KeptnEvaluationDefinition
+		wantError        bool
+	}{
+		{
+			name: "evalDef not found",
+			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "evalDef",
+					Namespace: "some-other-namespace",
+				},
+			},
+			evalDefName:      "evalDef",
+			evalDefNamespace: "some-namespace",
+			out:              nil,
+			wantError:        true,
+		},
+		{
+			name: "evalDef found",
+			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "evalDef",
+					Namespace: "some-namespace",
+				},
+			},
+			evalDefName:      "evalDef",
+			evalDefNamespace: "some-namespace",
+			out: &klcv1alpha3.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "evalDef",
+					Namespace: "some-namespace",
+				},
+			},
+			wantError: false,
+		},
+		{
+			name: "evalDef found in default KLT namespace",
+			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "evalDef",
+					Namespace: KLTNamespace,
+				},
+			},
+			evalDefName:      "evalDef",
+			evalDefNamespace: "some-namespace",
+			out: &klcv1alpha3.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Name:      "evalDef",
+					Namespace: KLTNamespace,
+				},
+			},
+			wantError: false,
+		},
+	}
+
+	err := klcv1alpha3.AddToScheme(scheme.Scheme)
+	require.Nil(t, err)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client := fake.NewClientBuilder().WithObjects(tt.evalDef).Build()
+			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)

@@ -186,11 +186,12 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		ctx     context.Context
-		req     controllerruntime.Request
-		want    controllerruntime.Result
-		wantErr error
+		name       string
+		ctx        context.Context
+		req        controllerruntime.Request
+		want       controllerruntime.Result
+		wantMetric *metricsapi.KeptnMetric
+		wantErr    error
 	}{
 		{
 			name: "metric not found, ignoring",
@@ -198,7 +199,8 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "myunexistingmetric"},
 			},
-			want: controllerruntime.Result{},
+			want:       controllerruntime.Result{},
+			wantMetric: nil,
 		},
 
 		{
@@ -207,7 +209,8 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric"},
 			},
-			want: controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			want:       controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantMetric: nil,
 		},
 
 		{
@@ -216,7 +219,8 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
 			},
-			want: controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			want:       controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantMetric: nil,
 		},
 
 		{
@@ -225,8 +229,9 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
 			},
-			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
-			wantErr: fmt.Errorf("provider unsupported-type not supported"),
+			want:       controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			wantErr:    fmt.Errorf("provider unsupported-type not supported"),
+			wantMetric: nil,
 		},
 
 		{
@@ -237,6 +242,17 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			},
 			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
 			wantErr: fmt.Errorf("client_error: client error: 404"),
+			wantMetric: &metricsapi.KeptnMetric{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "mymetric4",
+					Namespace: "default",
+				},
+				Status: metricsapi.KeptnMetricStatus{
+					ErrMsg:   "client_error: client error: 404",
+					Value:    "",
+					RawValue: []byte{},
+				},
+			},
 		},
 
 		{
@@ -247,6 +263,17 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			},
 			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
 			wantErr: fmt.Errorf("client_error: client error: 404"),
+			wantMetric: &metricsapi.KeptnMetric{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "mymetric5",
+					Namespace: "default",
+				},
+				Status: metricsapi.KeptnMetricStatus{
+					ErrMsg:   "client_error: client error: 404",
+					Value:    "",
+					RawValue: []byte{},
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -262,6 +289,15 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
+			}
+
+			if tt.wantMetric != nil {
+				metric := &metricsapi.KeptnMetric{}
+				err := client.Get(context.TODO(), types.NamespacedName{Namespace: tt.wantMetric.Namespace, Name: tt.wantMetric.Name}, metric)
+				require.Nil(t, err)
+				require.Equal(t, tt.wantMetric.Status.ErrMsg, metric.Status.ErrMsg)
+				require.Equal(t, tt.wantMetric.Status.Value, metric.Status.Value)
+				require.Equal(t, tt.wantMetric.Status.RawValue, metric.Status.RawValue)
 			}
 		})
 	}

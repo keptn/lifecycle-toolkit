@@ -33,7 +33,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -94,11 +93,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		namespacedDefinition := types.NamespacedName{
-			Namespace: req.NamespacedName.Namespace,
-			Name:      evaluation.Spec.EvaluationDefinition,
-		}
-		evaluationDefinition, err := r.fetchDefinition(ctx, namespacedDefinition)
+		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
@@ -203,31 +198,38 @@ func (r *KeptnEvaluationReconciler) evaluateObjective(ctx context.Context, evalu
 		return newStatus, statusSummary
 	}
 	// resolving the SLI value
-	value, _, err := provider.FetchData(ctx, objective, evaluation.Namespace)
 	statusItem := &klcv1alpha3.EvaluationStatusItem{
-		Value:  value,
 		Status: apicommon.StateFailed,
 	}
+
+	value, _, err := provider.FetchData(ctx, objective, evaluation.Namespace)
 	if err != nil {
 		statusItem.Message = err.Error()
+		r.Log.Error(err, "Could not fetch data")
+		return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
 	}
+
+	statusItem.Value = value
 	// Evaluating SLO
 	check, err := checkValue(objective, statusItem)
 	if err != nil {
 		statusItem.Message = err.Error()
 		r.Log.Error(err, "Could not check objective result")
-	} else {
-		// if there is no error, we set the message depending on if the value passed the objective, or not
-		if check {
-			statusItem.Status = apicommon.StateSucceeded
-			statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
-		} else {
-			statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
-		}
+		return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
 	}
+	// if there is no error, we set the message depending on if the value passed the objective, or not
+	if check {
+		statusItem.Status = apicommon.StateSucceeded
+		statusItem.Message = fmt.Sprintf("value '%s' met objective '%s'", value, objective.EvaluationTarget)
+	} else {
+		statusItem.Message = fmt.Sprintf("value '%s' did not meet objective '%s'", value, objective.EvaluationTarget)
+	}
+	return updateStatusSummary(statusSummary, statusItem, newStatus, objective)
+}
+
+func updateStatusSummary(statusSummary apicommon.StatusSummary, statusItem *klcv1alpha3.EvaluationStatusItem, newStatus map[string]klcv1alpha3.EvaluationStatusItem, objective klcv1alpha3.Objective) (map[string]klcv1alpha3.EvaluationStatusItem, apicommon.StatusSummary) {
 	statusSummary = apicommon.UpdateStatusSummary(statusItem.Status, statusSummary)
 	newStatus[objective.KeptnMetricRef.Name] = *statusItem
-
 	return newStatus, statusSummary
 }
 
@@ -259,15 +261,6 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha3.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnEvaluationReconciler) fetchDefinition(ctx context.Context, namespacedDefinition types.NamespacedName) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
-	evaluationDefinition := &klcv1alpha3.KeptnEvaluationDefinition{}
-	if err := r.Client.Get(ctx, namespacedDefinition, evaluationDefinition); err != nil {
-		return nil, err
-	}
-
-	return evaluationDefinition, nil
 }
 
 func (r *KeptnEvaluationReconciler) getTracer() controllercommon.ITracer {

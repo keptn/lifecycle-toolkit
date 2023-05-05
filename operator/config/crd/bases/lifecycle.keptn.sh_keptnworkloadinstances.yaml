@@ -521,22 +521,22 @@ spec:
             description: Spec describes the desired state of the KeptnWorkloadInstance
             properties:
               app:
-                description: AppName is the name of the KeptnApp containing the KeptnWorkload
+                description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
               postDeploymentEvaluations:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
                   located in the same namespace as the KeptnWorkload, or in the KLT
-                  namespace
+                  namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
                 description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnWorkload The items
+                  during the post-deployment phase of the KeptnWorkload. The items
                   of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnWorkload, or in the KLT namespace
+                  in the same namespace as the KeptnWorkload, or in the KLT namespace.
                 items:
                   type: string
                 type: array
@@ -545,15 +545,15 @@ spec:
                   to be performed during the pre-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
                   located in the same namespace as the KeptnWorkload, or in the KLT
-                  namespace
+                  namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
                 description: PreDeploymentTasks is a list of all tasks to be performed
-                  during the pre-deployment phase of the KeptnWorkload The items of
-                  this list refer to the names of KeptnTaskDefinitions located in
-                  the same namespace as the KeptnApp, or in the KLT namespace
+                  during the pre-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnApp, or in the KLT namespace.
                 items:
                   type: string
                 type: array
@@ -564,7 +564,7 @@ spec:
               resourceReference:
                 description: ResourceReference is a reference to the Kubernetes resource
                   (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
-                  is representing
+                  is representing.
                 properties:
                   kind:
                     type: string
@@ -587,7 +587,7 @@ spec:
                 description: TraceId contains the OpenTelemetry trace ID
                 type: object
               version:
-                description: Version defines the version of the KeptnWorkload
+                description: Version defines the version of the KeptnWorkload.
                 type: string
               workloadName:
                 description: WorkloadName is the name of the KeptnWorkload
@@ -640,12 +640,16 @@ spec:
                       description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
                       format: date-time
                       type: string
                     name:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -667,12 +671,16 @@ spec:
                       description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
                       format: date-time
                       type: string
                     name:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -694,12 +702,16 @@ spec:
                       description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
                       format: date-time
                       type: string
                     name:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -721,12 +733,16 @@ spec:
                       description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
                       type: string
                     endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
                       format: date-time
                       type: string
                     name:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -741,6 +757,7 @@ spec:
                 type: string
               status:
                 default: Pending
+                description: Status represents the overall status of the KeptnWorkloadInstance.
                 type: string
             type: object
         type: object

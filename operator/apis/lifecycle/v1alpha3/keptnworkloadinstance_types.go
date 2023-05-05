@@ -80,6 +80,7 @@ type KeptnWorkloadInstanceStatus struct {
 	CurrentPhase string `json:"currentPhase,omitempty"`
 	// PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance
 	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	// Status represents the overall status of the KeptnWorkloadInstance.
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 }
@@ -90,9 +91,11 @@ type ItemStatus struct {
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 	// Name is the name of the Evaluation/Task
-	Name      string      `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
+	// StartTime represents the time at which the Item (Evaluation/Task) started.
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	EndTime   metav1.Time `json:"endTime,omitempty"`
+	// EndTime represents the time at which the Item (Evaluation/Task) started.
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true

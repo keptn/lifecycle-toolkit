@@ -43,7 +43,7 @@ type KeptnEvaluationSpec struct {
 	// EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
 	// which includes the objectives for the KeptnEvaluation.
 	// The KeptnEvaluationDefinition can be
-	// located in the same namespace as the KeptnEvaluation, or in the KLT namespace
+	// located in the same namespace as the KeptnEvaluation, or in the KLT namespace.
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
 	// missed evaluation objective, before considering the KeptnEvaluation to be failed.
@@ -58,33 +58,33 @@ type KeptnEvaluationSpec struct {
 	// +optional
 	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
 	FailAction    string          `json:"failAction,omitempty"`
-	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase
+	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase.
 	Type common.CheckType `json:"checkType,omitempty"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 type KeptnEvaluationStatus struct {
-	// RetryCount indicates how many times the KeptnEvaluation has been attempted already
+	// RetryCount indicates how many times the KeptnEvaluation has been attempted already.
 	// +kubebuilder:default:=0
 	RetryCount int `json:"retryCount"`
 	// EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition
 	// referenced by the KeptnEvaluation.
 	EvaluationStatus map[string]EvaluationStatusItem `json:"evaluationStatus"`
 	// OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived
-	// from the status of the individual objectives of the KeptnEvaluationDefinition
+	// from the status of the individual objectives of the KeptnEvaluationDefinition.
 	// referenced by the KeptnEvaluation.
 	// +kubebuilder:default:=Pending
 	OverallStatus common.KeptnState `json:"overallStatus"`
-	// StartTime represents the time at which the KeptnEvaluation started
+	// StartTime represents the time at which the KeptnEvaluation started.
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	// EndTime represents the time at which the KeptnEvaluation finished
+	// EndTime represents the time at which the KeptnEvaluation finished.
 	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 type EvaluationStatusItem struct {
-	// Value represents the value of the KeptnMetric being evaluated
+	// Value represents the value of the KeptnMetric being evaluated.
 	Value string `json:"value"`
-	// Status indicates the status of the objective being evaluated
+	// Status indicates the status of the objective being evaluated.
 	Status common.KeptnState `json:"status"`
 	// Message contains additional information about the evaluation of an objective.
 	// This can include explanations about why an evaluation has failed (e.g. due to a missed objective),
@@ -109,9 +109,9 @@ type KeptnEvaluation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// Spec describes the desired state of the KeptnEvaluation
+	// Spec describes the desired state of the KeptnEvaluation.
 	Spec KeptnEvaluationSpec `json:"spec,omitempty"`
-	// Status describes the current state of the KeptnEvaluation
+	// Status describes the current state of the KeptnEvaluation.
 	Status KeptnEvaluationStatus `json:"status,omitempty"`
 }
 

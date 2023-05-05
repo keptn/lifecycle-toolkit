@@ -26,26 +26,26 @@ import (
 // KeptnEvaluationDefinitionSpec defines the desired state of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionSpec struct {
 	// Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
-	// KepttnEvaluationDefinition to be successful
+	// KeptnEvaluationDefinition to be successful.
 	Objectives []Objective `json:"objectives"`
 }
 
 type Objective struct {
-	// KeptnMetricRef references the KeptnMetric that should be evaluated
+	// KeptnMetricRef references the KeptnMetric that should be evaluated.
 	KeptnMetricRef KeptnMetricReference `json:"keptnMetricRef"`
 	// EvaluationTarget specifies the target value for the references KeptnMetric.
-	// Needs to start with either '<' or '>', followed by the target value. E.g. '<10'
+	// Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
 	EvaluationTarget string `json:"evaluationTarget"`
 }
 
 type KeptnMetricReference struct {
 	// Name is the name of the referenced KeptnMetric
 	Name string `json:"name"`
-	// Namespace is the namespace where the referenced KeptnMetric is located
+	// Namespace is the namespace where the referenced KeptnMetric is located.
 	Namespace string `json:"namespace,omitempty"`
 }
 
-// KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition
+// KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition.
 type KeptnEvaluationDefinitionStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
@@ -61,9 +61,9 @@ type KeptnEvaluationDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// Spec describes the desired state of the KeptnEvaluationDefinition
+	// Spec describes the desired state of the KeptnEvaluationDefinition.
 	Spec KeptnEvaluationDefinitionSpec `json:"spec,omitempty"`
-	// Status describes the current state of the KeptnEvaluationDefinition
+	// Status describes the current state of the KeptnEvaluationDefinition.
 	Status KeptnEvaluationDefinitionStatus `json:"status,omitempty"`
 }
 

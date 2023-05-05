@@ -41,6 +41,7 @@ type KeptnTaskSpec struct {
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`
+	Runner           string           `json:"runner,omitempty"`
 	// +kubebuilder:default:=10
 	Retries *int32 `json:"retries,omitempty"`
 	// +optional

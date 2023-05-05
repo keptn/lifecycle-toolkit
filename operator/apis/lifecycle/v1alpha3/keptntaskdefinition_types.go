@@ -34,6 +34,7 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
+	Runner  string          `json:"runner,omitempty"`
 }
 
 type FunctionSpec struct {

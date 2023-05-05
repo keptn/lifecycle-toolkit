@@ -322,6 +322,8 @@ spec:
                 default: 10
                 format: int32
                 type: integer
+              runner:
+                type: string
               secureParameters:
                 properties:
                   secret:

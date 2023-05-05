@@ -64,10 +64,19 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		params.SecureParameters = task.Spec.SecureParameters.Secret
 	}
 
-	job, err := r.generateFunctionJob(task, params)
-	if err != nil {
-		return "", err
+	var job *batchv1.Job
+	if task.Spec.Runner == "js" {
+		job, err = r.generateFunctionJob(task, params)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		job, err = r.generatePythonJob(task, params)
+		if err != nil {
+			return "", err
+		}
 	}
+
 	err = r.Client.Create(ctx, job)
 	if err != nil {
 		r.Log.Error(err, "could not create job")

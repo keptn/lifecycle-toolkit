@@ -20,7 +20,9 @@ spec:
       version: 0.1.0
   postDeploymentTasks:
     - post-deployment-hello
-  preDeploymentEvaluations: # Comment out this four lines if you do not have a prometheus installation
-    - my-prometheus-definition1
-  postDeploymentEvaluations:
-    - my-prometheus-definition2
+  preDeploymentTasks:
+    - post-deployment-hello
+  # preDeploymentEvaluations: # Comment out this four lines if you do not have a prometheus installation
+  #   - my-prometheus-definition1
+  # postDeploymentEvaluations:
+  #   - my-prometheus-definition2

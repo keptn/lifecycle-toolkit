@@ -1,10 +1,11 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
   namespace: podtato-kubectl
 spec:
+  runner: python
   function:
     inline:
       code: |
-        console.log("Post-Deployment Task has been executed");
+        print("Hello, World!")

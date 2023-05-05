@@ -187,7 +187,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec describes the desired state of the KeptnTaskDefinition
+            description: Spec describes the desired state of the KeptnTaskDefinition.
             properties:
               function:
                 description: Function contains the definition for the function that
@@ -275,7 +275,7 @@ spec:
                 type: string
             type: object
           status:
-            description: Status describes the current state of the KeptnTaskDefinition
+            description: Status describes the current state of the KeptnTaskDefinition.
             properties:
               function:
                 description: Function contains status information of the function

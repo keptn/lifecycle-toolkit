@@ -157,7 +157,7 @@ spec:
                         should be evaluated.
                       properties:
                         name:
-                          description: Name is the name of the referenced KeptnMetric
+                          description: Name is the name of the referenced KeptnMetric.
                           type: string
                         namespace:
                           description: Namespace is the namespace where the referenced

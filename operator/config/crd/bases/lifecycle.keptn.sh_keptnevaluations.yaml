@@ -350,7 +350,7 @@ spec:
                 default: Pending
                 description: OverallStatus describes the overall status of the KeptnEvaluation.
                   The Overall status is derived from the status of the individual
-                  objectives of the KeptnEvaluationDefinition. referenced by the KeptnEvaluation.
+                  objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
                 type: string
               retryCount:
                 default: 0

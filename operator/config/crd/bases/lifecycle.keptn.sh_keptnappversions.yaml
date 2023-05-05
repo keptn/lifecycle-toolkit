@@ -525,7 +525,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec describes the desired state of the KeptnAppVersion
+            description: Spec describes the desired state of the KeptnAppVersion.
             properties:
               appName:
                 description: AppName is the name of the KeptnApp.
@@ -540,7 +540,7 @@ spec:
                 type: array
               postDeploymentTasks:
                 description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnApp The items of this
+                  during the post-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
                   namespace as the KeptnApp, or in the KLT namespace.
                 items:
@@ -605,7 +605,7 @@ spec:
             - version
             type: object
           status:
-            description: Status describes the current state of the KeptnAppVersion
+            description: Status describes the current state of the KeptnAppVersion.
             properties:
               currentPhase:
                 description: CurrentPhase indicates the current phase of the KeptnAppVersion.

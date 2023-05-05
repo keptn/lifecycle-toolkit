@@ -40,7 +40,15 @@ to implement Keptn metrics:
 1. Run the metrics
 1. View metrics
 
-Andi's demo environment: my-klt-demo-with-argo/simplenode-dev
+This exercise is based on the
+[simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
+example.
+You can clone that repo to access it locally
+or just look at it for examples
+as you implement the functionality "from scratch"
+on your local Kubernetes deployment cluster.
+
+The steps to implement Keptn metrics are:
 
 ## Install KLT or just metrics server
 

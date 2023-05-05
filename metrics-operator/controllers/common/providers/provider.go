@@ -47,7 +47,9 @@ func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) 
 			K8sClient:  k8sClient,
 		}, nil
 	case RandomProviderType:
-		return &random.KeptnRandomProvider{}, nil
+		return &random.KeptnRandomProvider{
+			Log: log,
+		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", providerType)
 	}

@@ -141,4 +141,3 @@ that happens in your deployment.
 ## For more information
 
 For more information, see
-[Integrate KLT with your applications](../../implementing/integrate.md)

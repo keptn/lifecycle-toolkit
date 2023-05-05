@@ -343,7 +343,7 @@ func main() {
 				},
 			},
 		}); err1 != nil {
-			setupLog.Error(err, "problem running manager")
+			setupLog.Error(err1, "problem running manager")
 			os.Exit(1)
 		}
 

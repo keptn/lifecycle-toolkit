@@ -167,7 +167,7 @@ func main() {
 
 		setupLog.Info("starting webhook and manager")
 		if err1 := webhookBuilder.Run(mgr, nil); err1 != nil {
-			setupLog.Error(err, "problem running manager")
+			setupLog.Error(err1, "problem running manager")
 			os.Exit(1)
 		}
 

@@ -71,7 +71,7 @@ type KeptnEvaluationStatus struct {
 	// referenced by the KeptnEvaluation.
 	EvaluationStatus map[string]EvaluationStatusItem `json:"evaluationStatus"`
 	// OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived
-	// from the status of the individual objectives of the KeptnEvaluationDefinition.
+	// from the status of the individual objectives of the KeptnEvaluationDefinition
 	// referenced by the KeptnEvaluation.
 	// +kubebuilder:default:=Pending
 	OverallStatus common.KeptnState `json:"overallStatus"`

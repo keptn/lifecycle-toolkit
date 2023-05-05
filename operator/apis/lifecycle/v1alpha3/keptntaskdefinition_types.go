@@ -107,9 +107,9 @@ type KeptnTaskDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// Spec describes the desired state of the KeptnTaskDefinition
+	// Spec describes the desired state of the KeptnTaskDefinition.
 	Spec KeptnTaskDefinitionSpec `json:"spec,omitempty"`
-	// Status describes the current state of the KeptnTaskDefinition
+	// Status describes the current state of the KeptnTaskDefinition.
 	Status KeptnTaskDefinitionStatus `json:"status,omitempty"`
 }
 

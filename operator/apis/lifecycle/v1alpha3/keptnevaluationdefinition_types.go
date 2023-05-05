@@ -39,7 +39,7 @@ type Objective struct {
 }
 
 type KeptnMetricReference struct {
-	// Name is the name of the referenced KeptnMetric
+	// Name is the name of the referenced KeptnMetric.
 	Name string `json:"name"`
 	// Namespace is the namespace where the referenced KeptnMetric is located.
 	Namespace string `json:"namespace,omitempty"`

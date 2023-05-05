@@ -45,7 +45,7 @@ type KeptnAppSpec struct {
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the KLT namespace.
 	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
-	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp
+	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the KLT namespace.
 	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`

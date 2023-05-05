@@ -11,6 +11,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/random"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -45,6 +46,8 @@ func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) 
 			HttpClient: http.Client{},
 			K8sClient:  k8sClient,
 		}, nil
+	case RandomProviderType:
+		return &random.KeptnRandomProvider{}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", providerType)
 	}

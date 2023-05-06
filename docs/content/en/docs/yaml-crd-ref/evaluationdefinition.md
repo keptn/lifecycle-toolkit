@@ -1,5 +1,134 @@
 ---
 title: KeptnEvaluationDefinition
-description: Define all workloads and checks associated with an application
-weight: 25
+description: Define an evaluation query
+weight: 20
 ---
+
+A `KeptnEvaluationDefinition` assigns target values
+to [KeptnMetric](metric.md) queries.
+These are used as part of evaluation tasks
+that can be run by the Keptn Lifecycle Toolkit
+as part of pre- and post-analysis phases of a workload or application.
+You can then create a [KeptnTaskDefinition](taskdefinition.md)
+that describes an action to take based on the results of the evaluation.
+
+For example, you could define a `KeptnMetric`
+that reports the number of CPUs in your cluster.
+A `KeptnEvaluationDefinition` could then define the value as `>4`,
+and define a task to be executed if that value is not met.
+
+## Yaml Synopsis
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: <evaluation-name>
+spec:
+  objectives:
+    - evaluationTarget: "<value>"
+      keptnMetricRef:
+        name: available-cpus
+        namespace: some-namespace
+```
+
+## Fields
+
+* **apiVersion** -- API version being used.
+  Must be `v1alpha3` or later for this syntax.
+* **kind** -- Resource type.
+   Must be set to `KeptnEvaluationDefinition`
+
+* **metadata**
+  * **name** -- Unique name of this evaluation
+    such as `pre-deploy-eval` or `post-deploy-resource-eval`.
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
+
+* **spec**
+
+  * **objectives** -- define the evaluations to be performed.
+     Each objective is expressed as a `keptnMetricRef`
+     and an `evaluationTarget` value.
+
+    * **KeptnMericRef** -- A reference to the
+      [KeptnMetric](metric.md) object that contains the value,
+      identified by `name` and `namespace`
+    * **evaluationTarget** -- Desired value of the query,
+       expressed as an arithmatic formula,
+       usually less than (`<`) or greater than (`>`)
+       This is used to define success or failure criteria
+       for the referenced `KeptnMetric` in order to pass or fail
+       the pre- and post-evaluation stages
+
+## Usage
+
+A `KeptnEvaluationDefinition` references one or more
+[KeptnMetric](metric.md) CRDs.
+When multiple `KeptnMetric`s are used,
+the Keptn Lifecycle Toolkit considers the evaluation successful
+if **all** metrics meet their `evaluationTarget`.
+
+
+## Example
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-evaluation
+  namespace: example
+spec:
+  source: prometheus
+  objectives:
+    - keptnMetricRef:
+        name: available-cpus
+        namespace: example
+      evaluationTarget: ">1"
+    - keptnMetricRef:
+        name: cpus-throttling
+        namespace: example
+      evaluationTarget: "<0.01"
+```
+
+## Files
+
+API Reference:
+
+## Differences between versions
+
+In the `v1alpha1` and `v1alpha2` API versions,
+`KeptnEvaluationDefinition` referenced the `KeptnEvaluationProvider` CRD
+to identify the data source associated with this definition
+and itself contained the queries
+that are now taken from the specified [KeptnMetric](metric.md) CRD.
+The synopsis was:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnEvaluationDefinition
+metadata:
+  name: <evaluation-name>
+spec:
+  source: prometheus | dynatrace | datadog
+  objectives:
+    - name: query-1
+      query: "xxxx"
+      evaluationTarget: <20
+    - name: query-2
+      query: "yyyy"
+      evaluationTarget: >4
+```
+
+Beginning with `v1alpha3` API version,
+`KeptnEvaluationDefinition` references a `keptnMetricRef`
+that points to a [KeptnMetric](metric.md) CRD,
+that defines the data source, the query and the namespace to use.
+The `KeptnEvaluationDefinition` merely specifies the evaluation target.
+
+## See also
+
+* [KeptnMetricsProvider](metricsprovider.md)
+* [KeptnMetric](metric.md)
+

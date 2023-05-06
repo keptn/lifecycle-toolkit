@@ -11,3 +11,5 @@ but all material here has been reviewed for technical accuracy.
 Keptn software and documentation
 is developed and maintained by the Keptn community.
 We invite you to join us.
+
+## [Linters Requirements](docs/content/en/contribute/docs/linters-requirements/_index.md)

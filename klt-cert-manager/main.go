@@ -85,7 +85,7 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
-	if err = (&keptnwebhookcontroller.KeptnWebhookCertificateReconciler{
+	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CancelMgrFunc: nil,
@@ -94,7 +94,8 @@ func main() {
 		MatchLabels: map[string]string{
 			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
 		},
-	}).SetupWithManager(mgr); err != nil {
+	})
+	if err = certificateReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 		os.Exit(1)
 	}

@@ -10,8 +10,8 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 Use Kubernetes annotations and labels
 to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster.
 
-The Keptn Lifecycle Toolkit monitors manifests
-that have been applied against the Kubernetes API
+The Keptn Lifecycle Toolkit monitors resources
+that have been applied into the Kubernetes cluster
 and reacts if it finds a workload with special annotations/labels.
 This is a four-step process:
 

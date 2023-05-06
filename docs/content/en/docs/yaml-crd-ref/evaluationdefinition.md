@@ -70,7 +70,6 @@ When multiple `KeptnMetric`s are used,
 the Keptn Lifecycle Toolkit considers the evaluation successful
 if **all** metrics meet their `evaluationTarget`.
 
-
 ## Example
 
 ```yaml
@@ -131,4 +130,3 @@ The `KeptnEvaluationDefinition` merely specifies the evaluation target.
 
 * [KeptnMetricsProvider](metricsprovider.md)
 * [KeptnMetric](metric.md)
-

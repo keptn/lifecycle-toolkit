@@ -127,4 +127,3 @@ for the `KeptnEvaluationDefinition` CR.
 
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [KeptnMetric](metric.md)
-

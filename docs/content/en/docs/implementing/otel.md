@@ -28,4 +28,3 @@ You can access the metrics from your browser at: `http://localhost:9999`
 For an introduction to using OpenTelemetry with Keptn metrics, see the
 [Standardize access to observability data](../getting-started/observability]
 getting started guide.
-

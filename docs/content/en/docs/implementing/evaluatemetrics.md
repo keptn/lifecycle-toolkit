@@ -18,7 +18,6 @@ or can be retrieved using standard Kubernetes commands.
 For an introduction to Keptn metrics, see
 [Getting started with Keptn metrics](../getting-started/metrics).
 
-
 ## Keptn metric basics
 
 Keptn metrics are implemented with two CRDs:
@@ -31,7 +30,6 @@ Keptn metrics are implemented with two CRDs:
 A Metric can be created with a query that fetches data for a property
 that describes some quality of the application,
 but this is not done automatically.
-
 
 ## Accessing Metrics via the Kubernetes Custom Metrics API
 
@@ -148,4 +146,3 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
   ]
 }
 ```
-

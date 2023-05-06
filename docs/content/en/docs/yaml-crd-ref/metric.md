@@ -119,4 +119,3 @@ spec:
 * Implementing [Keptn Metrics](../implementing/evaluatemetrics.md)
 * [Getting started with Keptn metrics](../getting-started/metrics)
 * Architecture of the [Keptn Metrics Operator](../concepts/architecture/components/metrics-operator/_index.md)
-

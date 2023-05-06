@@ -140,7 +140,7 @@ kubectl get keptnworkloadinstance -n podtato-kubectl -w
 
 The deployment for a Workload stays in a `Pending`
 state until the respective pre-deployment check is successfully completed.
-Afterwards, the deployment starts and when it is marked  `Succeeded`,
+Afterwards, the deployment starts and when the workload is deployed,
 the post-deployment checks start.
 
 ## Define a Keptn application

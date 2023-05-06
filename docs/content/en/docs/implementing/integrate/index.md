@@ -62,7 +62,7 @@ and
 in the namespaces where KLT is enabled.
 If KLT finds any of hese CRDs and the CRD has either
 the keptn.sh or the kubernetes recommended labels,
-it creates a `KeptnWorkload` CRD for the version it detects.
+it creates a `KeptnWorkload` resource for the version it detects.
 
 ### Basic annotations
 

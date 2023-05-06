@@ -10,8 +10,8 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 Use Kubernetes annotations and labels
 to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster.
 
-The Keptn Lifecycle Toolkit monitors manifests
-that have been applied against the Kubernetes API
+The Keptn Lifecycle Toolkit monitors resources
+that have been applied into the Kubernetes cluster
 and reacts if it finds a workload with special annotations/labels.
 This is a four-step process:
 
@@ -25,7 +25,7 @@ This is a four-step process:
   * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
-    without requiring you to create any Keptn-related custom resources.
+    without requiring you to manually create any KeptnApp resources.
 
 ## Enable target namespace
 
@@ -62,7 +62,7 @@ and
 in the namespaces where KLT is enabled.
 If KLT finds any of hese CRDs and the CRD has either
 the keptn.sh or the kubernetes recommended labels,
-it creates a `KeptnWorkload` CRD for the version it detects.
+it creates a `KeptnWorkload` resource for the version it detects.
 
 ### Basic annotations
 
@@ -110,7 +110,7 @@ keptn.sh/post-deployment-tasks: slack-notification,performance-test
 The value of these annotations are
 Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called `KeptnTaskDefinition`s.
-These CRDs contain re-usable "functions"
+These resources contain re-usable "functions"
 that can execute before and after the deployment.
 In this example, before the deployment starts,
 a check for open problems in your infrastructure is performed.
@@ -139,8 +139,8 @@ kubectl get keptnworkloadinstance -n podtato-kubectl -w
 ```
 
 The deployment for a Workload stays in a `Pending`
-state until the respective pre-deployment check is completed.
-Afterwards, the deployment starts and when it is marked  `Succeeded`,
+state until the respective pre-deployment check is successfully completed.
+Afterwards, the deployment starts and when the workload is deployed,
 the post-deployment checks start.
 
 ## Define a Keptn application
@@ -156,7 +156,7 @@ the post-deployment checks start.
 * Use the Keptn automatic app discovery capability
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
-    without requiring you to create any Keptn-related custom resources
+    without requiring you to manually create any KeptnApp resources
 
 ### Define Keptn custom resources for the application
 

@@ -35,6 +35,7 @@ const MaxAppNameLength = 25
 const MaxWorkloadNameLength = 25
 const MaxTaskNameLength = 25
 const MaxVersionLength = 12
+const MaxK8sObjectLength = 253
 
 type AppType string
 

@@ -156,7 +156,7 @@ the post-deployment checks start.
 * Use the Keptn automatic app discovery capability
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
-    without requiring you to create any Keptn-related custom resources
+    without requiring you to manually create any KeptnApp resources
 
 ### Define Keptn custom resources for the application
 

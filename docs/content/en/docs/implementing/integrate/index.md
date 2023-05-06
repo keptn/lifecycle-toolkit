@@ -110,7 +110,7 @@ keptn.sh/post-deployment-tasks: slack-notification,performance-test
 The value of these annotations are
 Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called `KeptnTaskDefinition`s.
-These CRDs contain re-usable "functions"
+These resources contain re-usable "functions"
 that can execute before and after the deployment.
 In this example, before the deployment starts,
 a check for open problems in your infrastructure is performed.

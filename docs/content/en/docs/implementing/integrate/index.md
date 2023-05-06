@@ -147,7 +147,7 @@ the post-deployment checks start.
 
   You have two options:
 
-* Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
+* Create a [KeptnApp](../../../yaml-crd-ref/app.md) resource
     that references the workloads that should be included
     along with any
     [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)

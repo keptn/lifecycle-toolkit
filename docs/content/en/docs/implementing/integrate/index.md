@@ -25,7 +25,7 @@ This is a four-step process:
   * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
-    without requiring you to create any Keptn-related custom resources.
+    without requiring you to manually create any KeptnApp resources.
 
 ## Enable target namespace
 

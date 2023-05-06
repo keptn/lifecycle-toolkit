@@ -305,6 +305,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 		return false, latestVersion, err
 	}
 
+	// If the latest version is empty or the workload is not found, return false and empty result
 	if latestVersion.Spec.Version == "" || !workloadFound {
 		return false, klcv1alpha3.KeptnAppVersion{}, nil
 	}

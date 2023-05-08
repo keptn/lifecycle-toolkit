@@ -20,7 +20,7 @@ For an introduction to Keptn metrics, see
 
 ## Keptn metric basics
 
-Keptn metrics are implemented with two CRDs:
+Keptn metrics are implemented with two resources:
 
 * [KeptnMetric](../yaml-crd-ref/metric.md) --
   define the metric to report

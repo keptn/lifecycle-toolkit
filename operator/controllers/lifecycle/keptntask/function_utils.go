@@ -157,6 +157,32 @@ func (r *KeptnTaskReconciler) generatePythonJob(task *klcv1alpha3.KeptnTask, par
 
 	var envVars []corev1.EnvVar
 
+	if len(params.Parameters) > 0 {
+		jsonParams, err := json.Marshal(params.Parameters)
+		if err != nil {
+			return job, controllererrors.ErrCannotMarshalParams
+		}
+		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
+	}
+
+	jsonParams, err := json.Marshal(params.Context)
+	if err != nil {
+		return job, controllererrors.ErrCannotMarshalParams
+	}
+	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
+
+	if params.SecureParameters != "" {
+		envVars = append(envVars, corev1.EnvVar{
+			Name: "SECURE_DATA",
+			ValueFrom: &corev1.EnvVarSource{
+				SecretKeyRef: &corev1.SecretKeySelector{
+					LocalObjectReference: corev1.LocalObjectReference{Name: params.SecureParameters},
+					Key:                  "SECURE_DATA",
+				},
+			},
+		})
+	}
+
 	// Mount the function code if a ConfigMap is provided
 	// The ConfigMap might be provided manually or created by the TaskDefinition controller
 	if params.ConfigMap != "" {

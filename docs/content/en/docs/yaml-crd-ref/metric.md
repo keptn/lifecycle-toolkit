@@ -5,12 +5,12 @@ weight: 50
 ---
 
 A `KeptnMetric` represents a metric that is collected from a provider.
-Providing the metrics as a CRD in a Kubernetes cluster
+Providing the metrics as a CR in a Kubernetes cluster
 facilitates the reusability of this data across multiple components
 and allows using multiple observability platforms
 for different metrics at the same time.
 
-`KeptnMetric` CDs are also used as targets for
+`KeptnMetric` CRs are also used as targets for
 [EvaluationDefinition](evaluationdefinition.md) CRDs.
 
 ## Yaml Synopsis

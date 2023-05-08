@@ -98,7 +98,7 @@ API Reference:
 ## Differences between versions
 
 In the `v1alpha1` and `v1alpha2` API versions,
-`KeptnEvaluationDefinition` referenced the `KeptnEvaluationProvider` CRD
+`KeptnEvaluationDefinition` referenced the `KeptnEvaluationProvider` CR
 to identify the data source associated with this definition
 and itself contained the queries
 that are now taken from the specified [KeptnMetric](metric.md) CRD.

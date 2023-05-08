@@ -26,14 +26,14 @@ The Keptn Metrics Server unifies and standardizes access to this data.
 This guide walks you through the steps required
 to implement Keptn metrics:
 
-1. Install the Keptn Lifecycle Toolkit
-   or just the Keptn Metrics Server in your cluster.
-1. Create a CRD to define each observability platform
+1. [Install and configure](#install-and-configure-klt)
+   the Keptn Lifecycle Toolkit in your cluster.
+1. Create a resource to define each observability platform
    that is implemented in this namespace.
    You can define a mix of platforms --
    Prometheus, Dynatrace, Datadog, etc. --
    and multiple instances of each.
-1. Create a CRD that Defines
+1. Create a resource that Defines
    the type of data to pull from each observability platform.
    This data is pulled and fetched continuously
    at an interval you specify for each data query.
@@ -48,9 +48,13 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
+See the
+[Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
+video for a demonstration of this exercise.
+
 The steps to implement Keptn metrics are:
 
-## Install KLT or just metrics server
+## Install and configure KLT
 
 Use the Helm Chart to install the Keptn Metrics Server
 as part of the Lifecycle Toolkit
@@ -60,33 +64,60 @@ or completely stand-alone.
 
 ## Define metrics to use
 
+You need to define the external observability platforms
+from which you want to pull data
+and then the specific data you want to pull.
+This data is pulled and fetched continuously
+at an interval you specify for each specific bit of data.
+Data is available through the resource and through the data provider itself,
+as well as the Kubernetes CLI.
+
 ### Define metrics providers
 
-Specify metrics I want to pull in from an external observability platfor
+Populate a
+[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
+resource for each external observability platform you want to use.
 
-Two metrics identified
-Specify through a CRD the type of data I want to input to my Keptn Metrics Server.
-I can pull and fetch that data continuously into Prometheus
-Data is available through the CRD and through Prometheus itself
-as well as the Kubernetes CLI
+For our example, we define two observability platforms:
 
-TODO: Need to redo these to use the v1alpha3 synatax
+* `dev-prometheus`
+* `dev-dynatrace`
+
+You can specify a virtually unlimited number of providers,
+including multiple instances of each observability platform.
+Each one must be assigned a unique name,
+identified by the type of platform it is
+and the URL.
+
+> Note: The video and example application use an older syntax
+  of the `KeptnMetricsProvider` and `KeptnMetric` resources.
+  The ones shown in this document are the current ones.
+
+Definition of
+[dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml):
 
 ```yaml
 kind: KeptnMetricsProvider
 metadata:
-  name: prometheus
+  name: dev-prometheus
   namespace: simplenode-dev
 spec:
+  type: prometheus
   targetserver: "http://prometheus-k8s-monitoring-svc.cluster.local:9090"
 ```
 
+Definition of
+[dev-dynatrace](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/dynatrace-provider.yaml.tmp).
+Note that the `dev-dynatrace` server is protected by a secret key
+so that information is included in the provider definition:
+
 ```yaml
 kind: KeptnMetricsProvider
 metadata:
-  name: dynatrace
+  name: dev-dynatrace
   namespace: simplenode-dev
 spec:
+  type: dynatrace
   targetServer: "https://hci34192.live.dynatrace.com
   secretKeyRef
     name: dynatrace
@@ -96,23 +127,24 @@ spec:
 
 ### Define KeptnMetric information
 
-Define the information I want to retrieve
+The [KeptnMetric](../../yaml-crd-ref/metric.md) resource
+defines the information you want to gather,
+specified as a query for the particular observability platform
+you are using.
+You can define any type of metric from any data source.
 
-You can define multiple metrics from different metric providers
-and multiple instances of each provider
+In our example, we define two bits of information to retrieve:
 
-All in one `keptn-metric.yaml` file
+* Number of CPUs, derived from the `dev-prometheus` data platform
+* `availability` SLO, derived from the `dev-dynatrace` data platform
 
-TODO: Terminology question: is this one file that includes
-two CRD's or one CRD that includes multiple metrics?
-What if one did multiple queries for a metric provider?
+Each of these are configured to fetch data every 10 seconds
+but you could configure a different `fetchIntervalSeconds` value
+for each metric.
 
-TODO: Need to redo these to use the v1alpha3 synatax
-
-Check available CPUs using Prometheus
-
-Check the availability SLO metric,
-retrieved from Dynatrace:
+The
+[keptn-metric.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-metric.yaml)
+file for our example looks like:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2
@@ -122,7 +154,7 @@ metadata:
   namespace: simplenode-dev
 spec:
   provider:
-    name: prometheus
+    name: dev-prometheus
   query: "sum(kube_node_status_cvapacity{resources`cpu`})
   fetchIntervalSeconds" 10
 ...
@@ -133,20 +165,31 @@ metadata:
   namespace: simplenode-dev
 spec:
   provider:
-    name: dynatrace
+    name: dev-dynatrace
   query: "func:slo.availability_simplenodeservice"
   fetchIntervalSeconds" 10
 ...
 ```
 
-One file with two definitions.
-Information is fetched in on a continuous basis;
-both fetch every 10 seconds.
+Note the following:
 
-Summary: you can define any type of metric
-from any data source
+* You populate one YAML file
+that includes all the metrics for your cluster.
+* Each metric is assigned a unique `name`.
+* The value of the `spec.provider.name` field
+  must correspond to the name assigned in a
+  the `metadata.name` field of a `KeptnMetricsProvider` resource.
+* Information is fetched in on a continuous basis
+at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
 
 ### View available metrics
+
+Use the following command to view
+the metrics that are configured in your cluster.
+This example displays the two metrics we configured above:
+
+TODO: Is the syntax of the output changed
+to include the `name` of the provider (`dev-prometheus` or `dev-dynatrace`?
 
 ```shell
 get KeptnMetrics -A

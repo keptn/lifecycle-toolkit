@@ -43,6 +43,7 @@ type FunctionSpec struct {
 	HttpReference      HttpReference      `json:"httpRef,omitempty"`
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
 	Parameters         TaskParameters     `json:"parameters,omitempty"`
+	CmdParameters      string             `json:"cmdParameters,omitempty"`
 	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
 }
 

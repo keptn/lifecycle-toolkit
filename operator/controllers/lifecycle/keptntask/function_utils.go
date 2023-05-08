@@ -18,6 +18,7 @@ import (
 type FunctionExecutionParams struct {
 	ConfigMap        string
 	Parameters       map[string]string
+	CmdParameters    string
 	SecureParameters string
 	URL              string
 	Context          klcv1alpha3.TaskContext
@@ -171,6 +172,8 @@ func (r *KeptnTaskReconciler) generatePythonJob(task *klcv1alpha3.KeptnTask, par
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
+	envVars = append(envVars, corev1.EnvVar{Name: "CMD_ARGS", Value: params.CmdParameters})
+
 	if params.SecureParameters != "" {
 		envVars = append(envVars, corev1.EnvVar{
 			Name: "SECURE_DATA",
@@ -246,6 +249,11 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 	// Check if there are parameters provided
 	if len(definition.Spec.Function.Parameters.Inline) > 0 {
 		params.Parameters = definition.Spec.Function.Parameters.Inline
+	}
+
+	// Check if there are cmd parameters provided
+	if definition.Spec.Function.CmdParameters != "" {
+		params.CmdParameters = definition.Spec.Function.CmdParameters
 	}
 
 	// Check if there is a secret for secret params provided

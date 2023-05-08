@@ -64,6 +64,10 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 		params.SecureParameters = task.Spec.SecureParameters.Secret
 	}
 
+	if task.Spec.CmdParameters != "" {
+		params.CmdParameters = task.Spec.CmdParameters
+	}
+
 	var job *batchv1.Job
 	if task.Spec.Runner == "python" {
 		job, err = r.generatePythonJob(task, params)

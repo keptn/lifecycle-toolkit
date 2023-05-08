@@ -38,6 +38,7 @@ type KeptnTaskSpec struct {
 	AppVersion       string           `json:"appVersion"`
 	TaskDefinition   string           `json:"taskDefinition"`
 	Context          TaskContext      `json:"context"`
+	CmdParameters    string           `json:"cmdParameters,omitempty"`
 	Parameters       TaskParameters   `json:"parameters,omitempty"`
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	Type             common.CheckType `json:"checkType,omitempty"`

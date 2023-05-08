@@ -6,6 +6,7 @@ metadata:
 spec:
   runner: python
   function:
+    cmdParameters: "-v"
     parameters:
       map:
         "key1": "value1"

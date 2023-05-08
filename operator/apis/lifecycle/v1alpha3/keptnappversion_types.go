@@ -326,6 +326,7 @@ func (a KeptnAppVersion) GenerateTask(taskDefinition KeptnTaskDefinition, checkT
 			SecureParameters: SecureParameters{},
 			Type:             checkType,
 			Runner:           taskDefinition.Spec.Runner,
+			CmdParameters:    "",
 			Retries:          taskDefinition.Spec.Retries,
 			Timeout:          taskDefinition.Spec.Timeout,
 		},

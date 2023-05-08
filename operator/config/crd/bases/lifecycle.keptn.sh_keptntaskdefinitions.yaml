@@ -191,6 +191,8 @@ spec:
             properties:
               function:
                 properties:
+                  cmdParameters:
+                    type: string
                   configMapRef:
                     properties:
                       name:

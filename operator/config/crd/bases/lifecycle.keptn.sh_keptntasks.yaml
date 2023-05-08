@@ -289,6 +289,8 @@ spec:
                 type: string
               checkType:
                 type: string
+              cmdParameters:
+                type: string
               context:
                 properties:
                   appName:

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 $SCRIPT
+python3 $CMD_ARGS $SCRIPT 

@@ -76,7 +76,7 @@ helm upgrade --install keptn klt/klt \
 ```
 
 See
-[Install KLT](../../install/install)
+[Install KLT](../../install/install.md)
 for more information about installing the Lifecycle Toolkit.
 
 ## Enable KLT for your cluster
@@ -134,7 +134,7 @@ template:
 
 For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications](../../implementing/integrate).
+[Integrate KLT with your applications](../../implementing/integrate.md).
 
 ## Define evaluations to be performed pre- and post-deployment
 

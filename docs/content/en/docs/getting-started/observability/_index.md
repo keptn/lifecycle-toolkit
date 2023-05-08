@@ -143,7 +143,8 @@ Evaluations are resources that are defined in a
 [KeptinEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
 yaml file.
 In our example, evaluations are defined in the
-[keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml) file.
+[keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml)
+file.
 For example, the definition of the `evaluate-dependencies` evaluation
 looks like this:
 

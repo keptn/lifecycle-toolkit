@@ -122,7 +122,7 @@ spec:
 
 Beginning with `v1alpha3` API version,
 `KeptnEvaluationDefinition` references a `keptnMetricRef`
-that points to a [KeptnMetric](metric.md) CRD,
+that points to a [KeptnMetric](metric.md) CR,
 that defines the data source, the query and the namespace to use.
 The `KeptnEvaluationDefinition` merely specifies the evaluation target.
 

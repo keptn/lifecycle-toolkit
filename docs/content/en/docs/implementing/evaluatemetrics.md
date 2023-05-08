@@ -27,10 +27,6 @@ Keptn metrics are implemented with two resources:
 * [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) --
   define the configuration for a data provider
 
-A Metric can be created with a query that fetches data for a property
-that describes some quality of the application,
-but this is not done automatically.
-
 ## Accessing Metrics via the Kubernetes Custom Metrics API
 
 `KeptnMetrics` can also be retrieved via the Kubernetes Custom Metrics API.

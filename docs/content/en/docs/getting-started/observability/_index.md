@@ -48,13 +48,12 @@ on your local Kubernetes deployment cluster.
 
 The steps to implement pre- and post-deployment orchestration are:
 
-1. Bring or create a Kubernetes cluster
-1. Install the Keptn Lifecycle Toolkit on your cluster
-1. Enable KLT for your cluster
-1. Integrate KLT with your cluster by annotating
-   the Kubernetes `Deployment` and `Namespace` CRDs
-1. Define evaluations to be performed pre- and post-deployment
-1. Define tasks to be performed pre- and post-deployment
+1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
+1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
+1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
+1. [Integrate KLT with your cluster](#integrate-klt-with-your-cluster)
+1. [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-pre--and-post-deployment)
+1. [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-pre--and-post-deployment)
 
 ## Bring or create a Kubernetes deployment cluster
 
@@ -62,19 +61,29 @@ You can run this exercise on an existing Kubernetes cluster
 or you can create a new cluster.
 For personal study and demonstrations,
 this exercise runs well on a local Kubernetes cluster.
-See [Bring or Install a Kubernetes Cluster](../../install/k8s.md)
+See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
 
 ## Install KLT on your cluster
 
 Install the Keptn Lifecycle Toolkit on your cluster
-following the instructions in
-[Install KLT](../../install/install).
+by executing the following command sequence:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+See
+[Install KLT](../../install/install)
+for more information about installing the Lifecycle Toolkit.
 
 ## Enable KLT for your cluster
 
 To enable KLT for your cluster, annotate the
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-CRD.
+resource
 In this example, this is defined in the
 [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
 file, which looks like this:
@@ -95,7 +104,7 @@ This line tells the webhook to handle the namespace
 
 To integrate KLT with your cluster, annotate the Kubernetes
 [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-CRD.
+resource.
 In this example, this is defined in the
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
 file, which includes the following lines:
@@ -125,15 +134,15 @@ template:
 
 For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications[../../implementing/integrate).
+[Integrate KLT with your applications](../../implementing/integrate).
 
 ## Define evaluations to be performed pre- and post-deployment
 
 An `evaluation` is a KeptnMetric that has a defined target value.
-Evaluations are CRDs that are defined in a
+Evaluations are resources that are defined in a
 [KeptinEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
 yaml file.
-For our example, evaluations are defined in the
+In our example, evaluations are defined in the
 [keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml) file.
 For example, the definition of the `evaluate-dependencies` evaluation
 looks like this:
@@ -161,10 +170,10 @@ You could include objectives and additional metrics in this evaluation.
 
 ## Define tasks to be performed pre- and post-deployment
 
-Tasks are CRDs that are defined in a
+Tasks are resources that are defined in a
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 file.
-For our example, the tasks are defined in the
+In our example, the tasks are defined in the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
 file
 As an example,
@@ -200,7 +209,7 @@ this script would probably be located on a remote webserver.
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.
 This refers to the context in which this code executes --
-for which application, for which version, for which Workload
+for which application, for which version, for which Workload.
 
 Because the slack server that is required to execute this task
 is protected by a secret, the task definition also specifies that secret.

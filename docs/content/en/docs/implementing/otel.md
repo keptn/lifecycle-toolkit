@@ -13,7 +13,7 @@ To expose OTel metrics:
 * Be sure that the `EXPOSE_KEPTN_METRICS` environment variable
   in the `metrics-operator` manifest is set to `true`,
   which is the default value.
-* Define a [KeptnConfig](../crd-yaml-ref/config.md) CRD
+* Define a [KeptnConfig](../yaml-crd-ref/config.md) CRD
   that has the `spec.OTelCollectorUrl` field populated
   with the URL of the OpenTelemetry collector.
 

@@ -15,30 +15,7 @@ from multiple observability solutions --
 Datadog, Dynatrace, data in AWS, Google, and Azure --
 and include data in Lifestep (?) and Honeycomb or Splunk.
 
-The [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
-requires that you maintain point-to-point integrations
-from Argo Rollouts, Flux, KEDA, and HPA.
-Each has plugins but it is difficult to maintain them,
-especially if you are using multiple tools
-and multible observability platforms.
-The Keptn Metrics Server unifies and standardizes access to this data.
-
-This guide walks you through the steps required
-to implement Keptn metrics:
-
-1. [Install and configure](#install-and-configure-klt)
-   the Keptn Lifecycle Toolkit in your cluster.
-1. Create a resource to define each observability platform
-   that is implemented in this namespace.
-   You can define a mix of platforms --
-   Prometheus, Dynatrace, Datadog, etc. --
-   and multiple instances of each.
-1. Create a resource that Defines
-   the type of data to pull from each observability platform.
-   This data is pulled and fetched continuously
-   at an interval you specify for each data query.
-1. Run the metrics
-1. View metrics
+## Using this exercise
 
 This exercise is based on the
 [simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
@@ -48,9 +25,121 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
+The steps to implement pre- and post-deployment orchestration are:
+
+1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
+1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
+1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
+1. [Integrate KLT with your cluster](#integrate-klt-with-your-cluster)
+1. Define metrics to use
+   * [Define metrics providers](#define-metrics-providers)
+   * [Define KeptnMetric information](#define-keptnmetric-information)
+   * [View available metrics](#view-available-metrics)
+
 See the
 [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
 video for a demonstration of this exercise.
+
+## Bring or create a Kubernetes deployment cluster
+
+You can run this exercise on an existing Kubernetes cluster
+or you can create a new cluster.
+For personal study and demonstrations,
+this exercise runs well on a local Kubernetes cluster.
+See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
+
+## Install KLT on your cluster
+
+Install the Keptn Lifecycle Toolkit on your cluster
+by executing the following command sequence:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+If you only want to use Keptn's metrics features,
+you can install just the `metrics-operator`
+bu modifying Helm values.
+See
+[Install KLT](../../install/install.md)
+for more information about installing the Lifecycle Toolkit.
+
+To verify that the `metrics-operator` is installed in your cluster,
+run the following command:
+
+```shell
+kubectl get pods -n keptn-lifecycle-toolkit-system
+```
+
+The output shows all components that are running on your system.
+
+## Enable KLT for your cluster
+
+To enable KLT for your cluster, annotate the Kubernetes
+[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+resource.
+In this example, this is defined in the
+[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
+file, which looks like this:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: simplenode-dev
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled"
+```
+
+You see the annotation line that enables `lifecycle-toolkit`.
+This line tells the webhook to handle the namespace
+
+## Integrate KLT with your cluster
+
+To integrate KLT with your cluster, annotate the Kubernetes
+[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+resource.
+In this example, this is defined in the
+[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
+file, which includes the following lines:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplenode
+  namespace: simplenode-dev
+...
+template:
+    metadata:
+      labels:
+        app: simplenode
+        app.kubernetes.io/name: simplenodeservice
+      annotations:
+        # keptn.sh/app: simpleapp
+        keptn.sh/workload: simplenode
+        keptn.sh/version: 1.0.2
+        keptn.sh/pre-deployment-evaluations: evaluate-dependencies
+        keptn.sh/pre-deployment-tasks: notify
+        keptn.sh/post-deployment-evaluations: evaluate-deployment
+        keptn.sh/post-deployment-tasks: notify
+...
+```
+
+For more information about using annotations and labels
+to integrate KLT into your deployment cluster, see
+[Integrate KLT with your applications](../../implementing/integrate.md).
+
+The [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
+requires that you maintain point-to-point integrations
+from Argo Rollouts, Flux, KEDA, and HPA.
+Each has plugins but it is difficult to maintain them,
+especially if you are using multiple tools
+and multible observability platforms.
+The Keptn Metrics Server unifies and standardizes access to this data.
 
 The steps to implement Keptn metrics are:
 
@@ -61,6 +150,7 @@ as part of the Lifecycle Toolkit
 or completely stand-alone.
  See
 [Install KLT using the Helm Chart](../../install/install.md/#use-helm-chart).
+-- End of Probably goes --
 
 ## Define metrics to use
 
@@ -91,10 +181,11 @@ and the URL.
 
 > Note: The video and example application use an older syntax
   of the `KeptnMetricsProvider` and `KeptnMetric` resources.
-  The ones shown in this document are the current ones.
+  The syntax shown in this document is correct for v0.7.1 and later.
 
 Definition of
-[dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml):
+[dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml)
+data source:
 
 ```yaml
 kind: KeptnMetricsProvider
@@ -106,8 +197,9 @@ spec:
   targetserver: "http://prometheus-k8s-monitoring-svc.cluster.local:9090"
 ```
 
-Definition of
-[dev-dynatrace](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/dynatrace-provider.yaml.tmp).
+Definition of the
+[dev-dynatrace](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/dynatrace-provider.yaml.tmp)
+data source.
 Note that the `dev-dynatrace` server is protected by a secret key
 so that information is included in the provider definition:
 
@@ -217,9 +309,10 @@ viewing the results, perhaps from CLI and from Grafana?
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use it to implement HPA.
+See Using the HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
+for detailed information.
 
-TODO: Link to HPA section in "Implementing"
-(which includes link to Flo's blog post)
+TODO: Link to HPA subsection after that content is merged
 
 ## Learn more
 

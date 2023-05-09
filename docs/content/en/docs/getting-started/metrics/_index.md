@@ -258,7 +258,7 @@ spec:
   provider:
     name: dev-dynatrace
   query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds" 10
+  fetchIntervalSeconds: 10
 ...
 ```
 

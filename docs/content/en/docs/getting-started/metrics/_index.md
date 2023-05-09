@@ -98,7 +98,7 @@ This line tells KLT to handle the namespace
 
 ## Integrate KLT with your cluster
 
-To integrate KLT with your cluster, annotate the Kubernetes
+To integrate KLT with your deployment, annotate the Kubernetes
 [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 resource.
 In this example, this is defined in the

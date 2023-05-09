@@ -97,7 +97,7 @@ into the repository of the deployment engine
 (ArgoCD, Flux, etc)
 and is then deployed by that deployment engine.
 
-You can create a `KeptnApp` resource by populating the YAML file
+You can create a `KeptnApp` resource as a standard YAML manifest
 or you can use the automatic application discovery feature
 to automatically generate a `KeptnApp` resource
 based on Keptn or default Kubernetes labels.

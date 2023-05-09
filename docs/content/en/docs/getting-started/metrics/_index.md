@@ -94,7 +94,7 @@ metadata:
 ```
 
 You see the annotation line that enables `lifecycle-toolkit`.
-This line tells the webhook to handle the namespace
+This line tells KLT to handle the namespace
 
 ## Integrate KLT with your cluster
 

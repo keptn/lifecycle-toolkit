@@ -100,7 +100,7 @@ and is then deployed by that deployment engine.
 You can create a `KeptnApp` resource by populating the YAML file
 or you can use the automatic application discovery feature
 to automatically generate a `KeptnApp` resource
-based on Kubernetes labels.
+based on Keptn or default Kubernetes labels.
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
 

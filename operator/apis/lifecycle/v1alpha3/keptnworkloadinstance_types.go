@@ -34,31 +34,53 @@ import (
 // KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceSpec struct {
 	KeptnWorkloadSpec `json:",inline"`
-	WorkloadName      string            `json:"workloadName"`
-	PreviousVersion   string            `json:"previousVersion,omitempty"`
-	TraceId           map[string]string `json:"traceId,omitempty"`
+	// WorkloadName is the name of the KeptnWorkload.
+	WorkloadName string `json:"workloadName"`
+	// PreviousVersion is the version of the KeptnWorkload that has been deployed prior to this version.
+	PreviousVersion string `json:"previousVersion,omitempty"`
+	// TraceId contains the OpenTelemetry trace ID.
+	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
+	// PreDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PreDeployment phase.
 	// +kubebuilder:default:=Pending
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
+	// DeploymentStatus indicates the current status of the KeptnWorkloadInstance's Deployment phase.
 	// +kubebuilder:default:=Pending
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
+	// PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PreDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
+	// PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
+	// PostDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PostDeployment phase.
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus               common.KeptnState   `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	StartTime                          metav1.Time         `json:"startTime,omitempty"`
-	EndTime                            metav1.Time         `json:"endTime,omitempty"`
-	CurrentPhase                       string              `json:"currentPhase,omitempty"`
-	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	// PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadInstance.
+	PreDeploymentTaskStatus []ItemStatus `json:"preDeploymentTaskStatus,omitempty"`
+	// PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadInstance.
+	PostDeploymentTaskStatus []ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
+	// PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadInstance.
+	PreDeploymentEvaluationTaskStatus []ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	// PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnWorkloadInstance.
+	PostDeploymentEvaluationTaskStatus []ItemStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	// StartTime represents the time at which the deployment of the KeptnWorkloadInstance started.
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished.
+	EndTime metav1.Time `json:"endTime,omitempty"`
+	// CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be:
+	// - PreDeploymentTasks
+	// - PreDeploymentEvaluations
+	// - Deployment
+	// - PostDeploymentTasks
+	// - PostDeploymentEvaluations
+	CurrentPhase string `json:"currentPhase,omitempty"`
+	// PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance
+	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	// Status represents the overall status of the KeptnWorkloadInstance.
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 }
@@ -69,9 +91,11 @@ type ItemStatus struct {
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
 	// Name is the name of the Evaluation/Task
-	Name      string      `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
+	// StartTime represents the time at which the Item (Evaluation/Task) started.
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	EndTime   metav1.Time `json:"endTime,omitempty"`
+	// EndTime represents the time at which the Item (Evaluation/Task) started.
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -93,7 +117,9 @@ type KeptnWorkloadInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnWorkloadInstanceSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnWorkloadInstance.
+	Spec KeptnWorkloadInstanceSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnWorkloadInstance.
 	Status KeptnWorkloadInstanceStatus `json:"status,omitempty"`
 }
 

@@ -199,27 +199,49 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnWorkloadSpec defines the desired state of KeptnWorkload
+            description: Spec describes the desired state of the KeptnWorkload.
             properties:
               app:
+                description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
               postDeploymentEvaluations:
+                description: PostDeploymentEvaluations is a list of all evaluations
+                  to be performed during the post-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
+                description: PostDeploymentTasks is a list of all tasks to be performed
+                  during the post-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnWorkload, or in the KLT namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
+                description: PreDeploymentTasks is a list of all tasks to be performed
+                  during the pre-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnApp, or in the KLT namespace.
                 items:
                   type: string
                 type: array
               resourceReference:
+                description: ResourceReference is a reference to the Kubernetes resource
+                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
+                  is representing.
                 properties:
                   kind:
                     type: string
@@ -237,6 +259,7 @@ spec:
                 - uid
                 type: object
               version:
+                description: Version defines the version of the KeptnWorkload.
                 type: string
             required:
             - app
@@ -244,9 +267,11 @@ spec:
             - version
             type: object
           status:
-            description: KeptnWorkloadStatus defines the observed state of KeptnWorkload
+            description: Status describes the current state of the KeptnWorkload.
             properties:
               currentVersion:
+                description: CurrentVersion indicates the version that is currently
+                  deployed or being reconciled.
                 type: string
             type: object
         type: object

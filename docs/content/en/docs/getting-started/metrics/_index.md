@@ -209,7 +209,7 @@ metadata:
   namespace: simplenode-dev
 spec:
   type: dynatrace
-  targetServer: "https://hci34192.live.dynatrace.com
+  targetServer: "https://hci34192.live.dynatrace.com"
   secretKeyRef
     name: dynatrace
     key: DT_TOKEN

@@ -96,7 +96,7 @@ metadata:
 You see the annotation line that enables `lifecycle-toolkit`.
 This line tells KLT to handle the namespace
 
-## Integrate KLT with your cluster
+## Integrate KLT with your deployment
 
 To integrate KLT with your deployment, annotate the Kubernetes
 [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

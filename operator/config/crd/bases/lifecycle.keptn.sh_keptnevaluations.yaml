@@ -268,60 +268,98 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationSpec defines the desired state of KeptnEvaluation
+            description: Spec describes the desired state of the KeptnEvaluation.
             properties:
               appName:
+                description: AppName defines the KeptnApp for which the KeptnEvaluation
+                  is done.
                 type: string
               appVersion:
+                description: AppVersion defines the version of the KeptnApp for which
+                  the KeptnEvaluation is done.
                 type: string
               checkType:
+                description: Type indicates whether the KeptnEvaluation is part of
+                  the pre- or postDeployment phase.
                 type: string
               evaluationDefinition:
+                description: EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
+                  which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition
+                  can be located in the same namespace as the KeptnEvaluation, or
+                  in the KLT namespace.
                 type: string
               failAction:
                 type: string
               retries:
                 default: 10
+                description: Retries indicates how many times the KeptnEvaluation
+                  can be attempted in the case of an error or missed evaluation objective,
+                  before considering the KeptnEvaluation to be failed.
                 type: integer
               retryInterval:
                 default: 5s
+                description: RetryInterval specifies the interval at which the KeptnEvaluation
+                  is retried in the case of an error or a missed objective.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
+                description: Workload defines the KeptnWorkload for which the KeptnEvaluation
+                  is done.
                 type: string
               workloadVersion:
+                description: WorkloadVersion defines the version of the KeptnWorkload
+                  for which the KeptnEvaluation is done.
                 type: string
             required:
             - evaluationDefinition
             - workloadVersion
             type: object
           status:
-            description: KeptnEvaluationStatus defines the observed state of KeptnEvaluation
+            description: Status describes the current state of the KeptnEvaluation.
             properties:
               endTime:
+                description: EndTime represents the time at which the KeptnEvaluation
+                  finished.
                 format: date-time
                 type: string
               evaluationStatus:
                 additionalProperties:
                   properties:
                     message:
+                      description: Message contains additional information about the
+                        evaluation of an objective. This can include explanations
+                        about why an evaluation has failed (e.g. due to a missed objective),
+                        or if there was any error during the evaluation of the objective.
                       type: string
                     status:
+                      description: Status indicates the status of the objective being
+                        evaluated.
                       type: string
                     value:
+                      description: Value represents the value of the KeptnMetric being
+                        evaluated.
                       type: string
                   required:
                   - status
                   - value
                   type: object
+                description: EvaluationStatus describes the status of each objective
+                  of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
                 type: object
               overallStatus:
                 default: Pending
+                description: OverallStatus describes the overall status of the KeptnEvaluation.
+                  The Overall status is derived from the status of the individual
+                  objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
                 type: string
               retryCount:
                 default: 0
+                description: RetryCount indicates how many times the KeptnEvaluation
+                  has been attempted already.
                 type: integer
               startTime:
+                description: StartTime represents the time at which the KeptnEvaluation
+                  started.
                 format: date-time
                 type: string
             required:

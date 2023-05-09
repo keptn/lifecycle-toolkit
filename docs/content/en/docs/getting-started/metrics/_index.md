@@ -12,8 +12,7 @@ that need observability data to make automated decisions.
 Whether a rollout is good, whether to scale up or down.
 Your observability data may come
 from multiple observability solutions --
-Datadog, Dynatrace, data in AWS, Google, and Azure --
-and include data in Lifestep (?) and Honeycomb or Splunk.
+Datadog, Dynatrace, Lightstep, Honeycomb, Splunk, or data directly from your cloud provider such as AWS, Google, and Azure.
 
 ## Using this exercise
 

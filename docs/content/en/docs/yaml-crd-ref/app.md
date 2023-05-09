@@ -134,4 +134,3 @@ The `spec.Revision` field is introduced in v1alpha2.
 ## See also
 
 * Link to information about app discovery in implementing/integrate
-

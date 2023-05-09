@@ -30,7 +30,7 @@ The steps to implement pre- and post-deployment orchestration are:
 1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
 1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
 1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
-1. [Integrate KLT with your cluster](#integrate-klt-with-your-cluster)
+1. [Integrate KLT with your cluster](##integrate-klt-with-your-cluster)
 1. Define metrics to use
    * [Define metrics providers](#define-metrics-providers)
    * [Define KeptnMetric information](#define-keptnmetric-information)
@@ -46,7 +46,8 @@ You can run this exercise on an existing Kubernetes cluster
 or you can create a new cluster.
 For personal study and demonstrations,
 this exercise runs well on a local Kubernetes cluster.
-See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
+See [Bring or Install a Kubernetes Cluster](../../install/k8s.md)
+in the *Installation* section.
 
 ## Install KLT on your cluster
 
@@ -62,7 +63,7 @@ helm upgrade --install keptn klt/klt \
 
 If you only want to use Keptn's metrics features,
 you can install just the `metrics-operator`
-bu modifying Helm values.
+by modifying Helm values.
 See
 [Install KLT](../../install/install.md)
 for more information about installing the Lifecycle Toolkit.
@@ -140,17 +141,6 @@ Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools
 and multible observability platforms.
 The Keptn Metrics Server unifies and standardizes access to this data.
-
-The steps to implement Keptn metrics are:
-
-## Install and configure KLT
-
-Use the Helm Chart to install the Keptn Metrics Server
-as part of the Lifecycle Toolkit
-or completely stand-alone.
- See
-[Install KLT using the Helm Chart](../../install/install.md/#use-helm-chart).
--- End of Probably goes --
 
 ## Define metrics to use
 
@@ -265,8 +255,8 @@ spec:
 
 Note the following:
 
-* You populate one YAML file
-that includes all the metrics for your cluster.
+* Populate one YAML file per metric
+  then apply all of them.
 * Each metric is assigned a unique `name`.
 * The value of the `spec.provider.name` field
   must correspond to the name assigned in a

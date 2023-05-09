@@ -7,13 +7,12 @@ weight: 25
 The Keptn metrics component of the Keptn Lifecycle Toolkit
 allow you to define any type of metric
 from multiple instances of any type of data source in your Kubernetes cluster.
-You may have tools like Argo, Flux, KEDA, HBA, Keptn
+You may have tools like Argo, Flux, KEDA, HPA, or Keptn
 that need observability data to make automated decisions.
 Whether a rollout is good, whether to scale up or down.
 Your observability data may come
 from multiple observability solutions --
-Datadog, Dynatrace, data in AWS, Google, and Azure --
-and include data in Lifestep (?) and Honeycomb or Splunk.
+Datadog, Dynatrace, Lightstep, Honeycomb, Splunk, or data directly from your cloud provider such as AWS, Google, and Azure.
 
 ## Using this exercise
 
@@ -30,8 +29,8 @@ The steps to implement pre- and post-deployment orchestration are:
 1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
 1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
 1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
-1. [Integrate KLT with your cluster](##integrate-klt-with-your-cluster)
-1. Define metrics to use
+1. [Integrate KLT with your cluster](#integrate-klt-with-your-cluster)
+1. Configure metrics to use
    * [Define metrics providers](#define-metrics-providers)
    * [Define KeptnMetric information](#define-keptnmetric-information)
    * [View available metrics](#view-available-metrics)
@@ -96,11 +95,11 @@ metadata:
 ```
 
 You see the annotation line that enables `lifecycle-toolkit`.
-This line tells the webhook to handle the namespace
+This line tells KLT to handle the namespace
 
-## Integrate KLT with your cluster
+## Integrate KLT with your deployment
 
-To integrate KLT with your cluster, annotate the Kubernetes
+To integrate KLT with your deployment, annotate the Kubernetes
 [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 resource.
 In this example, this is defined in the
@@ -200,7 +199,7 @@ metadata:
   namespace: simplenode-dev
 spec:
   type: dynatrace
-  targetServer: "https://hci34192.live.dynatrace.com
+  targetServer: "https://hci34192.live.dynatrace.com"
   secretKeyRef
     name: dynatrace
     key: DT_TOKEN
@@ -237,8 +236,8 @@ metadata:
 spec:
   provider:
     name: dev-prometheus
-  query: "sum(kube_node_status_cvapacity{resources`cpu`})
-  fetchIntervalSeconds" 10
+  query: "sum(kube_node_status_cvapacity{resources`cpu`})"
+  fetchIntervalSeconds: 10
 ...
 apiVersion: metrics.keptn.sh/v1alpha2
 kind: Keptnmetric
@@ -249,7 +248,7 @@ spec:
   provider:
     name: dev-dynatrace
   query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds" 10
+  fetchIntervalSeconds: 10
 ...
 ```
 

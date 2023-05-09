@@ -32,8 +32,6 @@ This exercise shows how to standardize access
 to the observability data for your cluster.
 The steps are:
 
-* Install the Keptn Lifecycle Toolkit,
-  enable and integrate it into your cluster
 * Configure OpenTelemetry for the Lifecycle Toolkit
 * Define the workloads to be included in your Keptn Application.
   You can specify this manually or use the application discovery feature

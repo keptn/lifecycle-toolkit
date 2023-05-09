@@ -32,17 +32,36 @@ import (
 
 // KeptnWorkloadSpec defines the desired state of KeptnWorkload
 type KeptnWorkloadSpec struct {
-	AppName                   string            `json:"app"`
-	Version                   string            `json:"version"`
-	PreDeploymentTasks        []string          `json:"preDeploymentTasks,omitempty"`
-	PostDeploymentTasks       []string          `json:"postDeploymentTasks,omitempty"`
-	PreDeploymentEvaluations  []string          `json:"preDeploymentEvaluations,omitempty"`
-	PostDeploymentEvaluations []string          `json:"postDeploymentEvaluations,omitempty"`
-	ResourceReference         ResourceReference `json:"resourceReference"`
+	// AppName is the name of the KeptnApp containing the KeptnWorkload.
+	AppName string `json:"app"`
+	// Version defines the version of the KeptnWorkload.
+	Version string `json:"version"`
+	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.
+	// The items of this list refer to the names of KeptnTaskDefinitions
+	// located in the same namespace as the KeptnApp, or in the KLT namespace.
+	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
+	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.
+	// The items of this list refer to the names of KeptnTaskDefinitions
+	// located in the same namespace as the KeptnWorkload, or in the KLT namespace.
+	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
+	// PreDeploymentEvaluations is a list of all evaluations to be performed
+	// during the pre-deployment phase of the KeptnWorkload.
+	// The items of this list refer to the names of KeptnEvaluationDefinitions
+	// located in the same namespace as the KeptnWorkload, or in the KLT namespace.
+	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
+	// PostDeploymentEvaluations is a list of all evaluations to be performed
+	// during the post-deployment phase of the KeptnWorkload.
+	// The items of this list refer to the names of KeptnEvaluationDefinitions
+	// located in the same namespace as the KeptnWorkload, or in the KLT namespace.
+	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
+	// ResourceReference is a reference to the Kubernetes resource
+	// (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing.
+	ResourceReference ResourceReference `json:"resourceReference"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload
 type KeptnWorkloadStatus struct {
+	// CurrentVersion indicates the version that is currently deployed or being reconciled.
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
@@ -57,7 +76,9 @@ type KeptnWorkload struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnWorkloadSpec   `json:"spec,omitempty"`
+	// Spec describes the desired state of the KeptnWorkload.
+	Spec KeptnWorkloadSpec `json:"spec,omitempty"`
+	// Status describes the current state of the KeptnWorkload.
 	Status KeptnWorkloadStatus `json:"status,omitempty"`
 }
 

@@ -16,7 +16,7 @@ spec:
             defaultMode: 420
       containers:
         - name: keptn-python-runner
-          image: 'odubajdt/python-runner:latest'
+          image: 'odubajdt/python-runnerr:latest'
           env:
             - name: SCRIPT
               value: /var/data/function.py

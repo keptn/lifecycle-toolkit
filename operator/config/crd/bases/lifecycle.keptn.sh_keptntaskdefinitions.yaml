@@ -187,64 +187,103 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
+            description: Spec describes the desired state of the KeptnTaskDefinition.
             properties:
               function:
+                description: Function contains the definition for the function that
+                  is to be executed in KeptnTasks based on the KeptnTaskDefinitions.
                 properties:
                   configMapRef:
+                    description: ConfigMapReference allows to reference a ConfigMap
+                      containing the code of the function. When referencing a ConfigMap,
+                      the code of the function must be available as a value of the
+                      'code' key of the referenced ConfigMap.
                     properties:
                       name:
+                        description: Name is the name of the referenced ConfigMap.
                         type: string
                     type: object
                   functionRef:
+                    description: FunctionReference allows to reference another KeptnTaskDefinition
+                      which contains the source code of the function to be executes
+                      for KeptnTasks based on this KeptnTaskDefinition. This can be
+                      useful when you have multiple KeptnTaskDefinitions that should
+                      execute the same logic, but each with different parameters.
                     properties:
                       name:
+                        description: Name is the name of the referenced KeptnTaksDefinition.
                         type: string
                     type: object
                   httpRef:
+                    description: HttpReference allows to point to an HTTP URL containing
+                      the code of the function.
                     properties:
                       url:
+                        description: Url is the URL containing the code of the function.
                         type: string
                     type: object
                   inline:
+                    description: Inline allows to specify the code that should be
+                      executed directly in the KeptnTaskDefinition, as a multi-line
+                      string.
                     properties:
                       code:
+                        description: Code contains the code of the function.
                         type: string
                     type: object
                   parameters:
+                    description: Parameters contains parameters that will be passed
+                      to the job that executes the task.
                     properties:
                       map:
                         additionalProperties:
                           type: string
+                        description: Inline contains the parameters that will be made
+                          available to the job executing the KeptnTask via the 'DATA'
+                          environment variable. The 'DATA'  environment variable's
+                          content will be a json encoded string containing all properties
+                          of the map provided.
                         type: object
                     type: object
                   secureParameters:
+                    description: SecureParameters contains secure parameters that
+                      will be passed to the job that executes the task. These will
+                      be stored and accessed as secrets in the cluster.
                     properties:
                       secret:
+                        description: Secret contains the parameters that will be made
+                          available to the job executing the KeptnTask via the 'SECRET_DATA'
+                          environment variable. The 'SECRET_DATA'  environment variable's
+                          content will the same as value of the 'SECRET_DATA' key
+                          of the referenced secret.
                         type: string
                     type: object
                 type: object
               retries:
                 default: 10
+                description: Retries specifies how many times a job executing the
+                  KeptnTaskDefinition should be restarted in the case of an unsuccessful
+                  attempt.
                 format: int32
                 type: integer
               timeout:
                 default: 5m
+                description: Timeout specifies the maximum time to wait for the task
+                  to be completed successfully. If the task does not complete successfully
+                  within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
             type: object
           status:
-            description: KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+            description: Status describes the current state of the KeptnTaskDefinition.
             properties:
               function:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                  of cluster Important: Run "make" to regenerate code after modifying
-                  this file'
+                description: Function contains status information of the function
+                  definition for the task.
                 properties:
                   configMap:
-                    description: 'INSERT ADDITIONAL STATUS FIELD - define observed
-                      state of cluster Important: Run "make" to regenerate code after
-                      modifying this file'
+                    description: ConfigMap indicates the ConfigMap in which the function
+                      code is stored.
                     type: string
                 type: object
             type: object

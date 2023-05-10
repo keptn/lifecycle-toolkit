@@ -147,7 +147,7 @@ the post-deployment checks start.
 
   You have two options:
 
-* Create a [KeptnApp](../../../yaml-crd-ref/app.md) resource
+* Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
     that references the workloads that should be included
     along with any
     [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
@@ -160,11 +160,11 @@ the post-deployment checks start.
 
 ### Define Keptn custom resources for the application
 
-Create a [KeptnApp](../yaml-crd-ref/app.md) resource
+Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
 that references the workloads that should be included
 along with any
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
-and [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
 CRDs that you want
 
 TODO: provide more details

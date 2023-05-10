@@ -100,8 +100,9 @@ into the repository of the deployment engine
 and is then deployed by that deployment engine.
 
 You can create a `KeptnApp` resource as a standard YAML manifest
-or you can use the automatic application discovery feature
-to automatically generate a `KeptnApp` resource
+or you can use the
+[automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+feature to automatically generate a `KeptnApp` resource
 based on Keptn or default Kubernetes labels.
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
@@ -135,4 +136,4 @@ The `spec.Revision` field is introduced in v1alpha2.
 
 ## See also
 
-* Link to information about app discovery in implementing/integrate
+[Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

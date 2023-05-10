@@ -308,5 +308,5 @@ all `v1alpha?` library versions.
 
 ## See also
 
-* [Working with tasks](../implementing/tasks.md)
+* [Working with tasks](../implementing/tasks)
 * Link to reference pages for any related CRDs

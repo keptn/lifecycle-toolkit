@@ -52,8 +52,8 @@ import (
     "sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
     "github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
-	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
+    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+    certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
     "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
     // +kubebuilder:scaffold:imports
 )
@@ -83,15 +83,15 @@ func main() {
 			webhook.NewWebhookManagerProvider(
 				mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
 		).
-		SetCertificateWatcher(
-			certificates.NewCertificateWatcher(
-				mgr.GetAPIReader(),
-				mgr.GetWebhookServer().CertDir,
-				env.PodNamespace,
-				certCommon.SecretName,
-				setupLog,
-			),
-		)
+        SetCertificateWatcher(
+            certificates.NewCertificateWatcher(
+                mgr.GetAPIReader(),
+                mgr.GetWebhookServer().CertDir,
+                env.PodNamespace,
+                certCommon.SecretName,
+                setupLog,
+            ),
+        )
 
     setupLog.Info("starting webhook and manager")
     if err := webhookBuilder.Run(mgr, map[string]*admission.Webhook{

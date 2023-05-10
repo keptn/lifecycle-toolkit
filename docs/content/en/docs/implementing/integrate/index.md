@@ -20,7 +20,7 @@ This is a four-step process:
 * Define a Keptn application that references those workloads.
   You have two options:
 
-  * [Define Keptn custom resources](#define-keptn-custom-resources-for-the-application)
+  * [Define Keptn resources](#define-keptn-custom-resources-for-the-application)
     for the application
   * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
     that enables the observability features provided by the Lifecycle Toolkit
@@ -50,7 +50,7 @@ This annotation tells the webhook to handle the namespace.
 To annotate your
 [Workload](https://kubernetes.io/docs/concepts/workloads/),
 you need to set annotations in your Kubernetes
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) CRD.
+[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) resource.
 
 Note that you do not need to explicitly create a `KeptnWorkload`.
 KLT monitors your `Deployments`,
@@ -60,7 +60,7 @@ and
 and
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 in the namespaces where KLT is enabled.
-If KLT finds any of hese CRDs and the CRD has either
+If KLT finds any of hese resources and the resource has either
 the keptn.sh or the kubernetes recommended labels,
 it creates a `KeptnWorkload` resource for the version it detects.
 
@@ -108,7 +108,7 @@ keptn.sh/post-deployment-tasks: slack-notification,performance-test
 ```
 
 The value of these annotations are
-Keptn [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called `KeptnTaskDefinition`s.
 These resources contain re-usable "functions"
 that can execute before and after the deployment.
@@ -152,7 +152,7 @@ the post-deployment checks start.
     along with any
     [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
     and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-    CRDs that you want
+    resources that you want
 * Use the Keptn automatic app discovery capability
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
@@ -160,14 +160,13 @@ the post-deployment checks start.
 
 ### Define Keptn custom resources for the application
 
-Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
-that references the workloads that should be included
+Manually create a YAML file for the
+[KeptnApp](../../yaml-crd-ref/app.md) resource
+that references the workloads to be included
 along with any
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-CRDs that you want
-
-TODO: provide more details
+resource that you want
 
 ### Use Keptn automatic app discovery
 

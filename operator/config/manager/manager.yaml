@@ -121,7 +121,7 @@ spec:
               memory: 64Mi
           volumeMounts:
             - name: certs-dir
-              mountPath: /tmp/webhook/certs/
+              mountPath: /tmp/k8s-webhook-server/serving-certs/
             - name: adapter-certs-dir
               mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: lifecycle-operator

@@ -103,7 +103,7 @@ You can create a `KeptnApp` resource as a standard YAML manifest
 or you can use the
 [automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 feature to automatically generate a `KeptnApp` resource
-based on Keptn or default Kubernetes labels.
+based on Keptn or [recommended Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
 

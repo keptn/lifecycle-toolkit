@@ -94,15 +94,15 @@ Kubernetes defines
 but does not define applications.
 The Keptn Lifecycle Toolkit adds the concept of applications
 defined as a set of workloads that can be executed.
-A `KeptnApp` resource is inserted
+A `KeptnApp` resource is added
 into the repository of the deployment engine
 (ArgoCD, Flux, etc)
 and is then deployed by that deployment engine.
 
-You can create a `KeptnApp` resource by populating the YAML file
+You can create a `KeptnApp` resource as a standard YAML manifest
 or you can use the automatic application discovery feature
 to automatically generate a `KeptnApp` resource
-based on Kubernetes labels.
+based on Keptn or default Kubernetes labels.
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
 

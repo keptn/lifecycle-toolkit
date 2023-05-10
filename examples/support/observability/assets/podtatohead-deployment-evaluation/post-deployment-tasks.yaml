@@ -11,13 +11,15 @@ spec:
       map:
         "key1": "value1"
         "key2": "value2"
-    inline:
-      code: |
-        import os
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/91d1329f1eda01eb7f8254d44b900753f650b976/script.py
+# inline:
+#   code: |
+#     import os
 
-        print("Hello, World!")
-        print(os.environ)
-        CONTEXT = os.getenv('CONTEXT')
-        print(CONTEXT)
-        DATA = os.getenv('DATA')
-        print(DATA)
+#     print("Hello, World!")
+#     print(os.environ)
+#     CONTEXT = os.getenv('CONTEXT')
+#     print(CONTEXT)
+#     DATA = os.getenv('DATA')
+#     print(DATA)

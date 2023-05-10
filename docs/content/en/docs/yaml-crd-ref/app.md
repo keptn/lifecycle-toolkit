@@ -67,7 +67,7 @@ spec:
       associated with this Keptn application.
     * **version** -- version number for this workload.
       Changing this number causes a new execution
-      of checks for this workload only.
+      of checks for the Keptn application and the new version of the workload.
   * **preDeploymentTasks** -- list each task to be run
     as part of the pre-deployment stage.
     Task names must match the value of the `name` field

@@ -68,7 +68,7 @@ Your cluster should include the following:
 
 * [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
-* Data source such as
+* Metric provider such as
   [Prometheus](https://prometheus.io/),
   [Dynatrace](https://www.dynatrace.com/),
   or [Datadog](https://www.datadoghq.com/).

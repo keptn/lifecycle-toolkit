@@ -6,7 +6,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 Keptn tasks are defined in a
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition/)
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md/)
 resource.
 A task definition includes a function
 that defines the action taken by that task.

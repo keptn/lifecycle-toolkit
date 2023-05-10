@@ -337,7 +337,7 @@ func main() {
 			)
 
 		setupLog.Info("starting webhook and manager")
-		if err1 := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
+		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
 					Client:   mgr.GetClient(),
@@ -346,8 +346,8 @@ func main() {
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
 				},
 			},
-		}); err1 != nil {
-			setupLog.Error(err1, "problem running manager")
+		}); err != nil {
+			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}
 

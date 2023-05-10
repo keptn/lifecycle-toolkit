@@ -79,10 +79,10 @@ func main() {
         SetNamespace(env.PodNamespace).
         SetPodName(env.PodName).
         SetConfigProvider(cmdConfig.NewKubeConfigProvider()).
-		SetManagerProvider(
-			webhook.NewWebhookManagerProvider(
-				mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
-		).
+        SetManagerProvider(
+            webhook.NewWebhookManagerProvider(
+                mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+        ).
         SetCertificateWatcher(
             certificates.NewCertificateWatcher(
                 mgr.GetAPIReader(),

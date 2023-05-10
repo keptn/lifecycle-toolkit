@@ -45,8 +45,6 @@ spec:
             - /manager
           args:
             - webhook-server
-            # OLM mounts the certificates here, so we reuse it for simplicity
-            - --certs-dir=/tmp/webhook/certs/
             - --leader-elect
             # Secure port for the metrics adapter
             - --adapter-port=6443

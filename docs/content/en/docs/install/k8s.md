@@ -78,7 +78,7 @@ Your cluster should include the following:
   such as
   [Argo CD](https://argo-cd.readthedocs.io/en/stable/) or
   [Flux](https://fluxcd.io/).
-  KLT also works with just `kubctl apply` for deployment.
+  Alternatively, KLT also works with just `kubctl apply` for deployment.
 
 * For traces, install [Jaeger](https://jaegertracing.io)
   or a similar tool.

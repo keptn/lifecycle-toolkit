@@ -4,10 +4,12 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-`KeptnApp` specifies a concept of a running application with a list of workloads and the possibility to define pre/post deployment and pre/post evaluations checks
-that should be executed at the Keptn application level.
+`KeptnApp` defines a list of workloads
+that together constitute a logical application.
 It contains information about all workloads and checks
-that are associated with a Keptn application.
+that are associated with a Keptn application
+and a list of tasks and evaluations to be executed
+pre- and post-deployment.
 
 ## Synopsis
 
@@ -21,9 +23,9 @@ spec:
   version: "x.y"
   revision: x
   workloads:
-  - name: <workload-name>
+  - name: <workload1-name>
     version: x.y.z
-  - name: podtato-head-left-leg
+  - name: <workload2-name>
     version: x.y.z
   preDeploymentTasks:
   - <list of tasks>

@@ -11,7 +11,7 @@ and allows using multiple observability platforms
 for different metrics at the same time.
 
 `KeptnMetric` CRs are also used as targets for
-[EvaluationDefinition](evaluationdefinition.md) CRDs.
+[EvaluationDefinition](evaluationdefinition.md) CRs.
 
 ## Yaml Synopsis
 

@@ -66,7 +66,7 @@ spec:
 
 This example pulls metrics from the data provider
 defined as `my-provider` in the `spec.provider.name` field
-of the corresponding `KeptnMetricsProvider` CRD.
+of the corresponding `KeptnMetricsProvider` CR.
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha3

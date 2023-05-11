@@ -88,7 +88,7 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnEvaluationDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptnevaluationdefinition)
 
 ## Differences between versions
 

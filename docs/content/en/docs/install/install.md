@@ -144,5 +144,5 @@ metadata:
     keptn.sh/lifecycle-toolkit: "enabled"
 ```
 
-You see the annotation line that enables `lifecycle-toolkit`.
+You see the annotation line that `keptn.sh/lifecycle-toolkit: "enabled"`.
 This line tells KLT to handle the namespace

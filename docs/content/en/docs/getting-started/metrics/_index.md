@@ -15,6 +15,9 @@ from multiple observability solutions --
 Datadog, Dynatrace, Lightstep, Honeycomb, Splunk,
 or data directly from your cloud provider such as AWS, Google, or Azure.
 
+The Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives
+so minimal configuration is required.
+
 The
 [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
 requires that you maintain point-to-point integrations
@@ -35,116 +38,20 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
-The steps to implement metrics are:
+The steps to implement metrics in an existing cluster are:
 
-1. Install and configure Keptn Lifecycle Toolkit
-   - [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
-   - [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
-   - [Enable KLT for your cluster](#enable-klt-for-your-cluster)
-   - [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
+1. [Install the Keptn Lifecycle Toolkit](../../install/install)
 1. Configure metrics to use
-   * [Define metrics providers](#define-metrics-providers)
-   * [Define KeptnMetric information](#define-keptnmetric-information)
-   * [View available metrics](#view-available-metrics)
+   - [Define metrics providers](#define-metrics-providers)
+   - [Define KeptnMetric information](#define-keptnmetric-information)
+   - [View available metrics](#view-available-metrics)
+
+If you want to create your own cluster to run this exercise,
+follow the instructions in [Installation](../../install).
 
 See the
 [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
 video for a demonstration of this exercise.
-
-## Bring or create a Kubernetes deployment cluster
-
-You can run this exercise on an existing Kubernetes cluster
-or you can create a new cluster.
-For personal study and demonstrations,
-this exercise runs well on a local Kubernetes cluster.
-See [Bring or Install a Kubernetes Cluster](../../install/k8s.md)
-in the *Installation* section for more information.
-
-## Install KLT on your cluster
-
-Install the Keptn Lifecycle Toolkit on your cluster
-by executing the following command sequence:
-
-```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn klt/klt \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
-```
-
-> Note: If you only want to use the Keptn metrics features,
-you can install just the `metrics-operator`
-by modifying Helm values.
-See
-[Install KLT](../../install/install.md)
-for more information about installing the Lifecycle Toolkit.
-
-
-To verify that the `metrics-operator` is installed in your cluster,
-run the following command:
-
-```shell
-kubectl get pods -n keptn-lifecycle-toolkit-system
-```
-
-The output shows all components that are running on your system.
-
-## Enable KLT for your cluster
-
-To enable KLT for your cluster, annotate the Kubernetes
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-resource.
-In this example, this is defined in the
-[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
-file, which looks like this:
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: simplenode-dev
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
-```
-
-You see the annotation line that enables `lifecycle-toolkit`.
-This line tells KLT to handle the namespace
-
-## Integrate KLT with your deployment
-
-To integrate KLT with your deployment, annotate the Kubernetes
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-resource.
-In this example, this is defined in the
-[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
-file, which includes the following lines:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: simplenode
-  namespace: simplenode-dev
-...
-template:
-    metadata:
-      labels:
-        app: simplenode
-        app.kubernetes.io/name: simplenodeservice
-      annotations:
-        # keptn.sh/app: simpleapp
-        keptn.sh/workload: simplenode
-        keptn.sh/version: 1.0.2
-        keptn.sh/pre-deployment-evaluations: evaluate-dependencies
-        keptn.sh/pre-deployment-tasks: notify
-        keptn.sh/post-deployment-evaluations: evaluate-deployment
-        keptn.sh/post-deployment-tasks: notify
-...
-```
-
-For more information about using annotations and labels
-to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications](../../implementing/integrate/_index.md).
 
 ## Define metrics to use
 
@@ -164,8 +71,8 @@ resource for each external observability platform you want to use.
 
 For our example, we define two observability platforms:
 
-* `dev-prometheus`
-* `dev-dynatrace`
+- `dev-prometheus`
+- `dev-dynatrace`
 
 You can specify a virtually unlimited number of providers,
 including multiple instances of each observability platform.
@@ -259,13 +166,13 @@ spec:
 
 Note the following:
 
-* Populate one YAML file per metric
+- Populate one YAML file per metric
   then apply all of them.
-* Each metric is assigned a unique `name`.
-* The value of the `spec.provider.name` field
+- Each metric is assigned a unique `name`.
+- The value of the `spec.provider.name` field
   must correspond to the name assigned in a
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
-* Information is fetched in on a continuous basis
+- Information is fetched in on a continuous basis
 at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
 
 ### View available metrics
@@ -282,21 +189,72 @@ kubectl get KeptnMetrics -A
 ```
 
 ```shell
-NAMESPACE       NAME              PROVIDER   QUERY
+NAMESPACE       NAME              PROVIDER       QUERY
 simplenode-dev  availability-slo  dev-dynatrace  func:slo.availability_simplenodeservice
 simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{resource=`cpu`})
 ```
 
 ## Run the metrics
 
-TODO: Do I need to start and stop anything to start gathering metrics
-or could I theoretically just put these pieces into my cluster
-and would it start gathering metrics that I could then view?
+As soon as you define your `KeptnMetricsProvider` and `KeptnMetric` resources,
+the Lifecycle Toolkit begins collecting the metrics you defined.
+You do not need to do anything else.
 
 ## Observing the metrics
 
-TODO: Do we want to say anything about running these metrics,
-viewing the results, perhaps from CLI and from Grafana?
+The metrics can be retrieved
+through CRs and through the Kubernetes Metric API.
+
+The syntax to retrieve metrics from the CR is:
+
+```shell
+kubectl get keptnmetrics.metrics.keptn.sh -n <namespace> <metric-name>
+```
+
+For example, the output for the `available-cpus` metric looks like:
+
+```shell
+$ kubectl get keptnmetrics.metrics.keptn.sh -n simplenode-dev available-cpus
+
+NAME             PROVIDER     QUERY                                           VALUE
+cpu-throttling   my-provider  sum(kube_node_status_capacity{resource=`coy})   6.000
+```
+
+The syntax to retrieve metrics through the Kubernetes API  is:
+
+```yaml
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/<namespace>/keptnmetrics.metrics.sh/<metric-name>/<metric-name>"
+```
+
+For example, the output for the `available-cpus` looks like:
+
+```yaml
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-dev/keptnmetrics.metrics.sh/available-cpus/available-cpus"
+
+{
+  "kind": "MetricValueList",
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "metadata": {},
+  "items": [
+    {
+      "describedObject": {
+        "kind": "KeptnMetric",
+        "namespace": "simplenode-dev",
+        "name": "available-cpus",
+        "apiVersion": "metrics.keptn.sh/v1alpha2"
+      },
+      "metric": {
+        "name": "available-cpus",
+        "selector": {}
+      },
+      "timestamp": "2023-05-11T08:05:36Z",
+      "value": "6"
+    }
+  ]
+}
+```
+
+You can also display the graphics using a dashboard such as Grafana.
 
 ## Implementing autoscaling with HPA
 

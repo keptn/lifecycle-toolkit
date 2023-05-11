@@ -47,7 +47,7 @@ spec:
     Name of this instance of the data source
     from which the metric is collected.
     This value must match the value of the `metadata.name` field
-    of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD
+    of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD.
 
     Assigning your own name to the provider
     rather than just the type of provider

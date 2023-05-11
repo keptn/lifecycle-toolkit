@@ -79,7 +79,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v3.0.2
+        uses: sigstore/cosign-installer@v3.0.3
 
       - name: Build Docker Image
         id: docker_build_image

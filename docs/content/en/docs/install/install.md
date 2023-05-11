@@ -125,7 +125,6 @@ kubectl wait --for=condition=Available deployment/lifecycle-operator \
 
 The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 
-
 ## Enable KLT for your cluster
 
 To enable KLT for your cluster, annotate the Kubernetes
@@ -146,5 +145,3 @@ metadata:
 
 You see the annotation line that enables `lifecycle-toolkit`.
 This line tells KLT to handle the namespace
-
-

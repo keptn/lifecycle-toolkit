@@ -43,9 +43,9 @@ The steps to implement metrics are:
    - [Enable KLT for your cluster](#enable-klt-for-your-cluster)
    - [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
 1. Configure metrics to use
-   * [Define metrics providers](#define-metrics-providers)
-   * [Define KeptnMetric information](#define-keptnmetric-information)
-   * [View available metrics](#view-available-metrics)
+   - [Define metrics providers](#define-metrics-providers)
+   - [Define KeptnMetric information](#define-keptnmetric-information)
+   - [View available metrics](#view-available-metrics)
 
 See the
 [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
@@ -78,7 +78,6 @@ by modifying Helm values.
 See
 [Install KLT](../../install/install.md)
 for more information about installing the Lifecycle Toolkit.
-
 
 To verify that the `metrics-operator` is installed in your cluster,
 run the following command:
@@ -164,8 +163,8 @@ resource for each external observability platform you want to use.
 
 For our example, we define two observability platforms:
 
-* `dev-prometheus`
-* `dev-dynatrace`
+- `dev-prometheus`
+- `dev-dynatrace`
 
 You can specify a virtually unlimited number of providers,
 including multiple instances of each observability platform.
@@ -221,8 +220,8 @@ You can define any type of metric from any data source.
 
 In our example, we define two bits of information to retrieve:
 
-* Number of CPUs, derived from the `dev-prometheus` data platform
-* `availability` SLO, derived from the `dev-dynatrace` data platform
+- Number of CPUs, derived from the `dev-prometheus` data platform
+- `availability` SLO, derived from the `dev-dynatrace` data platform
 
 Each of these are configured to fetch data every 10 seconds
 but you could configure a different `fetchIntervalSeconds` value
@@ -259,13 +258,13 @@ spec:
 
 Note the following:
 
-* Populate one YAML file per metric
+- Populate one YAML file per metric
   then apply all of them.
-* Each metric is assigned a unique `name`.
-* The value of the `spec.provider.name` field
+- Each metric is assigned a unique `name`.
+- The value of the `spec.provider.name` field
   must correspond to the name assigned in a
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
-* Information is fetched in on a continuous basis
+- Information is fetched in on a continuous basis
 at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
 
 ### View available metrics
@@ -312,7 +311,7 @@ TODO: Link to HPA subsection after that content is merged
 
 To learn more about the Keptn Metrics Server, see:
 
-* Architecture:
+- Architecture:
   [Keptn Metrics Operator](../../concepts/architecture/components/metrics-operator/)
-* More information about implementing Keptn Metrics:
+- More information about implementing Keptn Metrics:
   [Keptn Metrics](../../implementing/evaluatemetrics.md/)

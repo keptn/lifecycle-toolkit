@@ -181,8 +181,6 @@ Use the following command to view
 the metrics that are configured in your cluster.
 This example displays the two metrics we configured above:
 
-TODO: Is the syntax of the output changed
-to include the `name` of the provider (`dev-prometheus` or `dev-dynatrace`?
 
 ```shell
 kubectl get KeptnMetrics -A

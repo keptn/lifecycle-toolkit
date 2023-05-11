@@ -33,7 +33,7 @@ spec:
 * **apiVersion** -- API version being used.
 `
 * **kind** -- Resource type.
-   Must be set to `KeptnMetric`
+   Must be set to `KeptnMetric`.
 
 * **metadata**
   * **name** -- Unique name of this metric.

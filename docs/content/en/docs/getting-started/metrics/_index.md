@@ -12,7 +12,18 @@ that need observability data to make automated decisions.
 Whether a rollout is good, whether to scale up or down.
 Your observability data may come
 from multiple observability solutions --
-Datadog, Dynatrace, Lightstep, Honeycomb, Splunk, or data directly from your cloud provider such as AWS, Google, and Azure.
+Datadog, Dynatrace, Lightstep, Honeycomb, Splunk,
+or data directly from your cloud provider such as AWS, Google, or Azure.
+
+The
+[Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
+requires that you maintain point-to-point integrations
+from Argo Rollouts, Flux, KEDA, and HPA.
+Each has plugins but it is difficult to maintain them,
+especially if you are using multiple tools,
+and multible observability platforms,
+and multiple instance of some tools or observability platforms.
+The Keptn Metrics Server unifies and standardizes access to this data.
 
 ## Using this exercise
 
@@ -24,12 +35,13 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
-The steps to implement pre- and post-deployment orchestration are:
+The steps to implement metrics are:
 
-1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
-1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
-1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
-1. [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
+1. Install and configure Keptn Lifecycle Toolkit
+   - [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
+   - [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
+   - [Enable KLT for your cluster](#enable-klt-for-your-cluster)
+   - [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
 1. Configure metrics to use
    * [Define metrics providers](#define-metrics-providers)
    * [Define KeptnMetric information](#define-keptnmetric-information)
@@ -46,7 +58,7 @@ or you can create a new cluster.
 For personal study and demonstrations,
 this exercise runs well on a local Kubernetes cluster.
 See [Bring or Install a Kubernetes Cluster](../../install/k8s.md)
-in the *Installation* section.
+in the *Installation* section for more information.
 
 ## Install KLT on your cluster
 
@@ -60,12 +72,13 @@ helm upgrade --install keptn klt/klt \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-If you only want to use Keptn's metrics features,
+> Note: If you only want to use the Keptn metrics features,
 you can install just the `metrics-operator`
 by modifying Helm values.
 See
 [Install KLT](../../install/install.md)
 for more information about installing the Lifecycle Toolkit.
+
 
 To verify that the `metrics-operator` is installed in your cluster,
 run the following command:
@@ -132,14 +145,6 @@ template:
 For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
 [Integrate KLT with your applications](../../implementing/integrate/_index.md).
-
-The [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
-requires that you maintain point-to-point integrations
-from Argo Rollouts, Flux, KEDA, and HPA.
-Each has plugins but it is difficult to maintain them,
-especially if you are using multiple tools
-and multible observability platforms.
-The Keptn Metrics Server unifies and standardizes access to this data.
 
 ## Define metrics to use
 

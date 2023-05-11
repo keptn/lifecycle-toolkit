@@ -31,46 +31,6 @@ Keptn metrics are implemented with two resources:
 
 `KeptnMetrics` can also be retrieved via the Kubernetes Custom Metrics API.
 
-### Using the HorizontalPodAutoscaler
-
-Use the Kubernetes Custom Metrics API
-to refer to `KeptnMetric` via the
-[Kubernetes HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
-(HPA),
-as in the following example:
-
-```yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: podtato-head-entry
-  namespace: podtato-kubectl
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: podtato-head-entry
-  minReplicas: 1
-  maxReplicas: 10
-  metrics:
-    - type: Object
-      object:
-        metric:
-          name: keptnmetric-sample
-        describedObject:
-          apiVersion: metrics.keptn.sh/v1alpha1
-          kind: KeptnMetric
-          name: keptnmetric-sample
-        target:
-          type: Value
-          value: "10"
-```
-
-See the [Scaling Kubernetes Workloads based on Dynatrace Metrics](https://www.linkedin.com/pulse/scaling-kubernetes-workloads-based-dynatrace-metrics-keptnproject/)
-blog post
-for a detailed discussion of doing this with Dynatrace metrics.
-The same approach could be used to implement HPA with other data providers.
-
 ### Retrieve KeptnMetric values with kubectl
 
 Use the `kubectl get --raw` command
@@ -142,3 +102,44 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
   ]
 }
 ```
+
+## Using the HorizontalPodAutoscaler
+
+Use the Kubernetes Custom Metrics API
+to refer to `KeptnMetric` via the
+[Kubernetes HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+(HPA),
+as in the following example:
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: podtato-head-entry
+  namespace: podtato-kubectl
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podtato-head-entry
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Object
+      object:
+        metric:
+          name: keptnmetric-sample
+        describedObject:
+          apiVersion: metrics.keptn.sh/v1alpha1
+          kind: KeptnMetric
+          name: keptnmetric-sample
+        target:
+          type: Value
+          value: "10"
+```
+
+See the
+[Scaling Kubernetes Workloads based on Dynatrace Metrics](https://www.linkedin.com/pulse/scaling-kubernetes-workloads-based-dynatrace-metrics-keptnproject/)
+blog post
+for a detailed discussion of doing this with Dynatrace metrics.
+The same approach could be used to implement HPA with other data providers.

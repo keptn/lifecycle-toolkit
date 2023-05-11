@@ -1,6 +1,6 @@
 ---
 title: Keptn Metrics
-description: Implement Keptn site metrics
+description: Implement Keptn metrics
 weight: 130
 ---
 

@@ -11,7 +11,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230504143450-0fd922ad161f
 	github.com/open-feature/go-sdk v1.3.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.15.0
+	github.com/prometheus/client_golang v1.15.1
 	github.com/prometheus/common v0.42.0
 	github.com/stretchr/testify v1.8.2
 	k8s.io/api v0.26.4
@@ -20,7 +20,7 @@ require (
 	k8s.io/apiserver v0.26.4
 	k8s.io/client-go v0.26.4
 	k8s.io/component-base v0.26.4
-	k8s.io/klog/v2 v2.90.1
+	k8s.io/klog/v2 v2.100.1
 	k8s.io/metrics v0.26.4
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2

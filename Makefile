@@ -65,6 +65,12 @@ install-prometheus:
 .PHONY: install-otel
 install-otel:
 	@echo "-----------------------------------"
+	@echo "Create Namespace and install CertManager"
+	@echo "-----------------------------------"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+	kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
+
+	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"
 	kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
 kubectl port-forward -n keptn-lifecycle-toolkit-system svc/jaeger-query 16686 &
 
 RETRY_COUNT=10

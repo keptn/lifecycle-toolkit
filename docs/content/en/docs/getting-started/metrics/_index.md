@@ -128,8 +128,8 @@ You can define any type of metric from any data source.
 
 In our example, we define two bits of information to retrieve:
 
-* Number of CPUs, derived from the `dev-prometheus` data platform
-* `availability` SLO, derived from the `dev-dynatrace` data platform
+- Number of CPUs, derived from the `dev-prometheus` data platform
+- `availability` SLO, derived from the `dev-dynatrace` data platform
 
 Each of these are configured to fetch data every 10 seconds
 but you could configure a different `fetchIntervalSeconds` value
@@ -180,7 +180,6 @@ at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
 Use the following command to view
 the metrics that are configured in your cluster.
 This example displays the two metrics we configured above:
-
 
 ```shell
 kubectl get KeptnMetrics -A
@@ -268,7 +267,7 @@ TODO: Link to HPA subsection after that content is merged
 
 To learn more about the Keptn Metrics Server, see:
 
-* Architecture:
+- Architecture:
   [Keptn Metrics Operator](../../concepts/architecture/components/metrics-operator/)
-* More information about implementing Keptn Metrics:
+- More information about implementing Keptn Metrics:
   [Keptn Metrics](../../implementing/evaluatemetrics.md/)

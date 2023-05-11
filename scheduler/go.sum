@@ -724,8 +724,8 @@ k8s.io/component-helpers v0.25.9/go.mod h1:o9yuVdUiyKe0ubYP78veYtYxThJx66PsGzpRa
 k8s.io/csi-translation-lib v0.25.9 h1:82oc8yYCapshWTMQVmecBEWSdbhrmpuEOBQUSlh1x5I=
 k8s.io/csi-translation-lib v0.25.9/go.mod h1:oWiY3igOmast1WmTreVezMXyOVRMoB1Eaa5j8CwtwEI=
 k8s.io/klog/v2 v2.0.0/go.mod h1:PBfzABfn139FHAV07az/IF9Wp1bkk3vpT2XSJ76fSDE=
-k8s.io/klog/v2 v2.90.1 h1:m4bYOKall2MmOiRaR1J+We67Do7vm9KiQVlT96lnHUw=
-k8s.io/klog/v2 v2.90.1/go.mod h1:y1WjHnz7Dj687irZUWR/WLkLc5N1YHtjLdmgWjndZn0=
+k8s.io/klog/v2 v2.100.1 h1:7WCHKK6K8fNhTqfBhISHQ97KrnJNFZMcQvKp7gP/tmg=
+k8s.io/klog/v2 v2.100.1/go.mod h1:y1WjHnz7Dj687irZUWR/WLkLc5N1YHtjLdmgWjndZn0=
 k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 h1:MQ8BAZPZlWk3S9K4a9NCkIFQtZShWqoha7snGixVgEA=
 k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1/go.mod h1:C/N6wCaBHeBHkHUesQOQy2/MZqGgMAFPqGsGQLdbZBU=
 k8s.io/kube-scheduler v0.25.9 h1:1niibmG0cU/yGG8O+ORRUhbisQ6k7d+g7O6Fo1CZSNs=

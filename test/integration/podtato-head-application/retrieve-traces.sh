@@ -7,7 +7,7 @@ SLEEP_TIME=5
 
 for i in $(seq 1 $RETRY_COUNT); do
     # Retrieve the custom metric value
-    TRACE_RESPONSE=$(curl http://localhost:16686/api/traces?limit=20&lookback=1h&service=lifecycle-operator&operation=podtato-head-1.3-6b86b273)
+    TRACE_RESPONSE=$(curl http://localhost:16686/api/traces?service=lifecycle-operator&limit=20&lookback=1h&operation=podtato-head-1.3-6b86b273)
 
     echo "$TRACE_RESPONSE"
 

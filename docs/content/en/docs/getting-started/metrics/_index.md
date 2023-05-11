@@ -40,7 +40,7 @@ on your local Kubernetes deployment cluster.
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install the Keptn Lifecycle Toolkit](../../install/install)
+1. [Install the Keptn Lifecycle Toolkit](../../install/install/)
 1. Configure metrics to use
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)

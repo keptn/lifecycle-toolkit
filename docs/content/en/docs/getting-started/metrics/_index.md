@@ -303,7 +303,7 @@ viewing the results, perhaps from CLI and from Grafana?
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use it to implement HPA.
-See Using the HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
+See Using the [HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
 for detailed information.
 
 TODO: Link to HPA subsection after that content is merged

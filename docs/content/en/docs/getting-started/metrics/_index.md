@@ -214,7 +214,7 @@ For example, the output for the `available-cpus` metric looks like:
 $ kubectl get keptnmetrics.metrics.keptn.sh -n simplenode-dev available-cpus
 
 NAME             PROVIDER     QUERY                                           VALUE
-cpu-throttling   my-provider  sum(kube_node_status_capacity{resource=`coy})   6.000
+cpu-throttling   my-provider  sum(kube_node_status_capacity{resource=`cpu`})   6.000
 ```
 
 The syntax to retrieve metrics through the Kubernetes API  is:

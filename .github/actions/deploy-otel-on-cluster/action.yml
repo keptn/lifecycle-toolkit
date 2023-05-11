@@ -1,0 +1,9 @@
+name: "Deploy Prometheus on GH cluster"
+description: "Deploys and exposes Prometheus on GH cluster"
+runs:
+  using: "composite"
+  steps:
+    - name: Install OpenTelemetry
+      shell: bash
+      run: |
+        make install-otel

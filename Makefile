@@ -9,6 +9,9 @@ CHART_APPVERSION ?= v0.7.1 # x-release-please-version
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
 
+# renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
+JAEGER_VERSION ?= v1.42.0
+
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn
@@ -59,7 +62,34 @@ install-prometheus:
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
 
+.PHONY: install-otel
+install-otel:
+	@echo "-----------------------------------"
+	@echo "Create Namespace and install Jaeger"
+	@echo "-----------------------------------"
+	kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/$(JAEGER_VERSION)/jaeger-operator.yaml -n observability
+	kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=300s
+	kubectl apply -f test/otel/jaeger.yaml -n keptn-lifecycle-toolkit-system
 
+	@echo ""
+	@echo "-------------------------------"
+	@echo "Install OpenTelemetry Collector"
+	@echo "-------------------------------"
+	kubectl apply -f test/otel/otel-collector.yaml -n keptn-lifecycle-toolkit-system
+
+	@echo ""
+	@echo "-------------------------------"
+	@echo "Wait for Resources to get ready"
+	@echo "-------------------------------"
+	kubectl wait --for=condition=available deployment/jaeger -n keptn-lifecycle-toolkit-system --timeout=120s
+	kubectl wait --for=condition=available deployment/otel-collector -n keptn-lifecycle-toolkit-system --timeout=120s
+
+	@echo ""
+	@echo "---------------------------------------------------------"
+	@echo "Configure Keptn to send traces to OpenTelemetry Collector"
+	@echo "---------------------------------------------------------"
+	kubectl apply -f test/otel/keptn-config.yaml
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

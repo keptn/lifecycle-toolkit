@@ -35,6 +35,9 @@ jobs:
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
+      - name: Install OpenTelemetry
+        uses: ./.github/actions/deploy-otel-on-cluster
+
       - name: Download KUTTL
         env:
           BASE_URL: "https://github.com/kudobuilder/kuttl/releases"

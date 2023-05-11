@@ -55,7 +55,7 @@ spec:
     For example, you might have `dev-prometheus`
     as the name of the Prometheus server that monitors the dev deployment
     and `prod-prometheus` as the name of the Prometheus server
-    that monitors the production deployment
+    that monitors the production deployment.
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric

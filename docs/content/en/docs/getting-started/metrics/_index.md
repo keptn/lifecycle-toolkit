@@ -40,7 +40,7 @@ on your local Kubernetes deployment cluster.
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install the Keptn Lifecycle Toolkit](../../install/install)
+1. [Install the Keptn Lifecycle Toolkit](../../install/install.md)
 1. Configure metrics to use
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
@@ -258,12 +258,8 @@ You can also display the graphics using a dashboard such as Grafana.
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use it to implement HPA.
-See Using the [HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
+See Using the [HorizontalPodAutoscaler](../../implmenting/evaluatemetrics.md)
 for detailed information.
-
-See
-[Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics/#using-the-horizontalpodautoscaler)
-for more information.
 
 ## Learn more
 

@@ -16,7 +16,8 @@ Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
   This is the less-preferred way because it does not support customization.
 
 After KLT is installed, you must
-[Enable KLT for your cluster](#enable-klt-for-your-cluster).
+[Enable KLT for your cluster](#enable-klt-for-your-cluster)
+in order to run some KLT functionality.
 
 You are then ready to
 [Integrate KLT with your applications](../implementing/integrate).

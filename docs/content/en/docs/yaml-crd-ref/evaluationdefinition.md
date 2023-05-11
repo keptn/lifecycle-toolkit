@@ -11,12 +11,12 @@ These are used as part of evaluation tasks
 that can be run by the Keptn Lifecycle Toolkit
 as part of pre- and post-analysis phases of a workload or application.
 You can then create a [KeptnTaskDefinition](taskdefinition.md)
-that describes an action to take based on the results of the evaluation.
+that describes an action to take when the evaluation target is met.
 
 For example, you could define a `KeptnMetric`
 that reports the number of CPUs in your cluster.
 A `KeptnEvaluationDefinition` could then define the value as `>4`,
-and define a task to be executed if that value is not met.
+and define a task to be executed when that value is met.
 
 ## Yaml Synopsis
 

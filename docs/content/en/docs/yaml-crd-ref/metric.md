@@ -97,7 +97,7 @@ define the `provider` field with the type of the data provider
 rather than the particular name assigned
 to the instance of the data provider
 that is assigned in the
-[KeptnMetricsProvider](metricsprovider.md) CRD.
+[KeptnMetricsProvider](metricsprovider.md) CR.
 
 So the `v1alpha1` and `v1alpha2` synopsis
 of the `spec` field is:

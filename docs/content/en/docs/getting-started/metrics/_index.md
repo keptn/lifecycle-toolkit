@@ -29,7 +29,7 @@ The steps to implement pre- and post-deployment orchestration are:
 1. [Bring or create a Kubernetes cluster](#bring-or-create-a-kubernetes-deployment-cluster)
 1. [Install the Keptn Lifecycle Toolkit on your cluster](#install-klt-on-your-cluster)
 1. [Enable KLT for your cluster](#enable-klt-for-your-cluster)
-1. [Integrate KLT with your cluster](#integrate-klt-with-your-cluster)
+1. [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
 1. Configure metrics to use
    * [Define metrics providers](#define-metrics-providers)
    * [Define KeptnMetric information](#define-keptnmetric-information)
@@ -131,7 +131,7 @@ template:
 
 For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications](../../implementing/integrate.md).
+[Integrate KLT with your applications](../../implementing/integrate/_index.md).
 
 The [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
 requires that you maintain point-to-point integrations

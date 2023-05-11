@@ -58,7 +58,7 @@ spec:
     that monitors the production deployment.
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
-  * **fetchIntervalSeconds** -- Number of seconds between updates of the metric
+  * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
 
 ## Usage
 

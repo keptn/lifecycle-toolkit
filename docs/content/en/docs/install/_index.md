@@ -1,8 +1,6 @@
 ---
 title: Installation
 description: Learn how to install, configure, and upgrade the Keptn Lifecycle Toolkit
-icon: concepts
-layout: quickstart
 weight: 15
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
@@ -18,12 +16,12 @@ or as part of an existing production cluster.
 The steps are:
 
 1. Understand the [Software versions and resources](reqs.md)
-   that are required
-1. [Bring or create your Kubernetes cluster](k8s.md)
-1. [Replace the default cert-manager](cert-manager.md) (optional)
+   that are required.
+1. [Bring or create your Kubernetes cluster](k8s.md).
+1. [Replace the default cert-manager](cert-manager.md) (optional).
    This step is only required if you want to replace
    the default KLT cert-manager with another cert-manager.
-1. [Install the Keptn Lifecycle Controller](install.md)
+1. [Install the Keptn Lifecycle Controller](install.md).
 1. [Enable `lifecycle-toolkit`](install.md/#enable-klt-for-your-cluster).
    This step is not required if you only want to run Keptn Metrics.
 

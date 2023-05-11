@@ -278,7 +278,7 @@ TODO: Is the syntax of the output changed
 to include the `name` of the provider (`dev-prometheus` or `dev-dynatrace`?
 
 ```shell
-get KeptnMetrics -A
+kubectl get KeptnMetrics -A
 ```
 
 ```shell

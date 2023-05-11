@@ -1,13 +1,11 @@
 ---
-title: Install KLT
+title: Install and enable KLT
 description: Install the Keptn Lifecycle Toolkit
-icon: concepts
-layout: quickstart
 weight: 35
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Two methods are supported for installing the Keptn Lifecycle Toolkit:
+Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
 
 * Releases v0.7.0 and later can be installed using
   the [Helm Chart](#use-helm-chart).
@@ -16,6 +14,12 @@ Two methods are supported for installing the Keptn Lifecycle Toolkit:
 * All releases can be installed using
   the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
+
+After KLT is installed, you must
+[Enable KLT for your cluster](#enable-klt-for-your-cluster).
+
+You are then ready to
+[Integrate KLT with your applications](../implementing/integrate).
 
 ## Use Helm Chart
 
@@ -33,15 +37,28 @@ helm upgrade --install keptn klt/klt \
 Note that the `helm repo update` command is used for fresh installs
 as well as for upgrades.
 
-Use the `--version <version>` flag on the
-`helm upgrade --install` command line to specify a different KLT version.
+Some helpful hints:
 
-Use the following command sequence to see a list of available versions:
+* Use the `--version <version>` flag on the
+  `helm upgrade --install` command line to specify a different KLT version.
 
-```shell
-helm repo update
-helm search repo klt
-```
+* Use the following command sequence to see a list of available versions:
+
+  ```shell
+  helm repo update
+  helm search repo klt
+  ```
+
+* To verify that the KLT components are installed in your cluster,
+  run the following command:
+
+  ```shell
+  kubectl get pods -n keptn-lifecycle-toolkit-system
+  ```
+
+  The output shows all components that are running on your system.
+
+### Modify Helm configuration options
 
 To modify configuration options, download a copy of the
 [helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
@@ -107,3 +124,24 @@ kubectl wait --for=condition=Available deployment/lifecycle-operator \
 ```
 
 The Lifecycle Toolkit and its dependencies are now installed and ready to use.
+
+## Enable KLT for your cluster
+
+To enable KLT for your cluster, annotate the Kubernetes
+[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+resource.
+In this example, this is defined in the
+[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
+file, which looks like this:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: simplenode-dev
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled"
+```
+
+You see the annotation line that enables `lifecycle-toolkit`.
+This line tells KLT to handle the namespace

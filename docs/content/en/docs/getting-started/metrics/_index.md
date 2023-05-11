@@ -278,13 +278,13 @@ TODO: Is the syntax of the output changed
 to include the `name` of the provider (`dev-prometheus` or `dev-dynatrace`?
 
 ```shell
-get KeptnMetrics -A
+kubectl get KeptnMetrics -A
 ```
 
 ```shell
 NAMESPACE       NAME              PROVIDER   QUERY
-simplenode-dev  availability-slo  dynatrace  func:slo.availability_simplenodeservice
-simplenode-dev  available-cpus    prometheus sum(kube_node_status_capacity{resource=`coy})
+simplenode-dev  availability-slo  dev-dynatrace  func:slo.availability_simplenodeservice
+simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{resource=`cpu`})
 ```
 
 ## Run the metrics
@@ -303,7 +303,7 @@ viewing the results, perhaps from CLI and from Grafana?
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use it to implement HPA.
-See Using the HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
+See Using the [HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
 for detailed information.
 
 TODO: Link to HPA subsection after that content is merged

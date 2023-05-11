@@ -261,7 +261,9 @@ HPA can retrieve KeptnMetrics and use it to implement HPA.
 See Using the [HorizontalPodAutoscaler](../../implmenting/evaluatemetrics)
 for detailed information.
 
-TODO: Link to HPA subsection after that content is merged
+See
+[Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics/#using-the-horizontalpodautoscaler)
+for more information.
 
 ## Learn more
 

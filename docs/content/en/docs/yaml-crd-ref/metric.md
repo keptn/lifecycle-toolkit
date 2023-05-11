@@ -40,7 +40,7 @@ spec:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-  * **namespace** -- Namespace of the application using this metric
+  * **namespace** -- Namespace of the application using this metric.
 
 * **spec**
   * **provider.name** --

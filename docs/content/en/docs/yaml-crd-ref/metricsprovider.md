@@ -42,7 +42,7 @@ spec:
 * **metadata**
   * **name** -- Unique name of this provider,
     used to reference the provider for the
-    [KeptnEvaluationDefinition](evaluationdefinition)
+    [KeptnEvaluationDefinition](evaluationdefinition.md)
     and [KeptnMetric](metric.md) resources.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)

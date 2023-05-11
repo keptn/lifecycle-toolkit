@@ -185,4 +185,4 @@ To learn more about the Keptn Metrics Server, see:
 * Architecture:
   [Keptn Metrics Operator](../../concepts/architecture/components/metrics-operator/)
 * More information about implementing Keptn Metrics:
-  [Keptn Metrics](../../implementing/metrics.md/)
+  [Keptn Metrics](../../implementing/metrics.md)

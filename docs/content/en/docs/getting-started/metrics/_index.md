@@ -150,7 +150,7 @@ spec:
     name: dev-prometheus
   query: "sum(kube_node_status_cvapacity{resources`cpu`})"
   fetchIntervalSeconds: 10
-...
+---
 apiVersion: metrics.keptn.sh/v1alpha2
 kind: Keptnmetric
 metadata:
@@ -161,7 +161,6 @@ spec:
     name: dev-dynatrace
   query: "func:slo.availability_simplenodeservice"
   fetchIntervalSeconds: 10
-...
 ```
 
 Note the following:

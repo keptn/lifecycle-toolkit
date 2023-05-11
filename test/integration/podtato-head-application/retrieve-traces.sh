@@ -1,6 +1,12 @@
 #!/bin/bash
 
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+terminate_children() {
+  echo "Terminating child processes..."
+  pkill -P $$
+}
+
+# Set up the signal handler
+trap terminate_children SIGINT SIGTERM
 
 kubectl port-forward -n keptn-lifecycle-toolkit-system svc/jaeger-query 16686 &
 

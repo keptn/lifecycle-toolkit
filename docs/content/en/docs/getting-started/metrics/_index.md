@@ -283,8 +283,8 @@ kubectl get KeptnMetrics -A
 
 ```shell
 NAMESPACE       NAME              PROVIDER   QUERY
-simplenode-dev  availability-slo  dynatrace  func:slo.availability_simplenodeservice
-simplenode-dev  available-cpus    prometheus sum(kube_node_status_capacity{resource=`coy})
+simplenode-dev  availability-slo  dev-dynatrace  func:slo.availability_simplenodeservice
+simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{resource=`cpu`})
 ```
 
 ## Run the metrics

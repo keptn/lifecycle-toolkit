@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.20
 
 require (
-	github.com/argoproj/argo-rollouts v1.4.1
+	github.com/argoproj/argo-rollouts v1.5.0
 	github.com/benbjohnson/clock v1.3.3
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
@@ -96,7 +96,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/component-base v0.26.4 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
-	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
+	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect

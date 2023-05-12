@@ -6,7 +6,7 @@ terminate_children() {
 }
 
 # Set up the signal handler
-trap terminate_children SIGINT SIGTERM
+trap terminate_children SIGINT SIGTERM EXIT
 
 kubectl port-forward -n keptn-lifecycle-toolkit-system svc/jaeger-query 16686 &
 

@@ -7,17 +7,48 @@ weight: 45
 The Keptn Lifecycle Toolkit makes any Kubernetes deployment observable.
 You can readily see why a deployment takes so long or why it fails,
 even when using multiple deployment tools.
-Keptn provides a Keptn application CRD
+Keptn provides a Keptn application resource
 that aggregates multiple Workloads into a single resource
 that can be monitored.
 
-The Lifecycle Toolkit emits OpenTelemetry traces
-for everything that happens in the Kubernetes pod scheduler
-and can display this information on dashboard tools
-such as Grafana and Jaeger.
-DORA metrics are implemented out of the box
-when the Lifecycle Toolkit is enabled
-and you can define additional metrics you want to monitor.
+The observability data is an amalgamation of the following:
+
+- The Lifecycle Toolkit emits OpenTelemetry traces
+  for everything that happens in the Kubernetes pod scheduler
+  and can display this information with dashboard tools
+  such as Grafana and Jaeger.
+- DORA metrics are implemented out of the box
+  when the Lifecycle Toolkit is enabled
+- You can define specific metrics you want to monitor
+  from all the data providers configured in your cluster.
+
+## Using this exercise
+
+This exercise is based on the
+[simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
+example.
+You can clone that repo to access it locally
+or just look at it for examples
+as you implement the functionality "from scratch"
+on your local Kubernetes deployment cluster.
+
+The steps to implement standardized observability
+in an existing cluster are:
+
+1. Install and configure the Lifecycle Toolkit on your cluster
+   - Be sure that your cluster includes the components discussed in
+     [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
+   - [Install the Keptn Lifecycle Toolkit](../install/install/#use-helm-chart)
+     on your cluster using the Helm chart
+   - [Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
+2. Observe your deployments
+   - [Integrate KLT with your cluster](#integrate-klt-with-your-deployment)
+   - Create a Keptn application
+   - [View observability data](#view-available-metrics)
+
+See the
+[Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
+video for a demonstration of this exercise.
 
 This exercise builds on what you did in the
 [Getting started with Keptn metrics](../metrics)
@@ -48,9 +79,9 @@ The steps are:
 ## Integrate KLT with your applications
 
 Integrate the Lifecycle Toolkit with your applications
-by annotating the Kubernetes `Deployment` and `Namespace` CRDs
+by annotating the Kubernetes `Deployment` and `Namespace` CRs
 
-### Annotate Deployment CRD
+### Annotate Deployment CR
 
 [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 For our example, modify the simplenode-dev-deployment.yaml file
@@ -64,7 +95,7 @@ app.kubernetes.io/name: simplenodeservice
 If you have multiple deployments or stateful sets,
 use the following syntax to reference the
 [KeptnApp](../../yaml-crd-ref/app.md)
-CRD:
+resource:
 
 ```yaml
 app.kubernetes.io/part-of: simpleapp
@@ -90,11 +121,11 @@ as well as a version for each workload that is in the app or
 should we just link to the ref page for those details.
 
 TODO: Is this version number automatically sync'ed with
-the application version in the KeptnApp CRD?
+the application version in the KeptnApp CR?
 If I have KeptnApp defined, should I change version number
 in KeptnApp or in Workload or does it matter?
 
-### Annotate Namespace CRD
+### Annotate Namespace CR
 
 TODO: This is the first time we've mentioned Namespace.
 Should we mention something about setting the namespace and all that?

@@ -81,7 +81,8 @@ Your cluster should include the following:
   Alternatively, KLT also works with just `kubctl apply` for deployment.
 
 * If you want to use the standardized observability feature,
-  install an OpenTelemetry collector on your cluster.  See
+  install an OpenTelemetry collector on your cluster.
+   See
   [OpenTelemetry Collector](https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/basics/collector)
   for more information.
 

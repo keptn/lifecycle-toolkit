@@ -54,26 +54,26 @@ This exercise builds on what you did in the
 [Getting started with Keptn metrics](../metrics)
 exercise:
 
-* Install the Keptn Lifecycle Toolkit on your deployment cluster
-* Enable the Lifecycle Toolkit for your cluster
+- Install the Keptn Lifecycle Toolkit on your deployment cluster
+- Enable the Lifecycle Toolkit for your cluster
   and integrate it into your cluster
-* Define `KeptnMetrics` for the data you want to monitor.
+- Define `KeptnMetrics` for the data you want to monitor.
 
 This exercise shows how to standardize access
 to the observability data for your cluster.
 The steps are:
 
-* Configure OpenTelemetry for the Lifecycle Toolkit
-* Define the workloads to be included in your Keptn Application.
+- Configure OpenTelemetry for the Lifecycle Toolkit
+- Define the workloads to be included in your Keptn Application.
   You can specify this manually or use the application discovery feature
   to automatically generate a Keptn Application
   that includes all workloads on the cluster,
   regardless of the tools being used
   that includes all workloads running in the cluster,
-* If you like, define `KeptnMetrics` for additional data you want to monitor.
-* Increment the version number for either your Workload
+- If you like, define `KeptnMetrics` for additional data you want to monitor.
+- Increment the version number for either your Workload
   or your application to start aggragating data
-* View the aggregated metrics and traces on Grafana
+- View the aggregated metrics and traces on Grafana
   or the dashboard of your choice
 
 ## Integrate KLT with your applications

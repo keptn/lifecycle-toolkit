@@ -6,7 +6,8 @@ weight: 25
 
 The Keptn metrics component of the Keptn Lifecycle Toolkit
 allow you to define any type of metric
-from multiple instances of any type of data source in your Kubernetes cluster.
+from multiple instances
+of any type of data source in your Kubernetes cluster.
 You may have deployment tools like Argo, Flux, KEDA, HPA, or Keptn
 that need observability data to make automated decisions
 such as whether a rollout is good, whether to scale up or down.

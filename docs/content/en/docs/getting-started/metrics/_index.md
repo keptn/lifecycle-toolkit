@@ -6,17 +6,19 @@ weight: 25
 
 The Keptn metrics component of the Keptn Lifecycle Toolkit
 allow you to define any type of metric
-from multiple instances of any type of data source in your Kubernetes cluster.
-You may have tools like Argo, Flux, KEDA, HPA, or Keptn
-that need observability data to make automated decisions.
-Whether a rollout is good, whether to scale up or down.
+from multiple instances
+of any type of data source in your Kubernetes cluster.
+You may have deployment tools like Argo, Flux, KEDA, HPA, or Keptn
+that need observability data to make automated decisions
+such as whether a rollout is good, whether to scale up or down.
 Your observability data may come
 from multiple observability solutions --
-Datadog, Dynatrace, Lightstep, Honeycomb, Splunk,
+Prometheus, Dynatrace, Datadog and others --
 or data directly from your cloud provider such as AWS, Google, or Azure.
 
-The Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives
-so minimal configuration is required.
+The Keptn Metrics Server unifies and standardizes access to all this data.
+Minimal configuration is required
+because the Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives.
 
 The
 [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
@@ -26,7 +28,6 @@ Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
 and multible observability platforms,
 and multiple instance of some tools or observability platforms.
-The Keptn Metrics Server unifies and standardizes access to this data.
 
 ## Using this exercise
 

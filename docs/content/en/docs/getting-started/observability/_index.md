@@ -134,7 +134,7 @@ template:
 
 For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications](../../implementing/integrate.md).
+[Integrate KLT with your applications](../../implementing/integrate/_index.md).
 
 ## Define evaluations to be performed pre- and post-deployment
 

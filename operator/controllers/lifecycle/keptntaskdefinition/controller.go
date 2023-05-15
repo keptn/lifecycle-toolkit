@@ -58,11 +58,12 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		r.Log.Error(err, "Failed to get the KeptnTaskDefinition")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
-
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
-		err := r.reconcileFunction(ctx, req, definition)
-		if err != nil {
-			return ctrl.Result{}, nil
+	if definition.Spec.ProviderType == "" || definition.Spec.ProviderType == klcv1alpha3.FUNCTION_PROVIDER {
+		if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
+			err := r.reconcileFunction(ctx, req, definition)
+			if err != nil {
+				return ctrl.Result{}, nil
+			}
 		}
 	}
 	r.Log.Info("Finished Reconciling KeptnTaskDefinition")

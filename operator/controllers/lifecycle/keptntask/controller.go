@@ -19,6 +19,7 @@ package keptntask
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -26,6 +27,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask/providers"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
@@ -33,6 +35,7 @@ import (
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -98,7 +101,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	if !jobExists {
-		err = r.createJob(ctx, req, task)
+		err = r.CreateJob(ctx, req, task)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
 			r.Log.Error(err, "could not create Job")
@@ -109,7 +112,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	if !task.Status.Status.IsCompleted() {
-		err := r.updateJob(ctx, req, task)
+		err := r.UpdateJob(ctx, req, task)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
@@ -170,4 +173,102 @@ func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha3.Ke
 
 func (r *KeptnTaskReconciler) getTracer() controllercommon.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
+}
+
+func (r *KeptnTaskReconciler) getProvider(taskDef *klcv1alpha3.KeptnTaskDefinition) providers.IProvider {
+
+	jsProvider := &providers.JSFunctionProvider{
+		Log:      r.Log,
+		Client:   r.Client,
+		Scheme:   r.Scheme,
+		Recorder: r.Recorder,
+	}
+	if taskDef.Spec.ProviderType == "" {
+		return jsProvider
+	}
+
+	switch taskDef.Spec.ProviderType {
+	case klcv1alpha3.FUNCTION_PROVIDER:
+		return jsProvider
+	case klcv1alpha3.CONTAINER_RUNTIME_PROVIDER:
+
+		return &providers.ContainerRuntimeProvider{
+			Log:      r.Log,
+			Client:   r.Client,
+			Scheme:   r.Scheme,
+			Recorder: r.Recorder,
+		}
+	default:
+		r.Log.Error(errors.NewBadRequest("provider type does not exist"), "Failed to get task provider:")
+		return nil
+	}
+}
+
+func notEmpty(taskDef *klcv1alpha3.KeptnTaskDefinition) bool {
+	switch taskDef.Spec.ProviderType {
+	case klcv1alpha3.FUNCTION_PROVIDER:
+		return !reflect.DeepEqual(taskDef.Spec.Function, klcv1alpha3.FunctionSpec{})
+	case klcv1alpha3.CONTAINER_RUNTIME_PROVIDER:
+		return !reflect.DeepEqual(taskDef.Spec.Container, klcv1alpha3.ContainerRuntimeSpec{})
+	default:
+		return false
+	}
+}
+
+func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namespace string) (*batchv1.Job, error) {
+	job := &batchv1.Job{}
+	err := r.Client.Get(ctx, types.NamespacedName{Name: jobName, Namespace: namespace}, job)
+	if err != nil {
+		return job, err
+	}
+	return job, nil
+}
+
+func (r *KeptnTaskReconciler) UpdateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
+	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
+	if err != nil {
+		task.Status.JobName = ""
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", task, "JobReferenceRemoved", "removed Job Reference as Job could not be found", "")
+		err = r.Client.Status().Update(ctx, task)
+		if err != nil {
+			r.Log.Error(err, "could not remove job reference for: "+task.Name)
+		}
+		return err
+	}
+	if len(job.Status.Conditions) > 0 {
+		if job.Status.Conditions[0].Type == batchv1.JobComplete {
+			task.Status.Status = apicommon.StateSucceeded
+		} else if job.Status.Conditions[0].Type == batchv1.JobFailed {
+			task.Status.Status = apicommon.StateFailed
+			task.Status.Message = job.Status.Conditions[0].Message
+			task.Status.Reason = job.Status.Conditions[0].Reason
+		}
+	}
+	return nil
+}
+
+func (r *KeptnTaskReconciler) CreateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
+
+	jobName := ""
+	definition, err := providers.GetTaskDefinition(ctx, r.Client, task.Spec.TaskDefinition, req.Namespace)
+	if err != nil {
+		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		return err
+	}
+	provider := r.getProvider(definition)
+	if notEmpty(definition) {
+		jobName, err = provider.CreateJob(ctx, req, task, definition)
+		if err != nil {
+			return err
+		}
+	}
+
+	task.Status.JobName = jobName
+	task.Status.Status = apicommon.StatePending
+	err = r.Client.Status().Update(ctx, task)
+	if err != nil {
+		r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
+	}
+	r.Log.Info("updated configmap status reference for: " + definition.Name)
+	return nil
 }

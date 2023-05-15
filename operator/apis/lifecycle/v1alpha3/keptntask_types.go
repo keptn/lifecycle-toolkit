@@ -261,3 +261,20 @@ func (t KeptnTask) GetActiveDeadlineSeconds() *int64 {
 	seconds := int64(deadline.Seconds())
 	return &seconds
 }
+
+func (t KeptnTask) SetupTaskContext() TaskContext {
+	taskContext := TaskContext{}
+
+	if t.Spec.Workload != "" {
+		taskContext.WorkloadName = t.Spec.Workload
+		taskContext.WorkloadVersion = t.Spec.WorkloadVersion
+		taskContext.ObjectType = "Workload"
+
+	} else {
+		taskContext.ObjectType = "Application"
+		taskContext.AppVersion = t.Spec.AppVersion
+	}
+	taskContext.AppName = t.Spec.AppName
+
+	return taskContext
+}

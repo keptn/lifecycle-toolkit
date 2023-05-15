@@ -17,14 +17,19 @@ limitations under the License.
 package v1alpha3
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+const FUNCTION_PROVIDER = "function"
+const CONTAINER_RUNTIME_PROVIDER = "container"
+
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
+	Container ContainerRuntimeSpec `json:"container,omitempty"`
 	// Function contains the definition for the function that is to be executed in KeptnTasks based on
 	// the KeptnTaskDefinitions.
 	Function FunctionSpec `json:"function,omitempty"`
@@ -40,7 +45,21 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	Timeout metav1.Duration `json:"timeout,omitempty"`
+	Timeout      metav1.Duration `json:"timeout,omitempty"`
+	ProviderType string          `json:"provider,omitempty"`
+}
+
+type ContainerRuntimeSpec struct {
+	JobNamespace                string                  `json:"jobNamespace,omitempty"`
+	Image                       string                  `json:"image,omitempty"`
+	ImagePullPolicy             v1.PullPolicy           `json:"imagePullPolicy,omitempty"`
+	DefaultResourceRequirements v1.ResourceRequirements `json:",omitempty"`
+	DefaultSecurityContext      *v1.SecurityContext     `json:",omitempty"`
+	DefaultPodSecurityContext   *v1.PodSecurityContext  `json:",omitempty"`
+	JobAdditionalLabels         map[string]string       `json:"additional-labels,omitempty"`
+	ContainerEnv                []v1.EnvVar             `json:"env,omitempty"`
+	Command                     []string                `json:"command,omitempty"`
+	Args                        []string                `json:"args,omitempty"`
 }
 
 type FunctionSpec struct {
@@ -65,22 +84,18 @@ type FunctionSpec struct {
 }
 
 type ConfigMapReference struct {
-	// Name is the name of the referenced ConfigMap.
 	Name string `json:"name,omitempty"`
 }
 
 type FunctionReference struct {
-	// Name is the name of the referenced KeptnTaksDefinition.
 	Name string `json:"name,omitempty"`
 }
 
 type Inline struct {
-	// Code contains the code of the function.
 	Code string `json:"code,omitempty"`
 }
 
 type HttpReference struct {
-	// Url is the URL containing the code of the function.
 	Url string `json:"url,omitempty"`
 }
 

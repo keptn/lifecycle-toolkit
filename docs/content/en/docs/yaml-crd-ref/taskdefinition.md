@@ -158,7 +158,7 @@ if (contextdata.objectType == "Application") {
     let application_version = contextdata.appVersion;
 }
 
-if (contextdata.objectType == "Workload") {
+if (context.objectType == "Workload") {
     let application_name = contextdata.appName;
     let workload_name = contextdata.workloadName;
     let workload_version = contextdata.workloadVersion;

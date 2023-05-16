@@ -29,7 +29,7 @@ even if they are using different deployment tools.
 And it can capture metrics from multiple data sources
 using multiple data platforms.
 With KLT implmented on your cluster,
-you can easily monitor what is happening in the Kuberenets pod scheduler,
+you can easily monitor what is happening during a deployment into your Kuberenetes cluster,
 and quickly get data to help you understand issues such as
 why a deployment took so long or why it failed.
 

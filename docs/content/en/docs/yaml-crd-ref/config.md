@@ -73,4 +73,4 @@ API Reference:
 
 * [KeptnApp](../yaml-crd-ref/app.md)
 * [OpenTelemetry observability](../implementing/otel.md)
-* [Keptn automatic app discovery](../implementing/integrate.md/#use-keptn-automatic-app-discovery)
+* [Keptn automatic app discovery](../implementing/integrate/_index.md/#use-keptn-automatic-app-discovery)

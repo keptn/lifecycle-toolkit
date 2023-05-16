@@ -135,7 +135,7 @@ For more information about using annotations and labels
 to integrate KLT into your deployment cluster, see
 [Integrate KLT with your applications](../../implementing/integrate/_index.md).
 
-## Define evaluations to be performed pre- and post-deployment
+## Define evaluations to be performed as pre- and post-deployment
 
 An `evaluation` is a KeptnMetric that has a defined target value.
 Evaluations are resources that are defined in a

@@ -109,6 +109,10 @@ Follow the instructions in
 [Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
 to enable KLT on your cluster.
 
+The
+[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
+file defines the `Namespace` resource for our example.
+
 ### Verify that your cluster is ready
 
 Run the following command to ensure that your Kuberetes cluster
@@ -116,6 +120,7 @@ is ready to complete this exercise by running:
 
 ```shell
 kubectl get pods -n keptn-lifecycle-toolkit-system
+```
 
 You should see pods for the following components:
 - certificate-operator (or another cert manager)
@@ -123,7 +128,6 @@ You should see pods for the following components:
 - scheduler
 - otel-collector
 - metrics-operator
-```
 
 ### Annotate Deployment resource
 
@@ -133,7 +137,7 @@ to apply basic annotations to your `Deployment` resource.
 
 The
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml/)
-file defines the Deployment resource for our example.
+file defines the `Deployment` resource for our example.
 
 The example file also includes annotations for
 pre- and post-deployment activities.

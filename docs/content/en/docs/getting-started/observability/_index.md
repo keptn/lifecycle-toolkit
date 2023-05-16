@@ -18,7 +18,7 @@ the Lifecycle Toolkit can do the following:
 
 * Automatically validate against your SLO (Service Level Objectives)
 
-KLT sits in the job scheduler and can trace the deployment
+KLT sits in the Kubernetes scheduler and can trace the deployment
 from start to end.
 KLT is also application aware,
 so we can extend the deployment

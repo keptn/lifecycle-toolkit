@@ -105,26 +105,9 @@ you now need to install the full KLT.
 
 ### Enable KLT on your cluster
 
-To enable KLT on your cluster, you need to annotate the
-[Kubernetes Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
-
-The YAML file for the Namespace CR in our sample app is
-[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml/).
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: simplenode-dev
-  annotations:
-    kept.sh/lifecycle-toolkit: "enabled"
-```
-
-The annotation on the last line
-activates the Lifecycle toolkit on your cluster.
-
-For more information, see
-[Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster).
+Follow the instructions in
+[Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
+to enable KLT on your cluster.
 
 ### Verify that your cluster is ready
 
@@ -144,59 +127,17 @@ You should see pods for the following components:
 
 ### Annotate Deployment resource
 
-Annotations to the
-[Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-resource enable the `lifecycle-controller` and `scheduler` components
-to extend the Kubernetes pod scheduler
-and to trace what the pod scheduler is doing
-and how long it takes.
+Follow the instructions in
+[Annotate workload](../../implementing/integrate/#basic-annotations)
+to apply basic annotations to your `Deployment` resource.
 
 The
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml/)
 file defines the Deployment resource for our example.
-The lines that must be set for this exercise are:
-
-```yaml
-...
-spec:
-  ...
-  template:
-    metadata:
-      labels:
-        app: simplenode
-        app.kubernetes.io/name: simplenodeservice
-      annotations:
-        # keptn.sh/app: simpleapp
-        keptn.sh/workload: simplenode
-        keptn.sh/version: 1.0.2
-  ...
-...
-```
-
-This example uses the Keptn annotations
-and Kubernetes labels.
-
-TODO: Should we mention the app.kubernetes.io/part-of annotation?
-The docs for automatic app discovery mention that annotation
-so perhaps better to just leave it for that?
-
-```yaml
-keptn.sh/app: simpleapp
-keptn.sh/workload: simplenode
-keptn.sh/version: x.y.z
-```
-
-The version number is an arbitrary version for the Workload
-and you can use any sort of numbering system you like.
-Incrementing this value triggers a new execution of the Workload.
 
 The example file also includes annotations for
 pre- and post-deployment activities.
 We will discuss those in a separate exercise.
-
-See
-[Integrate KLT with your applications](../../implementing/integrate)
-for more information.
 
 ## Define the Keptn application
 

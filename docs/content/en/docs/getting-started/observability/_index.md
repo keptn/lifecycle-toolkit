@@ -19,7 +19,7 @@ The observability data is an amalgamation of the following:
   when the Lifecycle Toolkit is enabled
 - OpenTelemetry traces everything that happens in the Kubernetes pod scheduler
   and can display this information with dashboard tools
-  such as Grafana and Jaeger.
+  such as Grafana.
 - Specific metrics that you can define to monitor
   information from all the data providers configured in your cluster.
 

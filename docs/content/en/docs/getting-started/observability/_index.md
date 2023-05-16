@@ -7,9 +7,9 @@ weight: 45
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
 You can readily see why a deployment takes so long or why it fails,
 even when using multiple deployment tools.
-Keptn provides a Keptn application resource
-that aggregates multiple Workloads into a single resource
-that can be monitored.
+Keptn provides a `KeptnApplication` resource
+which is an abstraction that connects multiple
+Workloads belonging together.
 In other words, KLT, creates a distributed end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
 

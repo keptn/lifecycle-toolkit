@@ -3,18 +3,18 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.20
 
 require (
-	github.com/argoproj/argo-rollouts v1.4.1
-	github.com/benbjohnson/clock v1.3.3
+	github.com/argoproj/argo-rollouts v1.5.0
+	github.com/benbjohnson/clock v1.3.4
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230504143450-0fd922ad161f
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230413082525-dd15d4a0e0e4
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.9.2
+	github.com/onsi/ginkgo/v2 v2.9.4
 	github.com/onsi/gomega v1.27.6
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.15.0
-	github.com/spf13/afero v1.9.5
+	github.com/prometheus/client_golang v1.15.1
 	github.com/stretchr/testify v1.8.2
 	go.opentelemetry.io/otel v1.11.2
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
@@ -24,7 +24,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.11.2
 	go.opentelemetry.io/otel/sdk/metric v0.34.0
 	go.opentelemetry.io/otel/trace v1.11.2
-	google.golang.org/grpc v1.54.0
+	google.golang.org/grpc v1.54.1
 	k8s.io/api v0.26.4
 	k8s.io/apiextensions-apiserver v0.26.4
 	k8s.io/apimachinery v0.26.4
@@ -36,7 +36,7 @@ require (
 require (
 	github.com/prometheus/common v0.42.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/term v0.7.0 // indirect
@@ -80,6 +80,7 @@ require (
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
+	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.11.2 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.11.2 // indirect
@@ -87,7 +88,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/tools v0.8.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
@@ -96,7 +97,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/component-base v0.26.4 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
-	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
+	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect

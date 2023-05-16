@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.4
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: keptntasks.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -281,27 +281,47 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnTaskSpec defines the desired state of KeptnTask
+            description: Spec describes the desired state of the KeptnTask.
             properties:
               app:
+                description: AppName defines the KeptnApp for which the KeptnTask
+                  is executed.
                 type: string
               appVersion:
+                description: AppVersion defines the version of the KeptnApp for which
+                  the KeptnTask is executed.
                 type: string
               checkType:
+                description: Type indicates whether the KeptnTask is part of the pre-
+                  or postDeployment phase.
                 type: string
               context:
+                description: Context contains contextual information about the task
+                  execution.
                 properties:
                   appName:
+                    description: AppName the name of the KeptnApp the KeptnTask is
+                      being executed for.
                     type: string
                   appVersion:
+                    description: AppVersion the version of the KeptnApp the KeptnTask
+                      is being executed for.
                     type: string
                   objectType:
+                    description: ObjectType indicates whether the KeptnTask is being
+                      executed for a KeptnApp or KeptnWorkload.
                     type: string
                   taskType:
+                    description: TaskType indicates whether the KeptnTask is part
+                      of the pre- or postDeployment phase.
                     type: string
                   workloadName:
+                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
+                      is being executed for.
                     type: string
                   workloadVersion:
+                    description: WorkloadVersion the version of the KeptnWorkload
+                      the KeptnTask is being executed for.
                     type: string
                 required:
                 - appName
@@ -312,30 +332,59 @@ spec:
                 - workloadVersion
                 type: object
               parameters:
+                description: Parameters contains parameters that will be passed to
+                  the job that executes the task.
                 properties:
                   map:
                     additionalProperties:
                       type: string
+                    description: Inline contains the parameters that will be made
+                      available to the job executing the KeptnTask via the 'DATA'
+                      environment variable. The 'DATA'  environment variable's content
+                      will be a json encoded string containing all properties of the
+                      map provided.
                     type: object
                 type: object
               retries:
                 default: 10
+                description: Retries indicates how many times the KeptnTask can be
+                  attempted in the case of an error before considering the KeptnTask
+                  to be failed.
                 format: int32
                 type: integer
               secureParameters:
+                description: SecureParameters contains secure parameters that will
+                  be passed to the job that executes the task. These will be stored
+                  and accessed as secrets in the cluster.
                 properties:
                   secret:
+                    description: Secret contains the parameters that will be made
+                      available to the job executing the KeptnTask via the 'SECRET_DATA'
+                      environment variable. The 'SECRET_DATA'  environment variable's
+                      content will the same as value of the 'SECRET_DATA' key of the
+                      referenced secret.
                     type: string
                 type: object
               taskDefinition:
+                description: TaskDefinition refers to the name of the KeptnTaskDefinition
+                  which includes the specification for the task to be performed. The
+                  KeptnTaskDefinition can be located in the same namespace as the
+                  KeptnTask, or in the KLT namespace.
                 type: string
               timeout:
                 default: 5m
+                description: Timeout specifies the maximum time to wait for the task
+                  to be completed successfully. If the task does not complete successfully
+                  within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
+                description: Workload defines the KeptnWorkload for which the KeptnTask
+                  is executed.
                 type: string
               workloadVersion:
+                description: WorkloadVersion defines the version of the KeptnWorkload
+                  for which the KeptnTask is executed.
                 type: string
             required:
             - app
@@ -346,22 +395,31 @@ spec:
             - workloadVersion
             type: object
           status:
-            description: KeptnTaskStatus defines the observed state of KeptnTask
+            description: Status describes the current state of the KeptnTask.
             properties:
               endTime:
+                description: EndTime represents the time at which the KeptnTask finished.
                 format: date-time
                 type: string
               jobName:
+                description: JobName is the name of the Job executing the Task.
                 type: string
               message:
+                description: Message contains information about unexpected errors
+                  encountered during the execution of the KeptnTask.
                 type: string
               reason:
+                description: Reason contains more information about the reason for
+                  the last transition of the Job executing the KeptnTask.
                 type: string
               startTime:
+                description: StartTime represents the time at which the KeptnTask
+                  started.
                 format: date-time
                 type: string
               status:
                 default: Pending
+                description: Status represents the overall state of the KeptnTask.
                 type: string
             type: object
         type: object

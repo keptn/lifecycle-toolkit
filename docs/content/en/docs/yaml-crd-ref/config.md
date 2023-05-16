@@ -49,8 +49,7 @@ that describes all configurations for that cluster.
 ### OTel example
 
 This example specifies the URL of the OpenTelemetry collector
-and the interval for
-running the automatic app discovery:
+and that the automatic app discovery should be run every 40 seconds:
 
 ```yaml
 apiVersion: options.keptn.sh/v1alpha2
@@ -67,11 +66,11 @@ spec:
 API Reference:
 
 * [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
-* [KeptnApp](app.md)
 
 ## Differences between versions
 
-The `keptnAppCreationRequestTimeoutSeconds` field
-is new in the `v1alpha2` App version.
-
 ## See also
+
+* [KeptnApp](../yaml-crd-ref/app.md)
+* [OpenTelemetry observability](../implementing/otel.md)
+* [Keptn automatic app discovery](../implementing/integrate.md/#use-keptn-automatic-app-discovery)

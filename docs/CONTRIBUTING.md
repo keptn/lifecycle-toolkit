@@ -60,19 +60,21 @@ please create an issue on the GitHub repository:
   or in a comment to the issue.
 
 ## Contributing for Windows User or via a Cloud Environment
-Windows users will most likely not have `make` installed. Linux or MacOS users may not wish to download tools just to contribute to docs.
+
+Windows users will most likely not have `make` installed.
+Linux or MacOS users may not wish to download tools just to contribute to docs.
 
 In both scenarios, GitHub codespaces can be used as a pre-built and pre-configured development environment.
 
 Review [this video](https://example.com) to see how this works.
 
-* TODO: when https://github.com/keptn/lifecycle-toolkit/issues/1325 is reviewed and resolved.
+* TODO: when [this issue](https://github.com/keptn/lifecycle-toolkit/issues/1325) is reviewed and resolved.
 
 1. Create a fork of this repo
 1. In your fork, click the green `Code` button
 1. Switch to `Codespaces` tab and create a new codespace
 
-After a minute or so you'll be presented with a fully configured environment with access to all the tools you require.
+You will be presented with a fully configured environment with access to all the tools you require.
 
 ## Building the documentation locally
 
@@ -524,6 +526,12 @@ to the corresponding doc source in the `lifecycle-toolkit` documentation.
 ## Tips and Tricks (aka How to Avoid Gotchas)
 
 1. Sign every commit! `git commit -sm "message"`
-1. If your PR has one commit, make it semantic (and all lowercase) according to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard: `git commit -sm "docs: i did something"`
-1. PRs with a single commit are very strictly checked for the above conventional commit messages. PRs with multiple commits are less strict as they use the pull request title instead.
+1. Always run `cd docs` then `make markdownlint` to show issues.
+1. If your PR has one commit, make it semantic.
+Make it all lowercase.
+Make the commit message conform to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard:
 
+`git commit -sm "docs: i did something"`
+
+1. PRs with a single commit are very strictly checked for the above conventional commit messages.
+PRs with multiple commits are less strict as they use the pull request title instead.

@@ -28,6 +28,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -188,7 +189,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)
-	r.Meters.AppDuration.Record(ctx, duration.Seconds(), attrs...)
+	r.Meters.AppDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
 
 	spanAppTrace.AddEvent(appVersion.Name + " has finished")
 	spanAppTrace.SetStatus(codes.Ok, "Finished")
@@ -215,7 +216,7 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 		if appVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing app count")
 			attrs := appVersion.GetMetricsAttributes()
-			r.Meters.AppCount.Add(ctx, 1, attrs...)
+			r.Meters.AppCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 		}
 		span.End()
 	}

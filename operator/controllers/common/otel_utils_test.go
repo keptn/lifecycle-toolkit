@@ -1,21 +1,15 @@
 package common
 
 import (
-	"context"
 	"net"
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake"
-	fakeasync "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake/async"
-	fakesync "github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces/fake/sync"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
-	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/syncint64"
+	"go.opentelemetry.io/otel/metric/noop"
 	"google.golang.org/grpc"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -85,31 +79,20 @@ func TestGetOTelTracerProviderOptions(t *testing.T) {
 }
 
 func TestSetUpKeptnMeters(t *testing.T) {
-	fakeAsyncIntTracerProvider := &fakeasync.ITracerProviderAsyncInt64Mock{
-		GaugeFunc: func(name string, opts ...instrument.Option) (asyncint64.Gauge, error) {
-			return nil, errors.New("some error")
-		},
-	}
-	fakeAsyncFloatTracerProvider := &fakeasync.ITracerProviderAsyncFloat64Mock{
-		GaugeFunc: func(name string, opts ...instrument.Option) (asyncfloat64.Gauge, error) {
-			return nil, errors.New("some error")
-		},
-	}
-
 	fakeMeter := &fake.IMeterMock{
-		AsyncInt64Func: func() asyncint64.InstrumentProvider {
-			return fakeAsyncIntTracerProvider
+		Int64ObservableGaugeFunc: func(name string, options ...metric.Int64ObservableGaugeOption) (metric.Int64ObservableGauge, error) {
+			return nil, errors.New("some error")
 		},
-		AsyncFloat64Func: func() asyncfloat64.InstrumentProvider {
-			return fakeAsyncFloatTracerProvider
+		Float64ObservableGaugeFunc: func(name string, options ...metric.Float64ObservableGaugeOption) (metric.Float64ObservableGauge, error) {
+			return nil, errors.New("some error")
 		},
-		RegisterCallbackFunc: func(insts []instrument.Asynchronous, function func(context.Context)) error {
-			return nil
+		RegisterCallbackFunc: func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
+			return nil, nil
 		},
 	}
 
 	type args struct {
-		meter metric.Meter
+		meter interfaces.IMeter
 		mgr   client.Client
 	}
 	tests := []struct {
@@ -120,7 +103,7 @@ func TestSetUpKeptnMeters(t *testing.T) {
 		{
 			name: "Basic case",
 			args: args{
-				meter: metric.NewNoopMeter(),
+				meter: noop.NewMeterProvider().Meter(("test")),
 				mgr:   nil,
 			},
 			wantRegisterCalls: 0,
@@ -143,17 +126,6 @@ func TestSetUpKeptnMeters(t *testing.T) {
 }
 
 func TestSetUpKeptnMetersError(t *testing.T) {
-	fakeAsyncIntTracerProvider := &fakeasync.ITracerProviderAsyncInt64Mock{
-		GaugeFunc: func(name string, opts ...instrument.Option) (asyncint64.Gauge, error) {
-			return nil, errors.New("some error")
-		},
-	}
-	fakeAsyncFloatTracerProvider := &fakeasync.ITracerProviderAsyncFloat64Mock{
-		GaugeFunc: func(name string, opts ...instrument.Option) (asyncfloat64.Gauge, error) {
-			return nil, errors.New("some error")
-		},
-	}
-
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("The code did not panic")
@@ -161,14 +133,14 @@ func TestSetUpKeptnMetersError(t *testing.T) {
 	}()
 
 	errorFakeMeter := &fake.IMeterMock{
-		AsyncInt64Func: func() asyncint64.InstrumentProvider {
-			return fakeAsyncIntTracerProvider
+		Int64ObservableGaugeFunc: func(name string, options ...metric.Int64ObservableGaugeOption) (metric.Int64ObservableGauge, error) {
+			return nil, errors.New("some error")
 		},
-		AsyncFloat64Func: func() asyncfloat64.InstrumentProvider {
-			return fakeAsyncFloatTracerProvider
+		Float64ObservableGaugeFunc: func(name string, options ...metric.Float64ObservableGaugeOption) (metric.Float64ObservableGauge, error) {
+			return nil, errors.New("some error")
 		},
-		RegisterCallbackFunc: func(insts []instrument.Asynchronous, function func(context.Context)) error {
-			return errors.New("some error")
+		RegisterCallbackFunc: func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
+			return nil, errors.New("some error")
 		},
 	}
 
@@ -176,9 +148,7 @@ func TestSetUpKeptnMetersError(t *testing.T) {
 }
 
 func TestSetUpKeptnTaskMeters(t *testing.T) {
-	noopMeter := metric.NewNoopMeter()
-
-	got := SetUpKeptnTaskMeters(noopMeter)
+	got := SetUpKeptnTaskMeters(noop.NewMeterProvider().Meter(("test")))
 
 	require.NotNil(t, got.TaskCount)
 	require.NotNil(t, got.TaskDuration)
@@ -191,32 +161,21 @@ func TestSetUpKeptnTaskMeters(t *testing.T) {
 }
 
 func TestSetUpKeptnTaskMeters_ErrorCase(t *testing.T) {
-	fakeSyncIntTracerProvider := &fakesync.ITracerProviderSyncInt64Mock{
-		CounterFunc: func(name string, opts ...instrument.Option) (syncint64.Counter, error) {
-			return nil, errors.New("some error")
-		},
-		HistogramFunc: func(name string, opts ...instrument.Option) (syncint64.Histogram, error) {
-			return nil, errors.New("some error")
-		},
-	}
-	fakeSyncFloatTracerProvider := &fakesync.ITracerProviderSyncFloat64Mock{
-		CounterFunc: func(name string, opts ...instrument.Option) (syncfloat64.Counter, error) {
-			return nil, errors.New("some error")
-		},
-		HistogramFunc: func(name string, opts ...instrument.Option) (syncfloat64.Histogram, error) {
-			return nil, errors.New("some error")
-		},
-	}
-
 	errorFakeMeter := &fake.IMeterMock{
-		SyncInt64Func: func() syncint64.InstrumentProvider {
-			return fakeSyncIntTracerProvider
+		Int64CounterFunc: func(name string, options ...metric.Int64CounterOption) (metric.Int64Counter, error) {
+			return nil, errors.New("some error")
 		},
-		SyncFloat64Func: func() syncfloat64.InstrumentProvider {
-			return fakeSyncFloatTracerProvider
+		Int64HistogramFunc: func(name string, options ...metric.Int64HistogramOption) (metric.Int64Histogram, error) {
+			return nil, errors.New("some error")
 		},
-		RegisterCallbackFunc: func(insts []instrument.Asynchronous, function func(context.Context)) error {
-			return errors.New("some error")
+		Float64CounterFunc: func(name string, options ...metric.Float64CounterOption) (metric.Float64Counter, error) {
+			return nil, errors.New("some error")
+		},
+		Float64HistogramFunc: func(name string, options ...metric.Float64HistogramOption) (metric.Float64Histogram, error) {
+			return nil, errors.New("some error")
+		},
+		RegisterCallbackFunc: func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
+			return nil, errors.New("some error")
 		},
 	}
 

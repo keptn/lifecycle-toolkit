@@ -16,9 +16,8 @@ import (
 	ginkgotypes "github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/metric/unit"
-	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/metric"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	"go.opentelemetry.io/otel/trace"
@@ -36,16 +35,16 @@ import (
 )
 
 func InitKeptnMeters() apicommon.KeptnMeters {
-	provider := metric.NewMeterProvider()
+	provider := sdkmetric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")
-	deploymentCount, _ := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
-	deploymentDuration, _ := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
-	taskCount, _ := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
-	taskDuration, _ := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
-	appCount, _ := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
-	appDuration, _ := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
-	evaluationCount, _ := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
-	evaluationDuration, _ := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	deploymentCount, _ := meter.Int64Counter("keptn.deployment.count", metric.WithDescription("a simple counter for Keptn Deployments"))
+	deploymentDuration, _ := meter.Float64Histogram("keptn.deployment.duration", metric.WithDescription("a histogram of duration for Keptn Deployments"), metric.WithUnit("s"))
+	taskCount, _ := meter.Int64Counter("keptn.task.count", metric.WithDescription("a simple counter for Keptn Tasks"))
+	taskDuration, _ := meter.Float64Histogram("keptn.task.duration", metric.WithDescription("a histogram of duration for Keptn Tasks"), metric.WithUnit("s"))
+	appCount, _ := meter.Int64Counter("keptn.app.count", metric.WithDescription("a simple counter for Keptn Apps"))
+	appDuration, _ := meter.Float64Histogram("keptn.app.duration", metric.WithDescription("a histogram of duration for Keptn Apps"), metric.WithUnit("s"))
+	evaluationCount, _ := meter.Int64Counter("keptn.evaluation.count", metric.WithDescription("a simple counter for Keptn Evaluations"))
+	evaluationDuration, _ := meter.Float64Histogram("keptn.evaluation.duration", metric.WithDescription("a histogram of duration for Keptn Evaluations"), metric.WithUnit("s"))
 
 	meters := apicommon.KeptnMeters{
 		TaskCount:          taskCount,

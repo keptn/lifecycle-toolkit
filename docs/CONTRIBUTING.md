@@ -59,6 +59,21 @@ please create an issue on the GitHub repository:
   include that information in your description of the issue
   or in a comment to the issue.
 
+## Contributing for Windows User or via a Cloud Environment
+Windows users will most likely not have `make` installed. Linux or MacOS users may not wish to download tools just to contribute to docs.
+
+In both scenarios, GitHub codespaces can be used as a pre-built and pre-configured development environment.
+
+Review [this video](https://example.com/****) to see how this works.
+
+* TODO: when https://github.com/keptn/lifecycle-toolkit/issues/1325 is reviewed and resolved.
+
+1. Create a fork of this repo
+1. In your fork, click the green `Code` button
+1. Switch to `Codespaces` tab and create a new codespace
+
+After a minute or so you'll be presented with a fully configured environment with access to all the tools you require.
+
 ## Building the documentation locally
 
 You can run Docsy locally so that you can view the formatted version

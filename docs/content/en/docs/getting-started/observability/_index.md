@@ -200,7 +200,7 @@ which allows you to trace everything done in the context of that deployment.
 
 * You must have an OpenTelemetry collector installed on your cluster.
   See
-  [OpenTelemetry Collector](https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/basics/collector)
+  [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 * Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)

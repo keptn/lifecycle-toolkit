@@ -204,7 +204,7 @@ for examples.
 ## Using OpenTelemetry
 
 The Keptn Lifecycle Toolkit extends the Kubernetes
-pod scheduler to create OpenTelemetry data
+primitives to create OpenTelemetry data
 that connects all your deployment and observability tools
 without worrying about where it is stored and where it is managed.
 OpenTelemetry traces collect data as Kubernetes is deploying the changes,
@@ -212,7 +212,7 @@ which allows you to trace everything done in the context of that deployment.
 
 * You must have an OpenTelemetry collector installed on your cluster.
   See
-  [OpenTelemetry Collector](https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/basics/collector)
+  [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 * Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)
@@ -247,7 +247,7 @@ TODO: talk about the Grafana display.
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information
-appears on a Grafana dashboard with the
+appears on a Grafana dashboard with
 [Jaeger](https://grafana.com/docs/grafana-cloud/data-configuration/metrics/prometheus-config-examples/the-jaeger-authors-jaeger/).
 
 If you also have Jaeger extension for Grafana installed on your cluster,

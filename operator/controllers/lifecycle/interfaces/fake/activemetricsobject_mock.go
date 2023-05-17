@@ -4,16 +4,15 @@
 package fake
 
 import (
-	"sync"
-
 	"go.opentelemetry.io/otel/attribute"
+	"sync"
 )
 
-// ActiveMetricsObjectMock is a mock implementation of common.ActiveMetricsObject.
+// ActiveMetricsObjectMock is a mock implementation of interfaces.ActiveMetricsObject.
 //
 //	func TestSomethingThatUsesActiveMetricsObject(t *testing.T) {
 //
-//		// make and configure a mocked common.ActiveMetricsObject
+//		// make and configure a mocked interfaces.ActiveMetricsObject
 //		mockedActiveMetricsObject := &ActiveMetricsObjectMock{
 //			GetActiveMetricsAttributesFunc: func() []attribute.KeyValue {
 //				panic("mock out the GetActiveMetricsAttributes method")
@@ -23,7 +22,7 @@ import (
 //			},
 //		}
 //
-//		// use mockedActiveMetricsObject in code that requires common.ActiveMetricsObject
+//		// use mockedActiveMetricsObject in code that requires interfaces.ActiveMetricsObject
 //		// and then make assertions.
 //
 //	}

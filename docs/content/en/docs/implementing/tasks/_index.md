@@ -26,7 +26,7 @@ For more information, see
 
 You may need to include context information in the `function` code
 included in the YAML file that defines a
-[KeptnTaskDefinition](../yaml-crd-ref/task)
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 resource.
 For an example of how to do this, see the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)

@@ -235,7 +235,7 @@ TODO: talk about the Grafana display.
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information
-appears on a Grafana dashboard with the
+appears on a Grafana dashboard with
 [Jaeger](https://grafana.com/docs/grafana-cloud/data-configuration/metrics/prometheus-config-examples/the-jaeger-authors-jaeger/).
 
 If you also have Jaeger extension for Grafana installed on your cluster,

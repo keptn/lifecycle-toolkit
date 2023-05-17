@@ -28,6 +28,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	batchv1 "k8s.io/api/batch/v1"
@@ -127,11 +128,11 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	r.Log.Info("Increasing task count")
 
 	// metrics: increment task counter
-	r.Meters.TaskCount.Add(ctx, 1, attrs...)
+	r.Meters.TaskCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 
 	// metrics: add task duration
 	duration := task.Status.EndTime.Time.Sub(task.Status.StartTime.Time)
-	r.Meters.TaskDuration.Record(ctx, duration.Seconds(), attrs...)
+	r.Meters.TaskDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
 
 	return ctrl.Result{}, nil
 }

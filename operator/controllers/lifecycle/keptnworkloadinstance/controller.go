@@ -28,6 +28,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -195,7 +196,7 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 
 	// metrics: add deployment duration
 	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
-	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), attrs...)
+	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
 
 	spanWorkloadTrace.AddEvent(workloadInstance.Name + " has finished")
 	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
@@ -236,7 +237,7 @@ func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context
 		if workloadInstance.IsEndTimeSet() {
 			r.Log.Info("Increasing deployment count")
 			attrs := workloadInstance.GetMetricsAttributes()
-			r.Meters.DeploymentCount.Add(ctx, 1, attrs...)
+			r.Meters.DeploymentCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 		}
 		span.End()
 	}

@@ -9,14 +9,11 @@ import (
 
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
-	"go.opentelemetry.io/otel/metric/unit"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
@@ -158,141 +155,141 @@ func newResource() *resource.Resource {
 	return r
 }
 
-func SetUpKeptnMeters(meter metric.Meter, mgr client.Client) {
-	deploymentActiveGauge, err := meter.AsyncInt64().Gauge("keptn.deployment.active", instrument.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
+func SetUpKeptnMeters(meter interfaces.IMeter, mgr client.Client) {
+	deploymentActiveGauge, err := meter.Int64ObservableGauge("keptn.deployment.active", metric.WithDescription("a gauge keeping track of the currently active Keptn Deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize active deployments OTel gauge")
 	}
-	taskActiveGauge, err := meter.AsyncInt64().Gauge("keptn.task.active", instrument.WithDescription("a simple counter of active Keptn Tasks"))
+	taskActiveGauge, err := meter.Int64ObservableGauge("keptn.task.active", metric.WithDescription("a simple counter of active Keptn Tasks"))
 	if err != nil {
 		logger.Error(err, "unable to initialize active tasks OTel gauge")
 	}
-	appActiveGauge, err := meter.AsyncInt64().Gauge("keptn.app.active", instrument.WithDescription("a simple counter of active Keptn Apps"))
+	appActiveGauge, err := meter.Int64ObservableGauge("keptn.app.active", metric.WithDescription("a simple counter of active Keptn Apps"))
 	if err != nil {
 		logger.Error(err, "unable to initialize active apps OTel gauge")
 	}
-	evaluationActiveGauge, err := meter.AsyncInt64().Gauge("keptn.evaluation.active", instrument.WithDescription("a simple counter of active Keptn Evaluations"))
+	evaluationActiveGauge, err := meter.Int64ObservableGauge("keptn.evaluation.active", metric.WithDescription("a simple counter of active Keptn Evaluations"))
 	if err != nil {
 		logger.Error(err, "unable to initialize active evaluations OTel gauge")
 	}
-	appDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentinterval", instrument.WithDescription("a gauge of the interval between app deployments"))
+	appDeploymentIntervalGauge, err := meter.Float64ObservableGauge("keptn.app.deploymentinterval", metric.WithDescription("a gauge of the interval between app deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize app deployment interval OTel gauge")
 	}
 
-	appDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.app.deploymentduration", instrument.WithDescription("a gauge of the duration of app deployments"))
+	appDeploymentDurationGauge, err := meter.Float64ObservableGauge("keptn.app.deploymentduration", metric.WithDescription("a gauge of the duration of app deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize app deployment duration OTel gauge")
 	}
 
-	workloadDeploymentIntervalGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentinterval", instrument.WithDescription("a gauge of the interval between workload deployments"))
+	workloadDeploymentIntervalGauge, err := meter.Float64ObservableGauge("keptn.deployment.deploymentinterval", metric.WithDescription("a gauge of the interval between workload deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize workload deployment interval OTel gauge")
 	}
 
-	workloadDeploymentDurationGauge, err := meter.AsyncFloat64().Gauge("keptn.deployment.deploymentduration", instrument.WithDescription("a gauge of the duration of workload deployments"))
+	workloadDeploymentDurationGauge, err := meter.Float64ObservableGauge("keptn.deployment.deploymentduration", metric.WithDescription("a gauge of the duration of workload deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize workload deployment duration OTel gauge")
 	}
 
-	err = meter.RegisterCallback(
-		[]instrument.Asynchronous{
-			deploymentActiveGauge,
-			taskActiveGauge,
-			appActiveGauge,
-			evaluationActiveGauge,
-			appDeploymentIntervalGauge,
-			appDeploymentDurationGauge,
-			workloadDeploymentIntervalGauge,
-			workloadDeploymentDurationGauge,
+	_, err = meter.RegisterCallback(
+		func(ctx context.Context, o metric.Observer) error {
+			observeActiveInstances(ctx, mgr, deploymentActiveGauge, appActiveGauge, taskActiveGauge, evaluationActiveGauge, o)
+			observeDeploymentInterval(ctx, mgr, appDeploymentIntervalGauge, workloadDeploymentIntervalGauge, o)
+			observeDuration(ctx, mgr, appDeploymentDurationGauge, workloadDeploymentDurationGauge, o)
+			return nil
 		},
-		func(ctx context.Context) {
-			observeActiveInstances(ctx, mgr, deploymentActiveGauge, appActiveGauge, taskActiveGauge, evaluationActiveGauge)
-			observeDeploymentInterval(ctx, mgr, appDeploymentIntervalGauge, workloadDeploymentIntervalGauge)
-			observeDuration(ctx, mgr, appDeploymentDurationGauge, workloadDeploymentDurationGauge)
-		})
+		deploymentActiveGauge,
+		taskActiveGauge,
+		appActiveGauge,
+		evaluationActiveGauge,
+		appDeploymentIntervalGauge,
+		appDeploymentDurationGauge,
+		workloadDeploymentIntervalGauge,
+		workloadDeploymentDurationGauge,
+	)
 	if err != nil {
 		fmt.Println("Failed to register callback")
 		panic(err)
 	}
 }
 
-func observeDuration(ctx context.Context, mgr client.Client, appDeploymentDurationGauge asyncfloat64.Gauge, workloadDeploymentDurationGauge asyncfloat64.Gauge) {
+func observeDuration(ctx context.Context, mgr client.Client, appDeploymentDurationGauge metric.Float64ObservableGauge, workloadDeploymentDurationGauge metric.Float64ObservableGauge, observer metric.Observer) {
 
-	err := ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentDurationGauge)
+	err := ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentDurationGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather app deployment durations")
 	}
 
-	err = ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, workloadDeploymentDurationGauge)
+	err = ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, workloadDeploymentDurationGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather workload deployment durations")
 	}
 
 }
 
-func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploymentIntervalGauge asyncfloat64.Gauge, workloadDeploymentIntervalGauge asyncfloat64.Gauge) {
-	err := ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentIntervalGauge)
+func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploymentIntervalGauge metric.Float64ObservableGauge, workloadDeploymentIntervalGauge metric.Float64ObservableGauge, observer metric.Observer) {
+	err := ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentIntervalGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather app deployment intervals")
 	}
 
-	err = ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, workloadDeploymentIntervalGauge)
+	err = ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, workloadDeploymentIntervalGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather workload deployment intervals")
 	}
 }
 
-func observeActiveInstances(ctx context.Context, mgr client.Client, deploymentActiveGauge asyncint64.Gauge, appActiveGauge asyncint64.Gauge, taskActiveGauge asyncint64.Gauge, evaluationActiveGauge asyncint64.Gauge) {
+func observeActiveInstances(ctx context.Context, mgr client.Client, deploymentActiveGauge metric.Int64ObservableGauge, appActiveGauge metric.Int64ObservableGauge, taskActiveGauge metric.Int64ObservableGauge, evaluationActiveGauge metric.Int64ObservableGauge, observer metric.Observer) {
 
-	err := ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, deploymentActiveGauge)
+	err := ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnWorkloadInstanceList{}, deploymentActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active deployments")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appActiveGauge)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active apps")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnTaskList{}, taskActiveGauge)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnTaskList{}, taskActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active tasks")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnEvaluationList{}, evaluationActiveGauge)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnEvaluationList{}, evaluationActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active evaluations")
 	}
 }
 
-func SetUpKeptnTaskMeters(meter metric.Meter) common.KeptnMeters {
-	deploymentCount, err := meter.SyncInt64().Counter("keptn.deployment.count", instrument.WithDescription("a simple counter for Keptn Deployments"))
+func SetUpKeptnTaskMeters(meter interfaces.IMeter) common.KeptnMeters {
+	deploymentCount, err := meter.Int64Counter("keptn.deployment.count", metric.WithDescription("a simple counter for Keptn Deployments"))
 	if err != nil {
 		logger.Error(err, "unable to initialize deployment count OTel counter")
 	}
-	deploymentDuration, err := meter.SyncFloat64().Histogram("keptn.deployment.duration", instrument.WithDescription("a histogram of duration for Keptn Deployments"), instrument.WithUnit(unit.Unit("s")))
+	deploymentDuration, err := meter.Float64Histogram("keptn.deployment.duration", metric.WithDescription("a histogram of duration for Keptn Deployments"), metric.WithUnit("s"))
 	if err != nil {
 		logger.Error(err, "unable to initialize deployment duration OTel histogram")
 	}
-	taskCount, err := meter.SyncInt64().Counter("keptn.task.count", instrument.WithDescription("a simple counter for Keptn Tasks"))
+	taskCount, err := meter.Int64Counter("keptn.task.count", metric.WithDescription("a simple counter for Keptn Tasks"))
 	if err != nil {
 		logger.Error(err, "unable to initialize task OTel counter")
 	}
-	taskDuration, err := meter.SyncFloat64().Histogram("keptn.task.duration", instrument.WithDescription("a histogram of duration for Keptn Tasks"), instrument.WithUnit(unit.Unit("s")))
+	taskDuration, err := meter.Float64Histogram("keptn.task.duration", metric.WithDescription("a histogram of duration for Keptn Tasks"), metric.WithUnit("s"))
 	if err != nil {
 		logger.Error(err, "unable to initialize task duration OTel histogram")
 	}
-	appCount, err := meter.SyncInt64().Counter("keptn.app.count", instrument.WithDescription("a simple counter for Keptn Apps"))
+	appCount, err := meter.Int64Counter("keptn.app.count", metric.WithDescription("a simple counter for Keptn Apps"))
 	if err != nil {
 		logger.Error(err, "unable to initialize app OTel counter")
 	}
-	appDuration, err := meter.SyncFloat64().Histogram("keptn.app.duration", instrument.WithDescription("a histogram of duration for Keptn Apps"), instrument.WithUnit(unit.Unit("s")))
+	appDuration, err := meter.Float64Histogram("keptn.app.duration", metric.WithDescription("a histogram of duration for Keptn Apps"), metric.WithUnit("s"))
 	if err != nil {
 		logger.Error(err, "unable to initialize app duration OTel histogram")
 	}
-	evaluationCount, err := meter.SyncInt64().Counter("keptn.evaluation.count", instrument.WithDescription("a simple counter for Keptn Evaluations"))
+	evaluationCount, err := meter.Int64Counter("keptn.evaluation.count", metric.WithDescription("a simple counter for Keptn Evaluations"))
 	if err != nil {
 		logger.Error(err, "unable to initialize evaluation OTel counter")
 	}
-	evaluationDuration, err := meter.SyncFloat64().Histogram("keptn.evaluation.duration", instrument.WithDescription("a histogram of duration for Keptn Evaluations"), instrument.WithUnit(unit.Unit("s")))
+	evaluationDuration, err := meter.Float64Histogram("keptn.evaluation.duration", metric.WithDescription("a histogram of duration for Keptn Evaluations"), metric.WithUnit("s"))
 	if err != nil {
 		logger.Error(err, "unable to initialize evaluation duration OTel histogram")
 	}

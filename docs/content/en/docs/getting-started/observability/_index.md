@@ -254,3 +254,4 @@ If you also have Jaeger extension for Grafana installed on your cluster,
 you can view full end-to-end trace for everything
 that happens in your deployment.
 For more information, see
+[Monitoring Jaeger](https://www.jaegertracing.io/docs/1.45/monitoring/).

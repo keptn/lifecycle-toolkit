@@ -17,7 +17,7 @@ The observability data is an amalgamation of the following:
 
 - DORA metrics are collected out of the box
   when the Lifecycle Toolkit is enabled
-- OpenTelemetry traces everything that happens in the Kubernetes pod scheduler
+- OpenTelemetry runs traces that show everything that happens in the Kubernetes pod scheduler
   and can display this information with dashboard tools
   such as Grafana.
 - Specific metrics that you can define to monitor

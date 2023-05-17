@@ -24,7 +24,7 @@ The observability data is an amalgamation of the following:
   information from all the data providers configured in your cluster.
 
 The Keptn Lifecycle Toolkit can provide this information
-for all deployments running in your cluster,
+for all applications running in your cluster,
 even if they are using different deployment tools.
 And it can capture metrics from multiple data sources
 using multiple data platforms.

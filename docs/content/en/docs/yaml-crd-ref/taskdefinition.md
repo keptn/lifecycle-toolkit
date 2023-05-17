@@ -8,7 +8,8 @@ weight: 89
 A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
-[KeptnApp](./app.md).
+[KeptnApp](./app.md) or
+[workload](../concepts/workloads/).
 
 ## Yaml Synopsis
 
@@ -72,9 +73,6 @@ spec:
                 url: "https://www.example.com/yourscript.js"
       ```
 
-      Note that the file referenced is actually JavaScript,
-      which is essentially the same as a Deno script.
-
     * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
       Populate this field with the value of the `name` field
       for the `KeptnTaskDefinition` to be called.
@@ -108,15 +106,9 @@ spec:
              textMessage: "This is my configuration"
      ```
 
-     The JSON object can be read
-     through the `DATA` environment variable using `Deno.env.get("DATA");`.
-
-     Multi-level maps are not supported at this time.
-
-     Currently only one secret can be passed.
-     The secret must have a `key` called `SECURE_DATA`.
-     It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
-     See [Context](#context) for details.
+     See
+     [Parameterized functions](../implementing/tasks/#parameterized-functions)
+     for more information.
 
   * **secureParameters** -- An optional field used to pass a Kubernetes secret.
     The `secret` value is the Kubernetes secret name
@@ -129,85 +121,39 @@ spec:
       secret: slack-token
     ```
 
-    See [Create secret text](#create-secret-text) for details.
+    Note that, currently, only one secret can be passed.
+
+    See [Create secret text](../implementing/tasks/#create-secret-text)
+    for details.
 
 ## Usage
 
 A Task is responsible for executing the TaskDefinition of a
-[workload](https://kubernetes.io/docs/concepts/workloads/)..
+[KeptnApp](app.md) or
+[workload](https://kubernetes.io/docs/concepts/workloads/).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
-### Context
+The `function` is coded in JavaScript
+and executed in
+[Deno](https://deno.com/runtime),
+which is a lightweight runtime environment
+that executes in your namespace.
+Note that Deno has tighter restrictions
+for permissions and importing data
+so a script that works properly elsewhere
+may not function properly when run in Deno.
 
-A Kubernetes context is a set of access parameters
-that contains a Kubernetes cluster, a user, and a namespace.
-For more information, see
-[Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
-
-A context environment variable is available via `Deno.env.get("CONTEXT")`.
-It can be used like this:
-
-```javascript
-let context = Deno.env.get("CONTEXT");
-
-if (context.objectType == "Application") {
-    let application_name = contextdata.appName;
-    let application_version = contextdata.appVersion;
-}
-
-if (context.objectType == "Workload") {
-    let application_name = contextdata.appName;
-    let workload_name = contextdata.workloadName;
-    let workload_version = contextdata.workloadVersion;
-}
-```
-
-### Create secret text
-
-```yaml
-# kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
-
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        // secret_text = "foo"
-```
-
-This methodology supports multiple variables
-by creating a Kubernetes secret with a JSON string:
-
-```yaml
-# kubectl create secret generic my-secret \
-# --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
-
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        let secret_text_obj = JSON.parse(secret_text);
-        // secret_text_obj["foo"] = "bar"
-        // secret_text_obj["foo2"] = "bar2"
-```
+A task can be executed either pre-deployment or post-deployment
+as specified in the `Deployment` resource;
+see
+[Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+for details.
+Note that the annotation identifies the task by `name`.
+This means that you can modify the `function` code in the resource definition
+and the revised code is picked up without additional changes.
 
 ## Examples
 
@@ -309,4 +255,3 @@ all `v1alpha?` library versions.
 ## See also
 
 * [Working with tasks](../implementing/tasks)
-* Link to reference pages for any related CRDs

@@ -16,6 +16,40 @@ It can be configured in one of three different ways:
 - referring to an HTTP script
 - referring to another `KeptnTaskDefinition`
 
+### Context
+
+A Kubernetes context is a set of access parameters
+that contains a Kubernetes cluster, a user, a namespace,
+the application name, workload name, and version.
+For more information, see
+[Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
+
+You may need to include context information in the `function` code
+included in the YAML file that defines a
+[KeptnTaskDefinition](../yaml-crd-ref/task)
+resource.
+For an example of how to do this, see the
+[keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
+file.
+
+A context environment variable is available via `Deno.env.get("CONTEXT")`.
+It can be used like this:
+  
+```javascript
+let context = Deno.env.get("CONTEXT");
+    
+if (context.objectType == "Application") {
+    let application_name = contextdata.appName;
+    let application_version = contextdata.appVersion;
+}       
+        
+if (context.objectType == "Workload") {
+    let application_name = contextdata.appName;
+    let workload_name = contextdata.workloadName;
+    let workload_version = contextdata.workloadVersion;
+}
+```
+
 ## Parameterized functions
 
 `KeptnTaskDefinition`s can use input parameters.
@@ -44,8 +78,58 @@ Note the following about using parameters with functions:
 - Multi-level maps are not currently supported.
 - The JSON object can be read through the environment variable `DATA`
   using `Deno.env.get("DATA");`.
+- Currently only one secret can be passed.
+  The secret must have a `key` called `SECURE_DATA`.
+  It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
-## Passing secrets to a function
+## Create secret text
+
+To create a secret to use in a `KeptnTaskDefinition`,
+execute this command:
+
+```yaml
+# kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
+  
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: dummy-task
+  namespace: "default"
+spec: 
+  function: 
+    secureParameters:
+      secret: my-secret
+    inline:
+      code: |
+        let secret_text = Deno.env.get("SECURE_DATA");
+        // secret_text = "foo"
+```
+
+This methodology supports multiple variables
+by creating a Kubernetes secret with a JSON string:
+
+```yaml
+# kubectl create secret generic my-secret \
+# --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: dummy-task
+  namespace: "default"
+spec:
+  function:
+    secureParameters:
+      secret: my-secret
+    inline:
+      code: |
+        let secret_text = Deno.env.get("SECURE_DATA");
+        let secret_text_obj = JSON.parse(secret_text);
+        // secret_text_obj["foo"] = "bar"
+        // secret_text_obj["foo2"] = "bar2"
+```
+
+## Pass secrets to a function
 
 In the previous example, you see that
 Kubernetes

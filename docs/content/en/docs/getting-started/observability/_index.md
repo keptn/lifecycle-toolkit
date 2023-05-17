@@ -192,7 +192,7 @@ TODO: How to observe DORA metrics without a dashboard.
 ## Using OpenTelemetry
 
 The Keptn Lifecycle Toolkit extends the Kubernetes
-pod scheduler to create OpenTelemetry data
+primitives to create OpenTelemetry data
 that connects all your deployment and observability tools
 without worrying about where it is stored and where it is managed.
 OpenTelemetry traces collect data as Kubernetes is deploying the changes,

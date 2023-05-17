@@ -73,9 +73,10 @@ spec:
                 url: "https://www.example.com/yourscript.js"
       ```
 
-    * **functionRef** -- Execute another `KeptnTaskDefinition` that has been defined.
-      Populate this field with the value of the `name` field
-      for the `KeptnTaskDefinition` to be called.
+    * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
+      that have been defined.
+      Populate this field with the value(s) of the `name` field
+      for the `KeptnTaskDefinition`(s) to be called.
       This is commonly used to call a general function
       that is used in multiple places, possibly with different parameters.
       An example is:
@@ -90,7 +91,7 @@ spec:
       This can also be used to group a set of tasks
       into a single `KeptnTaskDefinition`,
       such as defining a `KeptnTaskDefinition` for testing.
-      In this case, it other, existing `KeptnTaskDefinition`s
+      In this case, it calls other, existing `KeptnTaskDefinition`s
       for each type of test to be run,
       specifying each by the value of the `name` field.
 
@@ -128,7 +129,7 @@ spec:
 
 ## Usage
 
-A Task is responsible for executing the TaskDefinition of a
+A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or
 [workload](https://kubernetes.io/docs/concepts/workloads/).
 The execution is done by spawning a Kubernetes
@@ -255,3 +256,5 @@ all `v1alpha?` library versions.
 ## See also
 
 * [Working with tasks](../implementing/tasks)
+* [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+* [Orchestrate deployment checks](../getting-started/orchestrate)

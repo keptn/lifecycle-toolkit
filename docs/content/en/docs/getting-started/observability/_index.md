@@ -180,14 +180,26 @@ DORA metrics provide information such as:
 
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
+Metrics are collected only for the `Deployment` resources
+that are annotated.
 
-TODO: Are Dora metrics collected when KLT is enabled or only
-      when the `Deployment` resource is annotated?
+To view DORA metrics, run the following command:
 
-TODO: How to observe DORA metrics without a dashboard.
-      The info about observing Keptn metrics seems specific to those;
-      if it's the same commands, what are the names of each DORA
-      metric to specify?
+```shell
+kubectl port-forward -n keptn-lifecycle-toolkit-system \
+   svc/lifecycle-operator-metrics-service 2222
+```
+
+Then view the metrics at:
+
+```shell
+http://localhost:2222/metrics
+```
+
+DORA metrics are also displayed on Grafana
+or whatever dashboard application you choose.
+See the videos that accompany this exercise
+for examples.
 
 ## Using OpenTelemetry
 
@@ -204,7 +216,7 @@ which allows you to trace everything done in the context of that deployment.
   for more information.
 * Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)
-  to configure Keptn accessibility to your OpenTelemetry data.
+  to configure where your OpenTelemetry data is sent.
   * Define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the

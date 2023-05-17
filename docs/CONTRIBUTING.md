@@ -64,7 +64,7 @@ Windows users will most likely not have `make` installed. Linux or MacOS users m
 
 In both scenarios, GitHub codespaces can be used as a pre-built and pre-configured development environment.
 
-Review [this video](https://example.com/****) to see how this works.
+Review [this video](https://example.com) to see how this works.
 
 * TODO: when https://github.com/keptn/lifecycle-toolkit/issues/1325 is reviewed and resolved.
 
@@ -520,3 +520,10 @@ You can view these changes locally on the `localhost:1314` port.
 Note that changes made to the docs in the sandbox
 will be overwritten so the same changes should be applied
 to the corresponding doc source in the `lifecycle-toolkit` documentation.
+
+## Tips and Tricks (aka How to Avoid Gotchas)
+
+1. Sign all commits! `git commit -sm "message"`
+1. If your PR has one commit, make it semantic (and all lowercase): `git commit -sm "docs: i did something"`
+1. 
+

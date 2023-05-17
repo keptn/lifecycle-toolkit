@@ -523,7 +523,7 @@ to the corresponding doc source in the `lifecycle-toolkit` documentation.
 
 ## Tips and Tricks (aka How to Avoid Gotchas)
 
-1. Sign all commits! `git commit -sm "message"`
-1. If your PR has one commit, make it semantic (and all lowercase): `git commit -sm "docs: i did something"`
-1. 
+1. Sign every commit! `git commit -sm "message"`
+1. If your PR has one commit, make it semantic (and all lowercase) according to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard: `git commit -sm "docs: i did something"`
+1. PRs with a single commit are very strictly checked for the above conventional commit messages. PRs with multiple commits are less strict as they use the pull request title instead.
 

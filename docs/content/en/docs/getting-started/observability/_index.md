@@ -74,7 +74,7 @@ The steps are:
 TODO: Make the list items links to the subsections.
 
 - Increment the version number for either your Workload
-  or your application to start aggragating data.
+  or your application to start aggregating data.
 - View the aggregated metrics and traces as text.
   You can also use Grafana or the dashboard of your choice
   to view this information.

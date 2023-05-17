@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.0.1
+KUSTOMIZE_VERSION?=v5.0.3
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.11.3
 CHART_APPVERSION ?= v0.7.1 # x-release-please-version

@@ -153,7 +153,7 @@ It can be used like this:
 ```javascript
 let context = Deno.env.get("CONTEXT");
 
-if (contextdata.objectType == "Application") {
+if (context.objectType == "Application") {
     let application_name = contextdata.appName;
     let application_version = contextdata.appVersion;
 }

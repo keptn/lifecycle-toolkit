@@ -51,8 +51,8 @@ file for that repo contains useful information.
 Two videos are available
 to walk you through this exercise if you prefer:
 
-* [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-* [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
+- [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
+- [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
 
 In the
 [Getting started with Keptn metrics](../metrics)
@@ -132,8 +132,8 @@ To integrate KLT with your applications,
 you need to populate the metadata it needs.
 This requires the following steps:
 
-* Define a Keptn application
-* Annotate the `Deployment` resource to recognize your Keptn application
+- Define a Keptn application
+- Annotate the `Deployment` resource to recognize your Keptn application
 
 ## Define the Keptn application
 
@@ -194,15 +194,16 @@ We will discuss those in a separate exercise.
 DORA metrics are an industry-standard set of measurements;
 see the following for a description:
 
-* [What are DORA Metrics and Why Do They Matter?](https://codeclimate.com/blog/dora-metrics)
-* [Are you an Elite DevOps Performer?  Find out with the Four Keys Project](https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance)
+- [What are DORA Metrics and Why Do They Matter?](https://codeclimate.com/blog/dora-metrics)
+- [Are you an Elite DevOps Performer?
+   Find out with the Four Keys Project](https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance)
 
 DORA metrics provide information such as:
 
-* How many deployments happened in the last six hours?
-* Time between deployments
-* Deployment time between versions
-* Average time between versions.
+- How many deployments happened in the last six hours?
+- Time between deployments
+- Deployment time between versions
+- Average time between versions.
 
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
@@ -236,14 +237,14 @@ without worrying about where it is stored and where it is managed.
 OpenTelemetry traces collect data as Kubernetes is deploying the changes,
 which allows you to trace everything done in the context of that deployment.
 
-* You must have an OpenTelemetry collector installed on your cluster.
+- You must have an OpenTelemetry collector installed on your cluster.
   See
   [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
-* Follow the instructions in
+- Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)
   to configure where your OpenTelemetry data is sent.
-  * Define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
+  - Define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)

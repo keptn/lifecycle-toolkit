@@ -4,17 +4,16 @@
 package fake
 
 import (
-	"sync"
-
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"sync"
 )
 
-// SpanItemMock is a mock implementation of common.SpanItem.
+// SpanItemMock is a mock implementation of interfaces.SpanItem.
 //
 //	func TestSomethingThatUsesSpanItem(t *testing.T) {
 //
-//		// make and configure a mocked common.SpanItem
+//		// make and configure a mocked interfaces.SpanItem
 //		mockedSpanItem := &SpanItemMock{
 //			GetSpanKeyFunc: func(phase string) string {
 //				panic("mock out the GetSpanKey method")
@@ -30,7 +29,7 @@ import (
 //			},
 //		}
 //
-//		// use mockedSpanItem in code that requires common.SpanItem
+//		// use mockedSpanItem in code that requires interfaces.SpanItem
 //		// and then make assertions.
 //
 //	}

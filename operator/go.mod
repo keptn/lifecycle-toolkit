@@ -8,22 +8,22 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230504143450-0fd922ad161f
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230413082525-dd15d4a0e0e4
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230517124521-e381f7fc6d79
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230517134932-24a60f5e6f8f
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.4
 	github.com/onsi/gomega v1.27.6
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.15.1
 	github.com/stretchr/testify v1.8.2
-	go.opentelemetry.io/otel v1.11.2
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.11.2
-	go.opentelemetry.io/otel/exporters/prometheus v0.34.0
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
-	go.opentelemetry.io/otel/metric v0.34.0
-	go.opentelemetry.io/otel/sdk v1.11.2
-	go.opentelemetry.io/otel/sdk/metric v0.34.0
-	go.opentelemetry.io/otel/trace v1.11.2
+	go.opentelemetry.io/otel v1.15.1
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.15.1
+	go.opentelemetry.io/otel/exporters/prometheus v0.38.1
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.15.1
+	go.opentelemetry.io/otel/metric v0.38.1
+	go.opentelemetry.io/otel/sdk v1.15.1
+	go.opentelemetry.io/otel/sdk/metric v0.38.1
+	go.opentelemetry.io/otel/trace v1.15.1
 	google.golang.org/grpc v1.54.1
 	k8s.io/api v0.26.4
 	k8s.io/apiextensions-apiserver v0.26.4
@@ -47,7 +47,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
+	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
@@ -79,11 +79,10 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
-	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.11.2 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.11.2 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.15.1 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.15.1 // indirect
 	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
@@ -96,7 +95,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/component-base v0.26.4 // indirect
-	k8s.io/klog/v2 v2.90.1 // indirect
+	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect

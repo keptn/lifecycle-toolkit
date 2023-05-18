@@ -67,18 +67,10 @@ The steps are:
 1. [Install and enable]( #install-and-enable-klt)
    the Lifecycle Toolkit on your cluster
 1. [Integrate the Lifecycle Toolkit with your applications](#integrate-the-lifecycle-toolkit-with-your-applications)
-1. Access DORA metrics
-1. Access OpenTelemetry data
-1. Add Keptn metrics
-
-TODO: Make the list items links to the subsections.
-
-- Increment the version number for either your Workload
-  or your application to start aggregating data.
-- View the aggregated metrics and traces as text.
-  You can also use Grafana or the dashboard of your choice
-  to view this information.
-- If you like, define `KeptnMetrics` for additional data you want to monitor.
+1. [DORA metrics](#dora-metrics)
+1. [Using OpenTelemetry](#using-opentelemetry)
+1. [Keptn metrics](#keptn-metrics)
+1. [View the results](#view-the-results)
 
 ## Install and enable KLT
 
@@ -135,7 +127,7 @@ This requires the following steps:
 - Define a Keptn application
 - Annotate the `Deployment` resource to recognize your Keptn application
 
-## Define the Keptn application
+### Define the Keptn application
 
 A Keptn application defines the workloads
 to be included in your Keptn Application.
@@ -171,7 +163,7 @@ but the easier approach is to let KLT create this definition for you.
 This requires that you annotate all your workloads
 (`Deployments`, `Stateful Sets`, `DaemonSets`, and `ReplicaSets`
 as described in
-[Use Keptn automatic app discovery](../../implementing/integrate.md/#use-keptn-automatic-app-discovery).
+[Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery).
 
 ### Annotate your Deployment resource
 
@@ -225,8 +217,10 @@ http://localhost:2222/metrics
 
 DORA metrics are also displayed on Grafana
 or whatever dashboard application you choose.
-See the videos that accompany this exercise
-for examples.
+For example:
+
+![DORA metrics](assets/dynatrace_dora_dashboard.png)
+
 
 ## Using OpenTelemetry
 
@@ -249,6 +243,11 @@ which allows you to trace everything done in the context of that deployment.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)
   file.
+- Set the `EXPOSE_KEPTN_METRICS` environment variable
+  in the `metrics-operator`
+
+TODO: How to set this env variable in `metrics-operator`
+      or where is it set in the example?
 
 ## Keptn metrics
 
@@ -265,12 +264,11 @@ onto a dashboard of your choice,
 modify either your `Deployment` or `KeptnApp` resource yaml file
 to increment the version number
 and commit that change to your repository.
-
-TODO: How to view DORA and OpenTelemetry data without a dashboard.
-      Are the DORA metrics viewed using the same commands shown for
-      Keptn metrics.
-
-TODO: talk about the Grafana display.
+Note that, from the `KeptnApp` YAML file,
+you can either increment the version number of the application
+(which causes all workloads to be rerun and produce observability data)
+or you can increment the version number of a single workload,
+(which causes just that workload to be rerun and produce data).
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information

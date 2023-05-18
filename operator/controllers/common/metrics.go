@@ -7,12 +7,11 @@ import (
 
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
-	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
+	"go.opentelemetry.io/otel/metric"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncfloat64.Gauge) error {
+func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge metric.Float64ObservableGauge, o metric.Observer) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
@@ -27,14 +26,14 @@ func ObserveDeploymentDuration(ctx context.Context, client client.Client, reconc
 		reconcileObject, _ := interfaces.NewMetricsObjectWrapperFromClientObject(ro)
 		if reconcileObject.IsEndTimeSet() {
 			duration := reconcileObject.GetEndTime().Sub(reconcileObject.GetStartTime())
-			gauge.Observe(ctx, duration.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
+			o.ObserveFloat64(gauge, duration.Seconds(), metric.WithAttributes(reconcileObject.GetDurationMetricsAttributes()...))
 		}
 	}
 
 	return nil
 }
 
-func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncfloat64.Gauge) error {
+func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge metric.Float64ObservableGauge, o metric.Observer) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
@@ -59,7 +58,7 @@ func ObserveDeploymentInterval(ctx context.Context, client client.Client, reconc
 			}
 
 			previousInterval := reconcileObject.GetEndTime().Sub(predecessor.GetEndTime())
-			gauge.Observe(ctx, previousInterval.Seconds(), reconcileObject.GetDurationMetricsAttributes()...)
+			o.ObserveFloat64(gauge, previousInterval.Seconds(), metric.WithAttributes(reconcileObject.GetDurationMetricsAttributes()...))
 		}
 	}
 
@@ -84,7 +83,7 @@ func getPredecessor(successor *interfaces.MetricsObjectWrapper, items []client.O
 	return predecessor
 }
 
-func ObserveActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge asyncint64.Gauge) error {
+func ObserveActiveInstances(ctx context.Context, client client.Client, reconcileObjectList client.ObjectList, gauge metric.Int64ObservableGauge, o metric.Observer) error {
 	err := client.List(ctx, reconcileObjectList)
 	if err != nil {
 		return fmt.Errorf(controllererrors.ErrCannotRetrieveInstancesMsg, err)
@@ -102,7 +101,7 @@ func ObserveActiveInstances(ctx context.Context, client client.Client, reconcile
 			gaugeValue = int64(1)
 		}
 
-		gauge.Observe(ctx, gaugeValue, activeMetricsObject.GetActiveMetricsAttributes()...)
+		o.ObserveInt64(gauge, gaugeValue, metric.WithAttributes(activeMetricsObject.GetActiveMetricsAttributes()...))
 	}
 
 	return nil

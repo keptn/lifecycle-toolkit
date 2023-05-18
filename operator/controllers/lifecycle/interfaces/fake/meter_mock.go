@@ -4,14 +4,8 @@
 package fake
 
 import (
-	"context"
+	"go.opentelemetry.io/otel/metric"
 	"sync"
-
-	"go.opentelemetry.io/otel/metric/instrument"
-	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/asyncint64"
-	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 )
 
 // IMeterMock is a mock implementation of interfaces.IMeter.
@@ -20,20 +14,26 @@ import (
 //
 //		// make and configure a mocked interfaces.IMeter
 //		mockedIMeter := &IMeterMock{
-//			AsyncFloat64Func: func() asyncfloat64.InstrumentProvider {
-//				panic("mock out the AsyncFloat64 method")
+//			Float64CounterFunc: func(name string, options ...metric.Float64CounterOption) (metric.Float64Counter, error) {
+//				panic("mock out the Float64Counter method")
 //			},
-//			AsyncInt64Func: func() asyncint64.InstrumentProvider {
-//				panic("mock out the AsyncInt64 method")
+//			Float64HistogramFunc: func(name string, options ...metric.Float64HistogramOption) (metric.Float64Histogram, error) {
+//				panic("mock out the Float64Histogram method")
 //			},
-//			RegisterCallbackFunc: func(insts []instrument.Asynchronous, function func(context.Context)) error {
+//			Float64ObservableGaugeFunc: func(name string, options ...metric.Float64ObservableGaugeOption) (metric.Float64ObservableGauge, error) {
+//				panic("mock out the Float64ObservableGauge method")
+//			},
+//			Int64CounterFunc: func(name string, options ...metric.Int64CounterOption) (metric.Int64Counter, error) {
+//				panic("mock out the Int64Counter method")
+//			},
+//			Int64HistogramFunc: func(name string, options ...metric.Int64HistogramOption) (metric.Int64Histogram, error) {
+//				panic("mock out the Int64Histogram method")
+//			},
+//			Int64ObservableGaugeFunc: func(name string, options ...metric.Int64ObservableGaugeOption) (metric.Int64ObservableGauge, error) {
+//				panic("mock out the Int64ObservableGauge method")
+//			},
+//			RegisterCallbackFunc: func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
 //				panic("mock out the RegisterCallback method")
-//			},
-//			SyncFloat64Func: func() syncfloat64.InstrumentProvider {
-//				panic("mock out the SyncFloat64 method")
-//			},
-//			SyncInt64Func: func() syncint64.InstrumentProvider {
-//				panic("mock out the SyncInt64 method")
 //			},
 //		}
 //
@@ -42,120 +42,320 @@ import (
 //
 //	}
 type IMeterMock struct {
-	// AsyncFloat64Func mocks the AsyncFloat64 method.
-	AsyncFloat64Func func() asyncfloat64.InstrumentProvider
+	// Float64CounterFunc mocks the Float64Counter method.
+	Float64CounterFunc func(name string, options ...metric.Float64CounterOption) (metric.Float64Counter, error)
 
-	// AsyncInt64Func mocks the AsyncInt64 method.
-	AsyncInt64Func func() asyncint64.InstrumentProvider
+	// Float64HistogramFunc mocks the Float64Histogram method.
+	Float64HistogramFunc func(name string, options ...metric.Float64HistogramOption) (metric.Float64Histogram, error)
+
+	// Float64ObservableGaugeFunc mocks the Float64ObservableGauge method.
+	Float64ObservableGaugeFunc func(name string, options ...metric.Float64ObservableGaugeOption) (metric.Float64ObservableGauge, error)
+
+	// Int64CounterFunc mocks the Int64Counter method.
+	Int64CounterFunc func(name string, options ...metric.Int64CounterOption) (metric.Int64Counter, error)
+
+	// Int64HistogramFunc mocks the Int64Histogram method.
+	Int64HistogramFunc func(name string, options ...metric.Int64HistogramOption) (metric.Int64Histogram, error)
+
+	// Int64ObservableGaugeFunc mocks the Int64ObservableGauge method.
+	Int64ObservableGaugeFunc func(name string, options ...metric.Int64ObservableGaugeOption) (metric.Int64ObservableGauge, error)
 
 	// RegisterCallbackFunc mocks the RegisterCallback method.
-	RegisterCallbackFunc func(insts []instrument.Asynchronous, function func(context.Context)) error
-
-	// SyncFloat64Func mocks the SyncFloat64 method.
-	SyncFloat64Func func() syncfloat64.InstrumentProvider
-
-	// SyncInt64Func mocks the SyncInt64 method.
-	SyncInt64Func func() syncint64.InstrumentProvider
+	RegisterCallbackFunc func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// AsyncFloat64 holds details about calls to the AsyncFloat64 method.
-		AsyncFloat64 []struct {
+		// Float64Counter holds details about calls to the Float64Counter method.
+		Float64Counter []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Float64CounterOption
 		}
-		// AsyncInt64 holds details about calls to the AsyncInt64 method.
-		AsyncInt64 []struct {
+		// Float64Histogram holds details about calls to the Float64Histogram method.
+		Float64Histogram []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Float64HistogramOption
+		}
+		// Float64ObservableGauge holds details about calls to the Float64ObservableGauge method.
+		Float64ObservableGauge []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Float64ObservableGaugeOption
+		}
+		// Int64Counter holds details about calls to the Int64Counter method.
+		Int64Counter []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Int64CounterOption
+		}
+		// Int64Histogram holds details about calls to the Int64Histogram method.
+		Int64Histogram []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Int64HistogramOption
+		}
+		// Int64ObservableGauge holds details about calls to the Int64ObservableGauge method.
+		Int64ObservableGauge []struct {
+			// Name is the name argument value.
+			Name string
+			// Options is the options argument value.
+			Options []metric.Int64ObservableGaugeOption
 		}
 		// RegisterCallback holds details about calls to the RegisterCallback method.
 		RegisterCallback []struct {
-			// Insts is the insts argument value.
-			Insts []instrument.Asynchronous
-			// Function is the function argument value.
-			Function func(context.Context)
-		}
-		// SyncFloat64 holds details about calls to the SyncFloat64 method.
-		SyncFloat64 []struct {
-		}
-		// SyncInt64 holds details about calls to the SyncInt64 method.
-		SyncInt64 []struct {
+			// F is the f argument value.
+			F metric.Callback
+			// Instruments is the instruments argument value.
+			Instruments []metric.Observable
 		}
 	}
-	lockAsyncFloat64     sync.RWMutex
-	lockAsyncInt64       sync.RWMutex
-	lockRegisterCallback sync.RWMutex
-	lockSyncFloat64      sync.RWMutex
-	lockSyncInt64        sync.RWMutex
+	lockFloat64Counter         sync.RWMutex
+	lockFloat64Histogram       sync.RWMutex
+	lockFloat64ObservableGauge sync.RWMutex
+	lockInt64Counter           sync.RWMutex
+	lockInt64Histogram         sync.RWMutex
+	lockInt64ObservableGauge   sync.RWMutex
+	lockRegisterCallback       sync.RWMutex
 }
 
-// AsyncFloat64 calls AsyncFloat64Func.
-func (mock *IMeterMock) AsyncFloat64() asyncfloat64.InstrumentProvider {
-	if mock.AsyncFloat64Func == nil {
-		panic("IMeterMock.AsyncFloat64Func: method is nil but IMeter.AsyncFloat64 was just called")
+// Float64Counter calls Float64CounterFunc.
+func (mock *IMeterMock) Float64Counter(name string, options ...metric.Float64CounterOption) (metric.Float64Counter, error) {
+	if mock.Float64CounterFunc == nil {
+		panic("IMeterMock.Float64CounterFunc: method is nil but IMeter.Float64Counter was just called")
 	}
 	callInfo := struct {
-	}{}
-	mock.lockAsyncFloat64.Lock()
-	mock.calls.AsyncFloat64 = append(mock.calls.AsyncFloat64, callInfo)
-	mock.lockAsyncFloat64.Unlock()
-	return mock.AsyncFloat64Func()
+		Name    string
+		Options []metric.Float64CounterOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockFloat64Counter.Lock()
+	mock.calls.Float64Counter = append(mock.calls.Float64Counter, callInfo)
+	mock.lockFloat64Counter.Unlock()
+	return mock.Float64CounterFunc(name, options...)
 }
 
-// AsyncFloat64Calls gets all the calls that were made to AsyncFloat64.
+// Float64CounterCalls gets all the calls that were made to Float64Counter.
 // Check the length with:
 //
-//	len(mockedIMeter.AsyncFloat64Calls())
-func (mock *IMeterMock) AsyncFloat64Calls() []struct {
+//	len(mockedIMeter.Float64CounterCalls())
+func (mock *IMeterMock) Float64CounterCalls() []struct {
+	Name    string
+	Options []metric.Float64CounterOption
 } {
 	var calls []struct {
+		Name    string
+		Options []metric.Float64CounterOption
 	}
-	mock.lockAsyncFloat64.RLock()
-	calls = mock.calls.AsyncFloat64
-	mock.lockAsyncFloat64.RUnlock()
+	mock.lockFloat64Counter.RLock()
+	calls = mock.calls.Float64Counter
+	mock.lockFloat64Counter.RUnlock()
 	return calls
 }
 
-// AsyncInt64 calls AsyncInt64Func.
-func (mock *IMeterMock) AsyncInt64() asyncint64.InstrumentProvider {
-	if mock.AsyncInt64Func == nil {
-		panic("IMeterMock.AsyncInt64Func: method is nil but IMeter.AsyncInt64 was just called")
+// Float64Histogram calls Float64HistogramFunc.
+func (mock *IMeterMock) Float64Histogram(name string, options ...metric.Float64HistogramOption) (metric.Float64Histogram, error) {
+	if mock.Float64HistogramFunc == nil {
+		panic("IMeterMock.Float64HistogramFunc: method is nil but IMeter.Float64Histogram was just called")
 	}
 	callInfo := struct {
-	}{}
-	mock.lockAsyncInt64.Lock()
-	mock.calls.AsyncInt64 = append(mock.calls.AsyncInt64, callInfo)
-	mock.lockAsyncInt64.Unlock()
-	return mock.AsyncInt64Func()
+		Name    string
+		Options []metric.Float64HistogramOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockFloat64Histogram.Lock()
+	mock.calls.Float64Histogram = append(mock.calls.Float64Histogram, callInfo)
+	mock.lockFloat64Histogram.Unlock()
+	return mock.Float64HistogramFunc(name, options...)
 }
 
-// AsyncInt64Calls gets all the calls that were made to AsyncInt64.
+// Float64HistogramCalls gets all the calls that were made to Float64Histogram.
 // Check the length with:
 //
-//	len(mockedIMeter.AsyncInt64Calls())
-func (mock *IMeterMock) AsyncInt64Calls() []struct {
+//	len(mockedIMeter.Float64HistogramCalls())
+func (mock *IMeterMock) Float64HistogramCalls() []struct {
+	Name    string
+	Options []metric.Float64HistogramOption
 } {
 	var calls []struct {
+		Name    string
+		Options []metric.Float64HistogramOption
 	}
-	mock.lockAsyncInt64.RLock()
-	calls = mock.calls.AsyncInt64
-	mock.lockAsyncInt64.RUnlock()
+	mock.lockFloat64Histogram.RLock()
+	calls = mock.calls.Float64Histogram
+	mock.lockFloat64Histogram.RUnlock()
+	return calls
+}
+
+// Float64ObservableGauge calls Float64ObservableGaugeFunc.
+func (mock *IMeterMock) Float64ObservableGauge(name string, options ...metric.Float64ObservableGaugeOption) (metric.Float64ObservableGauge, error) {
+	if mock.Float64ObservableGaugeFunc == nil {
+		panic("IMeterMock.Float64ObservableGaugeFunc: method is nil but IMeter.Float64ObservableGauge was just called")
+	}
+	callInfo := struct {
+		Name    string
+		Options []metric.Float64ObservableGaugeOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockFloat64ObservableGauge.Lock()
+	mock.calls.Float64ObservableGauge = append(mock.calls.Float64ObservableGauge, callInfo)
+	mock.lockFloat64ObservableGauge.Unlock()
+	return mock.Float64ObservableGaugeFunc(name, options...)
+}
+
+// Float64ObservableGaugeCalls gets all the calls that were made to Float64ObservableGauge.
+// Check the length with:
+//
+//	len(mockedIMeter.Float64ObservableGaugeCalls())
+func (mock *IMeterMock) Float64ObservableGaugeCalls() []struct {
+	Name    string
+	Options []metric.Float64ObservableGaugeOption
+} {
+	var calls []struct {
+		Name    string
+		Options []metric.Float64ObservableGaugeOption
+	}
+	mock.lockFloat64ObservableGauge.RLock()
+	calls = mock.calls.Float64ObservableGauge
+	mock.lockFloat64ObservableGauge.RUnlock()
+	return calls
+}
+
+// Int64Counter calls Int64CounterFunc.
+func (mock *IMeterMock) Int64Counter(name string, options ...metric.Int64CounterOption) (metric.Int64Counter, error) {
+	if mock.Int64CounterFunc == nil {
+		panic("IMeterMock.Int64CounterFunc: method is nil but IMeter.Int64Counter was just called")
+	}
+	callInfo := struct {
+		Name    string
+		Options []metric.Int64CounterOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockInt64Counter.Lock()
+	mock.calls.Int64Counter = append(mock.calls.Int64Counter, callInfo)
+	mock.lockInt64Counter.Unlock()
+	return mock.Int64CounterFunc(name, options...)
+}
+
+// Int64CounterCalls gets all the calls that were made to Int64Counter.
+// Check the length with:
+//
+//	len(mockedIMeter.Int64CounterCalls())
+func (mock *IMeterMock) Int64CounterCalls() []struct {
+	Name    string
+	Options []metric.Int64CounterOption
+} {
+	var calls []struct {
+		Name    string
+		Options []metric.Int64CounterOption
+	}
+	mock.lockInt64Counter.RLock()
+	calls = mock.calls.Int64Counter
+	mock.lockInt64Counter.RUnlock()
+	return calls
+}
+
+// Int64Histogram calls Int64HistogramFunc.
+func (mock *IMeterMock) Int64Histogram(name string, options ...metric.Int64HistogramOption) (metric.Int64Histogram, error) {
+	if mock.Int64HistogramFunc == nil {
+		panic("IMeterMock.Int64HistogramFunc: method is nil but IMeter.Int64Histogram was just called")
+	}
+	callInfo := struct {
+		Name    string
+		Options []metric.Int64HistogramOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockInt64Histogram.Lock()
+	mock.calls.Int64Histogram = append(mock.calls.Int64Histogram, callInfo)
+	mock.lockInt64Histogram.Unlock()
+	return mock.Int64HistogramFunc(name, options...)
+}
+
+// Int64HistogramCalls gets all the calls that were made to Int64Histogram.
+// Check the length with:
+//
+//	len(mockedIMeter.Int64HistogramCalls())
+func (mock *IMeterMock) Int64HistogramCalls() []struct {
+	Name    string
+	Options []metric.Int64HistogramOption
+} {
+	var calls []struct {
+		Name    string
+		Options []metric.Int64HistogramOption
+	}
+	mock.lockInt64Histogram.RLock()
+	calls = mock.calls.Int64Histogram
+	mock.lockInt64Histogram.RUnlock()
+	return calls
+}
+
+// Int64ObservableGauge calls Int64ObservableGaugeFunc.
+func (mock *IMeterMock) Int64ObservableGauge(name string, options ...metric.Int64ObservableGaugeOption) (metric.Int64ObservableGauge, error) {
+	if mock.Int64ObservableGaugeFunc == nil {
+		panic("IMeterMock.Int64ObservableGaugeFunc: method is nil but IMeter.Int64ObservableGauge was just called")
+	}
+	callInfo := struct {
+		Name    string
+		Options []metric.Int64ObservableGaugeOption
+	}{
+		Name:    name,
+		Options: options,
+	}
+	mock.lockInt64ObservableGauge.Lock()
+	mock.calls.Int64ObservableGauge = append(mock.calls.Int64ObservableGauge, callInfo)
+	mock.lockInt64ObservableGauge.Unlock()
+	return mock.Int64ObservableGaugeFunc(name, options...)
+}
+
+// Int64ObservableGaugeCalls gets all the calls that were made to Int64ObservableGauge.
+// Check the length with:
+//
+//	len(mockedIMeter.Int64ObservableGaugeCalls())
+func (mock *IMeterMock) Int64ObservableGaugeCalls() []struct {
+	Name    string
+	Options []metric.Int64ObservableGaugeOption
+} {
+	var calls []struct {
+		Name    string
+		Options []metric.Int64ObservableGaugeOption
+	}
+	mock.lockInt64ObservableGauge.RLock()
+	calls = mock.calls.Int64ObservableGauge
+	mock.lockInt64ObservableGauge.RUnlock()
 	return calls
 }
 
 // RegisterCallback calls RegisterCallbackFunc.
-func (mock *IMeterMock) RegisterCallback(insts []instrument.Asynchronous, function func(context.Context)) error {
+func (mock *IMeterMock) RegisterCallback(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
 	if mock.RegisterCallbackFunc == nil {
 		panic("IMeterMock.RegisterCallbackFunc: method is nil but IMeter.RegisterCallback was just called")
 	}
 	callInfo := struct {
-		Insts    []instrument.Asynchronous
-		Function func(context.Context)
+		F           metric.Callback
+		Instruments []metric.Observable
 	}{
-		Insts:    insts,
-		Function: function,
+		F:           f,
+		Instruments: instruments,
 	}
 	mock.lockRegisterCallback.Lock()
 	mock.calls.RegisterCallback = append(mock.calls.RegisterCallback, callInfo)
 	mock.lockRegisterCallback.Unlock()
-	return mock.RegisterCallbackFunc(insts, function)
+	return mock.RegisterCallbackFunc(f, instruments...)
 }
 
 // RegisterCallbackCalls gets all the calls that were made to RegisterCallback.
@@ -163,69 +363,15 @@ func (mock *IMeterMock) RegisterCallback(insts []instrument.Asynchronous, functi
 //
 //	len(mockedIMeter.RegisterCallbackCalls())
 func (mock *IMeterMock) RegisterCallbackCalls() []struct {
-	Insts    []instrument.Asynchronous
-	Function func(context.Context)
+	F           metric.Callback
+	Instruments []metric.Observable
 } {
 	var calls []struct {
-		Insts    []instrument.Asynchronous
-		Function func(context.Context)
+		F           metric.Callback
+		Instruments []metric.Observable
 	}
 	mock.lockRegisterCallback.RLock()
 	calls = mock.calls.RegisterCallback
 	mock.lockRegisterCallback.RUnlock()
-	return calls
-}
-
-// SyncFloat64 calls SyncFloat64Func.
-func (mock *IMeterMock) SyncFloat64() syncfloat64.InstrumentProvider {
-	if mock.SyncFloat64Func == nil {
-		panic("IMeterMock.SyncFloat64Func: method is nil but IMeter.SyncFloat64 was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockSyncFloat64.Lock()
-	mock.calls.SyncFloat64 = append(mock.calls.SyncFloat64, callInfo)
-	mock.lockSyncFloat64.Unlock()
-	return mock.SyncFloat64Func()
-}
-
-// SyncFloat64Calls gets all the calls that were made to SyncFloat64.
-// Check the length with:
-//
-//	len(mockedIMeter.SyncFloat64Calls())
-func (mock *IMeterMock) SyncFloat64Calls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockSyncFloat64.RLock()
-	calls = mock.calls.SyncFloat64
-	mock.lockSyncFloat64.RUnlock()
-	return calls
-}
-
-// SyncInt64 calls SyncInt64Func.
-func (mock *IMeterMock) SyncInt64() syncint64.InstrumentProvider {
-	if mock.SyncInt64Func == nil {
-		panic("IMeterMock.SyncInt64Func: method is nil but IMeter.SyncInt64 was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockSyncInt64.Lock()
-	mock.calls.SyncInt64 = append(mock.calls.SyncInt64, callInfo)
-	mock.lockSyncInt64.Unlock()
-	return mock.SyncInt64Func()
-}
-
-// SyncInt64Calls gets all the calls that were made to SyncInt64.
-// Check the length with:
-//
-//	len(mockedIMeter.SyncInt64Calls())
-func (mock *IMeterMock) SyncInt64Calls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockSyncInt64.RLock()
-	calls = mock.calls.SyncInt64
-	mock.lockSyncInt64.RUnlock()
 	return calls
 }

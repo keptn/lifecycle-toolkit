@@ -55,7 +55,7 @@ to walk you through this exercise if you prefer:
 * [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
 
 In the
-[Getting started with Keptn metrics](../metrics)
+[Getting started with Keptn metrics](../../metrics)
 exercise, you learn how to define and use Keptn metrics.
 You may want to complete that exercise before doing this exercise
 although that is not required.
@@ -65,10 +65,9 @@ to the observability data for your cluster.
 The steps are:
 
 1. Install and configure the Lifecycle Toolkit on your cluster
-1. Configure OpenTelemetry for the Lifecycle Toolkit
-1. Create a Keptn application that aggregates your deployment workloads
-1. DORA metrics
-1. Using OpenTelemetry data
+1. Implement your Keptn application
+1. Access DORA metrics
+1. Access OpenTelemetry data
 1. Keptn metrics
 
 TODO: Make the list items links to the subsections.
@@ -98,7 +97,7 @@ To install the Keptn Lifecycle Toolkit on your cluster:
      on your cluster using the Helm chart
 
 If you installed KLT on your cluster for the
-[Getting started with Keptn metrics](../metrics)
+[Getting started with Keptn metrics](../../metrics)
 exercise, you do not need to re-install it for this exercise.
 However, if you only installed the `metrics-operator` for that exercise,
 you now need to install the full KLT.

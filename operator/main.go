@@ -25,13 +25,14 @@ import (
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/kelseyhightower/envconfig"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
-	cmdConfig "github.com/keptn/lifecycle-toolkit/operator/cmd/config"
-	"github.com/keptn/lifecycle-toolkit/operator/cmd/webhook"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnappcreationrequest"
@@ -42,7 +43,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
@@ -53,6 +56,7 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
 var (
@@ -318,10 +322,31 @@ func main() {
 		webhookBuilder := webhook.NewWebhookBuilder().
 			SetNamespace(env.PodNamespace).
 			SetPodName(env.PodName).
-			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+			SetManagerProvider(
+				webhook.NewWebhookManagerProvider(
+					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+			).
+			SetCertificateWatcher(
+				certificates.NewCertificateWatcher(
+					mgr.GetAPIReader(),
+					mgr.GetWebhookServer().CertDir,
+					env.PodNamespace,
+					certCommon.SecretName,
+					setupLog,
+				),
+			)
 
 		setupLog.Info("starting webhook and manager")
-		if err1 := webhookBuilder.Run(mgr); err1 != nil {
+		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
+			"/mutate-v1-pod": {
+				Handler: &pod_mutator.PodMutatingWebhook{
+					Client:   mgr.GetClient(),
+					Tracer:   otel.Tracer("keptn/webhook"),
+					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
+					Log:      ctrl.Log.WithName("Mutating Webhook"),
+				},
+			},
+		}); err != nil {
 			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}

@@ -107,7 +107,6 @@ To install and enable the Keptn Lifecycle Toolkit on your cluster:
    - certificate-operator (or another cert manager)
    - lifecycle-operator
    - scheduler
-   - otel-collector
    - metrics-operator
 
 ## Integrate the Lifecycle Toolkit with your applications

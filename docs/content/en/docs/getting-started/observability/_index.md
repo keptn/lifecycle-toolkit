@@ -221,7 +221,6 @@ For example:
 
 ![DORA metrics](assets/dynatrace_dora_dashboard.png)
 
-
 ## Using OpenTelemetry
 
 The Keptn Lifecycle Toolkit extends the Kubernetes

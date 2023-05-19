@@ -34,7 +34,7 @@ which the scheduler can use to determine
 that a node meets the criteria required
 to allow a pod to be bind to a node.
 Workload Instances have a reference
-to the respective Deployment/StatefulSet/ReplicaSet,
+to the respective Pod/DeamonSet/StatefulSet/ReplicaSet,
 to check whether it has reached the desired state.
 If it detects that the referenced object has reached its desired state
 (e.g. all pods of a deployment are up and running),

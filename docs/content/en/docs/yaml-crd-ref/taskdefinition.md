@@ -21,11 +21,11 @@ metadata:
 spec:
   function:
     inline | httpRef | functionRef:
-    [parameters:
+    parameters:
       map:
-        textMessage: "This is my configuration"]
-    [secureParameters:
-      secret: slack-token]
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: slack-token
 ```
 
 ## Fields

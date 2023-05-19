@@ -18,14 +18,12 @@ package keptntask
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
@@ -91,14 +89,14 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	}(task)
 
-	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
-	if err != nil {
+	job, err := r.getJob(ctx, task, req.Namespace)
+	if err != nil && !errors.IsNotFound(err) {
 		r.Log.Error(err, "Could not check if job is running")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !jobExists {
+	if job == nil {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -144,29 +142,6 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Owns(&batchv1.Job{}).
 		Complete(r)
-}
-
-func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha3.KeptnTask, namespace string) (bool, error) {
-	jobList := &batchv1.JobList{}
-
-	jobLabels := client.MatchingLabels{}
-	for k, v := range task.CreateKeptnLabels() {
-		jobLabels[k] = v
-	}
-
-	if len(jobLabels) == 0 {
-		return false, fmt.Errorf(controllererrors.ErrNoLabelsFoundTask, task.Name)
-	}
-
-	if err := r.Client.List(ctx, jobList, client.InNamespace(namespace), jobLabels); err != nil {
-		return false, err
-	}
-
-	if len(jobList.Items) > 0 {
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func (r *KeptnTaskReconciler) getTracer() controllercommon.ITracer {

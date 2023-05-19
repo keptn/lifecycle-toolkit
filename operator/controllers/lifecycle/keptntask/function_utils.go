@@ -30,8 +30,8 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        jobId,
 			Namespace:   task.Namespace,
-			Labels:      task.CreateKeptnLabels(),
-			Annotations: task.Annotations,
+			Labels:      task.Labels,
+			Annotations: task.CreateKeptnAnnotations(),
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{

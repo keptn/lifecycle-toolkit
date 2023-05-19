@@ -32,7 +32,7 @@ In its state, it keeps track of the current status of all checks,
 as well as the overall state of the Pre Deployment phase,
 which the scheduler can use to determine
 that a node meets the criteria required
-to allow a pod to be placed on that node.
+to allow a pod to be bind to a node.
 Workload Instances have a reference
 to the respective Deployment/StatefulSet/ReplicaSet,
 to check whether it has reached the desired state.

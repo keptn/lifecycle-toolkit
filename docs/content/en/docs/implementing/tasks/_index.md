@@ -112,10 +112,11 @@ spec:
 This methodology supports multiple variables
 by creating a Kubernetes secret with a JSON string:
 
-```yaml
+```shell
 # kubectl create secret generic my-secret \
 # --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
-
+```
+```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:

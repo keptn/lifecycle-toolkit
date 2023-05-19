@@ -90,9 +90,10 @@ Note the following about using parameters with functions:
 To create a secret to use in a `KeptnTaskDefinition`,
 execute this command:
 
-```yaml
+```shell
 # kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
-  
+```
+```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:

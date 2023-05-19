@@ -7,9 +7,7 @@ weight: 10
 hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-A Kubernetes
-[Workload](https://kubernetes.io/docs/concepts/workloads/)
-resource contains information about
+A `KeptnWorkload`resource contains information about
 which tasks should be performed during the `preDeployment`
 or `postDeployment` phase of a deployment.
 In its state,
@@ -20,20 +18,21 @@ for a particular instance of a Deployment/StatefulSet/ReplicaSet
 
 ## KeptnWorkload
 
-A `KeptnWorkload` resource augments a Kubernetes `workload`
+A `KeptnWorkload` resource augments a Kubernetes
+[Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
 KLT generates the `KeptnWorkload` resource
 from metadata information;
 it is not necessary to manually create a YAML file that defines it.
 
-A Workload Instance is responsible for executing
+A `KeptnWorkload` instance is responsible for executing
 the pre- and post deployment checks of a workload.
 In its state, it keeps track of the current status of all checks,
 as well as the overall state of the Pre Deployment phase,
 which the scheduler can use to determine
 that a node meets the criteria required
 to allow a pod to be bind to a node.
-Workload Instances have a reference
+`KeptnWorkload` nstances have a reference
 to the respective Pod/DeamonSet/StatefulSet/ReplicaSet,
 to check whether it has reached the desired state.
 If it detects that the referenced object has reached its desired state

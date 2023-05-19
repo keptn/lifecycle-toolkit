@@ -339,22 +339,6 @@ func main() {
 
 		setupLog.Info("starting webhook and manager")
 
-		go func() {
-			if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
-				"/gate-v1-pod": {
-					Handler: &gating.PodGatingWebhook{
-						Client:   mgr.GetClient(),
-						Tracer:   otel.Tracer("keptn/gatewebhook"),
-						Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
-						Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
-					},
-				},
-			}); err != nil {
-				setupLog.Error(err, "problem running manager")
-				os.Exit(1)
-			}
-		}()
-
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
@@ -362,6 +346,14 @@ func main() {
 					Tracer:   otel.Tracer("keptn/webhook"),
 					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
+				},
+			},
+			"/gate-v1-pod": {
+				Handler: &gating.PodGatingWebhook{
+					Client:   mgr.GetClient(),
+					Tracer:   otel.Tracer("keptn/gatewebhook"),
+					Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
+					Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
 				},
 			},
 		}); err != nil {

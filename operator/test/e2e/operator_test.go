@@ -74,8 +74,8 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 
 			})
 
-			It(" should be assigned to keptn scheduler", func() {
-				Expect(newPod.Spec.SchedulerName == "keptn-scheduler")
+			It(" should be gated", func() {
+				Expect(newPod.Spec.SchedulingGates).To(ContainElement(apiv1.PodSchedulingGate{Name: "klt-gated"}))
 			})
 		})
 	})

@@ -43,6 +43,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks/gating"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
@@ -337,6 +338,23 @@ func main() {
 			)
 
 		setupLog.Info("starting webhook and manager")
+
+		go func() {
+			if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
+				"/gate-v1-pod": {
+					Handler: &gating.PodGatingWebhook{
+						Client:   mgr.GetClient(),
+						Tracer:   otel.Tracer("keptn/gatewebhook"),
+						Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
+						Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
+					},
+				},
+			}); err != nil {
+				setupLog.Error(err, "problem running manager")
+				os.Exit(1)
+			}
+		}()
+
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{

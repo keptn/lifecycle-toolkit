@@ -15,6 +15,9 @@ It can be configured in one of three different ways:
 - inline
 - referring to an HTTP script
 - referring to another `KeptnTaskDefinition`
+- referring to a
+  [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+  resource that is populated with the function to execute
 
 ### Context
 

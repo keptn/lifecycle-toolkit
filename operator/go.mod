@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230517124521-e381f7fc6d79
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230519083019-d5b316ac6f9a
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230517141059-f0f7edf7041d
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.5
@@ -98,5 +98,3 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
-
-replace github.com/keptn/lifecycle-toolkit/klt-cert-manager => ../klt-cert-manager

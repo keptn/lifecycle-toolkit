@@ -9,7 +9,7 @@ A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[workload](../concepts/workloads/).
+[KeptnWorkload](../concepts/workloads/).
 
 ## Yaml Synopsis
 
@@ -20,7 +20,7 @@ metadata:
   name: <task-name>
 spec:
   function:
-    inline | httpRef | functionRef:
+    inline | httpRef | functionRef | ConfigMapRef
     parameters:
       map:
         textMessage: "This is my configuration"
@@ -94,6 +94,10 @@ spec:
       In this case, it calls other, existing `KeptnTaskDefinition`s
       for each type of test to be run,
       specifying each by the value of the `name` field.
+      
+    * **ConfigMapRef** - Specify the name of a
+      [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+      resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
     The Lifecycle Toolkit passes the values defined inside the `map` field
@@ -130,8 +134,7 @@ spec:
 ## Usage
 
 A Task executes the TaskDefinition of a
-[KeptnApp](app.md) or
-[workload](https://kubernetes.io/docs/concepts/workloads/).
+[KeptnApp](app.md) or [KeptnWorkload].
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -225,6 +228,22 @@ spec:
         textMessage: "This is my configuration"
     secureParameters:
       secret: slack-token
+```
+
+### Example 4: ConfigMapRef
+
+This example references a `ConfigMap` by the name of `dev-configmap`
+that contains the code for the function to be executed.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: keptntaskdefinition-sample
+spec:
+  function:
+    configMapRef:
+      name: dev-configmap
 ```
 
 ### More examples

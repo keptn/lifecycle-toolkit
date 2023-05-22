@@ -29,7 +29,7 @@ A `KeptnWorkload` instance is responsible for executing
 the pre- and post deployment checks of a workload.
 In its state, it keeps track of the current status of all checks,
 as well as the overall state of the Pre Deployment phase,
-which the scheduler can use to determine
+which the scheduler can use to determine whether the deployment should proceed and whether the pod should be bound to a node or stay pending.
 that a node meets the criteria required
 to allow a pod to be bind to a node.
 `KeptnWorkload` nstances have a reference

@@ -114,8 +114,8 @@ This methodology supports multiple variables
 by creating a Kubernetes secret with a JSON string:
 
 ```shell
-# kubectl create secret generic my-secret \
-# --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
+kubectl create secret generic my-secret \
+--from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
 ```
 
 ```yaml

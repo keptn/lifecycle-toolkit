@@ -83,7 +83,7 @@ Your cluster should include the following:
 * If you want to use the standardized observability feature,
   install an OpenTelemetry collector on your cluster.
    See
-  [OpenTelemetry Collector](https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/basics/collector)
+  [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 
 * If you want a dashboard for reviewing metrics and traces,

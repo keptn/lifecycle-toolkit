@@ -21,6 +21,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -28,7 +30,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
+// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
 // +kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets;replicasets,verbs=get
 
@@ -59,7 +61,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	pod := &corev1.Pod{}
 
 	logger.Info("checking the request", "req obj: ", req.Object, "req raw", req.Object.Raw)
-	err := a.decoder.Decode(req, pod)
+	//err := a.decoder.Decode(req.Object, pod) no clue why this fails so I directly use the runtime decoder
+	var deserializer runtime.Decoder
+	factory := serializer.NewCodecFactory(a.Client.Scheme())
+	deserializer = factory.UniversalDeserializer()
+	err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

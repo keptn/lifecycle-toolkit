@@ -27,22 +27,22 @@ webhooks:
         resources:
           - pods
     sideEffects: None
-#  - admissionReviewVersions:
-#      - v1
-#    clientConfig:
-#      service:
-#        name: lifecycle-webhook-service
-#        namespace: system
-#        path: /gate-v1-pod
-#    failurePolicy: Fail
-#    name: gpod.keptn.sh
-#    rules:
-#      - apiGroups:
-#          - ""
-#        apiVersions:
-#          - v1
-#        operations:
-#          - CREATE
-#        resources:
-#          - pods
-#    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: lifecycle-webhook-service
+        namespace: system
+        path: /gate-v1-pod
+    failurePolicy: Fail
+    name: gpod.keptn.sh
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods
+    sideEffects: None

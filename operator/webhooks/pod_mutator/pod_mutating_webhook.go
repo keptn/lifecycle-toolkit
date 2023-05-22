@@ -71,13 +71,12 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	// check if Lifecycle Controller is enabled for this namespace
-	namespace := &corev1.Namespace{}
-	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
+	enabled, err := common.IsNamespaceEnabled(ctx, req.Namespace, a.Client)
+	if err != nil {
 		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
-
-	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
+	if enabled {
 		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}

@@ -25,6 +25,16 @@ const (
 
 var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
 
+func IsNamespaceEnabled(ctx context.Context, namespaceRef string, k8sclient client.Client) (bool, error) {
+	// check if Lifecycle Controller is enabled for this namespace
+	namespace := &corev1.Namespace{}
+	if err := k8sclient.Get(ctx, types.NamespacedName{Name: namespaceRef}, namespace); err != nil {
+		return false, err
+	}
+
+	return namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled", nil
+}
+
 func IsPodOrParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod, k8sclient client.Client) (bool, error) {
 	podIsAnnotated, err := isPodAnnotated(pod)
 

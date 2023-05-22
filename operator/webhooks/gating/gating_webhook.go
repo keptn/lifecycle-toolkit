@@ -52,7 +52,15 @@ func (a *PodGatingWebhook) Handle(ctx context.Context, req admission.Request) ad
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
-
+	enabled, err := common.IsNamespaceEnabled(ctx, req.Namespace, a.Client)
+	if err != nil {
+		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
+		return admission.Errored(http.StatusInternalServerError, err)
+	}
+	if enabled {
+		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
+		return admission.Allowed("namespace is not enabled for lifecycle controller")
+	}
 	podIsAnnotated, err := common.IsPodOrParentAnnotated(ctx, &req, pod, a.Client)
 	logger.Info("Checked if pod is annotated.")
 	if err != nil {

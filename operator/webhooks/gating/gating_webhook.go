@@ -40,11 +40,7 @@ func (a *PodGatingWebhook) Handle(ctx context.Context, req admission.Request) ad
 	ctx, span := a.Tracer.Start(ctx, "gate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer span.End()
 	pod := &corev1.Pod{}
-	err := a.Decoder.Decode(req, pod) //no clue why this fails so I directly use the runtime decoder
-	//var deserializer runtime.Decoder
-	//factory := serializer.NewCodecFactory(a.Client.Scheme())
-	//deserializer = factory.UniversalDeserializer()
-	//err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
+	err := a.Decoder.Decode(req, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

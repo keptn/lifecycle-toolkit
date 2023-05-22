@@ -36,7 +36,7 @@ import (
 type PodMutatingWebhook struct {
 	Client   client.Client
 	Tracer   trace.Tracer
-	Decoder  *admission.Decoder
+	Decoder  *admission.Decoder //decoder cannot be injected from controller runtime 0.15.0 onward
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
@@ -59,11 +59,8 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	pod := &corev1.Pod{}
 
 	logger.Info("checking the request", "req obj: ", req.Object, "req raw", req.Object.Raw)
-	err := a.Decoder.Decode(req, pod) //no clue why this fails so I directly use the runtime decoder
-	//var deserializer runtime.Decoder
-	//factory := serializer.NewCodecFactory(a.Client.Scheme())
-	//deserializer = factory.UniversalDeserializer()
-	//err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
+	err := a.Decoder.Decode(req, pod)
+
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

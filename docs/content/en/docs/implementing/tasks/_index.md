@@ -110,7 +110,7 @@ spec:
         // secret_text = "foo"
 ```
 
-This methodology supports multiple variables
+To pass multiple variables
 by creating a Kubernetes secret with a JSON string:
 
 ```shell

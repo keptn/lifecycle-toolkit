@@ -23,7 +23,8 @@ from start to end.
 KLT is also application aware,
 so we can extend the deployment
 with tasks and evaluations that
-are run either before or after your whole application starts the deployment or even at the individual workload level.
+are run either before or after your whole application starts the deployment
+or even at the individual workload level.
 You can also validate any metric,
 either pre- or post-deployment,
 using the metrics from the Keptn Metrics Server introduced in

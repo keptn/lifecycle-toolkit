@@ -147,7 +147,7 @@ that executes in your namespace.
 Note that Deno has tighter restrictions
 for permissions and importing data
 so a script that works properly elsewhere
-may not function properly when run in Deno.
+may not function out of the box when run in Deno.
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the `Deployment` resource;

@@ -56,6 +56,9 @@ if (context.objectType == "Workload") {
 ## Parameterized functions
 
 `KeptnTaskDefinition`s can use input parameters.
+Simple parameters are passed as a single map of key values,
+while the `secret` parameters refer to a single Kubernetes `secret`.
+
 Consider the following example:
 
 ```yaml

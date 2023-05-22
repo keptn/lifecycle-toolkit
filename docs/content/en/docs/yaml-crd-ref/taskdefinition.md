@@ -94,7 +94,6 @@ spec:
       In this case, it calls other, existing `KeptnTaskDefinition`s
       for each type of test to be run,
       specifying each by the value of the `name` field.
-      
     * **ConfigMapRef** - Specify the name of a
       [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
       resource that contains the function to be executed.

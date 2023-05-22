@@ -68,7 +68,7 @@ docker run \
   -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts \
   -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' \
   -it \
-  ghcr.keptn.sh/keptn/functions-runtime:${VERSION}
+  ghcr.io/keptn/functions-runtime:${VERSION}
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

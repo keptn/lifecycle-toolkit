@@ -23,11 +23,11 @@
     "**/tests/**"
   ],
   "ignoreDeps": [
-    "ghcr.keptn.sh/keptn/lifecycle-operator",
-    "ghcr.keptn.sh/keptn/scheduler",
-    "ghcr.keptn.sh/keptn/functions-runtime",
-    "ghcr.keptn.sh/keptn/certificate-operator",
-    "ghcr.keptn.sh/keptn/metrics-operator"
+    "ghcr.io/keptn/lifecycle-operator",
+    "ghcr.io/keptn/scheduler",
+    "ghcr.io/keptn/functions-runtime",
+    "ghcr.io/keptn/certificate-operator",
+    "ghcr.io/keptn/metrics-operator"
   ],
   "packageRules": [
     {

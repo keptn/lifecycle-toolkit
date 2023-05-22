@@ -13,10 +13,11 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// +kubebuilder:webhook:path=/gate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create,versions=v1,name=mpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
+// +kubebuilder:webhook:path=/gate-v1-pod,mutating=true,failurePolicy=fail,groups="",resources=pods,verbs=create,versions=v1,name=gpod.keptn.sh,admissionReviewVersions=v1,sideEffects=None
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch
 // +kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets;replicasets,verbs=get
 
@@ -30,7 +31,12 @@ type PodGatingWebhook struct {
 }
 
 func (a *PodGatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
-	logger := a.Log
+	logger := log.FromContext(ctx).WithValues("webhook", "/gate-v1-pod", "object", map[string]interface{}{
+		"name":      req.Name,
+		"namespace": req.Namespace,
+		"kind":      req.Kind,
+	})
+	logger.Info("Gate webhook for pod called")
 	ctx, span := a.Tracer.Start(ctx, "gate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer span.End()
 	pod := &corev1.Pod{}
@@ -50,7 +56,6 @@ func (a *PodGatingWebhook) Handle(ctx context.Context, req admission.Request) ad
 
 	if podIsAnnotated {
 		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
-		pod.Spec.SchedulerName = "keptn-scheduler"
 		pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
 			{
 				Name: "klt-gated",

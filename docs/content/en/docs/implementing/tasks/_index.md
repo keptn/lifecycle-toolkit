@@ -91,7 +91,7 @@ To create a secret to use in a `KeptnTaskDefinition`,
 execute this command:
 
 ```shell
-# kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
+kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 ```
 
 ```yaml

@@ -111,7 +111,7 @@ spec:
 ```
 
 To pass multiple variables
-by creating a Kubernetes secret with a JSON string:
+you can create a Kubernetes secret using a JSON string:
 
 ```shell
 kubectl create secret generic my-secret \

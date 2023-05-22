@@ -96,3 +96,22 @@ jobs:
             echo ""
             echo "CRD docs are up to date!"
           fi
+  update-examples-in-docs:
+    name: Check CRD auto-generated docs
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+
+      - name: Get changed files in the docs folder
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v35
+        with:
+          files: docs/content/en/docs/**/*.{md}  # Alternatively using: `docs/**` or `docs`
+
+      - name: Markdown autodocs
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        uses: dineshsonachalam/markdown-autodocs@v1.0.4
+        with:
+          output_file_paths: '[./README.md,./docs/**/*.md]'

@@ -80,12 +80,18 @@ Your cluster should include the following:
   [Flux](https://fluxcd.io/).
   Alternatively, KLT also works with just `kubctl apply` for deployment.
 
-* For traces, install [Jaeger](https://jaegertracing.io)
-  or a similar tool.
+* If you want to use the standardized observability feature,
+  install an OpenTelemetry collector on your cluster.
+   See
+  [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+  for more information.
 
 * If you want a dashboard for reviewing metrics and traces,
   Install [Grafana](https://grafana.com/)
   or the dashboard of your choice.
+
+* For traces, install [Jaeger](https://jaegertracing.io)
+  or a similar tool.
 
 Also note that the Keptn Lifecycle Toolkit includes
 a light-weight cert-manager that, by default, is installed

@@ -160,7 +160,7 @@ but most production apps will have multiple workloads defined.
 You can create the YAML file to define the resource manually
 but the easier approach is to let KLT create this definition for you.
 This requires that you annotate all your workloads
-(`Deployments`, `Stateful Sets`, `DaemonSets`, and `ReplicaSets`
+(`Deployments`, `Pods`, `StatefulSets`, `DaemonSets`, and `ReplicaSets`
 as described in
 [Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery).
 

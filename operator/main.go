@@ -46,6 +46,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/gating"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
+
 	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -345,6 +347,7 @@ func main() {
 					Client:   mgr.GetClient(),
 					Tracer:   otel.Tracer("keptn/webhook"),
 					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
+					Decoder:  admission.NewDecoder(mgr.GetScheme()),
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
 				},
 			},
@@ -352,6 +355,7 @@ func main() {
 				Handler: &gating.PodGatingWebhook{
 					Client:   mgr.GetClient(),
 					Tracer:   otel.Tracer("keptn/gatewebhook"),
+					Decoder:  admission.NewDecoder(mgr.GetScheme()),
 					Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
 					Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
 				},

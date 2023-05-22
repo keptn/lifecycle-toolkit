@@ -11,8 +11,6 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -27,7 +25,7 @@ import (
 type PodGatingWebhook struct {
 	Client   client.Client
 	Tracer   trace.Tracer
-	decoder  *admission.Decoder
+	Decoder  *admission.Decoder
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
@@ -42,11 +40,11 @@ func (a *PodGatingWebhook) Handle(ctx context.Context, req admission.Request) ad
 	ctx, span := a.Tracer.Start(ctx, "gate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer span.End()
 	pod := &corev1.Pod{}
-	//err := a.decoder.Decode(req.Object, pod) no clue why this fails so I directly use the runtime decoder
-	var deserializer runtime.Decoder
-	factory := serializer.NewCodecFactory(a.Client.Scheme())
-	deserializer = factory.UniversalDeserializer()
-	err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
+	err := a.Decoder.Decode(req, pod) //no clue why this fails so I directly use the runtime decoder
+	//var deserializer runtime.Decoder
+	//factory := serializer.NewCodecFactory(a.Client.Scheme())
+	//deserializer = factory.UniversalDeserializer()
+	//err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

@@ -21,8 +21,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -38,7 +36,7 @@ import (
 type PodMutatingWebhook struct {
 	Client   client.Client
 	Tracer   trace.Tracer
-	decoder  *admission.Decoder
+	Decoder  *admission.Decoder
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
@@ -61,11 +59,11 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	pod := &corev1.Pod{}
 
 	logger.Info("checking the request", "req obj: ", req.Object, "req raw", req.Object.Raw)
-	//err := a.decoder.Decode(req.Object, pod) no clue why this fails so I directly use the runtime decoder
-	var deserializer runtime.Decoder
-	factory := serializer.NewCodecFactory(a.Client.Scheme())
-	deserializer = factory.UniversalDeserializer()
-	err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
+	err := a.Decoder.Decode(req, pod) //no clue why this fails so I directly use the runtime decoder
+	//var deserializer runtime.Decoder
+	//factory := serializer.NewCodecFactory(a.Client.Scheme())
+	//deserializer = factory.UniversalDeserializer()
+	//err := runtime.DecodeInto(deserializer, req.Object.Raw, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}
@@ -122,15 +120,6 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	return admission.PatchResponseFromRaw(req.Object.Raw, marshaledPod)
-}
-
-// PodMutatingWebhook implements admission.DecoderInjector.
-// A decoder will be automatically injected.
-
-// InjectDecoder injects the decoder.
-func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
-	a.decoder = d
-	return nil
 }
 
 func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {

@@ -341,13 +341,14 @@ func main() {
 
 		setupLog.Info("starting webhook and manager")
 
+		decoder := admission.NewDecoder(mgr.GetScheme())
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
 					Client:   mgr.GetClient(),
 					Tracer:   otel.Tracer("keptn/webhook"),
 					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
-					Decoder:  admission.NewDecoder(mgr.GetScheme()),
+					Decoder:  decoder,
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
 				},
 			},
@@ -355,7 +356,7 @@ func main() {
 				Handler: &gating.PodGatingWebhook{
 					Client:   mgr.GetClient(),
 					Tracer:   otel.Tracer("keptn/gatewebhook"),
-					Decoder:  admission.NewDecoder(mgr.GetScheme()),
+					Decoder:  decoder,
 					Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
 					Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
 				},

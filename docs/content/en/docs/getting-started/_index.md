@@ -50,7 +50,7 @@ to introduce these exercises:
 ## Getting started with Lifecycle Toolkit
 
 The
-[Getting started with Lifecycle Toolkit](generic-gs)
+[KLT End-to-end exercise](generic-gs)
 exercise provides a more detailed exercise
 for managing the release lifecycle
 with pre- and post-deployment evaluations and tasks.

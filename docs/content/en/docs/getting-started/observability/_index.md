@@ -45,146 +45,51 @@ to the observability data for your cluster.
 It is based on the
 [simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
 example.
-You can clone that repo to access it locally
-or just look at it for examples
-as you implement the functionality "from scratch"
-on your local Kubernetes deployment cluster.
-The
-[README](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/observability/README.md)
-file for that repo contains useful information.
 
-Two videos are available
-to walk you through this exercise if you prefer:
+This is the second of three exercises in the
+[Introducing the Keptn Lifecycle Toolkit](##introducing-the-keptn-lifecycle-toolkit)
+series:
 
-- [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-- [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
-
-In the
-[Getting started with Keptn metrics](../metrics)
-exercise, you learn how to define and use Keptn metrics.
-You may want to complete that exercise before doing this exercise
-although that is not required.
+- In the
+  [Getting started with Keptn metrics](../metrics)
+  exercise, you learn how to define and use Keptn metrics.
+  You may want to complete that exercise before doing this exercise
+  although that is not required.
+- In
+  [Manage release lifecycle](../orchestrate),
+  you learn how to implement
+  pre- and post-deployment tasks and evaluations
+  to orchestrate the flow of all the `workloads`
+  that are part of your `application`.
 
 This exercise shows how to standardize access
 to the observability data for your cluster.
-The steps are:
 
-1. [Install and enable]( #install-and-enable-klt)
-   the Lifecycle Toolkit on your cluster
-1. [Integrate the Lifecycle Toolkit with your applications](#integrate-the-lifecycle-toolkit-with-your-applications)
-1. [DORA metrics](#dora-metrics)
-1. [Using OpenTelemetry](#using-opentelemetry)
-1. [Keptn metrics](#keptn-metrics)
-1. [View the results](#view-the-results)
-
-## Install and enable KLT
-
-To install and enable the Keptn Lifecycle Toolkit on your cluster:
-
-1. Be sure that your cluster includes the components discussed in
-   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
-1. Follow the instructions in
-   [Install the Keptn Lifecycle Toolkit](../../install/install.md/#use-helm-chart)
-   to install KLT on your cluster using the Helm chart
-
-   If you installed KLT on your cluster for the
-   [Getting started with Keptn metrics](../metrics)
-   exercise, you do not need to re-install it for this exercise.
-   However, if you only installed the `metrics-operator` for that exercise,
-   you now need to install the full KLT.
+If you are installing the Keptn Lifecycle Toolkit on an existing cluster
+or in a local cluster you are creating for this exercise,
+you need to do the following:
 
 1. Follow the instructions in
-   [Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
-   to enable KLT on your cluster
-   by annotating the `Namespace` resource..
-   See the
-   [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
-   file for an example
+   [Install and update](../../install)
+   to install and enable KLT on your cluster.
+1. Follow the instructions in
+   [Integrate KLT with your applications](../../implementing/integrate)
+   to integrate KLT with your Kubernetes cluster:
 
-1. Run the following command to ensure that your Kuberetes cluster
-   is ready to complete this exercise:
-
-   ```shell
-   kubectl get pods -n keptn-lifecycle-toolkit-system
-   ```
-
-   You should see pods for the following components:
-   - certificate-operator (or another cert manager)
-   - lifecycle-operator
-   - scheduler
-   - metrics-operator
-
-## Integrate the Lifecycle Toolkit with your applications
-
-The Keptn Lifecycle Toolkit works
-on top of the default scheduler for the cluster
-so it can trace all activities of all deployment workloads on the cluster,
-no matter what tool is used for the deployment.
-This same mechanism allows KLT to inject pre- and post-deployment checks
-into all deployment workloads;
-we discuss this in another exercise.
-
-KLT uses metadata to identify the workloads of interest.
-To integrate KLT with your applications,
-you need to populate the metadata it needs.
-This requires the following steps:
-
-- Define a Keptn application
-- Annotate the `Deployment` resource to recognize your Keptn application
-
-### Define the Keptn application
-
-A Keptn application defines the workloads
-to be included in your Keptn Application.
-We will use the application discovery feature
-to automatically generate a Keptn Application
-that includes all workloads on the cluster,
-regardless of the tools being used.
-
-A Keptn application aggregates multiple workloads
-that belong to a logical app into a single
-[KeptnApp](../../yaml-crd-ref/app.md)
-resource.
-
-You can view a sample of this file in the
-[keptn-app.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-app.yaml.tmp)
-file.
-You see the metadata that names this `KeptnApp`
-and identifies the namespace where it lives:
-
-```yaml
-metadata:
-  name: simpleapp
-  namespace: simplenode-dev
-```
-
-You can also see the `spec.workloads` list.
-In this simple example,
-we only have one workload defined
-but most production apps will have multiple workloads defined.
-
-You can create the YAML file to define the resource manually
-but the easier approach is to let KLT create this definition for you.
-This requires that you annotate all your workloads
-(`Deployments`, `Pods`, `StatefulSets`, `DaemonSets`, and `ReplicaSets`
-as described in
-[Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery).
-
-### Annotate your Deployment resource
-
-Follow the instructions in
-[Annotate workload](../../implementing/integrate/#basic-annotations)
-to apply basic annotations to your `Deployment` resource.
-
-The
-[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml/)
-file defines the `Deployment` resource for our example.
-You see that the `metadata` specifies the same
-`name` and `namespace` values defined in the `KeptnApp` resource.
-
-The example file also includes annotations for
-pre- and post-deployment activities.
-We will discuss those in a separate exercise.
+   - Follow the instructions in
+     [Annotate workload](../../implementing/integrate/#basic-annotations)
+     to integrate the Lifecycle Toolkit into your Kubernetes cluster
+     by applying basic annotations to your `Deployment` resource.
+   - Follow the instructions in
+     [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
+     to create a Keptn application that aggragates
+     all the `workloads` for your deployment into a single
+     [KeptnApp](../../yaml-crd-ref/app) resource
+     that includes all workloads on the cluster,
+     regardless of the tools being used.
+     For this exercise, we recommend that you
+     [Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
+     to automatically generate a Keptn Application.
 
 ## DORA metrics
 
@@ -247,11 +152,6 @@ which allows you to trace everything done in the context of that deployment.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)
   file.
-- Set the `EXPOSE_KEPTN_METRICS` environment variable
-  in the `metrics-operator`
-
-TODO: How to set this env variable in `metrics-operator`
-      or where is it set in the example?
 
 ## Keptn metrics
 

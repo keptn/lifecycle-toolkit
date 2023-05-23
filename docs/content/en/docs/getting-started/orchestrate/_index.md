@@ -19,15 +19,18 @@ the Lifecycle Toolkit can do the following:
 * Automatically validate against your SLO (Service Level Objectives)
 
 KLT sits on top of the Kubernetes scheduler
-and can trace the deployment from start to end.
-KLT is also application aware,
-so we can extend the deployment with tasks and evaluations that
-are run either before or after your whole application starts the deployment
-or even at the individual workload level.
-You can also validate any metric,
-either pre- or post-deployment,
-using the metrics from the Keptn Metrics Server introduced in
-[Getting started with Keptn metrics](../metrics).
+and can do the following:
+
+- Trace the deployment from start to end
+- KLT is application aware,
+  so can extend the deployment with tasks and evaluations that
+  are run either before or after your whole application starts the deployment
+  or at the individual workload level.
+- Validate any Keptn metric,
+  either pre- or post-deployment,
+  using the metrics from the Keptn Metrics Server introduced in
+  [Getting started with Keptn metrics](../metrics).
+
 This means that you can be sure that the environment is healthy
 and has adequate resources before you begin the deployment.
 After the deployment succeeds,
@@ -38,102 +41,58 @@ You can also check for new logs that came in from a log monitoring solution.
 
 ## Using this exercise
 
-This exercise is based on the
+This exercise shows how to implement
+pre- and post-deployment evaluations and tasks
+for your application.
+It is based on the
 [simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
 example.
-You can clone that repo to access it locally
-or just look at it for examples
-as you implement the functionality "from scratch"
-on your local Kubernetes deployment cluster.
 
 The steps to implement pre- and post-deployment orchestration are:
 
-1. [Bring or create a Kubernetes cluster](../../install/k8s.md)
-1. [Install the Keptn Lifecycle Toolkit and enable it](../../install/install.md)
-1. [Integrate KLT with your cluster](../../implementing/integrate/)
 1. [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-pre--and-post-deployment)
 1. [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-pre--and-post-deployment)
+1. [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
-## Bring or create a Kubernetes deployment cluster
+This is the third of three exercises in the
+[Introducing the Keptn Lifecycle Toolkit](##introducing-the-keptn-lifecycle-toolkit)
+series.
+You may want to complete the other exercises before doing this exercise
+although that is not required:
 
-You can run this exercise on an existing Kubernetes cluster
-or you can create a new cluster.
-For personal study and demonstrations,
-this exercise runs well on a local Kubernetes cluster.
-See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
+- In the
+  [Getting started with Keptn metrics](../metrics)
+  exercise, you learn how to define and use Keptn metrics.
+- In [Standardize observability](../observability),
+  you learn how to standardize access
+  to the observability data for your cluster.
 
-## Install KLT on your cluster
+If you are installing the Keptn Lifecycle Toolkit on an existing cluster
+or in a local cluster you are creating for this exercise
+and did not previously set up your cluster for the
+[Standardize observability](../observability) exercise,
+you need to do the following:
 
-Install the Keptn Lifecycle Toolkit on your cluster
-by executing the following command sequence:
+1. Follow the instructions in
+   [Install and update](../../install)
+   to install and enable KLT on your cluster.
+1. Follow the instructions in
+   [Integrate KLT with your applications](../../implementing/integrate)
+   to integrate KLT with your Kubernetes cluster:
 
-```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn klt/klt \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
-```
-
-See
-[Install KLT](../../install/install.md)
-for more information about installing the Lifecycle Toolkit.
-
-## Enable KLT for your cluster
-
-To enable KLT for your cluster, annotate the
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-resource
-In this example, this is defined in the
-[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
-file, which looks like this:
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: simplenode-dev
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
-```
-
-You see the annotation line that enables `lifecycle-toolkit`.
-This line tells the webhook to handle the namespace
-
-## Integrate KLT with your cluster
-
-To integrate KLT with your cluster, annotate the Kubernetes
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-resource.
-In this example, this is defined in the
-[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
-file, which includes the following lines:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: simplenode
-  namespace: simplenode-dev
-...
-template:
-    metadata:
-      labels:
-        app: simplenode
-        app.kubernetes.io/name: simplenodeservice
-      annotations:
-        # keptn.sh/app: simpleapp
-        keptn.sh/workload: simplenode
-        keptn.sh/version: 1.0.2
-        keptn.sh/pre-deployment-evaluations: evaluate-dependencies
-        keptn.sh/pre-deployment-tasks: notify
-        keptn.sh/post-deployment-evaluations: evaluate-deployment
-        keptn.sh/post-deployment-tasks: notify
-...
-```
-
-For more information about using annotations and labels
-to integrate KLT into your deployment cluster, see
-[Integrate KLT with your applications](../../implementing/integrate/_index.md).
+   - Follow the instructions in
+     [Annotate workload](../../implementing/integrate/#basic-annotations)
+     to integrate the Lifecycle Toolkit into your Kubernetes cluster
+     by applying basic annotations to your `Deployment` resource.
+   - Follow the instructions in
+     [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
+     to create a
+     [KeptnApp](../../yaml-crd-ref/app) resource
+     that includes all workloads on the cluster,
+     regardless of the tools being used.
+     For this exercise, we recommend that you
+     [Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
+     to automatically generate a Keptn Application.
 
 ## Define evaluations to be performed pre- and post-deployment
 
@@ -213,3 +172,15 @@ for which application, for which version, for which Workload.
 
 Because the slack server that is required to execute this task
 is protected by a secret, the task definition also specifies that secret.
+
+## Integrate evaluations and tasks into the cluster
+
+Follow the instructions in
+[Annotate workload](../../implementing/integrate/#pre--and-post-deployment-checks)
+to integrate the evaluations and tasks you defined
+into the cluster
+by applying annotations to the `Deployment` resource.
+See the
+[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
+file for an example.
+

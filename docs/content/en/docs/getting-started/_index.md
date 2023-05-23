@@ -33,16 +33,24 @@ as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 The
 [README](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/observability/README.md)
-file for that repo contains useful information.
+file for that repo contains additional information.
+
+You can run these exercises on an existing Kubernetes cluster
+or you can create a new cluster.
+For personal study and demonstrations,
+these exercises run well on a local Kubernetes cluster.
+See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
 
 Two videos are available
-to walk you through this exercise if you prefer:
+to introduce these exercises:
 
-- [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-- [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
+* [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
+* [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
 
-If you prefer,
+## Getting started with Lifecycle Toolkit
+
+The
 [Getting started with Lifecycle Toolkit](generic-gs)
-provides a more detailed exercise 
+exercise provides a more detailed exercise
 for managing the release lifecycle
-with pre- and post-deployment evaluations and tasks
+with pre- and post-deployment evaluations and tasks.

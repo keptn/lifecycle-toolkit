@@ -95,8 +95,8 @@ func TestKeptnTask(t *testing.T) {
 		"keptn.sh/app":       "app",
 		"keptn.sh/task-name": "task",
 		"keptn.sh/version":   "appversion",
-		"label1":             "label2",
-	}, task.CreateKeptnLabels())
+		"annotation1":        "annotation2",
+	}, task.CreateKeptnAnnotations())
 
 	task.Spec.Workload = "workload"
 	task.Spec.WorkloadVersion = "workloadversion"
@@ -106,8 +106,8 @@ func TestKeptnTask(t *testing.T) {
 		"keptn.sh/workload":  "workload",
 		"keptn.sh/task-name": "task",
 		"keptn.sh/version":   "workloadversion",
-		"label1":             "label2",
-	}, task.CreateKeptnLabels())
+		"annotation1":        "annotation2",
+	}, task.CreateKeptnAnnotations())
 
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("app"),

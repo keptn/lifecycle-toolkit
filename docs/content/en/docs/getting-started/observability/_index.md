@@ -13,7 +13,7 @@ even if they use different deployment strategies.
 This means that:
 
 - You can readily see why a deployment takes so long
-  or why it fails, even when using multiple deployment tools.
+  or why it fails, even when using multiple deployment strategies.
 - KLT can capture DORA metrics and expose them as OpenTelemetry metrics
 
 To do this,

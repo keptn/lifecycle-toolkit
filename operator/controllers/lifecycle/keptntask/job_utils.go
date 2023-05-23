@@ -105,7 +105,7 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 	job := &batchv1.Job{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: jobName, Namespace: namespace}, job)
 	if err != nil {
-		return job, err
+		return nil, err
 	}
 	return job, nil
 }

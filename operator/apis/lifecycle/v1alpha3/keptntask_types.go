@@ -206,16 +206,16 @@ func (t KeptnTask) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(t.GetSpanAttributes()...)
 }
 
-func (t KeptnTask) CreateKeptnLabels() map[string]string {
+func (t KeptnTask) CreateKeptnAnnotations() map[string]string {
 	if t.Spec.Workload != "" {
-		return common.MergeMaps(t.Labels, map[string]string{
+		return common.MergeMaps(t.Annotations, map[string]string{
 			common.AppAnnotation:      t.Spec.AppName,
 			common.WorkloadAnnotation: t.Spec.Workload,
 			common.VersionAnnotation:  t.Spec.WorkloadVersion,
 			common.TaskNameAnnotation: t.Name,
 		})
 	}
-	return common.MergeMaps(t.Labels, map[string]string{
+	return common.MergeMaps(t.Annotations, map[string]string{
 		common.AppAnnotation:      t.Spec.AppName,
 		common.VersionAnnotation:  t.Spec.AppVersion,
 		common.TaskNameAnnotation: t.Name,

@@ -52,5 +52,5 @@ to introduce these exercises:
 The
 [KLT End-to-end exercise](generic-gs)
 exercise provides a more detailed exercise
-for managing the release lifecycle
+for managing the deployment lifecycle
 with pre- and post-deployment evaluations and tasks.

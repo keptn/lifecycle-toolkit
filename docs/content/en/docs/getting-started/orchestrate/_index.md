@@ -55,7 +55,7 @@ The steps to implement pre- and post-deployment orchestration are:
 1. [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
 This is the third of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](##introducing-the-keptn-lifecycle-toolkit)
+[Introducing the Keptn Lifecycle Toolkit](../##introducing-the-keptn-lifecycle-toolkit)
 series.
 You may want to complete the other exercises before doing this exercise
 although that is not required:

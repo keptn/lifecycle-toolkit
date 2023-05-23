@@ -9,7 +9,7 @@ In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
 It provides this information
 for all applications running in your cluster,
-even if they use different tools.
+even if they use different deployment strategies.
 This means that:
 
 - You can readily see why a deployment takes so long

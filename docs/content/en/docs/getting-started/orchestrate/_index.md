@@ -21,12 +21,12 @@ the Lifecycle Toolkit can do the following:
 KLT sits on top of the Kubernetes scheduler
 and can do the following:
 
-- Trace the deployment from start to end
-- KLT is application aware,
+* Trace the deployment from start to end
+* KLT is application aware,
   so can extend the deployment with tasks and evaluations that
   are run either before or after your whole application starts the deployment
   or at the individual workload level.
-- Validate any Keptn metric,
+* Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
   [Getting started with Keptn metrics](../metrics).
@@ -60,10 +60,10 @@ series.
 You may want to complete the other exercises before doing this exercise
 although that is not required:
 
-- In the
+* In the
   [Getting started with Keptn metrics](../metrics)
   exercise, you learn how to define and use Keptn metrics.
-- In [Standardize observability](../observability),
+* In [Standardize observability](../observability),
   you learn how to standardize access
   to the observability data for your cluster.
 
@@ -80,11 +80,11 @@ you need to do the following:
    [Integrate KLT with your applications](../../implementing/integrate)
    to integrate KLT with your Kubernetes cluster:
 
-   - Follow the instructions in
+   * Follow the instructions in
      [Annotate workload](../../implementing/integrate/#basic-annotations)
      to integrate the Lifecycle Toolkit into your Kubernetes cluster
      by applying basic annotations to your `Deployment` resource.
-   - Follow the instructions in
+   * Follow the instructions in
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a
      [KeptnApp](../../yaml-crd-ref/app) resource
@@ -183,4 +183,3 @@ by applying annotations to the `Deployment` resource.
 See the
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
 file for an example.
-

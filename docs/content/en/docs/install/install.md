@@ -161,4 +161,3 @@ metadata:
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 This annotation tells the webhook to handle the namespace.
-

@@ -147,7 +147,6 @@ that belong to a logical app into a single
 [KeptnApp](../../yaml-crd-ref/app.md)
 resource.
 
-
   You have two options:
 
 * Create a [KeptnApp](../../yaml-crd-ref/app.md) resource

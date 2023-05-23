@@ -3,19 +3,19 @@ package keptntask
 import (
 	"context"
 	"fmt"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"math/rand"
 	"reflect"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
@@ -146,10 +146,16 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		recorder: r.Recorder,
 	}
 	builder := getContainerBuilder(builderOpt)
-	err = builder.AddContainers(ctx, job)
+	if builder == nil {
+		return nil, controllererrors.ErrNoTaskDefinitionSpec
+	}
+	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
+
 	if err != nil {
 		return nil, controllererrors.ErrCannotMarshalParams
 	}
 
+	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
+	job.Spec.Template.Spec.Volumes = volumes
 	return job, nil
 }

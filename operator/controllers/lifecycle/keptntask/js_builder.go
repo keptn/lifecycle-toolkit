@@ -3,15 +3,15 @@ package keptntask
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/imdario/mergo"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
-	context "golang.org/x/net/context"
-	batchv1 "k8s.io/api/batch/v1"
+	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
-	"os"
 )
 
 // JSBuilder implements container builder interface for javascript deno
@@ -34,7 +34,7 @@ type FunctionExecutionParams struct {
 	Context          klcv1alpha3.TaskContext
 }
 
-func (js *JSBuilder) AddContainers(ctx context.Context, job *batchv1.Job) error {
+func (js *JSBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
 	container := corev1.Container{
 		Name:  "keptn-function-runner",
 		Image: os.Getenv("FUNCTION_RUNNER_IMAGE"),
@@ -44,19 +44,19 @@ func (js *JSBuilder) AddContainers(ctx context.Context, job *batchv1.Job) error 
 
 	params, err := js.getParams(ctx)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	if len(params.Parameters) > 0 {
 		jsonParams, err := json.Marshal(params.Parameters)
 		if err != nil {
-			return err
+			return nil, nil, err
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
@@ -71,24 +71,23 @@ func (js *JSBuilder) AddContainers(ctx context.Context, job *batchv1.Job) error 
 			},
 		})
 	}
-
+	var jobVolumes []corev1.Volume
 	// Mount the function code if a ConfigMap is provided
 	// The ConfigMap might be provided manually or created by the TaskDefinition controller
 	if params.ConfigMap != "" {
 		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: "/var/data/function.ts"})
 
-		job.Spec.Template.Spec.Volumes = append(
-			job.Spec.Template.Spec.Volumes,
-			corev1.Volume{
-				Name: "function-mount",
-				VolumeSource: corev1.VolumeSource{
-					ConfigMap: &corev1.ConfigMapVolumeSource{
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: params.ConfigMap,
-						},
+		jobVolumes = append(jobVolumes, corev1.Volume{
+			Name: "function-mount",
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: params.ConfigMap,
 					},
 				},
-			})
+			},
+		})
+
 		container.VolumeMounts = []corev1.VolumeMount{
 			{
 				Name:      "function-mount",
@@ -102,8 +101,8 @@ func (js *JSBuilder) AddContainers(ctx context.Context, job *batchv1.Job) error 
 	}
 
 	container.Env = envVars
-	job.Spec.Template.Spec.Containers = append(job.Spec.Template.Spec.Containers, container)
-	return nil
+	return &container, jobVolumes, nil
+
 }
 
 func (js *JSBuilder) getParams(ctx context.Context) (*FunctionExecutionParams, error) {
@@ -112,7 +111,7 @@ func (js *JSBuilder) getParams(ctx context.Context) (*FunctionExecutionParams, e
 		return nil, err
 	}
 	if hasParent {
-		if err := js.handleParent(ctx, params); err != nil {
+		if err := js.handleParent(ctx, &params); err != nil {
 			return nil, err
 		}
 	}
@@ -169,7 +168,7 @@ func (js *JSBuilder) parseFunctionTaskDefinition(definition *klcv1alpha3.KeptnTa
 	return params, hasParent, nil
 }
 
-func (js *JSBuilder) handleParent(ctx context.Context, params FunctionExecutionParams) error {
+func (js *JSBuilder) handleParent(ctx context.Context, params *FunctionExecutionParams) error {
 	var parentJobParams FunctionExecutionParams
 	parentDefinition, err := controllercommon.GetTaskDefinition(js.options.Client, js.options.Log, ctx, js.options.taskDef.Spec.Function.FunctionReference.Name, js.options.req.Namespace)
 	if err != nil {
@@ -180,7 +179,7 @@ func (js *JSBuilder) handleParent(ctx context.Context, params FunctionExecutionP
 	if err != nil {
 		return err
 	}
-	err = mergo.Merge(&params, parentJobParams)
+	err = mergo.Merge(params, parentJobParams)
 	if err != nil {
 		controllercommon.RecordEvent(js.options.recorder, apicommon.PhaseCreateTask, "Warning", js.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", js.options.task.Spec.TaskDefinition), "")
 		return err

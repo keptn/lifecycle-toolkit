@@ -89,7 +89,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	}(task)
 
-	job, err := r.getJob(ctx, task, req.Namespace)
+	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil && !errors.IsNotFound(err) {
 		r.Log.Error(err, "Could not check if job is running")
 		span.SetStatus(codes.Error, err.Error())

@@ -6,7 +6,6 @@ import (
 	"reflect"
 
 	"github.com/imdario/mergo"
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -81,7 +80,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 }
 
 func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
-	job, err := r.getJob(ctx, task, req.Namespace)
+	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil {
 		task.Status.JobName = ""
 		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", task, "JobReferenceRemoved", "removed Job Reference as Job could not be found", "")
@@ -102,9 +101,9 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 	}
 	return nil
 }
-func (r *KeptnTaskReconciler) getJob(ctx context.Context, task *v1alpha3.KeptnTask, namespace string) (*batchv1.Job, error) {
+func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namespace string) (*batchv1.Job, error) {
 	job := &batchv1.Job{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: task.Status.JobName, Namespace: namespace}, job)
+	err := r.Client.Get(ctx, types.NamespacedName{Name: jobName, Namespace: namespace}, job)
 	if err != nil {
 		return nil, err
 	}

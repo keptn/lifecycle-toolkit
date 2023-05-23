@@ -65,7 +65,7 @@ This exercise shows how to standardize access
 to the observability data for your cluster.
 
 If you are installing the Keptn Lifecycle Toolkit on an existing cluster
-or in a local cluster you are creating for this exercise,
+or on a local cluster you are creating for this exercise,
 you need to do the following:
 
 1. Follow the instructions in

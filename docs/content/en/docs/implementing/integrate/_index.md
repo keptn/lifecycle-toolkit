@@ -23,7 +23,7 @@ To integrate KLT with your applications,
 you need to populate the metadata it needs
 with either Keptn or Kubernetes annotations and labels.
 
-This is a requires two steps:
+This requires two steps:
 
 * [Annotate your workload(s)](#annotate-workloads)
 * Define a Keptn application that references those workloads.

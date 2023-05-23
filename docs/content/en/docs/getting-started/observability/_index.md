@@ -35,7 +35,7 @@ The observability data is an amalgamation of the following:
 - OpenTelemetry runs traces that show everything that happens in the Kubernetes cluster
   and can display this information with dashboard tools
   such as Grafana.
-- Custom Keptn metrics that you can define to monitor
+- Custom Keptn metrics that you can use to monitor
   information from all the data providers configured in your cluster.
 
 ## Using this exercise

@@ -3,18 +3,29 @@ package keptntask
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
-	"os"
-
+	"github.com/imdario/mergo"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
+	context "golang.org/x/net/context"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"os"
 )
 
+// JSBuilder implements container builder interface for javascript deno
+type JSBuilder struct {
+	options BuilderOptions
+}
+
+func newJSBuilder(options BuilderOptions) JSBuilder {
+	return JSBuilder{
+		options: options,
+	}
+}
+
+// FunctionExecutionParams stores parametersrelatedto js deno container creation
 type FunctionExecutionParams struct {
 	ConfigMap        string
 	Parameters       map[string]string
@@ -23,35 +34,7 @@ type FunctionExecutionParams struct {
 	Context          klcv1alpha3.TaskContext
 }
 
-func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
-	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
-	job := &batchv1.Job{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        jobId,
-			Namespace:   task.Namespace,
-			Labels:      task.Labels,
-			Annotations: task.CreateKeptnAnnotations(),
-		},
-		Spec: batchv1.JobSpec{
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels:      task.Labels,
-					Annotations: task.Annotations,
-				},
-				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
-				},
-			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
-		},
-	}
-	err := controllerutil.SetControllerReference(task, job, r.Scheme)
-	if err != nil {
-		r.Log.Error(err, "could not set controller reference:")
-	}
-
+func (js *JSBuilder) AddContainers(ctx context.Context, job *batchv1.Job) error {
 	container := corev1.Container{
 		Name:  "keptn-function-runner",
 		Image: os.Getenv("FUNCTION_RUNNER_IMAGE"),
@@ -59,17 +42,21 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 
 	var envVars []corev1.EnvVar
 
+	params, err := js.getParams(ctx)
+	if err != nil {
+		return err
+	}
 	if len(params.Parameters) > 0 {
 		jsonParams, err := json.Marshal(params.Parameters)
 		if err != nil {
-			return job, controllererrors.ErrCannotMarshalParams
+			return err
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
-		return job, controllererrors.ErrCannotMarshalParams
+		return err
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
 
@@ -90,8 +77,9 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 	if params.ConfigMap != "" {
 		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: "/var/data/function.ts"})
 
-		job.Spec.Template.Spec.Volumes = []corev1.Volume{
-			{
+		job.Spec.Template.Spec.Volumes = append(
+			job.Spec.Template.Spec.Volumes,
+			corev1.Volume{
 				Name: "function-mount",
 				VolumeSource: corev1.VolumeSource{
 					ConfigMap: &corev1.ConfigMapVolumeSource{
@@ -100,8 +88,7 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 						},
 					},
 				},
-			},
-		}
+			})
 		container.VolumeMounts = []corev1.VolumeMount{
 			{
 				Name:      "function-mount",
@@ -115,13 +102,38 @@ func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, p
 	}
 
 	container.Env = envVars
-	job.Spec.Template.Spec.Containers = []corev1.Container{
-		container,
-	}
-	return job, nil
+	job.Spec.Template.Spec.Containers = append(job.Spec.Template.Spec.Containers, container)
+	return nil
 }
 
-func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha3.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
+func (js *JSBuilder) getParams(ctx context.Context) (*FunctionExecutionParams, error) {
+	params, hasParent, err := js.parseFunctionTaskDefinition(js.options.taskDef)
+	if err != nil {
+		return nil, err
+	}
+	if hasParent {
+		if err := js.handleParent(ctx, params); err != nil {
+			return nil, err
+		}
+	}
+
+	params.Context = setupTaskContext(js.options.task)
+
+	if len(js.options.task.Spec.Parameters.Inline) > 0 {
+		err = mergo.Merge(&params.Parameters, js.options.task.Spec.Parameters.Inline)
+		if err != nil {
+			controllercommon.RecordEvent(js.options.recorder, apicommon.PhaseCreateTask, "Warning", js.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", js.options.task.Spec.TaskDefinition), "")
+			return nil, err
+		}
+	}
+
+	if js.options.task.Spec.SecureParameters.Secret != "" {
+		params.SecureParameters = js.options.task.Spec.SecureParameters.Secret
+	}
+	return &params, nil
+}
+
+func (js *JSBuilder) parseFunctionTaskDefinition(definition *klcv1alpha3.KeptnTaskDefinition) (FunctionExecutionParams, bool, error) {
 	params := FunctionExecutionParams{}
 
 	// Firstly check if this task definition has a parent object
@@ -131,7 +143,7 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 	}
 
 	if definition.Status.Function.ConfigMap != "" && definition.Spec.Function.HttpReference.Url != "" {
-		r.Log.Info(fmt.Sprintf("The JobDefinition contains a ConfigMap and a HTTP Reference, ConfigMap is used / Namespace: %s, Name: %s  ", definition.Namespace, definition.Name))
+		js.options.Log.Info(fmt.Sprintf("The JobDefinition contains a ConfigMap and a HTTP Reference, ConfigMap is used / Namespace: %s, Name: %s  ", definition.Namespace, definition.Name))
 	}
 
 	// Check if there is a ConfigMap with the function for this object
@@ -155,4 +167,23 @@ func (r *KeptnTaskReconciler) parseFunctionTaskDefinition(definition *klcv1alpha
 		params.SecureParameters = definition.Spec.Function.SecureParameters.Secret
 	}
 	return params, hasParent, nil
+}
+
+func (js *JSBuilder) handleParent(ctx context.Context, params FunctionExecutionParams) error {
+	var parentJobParams FunctionExecutionParams
+	parentDefinition, err := controllercommon.GetTaskDefinition(js.options.Client, js.options.Log, ctx, js.options.taskDef.Spec.Function.FunctionReference.Name, js.options.req.Namespace)
+	if err != nil {
+		controllercommon.RecordEvent(js.options.recorder, apicommon.PhaseCreateTask, "Warning", js.options.task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", js.options.task.Spec.TaskDefinition), "")
+		return err
+	}
+	parentJobParams, _, err = js.parseFunctionTaskDefinition(parentDefinition)
+	if err != nil {
+		return err
+	}
+	err = mergo.Merge(&params, parentJobParams)
+	if err != nil {
+		controllercommon.RecordEvent(js.options.recorder, apicommon.PhaseCreateTask, "Warning", js.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", js.options.task.Spec.TaskDefinition), "")
+		return err
+	}
+	return nil
 }

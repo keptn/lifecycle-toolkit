@@ -11,7 +11,7 @@ it can not be installed in a separate cluster.
 This is because KLT communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
-and doing post-deployment evaluations,
+doing post-deployment evaluations
 and tracing all activities of all deployment workloads on the cluster.
 
 Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):

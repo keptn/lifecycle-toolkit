@@ -3,7 +3,7 @@
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.0.3
 # renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.11.3
+HELM_VERSION ?= v3.12.0
 CHART_APPVERSION ?= v0.7.1 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint

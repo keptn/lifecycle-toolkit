@@ -1,17 +1,32 @@
 ---
-title: Standardize access to observability data
-description: Learn how the Keptn Lifecycle Toolkit provides observability for Kubernetes deployments
+title: Standardize observability
+description: How the KLT standardizes access to observability data for Kubernetes deployments
 weight: 45
 ---
 
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
-You can readily see why a deployment takes so long or why it fails,
-even when using multiple deployment tools.
-Keptn introduces a concept of an application
-which is an abstraction that connects multiple
-Workloads belonging together.
-In other words, KLT, creates a distributed end-to-end trace
+In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
+It provides this information
+for all applications running in your cluster,
+even if they use different tools.
+This means that:
+
+- You can readily see why a deployment takes so long
+  or why it fails, even when using multiple deployment tools.
+- KLT can capture metrics from multiple data sources
+  using multiple data platforms.
+
+To do this,
+Keptn introduces the concept of an `application`,
+which is an abstraction that connects multiple
+Workloads that logically belong together.
+
+With KLT deployed on your cluster,
+you can easily monitor what is happening
+during a deployment into your Kuberenetes cluster,
+and quickly get data to help you understand issues such as
+why a deployment took so long or why it failed.
 
 The observability data is an amalgamation of the following:
 
@@ -20,18 +35,8 @@ The observability data is an amalgamation of the following:
 - OpenTelemetry runs traces that show everything that happens in the Kubernetes cluster
   and can display this information with dashboard tools
   such as Grafana.
-- Specific metrics that you can define to monitor
+- Custom Keptn metrics that you can define to monitor
   information from all the data providers configured in your cluster.
-
-The Keptn Lifecycle Toolkit can provide this information
-for all applications running in your cluster,
-even if they are using different deployment tools.
-And it can capture metrics from multiple data sources
-using multiple data platforms.
-With KLT deployed on your cluster,
-you can easily monitor what is happening during a deployment into your Kuberenetes cluster,
-and quickly get data to help you understand issues such as
-why a deployment took so long or why it failed.
 
 ## Using this exercise
 
@@ -111,7 +116,8 @@ To install and enable the Keptn Lifecycle Toolkit on your cluster:
 
 ## Integrate the Lifecycle Toolkit with your applications
 
-The Keptn Lifecycle Toolkit sits in the scheduler
+The Keptn Lifecycle Toolkit works
+on top of the default scheduler for the cluster
 so it can trace all activities of all deployment workloads on the cluster,
 no matter what tool is used for the deployment.
 This same mechanism allows KLT to inject pre- and post-deployment checks

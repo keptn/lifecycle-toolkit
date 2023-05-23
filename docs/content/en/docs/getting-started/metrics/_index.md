@@ -1,6 +1,6 @@
 ---
-title: Getting started with Keptn metrics
-description: Learn how Keptn metrics enhances your deployment
+title: Custom Keptn metrics
+description: Enhance your deployment with custom Keptn metrics
 weight: 25
 ---
 

@@ -5,6 +5,15 @@ weight: 35
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
+The Keptn Lifecycle Toolkit must be installed, enabled, and integrated
+into each cluster you want to monitor;
+it can not be installed in a separate cluster.
+This is because KLT communicates with the Kubernetes scheduler
+for tasks such as enforcing checks natively,
+stopping a deployment from proceeding when criteria are not met, 
+and doing post-deployment evaluations,
+and tracing all activities of all deployment workloads on the cluster.
+
 Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
 
 * Releases v0.7.0 and later can be installed using

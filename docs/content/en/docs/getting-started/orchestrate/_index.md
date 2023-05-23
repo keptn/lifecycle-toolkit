@@ -1,6 +1,6 @@
 ---
-title: Orchestrating pre- and post-deployment tasks and evaluations
-description: Learn how the Keptn Lifecycle Toolkit can orchestrate deployment checks.
+title: Manage release lifecycle
+description: How KLT orchestrates pre- and post-deployment evaluations and tasks
 weight: 55
 ---
 
@@ -18,11 +18,10 @@ the Lifecycle Toolkit can do the following:
 
 * Automatically validate against your SLO (Service Level Objectives)
 
-KLT sits in the Kubernetes scheduler and can trace the deployment
-from start to end.
+KLT sits on top of the Kubernetes scheduler
+and can trace the deployment from start to end.
 KLT is also application aware,
-so we can extend the deployment
-with tasks and evaluations that
+so we can extend the deployment with tasks and evaluations that
 are run either before or after your whole application starts the deployment
 or even at the individual workload level.
 You can also validate any metric,

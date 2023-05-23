@@ -30,7 +30,7 @@ example.
 You can clone that repo to access it locally
 or just look at it for examples
 as you implement the functionality "from scratch"
-on your local Kubernetes deployment cluster.
+on your local Kubernetes cluster.
 The
 [README](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/observability/README.md)
 file for that repo contains additional information.

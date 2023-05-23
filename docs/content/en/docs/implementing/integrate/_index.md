@@ -57,7 +57,7 @@ it creates a `KeptnWorkload` resource for the version it detects.
 
 > Note: Annotations are not required if you are only using the
   `metrics-operator` component of KLT
-  to implement Keptn metrics.
+  to observe Keptn metrics.
 
 ### Basic annotations
 

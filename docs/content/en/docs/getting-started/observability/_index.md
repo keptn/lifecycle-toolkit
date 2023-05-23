@@ -46,7 +46,7 @@ It is based on the
 example.
 
 This is the second of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](../##introducing-the-keptn-lifecycle-toolkit)
+[Introducing the Keptn Lifecycle Toolkit](../#introducing-the-keptn-lifecycle-toolkit)
 series:
 
 - In the

@@ -5,20 +5,16 @@ weight: 15
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-> **Note**
-This section is under development.
-We welcome your input!**
-
 This section provides excercises to introduce you to
 the Keptn Lifecycle Toolkit.
-Choose the exercise that interest you the most.
+Choose the exercise that interests you the most.
 
 ## Introducing the Keptn Lifecycle Toolkit
 
 This exercise introduces three common use cases for the Lifecycle Toolkit
 and walks you through the implementation process for each.
 We recommend that you do all three exercises in order
-but you can do any of the independently.
+but you can do any of them independently.
 
 * [Getting started with Keptn metrics](metrics)
 * [Standardize access to observability data](observability)
@@ -39,10 +35,9 @@ You can run these exercises on an existing Kubernetes cluster
 or you can create a new cluster.
 For personal study and demonstrations,
 these exercises run well on a local Kubernetes cluster.
-See [Bring or Install a Kubernetes Cluster](../../install/k8s.md).
+See [Create Local Kubernetes Cluster](../install/k8s/#create-local-kubernetes-cluster).
 
-Two videos are available
-to introduce these exercises:
+Two videos are available to introduce these exercises:
 
 * [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
 * [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)

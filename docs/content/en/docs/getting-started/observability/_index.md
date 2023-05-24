@@ -9,33 +9,30 @@ In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
 It provides this information
 for all applications running in your cluster,
+of everything Kubernetes does in the context of a deployment.
+To do this,
+Keptn introduces the concept of an `application`,
+which is an abstraction that connects multiple
+Workloads that logically belong together,
 even if they use different deployment strategies.
+
 This means that:
 
 - You can readily see why a deployment takes so long
   or why it fails, even when using multiple deployment strategies.
 - KLT can capture DORA metrics and expose them as OpenTelemetry metrics
 
-To do this,
-Keptn introduces the concept of an `application`,
-which is an abstraction that connects multiple
-Workloads that logically belong together.
-
-With KLT deployed on your cluster,
-you can easily monitor what is happening
-during a deployment into your Kuberenetes cluster,
-and quickly get data to help you understand issues such as
-why a deployment took so long or why it failed.
-
 The observability data is an amalgamation of the following:
 
 - DORA metrics are collected out of the box
   when the Lifecycle Toolkit is enabled
-- OpenTelemetry runs traces that show everything that happens in the Kubernetes cluster
-  and can display this information with dashboard tools
-  such as Grafana.
+- OpenTelemetry runs traces that show
+  everything that happens in the Kubernetes cluster
 - Custom Keptn metrics that you can use to monitor
-  information from all the data providers configured in your cluster.
+  information from all the data providers configured in your cluster
+
+All this information can be displayed with dashboard tools
+such as Grafana.
 
 ## Using this exercise
 
@@ -83,9 +80,7 @@ you need to do the following:
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a Keptn application that aggragates
      all the `workloads` for your deployment into a single
-     [KeptnApp](../../yaml-crd-ref/app) resource
-     that includes all workloads on the cluster,
-     regardless of the tools being used.
+     [KeptnApp](../../yaml-crd-ref/app) resource.
      For this exercise, we recommend that you
      [Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
      to automatically generate a Keptn Application.
@@ -163,10 +158,12 @@ exercise discusses how to define Keptn metrics.
 ## View the results
 
 To start feeding observability data for your deployments
-onto a dashboard of your choice,
-modify either your `Deployment` or `KeptnApp` resource yaml file
-to increment the version number
-and commit that change to your repository.
+onto a dashboard of your choice:
+
+1. Modify either your `Deployment` or `KeptnApp` resource yaml file
+   to increment the version number
+1. Commit that change to your repository.
+
 Note that, from the `KeptnApp` YAML file,
 you can either increment the version number of the application
 (which causes all workloads to be rerun and produce observability data)

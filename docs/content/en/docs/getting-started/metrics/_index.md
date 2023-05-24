@@ -5,17 +5,18 @@ weight: 25
 ---
 
 The Keptn metrics component of the Keptn Lifecycle Toolkit
-allow you to define any type of metric
+allows you to define any type of metric
 from multiple instances
 of any type of data source in your Kubernetes cluster.
 You may have deployment tools like Argo, Flux, KEDA, HPA, or Keptn
 that need observability data to make automated decisions
-such as whether a rollout is good, whether to scale up or down.
+such as whether a rollout is good, or whether to scale up or down.
+
 Your observability data may come
 from multiple observability solutions --
 Prometheus, Dynatrace, Datadog and others --
-or data directly from your cloud provider such as AWS, Google, or Azure.
-
+or may be data that comes directly
+from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to all this data.
 Minimal configuration is required
 because the Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives.
@@ -39,6 +40,22 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
+This is the first of three exercises in the
+[Introducing the Keptn Lifecycle Toolkit](../##introducing-the-keptn-lifecycle-toolkit)
+series.
+After completing this exercise,
+you may want to do the other exercises:
+
+- In [Standardize observability](../observability),
+  you learn how to standardize access
+  to the observability data for your cluster.
+- In
+  [Manage release lifecycle](../orchestrate),
+  you learn how to implement
+  pre- and post-deployment tasks and evaluations
+  to orchestrate the flow of all the `workloads`
+  that are part of your `application`.
+
 The steps to implement metrics in an existing cluster are:
 
 1. [Install the Keptn Lifecycle Toolkit](../../install/install.md)
@@ -49,10 +66,6 @@ The steps to implement metrics in an existing cluster are:
 
 If you want to create your own cluster to run this exercise,
 follow the instructions in [Installation](../../install).
-
-See the
-[Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-video for a demonstration of this exercise.
 
 ## Define metrics to use
 
@@ -170,10 +183,11 @@ Note the following:
   then apply all of them.
 - Each metric is assigned a unique `name`.
 - The value of the `spec.provider.name` field
-  must correspond to the name assigned in a
+  must correspond to the name assigned in
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
 - Information is fetched in on a continuous basis
-at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
+  at a rate specified
+  by the value of the `spec.fetchIntervalSeconds` field.
 
 ### View available metrics
 
@@ -257,7 +271,7 @@ You can also display the graphics using a dashboard such as Grafana.
 
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
-HPA can retrieve KeptnMetrics and use it to implement HPA.
+HPA can retrieve KeptnMetrics and use those metrics to implement HPA.
 See
 Using the [HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
 for detailed information.

@@ -15,16 +15,14 @@ import (
 
 // NewClient returns a new controller-runtime fake Client configured with the Operator's scheme, and initialized with objs.
 func NewClient(objs ...client.Object) client.Client {
-	setupSchemes()
+	SetupSchemes()
 	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(objs...).Build()
 }
 
-func setupSchemes() {
+func SetupSchemes() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme.Scheme))
 	utilruntime.Must(corev1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(apiv1.AddToScheme(scheme.Scheme))
-	// utilruntime.Must(lfcv1alpha1.AddToScheme(scheme.Scheme))
-	// utilruntime.Must(lfcv1alpha2.AddToScheme(scheme.Scheme))
 	utilruntime.Must(lfcv1alpha3.AddToScheme(scheme.Scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(metricsapi.AddToScheme(scheme.Scheme))

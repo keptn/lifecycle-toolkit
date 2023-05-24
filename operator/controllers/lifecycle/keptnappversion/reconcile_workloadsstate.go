@@ -6,7 +6,6 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -20,26 +19,29 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		LongName:  "Reconcile Workloads",
 	}
 
-	var newStatus []klcv1alpha3.WorkloadStatus
-	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Name)
+	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Spec.AppName)
 	if err != nil {
 		r.Log.Error(err, "Could not get workloads")
-		return apicommon.StatePending, err
+		return apicommon.StateUnknown, r.handleUnaccessibleWorkloadInstanceList(ctx, appVersion)
 	}
 
-	if len(workloadInstanceList.Items) == 0 {
-		r.Log.Info("No WorkloadInstances found")
-		controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFound", "workloadInstances not found", appVersion.GetVersion())
-		return apicommon.StatePending, nil
-	}
-
+	newStatus := make([]klcv1alpha3.WorkloadStatus, 0, len(appVersion.Spec.Workloads))
 	for _, w := range appVersion.Spec.Workloads {
 		r.Log.Info("Reconciling workload " + w.Name)
 		workloadStatus := apicommon.StatePending
+		found := false
+		instanceName := getWorkloadInstanceName(appVersion.Spec.AppName, w.Name, w.Version)
 		for _, i := range workloadInstanceList.Items {
-			if w.Name == i.Name && w.Version == i.Spec.Version {
+			r.Log.Info("No WorkloadInstance found")
+			// no need to compare version, as it is part of WI name
+			if instanceName == i.Name {
+				found = true
 				workloadStatus = i.Status.Status
 			}
+		}
+
+		if !found {
+			controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
 		}
 
 		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{
@@ -69,6 +71,19 @@ func (r *KeptnAppVersionReconciler) getWorkloadInstanceList(ctx context.Context,
 	return workloadInstanceList, err
 }
 
-func getWorkloadInstanceName(namespace string, appName string, workloadName string, version string) types.NamespacedName {
-	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + workloadName + "-" + version}
+func (r *KeptnAppVersionReconciler) handleUnaccessibleWorkloadInstanceList(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion) error {
+	newStatus := make([]klcv1alpha3.WorkloadStatus, 0, len(appVersion.Spec.Workloads))
+	for _, w := range appVersion.Spec.Workloads {
+		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{
+			Workload: w,
+			Status:   apicommon.StateUnknown,
+		})
+	}
+	appVersion.Status.WorkloadOverallStatus = apicommon.StateUnknown
+	appVersion.Status.WorkloadStatus = newStatus
+	return r.Client.Status().Update(ctx, appVersion)
+}
+
+func getWorkloadInstanceName(appName string, workloadName string, version string) string {
+	return appName + "-" + workloadName + "-" + version
 }

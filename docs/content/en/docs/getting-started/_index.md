@@ -35,7 +35,7 @@ You can run these exercises on an existing Kubernetes cluster
 or you can create a new cluster.
 For personal study and demonstrations,
 these exercises run well on a local Kubernetes cluster.
-See [Create Local Kubernetes Cluster](../install/k8s/#create-local-kubernetes-cluster).
+See [Create Local Kubernetes Cluster](../install/k8s.md/#create-local-kubernetes-cluster).
 
 Two videos are available to introduce these exercises:
 

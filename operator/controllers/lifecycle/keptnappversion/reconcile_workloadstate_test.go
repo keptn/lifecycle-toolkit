@@ -11,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+//nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) {
 	appVersion := &lfcv1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
@@ -33,6 +34,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) 
 	require.Len(t, appVersion.Status.WorkloadStatus, 0)
 }
 
+//nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	appVersion := &lfcv1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{

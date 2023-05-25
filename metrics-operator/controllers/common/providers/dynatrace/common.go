@@ -15,6 +15,13 @@ var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the D
 var ErrInvalidResult = errors.New("the answer does not contain any data")
 var ErrDQLQueryTimeout = errors.New("timed out waiting for result of DQL query")
 
+const ErrAPI = "provider api response: %s"
+
+type Error struct {
+	Code    int    `json:"-"` // optional
+	Message string `json:"message"`
+}
+
 func getDTSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (string, error) {
 	if !provider.HasSecretDefined() {
 		return "", ErrSecretKeyRefNotDefined

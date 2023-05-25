@@ -65,7 +65,13 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	err = json.Unmarshal(b, &result)
 	if err != nil {
 		d.Log.Error(err, "Error while parsing response")
-		return "", nil, err
+		return "", b, err
+	}
+
+	if result.Error != nil {
+		err = fmt.Errorf("%s", *result.Error)
+		d.Log.Error(err, "Error from provider")
+		return "", b, err
 	}
 
 	if len(result.Series) == 0 {
@@ -76,7 +82,7 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
 		d.Log.Info("No metric points in query result")
-		return "", nil, fmt.Errorf("no metric points in query result")
+		return "", b, fmt.Errorf("no metric points in query result")
 	}
 
 	r := d.getSingleValue(points)

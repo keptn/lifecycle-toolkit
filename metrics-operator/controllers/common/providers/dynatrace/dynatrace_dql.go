@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"time"
 
 	"github.com/benbjohnson/clock"
@@ -36,6 +37,7 @@ type DynatraceDQLHandler struct {
 type DynatraceDQLResult struct {
 	State  string    `json:"state"`
 	Result DQLResult `json:"result,omitempty"`
+	Error  `json:"error"`
 }
 
 type DQLResult struct {
@@ -100,6 +102,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 		d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
 		return "", nil, err
 	}
+
 	// parse result
 	if len(results.Records) > 1 {
 		d.log.Info("More than a single result, the first one will be used")
@@ -194,6 +197,12 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 	if err != nil {
 		d.log.Error(err, "Error while parsing response")
 		return result, err
+	}
+
+	if !reflect.DeepEqual(result.Error, Error{}) {
+		err = fmt.Errorf(ErrAPI, result.Error.Message)
+		d.log.Error(err, "Error from provider")
+		return nil, err
 	}
 	return result, nil
 }

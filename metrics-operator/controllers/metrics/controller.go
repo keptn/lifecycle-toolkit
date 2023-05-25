@@ -102,10 +102,10 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
 	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
 	if err != nil {
-		r.Log.Error(err, "Failed to evaluate the query")
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		metric.Status.ErrMsg = err.Error()
 		metric.Status.Value = ""
-		metric.Status.RawValue = []byte{}
+		metric.Status.RawValue = cupSize(rawValue)
 		metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 		reconcile = ctrl.Result{Requeue: false}
 	} else {
@@ -123,6 +123,9 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 func cupSize(value []byte) []byte {
+	if len(value) == 0 {
+		return []byte{}
+	}
 	if len(value) > MB {
 		return value[:MB]
 	}

@@ -14,7 +14,7 @@ The steps are:
 1. Understand the [Software versions and resources](reqs.md)
    that are required.
 1. Be sure that your cluster includes the components discussed in
-   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt).
+   [Prepare your cluster for KLT](k8s.md/#prepare-your-cluster-for-klt).
 1. [Bring or create your Kubernetes cluster](k8s.md).
 1. [Replace the default cert-manager](cert-manager.md) (optional).
    This step is only required if you want to replace

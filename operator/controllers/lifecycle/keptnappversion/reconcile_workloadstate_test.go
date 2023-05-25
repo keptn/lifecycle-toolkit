@@ -180,6 +180,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	}, appVersion.Status.WorkloadStatus)
 }
 
+//nolint:dogsled
 func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadInstanceList(t *testing.T) {
 	appVersion := &lfcv1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{

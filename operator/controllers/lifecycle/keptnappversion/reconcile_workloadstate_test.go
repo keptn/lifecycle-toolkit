@@ -179,3 +179,41 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 		},
 	}, appVersion.Status.WorkloadStatus)
 }
+
+func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadInstanceList(t *testing.T) {
+	appVersion := &lfcv1alpha3.KeptnAppVersion{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      "appversion",
+			Namespace: "default",
+		},
+		Spec: lfcv1alpha3.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1alpha3.KeptnAppSpec{
+				Workloads: []lfcv1alpha3.KeptnWorkloadRef{
+					{
+						Name:    "workload",
+						Version: "ver1",
+					},
+				},
+			},
+			AppName: "app",
+		},
+	}
+	r, _, _, _ := setupReconciler(appVersion)
+
+	err := r.handleUnaccessibleWorkloadInstanceList(context.TODO(), appVersion)
+	require.Nil(t, err)
+
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: appVersion.Namespace, Name: appVersion.Name}, appVersion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateUnknown, appVersion.Status.WorkloadOverallStatus)
+	require.Len(t, appVersion.Status.WorkloadStatus, 1)
+	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+		{
+			Workload: lfcv1alpha3.KeptnWorkloadRef{
+				Name:    "workload",
+				Version: "ver1",
+			},
+			Status: apicommon.StateUnknown,
+		},
+	}, appVersion.Status.WorkloadStatus)
+}

@@ -122,14 +122,38 @@ func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unst
 	return ctx, span
 }
 
+func createResourceName(maxLen int, minSubstrLen int, str ...string) string {
+	for len(str)*minSubstrLen > maxLen {
+		minSubstrLen = minSubstrLen / 2
+	}
+	for i := 0; i < len(str)-1; i++ {
+		newStr := strings.Join(str, "-")
+		if len(newStr) > maxLen {
+			if len(str[i]) < minSubstrLen {
+				continue
+			}
+			cut := len(newStr) - maxLen
+			if cut > len(str[i])-minSubstrLen {
+				str[i] = str[i][:minSubstrLen]
+			} else {
+				str[i] = str[i][:len(str[i])-cut]
+			}
+		} else {
+			return strings.ToLower(newStr)
+		}
+	}
+
+	return strings.ToLower(strings.Join(str, "-"))
+}
+
 func getCRDName(pod *corev1.Pod) string {
 	application, _ := getLabelOrAnnotation(pod, AppAnnotation, K8sRecommendedAppAnnotations)
-	workloadInstance, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)
+	workload, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)
 	version, versionExists := getLabelOrAnnotation(pod, VersionAnnotation, K8sRecommendedVersionAnnotations)
 	if !versionExists {
 		version = calculateVersion(pod)
 	}
-	return application + "-" + workloadInstance + "-" + version
+	return application + "-" + workload + "-" + version
 }
 
 func (sMgr *WorkloadManager) unbindSpan(pod *corev1.Pod) {

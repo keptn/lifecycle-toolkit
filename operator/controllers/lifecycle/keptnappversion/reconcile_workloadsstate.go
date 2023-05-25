@@ -5,6 +5,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -85,5 +86,5 @@ func (r *KeptnAppVersionReconciler) handleUnaccessibleWorkloadInstanceList(ctx c
 }
 
 func getWorkloadInstanceName(appName string, workloadName string, version string) string {
-	return appName + "-" + workloadName + "-" + version
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, appName, workloadName, version)
 }

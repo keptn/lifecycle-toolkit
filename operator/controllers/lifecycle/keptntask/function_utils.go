@@ -3,7 +3,6 @@ package keptntask
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -24,11 +23,9 @@ type FunctionExecutionParams struct {
 }
 
 func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
-	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        jobId,
+			Name:        apicommon.GenerateJobName(task.Name),
 			Namespace:   task.Namespace,
 			Labels:      task.Labels,
 			Annotations: task.CreateKeptnAnnotations(),

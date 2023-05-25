@@ -82,7 +82,7 @@ you need to do the following:
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a Keptn application that aggragates
      all the `workloads` for your deployment into a single
-     [KeptnApp](../../yaml-crd-ref/app) resource.
+     [KeptnApp](../../yaml-crd-ref/app.md) resource.
      For this exercise, we recommend that you use
      [Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
      to automatically generate a Keptn Application.

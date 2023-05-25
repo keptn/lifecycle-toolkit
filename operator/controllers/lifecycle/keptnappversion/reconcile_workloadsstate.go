@@ -22,7 +22,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 
 	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Spec.AppName)
 	if err != nil {
-		r.Log.Error(err, "Could not get workloads")
+		r.Log.Error(err, "Could not get workloads of appVersion '%s'", appVersion.Name)
 		return apicommon.StateUnknown, r.handleUnaccessibleWorkloadInstanceList(ctx, appVersion)
 	}
 
@@ -33,7 +33,6 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		found := false
 		instanceName := getWorkloadInstanceName(appVersion.Spec.AppName, w.Name, w.Version)
 		for _, i := range workloadInstanceList.Items {
-			r.Log.Info("No WorkloadInstance found")
 			// no need to compare version, as it is part of WI name
 			if instanceName == i.Name {
 				found = true

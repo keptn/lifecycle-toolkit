@@ -42,7 +42,7 @@ Unless you are only using the customized Keptn metrics feature,
 you now need to:
 
 - Follow the instructions in
-  [Annotate workload](../../implementing/integrate/#basic-annotations)
+  [Annotate workload](../implementing/integrate/#basic-annotations)
   to integrate the Lifecycle Toolkit into your Kubernetes cluster
   by applying basic annotations to your `Deployment` resource.
 - Follow the instructions in

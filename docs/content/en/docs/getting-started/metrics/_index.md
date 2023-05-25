@@ -4,7 +4,7 @@ description: Enhance your deployment with custom Keptn metrics
 weight: 25
 ---
 
-The Keptn metrics component of the Keptn Lifecycle Toolkit
+The Custom Keptn metrics component of the Keptn Lifecycle Toolkit
 allows you to define any type of metric
 from multiple instances
 of any type of data source in your Kubernetes cluster.
@@ -28,7 +28,9 @@ from Argo Rollouts, Flux, KEDA, and HPA.
 Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
 and multible observability platforms,
-and multiple instance of some tools or observability platforms.
+and multiple instances of some tools or observability platforms.
+The Custom Keptn metrics feature unites all these metrics
+integrates metrics from all these sources into a single set of metrics.
 
 ## Using this exercise
 
@@ -59,7 +61,7 @@ you may want to do the other exercises:
 The steps to implement metrics in an existing cluster are:
 
 1. [Install the Keptn Lifecycle Toolkit](../../install/install.md)
-1. Configure metrics to use
+1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
    - [View available metrics](#view-available-metrics)
@@ -92,11 +94,14 @@ You can specify a virtually unlimited number of providers,
 including multiple instances of each observability platform.
 Each one must be assigned a unique name,
 identified by the type of platform it is
-and the URL.
+and the URL of the target server.
+If the target server is protected by a `secret`,
+provide information about the token and key.
 
 > Note: The video and example application use an older syntax
   of the `KeptnMetricsProvider` and `KeptnMetric` resources.
-  The syntax shown in this document is correct for v0.7.1 and later.
+  The syntax shown in this document and the reference page
+  is correct for v0.7.1 and later.
 
 Definition of
 [dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml)
@@ -265,7 +270,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-d
 }
 ```
 
-You can also display the graphics using a dashboard such as Grafana.
+You can also display the metrics graphically using a dashboard such as Grafana.
 
 ## Implementing autoscaling with HPA
 

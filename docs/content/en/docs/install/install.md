@@ -6,8 +6,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 The Keptn Lifecycle Toolkit must be installed, enabled, and integrated
-into each cluster you want to monitor;
-it can not be installed in a separate cluster.
+into each cluster you want to monitor.
 This is because KLT communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,

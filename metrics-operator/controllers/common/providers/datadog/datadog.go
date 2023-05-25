@@ -70,7 +70,7 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 
 	if result.Error != nil {
 		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, "Error from provider")
+		d.Log.Error(err, "Error from DataDog provider")
 		return "", b, err
 	}
 

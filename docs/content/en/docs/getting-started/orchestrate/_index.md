@@ -87,7 +87,7 @@ you need to do the following:
    * Follow the instructions in
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a
-     [KeptnApp](../../yaml-crd-ref/app/) resource
+     [KeptnApp](../../yaml-crd-ref/app.md) resource
      that includes all workloads on the cluster,
      regardless of the tools being used.
      For this exercise, we recommend that you

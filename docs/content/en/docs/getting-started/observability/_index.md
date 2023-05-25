@@ -9,7 +9,8 @@ In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
 It provides this information
 for all applications running in your cluster,
-of everything Kubernetes does in the context of a deployment.
+and includes information about
+everything Kubernetes does in the context of a deployment.
 To do this,
 Keptn introduces the concept of an `application`,
 which is an abstraction that connects multiple
@@ -70,7 +71,8 @@ you need to do the following:
    to install and enable KLT on your cluster.
 1. Follow the instructions in
    [Integrate KLT with your applications](../../implementing/integrate)
-   to integrate KLT with your Kubernetes cluster:
+   to integrate KLT with your Kubernetes cluster.
+   This requires the following:
 
    - Follow the instructions in
      [Annotate workload](../../implementing/integrate/#basic-annotations)
@@ -81,8 +83,8 @@ you need to do the following:
      to create a Keptn application that aggragates
      all the `workloads` for your deployment into a single
      [KeptnApp](../../yaml-crd-ref/app) resource.
-     For this exercise, we recommend that you
-     [Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
+     For this exercise, we recommend that you use
+     [Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
      to automatically generate a Keptn Application.
 
 ## DORA metrics
@@ -141,7 +143,7 @@ which allows you to trace everything done in the context of that deployment.
 - Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)
   to configure where your OpenTelemetry data is sent.
-  - Define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
+  This requires you to define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)
@@ -168,15 +170,15 @@ Note that, from the `KeptnApp` YAML file,
 you can either increment the version number of the application
 (which causes all workloads to be rerun and produce observability data)
 or you can increment the version number of a single workload,
-(which causes just that workload to be rerun and produce data).
+(which causes just that workload to be rerun and produce observability data).
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information
 appears on a Grafana dashboard with
 [Jaeger](https://grafana.com/docs/grafana-cloud/data-configuration/metrics/prometheus-config-examples/the-jaeger-authors-jaeger/).
 
-If you also have Jaeger extension for Grafana installed on your cluster,
-you can view full end-to-end trace for everything
+If you also have the Jaeger extension for Grafana installed on your cluster,
+you can view the full end-to-end trace for everything
 that happens in your deployment.
 For more information, see
 [Monitoring Jaeger](https://www.jaegertracing.io/docs/1.45/monitoring/).

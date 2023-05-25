@@ -36,7 +36,9 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Function: klcv1alpha3.FunctionSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytd"},
-				Parameters: klcv1alpha3.TaskParameters{map[string]string{"DATA": "mydata"}},
+				Parameters: klcv1alpha3.TaskParameters{
+					Inline: map[string]string{"DATA": "mydata"},
+				},
 				SecureParameters: klcv1alpha3.SecureParameters{
 					Secret: "mysecret",
 				},
@@ -68,7 +70,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			err:     "not found",
 		},
 		{
-			name: "definition exists",
+			name: "definition exists, recursive",
 			options: BuilderOptions{
 				Client:   fake.NewClient(def),
 				recorder: &record.FakeRecorder{},
@@ -123,9 +125,14 @@ func TestJSBuilder_hasParams(t *testing.T) {
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 			Function: klcv1alpha3.FunctionSpec{
-				FunctionReference: klcv1alpha3.FunctionReference{
-					Name: "mytaskdef",
-				}}},
+				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
+				Parameters: klcv1alpha3.TaskParameters{
+					Inline: map[string]string{"DATA2": "mydata2"},
+				},
+				SecureParameters: klcv1alpha3.SecureParameters{
+					Secret: "mysecret2",
+				},
+			}},
 	}
 	paramDef := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -134,11 +141,14 @@ func TestJSBuilder_hasParams(t *testing.T) {
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 			Function: klcv1alpha3.FunctionSpec{
+				HttpReference: klcv1alpha3.HttpReference{Url: "something"},
 				FunctionReference: klcv1alpha3.FunctionReference{
-					Name: "mytd"},
-				Parameters: klcv1alpha3.TaskParameters{map[string]string{"DATA": "mydata"}},
+					Name: "mytaskdef"},
+				Parameters: klcv1alpha3.TaskParameters{
+					Inline: map[string]string{"DATA1": "user"},
+				},
 				SecureParameters: klcv1alpha3.SecureParameters{
-					Secret: "mysecret",
+					Secret: "pw",
 				},
 			},
 		},
@@ -147,27 +157,12 @@ func TestJSBuilder_hasParams(t *testing.T) {
 	tests := []struct {
 		name    string
 		options BuilderOptions
-		params  FunctionExecutionParams
+		params  *FunctionExecutionParams
 		wantErr bool
 		err     string
 	}{
 		{
-			name: "no definition",
-			options: BuilderOptions{
-				Client:   fake.NewClient(),
-				recorder: &record.FakeRecorder{},
-				req: ctrl.Request{
-					NamespacedName: types.NamespacedName{Namespace: "default"},
-				},
-				Log:     testr.New(t),
-				taskDef: def,
-				task:    makeTask("myt", "default", def.Name),
-			},
-			wantErr: true,
-			err:     "not found",
-		},
-		{
-			name: "definition exists",
+			name: "definition exists, no parent",
 			options: BuilderOptions{
 				Client:   fake.NewClient(def),
 				recorder: &record.FakeRecorder{},
@@ -178,10 +173,22 @@ func TestJSBuilder_hasParams(t *testing.T) {
 				taskDef: def,
 				task:    makeTask("myt2", "default", def.Name),
 			},
+			params: &FunctionExecutionParams{
+				ConfigMap: "",
+				Parameters: map[string]string{
+					"DATA2": "mydata2",
+				},
+				SecureParameters: "mysecret2",
+				URL:              "donothing",
+				Context: klcv1alpha3.TaskContext{
+					WorkloadName: "my-workload",
+					AppName:      "my-app",
+					ObjectType:   "Workload"},
+			},
 			wantErr: false,
 		},
 		{
-			name: "definition exists, with parameters and secrets",
+			name: "definition exists, parent with parameters and secrets",
 			options: BuilderOptions{
 				Client:   fake.NewClient(paramDef, def),
 				recorder: &record.FakeRecorder{},
@@ -191,6 +198,19 @@ func TestJSBuilder_hasParams(t *testing.T) {
 				Log:     testr.New(t),
 				taskDef: paramDef,
 				task:    makeTask("myt3", "default", paramDef.Name),
+			},
+			params: &FunctionExecutionParams{
+				ConfigMap: "",
+				Parameters: map[string]string{ //maps should be merged
+					"DATA2": "mydata2",
+					"DATA1": "user",
+				},
+				URL:              "something", //we support a single URL so the original should be taken not the parent one
+				SecureParameters: "pw",        //we support a single secret so the original task secret should be taken not the parent one
+				Context: klcv1alpha3.TaskContext{
+					WorkloadName: "my-workload",
+					AppName:      "my-app",
+					ObjectType:   "Workload"},
 			},
 			wantErr: false,
 		},

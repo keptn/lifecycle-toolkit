@@ -26,7 +26,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
+	if emptySpec(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -58,6 +58,11 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 
 	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", task, "JobCreated", fmt.Sprintf("created Job: %s ", task.Name), "")
 	return job.Name, nil
+}
+
+func emptySpec(definition *klcv1alpha3.KeptnTaskDefinition) bool {
+	//TODO when adding new builders add more logic here
+	return !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{})
 }
 
 func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {

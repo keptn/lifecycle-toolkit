@@ -1,14 +1,14 @@
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkload
 metadata:
-  name: recwaiter-recwaiter
+  name: waiter-waiter
 
 ---
 
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkloadInstance
 metadata:
-  name: recwaiter-recwaiter-0.4
+  name: waiter-waiter-0.4
 status:
   currentPhase: Completed
   deploymentStatus: Succeeded
@@ -28,14 +28,14 @@ status:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
-  name: recwaiter
+  name: waiter
 
 ---
 
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
-  name: recwaiter-1b899b6ce1-6b86b273
+  name: waiter-1b899b6ce1-6b86b273
 
 ---
 apiVersion: batch/v1

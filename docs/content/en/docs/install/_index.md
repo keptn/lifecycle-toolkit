@@ -49,7 +49,7 @@ you now need to:
   [Define a Keptn application](../implementing/integrate/#define-a-keptn-application)
   to create a Keptn application that aggragates
   all the `workloads` for your deployment into a single
-  [KeptnApp](../../yaml-crd-ref/app) resource.
+  [KeptnApp](../yaml-crd-ref/app/) resource.
 
 This section also includes:
 

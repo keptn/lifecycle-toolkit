@@ -161,7 +161,7 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	return r
 }
 
-func setupReconciler() (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -192,7 +192,7 @@ func setupReconciler() (*KeptnAppVersionReconciler, chan string, *fake.ITracerMo
 	}
 
 	fake.SetupSchemes()
-	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
+	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{

@@ -5,6 +5,14 @@ weight: 35
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
+The Keptn Lifecycle Toolkit must be installed, enabled, and integrated
+into each cluster you want to monitor.
+This is because KLT communicates with the Kubernetes scheduler
+for tasks such as enforcing checks natively,
+stopping a deployment from proceeding when criteria are not met,
+doing post-deployment evaluations
+and tracing all activities of all deployment workloads on the cluster.
+
 Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
 
 * Releases v0.7.0 and later can be installed using
@@ -60,6 +68,11 @@ Some helpful hints:
   The output shows all components that are running on your system.
 
 ### Modify Helm configuration options
+
+Helm chart values can be modified before the installation.
+This is useful if you want to install only the `metrics-operator`
+rather than the full Toolkit
+or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
 [helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
@@ -128,10 +141,11 @@ The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 
 ## Enable KLT for your cluster
 
-To enable KLT for your cluster, annotate the Kubernetes
+To enable the Keptn Lifecycle Controller in your cluster,
+annotate the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 resource.
-In this example, this is defined in the
+For an example of this, see
 [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
 file, which looks like this:
 
@@ -145,4 +159,4 @@ metadata:
 ```
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
-This line tells KLT to handle the namespace
+This annotation tells the webhook to handle the namespace.

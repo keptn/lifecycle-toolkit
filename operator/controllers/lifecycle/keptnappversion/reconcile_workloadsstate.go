@@ -32,7 +32,10 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		found := false
 		instanceName := getWorkloadInstanceName(appVersion.Spec.AppName, w.Name, w.Version)
 		for _, i := range workloadInstanceList.Items {
-			r.Log.Info("No WorkloadInstance found")
+			r.Log.Info("No WorkloadInstance found for KeptnApp " + appVersion.Spec.AppName)
+			// additional filtering of the retrieved WIs is needed, as the List() method retrieves all
+			// WIs for a specific KeptnApp. The result can contain also WIs, that are not part of the
+			// latest KeptnAppVersion, so it's needed to double check them
 			// no need to compare version, as it is part of WI name
 			if instanceName == i.Name {
 				found = true

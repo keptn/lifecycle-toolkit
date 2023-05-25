@@ -46,7 +46,7 @@ you now need to:
   to integrate the Lifecycle Toolkit into your Kubernetes cluster
   by applying basic annotations to your `Deployment` resource.
 - Follow the instructions in
-  [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
+  [Define a Keptn application](../implementing/integrate/#define-a-keptn-application)
   to create a Keptn application that aggragates
   all the `workloads` for your deployment into a single
   [KeptnApp](../../yaml-crd-ref/app) resource.

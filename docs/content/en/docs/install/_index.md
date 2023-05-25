@@ -20,7 +20,6 @@ The steps are:
    This step is only required if you want to replace
    the default KLT cert-manager with another cert-manager.
 1. [Install the Keptn Lifecycle Toolkit](install.md).
-1. [Enable KLT for your cluster](install.md/#enable-klt-for-your-cluster)
 1. [Enable Keptn Lifecycle Toolkit](install.md/#enable-klt-for-your-cluster).
    This step is not required if you only want to run Keptn Metrics
    but is required for all other KLT features.

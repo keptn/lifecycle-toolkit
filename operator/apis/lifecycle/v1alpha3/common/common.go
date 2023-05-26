@@ -3,10 +3,10 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"math/rand"
 	"strconv"
 
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
 )
@@ -30,10 +30,7 @@ const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
 const AppTypeAnnotation = "keptn.sh/app-type"
 
-const MaxAppNameLength = 25
-const MaxWorkloadNameLength = 25
-const MaxTaskNameLength = 25
-const MaxVersionLength = 12
+const MinKLTNameLen = 80
 const MaxK8sObjectLength = 253
 
 type AppType string
@@ -178,12 +175,17 @@ const (
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
-	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(taskName, 32), randomId)
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, string(checkType), taskName, strconv.Itoa(randomId))
+}
+
+func GenerateJobName(taskName string) string {
+	randomId := rand.Intn(99_999-10_000) + 10000
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, taskName, strconv.Itoa(randomId))
 }
 
 func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
-	return fmt.Sprintf("%s-%s-%d", checkType, TruncateString(evalName, 27), randomId)
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, string(checkType), evalName, strconv.Itoa(randomId))
 }
 
 // MergeMaps merges two maps into a new map. If a key exists in both maps, the

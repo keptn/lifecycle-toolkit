@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const ExtraLongName = "loooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ooooooo01234567891234567890123456789"
+
 func TestKeptnState_IsCompleted(t *testing.T) {
 	tests := []struct {
 		State KeptnState
@@ -292,8 +294,8 @@ func Test_GenerateTaskName(t *testing.T) {
 		},
 		{
 			Check: PreDeploymentCheckType,
-			Name:  "loooooooooooooooooooooooooooooooooooooong_name",
-			Want:  "pre-looooooooooooooooooooooooooooooo-",
+			Name:  ExtraLongName,
+			Want:  "pre-loooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ooooooo0123456789123456-",
 		},
 	}
 	for _, tt := range tests {
@@ -321,13 +323,38 @@ func Test_GenerateEvaluationName(t *testing.T) {
 		},
 		{
 			Check: PreDeploymentEvaluationCheckType,
-			Name:  "loooooooooooooooooooooooooooooooooooooong_name",
-			Want:  "pre-eval-loooooooooooooooooooooooooo-",
+			Name:  ExtraLongName,
+			Want:  "pre-eval-loooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ooooooo01234567891-",
 		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.True(t, strings.HasPrefix(GenerateEvaluationName(tt.Check, tt.Name), tt.Want))
+		})
+	}
+}
+
+func Test_GenerateJobName(t *testing.T) {
+	tests := []struct {
+		Name string
+		Want string
+	}{
+		{
+			Name: "short-name",
+			Want: "short-name-",
+		},
+		{
+			Name: "",
+			Want: "-",
+		},
+		{
+			Name: ExtraLongName,
+			Want: "loooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ooooooo01234567891234567890-",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.True(t, strings.HasPrefix(GenerateJobName(tt.Name), tt.Want))
 		})
 	}
 }

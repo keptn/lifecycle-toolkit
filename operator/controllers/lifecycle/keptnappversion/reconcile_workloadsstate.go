@@ -5,6 +5,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -21,7 +22,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 
 	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Spec.AppName)
 	if err != nil {
-		r.Log.Error(err, "Could not get workloads")
+		r.Log.Error(err, "Could not get workloads of appVersion '%s'", appVersion.Name)
 		return apicommon.StateUnknown, r.handleUnaccessibleWorkloadInstanceList(ctx, appVersion)
 	}
 
@@ -32,7 +33,6 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		found := false
 		instanceName := getWorkloadInstanceName(appVersion.Spec.AppName, w.Name, w.Version)
 		for _, i := range workloadInstanceList.Items {
-			r.Log.Info("No WorkloadInstance found for KeptnApp " + appVersion.Spec.AppName)
 			// additional filtering of the retrieved WIs is needed, as the List() method retrieves all
 			// WIs for a specific KeptnApp. The result can contain also WIs, that are not part of the
 			// latest KeptnAppVersion, so it's needed to double check them
@@ -88,5 +88,5 @@ func (r *KeptnAppVersionReconciler) handleUnaccessibleWorkloadInstanceList(ctx c
 }
 
 func getWorkloadInstanceName(appName string, workloadName string, version string) string {
-	return appName + "-" + workloadName + "-" + version
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, appName, workloadName, version)
 }

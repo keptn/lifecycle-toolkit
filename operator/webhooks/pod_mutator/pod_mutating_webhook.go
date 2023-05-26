@@ -14,6 +14,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/semconv"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -83,21 +84,12 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	podIsAnnotated, err := a.isPodAnnotated(pod)
+	podIsAnnotated := a.isPodAnnotated(pod)
 	logger.Info("Checked if pod is annotated.")
-
-	if err != nil {
-		span.SetStatus(codes.Error, InvalidAnnotationMessage)
-		return admission.Errored(http.StatusBadRequest, err)
-	}
 
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
-		if err != nil {
-			span.SetStatus(codes.Error, InvalidAnnotationMessage)
-			return admission.Errored(http.StatusBadRequest, err)
-		}
+		podIsAnnotated = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if podIsAnnotated {
@@ -105,11 +97,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
-		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
-		if err != nil {
-			span.SetStatus(codes.Error, InvalidAnnotationMessage)
-			return admission.Errored(http.StatusBadRequest, err)
-		}
+		isAppAnnotationPresent := a.isAppAnnotationPresent(pod)
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 		logger.Info("Attributes from annotations set")
 
@@ -144,13 +132,9 @@ func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
 	return nil
 }
 
-func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
-	workload, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	version, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-
-	if len(workload) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
-		return false, ErrTooLongAnnotations
-	}
+func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
+	_, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	_, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
@@ -159,28 +143,28 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 			}
 			pod.Annotations[apicommon.VersionAnnotation] = a.calculateVersion(pod)
 		}
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }
 
-func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
 	podOwner := a.getOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
-		return false, nil
+		return false
 	}
 
 	switch podOwner.Kind {
 	case "ReplicaSet":
 		rs := &appsv1.ReplicaSet{}
 		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
-			return false, nil
+			return false
 		}
 		a.Log.Info("Done fetching RS")
 
 		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
 		if rsOwner.UID == "" {
-			return false, nil
+			return false
 		}
 
 		if rsOwner.Kind == "Rollout" {
@@ -197,13 +181,13 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		ds := &appsv1.DaemonSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
 	default:
-		return false, nil
+		return false
 	}
 }
 
-func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) (bool, error) {
+func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
 	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
-		return false, nil
+		return false
 	}
 	objectContainerMetaData := metav1.ObjectMeta{
 		Labels:      objectContainer.GetLabels(),
@@ -212,7 +196,7 @@ func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context,
 	return a.copyResourceLabelsIfPresent(&objectContainerMetaData, pod)
 }
 
-func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
 	var gotWorkloadName, gotVersion bool
 
@@ -223,10 +207,6 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentTaskAnnotation, "")
 	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
-
-	if len(workloadName) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
-		return false, ErrTooLongAnnotations
-	}
 
 	if len(targetPod.Annotations) == 0 {
 		targetPod.Annotations = make(map[string]string)
@@ -247,26 +227,23 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 		setMapKey(targetPod.Annotations, apicommon.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
 		setMapKey(targetPod.Annotations, apicommon.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
 
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }
 
-func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) bool {
+	_, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
-		if len(app) > apicommon.MaxAppNameLength {
-			return false, ErrTooLongAnnotations
-		}
-		return true, nil
+		return true
 	}
 
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string)
 	}
 	pod.Annotations[apicommon.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	return false, nil
+	return false
 }
 
 func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
@@ -465,7 +442,7 @@ func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-	return strings.ToLower(applicationName + "-" + workloadName)
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, applicationName, workloadName)
 }
 
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {

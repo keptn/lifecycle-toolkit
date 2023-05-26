@@ -3,7 +3,6 @@ package keptntask
 import (
 	"context"
 	"fmt"
-	"math/rand"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -108,11 +107,9 @@ func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
 }
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
-	randomId := rand.Intn(99999-10000) + 10000
-	jobId := fmt.Sprintf("klc-%s-%d", apicommon.TruncateString(task.Name, apicommon.MaxTaskNameLength), randomId)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        jobId,
+			Name:        apicommon.GenerateJobName(task.Name),
 			Namespace:   task.Namespace,
 			Labels:      task.Labels,
 			Annotations: task.CreateKeptnAnnotations(),

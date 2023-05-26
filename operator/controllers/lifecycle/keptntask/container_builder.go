@@ -29,14 +29,18 @@ type BuilderOptions struct {
 }
 
 func getContainerBuilder(options BuilderOptions) IContainerBuilder {
-	if !reflect.DeepEqual(options.taskDef.Spec.Function, klcv1alpha3.FunctionSpec{}) {
+	if isJSSpecDefined(&options.taskDef.Spec) {
 		builder := newJSBuilder(options)
 		return &builder
 	}
 	return nil
 }
 
-func emptySpec(definition *klcv1alpha3.KeptnTaskDefinition) bool {
+func specExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
 	//TODO when adding new builders add more logic here
-	return !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{})
+	return isJSSpecDefined(&definition.Spec)
+}
+
+func isJSSpecDefined(spec *klcv1alpha3.KeptnTaskDefinitionSpec) bool {
+	return !reflect.DeepEqual(spec.Function, klcv1alpha3.FunctionSpec{})
 }

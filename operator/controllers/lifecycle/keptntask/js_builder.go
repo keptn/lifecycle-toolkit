@@ -34,37 +34,7 @@ type FunctionExecutionParams struct {
 	Context          klcv1alpha3.TaskContext
 }
 
-<<<<<<< HEAD:operator/controllers/lifecycle/keptntask/js_builder.go
 func (js *JSBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
-=======
-func (r *KeptnTaskReconciler) generateFunctionJob(task *klcv1alpha3.KeptnTask, params FunctionExecutionParams) (*batchv1.Job, error) {
-	job := &batchv1.Job{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        apicommon.GenerateJobName(task.Name),
-			Namespace:   task.Namespace,
-			Labels:      task.Labels,
-			Annotations: task.CreateKeptnAnnotations(),
-		},
-		Spec: batchv1.JobSpec{
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels:      task.Labels,
-					Annotations: task.Annotations,
-				},
-				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
-				},
-			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
-		},
-	}
-	err := controllerutil.SetControllerReference(task, job, r.Scheme)
-	if err != nil {
-		r.Log.Error(err, "could not set controller reference:")
-	}
-
->>>>>>> chore: standardize generation of resource names:operator/controllers/lifecycle/keptntask/function_utils.go
 	container := corev1.Container{
 		Name:  "keptn-function-runner",
 		Image: os.Getenv("FUNCTION_RUNNER_IMAGE"),

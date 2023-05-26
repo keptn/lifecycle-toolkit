@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"reflect"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -58,11 +57,6 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 
 	controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", task, "JobCreated", fmt.Sprintf("created Job: %s ", task.Name), "")
 	return job.Name, nil
-}
-
-func emptySpec(definition *klcv1alpha3.KeptnTaskDefinition) bool {
-	//TODO when adding new builders add more logic here
-	return !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{})
 }
 
 func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {

@@ -35,3 +35,8 @@ func getContainerBuilder(options BuilderOptions) IContainerBuilder {
 	}
 	return nil
 }
+
+func emptySpec(definition *klcv1alpha3.KeptnTaskDefinition) bool {
+	//TODO when adding new builders add more logic here
+	return !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{})
+}

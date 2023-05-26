@@ -1,0 +1,96 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkloadInstance
+metadata:
+  name: waiter-waiter-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  postDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-parent
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: waiter
+
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: waiter-1b899b6ce1-6b86b273
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    batch.kubernetes.io/job-tracking: ""
+    keptn.sh/app: waiter
+    keptn.sh/version: "0.4"
+    keptn.sh/workload: waiter-waiter
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: DATA
+              value: '{"data":"myotherdata","other":"data","user":"myotheruser"}'
+            - name: CONTEXT
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+            - name: SCRIPT
+              value: /var/data/function.ts
+          name: keptn-function-runner
+status:
+  succeeded: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    batch.kubernetes.io/job-tracking: ""
+    keptn.sh/app: waiter
+    keptn.sh/version: "0.4"
+    keptn.sh/workload: waiter-waiter
+  ownerReferences:
+    - apiVersion: lifecycle.keptn.sh/v1alpha3
+      blockOwnerDeletion: true
+      controller: true
+      kind: KeptnTask
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: DATA
+              value: '{"data":"mydata","other":"data","user":"myuser"}'
+            - name: CONTEXT
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+            - name: SECURE_DATA
+              valueFrom:
+                secretKeyRef:
+                  key: SECURE_DATA
+                  name: mysecret
+            - name: SCRIPT
+              value: /var/data/function.ts
+          name: keptn-function-runner
+status:
+  succeeded: 1

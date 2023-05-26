@@ -21,7 +21,7 @@ The execution flow goes through six main phases:
 Within each phase,
 the order of execution is determined
 by the order in which evaluations and tasks are listed in the
-[KeptnApp](../../../yaml-crd-ref/app.md)
+[KeptnApp](../../../yaml-crd-ref/app/)
 resource.
 
 A [Kubernetes Event](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)

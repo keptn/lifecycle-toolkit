@@ -2,7 +2,7 @@
 title: Flow of deployment
 linktitle: Flow of deployment
 description: Understand the execution flow of a deployment
-weight: 25
+weight: 35
 ---
 
 The Keptn Lifecycle Toolkit (KLT) deploys a
@@ -21,8 +21,10 @@ The execution flow goes through six main phases:
 Within each phase,
 the order of execution is determined
 by the order in which evaluations and tasks are listed in the
-[KeptnApp](../../../yaml-crd-ref/app/)
+[KeptnApp](../../yaml-crd-ref/app)
 resource.
+
+## Kubernetes events
 
 A [Kubernetes Event](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 is emitted at each phase
@@ -49,7 +51,7 @@ until all the required pre-deployment tasks/evaluations
 defined on either the KeptnApp or KeptnWorkload level pass.
 Only then are the pods bound to a node and deployed.
 If any evaluation or task fails,
-the `KeptnApp` issues appropriate `*Errored` event
+the `KeptnApp` issues an appropriate `*Errored` event
 and terminates the deployment.
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event

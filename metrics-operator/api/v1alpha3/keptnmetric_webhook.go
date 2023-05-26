@@ -47,7 +47,7 @@ func (r *KeptnMetric) ValidateCreate() error {
 	keptnmetriclog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	return r.validateKeptnMetric()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -55,7 +55,7 @@ func (r *KeptnMetric) ValidateUpdate(old runtime.Object) error {
 	keptnmetriclog.Info("validate update", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	return r.validateKeptnMetric()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type

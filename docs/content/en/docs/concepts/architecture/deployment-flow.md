@@ -145,6 +145,7 @@ Completed
 ```
 
 ## Events that are not part of the deployment flow
+
 Additional phases/states exist,
 such as those that describe what happens when something fails.
 
@@ -167,4 +168,5 @@ Completed
 Deprecated
 WorkloadDeployReconcile
 WorkloadDeployReconcileErrored
+```
 

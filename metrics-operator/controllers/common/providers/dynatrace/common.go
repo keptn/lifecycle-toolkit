@@ -15,7 +15,7 @@ var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the D
 var ErrInvalidResult = errors.New("the answer does not contain any data")
 var ErrDQLQueryTimeout = errors.New("timed out waiting for result of DQL query")
 
-const ErrAPI = "provider api response: %s"
+const ErrAPIMsg = "provider api response: %s"
 
 type Error struct {
 	Code    int    `json:"-"` // optional

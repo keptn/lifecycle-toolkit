@@ -81,7 +81,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 		return "", b, err
 	}
 	if !reflect.DeepEqual(result.Error, Error{}) {
-		err = fmt.Errorf(ErrAPI, result.Error.Message)
+		err = fmt.Errorf(ErrAPIMsg, result.Error.Message)
 		d.Log.Error(err, "Error from Dynatrace provider")
 		return "", b, err
 	}

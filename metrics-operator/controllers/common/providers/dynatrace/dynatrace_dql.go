@@ -200,7 +200,7 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 	}
 
 	if !reflect.DeepEqual(result.Error, Error{}) {
-		err = fmt.Errorf(ErrAPI, result.Error.Message)
+		err = fmt.Errorf(ErrAPIMsg, result.Error.Message)
 		d.log.Error(err, "Error from Dynatrace DQL provider")
 		return nil, err
 	}

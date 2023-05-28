@@ -8,7 +8,7 @@ metadata:
     keptn.sh/inject-cert: "true"
 webhooks:
   - admissionReviewVersions:
-      - v3
+      - v1
     clientConfig:
       service:
         name: webhook-service

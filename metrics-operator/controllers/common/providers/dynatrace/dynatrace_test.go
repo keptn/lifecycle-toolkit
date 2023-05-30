@@ -357,33 +357,6 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
 }
 
-func Test_trimQuery(t *testing.T) {
-
-	tests := []struct {
-		name  string
-		query string
-		want  string
-	}{
-		{name: "spaces and newlines",
-			query: "((builtin:kubernetes.workload.cpu_throttled: filter(eq(\"k8s.workload.name\", \"frontend\"))  :splitBy(\"k8s.namespace.name\")",
-			want:  "((builtin:kubernetes.workload.cpu_throttled:filter(eq(\"k8s.workload.name\",\"frontend\")):splitBy(\"k8s.namespace.name\")",
-		},
-		{name: "spaces and newlines",
-			query: "((builtin:kubernetes.workload.cpu_throttled:filter(eq(\"k8s.workload.name\",\"frontend\"))\n    :splitBy(\"k8s.namespace.name\",\"k8s.workload.kind\",\"k8s.workload.name\")",
-			want:  "((builtin:kubernetes.workload.cpu_throttled:filter(eq(\"k8s.workload.name\",\"frontend\")):splitBy(\"k8s.namespace.name\",\"k8s.workload.kind\",\"k8s.workload.name\")",
-		},
-		{name: "spaces and \r",
-			query: "((builtin:kubernetes.workload.cpu_throttled:filter(eq(\"k8s.workload.name\",\"frontend\"))\n\r    :splitBy(\"k8s.namespace.name\",\"k8s.workload.kind\",\"k8s.workload.name\")",
-			want:  "((builtin:kubernetes.workload.cpu_throttled:filter(eq(\"k8s.workload.name\",\"frontend\")):splitBy(\"k8s.namespace.name\",\"k8s.workload.kind\",\"k8s.workload.name\")",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, trimQuery(tt.query))
-		})
-	}
-}
-
 func setupTest(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
 
 	fakeClient := fake.NewClient(objs...)

@@ -49,3 +49,7 @@ readme-generator-for-helm/
 /out.yaml
 /test.yaml
 /helmchart.yaml
+
+# Go Workspace file
+go.work
+go.work.sum

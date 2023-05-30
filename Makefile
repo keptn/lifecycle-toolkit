@@ -25,6 +25,23 @@ $(LOCALBIN):
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 HELMIFY ?=  $(LOCALBIN)/helmify
 
+# renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
+CONTROLLER_TOOLS_VERSION?=v0.12.0
+
+workspace-init: workspace-clean
+	go work init
+	go work use operator
+	go work use klt-cert-manager
+	go work use metrics-operator
+
+workspace-update:
+	go work use operator
+	go work use klt-cert-manager
+	go work use metrics-operator
+
+workspace-clean:
+	rm -rf go.work
+
 .PHONY: helmify
 helmify: $(HELMIFY) ## Download helmify locally if necessary.
 $(HELMIFY): $(LOCALBIN)
@@ -96,7 +113,7 @@ build-release-manifests:
 
 .PHONY: build-deploy-operator
 build-deploy-operator:
-	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C . release-local-operator.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 
@@ -134,3 +151,44 @@ include docs/Makefile
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
+
+.PHONY: release-local-operator
+release-local-operator: release-local-operator.amd64 release-local-operator.arm64
+	for arch in $(ARCHS); do \
+			docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(addprefix --amend $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-, $(ARCHS))
+		for arch in $(ARCHS); do \
+			DOCKER_CLI_EXPERIMENTAL=enabled docker manifest annotate --arch $${arch} $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-$${arch} ;\
+		done
+		DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE) ;\
+
+.PHONY: release-local-operator.amd64
+release-local-operator.amd64: clean-operator
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE):$(TAG)-amd64 \
+		--platform linux/amd64 \
+		--target debug \
+		-f operator/build.Dockerfile .
+	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE):$(TAG)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE):$(TAG)
+
+.PHONY: release-local-operator.arm64
+release-local-operator.arm64: clean-operator
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg GIT_HASH="$(HASH)" \
+		--build-arg RELEASE_VERSION="$(TAG)" \
+		--build-arg BUILD_TIME="$(BUILD_TIME)" \
+		--build-arg CONTROLLER_TOOLS_VERSION="$(CONTROLLER_TOOLS_VERSION)" \
+		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
+		--platform linux/arm64 \
+		--target debug \
+		-f operator/build.Dockerfile .
+	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+.PHONY: clean-operator
+clean:
+	rm -rf ./operator/bin

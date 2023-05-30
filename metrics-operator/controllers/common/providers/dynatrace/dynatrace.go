@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"reflect"
 	"strings"
 	"time"
 
@@ -24,6 +26,7 @@ type DynatraceResponse struct {
 	TotalCount int               `json:"totalCount"`
 	Resolution string            `json:"resolution"`
 	Result     []DynatraceResult `json:"result"`
+	Error      `json:"error"`
 }
 
 type DynatraceResult struct {
@@ -39,7 +42,8 @@ type DynatraceData struct {
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	qURL := baseURL + "v2/metrics/query?metricSelector=" + metric.Spec.Query
+	query := url.QueryEscape(metric.Spec.Query)
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + query
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
@@ -57,6 +61,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 
 	req.Header.Set("Authorization", "Api-Token "+token)
 	res, err := d.HttpClient.Do(req)
+
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
 		return "", nil, err
@@ -74,9 +79,13 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 	err = json.Unmarshal(b, &result)
 	if err != nil {
 		d.Log.Error(err, "Error while parsing response")
-		return "", nil, err
+		return "", b, err
 	}
-
+	if !reflect.DeepEqual(result.Error, Error{}) {
+		err = fmt.Errorf(ErrAPIMsg, result.Error.Message)
+		d.Log.Error(err, "Error from Dynatrace provider")
+		return "", b, err
+	}
 	r := fmt.Sprintf("%f", d.getSingleValue(result))
 	return r, b, nil
 }

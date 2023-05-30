@@ -18,10 +18,58 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const ddErrorPayload = "{\"error\":\"Token is missing required scope\"}"
 const ddPayload = "{\"from_date\":1677736306000,\"group_by\":[],\"message\":\"\",\"query\":\"system.cpu.idle{*}\",\"res_type\":\"time_series\",\"series\":[{\"aggr\":null,\"display_name\":\"system.cpu.idle\",\"end\":1677821999000,\"expression\":\"system.cpu.idle{*}\",\"interval\":300,\"length\":7,\"metric\":\"system.cpu.idle\",\"pointlist\":[[1677781200000,92.37997436523438],[1677781500000,91.46615447998047],[1677781800000,92.05865631103515],[1677782100000,97.49858474731445],[1677782400000,95.95263163248698],[1677821400000,69.67094268798829],[1677821700000,84.78184509277344]],\"query_index\":0,\"scope\":\"*\",\"start\":1677781200000,\"tag_set\":[],\"unit\":[{\"family\":\"percentage\",\"name\":\"percent\",\"plural\":\"percent\",\"scale_factor\":1,\"short_name\":\"%\"},{}]}],\"status\":\"ok\",\"to_date\":1677822706000}"
 const ddEmptyPayload = "{\"from_date\":1677736306000,\"group_by\":[],\"message\":\"\",\"query\":\"system.cpu.idle{*}\",\"res_type\":\"time_series\",\"series\":[],\"status\":\"ok\",\"to_date\":1677822706000}"
+
+func TestEvaluateQuery_APIError(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(ddErrorPayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
+		},
+	}
+	kdd := setupTest(apiToken)
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "system.cpu.idle{*}",
+		},
+	}
+	b := true
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Optional: &b,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+
+	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+	require.Error(t, e)
+	require.Contains(t, e.Error(), "Token is missing required scope")
+	require.Equal(t, []byte(ddErrorPayload), raw)
+	require.Empty(t, r)
+}
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -43,13 +91,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			appKey: []byte(appKeyValue),
 		},
 	}
-	fakeClient := fake.NewClient(apiToken)
-
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest(apiToken)
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -93,13 +135,7 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			appKey: []byte(appKeyValue),
 		},
 	}
-	fakeClient := fake.NewClient(apiToken)
-
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest(apiToken)
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -120,7 +156,7 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 
 	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
 	require.Equal(t, "", r)
-	require.Equal(t, []byte(nil), raw)
+	require.Equal(t, []byte("garbage"), raw)
 	require.NotNil(t, e)
 }
 func TestEvaluateQuery_MissingSecret(t *testing.T) {
@@ -130,13 +166,7 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	fakeClient := fake.NewClient()
-
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest()
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -159,14 +189,9 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	fakeClient := fake.NewClient()
 	secretName := "datadogSecret"
 
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest()
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -207,13 +232,7 @@ func TestEvaluateQuery_RefNonExistingKey(t *testing.T) {
 			apiKey: []byte(apiKeyValue),
 		},
 	}
-	fakeClient := fake.NewClient(apiToken)
-
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest(apiToken)
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -256,13 +275,7 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 			appKey: []byte(appKeyValue),
 		},
 	}
-	fakeClient := fake.NewClient(apiToken)
-
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest(apiToken)
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
@@ -282,30 +295,22 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 	}
 
 	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+	t.Log(string(raw))
 	require.Nil(t, raw)
 	require.Equal(t, "", r)
 	require.True(t, strings.Contains(e.Error(), "no values in query result"))
 
 }
 func TestGetSingleValue_EmptyPoints(t *testing.T) {
-	fakeClient := fake.NewClient()
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+	kdd := setupTest()
 	var points [][]*float64
 	value := kdd.getSingleValue(points)
 
 	require.Zero(t, value)
 }
 func TestGetSingleValue_HappyPath(t *testing.T) {
-	fakeClient := fake.NewClient()
-	kdd := KeptnDataDogProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
-		K8sClient:  fakeClient,
-	}
+
+	kdd := setupTest()
 	result := datadogV1.MetricsQueryResponse{}
 	_ = json.Unmarshal([]byte(ddPayload), &result)
 	points := (result.Series)[0].Pointlist
@@ -313,4 +318,16 @@ func TestGetSingleValue_HappyPath(t *testing.T) {
 
 	require.NotZero(t, value)
 	require.Equal(t, 89.11554133097331, value)
+}
+
+func setupTest(objs ...client.Object) KeptnDataDogProvider {
+
+	fakeClient := fake.NewClient(objs...)
+
+	kdd := KeptnDataDogProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	return kdd
 }

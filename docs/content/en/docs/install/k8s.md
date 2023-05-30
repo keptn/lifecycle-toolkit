@@ -81,17 +81,16 @@ Your cluster should include the following:
   Alternatively, KLT also works with just `kubctl apply` for deployment.
 
 * If you want to use the standardized observability feature,
-  install an OpenTelemetry collector on your cluster.
-  See
-  [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
-  for more information.
+  you must have an OpenTelemetry collector
+  and a Prometheus operator installed on your cluster.
 
-* If you want a dashboard for reviewing metrics and traces,
-  Install [Grafana](https://grafana.com/)
-  or the dashboard of your choice.
+  If you want a dashboard for reviewing metrics and traces,
+  install Grafana or the dashboard of your choice.
 
-* For traces, install [Jaeger](https://jaegertracing.io)
-  or a similar tool.
+  For traces, install Jaeger or a similar tool.
+
+  For more information, see
+  [Requirements for Open Telemetry](../implementing/otel/#requirements-for-opentelemetry).
 
 Also note that the Keptn Lifecycle Toolkit includes
 a light-weight cert-manager that, by default, is installed

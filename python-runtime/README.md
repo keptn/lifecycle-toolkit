@@ -14,7 +14,8 @@ The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecyc
 for pre- and post-checks.
 
 `KeptnTask`s can be tested locally with the runtime using the following commands.
-Replace `${VERSION}` with the KLT version of your choice. `SCRIPT` should refer to either a python file mounted locally in the container or to a url containing the file.
+Replace `${VERSION}` with the KLT version of your choice. 
+`SCRIPT` should refer to either a python file mounted locally in the container or to a url containing the file.
 
 ### mounting a python file
 

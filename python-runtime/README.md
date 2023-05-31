@@ -13,8 +13,10 @@ The Keptn python runtime uses python3, and enables the follwing packages: reques
 The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.
 
-`KeptnTask`s can be tested locally with the runtime using the following command.
-Replace `${VERSION}` with the KLT version of your choice.
+`KeptnTask`s can be tested locally with the runtime using the following commands.
+Replace `${VERSION}` with the KLT version of your choice. `SCRIPT` should refer to either a python file mounted locally in the container or to a url containing the file.
+
+### mounting a python file
 
 ```shell
 docker run -v $(pwd)/samples/hellopy.py:/hellopy.py -e "SCRIPT=hellopy.py" -it lifecycle-toolkit/python-runtime:${VERSION}
@@ -38,7 +40,8 @@ environ({'HOSTNAME': 'myhost', 'PYTHON_VERSION': '3.9.16', 'PWD': '/', 'CMD_ARGS
 
 ### Pass command line arguments to the python command
 
-You can pass python command line arguments by specifying CMD_ARGS. The following example will print the help of python3
+You can pass python command line arguments by specifying `CMD_ARGS`.
+The following example will print the help of python3:
 
 ```shell
 docker run -e "CMD_ARGS= -help" -it lifecycle-toolkit/python-runtime:${VERSION}
@@ -50,6 +53,14 @@ In this example we pass one argument (-i test.txt) to the script
 
 ```shell
 docker run -v $(pwd)/samples/args.py:/args.py -e "SCRIPT=args.py -i test.txt"  -it lifecycle-toolkit/python-runtime:${VERSION}
+```
+
+### Use a script from url
+
+We can call the hellopy.py script downloading it directly from github
+
+```shell
+docker run -e "SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/python-runtime/samples/hellopy.py" -it lifecycle-toolkit/python-runtime:${VERSION}
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

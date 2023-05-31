@@ -1,21 +1,22 @@
 ---
-title: Getting started with Keptn metrics
-description: Learn how Keptn metrics enhances your deployment
+title: Custom Keptn metrics
+description: Enhance your deployment with custom Keptn metrics
 weight: 25
 ---
 
-The Keptn metrics component of the Keptn Lifecycle Toolkit
-allow you to define any type of metric
+The Custom Keptn metrics component of the Keptn Lifecycle Toolkit
+allows you to define any type of metric
 from multiple instances
 of any type of data source in your Kubernetes cluster.
 You may have deployment tools like Argo, Flux, KEDA, HPA, or Keptn
 that need observability data to make automated decisions
-such as whether a rollout is good, whether to scale up or down.
+such as whether a rollout is good, or whether to scale up or down.
+
 Your observability data may come
 from multiple observability solutions --
 Prometheus, Dynatrace, Datadog and others --
-or data directly from your cloud provider such as AWS, Google, or Azure.
-
+or may be data that comes directly
+from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to all this data.
 Minimal configuration is required
 because the Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives.
@@ -27,7 +28,9 @@ from Argo Rollouts, Flux, KEDA, and HPA.
 Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
 and multible observability platforms,
-and multiple instance of some tools or observability platforms.
+and multiple instances of some tools or observability platforms.
+The Custom Keptn metrics feature unites all these metrics
+integrates metrics from all these sources into a single set of metrics.
 
 ## Using this exercise
 
@@ -39,20 +42,32 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
+This is the first of three exercises in the
+[Introducing the Keptn Lifecycle Toolkit](../#introducing-the-keptn-lifecycle-toolkit)
+series.
+After completing this exercise,
+you may want to do the other exercises:
+
+- In [Standardize observability](../observability),
+  you learn how to standardize access
+  to the observability data for your cluster.
+- In
+  [Manage release lifecycle](../orchestrate),
+  you learn how to implement
+  pre- and post-deployment tasks and evaluations
+  to orchestrate the flow of all the `workloads`
+  that are part of your `application`.
+
 The steps to implement metrics in an existing cluster are:
 
 1. [Install the Keptn Lifecycle Toolkit](../../install/install.md)
-1. Configure metrics to use
+1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
    - [View available metrics](#view-available-metrics)
 
 If you want to create your own cluster to run this exercise,
 follow the instructions in [Installation](../../install).
-
-See the
-[Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-video for a demonstration of this exercise.
 
 ## Define metrics to use
 
@@ -79,11 +94,14 @@ You can specify a virtually unlimited number of providers,
 including multiple instances of each observability platform.
 Each one must be assigned a unique name,
 identified by the type of platform it is
-and the URL.
+and the URL of the target server.
+If the target server is protected by a `secret`,
+provide information about the token and key.
 
 > Note: The video and example application use an older syntax
   of the `KeptnMetricsProvider` and `KeptnMetric` resources.
-  The syntax shown in this document is correct for v0.7.1 and later.
+  The syntax shown in this document and the reference page
+  is correct for v0.7.1 and later.
 
 Definition of
 [dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml)
@@ -170,10 +188,11 @@ Note the following:
   then apply all of them.
 - Each metric is assigned a unique `name`.
 - The value of the `spec.provider.name` field
-  must correspond to the name assigned in a
+  must correspond to the name assigned in
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
 - Information is fetched in on a continuous basis
-at a rate specified by the value of the `spec.fetchIntervalSeconds` field.
+  at a rate specified
+  by the value of the `spec.fetchIntervalSeconds` field.
 
 ### View available metrics
 
@@ -251,13 +270,13 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-d
 }
 ```
 
-You can also display the graphics using a dashboard such as Grafana.
+You can also display the metrics graphically using a dashboard such as Grafana.
 
 ## Implementing autoscaling with HPA
 
 The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
-HPA can retrieve KeptnMetrics and use it to implement HPA.
+HPA can retrieve KeptnMetrics and use those metrics to implement HPA.
 See
 Using the [HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
 for detailed information.

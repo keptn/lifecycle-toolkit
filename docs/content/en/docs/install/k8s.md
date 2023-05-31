@@ -82,7 +82,7 @@ Your cluster should include the following:
 
 * If you want to use the standardized observability feature,
   install an OpenTelemetry collector on your cluster.
-   See
+  See
   [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 

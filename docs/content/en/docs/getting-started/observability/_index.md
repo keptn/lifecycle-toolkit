@@ -1,37 +1,39 @@
 ---
-title: Standardize access to observability data
-description: Learn how the Keptn Lifecycle Toolkit provides observability for Kubernetes deployments
+title: Standardize observability
+description: How the KLT standardizes access to observability data for Kubernetes deployments
 weight: 45
 ---
 
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
-You can readily see why a deployment takes so long or why it fails,
-even when using multiple deployment tools.
-Keptn introduces a concept of an application
-which is an abstraction that connects multiple
-Workloads belonging together.
-In other words, KLT, creates a distributed end-to-end trace
+In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
+It provides this information
+for all applications running in your cluster,
+and includes information about
+everything Kubernetes does in the context of a deployment.
+To do this,
+Keptn introduces the concept of an `application`,
+which is an abstraction that connects multiple
+Workloads that logically belong together,
+even if they use different deployment strategies.
+
+This means that:
+
+- You can readily see why a deployment takes so long
+  or why it fails, even when using multiple deployment strategies.
+- KLT can capture DORA metrics and expose them as OpenTelemetry metrics
 
 The observability data is an amalgamation of the following:
 
 - DORA metrics are collected out of the box
   when the Lifecycle Toolkit is enabled
-- OpenTelemetry runs traces that show everything that happens in the Kubernetes cluster
-  and can display this information with dashboard tools
-  such as Grafana.
-- Specific metrics that you can define to monitor
-  information from all the data providers configured in your cluster.
+- OpenTelemetry runs traces that show
+  everything that happens in the Kubernetes cluster
+- Custom Keptn metrics that you can use to monitor
+  information from all the data providers configured in your cluster
 
-The Keptn Lifecycle Toolkit can provide this information
-for all applications running in your cluster,
-even if they are using different deployment tools.
-And it can capture metrics from multiple data sources
-using multiple data platforms.
-With KLT deployed on your cluster,
-you can easily monitor what is happening during a deployment into your Kuberenetes cluster,
-and quickly get data to help you understand issues such as
-why a deployment took so long or why it failed.
+All this information can be displayed with dashboard tools
+such as Grafana.
 
 ## Using this exercise
 
@@ -40,145 +42,50 @@ to the observability data for your cluster.
 It is based on the
 [simplenode-dev](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd)
 example.
-You can clone that repo to access it locally
-or just look at it for examples
-as you implement the functionality "from scratch"
-on your local Kubernetes deployment cluster.
-The
-[README](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/observability/README.md)
-file for that repo contains useful information.
 
-Two videos are available
-to walk you through this exercise if you prefer:
+This is the second of three exercises in the
+[Introducing the Keptn Lifecycle Toolkit](../#introducing-the-keptn-lifecycle-toolkit)
+series:
 
-- [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-- [Use SLOs and get DORA the Native K8s way!](https://www.youtube.com/watch?v=zeEC0475SOU)
-
-In the
-[Getting started with Keptn metrics](../metrics)
-exercise, you learn how to define and use Keptn metrics.
-You may want to complete that exercise before doing this exercise
-although that is not required.
+- In the
+  [Getting started with Keptn metrics](../metrics)
+  exercise, you learn how to define and use Keptn metrics.
+  You may want to complete that exercise before doing this exercise
+  although that is not required.
+- In
+  [Manage release lifecycle](../orchestrate),
+  you learn how to implement
+  pre- and post-deployment tasks and evaluations
+  to orchestrate the flow of all the `workloads`
+  that are part of your `application`.
 
 This exercise shows how to standardize access
 to the observability data for your cluster.
-The steps are:
 
-1. [Install and enable]( #install-and-enable-klt)
-   the Lifecycle Toolkit on your cluster
-1. [Integrate the Lifecycle Toolkit with your applications](#integrate-the-lifecycle-toolkit-with-your-applications)
-1. [DORA metrics](#dora-metrics)
-1. [Using OpenTelemetry](#using-opentelemetry)
-1. [Keptn metrics](#keptn-metrics)
-1. [View the results](#view-the-results)
-
-## Install and enable KLT
-
-To install and enable the Keptn Lifecycle Toolkit on your cluster:
-
-1. Be sure that your cluster includes the components discussed in
-   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
-1. Follow the instructions in
-   [Install the Keptn Lifecycle Toolkit](../../install/install.md/#use-helm-chart)
-   to install KLT on your cluster using the Helm chart
-
-   If you installed KLT on your cluster for the
-   [Getting started with Keptn metrics](../metrics)
-   exercise, you do not need to re-install it for this exercise.
-   However, if you only installed the `metrics-operator` for that exercise,
-   you now need to install the full KLT.
+If you are installing the Keptn Lifecycle Toolkit on an existing cluster
+or on a local cluster you are creating for this exercise,
+you need to do the following:
 
 1. Follow the instructions in
-   [Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
-   to enable KLT on your cluster
-   by annotating the `Namespace` resource..
-   See the
-   [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
-   file for an example
+   [Install and update](../../install)
+   to install and enable KLT on your cluster.
+1. Follow the instructions in
+   [Integrate KLT with your applications](../../implementing/integrate)
+   to integrate KLT with your Kubernetes cluster.
+   This requires the following:
 
-1. Run the following command to ensure that your Kuberetes cluster
-   is ready to complete this exercise:
-
-   ```shell
-   kubectl get pods -n keptn-lifecycle-toolkit-system
-   ```
-
-   You should see pods for the following components:
-   - certificate-operator (or another cert manager)
-   - lifecycle-operator
-   - scheduler
-   - metrics-operator
-
-## Integrate the Lifecycle Toolkit with your applications
-
-The Keptn Lifecycle Toolkit sits in the scheduler
-so it can trace all activities of all deployment workloads on the cluster,
-no matter what tool is used for the deployment.
-This same mechanism allows KLT to inject pre- and post-deployment checks
-into all deployment workloads;
-we discuss this in another exercise.
-
-KLT uses metadata to identify the workloads of interest.
-To integrate KLT with your applications,
-you need to populate the metadata it needs.
-This requires the following steps:
-
-- Define a Keptn application
-- Annotate the `Deployment` resource to recognize your Keptn application
-
-### Define the Keptn application
-
-A Keptn application defines the workloads
-to be included in your Keptn Application.
-We will use the application discovery feature
-to automatically generate a Keptn Application
-that includes all workloads on the cluster,
-regardless of the tools being used.
-
-A Keptn application aggregates multiple workloads
-that belong to a logical app into a single
-[KeptnApp](../../yaml-crd-ref/app.md)
-resource.
-
-You can view a sample of this file in the
-[keptn-app.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-app.yaml.tmp)
-file.
-You see the metadata that names this `KeptnApp`
-and identifies the namespace where it lives:
-
-```yaml
-metadata:
-  name: simpleapp
-  namespace: simplenode-dev
-```
-
-You can also see the `spec.workloads` list.
-In this simple example,
-we only have one workload defined
-but most production apps will have multiple workloads defined.
-
-You can create the YAML file to define the resource manually
-but the easier approach is to let KLT create this definition for you.
-This requires that you annotate all your workloads
-(`Deployments`, `Pods`, `StatefulSets`, `DaemonSets`, and `ReplicaSets`
-as described in
-[Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery).
-
-### Annotate your Deployment resource
-
-Follow the instructions in
-[Annotate workload](../../implementing/integrate/#basic-annotations)
-to apply basic annotations to your `Deployment` resource.
-
-The
-[simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml/)
-file defines the `Deployment` resource for our example.
-You see that the `metadata` specifies the same
-`name` and `namespace` values defined in the `KeptnApp` resource.
-
-The example file also includes annotations for
-pre- and post-deployment activities.
-We will discuss those in a separate exercise.
+   - Follow the instructions in
+     [Annotate workload](../../implementing/integrate/#basic-annotations)
+     to integrate the Lifecycle Toolkit into your Kubernetes cluster
+     by applying basic annotations to your `Deployment` resource.
+   - Follow the instructions in
+     [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
+     to create a Keptn application that aggragates
+     all the `workloads` for your deployment into a single
+     [KeptnApp](../../yaml-crd-ref/app.md) resource.
+     For this exercise, we recommend that you use
+     [Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
+     to automatically generate a Keptn Application.
 
 ## DORA metrics
 
@@ -236,16 +143,11 @@ which allows you to trace everything done in the context of that deployment.
 - Follow the instructions in
   [OpenTelemetry observability](../../implementing/otel.md)
   to configure where your OpenTelemetry data is sent.
-  - Define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
+  This requires you to define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)
   file.
-- Set the `EXPOSE_KEPTN_METRICS` environment variable
-  in the `metrics-operator`
-
-TODO: How to set this env variable in `metrics-operator`
-      or where is it set in the example?
 
 ## Keptn metrics
 
@@ -258,23 +160,25 @@ exercise discusses how to define Keptn metrics.
 ## View the results
 
 To start feeding observability data for your deployments
-onto a dashboard of your choice,
-modify either your `Deployment` or `KeptnApp` resource yaml file
-to increment the version number
-and commit that change to your repository.
+onto a dashboard of your choice:
+
+1. Modify either your `Deployment` or `KeptnApp` resource yaml file
+   to increment the version number
+1. Commit that change to your repository.
+
 Note that, from the `KeptnApp` YAML file,
 you can either increment the version number of the application
 (which causes all workloads to be rerun and produce observability data)
 or you can increment the version number of a single workload,
-(which causes just that workload to be rerun and produce data).
+(which causes just that workload to be rerun and produce observability data).
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information
 appears on a Grafana dashboard with
 [Jaeger](https://grafana.com/docs/grafana-cloud/data-configuration/metrics/prometheus-config-examples/the-jaeger-authors-jaeger/).
 
-If you also have Jaeger extension for Grafana installed on your cluster,
-you can view full end-to-end trace for everything
+If you also have the Jaeger extension for Grafana installed on your cluster,
+you can view the full end-to-end trace for everything
 that happens in your deployment.
 For more information, see
 [Monitoring Jaeger](https://www.jaegertracing.io/docs/1.45/monitoring/).

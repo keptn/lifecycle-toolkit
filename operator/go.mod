@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/argoproj/argo-rollouts v1.5.0
-	github.com/benbjohnson/clock v1.3.4
+	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.15
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -12,7 +12,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230523140051-57fdcddcf73c
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.9.5
-	github.com/onsi/gomega v1.27.6
+	github.com/onsi/gomega v1.27.7
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.15.1
 	github.com/stretchr/testify v1.8.3
@@ -36,7 +36,7 @@ require (
 require (
 	github.com/prometheus/common v0.42.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/net v0.10.0
 	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.7.0 // indirect

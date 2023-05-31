@@ -8,3 +8,5 @@ spec:
     name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 30
+  range:
+    interval: "5m"

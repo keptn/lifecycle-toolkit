@@ -46,7 +46,6 @@ var _ webhook.Validator = &KeptnMetric{}
 func (r *KeptnMetric) ValidateCreate() error {
 	keptnmetriclog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
 	return r.validateKeptnMetric()
 }
 
@@ -54,7 +53,6 @@ func (r *KeptnMetric) ValidateCreate() error {
 func (r *KeptnMetric) ValidateUpdate(old runtime.Object) error {
 	keptnmetriclog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
 	return r.validateKeptnMetric()
 }
 
@@ -77,7 +75,8 @@ func (s *KeptnMetric) validateKeptnMetric() error {
 
 	return apierrors.NewInvalid(
 		schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-		s.Name, allErrs)
+		s.Name,
+		allErrs)
 }
 
 func (s *KeptnMetric) validateRangeInterval() *field.Error {

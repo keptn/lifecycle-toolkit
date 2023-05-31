@@ -44,6 +44,10 @@ jobs:
         id: extract_branch
         uses: keptn/gh-action-extract-branch-name@main
 
+      - name: Init go workspace
+        id: init-go-workspace
+        run: make workspace-init
+
       - name: Get current date and time
         id: get_datetime
         run: |
@@ -142,7 +146,30 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Build Docker Image (Operator using go workspaces)
+        if: matrix.config.folder == "operator"
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./${{ matrix.config.folder }}/build.Dockerfile
+          platforms: linux/amd64
+          target: production
+          tags: |
+            ${{ env.RELEASE_REGISTRY }}/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
+          build-args: |
+            GIT_HASH=${{ env.GIT_SHA }}
+            RELEASE_VERSION=dev-${{ env.DATETIME }}
+            BUILD_TIME=${{ env.BUILD_TIME }}
+            CONTROLLER_TOOLS_VERSION=${{ env.CONTROLLER_TOOLS_VERSION }}
+            SCHEDULER_COMPATIBLE_K8S_VERSION=${{ env.SCHEDULER_COMPATIBLE_K8S_VERSION }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false
+          cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
+          cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
+          outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
+
       - name: Build Docker Image
+        if: matrix.config.folder != "operator"
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.config.folder }}

@@ -43,6 +43,10 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
+      - name: Init go workspace
+        id: init-go-workspace
+        run: make workspace-init
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:

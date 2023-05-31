@@ -8,10 +8,6 @@ weight: 140
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace
 of what Kubernetes does in the context of a Deployment.
-It provides this information
-for all applications running in your cluster,
-and includes information about
-everything Kubernetes does in the context of a deployment.
 To do this,
 Keptn introduces the concept of an `application`,
 which is an abstraction that connects multiple
@@ -107,24 +103,12 @@ you need:
 - [Jaeger](https://jaegertracing.io)
   or a similar tool if you want traces.
    See
-  [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator).
-
-If you do not already have an installation of the Jaeger
-[manifest](https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml),
-use the following commands to
-install Jaeger into the `observability` namespace
-and the Jaeger resource into the `lifecycle-toolkit` namespace:
-
-```shell
-kubectl create namespace observability
-kubectl apply -f \
-    https://github.com/jaegertracing/jaeger-operator/releases/download/v1.38.0/jaeger-operator.yaml \
-    -n observability
-kubectl apply -f config/jaeger.yaml -n keptn-lifecycle-toolkit-system
-```
+  [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator#getting-started).
 
 To install Prometheus into the `monitoring` namespace,
-use the following commands:
+using the default configuration included with KLT,
+use the following commands.
+Use similar commands if you define a different configuration::
 
 ```shell
 kubectl create namespace monitoring

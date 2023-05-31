@@ -90,7 +90,7 @@ Your cluster should include the following:
   For traces, install Jaeger or a similar tool.
 
   For more information, see
-  [Requirements for Open Telemetry](../implementing/otel/#requirements-for-opentelemetry).
+  [Requirements for Open Telemetry](../implementing/otel.md/#requirements-for-opentelemetry).
 
 Also note that the Keptn Lifecycle Toolkit includes
 a light-weight cert-manager that, by default, is installed

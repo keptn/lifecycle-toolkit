@@ -76,7 +76,7 @@ Then view the metrics at:
 http://localhost:2222/metrics
 ```
 
-DORA metrics are also displayed on Grafana
+DORA metrics can be displayed on Grafana
 or whatever dashboard application you choose.
 
 ## OpenTelemetry

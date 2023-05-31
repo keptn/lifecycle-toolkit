@@ -7,7 +7,7 @@ weight: 140
 
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace
-of everything Kubernetes does in the context of a Deployment.
+of what Kubernetes does in the context of a Deployment.
 It provides this information
 for all applications running in your cluster,
 and includes information about

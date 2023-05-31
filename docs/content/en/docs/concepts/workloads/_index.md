@@ -1,5 +1,5 @@
 ---
-title: Workloads
+title: Keptn Workloads
 description: Learn what Keptn Workloads are and how to use them
 icon: concepts
 layout: quickstart
@@ -26,7 +26,7 @@ from metadata information;
 it is not necessary to manually create a YAML file that defines it.
 
 A `KeptnWorkload` instance is responsible for executing
-the pre- and post deployment checks of a workload.
+the pre- and post-deployment checks of a workload.
 In its state, it keeps track of the current status of all checks,
 as well as the overall state of the Pre Deployment phase,
 which the scheduler can use to determine

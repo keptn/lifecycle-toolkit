@@ -60,7 +60,7 @@ The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you apply
 [basic annotations](integrate/#basic-annotations)
 to the `Deployment` resource.
-Metrics are collected only for the `Deployment` resources
+Metrics are collected only for the resources
 that are annotated.
 
 To view DORA metrics, run the following command:

@@ -94,7 +94,7 @@ you must have the following on your cluster:
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
 - The Prometheus Operator must have the required permissions
   to watch resources of the `keptn-lifecycle-toolkit-system` namespace (see
-  [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
+  [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
 If you want a dashboard for reviewing metrics and traces,
 you need:

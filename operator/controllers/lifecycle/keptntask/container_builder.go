@@ -18,8 +18,5 @@ func newContainerBuilder(taskDef *klcv1alpha3.KeptnTaskDefinition) *ContainerBui
 }
 
 func (c *ContainerBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
-	if !c.taskDef.IsVolumeMountPresent() {
-		return c.taskDef.Spec.Container.Container, []corev1.Volume{}, nil
-	}
 	return c.taskDef.Spec.Container.Container, c.taskDef.GenerateVolumes(), nil
 }

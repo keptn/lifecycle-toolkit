@@ -1,0 +1,23 @@
+name: Release Please
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GO_VERSION: "~1.20"
+
+jobs:
+  update-docs:
+    name: Update Documentation
+    with:
+      tag_name: ${{ github.event.inputs.tag }}
+    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.0.2-beta1
+    secrets: inherit
+

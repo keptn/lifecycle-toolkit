@@ -25,7 +25,7 @@ var (
 )
 
 type MetricsAdapter struct {
-	basecmd.AdapterBase
+	base         basecmd.AdapterBase
 	KltNamespace string
 }
 
@@ -43,29 +43,29 @@ func (a *MetricsAdapter) RunAdapter(ctx context.Context) {
 	cmd := &MetricsAdapter{}
 	// make sure you get the klog flags
 	logs.AddGoFlags(flag.CommandLine)
-	cmd.Flags().AddGoFlagSet(flag.CommandLine)
-	if err := cmd.Flags().Parse([]string{}); err != nil {
+	cmd.base.Flags().AddGoFlagSet(flag.CommandLine)
+	if err := cmd.base.Flags().Parse([]string{}); err != nil {
 		klog.Fatalf("Could not parse flags: %v", err)
 	}
 
-	cmd.CustomMetricsAdapterServerOptions.SecureServing.BindPort = port
-	cmd.CustomMetricsAdapterServerOptions.SecureServing.ServerCert = options.GeneratableKeyCert{
+	cmd.base.CustomMetricsAdapterServerOptions.SecureServing.BindPort = port
+	cmd.base.CustomMetricsAdapterServerOptions.SecureServing.ServerCert = options.GeneratableKeyCert{
 		PairName:      defaultCertificatePairName,
 		CertDirectory: certDir,
 	}
 
 	prov := cmd.makeProviderOrDie(ctx)
 
-	cmd.WithCustomMetrics(prov)
+	cmd.base.WithCustomMetrics(prov)
 
-	if err := cmd.Run(ctx.Done()); err != nil {
+	if err := cmd.base.Run(ctx.Done()); err != nil {
 		klog.Fatalf("Could not run custom metrics adapter: %v", err)
 	}
 	klog.Info("Finishing Keptn Metrics Adapter")
 }
 
 func (a *MetricsAdapter) makeProviderOrDie(ctx context.Context) provider.CustomMetricsProvider {
-	client, err := a.DynamicClient()
+	client, err := a.base.DynamicClient()
 	if err != nil {
 		klog.Fatalf("unable to construct dynamic client: %v", err)
 	}

@@ -62,7 +62,18 @@ It supports the following steps:
 All of these things can be executed for a workload or for a KeptnApp.
 
 ## Main features of : Metrics, Observability and Release lifecycle
-- **Custom Metrics:** The Custom Keptn Metrics feature in the Keptn Lifecycle Toolkit allows you to define metrics from multiple data sources in your Kubernetes cluster. It supports deployment tools like Argo, Flux, KEDA, HPA, or Keptn for automated decision-making based on observability data. Your observability data may come from multiple observability solutions – Prometheus, Dynatrace, Datadog and others – or may be data that comes directly from your cloud provider such as AWS, Google, or Azure. The Keptn Metrics Server unifies and standardizes access to data from various sources, simplifying configuration and integration into a single set of metrics.
+
+* **Custom Metrics:** The Custom Keptn Metrics feature in the
+Keptn Lifecycle Toolkit allows you to define metrics from
+multiple data sources in your Kubernetes cluster.
+It supports deployment tools like Argo, Flux, KEDA, HPA, or
+Keptn for automated decision-making based on observability data.
+Your observability data may come from multiple observability solutions
+– Prometheus, Dynatrace, Datadog and others – or may be data that comes
+directly from your cloud provider such as AWS, Google, or Azure.
+The Keptn Metrics Server unifies and standardizes access to data from
+arious sources, simplifying configuration and integration into a single
+set of metrics.
 
 - **Observability:** The Keptn Lifecycle Toolkit (KLT) ensures observability for Kubernetes deployments by creating a comprehensive trace of all Kubernetes activities within a deployment. It introduces the concept of applications, which connect logically related workloads using different deployment strategies. With KLT, you can easily understand deployment durations and failures across multiple strategies. It captures DORA metrics and exposes them as OpenTelemetry metrics. The observability data includes out-of-the-box DORA metrics, traces from OpenTelemetry, and custom Keptn metrics from configured data providers. Visualizing this information is possible using dashboard tools like Grafana.
 

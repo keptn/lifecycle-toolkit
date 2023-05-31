@@ -87,7 +87,17 @@ The observability data includes out-of-the-box DORA metrics, traces from
 OpenTelemetry, and custom Keptn metrics from configured data providers.
 Visualizing this information is possible using dashboard tools like Grafana.
 
-- **Release Lifecycle:** The Lifecycle Toolkit offers versatile functionalities for deployment scenarios, including pre-deployment validation, image scanning, and post-deployment tasks like test execution and stakeholder notification. It automatically validates against Service Level Objectives (SLOs) and provides end-to-end deployment traceability. The toolkit extends deployments with application-aware tasks and evaluations, allowing checks before or after deployment initiation. It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy environment and confirming software health against SLOs like performance and user experience. Additionally, it enables monitoring of new logs from log monitoring solutions.
+* **Release Lifecycle:** The Lifecycle Toolkit offers versatile functionalities
+for deployment scenarios, including pre-deployment validation, image scanning,
+and post-deployment tasks like test execution and stakeholder notification.
+It automatically validates against Service Level Objectives (SLOs) and provides
+end-to-end deployment traceability.
+The toolkit extends deployments with application-aware tasks and evaluations,
+allowing checks before or after deployment initiation.
+It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
+environment and confirming software health against SLOs like performance and
+user experience.
+Additionally, it enables monitoring of new logs from log monitoring solutions.
 
 To get started with Keptn Lifecycle Toolkit, refer to the [Getting Started Guide](https://main.lifecycle.keptn.sh/docs/getting-started/) for detailed instructions and examples. This guide will walk you through the installation process and help you set up your environment for using KLT effectively.
 

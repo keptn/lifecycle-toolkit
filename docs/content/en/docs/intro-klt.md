@@ -75,7 +75,17 @@ The Keptn Metrics Server unifies and standardizes access to data from
 arious sources, simplifying configuration and integration into a single
 set of metrics.
 
-- **Observability:** The Keptn Lifecycle Toolkit (KLT) ensures observability for Kubernetes deployments by creating a comprehensive trace of all Kubernetes activities within a deployment. It introduces the concept of applications, which connect logically related workloads using different deployment strategies. With KLT, you can easily understand deployment durations and failures across multiple strategies. It captures DORA metrics and exposes them as OpenTelemetry metrics. The observability data includes out-of-the-box DORA metrics, traces from OpenTelemetry, and custom Keptn metrics from configured data providers. Visualizing this information is possible using dashboard tools like Grafana.
+* **Observability:** The Keptn Lifecycle Toolkit (KLT) ensures observability
+for Kubernetes deployments by creating a comprehensive trace of all Kubernetes
+activities within a deployment.
+It introduces the concept of applications, which connect logically related
+workloads using different deployment strategies.
+With KLT, you can easily understand deployment durations and failures across
+multiple strategies.
+It captures DORA metrics and exposes them as OpenTelemetry metrics.
+The observability data includes out-of-the-box DORA metrics, traces from
+OpenTelemetry, and custom Keptn metrics from configured data providers.
+Visualizing this information is possible using dashboard tools like Grafana.
 
 - **Release Lifecycle:** The Lifecycle Toolkit offers versatile functionalities for deployment scenarios, including pre-deployment validation, image scanning, and post-deployment tasks like test execution and stakeholder notification. It automatically validates against Service Level Objectives (SLOs) and provides end-to-end deployment traceability. The toolkit extends deployments with application-aware tasks and evaluations, allowing checks before or after deployment initiation. It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy environment and confirming software health against SLOs like performance and user experience. Additionally, it enables monitoring of new logs from log monitoring solutions.
 

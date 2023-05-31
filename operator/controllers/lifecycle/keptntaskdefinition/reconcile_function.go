@@ -21,14 +21,14 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, r
 	if !definition.IsJSSpecDefined() {
 		return nil
 	}
-	if definition.Spec.Function.Inline != (klcv1alpha3.Inline{}) {
+	if definition.IsInline() {
 		err := r.reconcileFunctionInline(ctx, req, definition)
 		if err != nil {
 			return err
 		}
 	}
-	if definition.Spec.Function.ConfigMapReference != (klcv1alpha3.ConfigMapReference{}) {
-		err := r.reconcileFunctionConfigMap(ctx, req, definition)
+	if definition.IsConfigMap() {
+		err := r.reconcileFunctionConfigMap(ctx, definition)
 		if err != nil {
 			return err
 		}
@@ -93,16 +93,24 @@ func (r *KeptnTaskDefinitionReconciler) reconcileFunctionInline(ctx context.Cont
 	return nil
 }
 
-func (r *KeptnTaskDefinitionReconciler) reconcileFunctionConfigMap(ctx context.Context, req ctrl.Request, definition *klcv1alpha3.KeptnTaskDefinition) error {
-	if definition.Spec.Function.ConfigMapReference.Name != definition.Status.Function.ConfigMap {
-		definition.Status.Function.ConfigMap = definition.Spec.Function.ConfigMapReference.Name
-		err := r.Client.Status().Update(ctx, definition)
-		if err != nil {
-			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
+func (r *KeptnTaskDefinitionReconciler) reconcileFunctionConfigMap(ctx context.Context, definition *klcv1alpha3.KeptnTaskDefinition) error {
+	mapName := definition.Spec.Function.ConfigMapReference.Name
+	if mapName != definition.Status.Function.ConfigMap {
+		definition.Status.Function.ConfigMap = mapName
+		if err := updateTaskDefinition(ctx, definition, r); err != nil {
 			return err
 		}
-		r.Log.Info("updated configmap status reference for: " + definition.Name)
 	}
+	return nil
+}
+
+func updateTaskDefinition(ctx context.Context, definition *klcv1alpha3.KeptnTaskDefinition, r *KeptnTaskDefinitionReconciler) error {
+	err := r.Client.Status().Update(ctx, definition)
+	if err != nil {
+		r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
+		return err
+	}
+	r.Log.Info("updated configmap status reference for: " + definition.Name)
 	return nil
 }
 

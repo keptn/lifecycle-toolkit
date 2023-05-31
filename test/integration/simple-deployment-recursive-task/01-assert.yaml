@@ -55,9 +55,15 @@ spec:
               value: '{"data":"myotherdata","other":"data","user":"myotheruser"}'
             - name: CONTEXT
               value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+            - name: CMD_ARGS
             - name: SCRIPT
               value: /var/data/function.ts
           name: keptn-function-runner
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: keptnfn-pre-deployment-parent
+          name: function-mount
 status:
   succeeded: 1
 
@@ -84,6 +90,7 @@ spec:
               value: '{"data":"mydata","other":"data","user":"myuser"}'
             - name: CONTEXT
               value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+            - name: CMD_ARGS
             - name: SECURE_DATA
               valueFrom:
                 secretKeyRef:
@@ -92,5 +99,10 @@ spec:
             - name: SCRIPT
               value: /var/data/function.ts
           name: keptn-function-runner
+          volumeMounts:
+          - mountPath: /var/data/function.ts
+            name: function-mount
+            readOnly: true
+            subPath: code
 status:
   succeeded: 1

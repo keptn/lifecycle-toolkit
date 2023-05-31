@@ -18,7 +18,6 @@ package keptntaskdefinition
 
 import (
 	"context"
-	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -59,7 +58,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
+	if definition.IsConfigMap() || definition.IsInline() {
 		err := r.reconcileFunction(ctx, req, definition)
 		if err != nil {
 			return ctrl.Result{}, nil

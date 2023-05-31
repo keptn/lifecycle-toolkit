@@ -1,0 +1,14 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnTaskDefinition
+metadata:
+  name: scheduled-deployment
+spec:
+  function:
+    parameters:
+      map:
+        mydata: "my-user-defined"
+    inline:
+      code: |
+        # Get environment variables
+        data = os.getenv('DATA')
+        print(data)

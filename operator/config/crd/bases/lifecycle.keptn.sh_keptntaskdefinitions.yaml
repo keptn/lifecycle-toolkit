@@ -1424,6 +1424,10 @@ spec:
                 description: Function contains the definition for the function that
                   is to be executed in KeptnTasks based on the KeptnTaskDefinitions.
                 properties:
+                  cmdParameters:
+                    description: CmdParameters contains parameters that will be passed
+                      to the command
+                    type: string
                   configMapRef:
                     description: ConfigMapReference allows to reference a ConfigMap
                       containing the code of the function. When referencing a ConfigMap,
@@ -1445,6 +1449,8 @@ spec:
                         description: Name is the name of the referenced KeptnTaksDefinition.
                         type: string
                     type: object
+                  functionRuntime:
+                    type: string
                   httpRef:
                     description: HttpReference allows to point to an HTTP URL containing
                       the code of the function.
@@ -1464,7 +1470,7 @@ spec:
                     type: object
                   parameters:
                     description: Parameters contains parameters that will be passed
-                      to the job that executes the task.
+                      to the job that executes the task as env variables.
                     properties:
                       map:
                         additionalProperties:
@@ -1492,9 +1498,11 @@ spec:
                 type: object
               retries:
                 default: 10
-                description: Retries specifies how many times a job executing the
-                  KeptnTaskDefinition should be restarted in the case of an unsuccessful
-                  attempt.
+                description: Python contains the definition for the python script
+                  that is to be executed in KeptnTasks based on the KeptnTaskDefinitions.
+                  Python *PythonSpec `json:"python,omitempty"` Retries specifies how
+                  many times a job executing the KeptnTaskDefinition should be restarted
+                  in the case of an unsuccessful attempt.
                 format: int32
                 type: integer
               timeout:

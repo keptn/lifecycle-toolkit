@@ -102,7 +102,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &JSBuilder{
+			js := &FunctionBuilder{
 				options: tt.options,
 			}
 			err := js.handleParent(context.TODO(), &tt.params)
@@ -116,7 +116,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		})
 	}
 }
-func TestJSBuilder_hasParams(t *testing.T) {
+func TestJSBuilder_getParams(t *testing.T) {
 
 	def := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -125,12 +125,12 @@ func TestJSBuilder_hasParams(t *testing.T) {
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 			Function: &klcv1alpha3.FunctionSpec{
-				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
+				HttpReference: klcv1alpha3.HttpReference{Url: "do_parent"},
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA2": "mydata2"},
+					Inline: map[string]string{"DATA2": "parent_data"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
-					Secret: "mysecret2",
+					Secret: "parent_secret",
 				},
 			}},
 	}
@@ -141,15 +141,39 @@ func TestJSBuilder_hasParams(t *testing.T) {
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 			Function: &klcv1alpha3.FunctionSpec{
-				HttpReference: klcv1alpha3.HttpReference{Url: "something"},
+				HttpReference: klcv1alpha3.HttpReference{Url: "do_child"},
 				FunctionReference: klcv1alpha3.FunctionReference{
-					Name: "mytaskdef"},
+					Name: def.Name},
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA1": "user"},
+					Inline: map[string]string{"DATA1": "child_data"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
-					Secret: "pw",
+					Secret: "child_pw",
 				},
+			},
+		},
+	}
+
+	parentPy := &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "parentPy",
+			Namespace: "default",
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
+				FunctionRuntime: "python",
+				HttpReference:   klcv1alpha3.HttpReference{Url: "donothing"},
+			}},
+	}
+	defJS := &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myJS",
+			Namespace: "default",
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
+				FunctionReference: klcv1alpha3.FunctionReference{
+					Name: parentPy.Name},
 			},
 		},
 	}
@@ -158,6 +182,7 @@ func TestJSBuilder_hasParams(t *testing.T) {
 		name    string
 		options BuilderOptions
 		params  *FunctionExecutionParams
+		runtime string
 		wantErr bool
 		err     string
 	}{
@@ -174,12 +199,10 @@ func TestJSBuilder_hasParams(t *testing.T) {
 				task:    makeTask("myt2", "default", def.Name),
 			},
 			params: &FunctionExecutionParams{
-				ConfigMap: "",
-				Parameters: map[string]string{
-					"DATA2": "mydata2",
-				},
-				SecureParameters: "mysecret2",
-				URL:              "donothing",
+				ConfigMap:        "",
+				Parameters:       def.Spec.Function.Parameters.Inline,
+				SecureParameters: def.Spec.Function.SecureParameters.Secret,
+				URL:              def.Spec.Function.HttpReference.Url,
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
@@ -202,11 +225,11 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			params: &FunctionExecutionParams{
 				ConfigMap: "",
 				Parameters: map[string]string{ //maps should be merged
-					"DATA2": "mydata2",
-					"DATA1": "user",
+					"DATA2": "parent_data",
+					"DATA1": "child_data",
 				},
-				URL:              "something", //we support a single URL so the original should be taken not the parent one
-				SecureParameters: "pw",        //we support a single secret so the original task secret should be taken not the parent one
+				SecureParameters: paramDef.Spec.Function.SecureParameters.Secret, //uses child
+				URL:              def.Spec.Function.HttpReference.Url,            //uses parent
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
@@ -214,15 +237,39 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "definition exists, parent is of a different runtime",
+			options: BuilderOptions{
+				Client:   fake.NewClient(parentPy, defJS),
+				recorder: &record.FakeRecorder{},
+				req: ctrl.Request{
+					NamespacedName: types.NamespacedName{Namespace: "default"},
+				},
+				Log:     testr.New(t),
+				taskDef: defJS,
+				task:    makeTask("myt4", "default", defJS.Name),
+			},
+			params: &FunctionExecutionParams{
+				ConfigMap: "",
+				URL:       parentPy.Spec.Function.HttpReference.Url, //we support a single URL so the original should be taken not the parent one
+				Context: klcv1alpha3.TaskContext{
+					WorkloadName: "my-workload",
+					AppName:      "my-app",
+					ObjectType:   "Workload"},
+			},
+			wantErr: false,
+			runtime: "python",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &JSBuilder{
+			js := &FunctionBuilder{
 				options: tt.options,
 			}
 			params, err := js.getParams(context.TODO())
 			if !tt.wantErr {
 				require.Nil(t, err)
+				require.Equal(t, tt.runtime, tt.options.taskDef.Spec.Function.FunctionRuntime)
 				require.Equal(t, tt.params, params)
 			} else {
 				require.Error(t, err)

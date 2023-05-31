@@ -82,7 +82,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 
-			It("TaskDefinition referencing existing Configmap", func() {
+			It("TaskDefinition referencing existing Configmap defaulting to JS", func() {
 				By("Create TaskDefinition")
 				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
@@ -110,6 +110,58 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					},
 					Data: map[string]string{
 						"code": "console.log(Hello);",
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), configmap)
+				Expect(err).To(BeNil())
+
+				By("Check if TaskDefinition was updated")
+
+				taskDefinition2 := &klcv1alpha3.KeptnTaskDefinition{}
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespace,
+						Name:      taskDefinition.Name,
+					}, taskDefinition2)
+					g.Expect(err).To(BeNil())
+					g.Expect(taskDefinition2.Status.Function.ConfigMap).To(Equal(configmap.Name))
+
+				}, "30s").Should(Succeed())
+
+				err = k8sClient.Delete(context.TODO(), configmap)
+				common.LogErrorIfPresent(err)
+			})
+
+			It("TaskDefinition referencing existing Configmap for Python runtime", func() {
+				By("Create TaskDefinition")
+				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinitionName,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+						Function: &klcv1alpha3.FunctionSpec{
+							FunctionRuntime: "python",
+							ConfigMapReference: klcv1alpha3.ConfigMapReference{
+								Name: "my-configmap",
+							},
+						},
+					},
+				}
+
+				err := k8sClient.Create(context.TODO(), taskDefinition)
+				Expect(err).To(BeNil())
+
+				By("Create ConfigMap")
+
+				configmap = &v1.ConfigMap{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-configmap",
+						Namespace: namespace,
+					},
+					Data: map[string]string{
+						"code": "print(\"Hello, World!\")",
 					},
 				}
 

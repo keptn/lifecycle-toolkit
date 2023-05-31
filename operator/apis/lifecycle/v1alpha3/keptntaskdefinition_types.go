@@ -17,12 +17,19 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"os"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+const (
+	PYTHON_RUNTIME = "python"
+	//JS_RUNTIME     = "JS"
+)
 
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
@@ -45,6 +52,7 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
+	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
@@ -62,11 +70,15 @@ type FunctionSpec struct {
 	// When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key
 	// of the referenced ConfigMap.
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
-	// Parameters contains parameters that will be passed to the job that executes the task.
+	// Parameters contains parameters that will be passed to the job that executes the task as env variables.
 	Parameters TaskParameters `json:"parameters,omitempty"`
 	// SecureParameters contains secure parameters that will be passed to the job that executes the task.
 	// These will be stored and accessed as secrets in the cluster.
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
+	// CmdParameters contains parameters that will be passed to the command
+	CmdParameters string `json:"cmdParameters,omitempty"`
+	// FunctionRuntime specifies what function runtime to use (python or js)
+	FunctionRuntime string `json:"functionRuntime,omitempty"`
 }
 
 type ConfigMapReference struct {
@@ -146,4 +158,28 @@ func (d KeptnTaskDefinition) IsContainerSpecDefined() bool {
 
 func (d KeptnTaskDefinition) IsVolumeMountPresent() bool {
 	return d.IsContainerSpecDefined() && d.Spec.Container.VolumeMounts != nil && len(d.Spec.Container.VolumeMounts) > 0
+}
+
+func (td *KeptnTaskDefinition) IsInline() bool {
+	return td.Spec.Function.Inline != (Inline{})
+}
+
+func (td *KeptnTaskDefinition) IsConfigMap() bool {
+	return td.Spec.Function.ConfigMapReference != (ConfigMapReference{})
+}
+
+func (td *KeptnTaskDefinition) GetImage() string {
+	image := os.Getenv("FUNCTION_RUNNER_IMAGE")
+	if td.Spec.Function.FunctionRuntime == PYTHON_RUNTIME {
+		image = os.Getenv("PYTHON_RUNNER_IMAGE")
+	}
+	return image
+}
+
+func (td *KeptnTaskDefinition) GetMountPath() string {
+	path := "/var/data/function.ts"
+	if td.Spec.Function.FunctionRuntime == PYTHON_RUNTIME {
+		path = "/var/data/function.py"
+	}
+	return path
 }

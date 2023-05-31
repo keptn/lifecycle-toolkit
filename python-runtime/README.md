@@ -29,14 +29,14 @@ print("Hello, World!")
 print(os.environ)
 ```
 
-This should print in your shell, something like: 
+This should print in your shell, something like:
 
 ```shell
 Hello, World!
-environ({'HOSTNAME': 'myhost', 'PYTHON_VERSION': '3.9.16', 'PWD': '/', 'CMD_ARGS': '', 'PYTHON_SETUPTOOLS_VERSION': '58.1.0' ,'SCRIPT': 'hellopy.py', ...})
+environ({'HOSTNAME': 'myhost', 'PYTHON_VERSION': '3.9.16', 'PWD': '/', 'CMD_ARGS': '','SCRIPT': 'hellopy.py', ...})
 ```
 
-### Pass command line arguments to the python command 
+### Pass command line arguments to the python command
 
 You can pass python command line arguments by specifying CMD_ARGS. The following example will print the help of python3
 
@@ -46,7 +46,7 @@ docker run -e "CMD_ARGS= -help" -it lifecycle-toolkit/python-runtime:${VERSION}
 
 ### Pass arguments to your python script
 
-In this example we pass one argument (-i test.txt) to the script  
+In this example we pass one argument (-i test.txt) to the script
 
 ```shell
 docker run -v $(pwd)/samples/args.py:/args.py -e "SCRIPT=args.py -i test.txt"  -it lifecycle-toolkit/python-runtime:${VERSION}

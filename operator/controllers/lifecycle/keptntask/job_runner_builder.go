@@ -27,23 +27,11 @@ type BuilderOptions struct {
 }
 
 func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
-	if isJSSpecDefined(options.taskDef.Spec) {
+	if options.taskDef.IsJSSpecDefined() {
 		return newJSBuilder(options)
 	}
-	if isContainerSpecDefined(options.taskDef.Spec) {
+	if options.taskDef.IsContainerSpecDefined() {
 		return newContainerBuilder(options.taskDef)
 	}
 	return nil
-}
-
-func specExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
-	return isJSSpecDefined(definition.Spec) || isContainerSpecDefined(definition.Spec)
-}
-
-func isJSSpecDefined(spec klcv1alpha3.KeptnTaskDefinitionSpec) bool {
-	return spec.Function != nil
-}
-
-func isContainerSpecDefined(spec klcv1alpha3.KeptnTaskDefinitionSpec) bool {
-	return spec.Container != nil
 }

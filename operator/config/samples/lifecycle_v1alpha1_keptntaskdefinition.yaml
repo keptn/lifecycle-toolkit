@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnTaskDefinition
 metadata:
   name: keptntaskdefinition-sample

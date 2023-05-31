@@ -24,7 +24,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if specExists(definition) {
+	if definition.SpecExists() {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err

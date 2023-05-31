@@ -59,7 +59,7 @@ DORA metrics provide information such as:
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you apply
 [basic annotations](integrate/#basic-annotations)
-to the `Deployment` resource.
+to the Workload resource.
 Metrics are collected only for the resources
 that are annotated.
 

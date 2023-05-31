@@ -59,7 +59,7 @@ It supports the following steps:
 * Post-Deployment Evaluations: e.g. evaluate the deployment,
   evaluate the test results, etc.
 
-All of these things can be executed for a workload or for a KeptnApp.
+All of these things can be executed for a workload or for a [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/).
 
 ## Main features of : Metrics, Observability and Release lifecycle
 

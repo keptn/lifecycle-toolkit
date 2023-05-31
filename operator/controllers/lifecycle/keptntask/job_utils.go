@@ -141,12 +141,13 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		taskDef:  definition,
 		recorder: r.Recorder,
 	}
-	builder := getContainerBuilder(builderOpt)
+
+	builder := getJobRunnerBuilder(builderOpt)
 	if builder == nil {
 		return nil, controllererrors.ErrNoTaskDefinitionSpec
 	}
-	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 
+	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 	if err != nil {
 		return nil, controllererrors.ErrCannotMarshalParams
 	}

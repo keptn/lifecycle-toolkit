@@ -18,6 +18,9 @@ import (
 )
 
 func (r *KeptnTaskDefinitionReconciler) reconcileFunction(ctx context.Context, req ctrl.Request, definition *klcv1alpha3.KeptnTaskDefinition) error {
+	if definition.Spec.Function == nil {
+		return nil
+	}
 	if definition.Spec.Function.Inline != (klcv1alpha3.Inline{}) {
 		err := r.reconcileFunctionInline(ctx, req, definition)
 		if err != nil {

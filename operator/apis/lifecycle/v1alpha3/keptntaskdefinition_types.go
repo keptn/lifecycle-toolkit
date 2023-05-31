@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -27,7 +28,12 @@ import (
 type KeptnTaskDefinitionSpec struct {
 	// Function contains the definition for the function that is to be executed in KeptnTasks based on
 	// the KeptnTaskDefinitions.
-	Function FunctionSpec `json:"function,omitempty"`
+	// +optional
+	Function *FunctionSpec `json:"function,omitempty"`
+	// Container contains the definition for the container that is to be used in Job based on
+	// the KeptnTaskDefinitions.
+	// +optional
+	Container *ContainerSpec `json:"container,omitempty"`
 	// Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case
 	// of an unsuccessful attempt.
 	// +kubebuilder:default:=10
@@ -39,7 +45,6 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
-	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
@@ -85,6 +90,7 @@ type HttpReference struct {
 }
 
 type ContainerSpec struct {
+	*v1.Container `json:",inline"`
 }
 
 // KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition

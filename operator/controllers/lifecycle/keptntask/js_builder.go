@@ -19,8 +19,8 @@ type JSBuilder struct {
 	options BuilderOptions
 }
 
-func newJSBuilder(options BuilderOptions) JSBuilder {
-	return JSBuilder{
+func newJSBuilder(options BuilderOptions) *JSBuilder {
+	return &JSBuilder{
 		options: options,
 	}
 }

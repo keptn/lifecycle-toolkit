@@ -27,7 +27,9 @@
     "ghcr.io/keptn/scheduler",
     "ghcr.io/keptn/functions-runtime",
     "ghcr.io/keptn/certificate-operator",
-    "ghcr.io/keptn/metrics-operator"
+    "ghcr.io/keptn/metrics-operator",
+    "github.com/keptn/lifecycle-toolkit/certificate-operator",
+    "github.com/keptn/lifecycle-toolkit/metrics-operator"
   ],
   "packageRules": [
     {

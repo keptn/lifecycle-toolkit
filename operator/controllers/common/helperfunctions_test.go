@@ -8,7 +8,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -65,58 +64,6 @@ func Test_GetItemStatus(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.Equal(t, GetItemStatus(tt.name, tt.inStatus), tt.want)
-		})
-	}
-}
-
-func Test_GetAppVersionName(t *testing.T) {
-	tests := []struct {
-		namespace string
-		appName   string
-		version   string
-		want      types.NamespacedName
-	}{
-		{
-			namespace: "namespace",
-			appName:   "name",
-			version:   "version",
-			want: types.NamespacedName{
-				Namespace: "namespace",
-				Name:      "name-version",
-			},
-		},
-		{
-			namespace: "",
-			appName:   "name",
-			version:   "version",
-			want: types.NamespacedName{
-				Namespace: "",
-				Name:      "name-version",
-			},
-		},
-		{
-			namespace: "namespace",
-			appName:   "",
-			version:   "version",
-			want: types.NamespacedName{
-				Namespace: "namespace",
-				Name:      "-version",
-			},
-		},
-		{
-			namespace: "namespace",
-			appName:   "name",
-			version:   "",
-			want: types.NamespacedName{
-				Namespace: "namespace",
-				Name:      "name-",
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
-			require.Equal(t, GetAppVersionName(tt.namespace, tt.appName, tt.version), tt.want)
 		})
 	}
 }

@@ -17,7 +17,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.4"
+  CONTROLLER_TOOLS_VERSION: "v0.12.0"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -238,7 +238,7 @@ jobs:
 
       - name: Generate helm charts
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+          RELEASE_REGISTRY: ghcr.io/keptn
         run: make helm-package
 
       - name: Copy charts from klt to helm repo

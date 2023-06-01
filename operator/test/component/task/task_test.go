@@ -156,15 +156,15 @@ var _ = Describe("Task", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				Expect(createdJob.Annotations).To(Equal(map[string]string{
-					"annotation1": "annotation2",
-				}))
-
-				Expect(createdJob.Labels).To(Equal(map[string]string{
+					"annotation1":        "annotation2",
 					"keptn.sh/task-name": task.Name,
 					"keptn.sh/version":   "",
 					"keptn.sh/workload":  "my-workload",
-					"label1":             "label2",
 					"keptn.sh/app":       "my-app",
+				}))
+
+				Expect(createdJob.Labels).To(Equal(map[string]string{
+					"label1": "label2",
 				}))
 
 				val, ok := createdJob.Spec.Template.Labels["label1"]
@@ -237,7 +237,7 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				ConfigMapReference: klcv1alpha3.ConfigMapReference{
 					Name: cmName,
 				},

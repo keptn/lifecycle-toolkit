@@ -20,4 +20,4 @@ for how to approach the project.
 1. Install and configure the deployment tool(s) you want to use
    to deploy the components of your software.
    You can use different deployment tools for different components.
-1. Install 
+1. Install

@@ -18,7 +18,6 @@ package v1alpha3
 
 import (
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -147,35 +146,4 @@ func (d KeptnTaskDefinition) IsContainerSpecDefined() bool {
 
 func (d KeptnTaskDefinition) IsVolumeMountPresent() bool {
 	return d.IsContainerSpecDefined() && d.Spec.Container.VolumeMounts != nil && len(d.Spec.Container.VolumeMounts) > 0
-}
-
-func (d KeptnTaskDefinition) GetVolumeSource() *v1.EmptyDirVolumeSource {
-	if d.IsContainerSpecDefined() {
-		quantity, ok := d.Spec.Container.Resources.Limits["memory"]
-		if ok {
-			return &v1.EmptyDirVolumeSource{
-				SizeLimit: &quantity,
-			}
-		}
-	}
-
-	return &v1.EmptyDirVolumeSource{
-		// Default 50% of the memory of the node, max 1Gi
-		SizeLimit: resource.NewQuantity(1, resource.Format("Gi")),
-		Medium:    v1.StorageMedium("Memory"),
-	}
-}
-
-func (d KeptnTaskDefinition) GenerateVolumes() []v1.Volume {
-	if !d.IsVolumeMountPresent() {
-		return []v1.Volume{}
-	}
-	return []v1.Volume{
-		{
-			Name: d.Spec.Container.VolumeMounts[0].Name,
-			VolumeSource: v1.VolumeSource{
-				EmptyDir: d.GetVolumeSource(),
-			},
-		},
-	}
 }

@@ -5,7 +5,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 var jsTaskDef = &KeptnTaskDefinition{
@@ -163,115 +162,6 @@ func Test_IsContainerSpecDefined(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, tt.taskDef.IsContainerSpecDefined())
-		})
-	}
-}
-
-func Test_GenerateVolumes(t *testing.T) {
-	tests := []struct {
-		name    string
-		taskDef *KeptnTaskDefinition
-		want    []v1.Volume
-	}{
-		{
-			name: "defined",
-			taskDef: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{
-					Container: &ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							VolumeMounts: []v1.VolumeMount{
-								{
-									Name:      "name",
-									MountPath: "path",
-								},
-							},
-						},
-					},
-				},
-			},
-			want: []v1.Volume{
-				{
-					Name: "name",
-					VolumeSource: v1.VolumeSource{
-						EmptyDir: &v1.EmptyDirVolumeSource{
-							SizeLimit: resource.NewQuantity(1, resource.Format("Gi")),
-							Medium:    v1.StorageMedium("Memory"),
-						},
-					},
-				},
-			},
-		},
-		{
-			name:    "empty",
-			taskDef: &KeptnTaskDefinition{},
-			want:    []v1.Volume{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, tt.taskDef.GenerateVolumes())
-		})
-	}
-}
-
-func Test_GetVolumeSource(t *testing.T) {
-	tests := []struct {
-		name    string
-		taskDef *KeptnTaskDefinition
-		want    *v1.EmptyDirVolumeSource
-	}{
-		{
-			name:    "not set",
-			taskDef: &KeptnTaskDefinition{},
-			want: &v1.EmptyDirVolumeSource{
-				SizeLimit: resource.NewQuantity(1, resource.Format("Gi")),
-				Medium:    v1.StorageMedium("Memory"),
-			},
-		},
-		{
-			name: "not set limits",
-			taskDef: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{
-					Container: &ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							Resources: v1.ResourceRequirements{
-								Limits: v1.ResourceList{},
-							},
-						},
-					},
-				},
-			},
-			want: &v1.EmptyDirVolumeSource{
-				SizeLimit: resource.NewQuantity(1, resource.Format("Gi")),
-				Medium:    v1.StorageMedium("Memory"),
-			},
-		},
-		{
-			name: "set limits",
-			taskDef: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{
-					Container: &ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							Resources: v1.ResourceRequirements{
-								Limits: v1.ResourceList{
-									"memory": *resource.NewQuantity(100, resource.Format("Mi")),
-								},
-							},
-						},
-					},
-				},
-			},
-			want: &v1.EmptyDirVolumeSource{
-				SizeLimit: resource.NewQuantity(100, resource.Format("Mi")),
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, tt.taskDef.GetVolumeSource())
 		})
 	}
 }

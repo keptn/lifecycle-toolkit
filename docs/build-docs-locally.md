@@ -1,4 +1,4 @@
-## Building the documentation locally
+# Building the documentation locally
 
 You can run Docsy locally so that you can view the formatted version
 of what you are writing before you push it to github.
@@ -57,7 +57,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
      * make build
    * Run `make server`
 
-### Building markdown files without Hugo
+## Building markdown files without Hugo
 
 The Hugo generator described above only renders
 the markdown files under the */content/docs* directory.

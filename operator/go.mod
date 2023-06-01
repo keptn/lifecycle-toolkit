@@ -6,7 +6,7 @@ require (
 	github.com/argoproj/argo-rollouts v1.5.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
-	github.com/imdario/mergo v0.3.15
+	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230523133947-65b41399b2e0
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230523140051-57fdcddcf73c

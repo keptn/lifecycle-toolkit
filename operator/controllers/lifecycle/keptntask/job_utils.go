@@ -24,7 +24,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if specExists(definition) {
+	if definition.SpecExists() {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -141,12 +141,13 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		taskDef:  definition,
 		recorder: r.Recorder,
 	}
-	builder := getContainerBuilder(builderOpt)
+
+	builder := getJobRunnerBuilder(builderOpt)
 	if builder == nil {
 		return nil, controllererrors.ErrNoTaskDefinitionSpec
 	}
-	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 
+	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 	if err != nil {
 		return nil, controllererrors.ErrCannotMarshalParams
 	}

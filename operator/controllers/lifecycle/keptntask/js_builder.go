@@ -36,8 +36,9 @@ type FunctionExecutionParams struct {
 
 func (js *JSBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
 	container := corev1.Container{
-		Name:  "keptn-function-runner",
-		Image: os.Getenv("FUNCTION_RUNNER_IMAGE"),
+		Name:            "keptn-function-runner",
+		Image:           os.Getenv("FUNCTION_RUNNER_IMAGE"),
+		ImagePullPolicy: corev1.PullIfNotPresent,
 	}
 
 	var envVars []corev1.EnvVar

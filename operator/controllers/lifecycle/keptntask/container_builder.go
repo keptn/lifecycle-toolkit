@@ -7,12 +7,12 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
-// ContainerBuilder implements container builder interface for javascript deno
+// ContainerBuilder implements container builder interface for python
 type ContainerBuilder struct {
 	taskDef *klcv1alpha3.KeptnTaskDefinition
 }
 
-func newContainerBuilder(taskDef *klcv1alpha3.KeptnTaskDefinition) *ContainerBuilder {
+func NewContainerBuilder(taskDef *klcv1alpha3.KeptnTaskDefinition) *ContainerBuilder {
 	return &ContainerBuilder{
 		taskDef: taskDef,
 	}
@@ -23,13 +23,11 @@ func (c *ContainerBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 }
 
 func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
-	if c.taskDef.IsContainerSpecDefined() {
-		quantity, ok := c.taskDef.Spec.Container.Resources.Limits["memory"]
-		if ok {
-			return &corev1.EmptyDirVolumeSource{
-				SizeLimit: &quantity,
-				Medium:    corev1.StorageMedium("Memory"),
-			}
+	quantity, ok := c.taskDef.Spec.Container.Resources.Limits["memory"]
+	if ok {
+		return &corev1.EmptyDirVolumeSource{
+			SizeLimit: &quantity,
+			Medium:    corev1.StorageMedium("Memory"),
 		}
 	}
 

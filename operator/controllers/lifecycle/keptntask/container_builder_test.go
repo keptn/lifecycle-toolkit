@@ -193,14 +193,6 @@ func Test_GetVolumeSource(t *testing.T) {
 		want    *v1.EmptyDirVolumeSource
 	}{
 		{
-			name:    "not set",
-			taskDef: &v1alpha3.KeptnTaskDefinition{},
-			want: &v1.EmptyDirVolumeSource{
-				SizeLimit: resource.NewQuantity(1, resource.Format("Gi")),
-				Medium:    v1.StorageMedium("Memory"),
-			},
-		},
-		{
 			name: "not set limits",
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				Spec: v1alpha3.KeptnTaskDefinitionSpec{

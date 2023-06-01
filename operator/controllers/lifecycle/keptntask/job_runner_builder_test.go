@@ -44,7 +44,7 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 		{
 			name:    "container builder",
 			options: containerBuilderOptions,
-			want:    newContainerBuilder(containerBuilderOptions.taskDef),
+			want:    NewContainerBuilder(containerBuilderOptions.taskDef),
 		},
 		{
 			name: "invalid builder",

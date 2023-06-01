@@ -31,7 +31,7 @@ func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
 		return newJSBuilder(options)
 	}
 	if options.taskDef.IsContainerSpecDefined() {
-		return newContainerBuilder(options.taskDef)
+		return NewContainerBuilder(options.taskDef)
 	}
 	return nil
 }

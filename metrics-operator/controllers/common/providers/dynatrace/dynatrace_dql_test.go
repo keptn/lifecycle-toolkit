@@ -199,10 +199,8 @@ func TestGetDQLTimeout(t *testing.T) {
 	}, 5*time.Second, 100*time.Millisecond)
 
 	mockClock.Add(retryFetchInterval * (maxRetries + 1))
-
-	require.Len(t, mockClient.DoCalls(), maxRetries+1)
-
 	wg.Wait()
+	require.Len(t, mockClient.DoCalls(), maxRetries+1)
 }
 
 func TestGetDQLCannotPostQuery(t *testing.T) {

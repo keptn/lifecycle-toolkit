@@ -22,7 +22,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytaskdef",
 				}}},
@@ -33,7 +33,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytd"},
 				Parameters: klcv1alpha3.TaskParameters{
@@ -124,7 +124,7 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
 				Parameters: klcv1alpha3.TaskParameters{
 					Inline: map[string]string{"DATA2": "mydata2"},
@@ -140,7 +140,7 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				HttpReference: klcv1alpha3.HttpReference{Url: "something"},
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytaskdef"},

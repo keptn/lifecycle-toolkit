@@ -237,7 +237,7 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.FunctionSpec{
 				ConfigMapReference: klcv1alpha3.ConfigMapReference{
 					Name: cmName,
 				},

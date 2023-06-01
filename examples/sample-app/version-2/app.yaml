@@ -16,3 +16,5 @@ spec:
       version: 0.1.1
   preDeploymentEvaluations:
     - app-pre-deploy-eval-2
+  preDeploymentTasks:
+    - container-sleep

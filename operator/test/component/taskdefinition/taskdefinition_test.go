@@ -41,7 +41,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: klcv1alpha3.FunctionSpec{
+						Function: &klcv1alpha3.FunctionSpec{
 							Inline: klcv1alpha3.Inline{
 								Code: "console.log(Hello);",
 							},
@@ -90,7 +90,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: klcv1alpha3.FunctionSpec{
+						Function: &klcv1alpha3.FunctionSpec{
 							ConfigMapReference: klcv1alpha3.ConfigMapReference{
 								Name: "my-configmap",
 							},
@@ -141,7 +141,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: klcv1alpha3.FunctionSpec{
+						Function: &klcv1alpha3.FunctionSpec{
 							ConfigMapReference: klcv1alpha3.ConfigMapReference{
 								Name: "my-configmap-non-existing",
 							},

@@ -2,7 +2,7 @@
 
 # Keptn Lifecycle Toolkit Documentation generation
 #
-# This script support the release of the latest version of the documentation
+# This script supports the release of the latest version of the documentation
 # The final files are available under the docs/release folder
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

@@ -14,10 +14,13 @@ WORK_DIR=${DOC_DIR}/release
 mkdir -p $WORK_DIR
 
 cd $WORK_DIR
+
+## Download the latest status of the main documentation
 git clone https://github.com/keptn/lifecycle-toolkit.git
 cd lifecycle-toolkit
 git checkout page
 git pull
 
+## Rewrite with the current content
 cp -r "${DOC_DIR}/content/en/docs" ./docs/content/en
 

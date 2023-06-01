@@ -4,3 +4,4 @@ assert: # this checks that kubectl get resource succeeds
   - goodmetric1.yaml
   - goodmetric2.yaml
   - goodmetric3.yaml
+  - goodmetric4.yaml

@@ -39,6 +39,15 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			),
 		},
 		{
+			name: "with-nil-range",
+			Spec: KeptnMetricSpec{
+				Range: nil,
+			},
+		},
+		{
+			name: "with-no-range",
+		},
+		{
 			name: "with-right-interval",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: "5m"},
@@ -47,12 +56,22 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &KeptnMetric{
-				ObjectMeta: metav1.ObjectMeta{Name: tt.name},
-				Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval}},
-			}
-			if got := s.validateRangeInterval(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("validateRangeInterval() = %v, want %v", got, tt.want)
+			if tt.Spec.Range == nil {
+				s := &KeptnMetric{
+					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
+					Spec:       KeptnMetricSpec{Range: tt.Spec.Range},
+				}
+				if got := s.validateRangeInterval(); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("validateRangeInterval() = %v, want %v", got, tt.want)
+				}
+			} else {
+				s := &KeptnMetric{
+					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
+					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval}},
+				}
+				if got := s.validateRangeInterval(); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("validateRangeInterval() = %v, want %v", got, tt.want)
+				}
 			}
 		})
 	}

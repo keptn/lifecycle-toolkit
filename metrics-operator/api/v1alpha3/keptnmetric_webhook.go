@@ -80,13 +80,15 @@ func (s *KeptnMetric) validateKeptnMetric() error {
 }
 
 func (s *KeptnMetric) validateRangeInterval() *field.Error {
-	_, err := time.ParseDuration(s.Spec.Range.Interval)
-	if err != nil {
-		return field.Invalid(
-			field.NewPath("spec").Child("range").Child("interval"),
-			s.Spec.Range.Interval,
-			errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
-		)
+	if s.Spec.Range != nil {
+		_, err := time.ParseDuration(s.Spec.Range.Interval)
+		if err != nil {
+			return field.Invalid(
+				field.NewPath("spec").Child("range").Child("interval"),
+				s.Spec.Range.Interval,
+				errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
+			)
+		}
 	}
 	return nil
 }

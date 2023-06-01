@@ -32,7 +32,7 @@ type KeptnMetricSpec struct {
 	// FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric
 	FetchIntervalSeconds uint `json:"fetchIntervalSeconds"`
 	// Range represents the time range for which data is to be queried
-	Range RangeSpec `json:"range,omitempty"`
+	Range *RangeSpec `json:"range,omitempty"`
 }
 
 // KeptnMetricStatus defines the observed state of KeptnMetric
@@ -55,6 +55,7 @@ type ProviderRef struct {
 
 // RangeSpec defines the time range for which data is to be queried
 type RangeSpec struct {
+	// Interval specifies the duration of the time interval for the data query
 	// +kubebuilder:default:="5m"
 	Interval string `json:"interval,omitempty"`
 }

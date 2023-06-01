@@ -1,12 +1,13 @@
 ---
-title: Getting started with the Lifecycle Toolkit
-description: Learn how to use the Keptn Lifecycle Toolkit.
+title: KLT End-to-end exercise
+description: Implement full deployment orchestration
 weight: 85
 ---
 
 This page gives instructions for installing the Keptn Lifecycle Toolkit
 and running a simple Keptn application to familiarize yourself
-with how the Keptn Lifecycle Toolkit works.
+with how the Keptn Lifecycle Toolkit works and
+implements full deployment orchestration.
 
 You will learn how to do the following:
 
@@ -17,45 +18,42 @@ You will learn how to do the following:
 
 ## Prerequisites
 
-You need the following to complete this exercise:
+To complete this exercise, you need:
 
-* A Kubernetes cluster >= Kubernetes 1.24
-  * If you don't have one, we recommend
-      [Kubernetes-in-Docker(KinD)](https://kind.sigs.k8s.io/docs/user/quick-start/)
-      to set up your local development environment
+* A Kubernetes cluster running Kubernetes 1.24 or later.
 
-* kubectl installed on your system
-  * See (<https://kubernetes.io/docs/tasks/tools/>) for more information
+* [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+installed on your system.
 
-## Check Kubernetes Version
+You can use an existing cluster
+or you can create a local cluster to use; see
+[Create local Kubernetes cluster](../../install/k8s.md/#create-local-kubernetes-cluster)
+for details.
 
-Run the following and ensure that both client and server versions
+Run the following and verify that both client and server versions
 are running Kubernetes versions greater than or equal to v1.24.
+In this example, both client and server are at v1.24.0
+so are appropriate for the Keptn Lifecycle Toolkit.
 
 ```shell
 kubectl version --short
 ```
 
-The output should look like this.
-In this example, both client and server are at v1.24.0
-so the Keptn Lifecycle Toolkit will work.
+The output should look like the following
 
-{{% readfile file="../../snippets/tasks/k8s_version_output.md" markdown="true" %}}
+```shell
+Client Version: v1.24.0
+Kustomize Version: v4.5.4
+Server Version: v1.24.0
+```
 
-{{% readfile file="../../snippets/tasks/install.md" markdown="true" %}}
+## Clone the repository for this exercise
 
-## Check out the Getting Started Repository
-
-This exercise uses a sample application and some helpers
+We provide a repository that contains the sample application
+used in this exercise
+as well as some helper scripts
 that make it easier for you to set up your environment.
-These can be found in our Getting Started repository.
-Use the following command to check out this repository:
-
-For the further progress of this guide,
-we need a sample application as well as some helpers
-which make it easier foryour to set up your environment.
-These things can be found in our Getting Started repository
-which can be checked out as follows:
+Use the following command to clone this repository:
 
 ```shell
 git clone https://github.com/keptn-sandbox/lifecycle-toolkit-examples.git
@@ -65,9 +63,9 @@ cd lifecycle-toolkit-examples
 ## Install the required observability features
 
 The Keptn Lifecycle Toolkit emits OpenTelemetry data as standard
-but the toolkit does not come pre-bundled with Observability backend tooling.
+but the toolkit does not come pre-bundled with observability backend tooling.
 This is deliberate as it provides flexibility
-for you to bring your own Observability backend
+for you to bring your own observability backend
 that consumes this emitted data.
 
 In order to use the observability features of the lifecycle toolkit,
@@ -88,7 +86,8 @@ make restart-lifecycle-toolkit
 
 > **Note**
 To export traces to the OpenTelemetry Collector, you need a
- [KeptnConfig Resource](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/support/keptn/keptnconfig.yaml)
+ [KeptnConfig](../../yaml-crd-ref/config.md)
+ CRD with `spec.OTelCollectorUrl` specified
  in the namespace where KLT is installed.
 
 ## The Demo Application

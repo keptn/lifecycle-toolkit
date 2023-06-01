@@ -28,7 +28,7 @@ type BuilderOptions struct {
 
 func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
 	if options.taskDef.IsJSSpecDefined() {
-		return newJSBuilder(options)
+		return NewJSBuilder(options)
 	}
 	if options.taskDef.IsContainerSpecDefined() {
 		return NewContainerBuilder(options.taskDef)

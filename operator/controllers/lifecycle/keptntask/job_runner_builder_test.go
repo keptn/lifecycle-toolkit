@@ -39,7 +39,7 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 		{
 			name:    "js builder",
 			options: jsBuilderOptions,
-			want:    newJSBuilder(jsBuilderOptions),
+			want:    NewJSBuilder(jsBuilderOptions),
 		},
 		{
 			name:    "container builder",

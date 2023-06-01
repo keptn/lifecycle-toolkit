@@ -38,7 +38,7 @@ runs:
         path: ~/download/artifacts
 
     - name: "Create single kind Cluster"
-      uses: helm/kind-action@v1.5.0
+      uses: helm/kind-action@v1.7.0
       with:
         cluster_name: ${{ inputs.cluster-name }}
         version: ${{ inputs.kind-version }}

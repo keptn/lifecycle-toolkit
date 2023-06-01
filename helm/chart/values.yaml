@@ -68,6 +68,7 @@ lifecycleOperator:
         type: RuntimeDefault
     env:
       functionRunnerImage: ghcr.io/keptn/functions-runtime:v0.7.1
+      pythonRunnerImage: ghcr.io/keptn/python-runtime:latest
       keptnAppControllerLogLevel: "0"
       keptnAppCreationRequestControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"

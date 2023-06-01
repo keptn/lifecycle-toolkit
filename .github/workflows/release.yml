@@ -51,6 +51,8 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
+          - name: "python-runtime"
+            folder: "python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     runs-on: ubuntu-22.04

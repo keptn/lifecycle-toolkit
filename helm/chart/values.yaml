@@ -68,7 +68,6 @@ lifecycleOperator:
         type: RuntimeDefault
     env:
       functionRunnerImage: ghcr.io/keptn/functions-runtime:v0.7.1
-      pythonRunnerImage: ghcr.io/keptn/python-runtime:latest
       keptnAppControllerLogLevel: "0"
       keptnAppCreationRequestControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"
@@ -79,6 +78,7 @@ lifecycleOperator:
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
       otelCollectorUrl: otel-collector:4317
+      pythonRunnerImage: ghcr.io/keptn/python-runtime:latest
     image:
       repository: ghcr.io/keptn/lifecycle-operator
       tag: v0.7.1

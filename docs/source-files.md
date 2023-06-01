@@ -1,4 +1,4 @@
-## Source file structure
+# Source file structure
 
 The source files for the [Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs) are stored under
 the *docs/content/en/docs* directory in the repository.
@@ -36,7 +36,7 @@ but this is a bad practice.
 
 Some other fields are sometimes used in the metadata.
 
-### Top level structure
+## Top level structure
 
 The current tools do not support versioning.
 To work around this limitation, the docs are arranged with some general topics that generally apply to all releases and
@@ -48,10 +48,11 @@ The system for assigning weights for the docs landing page is:
 * Sections for individual releases use weight values of 9**.
 * Sections for general but advanced info use weight value of 1***.
 
-### Subdirectory structure
+## Subdirectory structure
 
 Each subdirectory contains topical subdirectories for each chapter in that section.
 Each topical subdirectory contains:
+
 * An *index.md* file that has the metadata discussed above plus the text for the section
 * An *assets* subdirectory where graphical files for that topic are stored.
 No *assets* subdirectory is present if the topic has no graphics.

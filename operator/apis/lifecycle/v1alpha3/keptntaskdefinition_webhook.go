@@ -54,7 +54,6 @@ func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) error {
 func (r *KeptnTaskDefinition) ValidateDelete() error {
 	keptntaskdefinitionlog.Info("validate delete", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
 }
 

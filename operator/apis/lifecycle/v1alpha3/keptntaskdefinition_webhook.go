@@ -17,7 +17,11 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"github.com/pkg/errors"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -78,7 +82,7 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Either Function or Container field must be defined").Error(), 
+			errors.New("Forbidden! Either Function or Container field must be defined").Error(),
 		)
 	}
 
@@ -86,7 +90,7 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(), 
+			errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(),
 		)
 	}
 

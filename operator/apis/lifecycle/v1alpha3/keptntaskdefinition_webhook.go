@@ -62,3 +62,26 @@ func (r *KeptnTaskDefinition) ValidateDelete() error {
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
 }
+
+func (r *KeptnTaskDefinition) validateFields() error {
+	if r.Spec.Function == nil && r.Spec.Container == nil {
+		return ValidationError{Field: "spec", Message: "Either Function or Container field must be defined"}
+	}
+
+	if r.Spec.Function != nil && r.Spec.Container != nil {
+		return ValidationError{Field: "spec", Message: "Both Function and Container fields cannot be defined simultaneously"}
+	}
+
+	return nil
+}
+
+// ValidationError represents a validation error with a specific field and message
+type ValidationError struct {
+	Field   string
+	Message string
+}
+
+// Error returns the validation error message
+func (e ValidationError) Error() string {
+	return e.Message
+}

@@ -40,45 +40,55 @@ var _ webhook.Validator = &KeptnTaskDefinition{}
 func (r *KeptnTaskDefinition) ValidateCreate() error {
 	keptntaskdefinitionlog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	return r.validateKeptnTaskDefination()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) error {
 	keptntaskdefinitionlog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	return r.validateKeptnTaskDefination()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnTaskDefinition) ValidateDelete() error {
 	keptntaskdefinitionlog.Info("validate delete", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
 }
 
-func (r *KeptnTaskDefinition) validateFields() error {
+func (r *KeptnTaskDefinition) validateKeptnTaskDefination() error {
+	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
+	var err *field.Error
+	if err = r.validateFields(); err != nil {
+		allErrs = append(allErrs, err)
+	}
+	if len(allErrs) == 0 {
+		return nil
+	}
+
+	return apierrors.NewInvalid(
+		schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
+		r.Name,
+		allErrs)
+}
+func (r *KeptnTaskDefinition) validateFields() *field.Error {
+
 	if r.Spec.Function == nil && r.Spec.Container == nil {
-		return ValidationError{Field: "spec", Message: "Either Function or Container field must be defined"}
+		return field.Invalid(
+			field.NewPath("spec"),
+			r.Spec,
+			errors.New("Forbidden! Either Function or Container field must be defined").Error(), 
+		)
 	}
 
 	if r.Spec.Function != nil && r.Spec.Container != nil {
-		return ValidationError{Field: "spec", Message: "Both Function and Container fields cannot be defined simultaneously"}
+		return field.Invalid(
+			field.NewPath("spec"),
+			r.Spec,
+			errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(), 
+		)
 	}
 
 	return nil
-}
-
-// ValidationError represents a validation error with a specific field and message
-type ValidationError struct {
-	Field   string
-	Message string
-}
-
-// Error returns the validation error message
-func (e ValidationError) Error() string {
-	return e.Message
 }

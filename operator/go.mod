@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.20
 
 require (
-	github.com/argoproj/argo-rollouts v1.5.0
+	github.com/argoproj/argo-rollouts v1.5.1
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.16

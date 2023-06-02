@@ -40,8 +40,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
-github.com/argoproj/argo-rollouts v1.5.0 h1:asKpzMuFSDGsXK5cGsbH/TGXUJD/v1mvM1D3o5Xwz34=
-github.com/argoproj/argo-rollouts v1.5.0/go.mod h1:OaOf+oZawsss6fy+9WEDy4IaSbwuRteBj1X2QiVfqdA=
+github.com/argoproj/argo-rollouts v1.5.1 h1:P1C6oIWn6fwtPvB3u04NQlUGIv8cq/aJvUkbwciuWYo=
+github.com/argoproj/argo-rollouts v1.5.1/go.mod h1:OaOf+oZawsss6fy+9WEDy4IaSbwuRteBj1X2QiVfqdA=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/benbjohnson/clock v1.3.5 h1:VvXlSJBzZpA/zum6Sj74hxwYI2DIxRWuNIoXAzHZz5o=
 github.com/benbjohnson/clock v1.3.5/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=

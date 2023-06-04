@@ -61,7 +61,7 @@ func (r *KeptnTaskDefinition) ValidateDelete() error {
 	return nil
 }
 
-func (r *KeptnTaskDefinition) validateKeptnTaskDefination() error {
+func (r *KeptnTaskDefinition) validateKeptnTaskDefinition() error {
 	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
 	var err *field.Error
 	if err = r.validateFields(); err != nil {

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
@@ -55,7 +56,8 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ktd := &KeptnTaskDefinition{
-				Spec: tt.spec,
+				ObjectMeta: metav1.ObjectMeta{Name: tt.name},
+				Spec:       tt.spec,
 			}
 			if got := ktd.validateFields(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("validateFields() = %v, want %v", got, tt.want)

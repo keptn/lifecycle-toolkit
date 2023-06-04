@@ -51,7 +51,7 @@ func (r *KeptnTaskDefinition) ValidateCreate() error {
 func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) error {
 	keptntaskdefinitionlog.Info("validate update", "name", r.Name)
 
-	return r.validateKeptnTaskDefination()
+	return r.validateKeptnTaskDefinition()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type

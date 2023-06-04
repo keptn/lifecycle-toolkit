@@ -44,7 +44,7 @@ var _ webhook.Validator = &KeptnTaskDefinition{}
 func (r *KeptnTaskDefinition) ValidateCreate() error {
 	keptntaskdefinitionlog.Info("validate create", "name", r.Name)
 
-	return r.validateKeptnTaskDefination()
+	return r.validateKeptnTaskDefinition()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type

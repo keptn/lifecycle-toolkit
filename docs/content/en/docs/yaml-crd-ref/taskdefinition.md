@@ -407,6 +407,12 @@ This modifies the synopsis in two ways:
   and enables `KeptnTask` to omit it when it is empty,
   which it must be when `spec.container` is populated.
 
+## Limitations
+
+Only one
+[runtime](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+is allowed per `KeptnTaskDefinition`.
+
 ## See also
 
 * [KeptnApp](app.md)

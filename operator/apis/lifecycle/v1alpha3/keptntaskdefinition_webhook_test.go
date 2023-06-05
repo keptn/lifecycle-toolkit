@@ -67,7 +67,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				field.NewPath("spec"),
 				KeptnTaskDefinitionSpec{Function: &FunctionSpec{}},
 				errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error()),
-			oldSpec: &KeptnTaskDefinitionSpec{
+			oldSpec: KeptnTaskDefinitionSpec{
 				Function: &FunctionSpec{},
 			},
 			verb: "update",

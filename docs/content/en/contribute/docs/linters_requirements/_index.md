@@ -1,10 +1,10 @@
 ---
-title: Linters requirements
-description: To maintain optimal code quality, this project employs linters which require a specific IDE configuration for effective utilization. Please refer to the documentation for further details.
+title: Linters Requirements
+description: To maintain optimal code quality, this project employs linters which require a specific IDE configuration for effective utilization.
 weight: 400
 ---
 
-## Linters requirements
+## Linters Requirements
 
 This project uses a set of linters to ensure good code quality.
 In order to make proper use of those linters inside an IDE,

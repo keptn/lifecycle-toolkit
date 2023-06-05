@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
@@ -37,7 +37,7 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 						"5mins",
 						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
 					),
-				},	
+				},
 			),
 		},
 		{
@@ -54,7 +54,7 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 						"",
 						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
 					),
-				},	
+				},
 			),
 		},
 		{

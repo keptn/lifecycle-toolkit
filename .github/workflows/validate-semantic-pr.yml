@@ -39,6 +39,7 @@ jobs:
             cert-manager
             metrics-operator
             functions-runtime
+            python-runtime
             dashboards
             examples
           # Configure that a scope must always be provided.

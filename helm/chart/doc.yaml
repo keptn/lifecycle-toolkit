@@ -132,7 +132,8 @@
 ## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
-## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for task runtime with Deno runner <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.env.pythonRunnerImage specify image for task runtime with python runner <!---x-release-please-version-->
 
 ## @param   lifecycleOperator.manager.image.repository specify registry for manager image
 ## @param   lifecycleOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->

@@ -192,6 +192,7 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
+          - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"

@@ -11,24 +11,20 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
-  function:
+  python:
     parameters:
       map:
         user: "myuser"
     secureParameters:
       secret: mysecret
-    functionRuntime: python
     inline:
       code: |
         import os
         import yaml
-        
         data = os.getenv('DATA')
         dct = yaml.safe_load(data)
-        
         USER= dct['user']
         PASSWORD = os.environ.get('SECURE_DATA')
-        
         print(USER,PASSWORD)
 ---
 

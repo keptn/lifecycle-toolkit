@@ -100,9 +100,9 @@ spec:
               value: /var/data/function.ts
           name: keptn-function-runner
           volumeMounts:
-          - mountPath: /var/data/function.ts
-            name: function-mount
-            readOnly: true
-            subPath: code
+            - mountPath: /var/data/function.ts
+              name: function-mount
+              readOnly: true
+              subPath: code
 status:
   succeeded: 1

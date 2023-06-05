@@ -70,7 +70,6 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 			oldSpec: &KeptnTaskDefinitionSpec{
 				Function: &FunctionSpec{},
 			},
-
 			verb: "update",
 		},
 		{
@@ -90,8 +89,8 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 			switch tt.verb {
 			case "create":
 				got = ktd.ValidateCreate()
-			// case "update":
-			// 	got = ktd.ValidateUpdate(runtime.Object)
+			case "update":
+				got = ktd.ValidateUpdate(tt.oldSpec)
 			case "delete":
 				got = ktd.ValidateDelete()
 			}

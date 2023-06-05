@@ -182,7 +182,7 @@ spec:
     * **image** -- name of the image you defined according to
       [images](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
-      
+
       TODO: Does this tell users all they need to know about
       what they can use as an image and how to get it?
       And is everything in the k8s "Images" document
@@ -356,8 +356,9 @@ data:
 
 ### Example 5: Container
 
-For an example of a `KeptnTaskDefinition` that defines a container.  see
-[container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml.
+For an example of a `KeptnTaskDefinition` that defines a container.
+ see
+[container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
 The `spec` includes:
 
 ```yaml
@@ -374,7 +375,6 @@ spec:
 This task is then referenced in
 
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
-
 
 ### More examples
 
@@ -400,8 +400,8 @@ The `KeptnTaskDefinition` support for containers is introduced in v0.8.0
 to support the container runtime feature.
 This modifies the synopsis in two ways:
 
-- Add the `spec.container` field.
-- The `spec.function` field is changed to pointer receiver.
+* Add the `spec.container` field.
+* The `spec.function` field is changed to pointer receiver.
   This aligns it with the `spec.container` field,
   which must be a pointer,
   and enables `KeptnTask` to omit it when it is empty,

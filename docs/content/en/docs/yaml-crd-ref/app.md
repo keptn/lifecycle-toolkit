@@ -44,51 +44,51 @@ spec:
 
 ## Fields
 
-* **apiVersion** -- API version being used.
-* **kind** -- Resource type.
+- **apiVersion** -- API version being used.
+- **kind** -- Resource type.
    Must be set to `KeptnApp`
 
-* **metadata**
-  * **name** -- Unique name of this application.
+- **metadata**
+  - **name** -- Unique name of this application.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 
-* **spec**
-  * **version** -- version of the Keptn application.
+- **spec**
+  - **version** -- version of the Keptn application.
     Changing this version number causes a new execution
     of all application-level checks
-  * **revision** -- revision of a `version`.
+  - **revision** -- revision of a `version`.
     The value is an integer that can be modified
     to trigger another deployment of a `KeptnApp` of the same version.
     For example, increment this number to restart a `KeptnApp` version
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed
     for reasons that may be transient.
-  * **workloads**
-    * **name** - name of this Kubernetes
+  - **workloads**
+    - **name** - name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
       Use the same naming rules listed above for the application name.
       Provide one entry for each workload
       associated with this Keptn application.
-    * **version** -- version number for this workload.
+    - **version** -- version number for this workload.
       Changing this number causes a new execution
       of checks for this workload only,
       not the entire application.
-  * **preDeploymentTasks** -- list each task or container
+  - **preDeploymentTasks** -- list each task or container
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  * **postDeploymentTasks** -- list each task or container
+  - **postDeploymentTasks** -- list each task or container
     to be run as part of the post-deployment stage.
     Task names must match the value of the `name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  * **preDeploymentEvaluations** -- list each evaluation to be run
+  - **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
     Evaluation names must match the value of the `name` field
     for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
     resource.
-  * **postDeploymentEvaluations** -- list each evaluation to be run
+  - **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
     Evaluation names must match the value of the `name` field
     for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
@@ -166,9 +166,9 @@ The `spec.Revision` field is introduced in v1alpha2.
 
 ## See also
 
-* [KeptnTaskDefinition](taskdefinition.md)
-* [Working with tasks](../implementing/tasks)
-* [Working with container runtimes](../implementing/container.md)
-* [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-* [Orchestrate deployment checks](../getting-started/orchestrate)
+- [KeptnTaskDefinition](taskdefinition.md)
+- [Working with tasks](../implementing/tasks)
+- [Working with container runtimes](../implementing/container.md)
+- [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+- [Orchestrate deployment checks](../getting-started/orchestrate)
 [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

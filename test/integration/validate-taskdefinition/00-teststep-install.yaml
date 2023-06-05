@@ -1,0 +1,7 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+apply:
+ - goodtaskdefinition.yaml
+commands:
+ - command: kubectl apply -f badtaskdefinition.yaml
+   ignoreFailure: true #we must install ignoring the validating webhook error to proceed with the test

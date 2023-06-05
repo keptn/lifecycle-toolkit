@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+error: #this checks that kubectl get resource fails, AKA bad CRD not added
+ - badtaskdefinition.yaml
+assert: #this checks that kubectl get resource succeeds
+ - goodtaskdefinition.yaml

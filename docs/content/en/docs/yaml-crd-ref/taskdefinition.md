@@ -4,14 +4,31 @@ description: Define tasks that can be run pre- or post-deployment
 weight: 89
 ---
 
-
 A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../concepts/workloads/).
 
-## Yaml Synopsis
+A Keptn
+[container](https://kubernetes.io/docs/concepts/containers/)
+runs as part of a Keptn
+[job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
+A Keptn job is part of a task.
+
+A Keptn task can be defined in either of two ways:
+
+* Specify the actions to take as a Deno script,
+  which is basically JavaScript with a few limitations
+* Define a Kubernetes container,
+  which you define to incled
+  an application and its runtime dependencies
+
+## Yaml Synopsis for executable task
+
+TODO: What is the right title here?
+This will filter through the rest of the page,
+of course.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -28,6 +45,27 @@ spec:
       secret: slack-token
 ```
 
+## Yaml Synopsis for container
+
+TODO: Is this going to be generic for all types of containers
+or should this be defined as a particular type of container
+so it works when we add other types of containers?
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  container
+    name: <container-name>
+    image: <image-name>
+    command:
+      - 'command1'
+      - 'command2'
+      - '...'
+```
+
 ## Fields
 
 * **apiVersion** -- API version being used.
@@ -36,10 +74,14 @@ spec:
    Must be set to `KeptnTaskDefinition`
 
 * **metadata**
-  * **name** -- Unique name of this task.
+  * **name** -- Unique name of this task or container.
+    This is the name used to insert this task or container
+    into the `preDeployment` or `postDeployment`
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
+
+### Fields used only for executable task definitions
 
 * **spec**
   * **function** -- Code to be executed,
@@ -130,6 +172,24 @@ spec:
     See [Create secret text](../implementing/tasks/#create-secret-text)
     for details.
 
+### Fields used only for container definitions
+
+* **spec**
+  * **container** -- Container definition.
+    * **name** -- Name of the container that will run,
+      which is not the same as the `metadata.name` field
+      that is used in the `KeptnApp` resource.
+    * **image** -- name of the image you defined according to
+      [images](https://kubernetes.io/docs/concepts/containers/images/)
+      and pushed to a registry
+      
+      TODO: Does this tell users all they need to know about
+      what they can use as an image and how to get it?
+      And is everything in the k8s "Images" document
+      usable here?
+    * **command** -- [TODO] -- How do users know what commands
+      can be specified here?
+
 ## Usage
 
 A Task executes the TaskDefinition of a
@@ -139,7 +199,11 @@ The execution is done by spawning a Kubernetes
 to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
-The `function` is coded in JavaScript
+TODO: Do we need a word about
+[container runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)?
+
+When defining a task as an executable task,
+the `function` is coded in JavaScript
 and executed in
 [Deno](https://deno.com/runtime),
 which is a lightweight runtime environment
@@ -148,6 +212,14 @@ Note that Deno has tighter restrictions
 for permissions and importing data
 so a script that works properly elsewhere
 may not function out of the box when run in Deno.
+
+When defining a task as a container,
+
+[TODO] What runtime is used?
+
+[TODO] Are there limitations as to what can be done
+with the current implementation of containers?
+Can I execute a Python script or is there a python-container in the future?
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the `Deployment` resource;
@@ -160,7 +232,7 @@ and the revised code is picked up without additional changes.
 
 ## Examples
 
-### Example 1: inline script
+### Example 1: inline script that defines an executable task
 
 This example defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
@@ -183,7 +255,7 @@ spec:
         console.log("Hello, " + name + " new");
 ```
 
-### Example 2: httpRef script
+### Example 2: httpRef script that defines an executable task
 
 This example fetches the Deno script from a remote webserver at runtime:
 
@@ -205,7 +277,7 @@ See the
 [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
 PodtatoHead example for a more complete example.
 
-### Example 3: functionRef
+### Example 3: functionRef that defines an executable task
 
 This example calls another defined task,
 illustrating how one `KeptnTaskDefinition` can build
@@ -229,7 +301,7 @@ spec:
       secret: slack-token
 ```
 
-### Example 4: ConfigMapRef
+### Example 4: ConfigMapRef that defines an executable task
 
 This example references a `ConfigMap` by the name of `dev-configmap`
 that contains the code for the function to be executed.
@@ -245,7 +317,7 @@ spec:
       name: dev-configmap
 ```
 
-### Example 5: ConfigMap
+### Example 5: ConfigMap that defines an executable task
 
 This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
@@ -282,6 +354,28 @@ data:
     console.log(targetDate);
 ```
 
+### Example 5: Container
+
+For an example of a `KeptnTaskDefinition` that defines a container.  see
+[container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml.
+The `spec` includes:
+
+```yaml
+spec:
+  container:
+    name: testy-test
+    image: busybox:1.36.0
+    command:
+      - 'sh'
+      - '-c'
+      - 'sleep 30'
+```
+
+This task is then referenced in
+
+[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
+
+
 ### More examples
 
 See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples/function_execution)
@@ -302,11 +396,21 @@ API Reference:
 
 ## Differences between versions
 
-The `KeptnTaskDefinition` is the same for
-all `v1alpha?` library versions.
+The `KeptnTaskDefinition` support for containers is introduced in v0.8.0
+to support the container runtime feature.
+This modifies the synopsis in two ways:
+
+- Add the `spec.container` field.
+- The `spec.function` field is changed to pointer receiver.
+  This aligns it with the `spec.container` field,
+  which must be a pointer,
+  and enables `KeptnTask` to omit it when it is empty,
+  which it must be when `spec.container` is populated.
 
 ## See also
 
+* [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
+* [Working with container runtimes](../implementing/container.md)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [Orchestrate deployment checks](../getting-started/orchestrate)

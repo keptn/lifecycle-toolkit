@@ -6,10 +6,15 @@ weight: 10
 
 `KeptnApp` defines a list of workloads
 that together constitute a logical application.
-It contains information about all workloads and checks
-that are associated with a Keptn application
-and a list of tasks and evaluations to be executed
-pre- and post-deployment.
+It contains information about:
+
+- All workloads and checks
+  that are associated with a Keptn application
+- A list of tasks and evaluations to be executed
+  pre- and post-deployment.
+- Tasks referenced by `KeptnApp` are defined in a
+  [KeptnTaskDefinition](taskdefinition.md) resource,
+  which can define either an executable task or a container.
 
 ## Synopsis
 
@@ -58,7 +63,8 @@ spec:
     to trigger another deployment of a `KeptnApp` of the same version.
     For example, increment this number to restart a `KeptnApp` version
     that failed to deploy, perhaps because a
-    `preDeploymentEvaluation` or `preDeploymentTask` failed.
+    `preDeploymentEvaluation` or `preDeploymentTask` failed
+    for reasons that may be transient.
   * **workloads**
     * **name** - name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
@@ -67,13 +73,14 @@ spec:
       associated with this Keptn application.
     * **version** -- version number for this workload.
       Changing this number causes a new execution
-      of checks for the Keptn application and the new version of the workload.
-  * **preDeploymentTasks** -- list each task to be run
-    as part of the pre-deployment stage.
-    Task names must match the value of the `name` field
+      of checks for this workload only,
+      not the entire application.
+  * **preDeploymentTasks** -- list each task or container
+    to be run as part of the pre-deployment stage.
+    Task names must match the value of the `metadata.name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  * **postDeploymentTasks** -- list each task to be run
-    as part of the post-deployment stage.
+  * **postDeploymentTasks** -- list each task or container
+    to be run as part of the post-deployment stage.
     Task names must match the value of the `name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
   * **preDeploymentEvaluations** -- list each evaluation to be run
@@ -107,7 +114,9 @@ based on Keptn or [recommended Kubernetes labels](https://kubernetes.io/docs/con
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
 
-## Example
+## Examples
+
+### Example 1: referencing Deno tasks
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -128,6 +137,27 @@ spec:
   - my-prometheus-definition
 ```
 
+### Referencing containers
+
+For an example of a `KeptnApp` resource definition
+that references a container, see
+[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
+The `spec` includes:
+
+```yaml
+spec:
+  version: "0.1.2"
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.1.1
+    ...
+  preDeploymentTasks:
+    - container-sleep
+```
+
+This container is defined in
+[container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml).
+
 ## Files
 
 ## Differences between versions
@@ -136,4 +166,9 @@ The `spec.Revision` field is introduced in v1alpha2.
 
 ## See also
 
+* [KeptnTaskDefinition](taskdefinition.md)
+* [Working with tasks](../implementing/tasks)
+* [Working with container runtimes](../implementing/container.md)
+* [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+* [Orchestrate deployment checks](../getting-started/orchestrate)
 [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

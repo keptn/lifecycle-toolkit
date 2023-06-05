@@ -18,7 +18,6 @@ spec:
     volumeMounts:
       - mountPath: /cache
         name: logger
-
 ---
 # This TaskDefinition will not be accepted by the validation webhook as it doesn't contain either containerSpec or functionSpec
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -26,4 +25,3 @@ kind: KeptnTaskDefinition
 metadata:
   name: badtaskdefinition2
 spec:
-  

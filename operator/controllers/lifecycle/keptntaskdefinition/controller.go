@@ -18,6 +18,7 @@ package keptntaskdefinition
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -57,13 +58,39 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		r.Log.Error(err, "Failed to get the KeptnTaskDefinition")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
+	defSpec := common.GetRuntimeSpec(definition)
+	if definition.Spec.Container == nil && defSpec != nil { //if the spec is well-defined
 
-	if definition.IsConfigMap() || definition.IsInline() {
-		err := r.reconcileFunction(ctx, req, definition)
+		// get configmap reference either existing configmap name or inline generated one
+		cmName := r.getCmName("keptnfn-"+definition.Name, defSpec)
+
+		//get existing configmap either generated from inline or user defined
+		cm, err := r.getConfigMap(ctx, cmName, req.Namespace)
 		if err != nil {
 			return ctrl.Result{}, nil
 		}
+
+		// generate the updated config map, this is either the existing config map or the inline one
+		functionCm := cm
+		if common.IsInline(defSpec) {
+			functionCm = r.generateConfigMap(defSpec, cmName, definition.Namespace)
+		}
+		//compare and handle updated and existing
+		r.reconcileConfigMap(ctx, functionCm, cm)
+		/// if neither exist remove from status
+		r.updateTaskDefinitionStatus(functionCm, definition)
+		// update ref
+		//defSpec.ConfigMapReference.Name = functionCm.Name
+		//now we know that the reference to the config map is valid, so we update the definition
+		err = r.Client.Status().Update(ctx, definition)
+		if err != nil {
+			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
+			return ctrl.Result{}, nil
+		}
+		r.Log.Info("updated configmap status reference for: " + definition.Name)
+
 	}
+
 	r.Log.Info("Finished Reconciling KeptnTaskDefinition")
 	return ctrl.Result{}, nil
 }

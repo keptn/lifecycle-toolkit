@@ -3,7 +3,6 @@ package keptntask
 import (
 	"context"
 	"fmt"
-
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -24,7 +23,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if definition.SpecExists() {
+	if controllercommon.SpecExists(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -134,12 +133,16 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 	}
 
 	builderOpt := BuilderOptions{
-		Client:   r.Client,
-		req:      request,
-		Log:      r.Log,
-		task:     task,
-		taskDef:  definition,
-		recorder: r.Recorder,
+		Client:        r.Client,
+		req:           request,
+		Log:           r.Log,
+		task:          task,
+		containerSpec: definition.Spec.Container,
+		funcSpec:      controllercommon.GetRuntimeSpec(definition),
+		recorder:      r.Recorder,
+		Image:         controllercommon.GetRuntimeImage(definition),
+		MountPath:     controllercommon.GetRuntimeMountPath(definition),
+		ConfigMap:     definition.Status.Function.ConfigMap,
 	}
 
 	builder := getJobRunnerBuilder(builderOpt)
@@ -149,6 +152,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 
 	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 	if err != nil {
+		r.Log.Error(err, "could not create Job")
 		return nil, controllererrors.ErrCannotMarshalParams
 	}
 

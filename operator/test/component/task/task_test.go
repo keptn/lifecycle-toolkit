@@ -2,7 +2,6 @@ package task_test
 
 import (
 	"context"
-
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -78,7 +77,7 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateFailed))
 				}, "10s").Should(Succeed())
 			})
-			It("succeed task if taskDefiniton is present in default KLT namespace", func() {
+			It("succeed task if taskDefiniton for Deno is present in default KLT namespace", func() {
 				By("create default KLT namespace")
 
 				ns := &v1.Namespace{
@@ -90,6 +89,59 @@ var _ = Describe("Task", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				taskDefinition = makeTaskDefinition(taskDefinitionName, controllercommon.KLTNamespace)
+				task = makeTask(name, namespace, taskDefinition.Name)
+
+				By("Verifying that a job has been created")
+
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespace,
+						Name:      task.Name,
+					}, task)
+					g.Expect(err).To(BeNil())
+					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
+				}, "10s").Should(Succeed())
+
+				createdJob := &batchv1.Job{}
+
+				err = k8sClient.Get(context.TODO(), types.NamespacedName{
+					Namespace: namespace,
+					Name:      task.Status.JobName,
+				}, createdJob)
+
+				Expect(err).To(BeNil())
+
+				By("Setting the Job Status to complete")
+				createdJob.Status.Conditions = []batchv1.JobCondition{
+					{
+						Type: batchv1.JobComplete,
+					},
+				}
+
+				err = k8sClient.Status().Update(context.TODO(), createdJob)
+				Expect(err).To(BeNil())
+
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespace,
+						Name:      task.Name,
+					}, task)
+					g.Expect(err).To(BeNil())
+					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
+				}, "10s").Should(Succeed())
+			})
+			It("succeed task if taskDefiniton for Container is present in default KLT namespace", func() {
+				By("create default KLT namespace")
+
+				ns := &v1.Namespace{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: controllercommon.KLTNamespace,
+					},
+				}
+				err := k8sClient.Create(context.TODO(), ns)
+				Expect(common.IgnoreAlreadyExists(err)).To(BeNil())
+
+				taskDefinition = makeContainerTaskDefinition(taskDefinitionName, controllercommon.KLTNamespace)
 				task = makeTask(name, namespace, taskDefinition.Name)
 
 				By("Verifying that a job has been created")
@@ -237,7 +289,7 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 			Namespace: namespace,
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.RuntimeSpec{
 				ConfigMapReference: klcv1alpha3.ConfigMapReference{
 					Name: cmName,
 				},
@@ -258,6 +310,36 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 	taskDefinition.Status.Function.ConfigMap = cmName
 
 	err = k8sClient.Status().Update(ctx, taskDefinition)
+	Expect(err).To(BeNil())
+
+	return taskDefinition
+}
+
+func makeContainerTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.KeptnTaskDefinition {
+
+	taskDefinition := &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      taskDefinitionName,
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Container: &klcv1alpha3.ContainerSpec{
+				Container: &v1.Container{
+					Name:  "test",
+					Image: "busybox:1.36.0",
+				},
+			},
+		},
+	}
+
+	err := k8sClient.Create(context.TODO(), taskDefinition)
+	Expect(err).To(BeNil())
+
+	err = k8sClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      taskDefinitionName,
+	}, taskDefinition)
+
 	Expect(err).To(BeNil())
 
 	return taskDefinition

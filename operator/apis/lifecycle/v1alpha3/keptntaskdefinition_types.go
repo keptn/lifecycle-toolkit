@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"os"
-
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -26,17 +24,21 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-const (
-	PYTHON_RUNTIME = "python"
-	//JS_RUNTIME     = "JS"
-)
-
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
+	// Deprecated
 	// Function contains the definition for the function that is to be executed in KeptnTasks based on
 	// the KeptnTaskDefinitions.
 	// +optional
-	Function *FunctionSpec `json:"function,omitempty"`
+	Function *RuntimeSpec `json:"function,omitempty"`
+	// Python contains the definition for the python function that is to be executed in KeptnTasks based on
+	//	the KeptnTaskDefinitions.
+	// +optional
+	Python *RuntimeSpec `json:"python,omitempty"`
+	// Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on
+	//	the KeptnTaskDefinitions.
+	// +optional
+	Deno *RuntimeSpec `json:"deno,omitempty"`
 	// Container contains the definition for the container that is to be used in Job based on
 	// the KeptnTaskDefinitions.
 	// +optional
@@ -48,7 +50,6 @@ type KeptnTaskDefinitionSpec struct {
 	// Timeout specifies the maximum time to wait for the task to be completed successfully.
 	// If the task does not complete successfully within this time frame, it will be
 	// considered to be failed.
-	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
@@ -56,7 +57,7 @@ type KeptnTaskDefinitionSpec struct {
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
-type FunctionSpec struct {
+type RuntimeSpec struct {
 	// FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the
 	// function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have
 	// multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters.
@@ -77,8 +78,6 @@ type FunctionSpec struct {
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	// CmdParameters contains parameters that will be passed to the command
 	CmdParameters string `json:"cmdParameters,omitempty"`
-	// FunctionRuntime specifies what function runtime to use (python or js)
-	FunctionRuntime string `json:"functionRuntime,omitempty"`
 }
 
 type ConfigMapReference struct {
@@ -142,44 +141,4 @@ type KeptnTaskDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
-}
-
-func (d KeptnTaskDefinition) SpecExists() bool {
-	return d.IsJSSpecDefined() || d.IsContainerSpecDefined()
-}
-
-func (d KeptnTaskDefinition) IsJSSpecDefined() bool {
-	return d.Spec.Function != nil
-}
-
-func (d KeptnTaskDefinition) IsContainerSpecDefined() bool {
-	return d.Spec.Container != nil
-}
-
-func (d KeptnTaskDefinition) IsVolumeMountPresent() bool {
-	return d.IsContainerSpecDefined() && d.Spec.Container.VolumeMounts != nil && len(d.Spec.Container.VolumeMounts) > 0
-}
-
-func (td *KeptnTaskDefinition) IsInline() bool {
-	return td.Spec.Function.Inline != (Inline{})
-}
-
-func (td *KeptnTaskDefinition) IsConfigMap() bool {
-	return td.Spec.Function.ConfigMapReference != (ConfigMapReference{})
-}
-
-func (td *KeptnTaskDefinition) GetImage() string {
-	image := os.Getenv("FUNCTION_RUNNER_IMAGE")
-	if td.Spec.Function.FunctionRuntime == PYTHON_RUNTIME {
-		image = os.Getenv("PYTHON_RUNNER_IMAGE")
-	}
-	return image
-}
-
-func (td *KeptnTaskDefinition) GetMountPath() string {
-	path := "/var/data/function.ts"
-	if td.Spec.Function.FunctionRuntime == PYTHON_RUNTIME {
-		path = "/var/data/function.py"
-	}
-	return path
 }

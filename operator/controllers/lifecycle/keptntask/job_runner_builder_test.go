@@ -9,25 +9,17 @@ import (
 )
 
 func Test_getJobRunnerBuilder(t *testing.T) {
-	jsBuilderOptions := BuilderOptions{
-		taskDef: &v1alpha3.KeptnTaskDefinition{
-			Spec: v1alpha3.KeptnTaskDefinitionSpec{
-				Function: &v1alpha3.FunctionSpec{
-					Inline: v1alpha3.Inline{
-						Code: "some code",
-					},
-				},
+	functionBuilderOptions := BuilderOptions{
+		funcSpec: &v1alpha3.RuntimeSpec{
+			Inline: v1alpha3.Inline{
+				Code: "some code",
 			},
 		},
 	}
 	containerBuilderOptions := BuilderOptions{
-		taskDef: &v1alpha3.KeptnTaskDefinition{
-			Spec: v1alpha3.KeptnTaskDefinitionSpec{
-				Container: &v1alpha3.ContainerSpec{
-					Container: &v1.Container{
-						Image: "image",
-					},
-				},
+		containerSpec: &v1alpha3.ContainerSpec{
+			Container: &v1.Container{
+				Image: "image",
 			},
 		},
 	}
@@ -38,20 +30,18 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 	}{
 		{
 			name:    "js builder",
-			options: jsBuilderOptions,
-			want:    NewJSBuilder(jsBuilderOptions),
+			options: functionBuilderOptions,
+			want:    NewFunctionBuilder(functionBuilderOptions),
 		},
 		{
 			name:    "container builder",
 			options: containerBuilderOptions,
-			want:    NewContainerBuilder(containerBuilderOptions.taskDef),
+			want:    NewContainerBuilder(containerBuilderOptions.containerSpec),
 		},
 		{
-			name: "invalid builder",
-			options: BuilderOptions{
-				taskDef: &v1alpha3.KeptnTaskDefinition{},
-			},
-			want: nil,
+			name:    "invalid builder",
+			options: BuilderOptions{},
+			want:    nil,
 		},
 	}
 	for _, tt := range tests {

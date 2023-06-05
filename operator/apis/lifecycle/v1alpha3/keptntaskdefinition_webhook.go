@@ -44,14 +44,14 @@ var _ webhook.Validator = &KeptnTaskDefinition{}
 func (r *KeptnTaskDefinition) ValidateCreate() error {
 	keptntaskdefinitionlog.Info("validate create", "name", r.Name)
 
-	return r.validateKeptnTaskDefination()
+	return r.validateKeptnTaskDefinition()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) error {
 	keptntaskdefinitionlog.Info("validate update", "name", r.Name)
 
-	return r.validateKeptnTaskDefination()
+	return r.validateKeptnTaskDefinition()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -61,7 +61,7 @@ func (r *KeptnTaskDefinition) ValidateDelete() error {
 	return nil
 }
 
-func (r *KeptnTaskDefinition) validateKeptnTaskDefination() error {
+func (r *KeptnTaskDefinition) validateKeptnTaskDefinition() error {
 	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
 	var err *field.Error
 	if err = r.validateFields(); err != nil {

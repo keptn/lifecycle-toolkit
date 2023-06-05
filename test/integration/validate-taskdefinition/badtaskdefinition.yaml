@@ -21,4 +21,4 @@ spec:
     inline:
       code: |
         console.log('hello');
-        
+

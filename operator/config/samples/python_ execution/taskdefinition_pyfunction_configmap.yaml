@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment
 spec:
-  function:
+  python:
     configMapRef:
       name: python-test-cm
 ---
@@ -14,4 +14,3 @@ metadata:
 data:
   code: |
     print("Hello, World!")
-   

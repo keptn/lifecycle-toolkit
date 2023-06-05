@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: python-inline
 spec:
-  function:
+  python:
     inlineRef:
       code: |
         import sys

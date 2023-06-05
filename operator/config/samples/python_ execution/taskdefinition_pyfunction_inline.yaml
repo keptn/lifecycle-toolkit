@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment
 spec:
-  function:
+  python:
     parameters:
       map:
         mydata: "my-user-defined"

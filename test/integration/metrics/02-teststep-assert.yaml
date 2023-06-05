@@ -5,3 +5,5 @@ assert: # this checks that kubectl get resource succeeds
   - goodmetric2.yaml
   - goodmetric3.yaml
   - goodmetric4.yaml
+error: # this checks that kubectl get resource fails
+  - badmetric.yaml

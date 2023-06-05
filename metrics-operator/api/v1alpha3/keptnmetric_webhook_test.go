@@ -4,7 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/pkg/errors"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
@@ -14,7 +15,7 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 	tests := []struct {
 		name string
 		Spec KeptnMetricSpec
-		want *field.Error
+		want *apierrors.StatusError
 	}{
 		{
 			name: "with-nil-range",
@@ -27,10 +28,16 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: "5mins"},
 			},
-			want: field.Invalid(
-				field.NewPath("spec").Child("range").Child("interval"),
-				"5mins",
-				errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"with-wrong-interval",
+				field.ErrorList{
+					field.Invalid(
+						field.NewPath("spec").Child("range").Child("interval"),
+						"5mins",
+						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
+					),
+				},	
 			),
 		},
 		{
@@ -38,10 +45,16 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: ""},
 			},
-			want: field.Invalid(
-				field.NewPath("spec").Child("range").Child("interval"),
-				"",
-				errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"with-empty-interval",
+				field.ErrorList{
+					field.Invalid(
+						field.NewPath("spec").Child("range").Child("interval"),
+						"",
+						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
+					),
+				},	
 			),
 		},
 		{
@@ -58,16 +71,16 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
 					Spec:       KeptnMetricSpec{Range: tt.Spec.Range},
 				}
-				if got := s.validateRangeInterval(); !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("validateRangeInterval() = %v, want %v", got, tt.want)
+				if got := s.validateKeptnMetric(); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("validateKeptnMetric() = %v, want %v", got, tt.want)
 				}
 			} else {
 				s := &KeptnMetric{
 					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
 					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval}},
 				}
-				if got := s.validateRangeInterval(); !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("validateRangeInterval() = %v, want %v", got, tt.want)
+				if got := s.validateKeptnMetric(); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("validateKeptnMetric() = %v, want %v", got, tt.want)
 				}
 			}
 		})

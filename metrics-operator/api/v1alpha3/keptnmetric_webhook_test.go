@@ -17,6 +17,12 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 		want *field.Error
 	}{
 		{
+			name: "with-nil-range",
+			Spec: KeptnMetricSpec{
+				Range: nil,
+			},
+		},
+		{
 			name: "with-wrong-interval",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: "5mins"},
@@ -37,15 +43,6 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 				"",
 				errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
 			),
-		},
-		{
-			name: "with-nil-range",
-			Spec: KeptnMetricSpec{
-				Range: nil,
-			},
-		},
-		{
-			name: "with-no-range",
 		},
 		{
 			name: "with-right-interval",

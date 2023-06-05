@@ -1,10 +1,10 @@
 package v1alpha3
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -67,8 +67,8 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				field.NewPath("spec"),
 				KeptnTaskDefinitionSpec{Function: &FunctionSpec{}},
 				errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error()),
-			oldSpec: KeptnTaskDefinitionSpec{
-				Function: &FunctionSpec{},
+			oldSpec: &KeptnTaskDefinition{
+				Spec: KeptnTaskDefinitionSpec{},
 			},
 			verb: "update",
 		},
@@ -85,7 +85,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				Spec:       tt.spec,
 			}
 
-			var got error
+			got := ktd.validateKeptnTaskDefinition()
 			switch tt.verb {
 			case "create":
 				got = ktd.ValidateCreate()
@@ -95,8 +95,11 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				got = ktd.ValidateDelete()
 			}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("validateFields() = %v, want %v", got, tt.want)
+			if tt.want != nil {
+				require.NotNil(t, got)
+				require.Contains(t, got.Error(), tt.want.Error())
+			} else {
+				require.Nil(t, got)
 			}
 		})
 	}

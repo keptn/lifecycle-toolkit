@@ -39,7 +39,7 @@ jobs:
       - name: Get result
         run: |
           echo "${{ steps.release.outputs.klt-cert-manager--release_created }}"
-          echo "${{ steps.release.outputs.*.value }}"
+          echo "${{ steps.release.outputs.releases_created }}"
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

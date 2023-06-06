@@ -78,7 +78,7 @@ lifecycleOperator:
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
       otelCollectorUrl: otel-collector:4317
-      pythonRunnerImage: ghcr.io/keptn/python-runtime:0.0.0
+      pythonRunnerImage: docker.io/odubajdt/python-runtime:test12345678
     image:
       repository: ghcr.io/keptn/lifecycle-operator
       tag: v0.7.1

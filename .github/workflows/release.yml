@@ -103,7 +103,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.release-please.outputs.build-matrix) }}
     steps:
-      - run: echo "matrix worked?"
+      - run: echo "matrix worked? ${{ matrix.config.name }}"
 
   build-release:
     if: needs.release-please.outputs.releases-created == 'true'

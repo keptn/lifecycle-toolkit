@@ -32,7 +32,7 @@ jobs:
         id: release
         with:
           command: manifest
-          token: ${{ secrets.KEPTN_BOT_TOKEN }}
+          token: ${{ secrets.PAT }}
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
@@ -61,7 +61,7 @@ jobs:
       packages: write
       id-token: write
     env:
-      IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
+      IMAGE_NAME: ghcr.io/mowies/${{ matrix.config.name }}
       IMAGE_TAG: ${{ needs.release-please.outputs.tag_name }}
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
         with:
           registry: "ghcr.io"
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PAT }}
 
       - name: Set up Cosign
         uses: sigstore/cosign-installer@v3.0.5
@@ -102,16 +102,6 @@ jobs:
           push: true
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
-
-      - name: Sign container image
-        env:
-          IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
-        run: |
-          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
-          cosign verify \
-            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
-            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
-            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.14.2

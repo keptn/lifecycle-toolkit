@@ -18,11 +18,11 @@ package keptntaskdefinition
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -66,7 +66,8 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 
 		//get existing configmap either generated from inline or user defined
 		cm, err := r.getConfigMap(ctx, cmName, req.Namespace)
-		if err != nil {
+		//if IsNotFound we need to create it
+		if err != nil && !errors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
 

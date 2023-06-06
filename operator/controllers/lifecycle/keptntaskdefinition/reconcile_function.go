@@ -8,7 +8,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -53,10 +52,6 @@ func (r *KeptnTaskDefinitionReconciler) getConfigMap(ctx context.Context, functi
 	cm := &corev1.ConfigMap{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: functionName, Namespace: namespace}, cm)
 	if err != nil {
-		//if IsNotFound we need to create it
-		if errors.IsNotFound(err) {
-			return nil, nil
-		}
 		r.Log.Error(err, "could not retrieve ConfigMap: "+functionName)
 		return nil, err
 	}

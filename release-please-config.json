@@ -1,6 +1,9 @@
 {
   "separate-pull-requests": true,
   "last-release-sha": "c13ae924904bdf07b12480d58c7e0eab767fc55c",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: release${component} ${version}",
   "packages": {
     ".": {
       "package-name": "klt",
@@ -8,9 +11,6 @@
       "release-type": "go",
       "prerelease": false,
       "monorepo-tags": "klt",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true,
-      "pull-request-title-pattern": "chore: release${component} ${version}",
       "draft": false,
       "exclude-paths": ["klt-cert-manager"],
       "extra-files": [
@@ -32,9 +32,6 @@
       "release-type": "go",
       "monorepo-tags": "cert-manager",
       "prerelease": false,
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true,
-      "pull-request-title-pattern": "chore: release cert manager ${version}",
       "draft": false,
       "extra-files": [
         "Makefile"

@@ -5,8 +5,6 @@ ENV CGO_ENABLED=0
 
 WORKDIR /workspace
 
-
-
 # Copy the Go Modules manifests
 COPY go.mod go.sum ./
 RUN go mod download

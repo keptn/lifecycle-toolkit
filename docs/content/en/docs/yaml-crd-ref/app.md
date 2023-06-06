@@ -164,8 +164,8 @@ This container is defined in
 
 ## Differences between versions
 
-* The `spec.Revision` field is introduced in v1alpha2.
-* Support for customized application containers
+- The `spec.Revision` field is introduced in v1alpha2.
+- Support for customized application containers
   is introduced in KLT v0.8.0.
 
 ## See also

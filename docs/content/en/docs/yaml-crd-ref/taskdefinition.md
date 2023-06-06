@@ -194,7 +194,8 @@ spec:
 
       TODO: should this go on to mention ports, env variables, volumes,
       resources, lifecycle, security context, and debugging, which are
-      all the subsections to `Container` in that doc.  Or should I just
+      all the subsections to `Container` in that doc.
+      Or should I just
       make a generic `Other fields in the spec` reference comment?
 
 ## Usage

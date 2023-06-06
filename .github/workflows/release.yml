@@ -37,7 +37,10 @@ jobs:
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
       - name: Get result
-        run: echo "${{ join(steps.release.outputs.*, '\n') }}"
+        run: |
+          echo "${{ steps.release.outputs.klt-cert-manager--release_created }}"
+          echo "${{ steps.release.outputs..--release_created }}"
+          echo "${{ steps.release.outputs.*.value }}"
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

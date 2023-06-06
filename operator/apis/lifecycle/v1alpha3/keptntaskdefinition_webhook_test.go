@@ -11,38 +11,48 @@ import (
 )
 
 func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
+
+	specWithFunctionAndContainer := KeptnTaskDefinitionSpec{
+		Function:  &FunctionSpec{},
+		Container: &ContainerSpec{},
+	}
+
+	emptySpec := KeptnTaskDefinitionSpec{}
+
 	tests := []struct {
 		name    string
 		spec    KeptnTaskDefinitionSpec
-		want    *field.Error
+		want    error
 		verb    string
 		oldSpec runtime.Object
 	}{
 		{
 			name: "with-no-function-or-container",
-			spec: KeptnTaskDefinitionSpec{},
-			want: field.Invalid(
-				field.NewPath("spec"),
-				KeptnTaskDefinitionSpec{},
-				errors.New("Forbidden! Either Function or Container field must be defined").Error(),
+			spec: emptySpec,
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
+				"with-no-function-or-container",
+				[]*field.Error{field.Invalid(
+					field.NewPath("spec"),
+					emptySpec,
+					errors.New("Forbidden! Either Function or Container field must be defined").Error(),
+				)},
 			),
 			verb: "create",
 		},
 		{
 			name: "with-both-function-and-container",
-			spec: KeptnTaskDefinitionSpec{
-				Function:  &FunctionSpec{},
-				Container: &ContainerSpec{},
-			},
-			want: field.Invalid(
-				field.NewPath("spec"),
-				KeptnTaskDefinitionSpec{
-					Function:  &FunctionSpec{},
-					Container: &ContainerSpec{},
-				},
-				errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(),
-			),
+			spec: specWithFunctionAndContainer,
 			verb: "create",
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
+				"with-both-function-and-container",
+				[]*field.Error{field.Invalid(
+					field.NewPath("spec"),
+					specWithFunctionAndContainer,
+					errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(),
+				)},
+			),
 		},
 		{
 			name: "with-function-only",
@@ -60,13 +70,16 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 		},
 		{
 			name: "update-with-both-function-and-container",
-			spec: KeptnTaskDefinitionSpec{
-				Function: &FunctionSpec{},
-			},
-			want: field.Invalid(
-				field.NewPath("spec"),
-				KeptnTaskDefinitionSpec{Function: &FunctionSpec{}},
-				errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error()),
+			spec: specWithFunctionAndContainer,
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
+				"update-with-both-function-and-container",
+				[]*field.Error{field.Invalid(
+					field.NewPath("spec"),
+					specWithFunctionAndContainer,
+					errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(),
+				)},
+			),
 			oldSpec: &KeptnTaskDefinition{
 				Spec: KeptnTaskDefinitionSpec{},
 			},
@@ -85,7 +98,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				Spec:       tt.spec,
 			}
 
-			got := ktd.validateKeptnTaskDefinition()
+			var got error
 			switch tt.verb {
 			case "create":
 				got = ktd.ValidateCreate()
@@ -97,7 +110,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 
 			if tt.want != nil {
 				require.NotNil(t, got)
-				require.Contains(t, got.Error(), tt.want.Error())
+				require.EqualValues(t, tt.want, got)
 			} else {
 				require.Nil(t, got)
 			}

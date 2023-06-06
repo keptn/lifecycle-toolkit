@@ -48,11 +48,11 @@ func (r *KeptnTaskDefinitionReconciler) reconcileConfigMap(ctx context.Context, 
 	//nothing changed
 }
 
-func (r *KeptnTaskDefinitionReconciler) getConfigMap(ctx context.Context, functionName string, namespace string) (*corev1.ConfigMap, error) {
+func (r *KeptnTaskDefinitionReconciler) getConfigMap(ctx context.Context, cmName string, namespace string) (*corev1.ConfigMap, error) {
 	cm := &corev1.ConfigMap{}
-	err := r.Client.Get(ctx, types.NamespacedName{Name: functionName, Namespace: namespace}, cm)
+	err := r.Client.Get(ctx, types.NamespacedName{Name: cmName, Namespace: namespace}, cm)
 	if err != nil {
-		r.Log.Error(err, "could not retrieve ConfigMap: "+functionName)
+		r.Log.Info("could not retrieve ConfigMap '%s': %s", cmName, err.Error())
 		return nil, err
 	}
 	return cm, nil

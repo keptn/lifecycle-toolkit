@@ -1,6 +1,4 @@
-#!/bin/bash
-
-set -eu
+#!/bin/sh
 
 regex='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
 

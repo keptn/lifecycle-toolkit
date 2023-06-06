@@ -3,6 +3,7 @@ package keptntask
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/imdario/mergo"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -36,6 +37,15 @@ type FunctionExecutionParams struct {
 	MountPath        string
 }
 
+const (
+	Context           = "CONTEXT"
+	SecureData        = "SECURE_DATA"
+	Data              = "DATA"
+	CmdArgs           = "CMD_ARGS"
+	Script            = "SCRIPT"
+	FunctionMountName = "function-mount"
+)
+
 func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
 
 	var envVars []corev1.EnvVar
@@ -49,22 +59,22 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 		if err != nil {
 			return nil, nil, err
 		}
-		envVars = append(envVars, corev1.EnvVar{Name: "DATA", Value: string(jsonParams)})
+		envVars = append(envVars, corev1.EnvVar{Name: Data, Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
 		return nil, nil, err
 	}
-	envVars = append(envVars, corev1.EnvVar{Name: "CONTEXT", Value: string(jsonParams)})
-	envVars = append(envVars, corev1.EnvVar{Name: "CMD_ARGS", Value: params.CmdParameters})
+	envVars = append(envVars, corev1.EnvVar{Name: Context, Value: string(jsonParams)})
+	envVars = append(envVars, corev1.EnvVar{Name: CmdArgs, Value: params.CmdParameters})
 	if params.SecureParameters != "" {
 		envVars = append(envVars, corev1.EnvVar{
-			Name: "SECURE_DATA",
+			Name: SecureData,
 			ValueFrom: &corev1.EnvVarSource{
 				SecretKeyRef: &corev1.SecretKeySelector{
 					LocalObjectReference: corev1.LocalObjectReference{Name: params.SecureParameters},
-					Key:                  "SECURE_DATA",
+					Key:                  SecureData,
 				},
 			},
 		})
@@ -80,10 +90,10 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 	}
 
 	if params.ConfigMap != "" {
-		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: params.MountPath})
+		envVars = append(envVars, corev1.EnvVar{Name: Script, Value: params.MountPath})
 
 		jobVolumes = append(jobVolumes, corev1.Volume{
-			Name: "function-mount",
+			Name: FunctionMountName,
 			VolumeSource: corev1.VolumeSource{
 				ConfigMap: &corev1.ConfigMapVolumeSource{
 					LocalObjectReference: corev1.LocalObjectReference{
@@ -95,14 +105,14 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 
 		container.VolumeMounts = []corev1.VolumeMount{
 			{
-				Name:      "function-mount",
+				Name:      FunctionMountName,
 				ReadOnly:  true,
 				MountPath: params.MountPath,
 				SubPath:   "code",
 			},
 		}
 	} else {
-		envVars = append(envVars, corev1.EnvVar{Name: "SCRIPT", Value: params.URL})
+		envVars = append(envVars, corev1.EnvVar{Name: Script, Value: params.URL})
 	}
 
 	container.Env = envVars

@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -33,8 +34,8 @@ var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, _, k8sClient, readyToStart = common.InitSuite()
 
-	_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image-js")
-	_ = os.Setenv("PYTHON_RUNNER_IMAGE", "my-image-py")
+	_ = os.Setenv(controllercommon.FunctionRuntimeImageKey, "my-image-js")
+	_ = os.Setenv(controllercommon.PythonRuntimeImageKey, "my-image-py")
 
 	////setup controllers here
 	controller := &keptntask.KeptnTaskReconciler{

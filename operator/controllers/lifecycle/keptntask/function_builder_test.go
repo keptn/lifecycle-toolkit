@@ -1,8 +1,9 @@
 package keptntask
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"testing"
+
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -38,7 +39,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytd"},
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA": "mydata"},
+					Inline: map[string]string{Data: "mydata"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
 					Secret: "mysecret",
@@ -118,8 +119,8 @@ func TestJSBuilder_handleParent(t *testing.T) {
 	}
 }
 func TestJSBuilder_getParams(t *testing.T) {
-	t.Setenv("FUNCTION_RUNNER_IMAGE", "js")
-	t.Setenv("PYTHON_RUNNER_IMAGE", "python")
+	t.Setenv(common.FunctionRuntimeImageKey, "js")
+	t.Setenv(common.PythonRuntimeImageKey, "python")
 
 	def := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -212,7 +213,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				funcSpec:  common.GetRuntimeSpec(def),
 				task:      makeTask("myt2", "default", def.Name),
 				Image:     "js",
-				MountPath: "/var/data/function.ts",
+				MountPath: common.FunctionScriptMountPath,
 				ConfigMap: def.Status.Function.ConfigMap,
 			},
 			params: &FunctionExecutionParams{
@@ -225,7 +226,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 					AppName:      "my-app",
 					ObjectType:   "Workload"},
 				Image:     "js",
-				MountPath: "/var/data/function.ts",
+				MountPath: common.FunctionScriptMountPath,
 			},
 			wantErr: false,
 		},
@@ -255,7 +256,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 					AppName:      "my-app",
 					ObjectType:   "Workload"},
 				Image:     "js",
-				MountPath: "/var/data/function.ts",
+				MountPath: common.FunctionScriptMountPath,
 			},
 			wantErr: false,
 		},
@@ -280,7 +281,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 					AppName:      "my-app",
 					ObjectType:   "Workload"},
 				Image:     "python",
-				MountPath: "/var/data/function.py",
+				MountPath: common.PythonScriptMountPath,
 			},
 			wantErr: false,
 		},

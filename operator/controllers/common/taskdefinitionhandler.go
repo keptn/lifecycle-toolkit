@@ -7,6 +7,13 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 )
 
+const (
+	FunctionRuntimeImageKey = "FUNCTION_RUNNER_IMAGE"
+	PythonRuntimeImageKey   = "PYTHON_RUNNER_IMAGE"
+	FunctionScriptMountPath = "/var/data/function.ts"
+	PythonScriptMountPath   = "/var/data/function.py"
+)
+
 func GetRuntimeSpec(def *klcv1alpha3.KeptnTaskDefinition) *klcv1alpha3.RuntimeSpec {
 
 	if !IsRuntimeEmpty(def.Spec.Function) {
@@ -35,17 +42,17 @@ func IsInline(spec *klcv1alpha3.RuntimeSpec) bool {
 }
 
 func GetRuntimeImage(def *klcv1alpha3.KeptnTaskDefinition) string {
-	image := os.Getenv("FUNCTION_RUNNER_IMAGE")
+	image := os.Getenv(FunctionRuntimeImageKey)
 	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) {
-		return os.Getenv("PYTHON_RUNNER_IMAGE")
+		return os.Getenv(PythonRuntimeImageKey)
 	}
 	return image
 }
 
 func GetRuntimeMountPath(def *klcv1alpha3.KeptnTaskDefinition) string {
-	path := "/var/data/function.ts"
+	path := FunctionScriptMountPath
 	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) && IsRuntimeEmpty(def.Spec.Deno) {
-		path = "/var/data/function.py"
+		path = PythonScriptMountPath
 	}
 	return path
 }

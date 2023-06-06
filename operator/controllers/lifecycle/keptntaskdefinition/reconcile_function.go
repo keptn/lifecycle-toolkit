@@ -2,6 +2,8 @@ package keptntaskdefinition
 
 import (
 	"context"
+	"reflect"
+
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -9,7 +11,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 

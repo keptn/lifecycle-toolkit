@@ -13,6 +13,7 @@ import (
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
+//nolint:dupl
 var _ = Describe("Taskdefinition", Ordered, func() {
 	var (
 		taskDefinitionName string
@@ -83,24 +84,6 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 			})
 
 			It("TaskDefinition referencing existing Configmap defaulting to Deno", func() {
-				By("Create TaskDefinition")
-				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      taskDefinitionName,
-						Namespace: namespace,
-					},
-					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: &klcv1alpha3.RuntimeSpec{
-							ConfigMapReference: klcv1alpha3.ConfigMapReference{
-								Name: "my-configmap",
-							},
-						},
-					},
-				}
-
-				err := k8sClient.Create(context.TODO(), taskDefinition)
-				Expect(err).To(BeNil())
-
 				By("Create ConfigMap")
 
 				configmap = &v1.ConfigMap{
@@ -113,7 +96,25 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					},
 				}
 
-				err = k8sClient.Create(context.TODO(), configmap)
+				err := k8sClient.Create(context.TODO(), configmap)
+				Expect(err).To(BeNil())
+
+				By("Create TaskDefinition")
+				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinitionName,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+						Function: &klcv1alpha3.RuntimeSpec{
+							ConfigMapReference: klcv1alpha3.ConfigMapReference{
+								Name: configmap.Name,
+							},
+						},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), taskDefinition)
 				Expect(err).To(BeNil())
 
 				By("Check if TaskDefinition was updated")
@@ -127,31 +128,13 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					g.Expect(err).To(BeNil())
 					g.Expect(taskDefinition2.Status.Function.ConfigMap).To(Equal(configmap.Name))
 
-				}, "40s").Should(Succeed())
+				}, "30s").Should(Succeed())
 
 				err = k8sClient.Delete(context.TODO(), configmap)
 				common.LogErrorIfPresent(err)
 			})
 
 			It("TaskDefinition referencing existing Configmap for Python runtime", func() {
-				By("Create TaskDefinition")
-				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      taskDefinitionName,
-						Namespace: namespace,
-					},
-					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Python: &klcv1alpha3.RuntimeSpec{
-							ConfigMapReference: klcv1alpha3.ConfigMapReference{
-								Name: "my-configmap",
-							},
-						},
-					},
-				}
-
-				err := k8sClient.Create(context.TODO(), taskDefinition)
-				Expect(err).To(BeNil())
-
 				By("Create ConfigMap")
 
 				configmap = &v1.ConfigMap{
@@ -164,7 +147,25 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					},
 				}
 
-				err = k8sClient.Create(context.TODO(), configmap)
+				err := k8sClient.Create(context.TODO(), configmap)
+				Expect(err).To(BeNil())
+
+				By("Create TaskDefinition")
+				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinitionName,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+						Python: &klcv1alpha3.RuntimeSpec{
+							ConfigMapReference: klcv1alpha3.ConfigMapReference{
+								Name: configmap.Name,
+							},
+						},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), taskDefinition)
 				Expect(err).To(BeNil())
 
 				By("Check if TaskDefinition was updated")

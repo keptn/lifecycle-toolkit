@@ -1,16 +1,17 @@
 package common
 
 import (
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
-	corev1 "k8s.io/api/core/v1"
 	"reflect"
 	"testing"
+
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	corev1 "k8s.io/api/core/v1"
 )
 
 func TestGetRuntimeImage(t *testing.T) {
 
-	t.Setenv("FUNCTION_RUNNER_IMAGE", "js")
-	t.Setenv("PYTHON_RUNNER_IMAGE", "python")
+	t.Setenv(FunctionRuntimeImageKey, "js")
+	t.Setenv(PythonRuntimeImageKey, "python")
 	tests := []struct {
 		name string
 		def  *klcv1alpha3.KeptnTaskDefinition
@@ -221,7 +222,7 @@ func TestGetRuntimeMountPath(t *testing.T) {
 					},
 				},
 			},
-			want: "/var/data/function.ts",
+			want: FunctionScriptMountPath,
 		},
 		{
 			name: "deno",
@@ -232,7 +233,7 @@ func TestGetRuntimeMountPath(t *testing.T) {
 					},
 				},
 			},
-			want: "/var/data/function.ts",
+			want: FunctionScriptMountPath,
 		},
 		{
 			name: "python",
@@ -243,7 +244,7 @@ func TestGetRuntimeMountPath(t *testing.T) {
 					},
 				},
 			},
-			want: "/var/data/function.py",
+			want: PythonScriptMountPath,
 		},
 	}
 	for _, tt := range tests {

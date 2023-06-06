@@ -53,57 +53,56 @@ jobs:
         env:
           RELEASE_KLT: ${{ steps.release.outputs.release_created }}
           RELEASE_CERT_MANAGER: ${{ steps.release.outputs.klt-cert-manager--release_created }}
+          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          CERT_MANAGER_TAG: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
         with:
           script: |
-            const { RELEASE_KLT, RELEASE_CERT_MANAGER } = process.env
+            const { RELEASE_KLT, RELEASE_CERT_MANAGER, KLT_TAG, CERT_MANAGER_TAG } = process.env
             const kltMatrix = [
               {
                   name: "lifecycle-operator",
-                  folder: "operator/"
+                  folder: "operator/",
+                  tagName: KLT_TAG
               },
               {
                   name: "metrics-operator",
-                  folder: "metrics-operator/"
+                  folder: "metrics-operator/",
+                  tagName: KLT_TAG
               },
               {
                   name: "scheduler",
-                  folder: "scheduler/"
+                  folder: "scheduler/",
+                  tagName: KLT_TAG
               },
               {
                   name: "functions-runtime",
-                  folder: "functions-runtime/"
+                  folder: "functions-runtime/",
+                  tagName: KLT_TAG
               },
               {
                   name: "python-runtime",
-                  folder: "python-runtime/"
+                  folder: "python-runtime/",
+                  tagName: KLT_TAG
               }
             ]
               
             const certManagerMatrix = [
               {
                   name: "certificate-operator",
-                  folder: "klt-cert-manager/"
+                  folder: "klt-cert-manager/",
+                  tagName: CERT_MANAGER_TAG
               }
             ]
             
             let result = {}
             if (RELEASE_KLT === "true" && RELEASE_CERT_MANAGER === "true") {
-                result = { config: [...kltMatrix, ...certManagerMatrix]} 
+                result = { config: [...kltMatrix, ...certManagerMatrix]}
             } else if (RELEASE_KLT === "true") {
                 result = { config: kltMatrix }
             } else if (RELEASE_CERT_MANAGER === "true") {
                 result = { config: certManagerMatrix }
             }
-            return { config: [...kltMatrix, ...certManagerMatrix]}
-
-  try-build-matrix:
-    runs-on: ubuntu-22.04
-    needs:
-      - release-please
-    strategy:
-      matrix: ${{ fromJson(needs.release-please.outputs.build-matrix) }}
-    steps:
-      - run: echo "matrix worked? ${{ matrix.config.name }}"
+            return result
 
   build-release:
     if: needs.release-please.outputs.releases-created == 'true'
@@ -118,7 +117,6 @@ jobs:
       id-token: write
     env:
       IMAGE_NAME: ghcr.io/mowies/${{ matrix.config.name }}
-      IMAGE_TAG: ${{ needs.release-please.outputs.klt-tag-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -147,7 +145,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:${{ matrix.config.tagName }}
           build-args: |
             GIT_HASH=${{ env.GIT_SHA }}
             RELEASE_VERSION=dev-${{ env.DATETIME }}
@@ -172,18 +170,18 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.14.2
         with:
-          image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ env.IMAGE_NAME }}:${{ matrix.config.tagName }}
           artifact-name: sbom-${{ matrix.config.name }}
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
+          tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
 
   release-manifests:
-    if: needs.release-please.outputs.releases_created == 'true'
+    if: needs.release-please.outputs.releases-created == 'true'
     needs:
       - release-please
       - build-release
@@ -218,7 +216,8 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Create manifests
+      - name: Create KLT manifest
+        if: needs.release-please.outputs.klt-release-created == 'true'
         env:
           RELEASE_REGISTRY: ghcr.io/keptn
           CHART_APPVERSION: ${{ needs.release-please.outputs.klt-tag-name }}
@@ -227,14 +226,11 @@ jobs:
           make release-manifests
           cd ../operator
           make controller-gen release-manifests
-          cd ../klt-cert-manager
-          make controller-gen release-manifests
           cd ../metrics-operator
           make controller-gen release-manifests
           cd ..
           echo "---" >> operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
-          echo "---" >> klt-cert-manager/config/rendered/release.yaml
           cat >> namespace.yaml << EOF
           ---
           apiVersion: v1
@@ -246,14 +242,33 @@ jobs:
           cat namespace.yaml \
               operator/config/rendered/release.yaml \
               scheduler/config/rendered/release.yaml \
-              klt-cert-manager/config/rendered/release.yaml \
-              metrics-operator/config/rendered/release.yaml > manifest.yaml
+              metrics-operator/config/rendered/release.yaml > klt-manifest.yaml
 
-      - name: Attach release assets
+      - name: Create Cert-Manager manifest
+        if: needs.release-please.outputs.cert-manager-release-created == 'true'
+        env:
+          RELEASE_REGISTRY: ghcr.io/keptn
+          CHART_APPVERSION: ${{ needs.release-please.outputs.cert-manager-tag-name }}
+        run: |
+          cd klt-cert-manager
+          make controller-gen release-manifests
+          cd ..
+          echo "---" >> klt-cert-manager/config/rendered/release.yaml
+          cat klt-cert-manager/config/rendered/release.yaml > cert-manager-manifest.yaml
+
+      - name: Attach KLT release assets
+        if: needs.release-please.outputs.klt-release-created == 'true'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
-          files: manifest.yaml
+          files: klt-manifest.yaml
+
+      - name: Attach Cert-Manager release assets
+        if: needs.release-please.outputs.cert-manager-release-created == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.release-please.outputs.cert-manager-tag-name }}
+          files: cert-manager-manifest.yaml
 
   update-docs:
     name: Update Documentation

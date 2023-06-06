@@ -3,10 +3,9 @@ package keptntask
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"

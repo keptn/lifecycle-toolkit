@@ -36,6 +36,10 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
+      - name: Check RP outputs
+        run: |
+          echo "${{ steps.release.outputs }}"
+
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:

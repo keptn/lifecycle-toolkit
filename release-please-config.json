@@ -1,13 +1,18 @@
 {
+  "separate-pull-requests": true,
+  "last-release-sha": "d5000da9b2aa8c02ae0b10129b7066ddd9a573fb",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: release${component} ${version}",
   "packages": {
     ".": {
+      "package-name": "klt",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "prerelease": false,
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true,
-      "pull-request-title-pattern": "chore: release${component} ${version}",
+      "monorepo-tags": "klt",
       "draft": false,
+      "exclude-paths": ["klt-cert-manager"],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
@@ -15,68 +20,78 @@
         "Makefile",
         "operator/Makefile",
         "scheduler/Makefile",
-        "klt-cert-manager/Makefile",
         "metrics-operator/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"
-      ],
-      "changelog-sections": [
-        {
-          "type": "feat",
-          "section": "Features"
-        },
-        {
-          "type": "fix",
-          "section": "Bug Fixes"
-        },
-        {
-          "type": "chore",
-          "section": "Other"
-        },
-        {
-          "type": "docs",
-          "section": "Docs"
-        },
-        {
-          "type": "perf",
-          "section": "Performance"
-        },
-        {
-          "type": "build",
-          "hidden": true,
-          "section": "Build"
-        },
-        {
-          "type": "deps",
-          "section": "Dependency Updates"
-        },
-        {
-          "type": "ci",
-          "hidden": true,
-          "section": "CI"
-        },
-        {
-          "type": "refactor",
-          "section": "Refactoring"
-        },
-        {
-          "type": "revert",
-          "hidden": true,
-          "section": "Reverts"
-        },
-        {
-          "type": "style",
-          "hidden": true,
-          "section": "Styling"
-        },
-        {
-          "type": "test",
-          "hidden": true,
-          "section": "Tests"
-        }
+      ]
+    },
+    "klt-cert-manager": {
+      "package-name": "cert-manager",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "cert-manager",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
       ]
     }
   },
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "chore",
+      "section": "Other"
+    },
+    {
+      "type": "docs",
+      "section": "Docs"
+    },
+    {
+      "type": "perf",
+      "section": "Performance"
+    },
+    {
+      "type": "build",
+      "hidden": true,
+      "section": "Build"
+    },
+    {
+      "type": "deps",
+      "section": "Dependency Updates"
+    },
+    {
+      "type": "ci",
+      "hidden": true,
+      "section": "CI"
+    },
+    {
+      "type": "refactor",
+      "section": "Refactoring"
+    },
+    {
+      "type": "revert",
+      "hidden": true,
+      "section": "Reverts"
+    },
+    {
+      "type": "style",
+      "hidden": true,
+      "section": "Styling"
+    },
+    {
+      "type": "test",
+      "hidden": true,
+      "section": "Tests"
+    }
+  ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }

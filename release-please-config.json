@@ -28,7 +28,7 @@
     },
     "klt-cert-manager": {
       "package-name": "cert-manager",
-      "changelog-path": "klt-cert-manager/CHANGELOG.md",
+      "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "cert-manager",
       "prerelease": false,

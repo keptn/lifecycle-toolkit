@@ -108,6 +108,16 @@ jobs:
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
 
+      - name: Sign container image
+        env:
+          IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
+        run: |
+          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.14.2
         with:

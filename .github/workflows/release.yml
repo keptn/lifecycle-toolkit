@@ -37,7 +37,7 @@ jobs:
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
       - name: Get result
-        run: echo "${{ join(steps.release.*, '\n') }}"
+        run: echo "${{ join(steps.release.outputs.*, '\n') }}"
 
   build-release:
     if: needs.release-please.outputs.releases_created == 'true'

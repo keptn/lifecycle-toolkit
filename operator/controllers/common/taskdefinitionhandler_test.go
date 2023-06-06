@@ -72,6 +72,24 @@ func TestGetRuntimeImage(t *testing.T) {
 			},
 			want: "js",
 		},
+		{
+			name: "deno and python defined, deno wins",
+			def: &klcv1alpha3.KeptnTaskDefinition{
+				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+					Deno: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+					Python: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+				},
+			},
+			want: "js",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -246,6 +264,42 @@ func TestGetRuntimeMountPath(t *testing.T) {
 			},
 			want: PythonScriptMountPath,
 		},
+		{
+			name: "default and python defined, default wins",
+			def: &klcv1alpha3.KeptnTaskDefinition{
+				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+					Function: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+					Python: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+				},
+			},
+			want: FunctionScriptMountPath,
+		},
+		{
+			name: "deno and python defined, deno wins",
+			def: &klcv1alpha3.KeptnTaskDefinition{
+				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+					Deno: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+					Python: &klcv1alpha3.RuntimeSpec{
+						HttpReference: klcv1alpha3.HttpReference{
+							Url: "testy.com",
+						},
+					},
+				},
+			},
+			want: FunctionScriptMountPath,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -278,6 +332,36 @@ func TestIsRuntimeEmpty(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := IsRuntimeEmpty(tt.spec); got != tt.want {
+				t.Errorf("IsRuntimeEmpty() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsContianerEmpty(t *testing.T) {
+	tests := []struct {
+		name string
+		spec *klcv1alpha3.ContainerSpec
+		want bool
+	}{
+		{
+			name: "empty",
+			spec: nil,
+			want: true,
+		},
+		{
+			name: "not empty",
+			spec: &klcv1alpha3.ContainerSpec{
+				Container: &corev1.Container{
+					Name: "name",
+				},
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsContainerEmpty(tt.spec); got != tt.want {
 				t.Errorf("IsRuntimeEmpty() = %v, want %v", got, tt.want)
 			}
 		})

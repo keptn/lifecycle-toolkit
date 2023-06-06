@@ -33,6 +33,10 @@ func IsRuntimeEmpty(spec *klcv1alpha3.RuntimeSpec) bool {
 	return spec == nil || reflect.DeepEqual(spec, &klcv1alpha3.RuntimeSpec{})
 }
 
+func IsContainerEmpty(spec *klcv1alpha3.ContainerSpec) bool {
+	return spec == nil || reflect.DeepEqual(spec, &klcv1alpha3.ContainerSpec{})
+}
+
 func IsVolumeMountPresent(spec *klcv1alpha3.ContainerSpec) bool {
 	return spec != nil && spec.Container != nil && spec.VolumeMounts != nil && len(spec.VolumeMounts) > 0
 }
@@ -43,8 +47,8 @@ func IsInline(spec *klcv1alpha3.RuntimeSpec) bool {
 
 func GetRuntimeImage(def *klcv1alpha3.KeptnTaskDefinition) string {
 	image := os.Getenv(FunctionRuntimeImageKey)
-	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) {
-		return os.Getenv(PythonRuntimeImageKey)
+	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) && IsRuntimeEmpty(def.Spec.Deno) {
+		image = os.Getenv(PythonRuntimeImageKey)
 	}
 	return image
 }
@@ -57,6 +61,7 @@ func GetRuntimeMountPath(def *klcv1alpha3.KeptnTaskDefinition) string {
 	return path
 }
 
+// check if either the funtions or container spec is set
 func SpecExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
 	if definition == nil {
 		return false
@@ -65,6 +70,6 @@ func SpecExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
 	if runtimeSpec != nil {
 		return true
 	}
-	//hasParent := runtimeSpec != nil && reflect.DeepEqual(runtimeSpec.FunctionReference, klcv1alpha3.FunctionReference{})
-	return definition.Spec.Container != nil || reflect.DeepEqual(runtimeSpec, &klcv1alpha3.ContainerSpec{})
+
+	return !IsContainerEmpty(definition.Spec.Container)
 }

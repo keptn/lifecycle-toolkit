@@ -80,8 +80,6 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		r.reconcileConfigMap(ctx, functionCm, cm)
 		/// if neither exist remove from status
 		r.updateTaskDefinitionStatus(functionCm, definition)
-		// update ref
-		//defSpec.ConfigMapReference.Name = functionCm.Name
 		//now we know that the reference to the config map is valid, so we update the definition
 		err = r.Client.Status().Update(ctx, definition)
 		if err != nil {

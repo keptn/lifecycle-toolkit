@@ -101,7 +101,7 @@ jobs:
     needs:
       - release-please
     strategy:
-      matrix: ${{ fromJson(needs.release-please.outputs.build-matrix }}
+      matrix: ${{ fromJson(needs.release-please.outputs.build-matrix) }}
     steps:
       - run: echo "matrix worked?"
 
@@ -110,7 +110,7 @@ jobs:
     needs:
       - release-please
     strategy:
-      matrix: ${{ fromJson(needs.release-please.outputs.build-matrix }}
+      matrix: ${{ fromJson(needs.release-please.outputs.build-matrix) }}
     runs-on: ubuntu-22.04
     permissions:
       contents: write

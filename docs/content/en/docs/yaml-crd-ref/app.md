@@ -14,7 +14,9 @@ It contains information about:
   pre- and post-deployment.
 - Tasks referenced by `KeptnApp` are defined in a
   [KeptnTaskDefinition](taskdefinition.md) resource,
-  which can define either an executable task or a container.
+  which can either use the Deno-runtime container
+  that is included in KLT
+  or an application container that you define.
 
 ## Synopsis
 
@@ -116,7 +118,7 @@ without manually populating any Keptn related resources.
 
 ## Examples
 
-### Example 1: referencing Deno tasks
+### Example 1: referencing Deno-runtime tasks
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -137,10 +139,10 @@ spec:
   - my-prometheus-definition
 ```
 
-### Referencing containers
+### Referencing a task in a customized application container
 
 For an example of a `KeptnApp` resource definition
-that references a container, see
+that references a customized application container, see
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
 The `spec` includes:
 
@@ -162,7 +164,9 @@ This container is defined in
 
 ## Differences between versions
 
-The `spec.Revision` field is introduced in v1alpha2.
+* The `spec.Revision` field is introduced in v1alpha2.
+* Support for customized application containers
+  is introduced in KLT v0.8.0.
 
 ## See also
 

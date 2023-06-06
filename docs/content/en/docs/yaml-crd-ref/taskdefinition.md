@@ -10,25 +10,30 @@ as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../concepts/workloads/).
 
-A Keptn
-[container](https://kubernetes.io/docs/concepts/containers/)
-runs as part of a Keptn
+A Keptn task runs as an application
+[container](https://kubernetes.io/docs/concepts/containers/),
+which runs as part of a Keptn
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 A Keptn job is part of a task.
 
+TODO: That last sentence doesn't make sense --
+perhaps "task" needs a modifier.
+
 A Keptn task can be defined in either of two ways:
 
-* Specify the actions to take as a Deno script,
-  which is basically JavaScript with a few limitations
-* Define a Kubernetes container,
-  which you define to incled
-  an application and its runtime dependencies
+* Define a Kubernetes application container,
+  that includes a runtime,  an application
+  and its runtime dependencies.
+  This gives you a lot of flexibility,
+  to define tasks using Python or Java scripts
+  or any anything else.
+* Out of the box, KLT includes a Deno-runtime container
+  that you can use to define tasks using Deno scripts,
+  which is basically JavaScript with a few limitations.
+  You can use this to specify simple actions
+  without having to define your container.
 
-## Yaml Synopsis for executable task
-
-TODO: What is the right title here?
-This will filter through the rest of the page,
-of course.
+## Yaml Synopsis for Deno-runtime container
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -81,7 +86,7 @@ spec:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 
-### Fields used only for executable task definitions
+### Fields used only for Deno-runtime definitions
 
 * **spec**
   * **function** -- Code to be executed,
@@ -180,29 +185,29 @@ spec:
       which is not the same as the `metadata.name` field
       that is used in the `KeptnApp` resource.
     * **image** -- name of the image you defined according to
-      [images](https://kubernetes.io/docs/concepts/containers/images/)
+      [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
+      and
+      [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
+    * **command** (optional) -- entrypoint array according to
+      [Entrypoint array](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#entrypoint).
 
-      TODO: Does this tell users all they need to know about
-      what they can use as an image and how to get it?
-      And is everything in the k8s "Images" document
-      usable here?
-    * **command** -- [TODO] -- How do users know what commands
-      can be specified here?
+      TODO: should this go on to mention ports, env variables, volumes,
+      resources, lifecycle, security context, and debugging, which are
+      all the subsections to `Container` in that doc.  Or should I just
+      make a generic `Other fields in the spec` reference comment?
 
 ## Usage
 
 A Task executes the TaskDefinition of a
-[KeptnApp](app.md) or [KeptnWorkload].
+[KeptnApp](app.md) or a
+[KeptnWorkload](../concepts/workloads).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
-TODO: Do we need a word about
-[container runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)?
-
-When defining a task as an executable task,
+When using the Deno-runtime container to define a task,
 the `function` is coded in JavaScript
 and executed in
 [Deno](https://deno.com/runtime),
@@ -232,7 +237,7 @@ and the revised code is picked up without additional changes.
 
 ## Examples
 
-### Example 1: inline script that defines an executable task
+### Example 1: inline script for a Deno script
 
 This example defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
@@ -255,7 +260,7 @@ spec:
         console.log("Hello, " + name + " new");
 ```
 
-### Example 2: httpRef script that defines an executable task
+### Example 2: httpRef script for a Deno script
 
 This example fetches the Deno script from a remote webserver at runtime:
 
@@ -277,7 +282,7 @@ See the
 [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
 PodtatoHead example for a more complete example.
 
-### Example 3: functionRef that defines an executable task
+### Example 3: functionRef for a Deno script
 
 This example calls another defined task,
 illustrating how one `KeptnTaskDefinition` can build
@@ -301,7 +306,7 @@ spec:
       secret: slack-token
 ```
 
-### Example 4: ConfigMapRef that defines an executable task
+### Example 4: ConfigMapRef for a Deno script
 
 This example references a `ConfigMap` by the name of `dev-configmap`
 that contains the code for the function to be executed.
@@ -317,7 +322,7 @@ spec:
       name: dev-configmap
 ```
 
-### Example 5: ConfigMap that defines an executable task
+### Example 5: ConfigMap for a Deno script
 
 This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
@@ -375,6 +380,9 @@ spec:
 This task is then referenced in
 
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
+
+This is a a trivial example that just runs `busybox`,
+then spawns a shell and runs the `sleep 30` command.
 
 ### More examples
 

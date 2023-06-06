@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
@@ -13,24 +14,28 @@ import (
 func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 
 	tests := []struct {
-		name string
-		Spec KeptnMetricSpec
-		want *apierrors.StatusError
+		name    string
+		verb    string
+		Spec    KeptnMetricSpec
+		want    error
+		oldSpec runtime.Object
 	}{
 		{
-			name: "with-nil-range",
+			name: "create-with-nil-range",
+			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: nil,
 			},
 		},
 		{
-			name: "with-wrong-interval",
+			name: "create-with-wrong-interval",
+			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: "5mins"},
 			},
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"with-wrong-interval",
+				"create-with-wrong-interval",
 				field.ErrorList{
 					field.Invalid(
 						field.NewPath("spec").Child("range").Child("interval"),
@@ -41,13 +46,14 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			),
 		},
 		{
-			name: "with-empty-interval",
+			name: "create-with-empty-interval",
+			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: ""},
 			},
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"with-empty-interval",
+				"create-with-empty-interval",
 				field.ErrorList{
 					field.Invalid(
 						field.NewPath("spec").Child("range").Child("interval"),
@@ -58,10 +64,50 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			),
 		},
 		{
-			name: "with-right-interval",
+			name: "create-with-right-interval",
+			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{Interval: "5m"},
 			},
+		},
+		{
+			name: "update-with-right-interval",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{Interval: "5m"},
+			},
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{Interval: "5mins"},
+				},
+			},
+		},
+		{
+			name: "update-with-wrong-interval",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{Interval: "5mins"},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"update-with-wrong-interval",
+				field.ErrorList{
+					field.Invalid(
+						field.NewPath("spec").Child("range").Child("interval"),
+						"5mins",
+						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
+					),
+				},
+			),
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{Interval: "5m"},
+				},
+			},
+		},
+		{
+			name: "delete",
+			verb: "delete",
 		},
 	}
 	for _, tt := range tests {
@@ -78,7 +124,15 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval}},
 				}
 			}
-			err := s.validateKeptnMetric()
+			var err error
+			switch tt.verb {
+			case "create":
+				err = s.ValidateCreate()
+			case "update":
+				err = s.ValidateUpdate(tt.oldSpec)
+			case "delete":
+				err = s.ValidateDelete()
+			}
 			if tt.want == nil {
 				require.Nil(t, err)
 			} else {

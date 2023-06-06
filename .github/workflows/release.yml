@@ -85,7 +85,7 @@ jobs:
                   tagName: KLT_TAG
               }
             ]
-  
+
             const certManagerMatrix = [
               {
                   name: "certificate-operator",

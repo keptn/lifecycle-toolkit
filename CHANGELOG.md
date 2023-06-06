@@ -1,5 +1,110 @@
 # Changelog
 
+## [0.7.2](https://github.com/mowies/lifecycle-controller/compare/klt-v0.7.1...klt-v0.7.2) (2023-06-06)
+
+
+### Features
+
+* add python-runtime ([#1496](https://github.com/mowies/lifecycle-controller/issues/1496)) ([76a4bd9](https://github.com/mowies/lifecycle-controller/commit/76a4bd92607d05c16c63ccc4c1dd91e35cb4d6b0))
+* **functions-runtime:** some random change in the functions runtime ([a144666](https://github.com/mowies/lifecycle-controller/commit/a1446669a1b8f2033d6c669d11a025390bb73151))
+* integrate python-runtime into pipelines ([#1505](https://github.com/mowies/lifecycle-controller/issues/1505)) ([069e049](https://github.com/mowies/lifecycle-controller/commit/069e0491728d3b68aaf2b7cd1aaaa2e2474aca16))
+* **metrics-operator:** introduce ErrMsg field into KeptnMetric status ([#1365](https://github.com/mowies/lifecycle-controller/issues/1365)) ([092d284](https://github.com/mowies/lifecycle-controller/commit/092d28499a74d0ac11c69400bc9454ee2285366d))
+* **operator:** introduce container-runtime runner ([#1493](https://github.com/mowies/lifecycle-controller/issues/1493)) ([02ce860](https://github.com/mowies/lifecycle-controller/commit/02ce86023b3db175481b859f379cb4298d03566a))
+* **operator:** introduce fallback search to KLT default namespace when KeptnEvaluationDefinition is not found ([#1359](https://github.com/mowies/lifecycle-controller/issues/1359)) ([d5ddf26](https://github.com/mowies/lifecycle-controller/commit/d5ddf266a737d3a69d5919f4231a03732c59694f))
+* **operator:** trim KeptnAppVersion name that exceed max limit ([#1296](https://github.com/mowies/lifecycle-controller/issues/1296)) ([0bf2f9e](https://github.com/mowies/lifecycle-controller/commit/0bf2f9e78f6a65d79eed0135e49289816e9a2533))
+
+
+### Bug Fixes
+
+* **metrics-operator:** improve error handling in metrics providers ([#1466](https://github.com/mowies/lifecycle-controller/issues/1466)) ([9801e5d](https://github.com/mowies/lifecycle-controller/commit/9801e5dfe9e17fc6c30ef832d97439955964fdcc))
+* **metrics-operator:** introduce IsStatusSet method to KeptnMetric ([#1427](https://github.com/mowies/lifecycle-controller/issues/1427)) ([24a60f5](https://github.com/mowies/lifecycle-controller/commit/24a60f5e6f8f3a383dfce554d644bfd974c4b5fd))
+* remove scarf redirect from containers images ([#1443](https://github.com/mowies/lifecycle-controller/issues/1443)) ([a20b2e7](https://github.com/mowies/lifecycle-controller/commit/a20b2e707fd2c0bb03b661c6a6cca272eb088ee1))
+* restore go files ([#1371](https://github.com/mowies/lifecycle-controller/issues/1371)) ([9a4a6fd](https://github.com/mowies/lifecycle-controller/commit/9a4a6fd026bbdbfe986449373bad2b116c34b3d4))
+
+
+### Docs
+
+* add cluster requirements ([#1364](https://github.com/mowies/lifecycle-controller/issues/1364)) ([e06b01e](https://github.com/mowies/lifecycle-controller/commit/e06b01e4b3723b16b8479f3b22fa3021e8dead55))
+* add info about automatic application discovery ([#1353](https://github.com/mowies/lifecycle-controller/issues/1353)) ([d42d023](https://github.com/mowies/lifecycle-controller/commit/d42d023d1d431782deb0c3ef8fa20fa2f2375ad3))
+* added comments to document the meaning of CRD properties ([#1360](https://github.com/mowies/lifecycle-controller/issues/1360)) ([a8bc440](https://github.com/mowies/lifecycle-controller/commit/a8bc440a4f15f624455c513373033c78a31a53b5))
+* content for KeptnTaskDefinition ref and tasks guide ([#1392](https://github.com/mowies/lifecycle-controller/issues/1392)) ([13b0495](https://github.com/mowies/lifecycle-controller/commit/13b04956a02a0384bfc1ad6b043e901613d1d5b2))
+* create "observability" getting started guide ([#1376](https://github.com/mowies/lifecycle-controller/issues/1376)) ([4815986](https://github.com/mowies/lifecycle-controller/commit/48159862bf89b8cc1692500af7b05487a6cc03cb))
+* create keptn metrics getting started ([#1375](https://github.com/mowies/lifecycle-controller/issues/1375)) ([8de6d8f](https://github.com/mowies/lifecycle-controller/commit/8de6d8f8ca34c576466d9cc8b32d1d3865123ad8))
+* create KeptnApp reference page ([#1391](https://github.com/mowies/lifecycle-controller/issues/1391)) ([4aa141a](https://github.com/mowies/lifecycle-controller/commit/4aa141a069b8b7d25c508ff92309ad460120beb4))
+* create KeptnConfig yaml ref page ([#1369](https://github.com/mowies/lifecycle-controller/issues/1369)) ([e40292c](https://github.com/mowies/lifecycle-controller/commit/e40292ce995070a492187f5dcc7db363e03eb260))
+* create pre/post-deploy getting started ([#1362](https://github.com/mowies/lifecycle-controller/issues/1362)) ([d602115](https://github.com/mowies/lifecycle-controller/commit/d602115ef4b158b04be3c630ca45c6e4f39fc0f3))
+* enhance install page ([#1399](https://github.com/mowies/lifecycle-controller/issues/1399)) ([025709e](https://github.com/mowies/lifecycle-controller/commit/025709e3147abef79d2ddbecb795db0c5e8bf2a8))
+* final polish of getting started guides ([#1449](https://github.com/mowies/lifecycle-controller/issues/1449)) ([30e6647](https://github.com/mowies/lifecycle-controller/commit/30e664703c3b42aa5c2049535d528f69cbcfe4b4))
+* fix getting started guides ([#1447](https://github.com/mowies/lifecycle-controller/issues/1447)) ([6035e55](https://github.com/mowies/lifecycle-controller/commit/6035e552d3f46e2553603f711db008784ff99d0e))
+* fix markdown links ([#1414](https://github.com/mowies/lifecycle-controller/issues/1414)) ([b2392c1](https://github.com/mowies/lifecycle-controller/commit/b2392c1d6a81df92adf6228167a52233eb1757ae))
+* improve list on install landing page ([#1400](https://github.com/mowies/lifecycle-controller/issues/1400)) ([3d23e29](https://github.com/mowies/lifecycle-controller/commit/3d23e29b82d1296627900850b19af7ea2eb30d87))
+* mention Prometheus in intro ([#1405](https://github.com/mowies/lifecycle-controller/issues/1405)) ([2c51231](https://github.com/mowies/lifecycle-controller/commit/2c51231fd700009c1588259de1974e1dfa80e8b8))
+* metrics & evaluation ref and guides ([#1385](https://github.com/mowies/lifecycle-controller/issues/1385)) ([7712bfa](https://github.com/mowies/lifecycle-controller/commit/7712bfae84a21adaf6341ca02ec3589d0459854f))
+* misspelled file name, misordered pages ([#1363](https://github.com/mowies/lifecycle-controller/issues/1363)) ([be3c2f1](https://github.com/mowies/lifecycle-controller/commit/be3c2f1b469a15292bbd698af2200c0a4fb4002e))
+* regenerate CRD docs ([#1507](https://github.com/mowies/lifecycle-controller/issues/1507)) ([672e281](https://github.com/mowies/lifecycle-controller/commit/672e281f1b44a7e83449c32e08a9de4a44c8d287))
+* small edit of original Getting Started guide ([#1367](https://github.com/mowies/lifecycle-controller/issues/1367)) ([0fd922a](https://github.com/mowies/lifecycle-controller/commit/0fd922ad161fb30dcf834d87aec225f48d619f4d))
+
+
+### Dependency Updates
+
+* update anchore/sbom-action action to v0.14.2 ([#1401](https://github.com/mowies/lifecycle-controller/issues/1401)) ([9085785](https://github.com/mowies/lifecycle-controller/commit/9085785b669bbc5bdd418afa6e9bd2f81c788653))
+* update busybox docker tag to v1.36.1 ([#1437](https://github.com/mowies/lifecycle-controller/issues/1437)) ([9ba5cae](https://github.com/mowies/lifecycle-controller/commit/9ba5cae8b3f0be8b380e28883530f97db76773dc))
+* update checkmarx/kics-github-action action to v1.7.0 ([#1435](https://github.com/mowies/lifecycle-controller/issues/1435)) ([f9d609c](https://github.com/mowies/lifecycle-controller/commit/f9d609c47545c8fa772329056606891534a6eed6))
+* update curlimages/curl docker tag to v8.1.0 ([#1439](https://github.com/mowies/lifecycle-controller/issues/1439)) ([9e90d17](https://github.com/mowies/lifecycle-controller/commit/9e90d17c211709b357b40ef8f0843a9e1bf0364f))
+* update curlimages/curl docker tag to v8.1.1 ([#1455](https://github.com/mowies/lifecycle-controller/issues/1455)) ([d1279a9](https://github.com/mowies/lifecycle-controller/commit/d1279a9fe0f09177449b20d4b3fc8f0f3c10d81a))
+* update dependency argoproj/argo-cd to v2.7.1 ([#1374](https://github.com/mowies/lifecycle-controller/issues/1374)) ([9b9a973](https://github.com/mowies/lifecycle-controller/commit/9b9a973a95ca59e91927695f92c0d56389be3f4f))
+* update dependency argoproj/argo-cd to v2.7.2 ([#1423](https://github.com/mowies/lifecycle-controller/issues/1423)) ([e381f7f](https://github.com/mowies/lifecycle-controller/commit/e381f7fc6d79703b9f32dbf49331247107597b20))
+* update dependency argoproj/argo-cd to v2.7.3 ([#1512](https://github.com/mowies/lifecycle-controller/issues/1512)) ([6146e79](https://github.com/mowies/lifecycle-controller/commit/6146e79a62d12de37fec9218c5f6f7acd2255b82))
+* update dependency helm/helm to v3.12.0 ([#1440](https://github.com/mowies/lifecycle-controller/issues/1440)) ([aff755d](https://github.com/mowies/lifecycle-controller/commit/aff755d4539310787d47a448f1fc6600ffd04c33))
+* update dependency jaegertracing/jaeger to v1.45.0 ([#1407](https://github.com/mowies/lifecycle-controller/issues/1407)) ([dab62de](https://github.com/mowies/lifecycle-controller/commit/dab62dea8b5c0a45baba9d9b3e33c1e6f6f640e4))
+* update dependency jaegertracing/jaeger-operator to v1.44.0 ([#1258](https://github.com/mowies/lifecycle-controller/issues/1258)) ([dab73fb](https://github.com/mowies/lifecycle-controller/commit/dab73fb94f85022d84436453a84bf19f7f95cc5c))
+* update dependency jaegertracing/jaeger-operator to v1.45.0 ([#1478](https://github.com/mowies/lifecycle-controller/issues/1478)) ([7bc4feb](https://github.com/mowies/lifecycle-controller/commit/7bc4feb66cd303235a407f9341cd723562262dca))
+* update dependency kubernetes-sigs/controller-tools to v0.12.0 ([#1383](https://github.com/mowies/lifecycle-controller/issues/1383)) ([0a6b7e7](https://github.com/mowies/lifecycle-controller/commit/0a6b7e795a9e58425ab6baacf38a82a22dbbc0c8))
+* update dependency kubernetes-sigs/kustomize to v5.0.3 ([#1402](https://github.com/mowies/lifecycle-controller/issues/1402)) ([fad37af](https://github.com/mowies/lifecycle-controller/commit/fad37afd14cd781c9561d43dd2f1af6824973693))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 65b4139 ([#1429](https://github.com/mowies/lifecycle-controller/issues/1429)) ([57fdcdd](https://github.com/mowies/lifecycle-controller/commit/57fdcddcf73c71dde07641cb13f9c7b16cff6cf5))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 9eafb78 ([#1454](https://github.com/mowies/lifecycle-controller/issues/1454)) ([b66ad6f](https://github.com/mowies/lifecycle-controller/commit/b66ad6fab019640380a11acf837b3589605e6219))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to e381f7f ([#1422](https://github.com/mowies/lifecycle-controller/issues/1422)) ([daedf87](https://github.com/mowies/lifecycle-controller/commit/daedf878eeb8d00d717e5746b46dd651c6fba8de))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to 57fdcdd ([#1430](https://github.com/mowies/lifecycle-controller/issues/1430)) ([54a9384](https://github.com/mowies/lifecycle-controller/commit/54a93840094e7dd3c9799e5e0a8ae889d51bb2ac))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to bb916f3 ([#1463](https://github.com/mowies/lifecycle-controller/issues/1463)) ([4292570](https://github.com/mowies/lifecycle-controller/commit/4292570ec3256b9aa2291f5abc5769ef22e3cdf2))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to e381f7f ([#1268](https://github.com/mowies/lifecycle-controller/issues/1268)) ([f0f7edf](https://github.com/mowies/lifecycle-controller/commit/f0f7edf7041d438b8d8804ad9341ef878ed625de))
+* update golang docker tag to v1.20.4 ([#1346](https://github.com/mowies/lifecycle-controller/issues/1346)) ([8fedf0f](https://github.com/mowies/lifecycle-controller/commit/8fedf0f11c6f4e55e1ac47ab8e80705e189ffff8))
+* update helm/kind-action action to v1.7.0 ([#1479](https://github.com/mowies/lifecycle-controller/issues/1479)) ([fb22707](https://github.com/mowies/lifecycle-controller/commit/fb22707ee148bb5c3ae2a724ca1bde3c0d5df929))
+* update kubernetes packages (patch) ([#1432](https://github.com/mowies/lifecycle-controller/issues/1432)) ([7f5b3ab](https://github.com/mowies/lifecycle-controller/commit/7f5b3abb87ebe8e0c040e415f69ed12e25ebb7fd))
+* update module github.com/argoproj/argo-rollouts to v1.5.0 ([#1408](https://github.com/mowies/lifecycle-controller/issues/1408)) ([2f75e73](https://github.com/mowies/lifecycle-controller/commit/2f75e739ca8fa218b3d15ccf657a5d85530eecf5))
+* update module github.com/argoproj/argo-rollouts to v1.5.1 ([#1513](https://github.com/mowies/lifecycle-controller/issues/1513)) ([de95b50](https://github.com/mowies/lifecycle-controller/commit/de95b50ae10da0e0e6c40eb5545fd98bc0f5ffcb))
+* update module github.com/benbjohnson/clock to v1.3.4 ([#1403](https://github.com/mowies/lifecycle-controller/issues/1403)) ([f88dfd5](https://github.com/mowies/lifecycle-controller/commit/f88dfd5c0d7a544d94054cce6693ebd3d88f0a9f))
+* update module github.com/benbjohnson/clock to v1.3.5 ([#1464](https://github.com/mowies/lifecycle-controller/issues/1464)) ([abf10bf](https://github.com/mowies/lifecycle-controller/commit/abf10bfaf033a1f57b8f65d3c7127dd962926ed4))
+* update module github.com/imdario/mergo to v0.3.16 ([#1482](https://github.com/mowies/lifecycle-controller/issues/1482)) ([9eafb78](https://github.com/mowies/lifecycle-controller/commit/9eafb78b51d60d13af44cad281c8c631b02773c3))
+* update module github.com/onsi/ginkgo/v2 to v2.9.4 ([#1384](https://github.com/mowies/lifecycle-controller/issues/1384)) ([2ed8dd7](https://github.com/mowies/lifecycle-controller/commit/2ed8dd7a7d62a44bab22cc1da11f80e02fd129f8))
+* update module github.com/onsi/ginkgo/v2 to v2.9.5 ([#1433](https://github.com/mowies/lifecycle-controller/issues/1433)) ([fcdd9fe](https://github.com/mowies/lifecycle-controller/commit/fcdd9fea3860ba9d5ec52b3733a48258df4e8549))
+* update module github.com/onsi/gomega to v1.27.7 ([#1473](https://github.com/mowies/lifecycle-controller/issues/1473)) ([50f7415](https://github.com/mowies/lifecycle-controller/commit/50f7415a832f2cc4e90db5faf51f17cf471558cc))
+* update module github.com/prometheus/client_golang to v1.15.1 ([#1386](https://github.com/mowies/lifecycle-controller/issues/1386)) ([8b73046](https://github.com/mowies/lifecycle-controller/commit/8b730461a9892f5ab06e51ee9519ec6fa7d83125))
+* update module github.com/prometheus/common to v0.44.0 ([#1452](https://github.com/mowies/lifecycle-controller/issues/1452)) ([af22685](https://github.com/mowies/lifecycle-controller/commit/af2268566b74b251da17dec5576af3cd03159482))
+* update module github.com/stretchr/testify to v1.8.3 ([#1434](https://github.com/mowies/lifecycle-controller/issues/1434)) ([65b4139](https://github.com/mowies/lifecycle-controller/commit/65b41399b2e0d5c4109af484a80d4bb2c56f9215))
+* update module golang.org/x/net to v0.10.0 ([#1453](https://github.com/mowies/lifecycle-controller/issues/1453)) ([65a3e4b](https://github.com/mowies/lifecycle-controller/commit/65a3e4b402d693a64dc9be452aead9c4773d6945))
+* update module google.golang.org/grpc to v1.54.1 ([#1404](https://github.com/mowies/lifecycle-controller/issues/1404)) ([a5d9b19](https://github.com/mowies/lifecycle-controller/commit/a5d9b19901f673768cef63dcc1606aafbc5a1b51))
+* update module google.golang.org/grpc to v1.55.0 ([#1480](https://github.com/mowies/lifecycle-controller/issues/1480)) ([d5a8e7c](https://github.com/mowies/lifecycle-controller/commit/d5a8e7cbf0095119b646f23b74891dcb231e2e0c))
+* update module k8s.io/klog/v2 to v2.100.1 ([#1324](https://github.com/mowies/lifecycle-controller/issues/1324)) ([6524d58](https://github.com/mowies/lifecycle-controller/commit/6524d583dc9d99bd67b9a599f48f78b6d89a3877))
+* update module k8s.io/kubernetes to v1.25.10 ([#1475](https://github.com/mowies/lifecycle-controller/issues/1475)) ([e65715c](https://github.com/mowies/lifecycle-controller/commit/e65715cfe98eebfcdee599253a1e63e482773f4d))
+* update sigstore/cosign-installer action to v3.0.3 ([#1308](https://github.com/mowies/lifecycle-controller/issues/1308)) ([ac98fe5](https://github.com/mowies/lifecycle-controller/commit/ac98fe566f2652eebdd6e578a6f3491df9e471d1))
+* update sigstore/cosign-installer action to v3.0.5 ([#1438](https://github.com/mowies/lifecycle-controller/issues/1438)) ([1fba2b4](https://github.com/mowies/lifecycle-controller/commit/1fba2b4985a424c728ca02747c56a343fcf3fdbe))
+
+
+### Other
+
+* bump up helm chart version ([#1351](https://github.com/mowies/lifecycle-controller/issues/1351)) ([737d478](https://github.com/mowies/lifecycle-controller/commit/737d4782c6c90c77930f58590dcd1098b68b6ef1))
+* minor refactoring of the evaluation controller ([#1356](https://github.com/mowies/lifecycle-controller/issues/1356)) ([4398e96](https://github.com/mowies/lifecycle-controller/commit/4398e9677ca60a4dd10bd7198479796f36f26026))
+* monorepo setup adjust rp config ([ed4ff4b](https://github.com/mowies/lifecycle-controller/commit/ed4ff4b15b4a468e9bef55f7821c27c57827366d))
+* **operator:** bump OTel dependencies to the latest version ([#1419](https://github.com/mowies/lifecycle-controller/issues/1419)) ([a7475c2](https://github.com/mowies/lifecycle-controller/commit/a7475c2ae13479fed55fa4a322af3c2a47649fa1))
+* **operator:** explicitly define ImagePullPolicy of Job container to IfNotPresent ([#1509](https://github.com/mowies/lifecycle-controller/issues/1509)) ([bb916f3](https://github.com/mowies/lifecycle-controller/commit/bb916f3e3875ec4b3c3e5efbb9f1a65be2a58196))
+* **operator:** make use of status.jobName when searching for job in KeptnTask controller ([#1436](https://github.com/mowies/lifecycle-controller/issues/1436)) ([28dd6b7](https://github.com/mowies/lifecycle-controller/commit/28dd6b77c4cacd038539e30ac8275d6f63d39155))
+* **operator:** refactor keptntaskcontroller to use builder interface ([#1450](https://github.com/mowies/lifecycle-controller/issues/1450)) ([a3f5e5b](https://github.com/mowies/lifecycle-controller/commit/a3f5e5bc3fc8bd8073d264c30c39a38fc09d364e))
+* **operator:** use List() when fetching KeptnWorkloadInstances for KeptnAppVersion ([#1456](https://github.com/mowies/lifecycle-controller/issues/1456)) ([ecd8c48](https://github.com/mowies/lifecycle-controller/commit/ecd8c487b22b11bea0646a3c5b2a1f9a22c80d2f))
+* release cert-manager 0.7.2 ([#105](https://github.com/mowies/lifecycle-controller/issues/105)) ([952764d](https://github.com/mowies/lifecycle-controller/commit/952764d72e3f43e4f13711821f6858e4da54bf61))
+* remove code duplication ([#1372](https://github.com/mowies/lifecycle-controller/issues/1372)) ([da66c80](https://github.com/mowies/lifecycle-controller/commit/da66c80653b4a992fd94e49b067f4a21bdf3978b))
+* standardize generation of resource names ([#1472](https://github.com/mowies/lifecycle-controller/issues/1472)) ([f7abcb0](https://github.com/mowies/lifecycle-controller/commit/f7abcb096838c0071c07b95bf6ff938de9be4975))
+* use cert-manager library in lifecycle-operator and metrics-operator to reduce code duplication ([#1379](https://github.com/mowies/lifecycle-controller/issues/1379)) ([831fc46](https://github.com/mowies/lifecycle-controller/commit/831fc46d9e4ebb059473f137ef6c012373c6179c))
+
 ## [0.7.1](https://github.com/keptn/lifecycle-toolkit/compare/v0.7.0...v0.7.1) (2023-05-03)
 
 

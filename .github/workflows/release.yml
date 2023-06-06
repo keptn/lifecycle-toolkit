@@ -163,7 +163,7 @@ jobs:
         run: |
           cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
           cosign verify \
-            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-identity-regexp="https://github.com/mowies/lifecycle-controller/.*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
@@ -219,7 +219,7 @@ jobs:
       - name: Create KLT manifest
         if: needs.release-please.outputs.klt-release-created == 'true'
         env:
-          RELEASE_REGISTRY: ghcr.io/keptn
+          RELEASE_REGISTRY: ghcr.io/mowies
           CHART_APPVERSION: ${{ needs.release-please.outputs.klt-tag-name }}
         run: |
           cd scheduler
@@ -247,7 +247,7 @@ jobs:
       - name: Create Cert-Manager manifest
         if: needs.release-please.outputs.cert-manager-release-created == 'true'
         env:
-          RELEASE_REGISTRY: ghcr.io/keptn
+          RELEASE_REGISTRY: ghcr.io/mowies
           CHART_APPVERSION: ${{ needs.release-please.outputs.cert-manager-tag-name }}
         run: |
           cd klt-cert-manager

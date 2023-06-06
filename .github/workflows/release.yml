@@ -94,7 +94,7 @@ jobs:
             } else if (RELEASE_CERT_MANAGER === "true") {
                 result = { config: certManagerMatrix }
             }
-            return result
+            return { config: [...kltMatrix, ...certManagerMatrix]}
 
   try-build-matrix:
     runs-on: ubuntu-22.04

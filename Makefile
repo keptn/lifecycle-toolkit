@@ -4,7 +4,7 @@
 KUSTOMIZE_VERSION?=v5.0.3
 # renovate: datasource=github-tags depName=helm/helm
 HELM_VERSION ?= v3.12.0
-CHART_APPVERSION ?= v0.7.2 # x-release-please-version
+CHART_APPVERSION ?= v0.7.3 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine

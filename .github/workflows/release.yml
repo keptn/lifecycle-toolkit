@@ -85,7 +85,7 @@ jobs:
                   tagName: KLT_TAG
               }
             ]
-              
+  
             const certManagerMatrix = [
               {
                   name: "certificate-operator",
@@ -93,7 +93,7 @@ jobs:
                   tagName: CERT_MANAGER_TAG
               }
             ]
-            
+
             let result = {}
             if (RELEASE_KLT === "true" && RELEASE_CERT_MANAGER === "true") {
                 result = { config: [...kltMatrix, ...certManagerMatrix]}

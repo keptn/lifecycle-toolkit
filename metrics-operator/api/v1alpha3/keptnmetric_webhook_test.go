@@ -1,9 +1,9 @@
 package v1alpha3
 
 import (
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -66,22 +66,23 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			var s *KeptnMetric
 			if tt.Spec.Range == nil {
-				s := &KeptnMetric{
+				s = &KeptnMetric{
 					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
 					Spec:       KeptnMetricSpec{Range: tt.Spec.Range},
 				}
-				if got := s.validateKeptnMetric(); !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("validateKeptnMetric() = %v, want %v", got, tt.want)
-				}
 			} else {
-				s := &KeptnMetric{
+				s = &KeptnMetric{
 					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
 					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval}},
 				}
-				if got := s.validateKeptnMetric(); !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("validateKeptnMetric() = %v, want %v", got, tt.want)
-				}
+			}
+			err := s.validateKeptnMetric()
+			if tt.want == nil {
+				require.Nil(t, err)
+			} else {
+				require.Equal(t, tt.want, err)
 			}
 		})
 	}

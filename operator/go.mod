@@ -11,7 +11,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230601122212-9eafb78b51d6
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230601125711-bb916f3e3875
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.9.5
+	github.com/onsi/ginkgo/v2 v2.9.7
 	github.com/onsi/gomega v1.27.7
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.15.1

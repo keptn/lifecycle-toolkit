@@ -191,7 +191,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 			},
 			verb: "update",
 		},
-		////////////////////3
+
 		{
 			name: "with-both-container-and-python",
 			spec: specWithContainerAndPython,

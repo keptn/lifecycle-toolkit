@@ -7,7 +7,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.9.5
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	k8s.io/api v0.26.5
 	k8s.io/apiextensions-apiserver v0.26.5
 	k8s.io/apimachinery v0.26.5

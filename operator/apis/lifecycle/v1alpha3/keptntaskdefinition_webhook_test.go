@@ -15,7 +15,7 @@ import (
 func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 
 	specWithFunctionAndContainer := KeptnTaskDefinitionSpec{
-		Function:  &FunctionSpec{},
+		Function:  &RuntimeSpec{},
 		Container: &ContainerSpec{},
 	}
 
@@ -59,7 +59,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 		{
 			name: "with-function-only",
 			spec: KeptnTaskDefinitionSpec{
-				Function: &FunctionSpec{},
+				Function: &RuntimeSpec{},
 			},
 			verb: "create",
 		},

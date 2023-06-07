@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -497,6 +498,53 @@ func TestSpecExists(t *testing.T) {
 			if got := SpecExists(tt.definition); got != tt.want {
 				t.Errorf("SpecExists() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestGetCmName(t *testing.T) {
+
+	tests := []struct {
+		name         string
+		functionName string
+		spec         *klcv1alpha3.RuntimeSpec
+		want         string
+	}{
+		{
+			name:         "inline func",
+			functionName: "funcName",
+			spec: &klcv1alpha3.RuntimeSpec{
+				Inline: klcv1alpha3.Inline{
+					Code: "code",
+				},
+			},
+			want: "keptnfn-funcName",
+		},
+		{
+			name:         "inline func long name",
+			functionName: "funcNamelooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong",
+			spec: &klcv1alpha3.RuntimeSpec{
+				Inline: klcv1alpha3.Inline{
+					Code: "code",
+				},
+			},
+			want: "keptnfn-funcNameloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+		},
+		{
+			name:         "non inline func",
+			functionName: "funcName",
+			spec: &klcv1alpha3.RuntimeSpec{
+				ConfigMapReference: klcv1alpha3.ConfigMapReference{
+					Name: "configMapName",
+				},
+			},
+			want: "configMapName",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := GetCmName(tt.functionName, tt.spec)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

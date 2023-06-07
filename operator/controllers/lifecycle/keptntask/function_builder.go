@@ -203,6 +203,7 @@ func (fb *FunctionBuilder) handleParent(ctx context.Context, params *FunctionExe
 		return err
 	}
 	parSpec := controllercommon.GetRuntimeSpec(parentDefinition)
+	// if the parent has also another parent, the data from the grandparent are alredy copied to the parent and therefore parent can copy it's data to the child
 	parentJobParams, _, err = fb.parseFunctionTaskDefinition(parSpec, parentDefinition.Name, parentDefinition.Namespace, parentDefinition.Status.Function.ConfigMap)
 	if err != nil {
 		return err

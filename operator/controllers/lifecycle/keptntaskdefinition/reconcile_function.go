@@ -58,13 +58,6 @@ func (r *KeptnTaskDefinitionReconciler) getConfigMap(ctx context.Context, cmName
 	return cm, nil
 }
 
-func (r *KeptnTaskDefinitionReconciler) getCmName(functionName string, spec *klcv1alpha3.RuntimeSpec) string {
-	if controllercommon.IsInline(spec) {
-		return functionName
-	}
-	return spec.ConfigMapReference.Name
-}
-
 func (r *KeptnTaskDefinitionReconciler) updateTaskDefinitionStatus(functionCm *corev1.ConfigMap, definition *klcv1alpha3.KeptnTaskDefinition) {
 	// config map referenced but does not exist we can use the status to signify that
 	if functionCm != nil && definition.Status.Function.ConfigMap != functionCm.Name { //configmap referenced exists but old

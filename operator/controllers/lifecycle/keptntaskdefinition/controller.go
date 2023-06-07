@@ -23,6 +23,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -62,7 +63,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 	if definition.Spec.Container == nil && defSpec != nil { //if the spec is well-defined
 
 		// get configmap reference either existing configmap name or inline generated one
-		cmName := r.getCmName("keptnfn-"+definition.Name, defSpec)
+		cmName := controllercommon.GetCmName(definition.Name, defSpec)
 
 		//get existing configmap either generated from inline or user defined
 		cm, err := r.getConfigMap(ctx, cmName, req.Namespace)

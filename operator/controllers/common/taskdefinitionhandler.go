@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 )
 
 const (
@@ -51,6 +52,13 @@ func GetRuntimeImage(def *klcv1alpha3.KeptnTaskDefinition) string {
 		image = os.Getenv(PythonRuntimeImageKey)
 	}
 	return image
+}
+
+func GetCmName(functionName string, spec *klcv1alpha3.RuntimeSpec) string {
+	if IsInline(spec) {
+		return "keptnfn-" + apicommon.TruncateString(functionName, 245)
+	}
+	return spec.ConfigMapReference.Name
 }
 
 func GetRuntimeMountPath(def *klcv1alpha3.KeptnTaskDefinition) string {

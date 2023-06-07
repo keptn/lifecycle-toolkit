@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller - Function Runtime
+# Keptn Lifecycle Controller - Python Runtime
 
 ## Build
 

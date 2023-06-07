@@ -33,7 +33,7 @@ jobs:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
       - name: Get Latest Release Information
-        uses: octokit/request-action@v2.1.7
+        uses: octokit/request-action@v2.1.8
         id: latest_release
         with:
           route: GET /repos/:owner/:repository/releases/latest

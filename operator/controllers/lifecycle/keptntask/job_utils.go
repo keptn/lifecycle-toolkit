@@ -151,13 +151,19 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		return nil, controllererrors.ErrNoTaskDefinitionSpec
 	}
 
-	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
+	container, err := builder.CreateContainer(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not create Job")
+		r.Log.Error(err, "could not create container for Job")
+		return nil, controllererrors.ErrCannotMarshalParams
+	}
+
+	volume, err := builder.CreateVolume(ctx)
+	if err != nil {
+		r.Log.Error(err, "could not create volume for Job")
 		return nil, controllererrors.ErrCannotMarshalParams
 	}
 
 	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
-	job.Spec.Template.Spec.Volumes = volumes
+	job.Spec.Template.Spec.Volumes = []corev1.Volume{*volume}
 	return job, nil
 }

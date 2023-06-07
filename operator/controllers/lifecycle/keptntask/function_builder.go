@@ -46,25 +46,25 @@ const (
 	FunctionMountName = "function-mount"
 )
 
-func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
+func (fb *FunctionBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
 
 	var envVars []corev1.EnvVar
 
 	params, err := fb.getParams(ctx)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	if len(params.Parameters) > 0 {
 		jsonParams, err := json.Marshal(params.Parameters)
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 		envVars = append(envVars, corev1.EnvVar{Name: Data, Value: string(jsonParams)})
 	}
 
 	jsonParams, err := json.Marshal(params.Context)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: Context, Value: string(jsonParams)})
 	envVars = append(envVars, corev1.EnvVar{Name: CmdArgs, Value: params.CmdParameters})
@@ -79,10 +79,9 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 			},
 		})
 	}
-	var jobVolumes []corev1.Volume
+
 	// Mount the function code if a ConfigMap is provided
 	// The ConfigMap might be provided manually or created by the TaskDefinition controller
-
 	container := corev1.Container{
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		Name:            "keptn-function-runner",
@@ -91,17 +90,6 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 
 	if params.ConfigMap != "" {
 		envVars = append(envVars, corev1.EnvVar{Name: Script, Value: params.MountPath})
-
-		jobVolumes = append(jobVolumes, corev1.Volume{
-			Name: FunctionMountName,
-			VolumeSource: corev1.VolumeSource{
-				ConfigMap: &corev1.ConfigMapVolumeSource{
-					LocalObjectReference: corev1.LocalObjectReference{
-						Name: params.ConfigMap,
-					},
-				},
-			},
-		})
 
 		container.VolumeMounts = []corev1.VolumeMount{
 			{
@@ -116,7 +104,30 @@ func (fb *FunctionBuilder) CreateContainerWithVolumes(ctx context.Context) (*cor
 	}
 
 	container.Env = envVars
-	return &container, jobVolumes, nil
+	return &container, nil
+
+}
+
+func (fb *FunctionBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
+	params, err := fb.getParams(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.ConfigMap != "" {
+		return &corev1.Volume{
+			Name: FunctionMountName,
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: params.ConfigMap,
+					},
+				},
+			},
+		}, nil
+	}
+
+	return nil, nil
 
 }
 

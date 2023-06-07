@@ -7,7 +7,7 @@ ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . ../netlify.toml"
 [build.environment]
 # added specifically a docker image, so the versions within makefile and netlify documentation match
 # renovate: datasource=docker depName=klakegg/hugo
-HUGO_VERSION = "0.107.0"
+HUGO_VERSION = "0.111.3"
 HUGO_ENABLEGITINFO = "true"
 
 # On netlify our branch will always be the one we are currently building for

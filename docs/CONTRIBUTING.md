@@ -66,9 +66,9 @@ Linux or MacOS users may not wish to download tools just to contribute to docs.
 
 In both scenarios, GitHub codespaces can be used as a pre-built and pre-configured development environment.
 
-Review [this video](https://example.com) to see how this works.
+Review [this video](https://www.youtube.com/watch?v=sFNzOhZw7Eg) to see how this works.
 
-* TODO: when [this issue](https://github.com/keptn/lifecycle-toolkit/issues/1325) is reviewed and resolved.
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/sFNzOhZw7Eg/0.jpg)](https://www.youtube.com/watch?v=sFNzOhZw7Eg)
 
 1. Create a fork of this repo
 1. In your fork, click the green `Code` button

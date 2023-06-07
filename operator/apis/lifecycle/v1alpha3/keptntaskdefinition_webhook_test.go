@@ -247,7 +247,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithContainerAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Pdeno or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 			oldSpec: &KeptnTaskDefinition{
@@ -278,7 +278,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithPythonAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Pdeno or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 			oldSpec: &KeptnTaskDefinition{

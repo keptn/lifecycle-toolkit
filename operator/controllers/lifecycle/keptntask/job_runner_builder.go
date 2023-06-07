@@ -19,19 +19,23 @@ type JobRunnerBuilder interface {
 // BuilderOptions contains everything needed to build the current job
 type BuilderOptions struct {
 	client.Client
-	recorder record.EventRecorder
-	req      ctrl.Request
-	Log      logr.Logger
-	task     *klcv1alpha3.KeptnTask
-	taskDef  *klcv1alpha3.KeptnTaskDefinition
+	recorder      record.EventRecorder
+	req           ctrl.Request
+	Log           logr.Logger
+	task          *klcv1alpha3.KeptnTask
+	containerSpec *klcv1alpha3.ContainerSpec
+	funcSpec      *klcv1alpha3.RuntimeSpec
+	Image         string
+	MountPath     string
+	ConfigMap     string
 }
 
 func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
-	if options.taskDef.IsJSSpecDefined() {
-		return NewJSBuilder(options)
+	if options.funcSpec != nil {
+		return NewFunctionBuilder(options)
 	}
-	if options.taskDef.IsContainerSpecDefined() {
-		return NewContainerBuilder(options.taskDef)
+	if options.containerSpec != nil {
+		return NewContainerBuilder(options.containerSpec)
 	}
 	return nil
 }

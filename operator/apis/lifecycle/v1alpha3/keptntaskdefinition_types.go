@@ -26,10 +26,19 @@ import (
 
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
+	// Deprecated
 	// Function contains the definition for the function that is to be executed in KeptnTasks based on
 	// the KeptnTaskDefinitions.
 	// +optional
-	Function *FunctionSpec `json:"function,omitempty"`
+	Function *RuntimeSpec `json:"function,omitempty"`
+	// Python contains the definition for the python function that is to be executed in KeptnTasks based on
+	//	the KeptnTaskDefinitions.
+	// +optional
+	Python *RuntimeSpec `json:"python,omitempty"`
+	// Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on
+	//	the KeptnTaskDefinitions.
+	// +optional
+	Deno *RuntimeSpec `json:"deno,omitempty"`
 	// Container contains the definition for the container that is to be used in Job based on
 	// the KeptnTaskDefinitions.
 	// +optional
@@ -41,14 +50,14 @@ type KeptnTaskDefinitionSpec struct {
 	// Timeout specifies the maximum time to wait for the task to be completed successfully.
 	// If the task does not complete successfully within this time frame, it will be
 	// considered to be failed.
-	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
+	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 
-type FunctionSpec struct {
+type RuntimeSpec struct {
 	// FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the
 	// function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have
 	// multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters.
@@ -62,11 +71,13 @@ type FunctionSpec struct {
 	// When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key
 	// of the referenced ConfigMap.
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
-	// Parameters contains parameters that will be passed to the job that executes the task.
+	// Parameters contains parameters that will be passed to the job that executes the task as env variables.
 	Parameters TaskParameters `json:"parameters,omitempty"`
 	// SecureParameters contains secure parameters that will be passed to the job that executes the task.
 	// These will be stored and accessed as secrets in the cluster.
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
+	// CmdParameters contains parameters that will be passed to the command
+	CmdParameters string `json:"cmdParameters,omitempty"`
 }
 
 type ConfigMapReference struct {
@@ -130,20 +141,4 @@ type KeptnTaskDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
-}
-
-func (d KeptnTaskDefinition) SpecExists() bool {
-	return d.IsJSSpecDefined() || d.IsContainerSpecDefined()
-}
-
-func (d KeptnTaskDefinition) IsJSSpecDefined() bool {
-	return d.Spec.Function != nil
-}
-
-func (d KeptnTaskDefinition) IsContainerSpecDefined() bool {
-	return d.Spec.Container != nil
-}
-
-func (d KeptnTaskDefinition) IsVolumeMountPresent() bool {
-	return d.IsContainerSpecDefined() && d.Spec.Container.VolumeMounts != nil && len(d.Spec.Container.VolumeMounts) > 0
 }

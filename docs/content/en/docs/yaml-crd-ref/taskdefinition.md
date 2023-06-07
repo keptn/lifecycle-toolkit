@@ -628,7 +628,7 @@ API Reference:
 * [KeptnTaskDefinitionList](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
 * [KeptnTaskDefinitionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
 * [FunctionReference](../crd-ref/lifecycle/v1alpha3/_index.md#functionreference)
-* [FunctionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#functionspec)
+* [FunctionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#runtimespec)
 * [FunctionStatus](../crd-ref/lifecycle/v1alpha3/_index.md#functionstatus)
 * [HttpReference](../crd-ref/lifecycle/v1alpha3/_index.md#httpreference)
 * [Inline](../crd-ref/lifecycle/v1alpha3/_index.md#inline)

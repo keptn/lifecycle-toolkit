@@ -82,12 +82,12 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	task.SetStartTime()
 
-	defer func(task *klcv1alpha3.KeptnTask) {
+	defer func() {
 		err := r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not update status")
 		}
-	}(task)
+	}()
 
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil && !errors.IsNotFound(err) {

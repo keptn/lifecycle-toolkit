@@ -11,7 +11,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230601122212-9eafb78b51d6
 	github.com/onsi/ginkgo/v2 v2.8.1
 	github.com/onsi/gomega v1.27.0
-	github.com/open-feature/go-sdk v1.3.0
+	github.com/open-feature/go-sdk v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.15.1
 	github.com/prometheus/common v0.44.0

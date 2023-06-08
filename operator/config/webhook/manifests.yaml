@@ -27,3 +27,32 @@ webhooks:
         resources:
           - pods
     sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: lifecycle-validating-webhook-configuration
+  labels:
+    keptn.sh/inject-cert: "true"
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: lifecycle-webhook-service
+        namespace: system
+        path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
+    failurePolicy: Fail
+    name: vkeptntaskdefinition.kb.io
+    rules:
+      - apiGroups:
+          - lifecycle.keptn.sh
+        apiVersions:
+          - v1alpha3
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - keptntaskdefinitions
+    sideEffects: None

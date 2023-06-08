@@ -18,3 +18,4 @@ spec:
     - app-pre-deploy-eval-2
   preDeploymentTasks:
     - container-sleep
+    - python-secret

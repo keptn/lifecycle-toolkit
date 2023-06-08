@@ -18,11 +18,12 @@ package keptntaskdefinition
 
 import (
 	"context"
-	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -58,13 +59,38 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 		r.Log.Error(err, "Failed to get the KeptnTaskDefinition")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
+	defSpec := common.GetRuntimeSpec(definition)
+	if definition.Spec.Container == nil && defSpec != nil { //if the spec is well-defined
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
-		err := r.reconcileFunction(ctx, req, definition)
-		if err != nil {
+		// get configmap reference either existing configmap name or inline generated one
+		cmName := controllercommon.GetCmName(definition.Name, defSpec)
+
+		//get existing configmap either generated from inline or user defined
+		cm, err := r.getConfigMap(ctx, cmName, req.Namespace)
+		//if IsNotFound we need to create it
+		if err != nil && !errors.IsNotFound(err) {
 			return ctrl.Result{}, nil
 		}
+
+		// generate the updated config map, this is either the existing config map or the inline one
+		functionCm := cm
+		if common.IsInline(defSpec) {
+			functionCm = r.generateConfigMap(defSpec, cmName, definition.Namespace)
+		}
+		//compare and handle updated and existing
+		r.reconcileConfigMap(ctx, functionCm, cm)
+		/// if neither exist remove from status
+		r.updateTaskDefinitionStatus(functionCm, definition)
+		//now we know that the reference to the config map is valid, so we update the definition
+		err = r.Client.Status().Update(ctx, definition)
+		if err != nil {
+			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
+			return ctrl.Result{}, nil
+		}
+		r.Log.Info("updated configmap status reference for: " + definition.Name)
+
 	}
+
 	r.Log.Info("Finished Reconciling KeptnTaskDefinition")
 	return ctrl.Result{}, nil
 }

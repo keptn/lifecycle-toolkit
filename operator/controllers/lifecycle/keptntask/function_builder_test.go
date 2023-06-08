@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
@@ -22,7 +23,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.RuntimeSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytaskdef",
 				}}},
@@ -33,11 +34,11 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.RuntimeSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
 					Name: "mytd"},
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA": "mydata"},
+					Inline: map[string]string{Data: "mydata"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
 					Secret: "mysecret",
@@ -61,9 +62,9 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
-				Log:     testr.New(t),
-				taskDef: def,
-				task:    makeTask("myt", "default", def.Name),
+				Log:      testr.New(t),
+				funcSpec: common.GetRuntimeSpec(def),
+				task:     makeTask("myt", "default", def.Name),
 			},
 			params:  FunctionExecutionParams{},
 			wantErr: true,
@@ -77,9 +78,9 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
-				Log:     testr.New(t),
-				taskDef: def,
-				task:    makeTask("myt2", "default", def.Name),
+				Log:      testr.New(t),
+				funcSpec: common.GetRuntimeSpec(def),
+				task:     makeTask("myt2", "default", def.Name),
 			},
 			params:  FunctionExecutionParams{},
 			wantErr: false,
@@ -92,9 +93,9 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
-				Log:     testr.New(t),
-				taskDef: paramDef,
-				task:    makeTask("myt3", "default", paramDef.Name),
+				Log:      testr.New(t),
+				funcSpec: common.GetRuntimeSpec(paramDef),
+				task:     makeTask("myt3", "default", paramDef.Name),
 			},
 			params:  FunctionExecutionParams{},
 			wantErr: false,
@@ -102,7 +103,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &JSBuilder{
+			js := &FunctionBuilder{
 				options: tt.options,
 			}
 			err := js.handleParent(context.TODO(), &tt.params)
@@ -116,7 +117,9 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		})
 	}
 }
-func TestJSBuilder_hasParams(t *testing.T) {
+func TestJSBuilder_getParams(t *testing.T) {
+	t.Setenv(common.FunctionRuntimeImageKey, "js")
+	t.Setenv(common.PythonRuntimeImageKey, "python")
 
 	def := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -124,15 +127,19 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.FunctionSpec{
-				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
+			Function: &klcv1alpha3.RuntimeSpec{
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA2": "mydata2"},
+					Inline: map[string]string{"DATA2": "parent_data"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
-					Secret: "mysecret2",
+					Secret: "parent_secret",
 				},
 			}},
+		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
+			Function: klcv1alpha3.FunctionStatus{
+				ConfigMap: "mymap",
+			},
+		},
 	}
 	paramDef := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -140,16 +147,48 @@ func TestJSBuilder_hasParams(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.FunctionSpec{
-				HttpReference: klcv1alpha3.HttpReference{Url: "something"},
+			Deno: &klcv1alpha3.RuntimeSpec{
 				FunctionReference: klcv1alpha3.FunctionReference{
-					Name: "mytaskdef"},
+					Name: def.Name},
 				Parameters: klcv1alpha3.TaskParameters{
-					Inline: map[string]string{"DATA1": "user"},
+					Inline: map[string]string{"DATA1": "child_data"},
 				},
 				SecureParameters: klcv1alpha3.SecureParameters{
-					Secret: "pw",
+					Secret: "child_pw",
 				},
+			},
+		},
+		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
+			Function: klcv1alpha3.FunctionStatus{
+				ConfigMap: "mychildmap",
+			},
+		},
+	}
+
+	parentPy := &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "parentPy",
+			Namespace: "default",
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Python: &klcv1alpha3.RuntimeSpec{
+				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
+			}},
+	}
+	defJS := &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myJS",
+			Namespace: "default",
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Deno: &klcv1alpha3.RuntimeSpec{
+				FunctionReference: klcv1alpha3.FunctionReference{
+					Name: parentPy.Name},
+			},
+		},
+		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
+			Function: klcv1alpha3.FunctionStatus{
+				ConfigMap: "myJSChildmap",
 			},
 		},
 	}
@@ -169,21 +208,24 @@ func TestJSBuilder_hasParams(t *testing.T) {
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
-				Log:     testr.New(t),
-				taskDef: def,
-				task:    makeTask("myt2", "default", def.Name),
+				Log:       testr.New(t),
+				funcSpec:  common.GetRuntimeSpec(def),
+				task:      makeTask("myt2", "default", def.Name),
+				Image:     "js",
+				MountPath: common.FunctionScriptMountPath,
+				ConfigMap: def.Status.Function.ConfigMap,
 			},
 			params: &FunctionExecutionParams{
-				ConfigMap: "",
-				Parameters: map[string]string{
-					"DATA2": "mydata2",
-				},
-				SecureParameters: "mysecret2",
-				URL:              "donothing",
+				ConfigMap:        def.Status.Function.ConfigMap,
+				Parameters:       def.Spec.Function.Parameters.Inline,
+				SecureParameters: def.Spec.Function.SecureParameters.Secret,
+				URL:              def.Spec.Function.HttpReference.Url,
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
 					ObjectType:   "Workload"},
+				Image:     "js",
+				MountPath: common.FunctionScriptMountPath,
 			},
 			wantErr: false,
 		},
@@ -195,29 +237,57 @@ func TestJSBuilder_hasParams(t *testing.T) {
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
-				Log:     testr.New(t),
-				taskDef: paramDef,
-				task:    makeTask("myt3", "default", paramDef.Name),
+				Log:       testr.New(t),
+				funcSpec:  common.GetRuntimeSpec(paramDef),
+				task:      makeTask("myt3", "default", paramDef.Name),
+				ConfigMap: def.Status.Function.ConfigMap,
 			},
 			params: &FunctionExecutionParams{
-				ConfigMap: "",
+				ConfigMap: def.Status.Function.ConfigMap,
 				Parameters: map[string]string{ //maps should be merged
-					"DATA2": "mydata2",
-					"DATA1": "user",
+					"DATA2": "parent_data",
+					"DATA1": "child_data",
 				},
-				URL:              "something", //we support a single URL so the original should be taken not the parent one
-				SecureParameters: "pw",        //we support a single secret so the original task secret should be taken not the parent one
+				SecureParameters: paramDef.Spec.Deno.SecureParameters.Secret, //uses child
+				URL:              def.Spec.Function.HttpReference.Url,        //uses parent
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
 					ObjectType:   "Workload"},
+				Image:     "js",
+				MountPath: common.FunctionScriptMountPath,
+			},
+			wantErr: false,
+		},
+		{
+			name: "definition exists, parent is of a different runtime",
+			options: BuilderOptions{
+				Client:   fake.NewClient(parentPy, defJS),
+				recorder: &record.FakeRecorder{},
+				req: ctrl.Request{
+					NamespacedName: types.NamespacedName{Namespace: "default"},
+				},
+				Log:       testr.New(t),
+				funcSpec:  common.GetRuntimeSpec(defJS),
+				task:      makeTask("myt4", "default", defJS.Name),
+				ConfigMap: defJS.Status.Function.ConfigMap,
+			},
+			params: &FunctionExecutionParams{
+				ConfigMap: parentPy.Status.Function.ConfigMap,
+				URL:       parentPy.Spec.Python.HttpReference.Url, //we support a single URL so the original should be taken not the parent one
+				Context: klcv1alpha3.TaskContext{
+					WorkloadName: "my-workload",
+					AppName:      "my-app",
+					ObjectType:   "Workload"},
+				Image:     "python",
+				MountPath: common.PythonScriptMountPath,
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &JSBuilder{
+			js := &FunctionBuilder{
 				options: tt.options,
 			}
 			params, err := js.getParams(context.TODO())

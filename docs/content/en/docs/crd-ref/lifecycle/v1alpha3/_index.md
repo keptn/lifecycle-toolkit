@@ -43,7 +43,7 @@ Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API 
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |
@@ -107,30 +107,11 @@ _Appears in:_
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name is the name of the referenced KeptnTaksDefinition. |
-
-
-#### FunctionSpec
-
-
-
-
-
-_Appears in:_
-- [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
-
-| Field | Description |
-| --- | --- |
-| `functionRef` _[FunctionReference](#functionreference)_ | FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters. |
-| `inline` _[Inline](#inline)_ | Inline allows to specify the code that should be executed directly in the KeptnTaskDefinition, as a multi-line string. |
-| `httpRef` _[HttpReference](#httpreference)_ | HttpReference allows to point to an HTTP URL containing the code of the function. |
-| `configMapRef` _[ConfigMapReference](#configmapreference)_ | ConfigMapReference allows to reference a ConfigMap containing the code of the function. When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key of the referenced ConfigMap. |
-| `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task. |
-| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. |
 
 
 #### FunctionStatus
@@ -154,7 +135,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |
@@ -168,7 +149,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |
@@ -588,7 +569,9 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `function` _[FunctionSpec](#functionspec)_ | Function contains the definition for the function that is to be executed in KeptnTasks based on the KeptnTaskDefinitions. |
+| `function` _[RuntimeSpec](#runtimespec)_ | Deprecated Function contains the definition for the function that is to be executed in KeptnTasks based on the KeptnTaskDefinitions. |
+| `python` _[RuntimeSpec](#runtimespec)_ | Python contains the definition for the python function that is to be executed in KeptnTasks based on the KeptnTaskDefinitions. |
+| `deno` _[RuntimeSpec](#runtimespec)_ | Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on the KeptnTaskDefinitions. |
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job based on the KeptnTaskDefinitions. |
 | `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case of an unsuccessful attempt. |
 | `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
@@ -801,6 +784,26 @@ _Appears in:_
 | `name` _string_ |  |
 
 
+#### RuntimeSpec
+
+
+
+
+
+_Appears in:_
+- [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `functionRef` _[FunctionReference](#functionreference)_ | FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters. |
+| `inline` _[Inline](#inline)_ | Inline allows to specify the code that should be executed directly in the KeptnTaskDefinition, as a multi-line string. |
+| `httpRef` _[HttpReference](#httpreference)_ | HttpReference allows to point to an HTTP URL containing the code of the function. |
+| `configMapRef` _[ConfigMapReference](#configmapreference)_ | ConfigMapReference allows to reference a ConfigMap containing the code of the function. When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key of the referenced ConfigMap. |
+| `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task as env variables. |
+| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. |
+| `cmdParameters` _string_ | CmdParameters contains parameters that will be passed to the command |
+
+
 #### SecureParameters
 
 
@@ -808,8 +811,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
 - [KeptnTaskSpec](#keptntaskspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |
@@ -842,8 +845,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [FunctionSpec](#functionspec)
 - [KeptnTaskSpec](#keptntaskspec)
+- [RuntimeSpec](#runtimespec)
 
 | Field | Description |
 | --- | --- |

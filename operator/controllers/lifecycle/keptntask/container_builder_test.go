@@ -20,13 +20,9 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined without volumes",
 			builder: ContainerBuilder{
-				taskDef: &v1alpha3.KeptnTaskDefinition{
-					Spec: v1alpha3.KeptnTaskDefinitionSpec{
-						Container: &v1alpha3.ContainerSpec{
-							Container: &v1.Container{
-								Image: "image",
-							},
-						},
+				spec: &v1alpha3.ContainerSpec{
+					Container: &v1.Container{
+						Image: "image",
 					},
 				},
 			},
@@ -38,17 +34,13 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined with volume",
 			builder: ContainerBuilder{
-				taskDef: &v1alpha3.KeptnTaskDefinition{
-					Spec: v1alpha3.KeptnTaskDefinitionSpec{
-						Container: &v1alpha3.ContainerSpec{
-							Container: &v1.Container{
-								Image: "image",
-								VolumeMounts: []v1.VolumeMount{
-									{
-										Name:      "test-volume",
-										MountPath: "path",
-									},
-								},
+				spec: &v1alpha3.ContainerSpec{
+					Container: &v1.Container{
+						Image: "image",
+						VolumeMounts: []v1.VolumeMount{
+							{
+								Name:      "test-volume",
+								MountPath: "path",
 							},
 						},
 					},
@@ -78,27 +70,24 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined with volume and limits",
 			builder: ContainerBuilder{
-				taskDef: &v1alpha3.KeptnTaskDefinition{
-					Spec: v1alpha3.KeptnTaskDefinitionSpec{
-						Container: &v1alpha3.ContainerSpec{
-							Container: &v1.Container{
-								Image: "image",
-								Resources: v1.ResourceRequirements{
-									Limits: v1.ResourceList{
-										"memory": *resource.NewQuantity(100, resource.Format("Mi")),
-									},
-								},
-								VolumeMounts: []v1.VolumeMount{
-									{
-										Name:      "test-volume",
-										MountPath: "path",
-									},
-								},
+				spec: &v1alpha3.ContainerSpec{
+					Container: &v1.Container{
+						Image: "image",
+						Resources: v1.ResourceRequirements{
+							Limits: v1.ResourceList{
+								"memory": *resource.NewQuantity(100, resource.Format("Mi")),
+							},
+						},
+						VolumeMounts: []v1.VolumeMount{
+							{
+								Name:      "test-volume",
+								MountPath: "path",
 							},
 						},
 					},
 				},
 			},
+
 			wantContainer: &v1.Container{
 				Image: "image",
 				VolumeMounts: []v1.VolumeMount{
@@ -137,23 +126,19 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 
 func Test_GenerateVolumes(t *testing.T) {
 	tests := []struct {
-		name    string
-		taskDef *v1alpha3.KeptnTaskDefinition
-		want    []v1.Volume
+		name string
+		spec *v1alpha3.ContainerSpec
+		want []v1.Volume
 	}{
 		{
 			name: "defined",
-			taskDef: &v1alpha3.KeptnTaskDefinition{
-				Spec: v1alpha3.KeptnTaskDefinitionSpec{
-					Container: &v1alpha3.ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							VolumeMounts: []v1.VolumeMount{
-								{
-									Name:      "name",
-									MountPath: "path",
-								},
-							},
+			spec: &v1alpha3.ContainerSpec{
+				Container: &v1.Container{
+					Image: "image",
+					VolumeMounts: []v1.VolumeMount{
+						{
+							Name:      "name",
+							MountPath: "path",
 						},
 					},
 				},
@@ -171,14 +156,14 @@ func Test_GenerateVolumes(t *testing.T) {
 			},
 		},
 		{
-			name:    "empty",
-			taskDef: &v1alpha3.KeptnTaskDefinition{},
-			want:    []v1.Volume{},
+			name: "empty",
+			spec: &v1alpha3.ContainerSpec{},
+			want: []v1.Volume{},
 		},
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			taskDef: tt.taskDef,
+			spec: tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.generateVolumes())
@@ -188,21 +173,17 @@ func Test_GenerateVolumes(t *testing.T) {
 
 func Test_GetVolumeSource(t *testing.T) {
 	tests := []struct {
-		name    string
-		taskDef *v1alpha3.KeptnTaskDefinition
-		want    *v1.EmptyDirVolumeSource
+		name string
+		spec *v1alpha3.ContainerSpec
+		want *v1.EmptyDirVolumeSource
 	}{
 		{
 			name: "not set limits",
-			taskDef: &v1alpha3.KeptnTaskDefinition{
-				Spec: v1alpha3.KeptnTaskDefinitionSpec{
-					Container: &v1alpha3.ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							Resources: v1.ResourceRequirements{
-								Limits: v1.ResourceList{},
-							},
-						},
+			spec: &v1alpha3.ContainerSpec{
+				Container: &v1.Container{
+					Image: "image",
+					Resources: v1.ResourceRequirements{
+						Limits: v1.ResourceList{},
 					},
 				},
 			},
@@ -213,16 +194,12 @@ func Test_GetVolumeSource(t *testing.T) {
 		},
 		{
 			name: "set limits",
-			taskDef: &v1alpha3.KeptnTaskDefinition{
-				Spec: v1alpha3.KeptnTaskDefinitionSpec{
-					Container: &v1alpha3.ContainerSpec{
-						Container: &v1.Container{
-							Image: "image",
-							Resources: v1.ResourceRequirements{
-								Limits: v1.ResourceList{
-									"memory": *resource.NewQuantity(100, resource.Format("Mi")),
-								},
-							},
+			spec: &v1alpha3.ContainerSpec{
+				Container: &v1.Container{
+					Image: "image",
+					Resources: v1.ResourceRequirements{
+						Limits: v1.ResourceList{
+							"memory": *resource.NewQuantity(100, resource.Format("Mi")),
 						},
 					},
 				},
@@ -235,7 +212,7 @@ func Test_GetVolumeSource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			taskDef: tt.taskDef,
+			spec: tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.getVolumeSource())

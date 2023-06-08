@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+status:
+  readyReplicas: 1
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkloadInstance
+metadata:
+  name: waiter-waiter-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - definitionName: pre-deployment-sleep
+      status: Succeeded
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: waiter
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: waiter-1b899b6ce1-6b86b273
+status:
+  currentPhase: Completed
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTask
+metadata:
+  annotations:
+    container: test
+status:
+  status: Succeeded
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    container: test
+    keptn.sh/app: waiter
+    keptn.sh/version: '0.4'
+    keptn.sh/workload: waiter-waiter
+status:
+  conditions:
+    - type: Complete
+      status: 'True'
+  succeeded: 1

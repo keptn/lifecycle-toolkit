@@ -379,24 +379,8 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 		fields    fields
 		args      args
 		want      bool
-		wantErr   bool
 		wantedPod *corev1.Pod
 	}{
-		{
-			name: "Test error when workload name is too long",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
-							apicommon.WorkloadAnnotation: "workload-name-that-is-too-loooooooooooooooooooooooooooooooooooooooooooooooooong",
-						},
-					},
-				},
-			},
-			want:    false,
-			wantErr: true,
-		},
 		{
 			name: "Test return true when pod has workload annotation",
 			args: args{
@@ -408,8 +392,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 		},
 		{
 			name: "Test return true and initialize annotations when labels are set",
@@ -429,8 +412,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 			wantedPod: &corev1.Pod{
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{
@@ -460,8 +442,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 	}
 	for _, tt := range tests {
@@ -473,11 +454,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
-			got, err := a.isPodAnnotated(tt.args.pod)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("isPodAnnotated() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := a.isPodAnnotated(tt.args.pod)
 			if got != tt.want {
 				t.Errorf("isPodAnnotated() got = %v, want %v", got, tt.want)
 			}
@@ -571,11 +548,10 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		pod *corev1.Pod
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    bool
-		wantErr bool
+		name   string
+		fields fields
+		args   args
+		want   bool
 	}{
 		{
 			name: "Test that nothing happens if owner UID is pod UID",
@@ -596,8 +572,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 		{
 			name: "Test fetching of replicaset owner of pod and deployment owner of replicaset",
@@ -625,8 +600,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 		{
 			name: "Test fetching of statefulset owner of pod",
@@ -654,8 +628,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 		{
 			name: "Test fetching of daemonset owner of pod",
@@ -683,8 +656,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 		{
 			name: "Test that method returns without doing anything when we get a pod with replicaset without owner",
@@ -712,8 +684,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 		},
 	}
 	for _, tt := range tests {
@@ -725,11 +696,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
-			got, err := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("copyAnnotationsIfParentAnnotated() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
 			if got != tt.want {
 				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
 			}
@@ -754,7 +721,6 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 		fields    fields
 		args      args
 		want      bool
-		wantErr   bool
 		wantedPod *corev1.Pod
 	}{
 		{
@@ -779,8 +745,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 					Status:     corev1.PodStatus{},
 				},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 			wantedPod: &corev1.Pod{
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
@@ -813,8 +778,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				},
 				targetPod: &corev1.Pod{},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 			wantedPod: &corev1.Pod{
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
@@ -857,8 +821,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 					Status: corev1.PodStatus{},
 				},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 			wantedPod: &corev1.Pod{
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
@@ -882,20 +845,6 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				Status: corev1.PodStatus{},
 			},
 		},
-		{
-			name: "Test that error is return with too long workload name",
-			args: args{
-				sourceResource: &metav1.ObjectMeta{
-					Name: "testSourceObject",
-					Labels: map[string]string{
-						apicommon.WorkloadAnnotation: "some-workload-name-that-is-very-looooooooooooooooooooooong",
-					},
-				},
-				targetPod: &corev1.Pod{},
-			},
-			want:    false,
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -906,11 +855,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
-			got, err := a.copyResourceLabelsIfPresent(tt.args.sourceResource, tt.args.targetPod)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("copyResourceLabelsIfPresent() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := a.copyResourceLabelsIfPresent(tt.args.sourceResource, tt.args.targetPod)
 			if got != tt.want {
 				t.Errorf("copyResourceLabelsIfPresent() got = %v, want %v", got, tt.want)
 			}
@@ -937,7 +882,6 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 		fields    fields
 		args      args
 		want      bool
-		wantErr   bool
 		wantedPod *corev1.Pod
 	}{
 		{
@@ -951,30 +895,14 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 					},
 				},
 			},
-			want:    true,
-			wantErr: false,
+			want: true,
 		},
 		{
 			name: "Test return false when app annotation is not present",
 			args: args{
 				pod: &corev1.Pod{},
 			},
-			want:    false,
-			wantErr: false,
-		},
-		{
-			name: "Test return error when app annotation is too long",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation: "some-app-annotation-that-is-very-looooooooooooooooooooong",
-						},
-					},
-				},
-			},
-			want:    false,
-			wantErr: true,
+			want: false,
 		},
 		{
 			name: "Test that app name is copied when only workload name is present",
@@ -987,8 +915,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 					},
 				},
 			},
-			want:    false,
-			wantErr: false,
+			want: false,
 			wantedPod: &corev1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
@@ -1008,11 +935,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
-			got, err := a.isAppAnnotationPresent(tt.args.pod)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("isAppAnnotationPresent() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := a.isAppAnnotationPresent(tt.args.pod)
 			if got != tt.want {
 				t.Errorf("isAppAnnotationPresent() got = %v, want %v", got, tt.want)
 			}

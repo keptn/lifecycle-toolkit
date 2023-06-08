@@ -212,6 +212,12 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1alpha3.KeptnWorkloadInstance{}, "spec.app", func(rawObj client.Object) []string {
+		workloadInstance := rawObj.(*klcv1alpha3.KeptnWorkloadInstance)
+		return []string{workloadInstance.Spec.AppName}
+	}); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha3.KeptnWorkloadInstance{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).

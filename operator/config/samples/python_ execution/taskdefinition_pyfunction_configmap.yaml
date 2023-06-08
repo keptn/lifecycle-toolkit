@@ -1,0 +1,16 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: scheduled-deployment
+spec:
+  python:
+    configMapRef:
+      name: python-test-cm
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: python-test-cm
+data:
+  code: |
+    print("Hello, World!")

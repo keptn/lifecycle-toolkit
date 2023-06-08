@@ -1,7 +1,6 @@
 package taskdefinition_test
 
 import (
-	"context"
 	"os"
 	"testing"
 	"time"
@@ -10,8 +9,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	// nolint:gci
@@ -24,16 +21,13 @@ func TestTaskdefinition(t *testing.T) {
 }
 
 var (
-	k8sManager   ctrl.Manager
-	tracer       *otelsdk.TracerProvider
-	k8sClient    client.Client
-	ctx          context.Context
-	spanRecorder *sdktest.SpanRecorder
+	k8sManager ctrl.Manager
+	k8sClient  client.Client
 )
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+	_, k8sManager, _, _, k8sClient, readyToStart = common.InitSuite()
 
 	////setup controllers here
 	controller := &keptntaskdefinition.KeptnTaskDefinitionReconciler{

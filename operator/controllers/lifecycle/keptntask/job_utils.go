@@ -3,15 +3,17 @@ package keptntask
 import (
 	"context"
 	"fmt"
-	"reflect"
 
-	"github.com/imdario/mergo"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
@@ -22,7 +24,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if !reflect.DeepEqual(definition.Spec.Function, klcv1alpha3.FunctionSpec{}) {
+	if controllercommon.SpecExists(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -40,31 +42,8 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 }
 
 func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition) (string, error) {
-	params, hasParent, err := r.parseFunctionTaskDefinition(definition)
-	if err != nil {
-		return "", err
-	}
-	if hasParent {
-		if err := r.handleParent(ctx, req, task, definition, params); err != nil {
-			return "", err
-		}
-	}
 
-	params.Context = setupTaskContext(task)
-
-	if len(task.Spec.Parameters.Inline) > 0 {
-		err = mergo.Merge(&params.Parameters, task.Spec.Parameters.Inline)
-		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-			return "", err
-		}
-	}
-
-	if task.Spec.SecureParameters.Secret != "" {
-		params.SecureParameters = task.Spec.SecureParameters.Secret
-	}
-
-	job, err := r.generateFunctionJob(task, params)
+	job, err := r.generateJob(ctx, task, definition, req)
 	if err != nil {
 		return "", err
 	}
@@ -127,21 +106,58 @@ func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
 	return taskContext
 }
 
-func (r *KeptnTaskReconciler) handleParent(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, params FunctionExecutionParams) error {
-	var parentJobParams FunctionExecutionParams
-	parentDefinition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, definition.Spec.Function.FunctionReference.Name, req.Namespace)
-	if err != nil {
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-		return err
+func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
+	job := &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        apicommon.GenerateJobName(task.Name),
+			Namespace:   task.Namespace,
+			Labels:      task.Labels,
+			Annotations: task.CreateKeptnAnnotations(),
+		},
+		Spec: batchv1.JobSpec{
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels:      task.Labels,
+					Annotations: task.Annotations,
+				},
+				Spec: corev1.PodSpec{
+					RestartPolicy: "OnFailure",
+				},
+			},
+			BackoffLimit:          task.Spec.Retries,
+			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+		},
 	}
-	parentJobParams, _, err = r.parseFunctionTaskDefinition(parentDefinition)
+	err := controllerutil.SetControllerReference(task, job, r.Scheme)
 	if err != nil {
-		return err
+		r.Log.Error(err, "could not set controller reference:")
 	}
-	err = mergo.Merge(&params, parentJobParams)
+
+	builderOpt := BuilderOptions{
+		Client:        r.Client,
+		req:           request,
+		Log:           r.Log,
+		task:          task,
+		containerSpec: definition.Spec.Container,
+		funcSpec:      controllercommon.GetRuntimeSpec(definition),
+		recorder:      r.Recorder,
+		Image:         controllercommon.GetRuntimeImage(definition),
+		MountPath:     controllercommon.GetRuntimeMountPath(definition),
+		ConfigMap:     definition.Status.Function.ConfigMap,
+	}
+
+	builder := getJobRunnerBuilder(builderOpt)
+	if builder == nil {
+		return nil, controllererrors.ErrNoTaskDefinitionSpec
+	}
+
+	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
 	if err != nil {
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
-		return err
+		r.Log.Error(err, "could not create Job")
+		return nil, controllererrors.ErrCannotMarshalParams
 	}
-	return nil
+
+	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
+	job.Spec.Template.Spec.Volumes = volumes
+	return job, nil
 }

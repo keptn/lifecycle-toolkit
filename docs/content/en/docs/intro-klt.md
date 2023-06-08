@@ -80,7 +80,7 @@ on the production site.
 Keptn Lifecycle Toolkit includes multiple features
 that can be implemented independently or together.
 Different features are at different levels of stability.
-See the [Keptn Lifecycle Toolkit README file]
+See the [Keptn Lifecycle Toolkit README file](https://github.com/keptn/lifecycle-toolkit/blob/main/README.md)
 for a list of the features that have been implemented to date
 and their level of stability.
 

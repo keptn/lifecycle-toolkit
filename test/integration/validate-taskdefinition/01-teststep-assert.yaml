@@ -1,6 +1,15 @@
 apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 error: # this checks that kubectl get resource fails, AKA bad CRD not added
-  - badtaskdefinition.yaml
+  - badtaskdefinition1.yaml
+  - badtaskdefinition2.yaml
+  - badtaskdefinition3.yaml
+  - badtaskdefinition4.yaml
+  - badtaskdefinition5.yaml
+  - badtaskdefinition6.yaml
+  - badtaskdefinition7.yaml
 assert: # this checks that kubectl get resource succeeds
-  - goodtaskdefinition.yaml
+  - goodtaskdefinition1.yaml
+  - goodtaskdefinition2.yaml
+  - goodtaskdefinition3.yaml
+  - goodtaskdefinition4.yaml

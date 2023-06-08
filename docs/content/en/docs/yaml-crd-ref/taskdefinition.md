@@ -15,9 +15,10 @@ A Keptn task runs as an application
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 
-A Keptn task can be defined in either of two ways:
+A Keptn task can be defined in either of two ways,
+differentiated by the `spec` section:
 
-* Define a Kubernetes application container,
+* Define a custom Kubernetes application container,
   that includes a runtime,  an application
   and its runtime dependencies.
   This gives you a lot of flexibility,
@@ -46,11 +47,7 @@ spec:
       secret: slack-token
 ```
 
-## Yaml Synopsis for container
-
-TODO: Is this going to be generic for all types of containers
-or should this be defined as a particular type of container
-so it works when we add other types of containers?
+## Yaml Synopsis for custom application container
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -61,10 +58,7 @@ spec:
   container
     name: <container-name>
     image: <image-name>
-    command:
-      - 'command1'
-      - 'command2'
-      - '...'
+    <other fields>
 ```
 
 ## Fields
@@ -77,12 +71,12 @@ spec:
 * **metadata**
   * **name** -- Unique name of this task or container.
     This is the name used to insert this task or container
-    into the `preDeployment` or `postDeployment`
+    into the `preDeployment` or `postDeployment` list.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 
-### Fields used only for Deno-runtime definitions
+### Spec used only for Deno-runtime definitions
 
 * **spec**
   * **function** -- Code to be executed,
@@ -173,7 +167,7 @@ spec:
     See [Create secret text](../implementing/tasks/#create-secret-text)
     for details.
 
-### Fields used only for container definitions
+### Spec used only for custom Kuberenetes container definitions
 
 * **spec**
   * **container** -- Container definition.
@@ -185,14 +179,17 @@ spec:
       and
       [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
-    * **command** (optional) -- entrypoint array according to
-      [Entrypoint array](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#entrypoint).
+    * **other fields** -- The full list of valid fields is available at
+      [ContainerSpec](../crd-ref/lifecycle/v1alpha3/#containerspec),
+      with additional information in the Kubernetes
+      [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
+      spec documentation.
 
-      TODO: should this go on to mention ports, env variables, volumes,
-      resources, lifecycle, security context, and debugging, which are
-      all the subsections to `Container` in that doc.
-      Or should I just
-      make a generic `Other fields in the spec` reference comment?
+      TODO: Should we only link to the ContainerSpec here or should
+      we perhaps show the required fields plus "other fields"?
+       It
+      is not real clear which fields are required but I'm pretty sure
+      that `name` and `image` are required.
 
 ## Usage
 
@@ -356,9 +353,9 @@ data:
     console.log(targetDate);
 ```
 
-### Example 5: Container
+### Example 5: Custom container
 
-For an example of a `KeptnTaskDefinition` that defines a container.
+For an example of a `KeptnTaskDefinition` that defines a custome container.
  see
 [container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
 The `spec` includes:

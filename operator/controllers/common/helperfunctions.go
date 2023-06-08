@@ -30,10 +30,6 @@ func GetItemStatus(name string, instanceStatus []klcv1alpha3.ItemStatus) klcv1al
 	}
 }
 
-func GetAppVersionName(namespace string, appName string, version string) types.NamespacedName {
-	return types.NamespacedName{Namespace: namespace, Name: appName + "-" + version}
-}
-
 // GetOldStatus retrieves the state of the task/evaluation
 func GetOldStatus(name string, statuses []klcv1alpha3.ItemStatus) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState

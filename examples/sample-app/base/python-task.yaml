@@ -1,0 +1,21 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: python-secret
+spec:
+  python:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/python-runtime/samples/secrets.py
+    parameters:
+      map:
+        user: "myuser"
+    secureParameters:
+      secret: mypysecret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mypysecret
+type: Opaque
+data:
+  SECURE_DATA: dG9rZW46IG15dG9rZW4=

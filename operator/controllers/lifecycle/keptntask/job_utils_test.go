@@ -78,16 +78,16 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
-	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
 	require.Equal(t, map[string]string{
-		"label1":             "label2",
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
 		"keptn.sh/app":       "my-app",
 		"keptn.sh/task-name": "my-task",
 		"keptn.sh/version":   "",
 		"keptn.sh/workload":  "my-workload",
-	}, resultingJob.Labels)
-	require.Equal(t, map[string]string{
-		"annotation1": "annotation2",
 	}, resultingJob.Annotations)
 }
 
@@ -152,16 +152,16 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
-	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
 	require.Equal(t, map[string]string{
-		"label1":             "label2",
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
 		"keptn.sh/app":       "my-app",
 		"keptn.sh/task-name": "my-task",
 		"keptn.sh/version":   "",
 		"keptn.sh/workload":  "my-workload",
-	}, resultingJob.Labels)
-	require.Equal(t, map[string]string{
-		"annotation1": "annotation2",
 	}, resultingJob.Annotations)
 }
 
@@ -272,7 +272,7 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 			},
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.RuntimeSpec{
 				ConfigMapReference: klcv1alpha3.ConfigMapReference{
 					Name: configMapName,
 				},

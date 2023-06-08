@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	// nolint:gci
@@ -24,18 +24,18 @@ func TestTask(t *testing.T) {
 }
 
 var (
-	k8sManager   ctrl.Manager
-	tracer       *otelsdk.TracerProvider
-	k8sClient    client.Client
-	ctx          context.Context
-	spanRecorder *sdktest.SpanRecorder
+	k8sManager ctrl.Manager
+	tracer     *otelsdk.TracerProvider
+	k8sClient  client.Client
+	ctx        context.Context
 )
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+	ctx, k8sManager, tracer, _, k8sClient, readyToStart = common.InitSuite()
 
-	_ = os.Setenv("FUNCTION_RUNNER_IMAGE", "my-image")
+	_ = os.Setenv(controllercommon.FunctionRuntimeImageKey, "my-image-js")
+	_ = os.Setenv(controllercommon.PythonRuntimeImageKey, "my-image-py")
 
 	////setup controllers here
 	controller := &keptntask.KeptnTaskReconciler{

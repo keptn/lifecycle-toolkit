@@ -14,7 +14,7 @@ defaults:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.4"
+  CONTROLLER_TOOLS_VERSION: "v0.12.0"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 
 jobs:
@@ -51,6 +51,8 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
+          - name: "python-runtime"
+            folder: "python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     runs-on: ubuntu-22.04
@@ -79,7 +81,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v3.0.2
+        uses: sigstore/cosign-installer@v3.0.5
 
       - name: Build Docker Image
         id: docker_build_image
@@ -112,7 +114,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.14.1
+        uses: anchore/sbom-action@v0.14.2
         with:
           image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
@@ -162,7 +164,7 @@ jobs:
 
       - name: Create manifests
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+          RELEASE_REGISTRY: ghcr.io/keptn
           CHART_APPVERSION: ${{ needs.release-please.outputs.tag_name }}
         run: |
           cd scheduler

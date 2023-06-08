@@ -2,7 +2,7 @@ name: Performance Tests
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
+      runtime_tag:
         description: "Tag for the functions runner image"
         type: "string"
         required: true
@@ -23,7 +23,7 @@ jobs:
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
-          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          runtime_tag: ${{ inputs.runtime_tag }}
 
       - name: Execute Performance Tests
         working-directory: operator

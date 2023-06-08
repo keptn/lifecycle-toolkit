@@ -29,6 +29,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -248,11 +249,11 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	r.Log.Info("Increasing evaluation count")
 
 	// metrics: increment evaluation counter
-	r.Meters.EvaluationCount.Add(ctx, 1, attrs...)
+	r.Meters.EvaluationCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 
 	// metrics: add evaluation duration
 	duration := evaluation.Status.EndTime.Time.Sub(evaluation.Status.StartTime.Time)
-	r.Meters.EvaluationDuration.Record(ctx, duration.Seconds(), attrs...)
+	r.Meters.EvaluationDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
 	return nil
 }
 

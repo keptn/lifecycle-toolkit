@@ -7,7 +7,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.4"
+  CONTROLLER_TOOLS_VERSION: "v0.12.0"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -62,6 +62,8 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
+          - name: "python-runtime"
+            folder: "python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
@@ -141,6 +143,6 @@ jobs:
     name: Integration Tests
     needs: [prepare_ci_run, build_helm_chart]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: true
     uses: ./.github/workflows/integration-test.yml

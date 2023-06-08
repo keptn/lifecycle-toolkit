@@ -16,3 +16,4 @@ spec:
       version: 0.1.2
   preDeploymentTasks:
     - container-sleep
+    - python-secret

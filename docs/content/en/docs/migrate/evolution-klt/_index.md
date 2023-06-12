@@ -143,3 +143,22 @@ But it has flaws in the GitOps world:
 
 KLT solves these problems by providing an operator
 
+## Why to choose KLT
+
+- You are running (or moving towards) GitOps
+- Your application is being assembled
+  from a set of microservices,
+  each of which is developed in its own repo
+
+## Why to choose Keptn v1
+
+- You are not using Kubernetes to deploy your application
+- You are developing your software as an application
+  in a monolithic repository
+  rather than assembling it from multiple repos,
+  each of which develops a microservice that is part of the application.
+- You need the sophisticated SLI/SLO evaluation provided by quality gates,
+  including the ability to weight different SLIs
+  and receive a composite score
+- You want the sophisticated remediation facilities
+  that Keptn v1 provides

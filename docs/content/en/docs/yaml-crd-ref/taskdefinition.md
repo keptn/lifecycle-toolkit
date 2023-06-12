@@ -15,9 +15,6 @@ A Keptn task runs as an application
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 
-TODO: That last sentence doesn't make sense --
-perhaps "task" needs a modifier.
-
 A Keptn task can be defined in either of two ways:
 
 * Define a Kubernetes application container,

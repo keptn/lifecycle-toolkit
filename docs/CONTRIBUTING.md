@@ -423,7 +423,9 @@ If you've pushed your changes to GitHub already you'll need to force push your b
 * <https://code.asam.net/simulation/wiki/-/wikis/docs/project_guidelines/ASAM-DCO?version_id=c510bffb1195dc04deb9db9451112669073f0ba5>
 * <https://thesofproject.github.io/latest/contribute/contribute_guidelines.html>
 
-## [Source file structure](./content/en/contribute/docs/Source_file_structure/_index.md)
+## Source File Structure
+
+Please check [Source File Structure](content/en/contribute/docs/source-file-structure/_index.md)..
 
 ## Guidelines for working on documentation in development versus already released documentation
 

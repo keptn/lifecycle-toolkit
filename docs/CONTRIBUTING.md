@@ -23,7 +23,9 @@ If you need help getting started,
 feel free to ask for help on the `#help-contributing` or `#keptn-docs` channels on the [Keptn Slack](https://keptn.sh/community/#slack).
 We were all new to this once and are happy to help you!
 
-## [Guidelines for contributing](./content/en/contribute/general/guidelines_for_contributing.md/_index.md)
+## Guidelines for Contributing
+
+Please check [Guidelines for Contributing](./content/en/contribute/general/guidelines_for_contributing.md/_index.md).
 
 ## Building the documentation locally
 

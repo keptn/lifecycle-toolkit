@@ -27,8 +27,8 @@ The meaning of these fields is:
 
 * **title** -- title displayed for the section or file
 * **description** -- subtext displayed for the section or subsection
-* **weight** -- order in which section or subsection is desplayed relative to other sections and
-   subsections at the same level.
+* **weight** -- order in which section or subsection is displayed relative to other sections and
+  subsections at the same level.
 
 In this case, the weight of 50 means that this section is displayed
 after sections that have weights of 49 and lower
@@ -58,4 +58,4 @@ Each topical subdirectory contains:
 
 * An *index.md* file that has the metadata discussed above plus the text for the section
 * An *assets* subdirectory where graphical files for that topic are stored.
-No *assets* subdirectory is present if the topic has no graphics.
+* No *assets* subdirectory is present if the topic has no graphics.

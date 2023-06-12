@@ -59,7 +59,9 @@ please create an issue on the GitHub repository:
   include that information in your description of the issue
   or in a comment to the issue.
 
-## [Building the documentation locally](./content/en/contribute/general/build_docs_locally/index.md)
+## Building the Documentation Locally
+
+Please check [Building the Documentation Locally](content/en/contribute/general/local-building/index.md).
 
 ## Interacting with github
 

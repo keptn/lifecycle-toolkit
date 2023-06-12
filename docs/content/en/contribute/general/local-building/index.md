@@ -1,5 +1,5 @@
 ---
-title: Build documentation locally
+title: Build Documentation Locally
 description: This guide explains how to create a local version of the documentation
 weight: 400
 ---
@@ -9,7 +9,7 @@ weight: 400
 You can run Docsy locally so that you can view the formatted version
 of what you are writing before you push it to github.
 We provide a Docsy run environment in a Docker container,
-which simplifies the set up
+which simplifies the setup
 and makes it easier to upgrade your local build environment
 as the software is updated.
 

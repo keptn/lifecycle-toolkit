@@ -27,7 +27,7 @@ spec:
   # The following are optional
   preDeploymentTasks:
   - pre-deployment-hello
-  preDeploymentEvaluations:    
+  preDeploymentEvaluations:
   - my-pre-deploy-evaluation
   postDeploymentTasks:
   - post-deployment-hello

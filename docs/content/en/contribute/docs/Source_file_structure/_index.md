@@ -1,5 +1,5 @@
 ---
-title: Source file structure
+title: Source File Structure
 description: Structure source files with Metadata
 weight: 400
 ---

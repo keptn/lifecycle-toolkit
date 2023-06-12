@@ -1,0 +1,14 @@
+# This TaskDefinition will not be accepted by the validation webhook as it contains both containerSpec and functionSpec
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: badtaskdefinition6
+spec:
+  function:
+    inline:
+      code: |
+        console.log('hello');
+  deno:
+    inline:
+      code: |
+        console.log('hello');

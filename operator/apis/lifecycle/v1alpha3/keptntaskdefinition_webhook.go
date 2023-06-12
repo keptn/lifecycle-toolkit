@@ -77,22 +77,39 @@ func (r *KeptnTaskDefinition) validateKeptnTaskDefinition() error {
 		allErrs)
 }
 func (r *KeptnTaskDefinition) validateFields() *field.Error {
-
-	if r.Spec.Function == nil && r.Spec.Container == nil {
+	count := countSpec(r)
+	if count == 0 {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Either Function or Container field must be defined").Error(),
+			errors.New("Forbidden! Either Function, Container, Python, or Deno field must be defined").Error(),
 		)
 	}
 
-	if r.Spec.Function != nil && r.Spec.Container != nil {
+	if count > 1 {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Both Function and Container fields cannot be defined simultaneously").Error(),
+			errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
 		)
 	}
 
 	return nil
+}
+
+func countSpec(r *KeptnTaskDefinition) int {
+	count := 0
+	if r.Spec.Function != nil {
+		count++
+	}
+	if r.Spec.Container != nil {
+		count++
+	}
+	if r.Spec.Python != nil {
+		count++
+	}
+	if r.Spec.Deno != nil {
+		count++
+	}
+	return count
 }

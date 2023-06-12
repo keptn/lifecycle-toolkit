@@ -23,7 +23,7 @@ To set up a local Docsy build:
 
 1. Build the Keptn Docsy repo:
 
-   ```console
+   ```shell
    make build
    ```
 
@@ -34,7 +34,7 @@ To set up a local Docsy build:
 
 1. Execute the following command from the `docs` folder of your clone:
 
-   ```console
+   ```shell
    make server
    ```
 
@@ -82,7 +82,7 @@ to check your formatting, you have the following options:
      you can format the specified file locally
      by running the following in its own shell:
 
-     ```console
+     ```shell
      grip <file>.md
      ```
 

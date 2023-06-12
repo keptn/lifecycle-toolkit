@@ -20,8 +20,9 @@ and questions that you have.
 
 This section currently includes the following topics:
 
-* [Evolution of KLT](../evolution-klt)
+* Evolution of KLT --
   Understand the paradigm of KLT and how it evolved from Keptn v1.
   Also see whether migrating to KLT is appropriate for your deployments
 
-* [Migration strategy](../strategy)
+* Migration strategy -- Summary of the steps, in a suggested order,
+  for migrating your projects from Keptn v1 to KLT

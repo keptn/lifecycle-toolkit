@@ -1,4 +1,4 @@
-FROM python:3.9 AS production
+FROM python:3.11-alpine AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

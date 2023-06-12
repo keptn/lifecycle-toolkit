@@ -1,5 +1,5 @@
 ---
-title: Contributing guidelines
+title: Contribution Guidelines
 description: Guidelines for contributing towards Keptn Lifecycle Toolkit
 weight: 300
 ---

@@ -61,7 +61,7 @@ please create an issue on the GitHub repository:
 
 ## Building the Documentation Locally
 
-Please check [Building the Documentation Locally](content/en/contribute/general/local-building/index.md).
+Please check [Building the Documentation Locally](content/en/contribute/docs/local-building/index.md).
 
 ## Interacting with github
 

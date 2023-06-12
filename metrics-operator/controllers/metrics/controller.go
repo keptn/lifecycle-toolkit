@@ -55,10 +55,6 @@ type KeptnMetricReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the KeptnMetric object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
@@ -99,24 +95,33 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{Requeue: false}, err2
 	}
 
+	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
 	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
 	if err != nil {
-		r.Log.Error(err, "Failed to evaluate the query")
-		return ctrl.Result{Requeue: false}, err
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		metric.Status.ErrMsg = err.Error()
+		metric.Status.Value = ""
+		metric.Status.RawValue = cupSize(rawValue)
+		metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
+		reconcile = ctrl.Result{Requeue: false}
+	} else {
+		metric.Status.Value = value
+		metric.Status.RawValue = cupSize(rawValue)
+		metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 	}
-	metric.Status.Value = value
-	metric.Status.RawValue = cupSize(rawValue)
-	metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
 		r.Log.Error(err, "Failed to update the Metric status")
 		return ctrl.Result{}, err
 	}
 
-	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	return reconcile, err
 }
 
 func cupSize(value []byte) []byte {
+	if len(value) == 0 {
+		return []byte{}
+	}
 	if len(value) > MB {
 		return value[:MB]
 	}

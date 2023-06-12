@@ -23,6 +23,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -185,9 +186,10 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 	lastResultErr = nil
 	for i := app.Generation - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha3.KeptnAppVersion{}
-		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + common.Hash(i)}, deprecatedAppVersion); err != nil {
+		appVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, app.Name, app.Spec.Version, common.Hash(i))
+		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: appVersionName}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {
-				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+common.Hash(i)))
+				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", appVersionName))
 				lastResultErr = err
 			}
 		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {

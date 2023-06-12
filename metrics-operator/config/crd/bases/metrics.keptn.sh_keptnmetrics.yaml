@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.4
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: keptnmetrics.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
@@ -220,6 +220,10 @@ spec:
           status:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
             properties:
+              errMsg:
+                description: ErrMsg represents the error details when the query could
+                  not be evaluated
+                type: string
               lastUpdated:
                 description: LastUpdated represents the time when the status data
                   was last updated

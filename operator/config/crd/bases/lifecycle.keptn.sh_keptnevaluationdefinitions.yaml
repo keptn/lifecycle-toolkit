@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.4
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -139,19 +139,29 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationDefinitionSpec defines the desired state of
-              KeptnEvaluationDefinition
+            description: Spec describes the desired state of the KeptnEvaluationDefinition.
             properties:
               objectives:
+                description: Objectives is a list of objectives that have to be met
+                  for a KeptnEvaluation referencing this KeptnEvaluationDefinition
+                  to be successful.
                 items:
                   properties:
                     evaluationTarget:
+                      description: EvaluationTarget specifies the target value for
+                        the references KeptnMetric. Needs to start with either '<'
+                        or '>', followed by the target value (e.g. '<10').
                       type: string
                     keptnMetricRef:
+                      description: KeptnMetricRef references the KeptnMetric that
+                        should be evaluated.
                       properties:
                         name:
+                          description: Name is the name of the referenced KeptnMetric.
                           type: string
                         namespace:
+                          description: Namespace is the namespace where the referenced
+                            KeptnMetric is located.
                           type: string
                       required:
                       - name
@@ -165,8 +175,7 @@ spec:
             - objectives
             type: object
           status:
-            description: KeptnEvaluationDefinitionStatus defines the observed state
-              of KeptnEvaluationDefinition
+            description: Status describes the current state of the KeptnEvaluationDefinition.
             type: object
         type: object
     served: true

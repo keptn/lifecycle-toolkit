@@ -8,4 +8,5 @@ IgnoreDirs:
 IgnoreURLs:
   - "linkedin.com"
   - "localhost"
+  - "twitter.com"
 StripQueryString: false

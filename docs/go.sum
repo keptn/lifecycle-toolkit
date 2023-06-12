@@ -1,0 +1,9 @@
+github.com/FortAwesome/Font-Awesome v0.0.0-20220831210243-d3a7818c253f/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
+github.com/google/docsy v0.6.0 h1:43bVF18t2JihAamelQjjGzx1vO2ljCilVrBgetCA8oI=
+github.com/google/docsy/dependencies v0.6.0 h1:BFXDCINbp8ZuUGl/mrHjMfhCg+b1YX+hVLAA5fGW7Pc=
+github.com/google/docsy/dependencies v0.6.0/go.mod h1:EDGc2znMbGUw0RW5kWwy2oGgLt0iVXBmoq4UOqstuNE=
+github.com/keptn/community v0.0.0-20230429154843-72d65a6e2b39 h1:cexkJyNwTSwU+XgNKbu3ttr71rK/W9AwuyqUdefzPfc=
+github.com/keptn/community v0.0.0-20230429154843-72d65a6e2b39/go.mod h1:0G5nUhSv7ch9BgIFXiY7+U+cV5SbVmneysNGQwQkH8s=
+github.com/keptn/docs-tooling v0.1.1 h1:IuI0Fgs0JrtffLN05iaRZVkRMbPu6h9bxR4C8q1ApGU=
+github.com/keptn/docs-tooling v0.1.1/go.mod h1:x0iT5YsJosz6wzjQke/YaLgiXF6PV+N8QzxSAc2MY/4=
+github.com/twbs/bootstrap v4.6.2+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=

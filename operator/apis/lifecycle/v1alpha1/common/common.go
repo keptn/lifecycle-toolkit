@@ -6,8 +6,7 @@ import (
 	"math/rand"
 
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
-	"go.opentelemetry.io/otel/metric/instrument/syncint64"
+	"go.opentelemetry.io/otel/metric"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -132,14 +131,14 @@ const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
 const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
 type KeptnMeters struct {
-	TaskCount          syncint64.Counter
-	TaskDuration       syncfloat64.Histogram
-	DeploymentCount    syncint64.Counter
-	DeploymentDuration syncfloat64.Histogram
-	AppCount           syncint64.Counter
-	AppDuration        syncfloat64.Histogram
-	EvaluationCount    syncint64.Counter
-	EvaluationDuration syncfloat64.Histogram
+	TaskCount          metric.Int64Counter
+	TaskDuration       metric.Float64Histogram
+	DeploymentCount    metric.Int64Counter
+	DeploymentDuration metric.Float64Histogram
+	AppCount           metric.Int64Counter
+	AppDuration        metric.Float64Histogram
+	EvaluationCount    metric.Int64Counter
+	EvaluationDuration metric.Float64Histogram
 }
 
 const (

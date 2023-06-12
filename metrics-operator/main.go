@@ -26,12 +26,13 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
@@ -154,10 +155,22 @@ func main() {
 		webhookBuilder := webhook.NewWebhookBuilder().
 			SetNamespace(env.PodNamespace).
 			SetPodName(env.PodName).
-			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+			SetManagerProvider(
+				webhook.NewWebhookManagerProvider(
+					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+			).
+			SetCertificateWatcher(
+				certificates.NewCertificateWatcher(
+					mgr.GetAPIReader(),
+					mgr.GetWebhookServer().CertDir,
+					env.PodNamespace,
+					certCommon.SecretName,
+					setupLog,
+				),
+			)
 
 		setupLog.Info("starting webhook and manager")
-		if err1 := webhookBuilder.Run(mgr); err1 != nil {
+		if err := webhookBuilder.Run(mgr, nil); err != nil {
 			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}

@@ -9,8 +9,8 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"github.com/stretchr/testify/require"
-	noop "go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/instrument/asyncfloat64"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/noop"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -18,16 +18,14 @@ import (
 )
 
 func TestMetrics_ObserveDeploymentDuration(t *testing.T) {
-
-	gauge, err := noop.NewNoopMeter().AsyncFloat64().Gauge("mine")
-	require.Nil(t, err)
+	gauge := noop.Float64ObservableGauge{}
 
 	tests := []struct {
 		name          string
 		clientObjects client.ObjectList
 		list          client.ObjectList
 		err           error
-		gauge         asyncfloat64.Gauge
+		gauge         metric.Float64ObservableGauge
 	}{
 		{
 			name:          "failed to create wrapper",
@@ -79,7 +77,7 @@ func TestMetrics_ObserveDeploymentDuration(t *testing.T) {
 			err := lifecyclev1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
-			err = ObserveDeploymentDuration(context.TODO(), client, tt.list, gauge)
+			err = ObserveDeploymentDuration(context.TODO(), client, tt.list, gauge, noop.Observer{})
 			require.ErrorIs(t, err, tt.err)
 		})
 
@@ -153,9 +151,9 @@ func TestMetrics_ObserveActiveInstances(t *testing.T) {
 			err := lifecyclev1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			client := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
-			gauge, err := noop.NewNoopMeter().AsyncInt64().Gauge("mine")
+			gauge := noop.Int64ObservableGauge{}
 			require.Nil(t, err)
-			err = ObserveActiveInstances(context.TODO(), client, tt.list, gauge)
+			err = ObserveActiveInstances(context.TODO(), client, tt.list, gauge, noop.Observer{})
 			require.ErrorIs(t, err, tt.err)
 
 		})
@@ -365,15 +363,14 @@ func TestMetrics_ObserveDeploymentInterval(t *testing.T) {
 		},
 	}
 
-	gauge, err := noop.NewNoopMeter().AsyncFloat64().Gauge("mine")
-	require.Nil(t, err)
+	gauge := noop.Float64ObservableGauge{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := lifecyclev1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			fakeClient := fake.NewClientBuilder().WithLists(tt.clientObjects).Build()
-			err = ObserveDeploymentInterval(context.TODO(), fakeClient, tt.list, gauge)
+			err = ObserveDeploymentInterval(context.TODO(), fakeClient, tt.list, gauge, noop.Observer{})
 			require.ErrorIs(t, err, tt.err)
 		})
 

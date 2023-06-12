@@ -2,8 +2,8 @@ name: E2E-Test
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
-        description: "Tag for the functions runner image"
+      runtime_tag:
+        description: "Tag for the runner image"
         type: "string"
         required: true
 env:
@@ -30,7 +30,7 @@ jobs:
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
-          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          runtime_tag: ${{ inputs.runtime_tag }}
 
       - name: Run E2E Tests ${{ matrix.config.name }}
         working-directory: ${{ matrix.config.folder }}

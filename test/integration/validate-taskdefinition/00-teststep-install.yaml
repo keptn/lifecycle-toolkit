@@ -1,7 +1,7 @@
 apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 apply:
-  - goodtaskdefinitio1.yaml
+  - goodtaskdefinition1.yaml
   - goodtaskdefinition2.yaml
   - goodtaskdefinition3.yaml
   - goodtaskdefinition4.yaml

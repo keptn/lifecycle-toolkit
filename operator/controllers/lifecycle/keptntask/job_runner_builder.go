@@ -33,7 +33,7 @@ type BuilderOptions struct {
 
 func NewJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
 	if options.funcSpec != nil {
-		return NewFunctionBuilder(options)
+		return NewRuntimeBuilder(options)
 	}
 	if options.containerSpec != nil {
 		return NewContainerBuilder(options)

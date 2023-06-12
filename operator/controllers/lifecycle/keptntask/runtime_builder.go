@@ -13,20 +13,20 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// FunctionBuilder implements container builder interface for javascript deno
-type FunctionBuilder struct {
+// RuntimeBuilder implements container builder interface for javascript deno
+type RuntimeBuilder struct {
 	options BuilderOptions
 }
 
-func NewFunctionBuilder(options BuilderOptions) *FunctionBuilder {
+func NewRuntimeBuilder(options BuilderOptions) *RuntimeBuilder {
 
-	return &FunctionBuilder{
+	return &RuntimeBuilder{
 		options: options,
 	}
 }
 
-// FunctionExecutionParams stores parameters related to js deno container creation
-type FunctionExecutionParams struct {
+// RuntimeExecutionParams stores parameters related to js deno container creation
+type RuntimeExecutionParams struct {
 	ConfigMap        string
 	Parameters       map[string]string
 	SecureParameters string
@@ -46,7 +46,7 @@ const (
 	FunctionMountName = "function-mount"
 )
 
-func (fb *FunctionBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
+func (fb *RuntimeBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
 
 	var envVars []corev1.EnvVar
 
@@ -109,7 +109,7 @@ func (fb *FunctionBuilder) CreateContainer(ctx context.Context) (*corev1.Contain
 }
 
 //nolint:nilnil
-func (fb *FunctionBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
+func (fb *RuntimeBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
 	params, err := fb.getParams(ctx)
 	if err != nil {
 		return nil, err
@@ -132,8 +132,8 @@ func (fb *FunctionBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, er
 
 }
 
-func (fb *FunctionBuilder) getParams(ctx context.Context) (*FunctionExecutionParams, error) {
-	params, hasParent, err := fb.parseFunctionTaskDefinition(
+func (fb *RuntimeBuilder) getParams(ctx context.Context) (*RuntimeExecutionParams, error) {
+	params, hasParent, err := fb.parseRuntimeTaskDefinition(
 		fb.options.funcSpec,
 		fb.options.task.Spec.TaskDefinition,
 		fb.options.task.Namespace,
@@ -168,8 +168,8 @@ func (fb *FunctionBuilder) getParams(ctx context.Context) (*FunctionExecutionPar
 	return &params, nil
 }
 
-func (fb *FunctionBuilder) parseFunctionTaskDefinition(spec *klcv1alpha3.RuntimeSpec, name string, namespace string, configMap string) (FunctionExecutionParams, bool, error) {
-	params := FunctionExecutionParams{}
+func (fb *RuntimeBuilder) parseRuntimeTaskDefinition(spec *klcv1alpha3.RuntimeSpec, name string, namespace string, configMap string) (RuntimeExecutionParams, bool, error) {
+	params := RuntimeExecutionParams{}
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
@@ -207,8 +207,8 @@ func (fb *FunctionBuilder) parseFunctionTaskDefinition(spec *klcv1alpha3.Runtime
 	return params, hasParent, nil
 }
 
-func (fb *FunctionBuilder) handleParent(ctx context.Context, params *FunctionExecutionParams) error {
-	var parentJobParams FunctionExecutionParams
+func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecutionParams) error {
+	var parentJobParams RuntimeExecutionParams
 	parentDefinition, err := controllercommon.GetTaskDefinition(fb.options.Client, fb.options.Log, ctx, fb.options.funcSpec.FunctionReference.Name, fb.options.req.Namespace)
 	if err != nil {
 		controllercommon.RecordEvent(fb.options.recorder, apicommon.PhaseCreateTask, "Warning", fb.options.task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
@@ -216,7 +216,7 @@ func (fb *FunctionBuilder) handleParent(ctx context.Context, params *FunctionExe
 	}
 	parSpec := controllercommon.GetRuntimeSpec(parentDefinition)
 	// if the parent has also another parent, the data from the grandparent are alredy copied to the parent and therefore parent can copy it's data to the child
-	parentJobParams, _, err = fb.parseFunctionTaskDefinition(parSpec, parentDefinition.Name, parentDefinition.Namespace, parentDefinition.Status.Function.ConfigMap)
+	parentJobParams, _, err = fb.parseRuntimeTaskDefinition(parSpec, parentDefinition.Name, parentDefinition.Namespace, parentDefinition.Status.Function.ConfigMap)
 	if err != nil {
 		return err
 	}

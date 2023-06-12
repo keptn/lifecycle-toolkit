@@ -9,7 +9,7 @@ import (
 )
 
 func Test_getJobRunnerBuilder(t *testing.T) {
-	functionBuilderOptions := BuilderOptions{
+	runtimeBuilderOptions := BuilderOptions{
 		funcSpec: &v1alpha3.RuntimeSpec{
 			Inline: v1alpha3.Inline{
 				Code: "some code",
@@ -30,8 +30,8 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 	}{
 		{
 			name:    "js builder",
-			options: functionBuilderOptions,
-			want:    NewFunctionBuilder(functionBuilderOptions),
+			options: runtimeBuilderOptions,
+			want:    NewRuntimeBuilder(runtimeBuilderOptions),
 		},
 		{
 			name:    "container builder",

@@ -54,9 +54,11 @@ and generating manifests.
 * [**Helm**](https://helm.sh/): a package manager for Kubernetes that
 simplifies the deployment and management of applications on a Kubernetes cluster.
 
-## [Related Technologies](docs/content/en/contribute/general/technologies/_index.md)
+## Related Technologies
+Please check [Related Technologies](docs/content/en/contribute/general/technologies/_index.md).
 
-## [Linters requirements](docs/content/en/contribute/docs/linters_requirements/_index.md)
+## Linter Requirements
+Please check [Linter Requirements](docs/content/en/contribute/docs/linter-requirements/_index.md).
 
 ## Submit a Pull Request 🚀
 

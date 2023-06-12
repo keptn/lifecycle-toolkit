@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: goodtaskdefinition3
+spec:
+  python:
+    inline:
+      code: |
+        print('hello')

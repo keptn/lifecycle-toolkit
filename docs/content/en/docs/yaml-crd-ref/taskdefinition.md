@@ -14,7 +14,6 @@ A Keptn task runs as an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
-A Keptn job is part of a task.
 
 TODO: That last sentence doesn't make sense --
 perhaps "task" needs a modifier.

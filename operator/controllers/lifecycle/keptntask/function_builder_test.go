@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -134,7 +135,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 				SecureParameters: klcv1alpha3.SecureParameters{
 					Secret: "parent_secret",
 				},
-			}},
+			},
+		},
 		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
 			Function: klcv1alpha3.FunctionStatus{
 				ConfigMap: "mymap",
@@ -223,7 +225,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "js",
 				MountPath: common.FunctionScriptMountPath,
 			},
@@ -253,7 +257,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "js",
 				MountPath: common.FunctionScriptMountPath,
 			},
@@ -278,7 +284,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "python",
 				MountPath: common.PythonScriptMountPath,
 			},

@@ -31,12 +31,12 @@ type BuilderOptions struct {
 	ConfigMap     string
 }
 
-func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
+func NewJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
 	if options.funcSpec != nil {
 		return NewFunctionBuilder(options)
 	}
 	if options.containerSpec != nil {
-		return NewContainerBuilder(options.containerSpec)
+		return NewContainerBuilder(options)
 	}
 	return nil
 }

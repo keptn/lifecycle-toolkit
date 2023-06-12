@@ -36,7 +36,7 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 		{
 			name:    "container builder",
 			options: containerBuilderOptions,
-			want:    NewContainerBuilder(containerBuilderOptions.containerSpec),
+			want:    NewContainerBuilder(containerBuilderOptions),
 		},
 		{
 			name:    "invalid builder",
@@ -46,7 +46,7 @@ func Test_getJobRunnerBuilder(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, getJobRunnerBuilder(tt.options))
+			require.Equal(t, tt.want, NewJobRunnerBuilder(tt.options))
 		})
 	}
 }

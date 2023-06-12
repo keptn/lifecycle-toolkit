@@ -13,9 +13,9 @@ type ContainerBuilder struct {
 	spec *klcv1alpha3.ContainerSpec
 }
 
-func NewContainerBuilder(spec *klcv1alpha3.ContainerSpec) *ContainerBuilder {
+func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
 	return &ContainerBuilder{
-		spec: spec,
+		spec: options.containerSpec,
 	}
 }
 

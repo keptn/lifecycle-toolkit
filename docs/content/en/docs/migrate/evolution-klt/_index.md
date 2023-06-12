@@ -119,6 +119,9 @@ to validate whether your overall deployment is actually healthy.
 But it has flaws in the GitOps world:
 
 - Single-pod ready does not mean application ready.
+  If you deploy different services in two different pods,
+  and they are ready,
+  it does not mean that your overall deployment is actually healthy
 
 - Very difficult to integrate Keptn into all the different tools,
   especially with many development teams using different tools
@@ -140,8 +143,33 @@ But it has flaws in the GitOps world:
   as a sum of separate microservices,
   each of which may be deployed at different times
   using different tools.
+  This means that it cannot validate the full application.
 
 KLT solves these problems by providing an operator
+that can observe and orchestrate application-aware workload life cycles.
+This operator leverages Kubernetes webhooks
+and extends the Kubernetes scheduler
+to support pre- and post-deployment hooks.
+This means that when any deployment tool
+deploys a workload change into Kubernetes,
+KLT uses Kubernetes capabilities
+to do pre- and post-deployment checks.
+This means that:
+
+- Information is observable and is made available
+  using OpenTelemetry
+- We can provide traces that capture information
+  about how long each step takes for the entire deployment cycle
+- KLT knows when each workload is being deployed
+  and which version of the workload/service
+  belongs to this version of the application.
+and we know which version is being deployed.
+We can also provide traces.
+And we can say that this set of workloads and which versions
+comprise the application
+
+- When the operator detects a new version of a service,
+  it can execute pre- and post-deployment evaluations and tasks.
 
 ## Why to choose KLT
 

@@ -163,7 +163,11 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		return nil, controllererrors.ErrCannotMarshalParams
 	}
 
+	if volume != nil {
+		job.Spec.Template.Spec.Volumes = []corev1.Volume{*volume}
+	}
+
 	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
-	job.Spec.Template.Spec.Volumes = []corev1.Volume{*volume}
+
 	return job, nil
 }

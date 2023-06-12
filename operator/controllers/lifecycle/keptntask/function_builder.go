@@ -127,7 +127,7 @@ func (fb *FunctionBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, er
 		}, nil
 	}
 
-	return nil, nil
+	return &corev1.Volume{}, nil
 
 }
 

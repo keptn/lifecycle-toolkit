@@ -27,7 +27,7 @@ requires that you maintain point-to-point integrations
 from Argo Rollouts, Flux, KEDA, and HPA.
 Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
-and multible observability platforms,
+and multiple observability platforms,
 and multiple instances of some tools or observability platforms.
 The Custom Keptn metrics feature unites all these metrics
 integrates metrics from all these sources into a single set of metrics.

@@ -54,7 +54,7 @@ spec:
             - name: DATA
               value: '{"data":"myotherdata","other":"data","user":"myotheruser"}'
             - name: CONTEXT
-              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"post","objectType":"Workload"}'
             - name: CMD_ARGS
             - name: SCRIPT
               value: /var/data/function.ts
@@ -89,7 +89,7 @@ spec:
             - name: DATA
               value: '{"data":"mydata","other":"data","user":"myuser"}'
             - name: CONTEXT
-              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"","objectType":"Workload"}'
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload"}'
             - name: CMD_ARGS
             - name: SECURE_DATA
               valueFrom:

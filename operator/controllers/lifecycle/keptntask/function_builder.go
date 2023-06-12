@@ -108,6 +108,7 @@ func (fb *FunctionBuilder) CreateContainer(ctx context.Context) (*corev1.Contain
 
 }
 
+//nolint:nilnil
 func (fb *FunctionBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
 	params, err := fb.getParams(ctx)
 	if err != nil {

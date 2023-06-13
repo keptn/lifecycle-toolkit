@@ -544,4 +544,3 @@ is allowed per `KeptnTaskDefinition`.
 * [Working with container runtimes](../implementing/container.md)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [Orchestrate deployment checks](../getting-started/orchestrate)
-

@@ -238,6 +238,7 @@ The `python-container` can be used to define tasks using  Python 3 code.
               httpRef:
                 url: "https://www.example.com/yourscript.js"
       ```
+
     * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
       that have been defined.
       Populate this field with the value(s) of the `metadata.name` field
@@ -461,7 +462,7 @@ Consider the following:
 
 ### Example 3: functionRef for a Python container
 
-You can refer to an existing `KeptnTaskDefinition`. 
+You can refer to an existing `KeptnTaskDefinition`.
 This example calls the inline example
 but overrides the data printed with what is specified in the task:
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_recursive.yaml" code="true" lang="yaml" >}}
@@ -469,7 +470,6 @@ but overrides the data printed with what is specified in the task:
 ### Example 4: ConfigMapRef for a Python container
 
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
-
 
 ### Allowed libraries for the Python runtime
 
@@ -532,3 +532,4 @@ is allowed per `KeptnTaskDefinition`.
 * [Working with container runtimes](../implementing/container.md)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [Orchestrate deployment checks](../getting-started/orchestrate)
+

@@ -277,13 +277,11 @@ for permissions and importing data
 so a script that works properly elsewhere
 may not function out of the box when run in Deno.
 
-When defining a task as a container,
-
-[TODO] What runtime is used?
-
-[TODO] Are there limitations as to what can be done
-with the current implementation of containers?
-Can I execute a Python script or is there a python-container in the future?
+When using a container runtime that includes a volume,
+an `EmptyDir` volume is created with the same name as the container.
+By default, the size of this volume is 1GB.
+If the memory limit for the container is set,
+the size of the volume is 50% of the memory allocated for the node.
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the `Deployment` resource;

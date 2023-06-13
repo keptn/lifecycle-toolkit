@@ -13,10 +13,9 @@ It contains information about:
 - A list of tasks and evaluations to be executed
   pre- and post-deployment.
 - Tasks referenced by `KeptnApp` are defined in a
-  [KeptnTaskDefinition](taskdefinition.md) resource,
-  which can either use the Deno-runtime container
-  that is included in KLT
-  or an application container that you define.
+  [KeptnTaskDefinition](taskdefinition.md) resource.
+  `KeptnApp` identifies the task by the value of the `metadata.name` field
+  and does not need to understand what runtime is used to define the task.
 
 ## Synopsis
 
@@ -77,22 +76,22 @@ spec:
       Changing this number causes a new execution
       of checks for this workload only,
       not the entire application.
-  - **preDeploymentTasks** -- list each task or container
+  - **preDeploymentTasks** -- list each task
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  - **postDeploymentTasks** -- list each task or container
+  - **postDeploymentTasks** -- list each task
     to be run as part of the post-deployment stage.
-    Task names must match the value of the `name` field
+    Task names must match the value of the `metadata.name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
   - **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
-    Evaluation names must match the value of the `name` field
+    Evaluation names must match the value of the `metadata.name` field
     for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
     resource.
   - **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
-    Evaluation names must match the value of the `name` field
+    Evaluation names must match the value of the `metadata.name` field
     for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
     resource.
 
@@ -118,7 +117,7 @@ without manually populating any Keptn related resources.
 
 ## Examples
 
-### Example 1: referencing Deno-runtime tasks
+### Example
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -139,34 +138,11 @@ spec:
   - my-prometheus-definition
 ```
 
-### Referencing a task in a customized application container
-
-For an example of a `KeptnApp` resource definition
-that references a customized application container, see
-[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
-The `spec` includes:
-
-```yaml
-spec:
-  version: "0.1.2"
-  workloads:
-    - name: podtato-head-left-arm
-      version: 0.1.1
-    ...
-  preDeploymentTasks:
-    - container-sleep
-```
-
-This container is defined in
-[container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml).
-
 ## Files
 
 ## Differences between versions
 
 - The `spec.Revision` field is introduced in v1alpha2.
-- Support for customized application containers
-  is introduced in KLT v0.8.0.
 
 ## See also
 

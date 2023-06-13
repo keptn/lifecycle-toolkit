@@ -15,20 +15,49 @@ A Keptn task runs as an application
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 
-A Keptn task can be defined in either of two ways,
+A Keptn task can be defined in the following ways,
 differentiated by the `spec` section:
 
-* Define a custom Kubernetes application container,
-  that includes a runtime,  an application
-  and its runtime dependencies.
-  This gives you a lot of flexibility,
-  to define tasks using Python or Java scripts
-  or any anything else.
 * Out of the box, KLT includes a Deno-runtime container
   that you can use to define tasks using Deno scripts,
   which is basically JavaScript with a few limitations.
   You can use this to specify simple actions
-  without having to define your container.
+  without having to define a container.
+* Define a custom Kubernetes application container,
+  that includes a runtime,  an application
+  and its runtime dependencies.
+  This gives you a lot of flexibility,
+  to define tasks using Java scripts or any anything else.
+* Use the Python container that is included with KLT.
+  This can be used to define your task using Python 3.
+
+## Yaml Synopsis for all containers
+
+The Yaml files for all `KeptnTaskDefinition` resources
+include the same lines at the top.
+These are described here.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+```
+
+### Fields used for all containers
+
+* **apiVersion** -- API version being used.
+`
+* **kind** -- Resource type.
+   Must be set to `KeptnTaskDefinition`
+
+* **metadata**
+  * **name** -- Unique name of this task or container.
+    This is the name used to insert this task or container
+    into the `preDeployment` or `postDeployment` list.
+    Names must comply with the
+    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+    specification.
 
 ## Yaml Synopsis for Deno-runtime container
 
@@ -47,36 +76,7 @@ spec:
       secret: slack-token
 ```
 
-## Yaml Synopsis for custom application container
-
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  container
-    name: <container-name>
-    image: <image-name>
-    <other fields>
-```
-
-## Fields
-
-* **apiVersion** -- API version being used.
-`
-* **kind** -- Resource type.
-   Must be set to `KeptnTaskDefinition`
-
-* **metadata**
-  * **name** -- Unique name of this task or container.
-    This is the name used to insert this task or container
-    into the `preDeployment` or `postDeployment` list.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
-
-### Spec used only for Deno-runtime definitions
+### Spec fields for Deno-runtime definitions
 
 * **spec**
   * **function** -- Code to be executed,
@@ -167,6 +167,20 @@ spec:
     See [Create secret text](../implementing/tasks/#create-secret-text)
     for details.
 
+## Yaml Synopsis for custom application container
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  container
+    name: <container-name>
+    image: <image-name>
+    <other fields>
+```
+
 ### Spec used only for custom Kuberenetes container definitions
 
 * **spec**
@@ -187,9 +201,60 @@ spec:
 
       TODO: Should we only link to the ContainerSpec here or should
       we perhaps show the required fields plus "other fields"?
-       It
-      is not real clear which fields are required but I'm pretty sure
+      It is not real clear which fields are required but I'm pretty sure
       that `name` and `image` are required.
+
+## Yaml Synopsis for Python container
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  inline | httpRef | functionRef | ConfigMapRef
+```
+
+### Spec used only for python-container definitions
+
+The `python-container` can be used to define tasks using  Python 3 code.
+
+* **spec**
+  * **python** -- Identifies this as a Python container
+    * **inline** -- Include the actual Python 3.1 code to execute.
+      For example, the following example
+      prints data stored in the parameters map:
+
+      {{< readfile file="/yaml_py/taskdefinition_pyfunction_inline.yaml" code="true" lang="yaml" >}}
+
+    * **httpRef** - Specify a Deno script to be executed at runtime
+      from the remote webserver that is specified.
+      For example:
+
+      ```yaml
+      name: hello-keptn-http
+        spec:
+            function:
+              httpRef:
+                url: "https://www.example.com/yourscript.js"
+      ```
+    * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
+      that have been defined.
+      Populate this field with the value(s) of the `metadata.name` field
+      for each `KeptnDefinitionTask` to be called.
+      This is commonly used to call a general function
+      that is used in multiple places,
+      possibly with different parameters.
+      An example is:
+
+      {{< readfile file="/yaml_py/taskdefinition_pyfunction_recursive.yaml" code="true" lang="yaml" >}}
+
+    * **ConfigMapRef** -- Specify the name of a
+      [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+      resource that contains the function to be executed.
+      For example:
+
+      {{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
 
 ## Usage
 
@@ -229,7 +294,7 @@ Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
 
-## Examples
+## Examples for Deno-runtime
 
 ### Example 1: inline script for a Deno script
 
@@ -353,9 +418,11 @@ data:
     console.log(targetDate);
 ```
 
-### Example 5: Custom container
+## Examples for a custom container
 
-For an example of a `KeptnTaskDefinition` that defines a custome container.
+### Example 1: Custom container
+
+For an example of a `KeptnTaskDefinition` that defines a custom container.
  see
 [container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
 The `spec` includes:
@@ -378,7 +445,52 @@ This task is then referenced in
 This is a a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command.
 
-### More examples
+## Examples for a python container
+
+### Example 1: inline code for a Python container
+
+You can embed python code directly in the task definition.
+This example prints data stored in the parameters map:
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_inline.yaml" code="true" lang="yaml" >}}
+
+### Example 2: httpRef for a Python container
+
+You can refer to code stored online.
+For example, we have a few examples available
+[here](https://github.com/keptn/lifecycle-toolkit/tree/main/python-runtime/samples).
+Consider the following:
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
+
+### Example 3: functionRef for a Python container
+
+You can refer to an existing `KeptnTaskDefinition`. 
+This example calls the inline example
+but overrides the data printed with what is specified in the task:
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_recursive.yaml" code="true" lang="yaml" >}}
+
+### Example 4: ConfigMapRef for a Python container
+
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
+
+
+### Allowed libraries for the Python runtime
+
+The following example shows how to use few of the allowed packages, namely:
+requests, json, git, and yaml:
+
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_inline_printargs_py.yaml" code="true" lang="yaml" >}}
+
+### Passing secrets, environment variables and modifying the python command
+
+The following examples show how to pass data inside the parameter map,
+how to load a secret in your code,
+and how to modify the python command.
+In this case the container run with the `-h` option
+which prints the help message for the python3 interpreter:
+
+{{< readfile file="/yaml_py/taskdefinition_pyfunction_use_envvars.yaml" code="true" lang="yaml" >}}
+
+## More examples
 
 See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples/function_execution)
 directory for more example `KeptnTaskDefinition` YAML files.

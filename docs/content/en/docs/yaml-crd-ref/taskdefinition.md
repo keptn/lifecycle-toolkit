@@ -23,13 +23,25 @@ differentiated by the `spec` section:
   which is basically JavaScript with a few limitations.
   You can use this to specify simple actions
   without having to define a container.
+  See
+  [Deno-runtime synopsis](#yaml-synopsis-for-deno-runtime-container)
+  and
+  [Deno-runtime examples](#examples-for-deno-runtime).
 * Define a custom Kubernetes application container,
   that includes a runtime,  an application
   and its runtime dependencies.
   This gives you a lot of flexibility,
   to define tasks using Java scripts or any anything else.
+  See
+  [Custom container synopsis](#yaml-synopsis-for-custom-application-container)
+  and
+  [Custom container examples](#examples-for-a-custom-container).
 * Use the Python container that is included with KLT.
   This can be used to define your task using Python 3.
+  See
+  [Python container synopsis](#yaml-synopsis-for-python-container)
+  and
+  [Python container examples](#examples-for-a-python-container).
 
 ## Yaml Synopsis for all containers
 

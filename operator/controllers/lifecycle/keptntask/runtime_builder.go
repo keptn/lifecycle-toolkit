@@ -13,7 +13,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// RuntimeBuilder implements container builder interface for javascript deno
+// RuntimeBuilder implements container builder interface for Deno/Python
 type RuntimeBuilder struct {
 	options BuilderOptions
 }

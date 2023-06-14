@@ -140,14 +140,12 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 
 	container, err := builder.CreateContainer(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not create container for Job")
-		return nil, controllererrors.ErrCannotMarshalParams
+		return nil, fmt.Errorf("could not create container for Job: %w", err)
 	}
 
 	volume, err := builder.CreateVolume(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not create volume for Job")
-		return nil, controllererrors.ErrCannotMarshalParams
+		return nil, fmt.Errorf("could not create volume for Job: %w", err)
 	}
 
 	if volume != nil {

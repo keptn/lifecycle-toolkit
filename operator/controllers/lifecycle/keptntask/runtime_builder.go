@@ -25,7 +25,7 @@ func NewRuntimeBuilder(options BuilderOptions) *RuntimeBuilder {
 	}
 }
 
-// RuntimeExecutionParams stores parameters related to js deno container creation
+// RuntimeExecutionParams stores parameters related to Deno/Python container creation
 type RuntimeExecutionParams struct {
 	ConfigMap        string
 	Parameters       map[string]string

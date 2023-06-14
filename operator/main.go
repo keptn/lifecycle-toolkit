@@ -343,7 +343,7 @@ func main() {
 
 		setupLog.Info("starting webhook and manager")
 
-		decoder := admission.NewDecoder(mgr.GetScheme())
+		decoder, _ := admission.NewDecoder(mgr.GetScheme())
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{

@@ -28,7 +28,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -86,7 +86,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -101,7 +101,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -162,7 +162,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -177,7 +177,7 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -242,7 +242,7 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -367,7 +367,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -450,7 +450,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -538,7 +538,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -692,7 +692,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -708,7 +708,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -851,7 +851,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -870,7 +870,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 	type fields struct {
 		Client   client.Client
 		Tracer   trace.Tracer
-		decoder  *admission.Decoder
+		Decoder  *admission.Decoder
 		Recorder record.EventRecorder
 		Log      logr.Logger
 	}
@@ -931,7 +931,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 			a := &PodMutatingWebhook{
 				Client:   tt.fields.Client,
 				Tracer:   tt.fields.Tracer,
-				decoder:  tt.fields.decoder,
+				Decoder:  tt.fields.Decoder,
 				Recorder: tt.fields.Recorder,
 				Log:      tt.fields.Log,
 			}
@@ -965,7 +965,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 	wh := &PodMutatingWebhook{
 		Client:   fakeClient,
 		Tracer:   tr,
-		decoder:  decoder,
+		Decoder:  decoder,
 		Recorder: recorder,
 		Log:      testr.New(t),
 	}
@@ -1030,7 +1030,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	wh := &PodMutatingWebhook{
 		Client:   fakeClient,
 		Tracer:   tr,
-		decoder:  decoder,
+		Decoder:  decoder,
 		Recorder: recorder,
 		Log:      testr.New(t),
 	}
@@ -1153,7 +1153,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 	wh := &PodMutatingWebhook{
 		Client:   fakeClient,
 		Tracer:   tr,
-		decoder:  decoder,
+		Decoder:  decoder,
 		Recorder: recorder,
 		Log:      testr.New(t),
 	}
@@ -1263,7 +1263,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 	wh := &PodMutatingWebhook{
 		Client:   fakeClient,
 		Tracer:   tr,
-		decoder:  decoder,
+		Decoder:  decoder,
 		Recorder: recorder,
 		Log:      testr.New(t),
 	}

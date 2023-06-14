@@ -73,7 +73,7 @@ this is what KLT adds.
 
 Keptn LTS is a long-term support release
 that can deploy applications on platforms other than Kubernetes,
-can accomodate complex scoring algorithms for SLO evaluations,
+can accommodate complex scoring algorithms for SLO evaluations,
 and can implement remediations (self-healing) for problems discovered
 on the production site.
 
@@ -119,7 +119,7 @@ the Keptn Lifecycle Toolkit:
     is a video that steps through the process of integrating KLT
     with your existing cloud native cluster.
 
-* [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+* [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
   demonstrates how to install KLT and create your first KeptnTask in less than ten minutes.
   
 * You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit)

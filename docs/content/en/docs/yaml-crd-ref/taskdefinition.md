@@ -73,6 +73,17 @@ metadata:
 
 ## Yaml Synopsis for Deno-runtime container
 
+When using the Deno-runtime container to define a task,
+the `function` is coded in JavaScript
+and executed in
+[Deno](https://deno.com/runtime),
+which is a lightweight runtime environment
+that executes in your namespace.
+Note that Deno has tighter restrictions
+for permissions and importing data
+so a script that works properly elsewhere
+may not function out of the box when run in Deno.
+
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
 kind: KeptnTaskDefinition
@@ -279,17 +290,6 @@ The execution is done by spawning a Kubernetes
 to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
-When using the Deno-runtime container to define a task,
-the `function` is coded in JavaScript
-and executed in
-[Deno](https://deno.com/runtime),
-which is a lightweight runtime environment
-that executes in your namespace.
-Note that Deno has tighter restrictions
-for permissions and importing data
-so a script that works properly elsewhere
-may not function out of the box when run in Deno.
-
 When using a container runtime that includes a volume,
 an `EmptyDir` volume is created with the same name as the container.
 By default, the size of this volume is 1GB.
@@ -297,8 +297,13 @@ If the memory limit for the container is set,
 the size of the volume is 50% of the memory allocated for the node.
 
 A task can be executed either pre-deployment or post-deployment
-as specified in the `Deployment` resource;
-see
+as specified in the pod template specs of your Workloads
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+and
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+See
 [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 for details.
 Note that the annotation identifies the task by `name`.

@@ -22,7 +22,7 @@ To implement this feature:
   [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
   resource that defines the container
 - Populate a [KeptnApp](../yaml-crd-ref/app.md)
-  resource that associates that container definition
+  resource that associates that KeptnTaskDefinition
   with the pre- and post-deployment tasks
   that should run in it
 

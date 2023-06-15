@@ -59,7 +59,51 @@ It supports the following steps:
 * Post-Deployment Evaluations: e.g. evaluate the deployment,
   evaluate the test results, etc.
 
-All of these things can be executed for a workload or for a KeptnApp.
+All of these things can be executed for a workload or for a [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/).
+
+## Main features of : Metrics, Observability and Release lifecycle
+
+* **Custom Metrics:** The Custom Keptn Metrics feature in the
+Keptn Lifecycle Toolkit allows you to define metrics from
+multiple data sources in your Kubernetes cluster.
+It supports deployment tools like Argo, Flux, KEDA, HPA, or
+Keptn for automated decision-making based on observability data.
+Your observability data may come from multiple observability solutions
+– Prometheus, Dynatrace, Datadog and others – or may be data that comes
+directly from your cloud provider such as AWS, Google, or Azure.
+The Keptn Metrics Server unifies and standardizes access to data from
+arious sources, simplifying configuration and integration into a single
+set of metrics.
+
+* **Observability:** The Keptn Lifecycle Toolkit (KLT) ensures observability
+for Kubernetes deployments by creating a comprehensive trace of all Kubernetes
+activities within a deployment.
+It introduces the concept of applications, which connect logically related
+workloads using different deployment strategies.
+With KLT, you can easily understand deployment durations and failures across
+multiple strategies.
+It captures DORA metrics and exposes them as OpenTelemetry metrics.
+The observability data includes out-of-the-box DORA metrics, traces from
+OpenTelemetry, and custom Keptn metrics from configured data providers.
+Visualizing this information is possible using dashboard tools like Grafana.
+
+* **Release Lifecycle:** The Lifecycle Toolkit offers versatile functionalities
+for deployment scenarios, including pre-deployment validation, image scanning,
+and post-deployment tasks like test execution and stakeholder notification.
+It automatically validates against Service Level Objectives (SLOs) and provides
+end-to-end deployment traceability.
+The toolkit extends deployments with application-aware tasks and evaluations,
+allowing checks before or after deployment initiation.
+It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
+environment and confirming software health against SLOs like performance and
+user experience.
+Additionally, it enables monitoring of new logs from log monitoring solutions.
+
+To get started with Keptn Lifecycle Toolkit, refer to the
+[Getting Started Exercises](https://main.lifecycle.keptn.sh/docs/getting-started/)
+for detailed instructions and examples.
+This guide will walk you through the installation process and help you set up
+your environment for using KLT effectively.
 
 ## Compare Keptn Lifecycle Toolkit and Keptn LTS
 
@@ -89,7 +133,7 @@ we discussed the differences and similarities
 between Keptn and the Keptn Lifecycle Toolkit
 to help you decide which best fits your needs.
 View the recording:
-[Compare Keptn V1 and the Keptn Lifecycle Toolkit](https://www.youtube.com/watch?v=0nCbrG_RFos)
+[Compare Keptn V1 and the Keptn Lifecycle Toolkit](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=170s)
 
 ## Overviews of Keptn Lifecycle Toolkit
 
@@ -101,7 +145,7 @@ the Keptn Lifecycle Toolkit:
   and the concepts that drive the Keptn Lifecycle Toolkit,
   then gives a simple demonstration of a Keptn Lifecycle Controller implementation.
 
-* [Keptn Lifecycle Toolkit in a Nutshell](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+* [Introducing Keptn Lifecyle Toolkit](https://youtu.be/449HAFYkUlY)
   gives an overview of what KLT does and how to implement it.
 
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)

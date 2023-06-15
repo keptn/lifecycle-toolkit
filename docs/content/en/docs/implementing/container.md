@@ -5,7 +5,7 @@ weight: 95
 ---
 
 Container runtime allows the Keptn Lifecycle Toolkit
-to execute tasks in Kubernetes containers as part of a Kubernetes Job.
+to execute tasks in Kubernetes Containers as part of a Kubernetes Job.
 This is similar to the Keptn v1 Job Executor Service.
 
 This is a new feature introduced in v0.8.0

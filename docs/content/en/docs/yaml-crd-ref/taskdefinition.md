@@ -33,13 +33,13 @@ differentiated by the `spec` section:
   This gives you a lot of flexibility,
   to define tasks using Java scripts or any anything else.
   See
-  [Custom container synopsis](#yaml-synopsis-for-custom-application-container)
+  [Yaml synopsis for container-runtime](##yaml-synopsis-for-container-runtime)
   and
   [Custom container examples](#examples-for-a-custom-container).
 * Use the Python container that is included with KLT.
   This can be used to define your task using Python 3.
   See
-  [Python container synopsis](#yaml-synopsis-for-python-container)
+  [Yaml synopsis for python-container](##yaml-synopsis-for-python-runtime-container)
   and
   [Python container examples](#examples-for-a-python-container).
 

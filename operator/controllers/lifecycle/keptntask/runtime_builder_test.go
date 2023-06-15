@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -50,7 +51,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 	tests := []struct {
 		name    string
 		options BuilderOptions
-		params  FunctionExecutionParams
+		params  RuntimeExecutionParams
 		wantErr bool
 		err     string
 	}{
@@ -66,7 +67,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				funcSpec: common.GetRuntimeSpec(def),
 				task:     makeTask("myt", "default", def.Name),
 			},
-			params:  FunctionExecutionParams{},
+			params:  RuntimeExecutionParams{},
 			wantErr: true,
 			err:     "not found",
 		},
@@ -82,7 +83,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				funcSpec: common.GetRuntimeSpec(def),
 				task:     makeTask("myt2", "default", def.Name),
 			},
-			params:  FunctionExecutionParams{},
+			params:  RuntimeExecutionParams{},
 			wantErr: false,
 		},
 		{
@@ -97,13 +98,13 @@ func TestJSBuilder_handleParent(t *testing.T) {
 				funcSpec: common.GetRuntimeSpec(paramDef),
 				task:     makeTask("myt3", "default", paramDef.Name),
 			},
-			params:  FunctionExecutionParams{},
+			params:  RuntimeExecutionParams{},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &FunctionBuilder{
+			js := &RuntimeBuilder{
 				options: tt.options,
 			}
 			err := js.handleParent(context.TODO(), &tt.params)
@@ -134,7 +135,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 				SecureParameters: klcv1alpha3.SecureParameters{
 					Secret: "parent_secret",
 				},
-			}},
+			},
+		},
 		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
 			Function: klcv1alpha3.FunctionStatus{
 				ConfigMap: "mymap",
@@ -196,7 +198,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 	tests := []struct {
 		name    string
 		options BuilderOptions
-		params  *FunctionExecutionParams
+		params  *RuntimeExecutionParams
 		wantErr bool
 		err     string
 	}{
@@ -215,7 +217,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				MountPath: common.FunctionScriptMountPath,
 				ConfigMap: def.Status.Function.ConfigMap,
 			},
-			params: &FunctionExecutionParams{
+			params: &RuntimeExecutionParams{
 				ConfigMap:        def.Status.Function.ConfigMap,
 				Parameters:       def.Spec.Function.Parameters.Inline,
 				SecureParameters: def.Spec.Function.SecureParameters.Secret,
@@ -223,7 +225,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "js",
 				MountPath: common.FunctionScriptMountPath,
 			},
@@ -242,7 +246,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				task:      makeTask("myt3", "default", paramDef.Name),
 				ConfigMap: def.Status.Function.ConfigMap,
 			},
-			params: &FunctionExecutionParams{
+			params: &RuntimeExecutionParams{
 				ConfigMap: def.Status.Function.ConfigMap,
 				Parameters: map[string]string{ //maps should be merged
 					"DATA2": "parent_data",
@@ -253,7 +257,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "js",
 				MountPath: common.FunctionScriptMountPath,
 			},
@@ -272,13 +278,15 @@ func TestJSBuilder_getParams(t *testing.T) {
 				task:      makeTask("myt4", "default", defJS.Name),
 				ConfigMap: defJS.Status.Function.ConfigMap,
 			},
-			params: &FunctionExecutionParams{
+			params: &RuntimeExecutionParams{
 				ConfigMap: parentPy.Status.Function.ConfigMap,
 				URL:       parentPy.Spec.Python.HttpReference.Url, //we support a single URL so the original should be taken not the parent one
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
-					ObjectType:   "Workload"},
+					ObjectType:   "Workload",
+					TaskType:     string(apicommon.PostDeploymentCheckType),
+				},
 				Image:     "python",
 				MountPath: common.PythonScriptMountPath,
 			},
@@ -287,7 +295,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			js := &FunctionBuilder{
+			js := &RuntimeBuilder{
 				options: tt.options,
 			}
 			params, err := js.getParams(context.TODO())

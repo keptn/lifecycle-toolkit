@@ -13,7 +13,8 @@ import (
 // JobRunnerBuilder is the interface that describes the operations needed to help build job specs of a task
 type JobRunnerBuilder interface {
 	// CreateContainerWithVolumes returns a job container and volumes based on the task definition spec
-	CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error)
+	CreateContainer(ctx context.Context) (*corev1.Container, error)
+	CreateVolume(ctx context.Context) (*corev1.Volume, error)
 }
 
 // BuilderOptions contains everything needed to build the current job
@@ -30,12 +31,12 @@ type BuilderOptions struct {
 	ConfigMap     string
 }
 
-func getJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
+func NewJobRunnerBuilder(options BuilderOptions) JobRunnerBuilder {
 	if options.funcSpec != nil {
-		return NewFunctionBuilder(options)
+		return NewRuntimeBuilder(options)
 	}
 	if options.containerSpec != nil {
-		return NewContainerBuilder(options.containerSpec)
+		return NewContainerBuilder(options)
 	}
 	return nil
 }

@@ -15,7 +15,8 @@ A Keptn task runs as an application
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 
-A Keptn task can be defined in the following ways,
+Each `KeptnTaskDefinition` can use exactly one container,
+which is one of the following,
 differentiated by the `spec` section:
 
 * KLT includes a Deno-runtime container
@@ -34,13 +35,13 @@ differentiated by the `spec` section:
   to define tasks using the lanugage and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
-  [Yaml synopsis for container-runtime](##yaml-synopsis-for-container-runtime)
+  [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
   and
   [Custom container examples](#examples-for-a-custom-container).
 * KLT also includes a `python-runtime` container
   This can be used to define your task using Python 3.
   See
-  [Yaml synopsis for python-container](##yaml-synopsis-for-python-runtime-container)
+  [Yaml synopsis for python-container](#yaml-synopsis-for-python-runtime-container)
   and
   [Python container examples](#examples-for-a-python-container).
 
@@ -229,11 +230,6 @@ almost anything that you implemented with JES for Keptn v1.
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-      TODO: Should we only link to the ContainerSpec here or should
-      we perhaps show the required fields plus "other fields"?
-      It is not real clear which fields are required but I'm pretty sure
-      that `name` and `image` are required.
-
 ## Yaml Synopsis for Python-runtime container
 
 The `python-runtime` is built on the `container-runtime`
@@ -256,6 +252,7 @@ spec:
       secureParameters:
         secret: slack-token
 ```
+
 TODO: Fix synopsis above
 
 ### Spec used only for python-runtime definitions
@@ -274,6 +271,7 @@ The `python-container` can be used to define tasks using  Python 3 code.
           code: |
             console.log("Deployment Task has been executed");
       ```
+
 TODO: Need python code above
 
     * **httpRef** - Specify a Deno script to be executed at runtime

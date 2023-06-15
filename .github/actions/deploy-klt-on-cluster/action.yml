@@ -31,6 +31,7 @@ runs:
         go-version: ${{ env.GO_VERSION }}
         cache: true
         cache-dependency-path: '**/go.sum'
+        check-latest: true
 
     - name: Download artifacts
       uses: actions/download-artifact@v3

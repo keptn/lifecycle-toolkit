@@ -20,7 +20,7 @@ differentiated by the `spec` section:
 
 * KLT includes a Deno-runtime container
   that you can use to define tasks using Deno scripts,
-  which is basically JavaScript with a few limitations.
+  which is basically JavaScript/Typescript with a few limitations.
   You can use this to specify simple actions
   without having to define a container.
   See

@@ -18,7 +18,7 @@ which runs as part of a Kubernetes
 A Keptn task can be defined in the following ways,
 differentiated by the `spec` section:
 
-* Out of the box, KLT includes a Deno-runtime container
+* KLT includes a Deno-runtime container
   that you can use to define tasks using Deno scripts,
   which is basically JavaScript with a few limitations.
   You can use this to specify simple actions
@@ -27,16 +27,17 @@ differentiated by the `spec` section:
   [Deno-runtime synopsis](#yaml-synopsis-for-deno-runtime-container)
   and
   [Deno-runtime examples](#examples-for-deno-runtime).
-* Define a custom Kubernetes application container,
-  that includes a runtime,  an application
+* The `custom-runtime` provides custom Kubernetes application containers,
+  that you define to includes a runtime,  an application
   and its runtime dependencies.
-  This gives you a lot of flexibility,
-  to define tasks using Java scripts or any anything else.
+  This gives you the flexibility,
+  to define tasks using the lanugage and facilities of your choice,
+  although it is more complicated that using one of the pre-defined runtimes.
   See
   [Yaml synopsis for container-runtime](##yaml-synopsis-for-container-runtime)
   and
   [Custom container examples](#examples-for-a-custom-container).
-* Use the Python container that is included with KLT.
+* KLT also includes a `python-runtime` container
   This can be used to define your task using Python 3.
   See
   [Yaml synopsis for python-container](##yaml-synopsis-for-python-runtime-container)

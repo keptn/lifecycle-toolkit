@@ -123,9 +123,6 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	return admission.PatchResponseFromRaw(req.Object.Raw, marshaledPod)
 }
 
-// PodMutatingWebhook implements admission.DecoderInjector.
-// A decoder will be automatically injected.
-
 func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
 	_, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	_, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)

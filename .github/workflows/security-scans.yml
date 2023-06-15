@@ -107,6 +107,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -228,7 +229,9 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
         with:
+          cache-dependency-path: ${{ matrix.artifact }}/go.sum
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
 
       - name: Checkout Code
         uses: actions/checkout@v3

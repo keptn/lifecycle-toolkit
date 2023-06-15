@@ -13,14 +13,18 @@ type ContainerBuilder struct {
 	spec *klcv1alpha3.ContainerSpec
 }
 
-func NewContainerBuilder(spec *klcv1alpha3.ContainerSpec) *ContainerBuilder {
+func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
 	return &ContainerBuilder{
-		spec: spec,
+		spec: options.containerSpec,
 	}
 }
 
-func (c *ContainerBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
-	return c.spec.Container, c.generateVolumes(), nil
+func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
+	return c.spec.Container, nil
+}
+
+func (c *ContainerBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
+	return c.generateVolume(), nil
 }
 
 func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
@@ -39,16 +43,14 @@ func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
 	}
 }
 
-func (c *ContainerBuilder) generateVolumes() []corev1.Volume {
+func (c *ContainerBuilder) generateVolume() *corev1.Volume {
 	if !common.IsVolumeMountPresent(c.spec) {
-		return []corev1.Volume{}
+		return nil
 	}
-	return []corev1.Volume{
-		{
-			Name: c.spec.VolumeMounts[0].Name,
-			VolumeSource: corev1.VolumeSource{
-				EmptyDir: c.getVolumeSource(),
-			},
+	return &corev1.Volume{
+		Name: c.spec.VolumeMounts[0].Name,
+		VolumeSource: corev1.VolumeSource{
+			EmptyDir: c.getVolumeSource(),
 		},
 	}
 }

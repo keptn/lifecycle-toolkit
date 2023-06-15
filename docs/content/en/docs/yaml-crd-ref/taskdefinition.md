@@ -358,7 +358,7 @@ to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
 When using a container runtime that includes a volume,
-an `EmptyDir` volume is created with the same name as the container.
+an `EmptyDir` volume is created with the same name as is specified the container `volumeMount`. Please be aware, that, if more `volumeMount`s are specified, only one volume is created with the name of the first `volumeMount`.
 By default, the size of this volume is 1GB.
 If the memory limit for the container is set,
 the size of the volume is 50% of the memory allocated for the node.

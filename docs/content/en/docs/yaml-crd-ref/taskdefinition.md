@@ -45,7 +45,7 @@ differentiated by the `spec` section:
 
 ## Yaml Synopsis for all containers
 
-The Yaml files for all `KeptnTaskDefinition` resources
+The `KeptnTaskDefinition` Yaml files for all container runtimes
 include the same lines at the top.
 These are described here.
 
@@ -190,7 +190,7 @@ spec:
     See [Create secret text](../implementing/tasks/#create-secret-text)
     for details.
 
-## Yaml Synopsis for custom application container
+## Yaml Synopsis for container-runtime
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -204,7 +204,13 @@ spec:
     <other fields>
 ```
 
-### Spec used only for custom Kuberenetes container definitions
+### Spec used only for container-runtime
+
+The `container-runtime` can be used to specify
+your own container image and define almost task you want to do.
+If you are migrating from Keptn v1,
+you can use a `container-runtime` to execute
+almost anything that you implemented with JES for Keptn v1.
 
 * **spec**
   * **container** -- Container definition.
@@ -227,7 +233,13 @@ spec:
       It is not real clear which fields are required but I'm pretty sure
       that `name` and `image` are required.
 
-## Yaml Synopsis for Python container
+## Yaml Synopsis for Python-runtime container
+
+The `python-runtime` is built on the `container-runtime`
+provides a way easily define a task using Python 3.
+You do not need to specify the image, volumes, and so forth.
+Instead, just provide a Python script
+and KLT sets up the container and runs the script as part of the task.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -235,10 +247,17 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-  inline | httpRef | functionRef | ConfigMapRef
+    python
+      inline | httpRef | functionRef | ConfigMapRef
+      parameters:
+        map:
+          textMessage: "This is my configuration"
+      secureParameters:
+        secret: slack-token
 ```
+TODO: Fix synopsis above
 
-### Spec used only for python-container definitions
+### Spec used only for python-runtime definitions
 
 The `python-container` can be used to define tasks using  Python 3 code.
 
@@ -248,7 +267,13 @@ The `python-container` can be used to define tasks using  Python 3 code.
       For example, the following example
       prints data stored in the parameters map:
 
-      {{< readfile file="/yaml_py/taskdefinition_pyfunction_inline.yaml" code="true" lang="yaml" >}}
+      ```yaml
+      function:
+        inline:
+          code: |
+            console.log("Deployment Task has been executed");
+      ```
+TODO: Need python code above
 
     * **httpRef** - Specify a Deno script to be executed at runtime
       from the remote webserver that is specified.
@@ -259,7 +284,7 @@ The `python-container` can be used to define tasks using  Python 3 code.
         spec:
             function:
               httpRef:
-                url: "https://www.example.com/yourscript.js"
+                url: "https://www.example.com/yourscript.py"
       ```
 
     * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
@@ -271,14 +296,55 @@ The `python-container` can be used to define tasks using  Python 3 code.
       possibly with different parameters.
       An example is:
 
-      {{< readfile file="/yaml_py/taskdefinition_pyfunction_recursive.yaml" code="true" lang="yaml" >}}
+      ```yaml
+       spec:
+         function:
+           functionRef:
+             name: slack-notification
+       ```
+
+      This can also be used to group a set of tasks
+      into a single `KeptnTaskDefinition`,
+      such as defining a `KeptnTaskDefinition` for testing.
+      In this case, it calls other, existing `KeptnTaskDefinition`s
+      for each type of test to be run,
+      specifying each by the value of the `name` field.
 
     * **ConfigMapRef** -- Specify the name of a
       [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
       resource that contains the function to be executed.
-      For example:
 
-      {{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
+  * **parameters** - An optional field to supply input parameters to a function.
+    The Lifecycle Toolkit passes the values defined inside the `map` field
+    as a JSON object.
+    For example:
+
+     ```yaml
+       spec:
+         parameters:
+           map:
+             textMessage: "This is my configuration"
+     ```
+
+     See
+     [Parameterized functions](../implementing/tasks/#parameterized-functions)
+     for more information.
+
+  * **secureParameters** -- An optional field used to pass a Kubernetes secret.
+    The `secret` value is the Kubernetes secret name
+    that is mounted into the runtime and made available to functions
+    using the `SECURE_DATA` environment variable.
+    For example:
+
+    ```yaml
+    secureParameters:
+      secret: slack-token
+    ```
+
+    Note that, currently, only one secret can be passed.
+
+    See [Create secret text](../implementing/tasks/#create-secret-text)
+    for details.
 
 ## Usage
 

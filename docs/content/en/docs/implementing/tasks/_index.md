@@ -52,7 +52,7 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runtime to use for the container:
 
-- The `custom-runtime` provides
+- The `container-runtime` provides
   a pure custom Kubernetes application container
   that you define to includes a runtime,  an application
   and its runtime dependencies.

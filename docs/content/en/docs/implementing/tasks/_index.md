@@ -5,12 +5,72 @@ weight: 90
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Keptn tasks are defined in a
+A
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md/)
-resource.
+resource defines tasks that the Keptn Lifecycle Toolkit runs
+as part of the pre- and post-deployment phases of a 
+[KeptnApp](../../yaml-crd-ref/app.md) or 
+[KeptnWorkload](../concepts/workloads/). 
+    
+A Keptn task runs as an application
+[container](https://kubernetes.io/docs/concepts/containers/),
+which runs as part of a Kubernetes
+[job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 A task definition includes a function
 that defines the action taken by that task.
-It can be configured in one of three different ways:
+
+To implement a Keptn task:
+
+- Define a
+  [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+  resource that defines the container
+- [Annotate your workloads](../integrate/#annotate-workloads)
+  to integrate your task with Kubernetes
+- Add your task to the  [KeptnApp](../yaml-crd-ref/app.md)
+  resource that associates your `KeptnTaskDefinition`
+  with the pre- and post-deployment tasks that should run in it
+
+This page provides information to help you create your tasks:
+
+- Code your task in a [container](#containers)
+- Understand how to use [Context](#context)
+  that contains a Kubernetes cluster, a user, a namespace,
+  the application name, workload name, and version.
+- Use [parameterized functions](#parameterized-functions)
+  if your task requires input parameters
+- [Create secret text](#create-secret-text)
+  and [pass secrets to a function](#pass-secrets-to-a-function)
+  if necessary.
+
+## Containers
+
+Each `KeptnTaskDefinition` can use exactly one container,
+which can use the `container-runtime`, the `deno-runtime`,
+or the `python-runtime`.
+The type of runtime you use determines the language you can use
+to define the task.
+The `spec` section of the `KeptnTaskDefinition`
+defines the runtime to use for the container:
+
+* The `custom-runtime` provides
+  a pure custom Kubernetes application container
+  that you define to includes a runtime,  an application
+  and its runtime dependencies.
+  This gives you the greatest flexibility
+  to define tasks using the lanugage and facilities of your choice
+
+KLT also includes two "pre-defined" runtimes:
+
+* Use the `deno-runtime` to define tasks using Deno scripts,
+  which use JavaScript/Typescript syntax with a few limitations.
+  You can use this to specify simple actions
+  without having to define a container.
+* Use the `python-runtime` container
+  to define your task using Python 3.
+
+For the pre-defined runtime containers (`deno-runtime` and `python-runtime`,
+the actual code to be executed
+can be configured in one of four different ways:
 
 - inline
 - referring to an HTTP script
@@ -19,7 +79,11 @@ It can be configured in one of three different ways:
   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
   resource that is populated with the function to execute
 
-### Context
+See the
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+reference page for the synopsis and examples or each container type.
+
+## Context
 
 A Kubernetes context is a set of access parameters
 that contains a Kubernetes cluster, a user, a namespace,
@@ -88,7 +152,13 @@ Note the following about using parameters with functions:
   The secret must have a `key` called `SECURE_DATA`.
   It can be accessed via the environment variable `Deno.env.get("SECURE_DATA")`.
 
-## Create secret text
+## Working with secrets
+
+A special case of parameterized functions
+is to pass secrets that may be required
+to access data that your task requires.
+
+### Create secret text
 
 To create a secret to use in a `KeptnTaskDefinition`,
 execute this command:
@@ -139,9 +209,8 @@ spec:
         // secret_text_obj["foo2"] = "bar2"
 ```
 
-## Pass secrets to a function
+### Pass secrets to a function
 
-In the previous example, you see that
 Kubernetes
 [secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
 can be passed to the function

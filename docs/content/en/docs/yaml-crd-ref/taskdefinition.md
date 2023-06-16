@@ -106,7 +106,7 @@ but timeouts seem to be measured in seconds.
     * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
-    * **timeout* (optional)* -- specifies the maximum time, in seconds,
+    * **timeout** (optional)* -- specifies the maximum time, in seconds,
     to wait for the task to be completed successfully.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
@@ -628,12 +628,12 @@ API Reference:
 
 ## Differences between versions
 
-The `KeptnTaskDefinition` support for containers is introduced in v0.8.0
-to support the container runtime feature.
+The `KeptnTaskDefinition` support for
+the `container-runtime` and `python-runtime` is introduced in v0.8.0.
 This modifies the synopsis in two ways:
 
 * Add the `spec.container` field.
-* The `spec.function` field is changed to pointer receiver.
+* The `spec.function` field is changed to be a pointer receiver.
   This aligns it with the `spec.container` field,
   which must be a pointer,
   and enables `KeptnTask` to omit it when it is empty,

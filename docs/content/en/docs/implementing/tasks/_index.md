@@ -10,7 +10,7 @@ A
 resource defines tasks that the Keptn Lifecycle Toolkit runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
-[KeptnWorkload](../concepts/workloads/).
+[KeptnWorkload](../../concepts/workloads.md).
 
 A Keptn task runs as an application
 [container](https://kubernetes.io/docs/concepts/containers/),
@@ -80,7 +80,7 @@ can be configured in one of four different ways:
   resource that is populated with the function to execute
 
 See the
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 reference page for the synopsis and examples or each container type.
 
 ## Context

@@ -19,15 +19,6 @@ Each `KeptnTaskDefinition` can use exactly one container,
 which is one of the following,
 differentiated by the `spec` section:
 
-* KLT includes a Deno-runtime container
-  that you can use to define tasks using Deno scripts,
-  which is basically JavaScript/Typescript with a few limitations.
-  You can use this to specify simple actions
-  without having to define a container.
-  See
-  [Deno-runtime synopsis](#yaml-synopsis-for-deno-runtime-container)
-  and
-  [Deno-runtime examples](#examples-for-deno-runtime).
 * The `custom-runtime` provides custom Kubernetes application containers,
   that you define to includes a runtime,  an application
   and its runtime dependencies.
@@ -38,12 +29,21 @@ differentiated by the `spec` section:
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
   and
   [Custom container examples](#examples-for-a-custom-container).
-* KLT also includes a `python-runtime` container
-  This can be used to define your task using Python 3.
+* The pre-defined `deno-runtime` container
+  that you can use to define tasks using Deno scripts,
+  which is basically JavaScript/Typescript with a few limitations.
+  You can use this to specify simple actions
+  without having to define a container.
+  See
+  [Yaml synopsis for Deno-runtime container](#yaml-synopsis-for-deno-runtime-container)
+  and
+  [Deno-runtime examples](#examples-for-deno-runtime).
+* The pre-defined `python-runtime` container
+  that can be used to define your task using Python 3.
   See
   [Yaml synopsis for python-container](#yaml-synopsis-for-python-runtime-container)
   and
-  [Python container examples](#examples-for-a-python-container).
+  [Python-container examples](#examples-for-a-python-container).
 
 ## Yaml Synopsis for all containers
 
@@ -91,7 +91,7 @@ but timeouts seem to be measured in seconds.
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
-    [Yaml synopsis for Deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
+    [Yaml synopsis for deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
     * **python** -- Use a `python-runtime` container
     and code the functionality in Python 3.
     See
@@ -101,7 +101,7 @@ but timeouts seem to be measured in seconds.
     for which you define the image, runtime parameters, etc.
     and code the functionality to match the container you define.
     See
-    [Yaml synopsis for container-runtime contaier]9#yaml-synopsis-for-container-runtime).
+    [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
@@ -110,9 +110,9 @@ but timeouts seem to be measured in seconds.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
 
-## Yaml Synopsis for Deno-runtime container
+## Yaml Synopsis for deno-runtime container
 
-When using the Deno-runtime container to define a task,
+When using the deno-runtime container to define a task,
 the `function` is coded in JavaScript
 and executed in
 [Deno](https://deno.com/runtime),
@@ -138,7 +138,7 @@ spec:
       secret: slack-token
 ```
 
-### Spec fields for Deno-runtime definitions
+### Spec fields for deno-runtime definitions
 
 * **spec**
   * **function** -- Code to be executed,
@@ -290,7 +290,7 @@ spec:
         secret: slack-token
 ```
 
-TODO: Fix synopsis above
+TODO: Check synopsis above
 
 ### Spec used only for python-runtime definitions
 
@@ -309,7 +309,7 @@ The `python-container` can be used to define tasks using  Python 3 code.
             console.log("Deployment Task has been executed");
       ```
 
-TODO: Need python code above
+      TODO: Need python code above
 
     * **httpRef** - Specify a Deno script to be executed at runtime
       from the remote webserver that is specified.
@@ -415,7 +415,7 @@ Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
 
-## Examples for Deno-runtime
+## Examples for deno-runtime
 
 ### Example 1: inline script for a Deno script
 

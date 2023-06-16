@@ -22,7 +22,7 @@ that defines the action taken by that task.
 To implement a Keptn task:
 
 - Define a
-  [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
   resource that defines the container
 - [Annotate your workloads](../integrate/#annotate-workloads)
   to integrate your task with Kubernetes

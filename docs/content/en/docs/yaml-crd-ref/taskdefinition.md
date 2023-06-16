@@ -84,29 +84,28 @@ but timeouts seem to be measured in seconds.
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec**
-    * **function | python | container** -- Define the container type
-    to use for this task.
-    Each task can use one container type:
-      * **function** -- Use a `deno-runtime` container
-      and code the functionality in Deno script,
-      which is similar to JavaScript and Typescript.
-      See
-      [Yaml synopsis for Deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
-      * **python** -- Use a `python-runtime` container
-      and code the functionality in Python 3.
-      See
-      [Yaml synopsis for python-runtime container](#yaml-synopsis-for-python-runtime-container).
-      * **container** -- Use a `container-runtime` container,
-      which is a standard Kubernetes container
-      for which you define the image, runtime parameters, etc.
-      and code the functionality to match the container you define.
-      See
-      [Yaml synopsis for container-runtime contaier]9#yaml-synopsis-for-container-runtime).
-  ...
-    * **retries** (optional) - specifies the number of times,
+  * **function | python | container** -- Define the container type
+  to use for this task.
+  Each task can use one container type:
+    * **function** -- Use a `deno-runtime` container
+    and code the functionality in Deno script,
+    which is similar to JavaScript and Typescript.
+    See
+    [Yaml synopsis for Deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
+    * **python** -- Use a `python-runtime` container
+    and code the functionality in Python 3.
+    See
+    [Yaml synopsis for python-runtime container](#yaml-synopsis-for-python-runtime-container).
+    * **container** -- Use a `container-runtime` container,
+    which is a standard Kubernetes container
+    for which you define the image, runtime parameters, etc.
+    and code the functionality to match the container you define.
+    See
+    [Yaml synopsis for container-runtime contaier]9#yaml-synopsis-for-container-runtime).
+  * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
-    * **timeout** (optional)* -- specifies the maximum time, in seconds,
+  * **timeout** (optional)* -- specifies the maximum time, in seconds,
     to wait for the task to be completed successfully.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
@@ -394,7 +393,10 @@ to handle a single Task.
 In its state, it tracks the current status of this Kubernetes Job.
 
 When using a container runtime that includes a volume,
-an `EmptyDir` volume is created with the same name as is specified the container `volumeMount`. Please be aware, that, if more `volumeMount`s are specified, only one volume is created with the name of the first `volumeMount`.
+an `EmptyDir` volume is created
+with the same name as is specified the container `volumeMount`.
+Note that, if more `volumeMount`s are specified,
+only one volume is created with the name of the first `volumeMount`.
 By default, the size of this volume is 1GB.
 If the memory limit for the container is set,
 the size of the volume is 50% of the memory allocated for the node.
@@ -649,6 +651,5 @@ is allowed per `KeptnTaskDefinition`.
 
 * [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
-* [Working with container runtimes](../implementing/container.md)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [Orchestrate deployment checks](../getting-started/orchestrate)

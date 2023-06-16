@@ -8,8 +8,8 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 A
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md/)
 resource defines tasks that the Keptn Lifecycle Toolkit runs
-as part of the pre- and post-deployment phases of a 
-[KeptnApp](../../yaml-crd-ref/app.md) or 
+as part of the pre- and post-deployment phases of a
+[KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../concepts/workloads/). 
     
 A Keptn task runs as an application
@@ -52,7 +52,7 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runtime to use for the container:
 
-* The `custom-runtime` provides
+- The `custom-runtime` provides
   a pure custom Kubernetes application container
   that you define to includes a runtime,  an application
   and its runtime dependencies.
@@ -61,11 +61,11 @@ defines the runtime to use for the container:
 
 KLT also includes two "pre-defined" runtimes:
 
-* Use the `deno-runtime` to define tasks using Deno scripts,
+- Use the `deno-runtime` to define tasks using Deno scripts,
   which use JavaScript/Typescript syntax with a few limitations.
   You can use this to specify simple actions
   without having to define a container.
-* Use the `python-runtime` container
+- Use the `python-runtime` container
   to define your task using Python 3.
 
 For the pre-defined runtime containers (`deno-runtime` and `python-runtime`,

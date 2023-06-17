@@ -149,12 +149,15 @@ your environment for using KLT effectively.
 
 ## Benefits of using Keptn Lifecycle Toolkit:
 
-* Improved reliability: KLT can help you improve the reliability of your applications by collecting metrics, logs, and 
-  traces. This data can be used to identify and troubleshoot issues before they cause outages.
-* Reduced costs: KLT can help you reduce the costs of operating your applications by automating tasks such as deployment 
-  and monitoring. This can free up your team to focus on other tasks, such as development and innovation.
-* Increased agility: KLT can help you increase the agility of your organization by making it easier to deploy new 
-  features and fix bugs. This can help you respond to market changes and stay ahead of the competition.
+* **Improved reliability:** KLT can help you improve the reliability of your applications
+ by collecting metrics, logs, and traces. This data can be used to identify and 
+ troubleshoot issues before they cause outages.
+* **Reduced costs:** KLT can help you reduce the costs of operating your applications 
+by automating tasks such as deployment and monitoring. This can free up your team to 
+focus on other tasks, such as development and innovation.
+* **Increased agility:** KLT can help you increase the agility of your organization by making it 
+easier to deploy new features and fix bugs. This can help you respond to market 
+changes and stay ahead of the competition.
 
 ## Compare Keptn Lifecycle Toolkit and Keptn LTS
 

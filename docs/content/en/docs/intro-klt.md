@@ -206,7 +206,7 @@ the Keptn Lifecycle Toolkit:
   and the concepts that drive the Keptn Lifecycle Toolkit,
   then gives a simple demonstration of a Keptn Lifecycle Controller implementation.
 
-* [Introducing Keptn Lifecyle Toolkit](https://youtu.be/449HAFYkUlY)
+* [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
   gives an overview of what KLT does and how to implement it.
 
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)

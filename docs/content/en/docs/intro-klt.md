@@ -170,6 +170,11 @@ However, these deployment tools do not provide
 pre-deployment and post-deployment evaluations and actions;
 this is what KLT adds.
 
+Keptn LTS is a more comprehensive solution than KLT. It can deploy
+applications on a wider range of platforms, it can perform more
+complex evaluations and actions, and it is supported by Keptn.
+However, Keptn LTS is also a more expensive solution.
+
 Keptn LTS is a long-term support release
 that can deploy applications on platforms other than Kubernetes,
 such as AWS, Azure, and Google Cloud Platform.

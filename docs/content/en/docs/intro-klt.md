@@ -113,14 +113,14 @@ logs, traces, and metrics. This data can be used to troubleshoot issues,
 identify performance bottlenecks, and improve the overall reliability of
 your applications.
 
-For example, KLT can collect logs from your applications. These logs can be
-used to troubleshoot issues, such as a crash or a failure. KLT can also collect
-traces from your applications. These traces can be used to identify performance 
-bottlenecks, such as a slow database query.
-It captures DORA metrics and exposes them as OpenTelemetry metrics.
-The observability data includes out-of-the-box DORA metrics, traces from
-OpenTelemetry, and custom Keptn metrics from configured data providers.
-Visualizing this information is possible using dashboard tools like Grafana.
+*For example, KLT can collect logs from your applications. These logs can be
+ used to troubleshoot issues, such as a crash or a failure. KLT can also collect
+ traces from your applications. These traces can be used to identify performance 
+ bottlenecks, such as a slow database query.
+ It captures DORA metrics and exposes them as OpenTelemetry metrics.
+ The observability data includes out-of-the-box DORA metrics, traces from
+ OpenTelemetry, and custom Keptn metrics from configured data providers.
+ Visualizing this information is possible using dashboard tools like Grafana.
 
 * **Release Lifecycle:** The Lifecycle Toolkit offers versatile functionalities
 for deployment scenarios, including pre-deployment validation, image scanning,
@@ -132,7 +132,8 @@ allowing checks before or after deployment initiation.
 It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
 environment and confirming software health against SLOs like performance and
 user experience.
-For example, KLT can run pre-deployment checks to ensure that your application 
+
+* For example, KLT can run pre-deployment checks to ensure that your application 
 is ready to be deployed. These checks can include things like linting your code,
 running unit tests, and scanning for security vulnerabilities. KLT can also deploy
 your applications to a variety of environments, such as production, staging, and

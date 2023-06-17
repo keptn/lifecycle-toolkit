@@ -112,8 +112,7 @@ KLT can help you improve the observability of your applications by collecting
 logs, traces, and metrics. This data can be used to troubleshoot issues,
 identify performance bottlenecks, and improve the overall reliability of
 your applications.
-
-*For example, KLT can collect logs from your applications. These logs can be
+ For example: KLT can collect logs from your applications. These logs can be
  used to troubleshoot issues, such as a crash or a failure. KLT can also collect
  traces from your applications. These traces can be used to identify performance 
  bottlenecks, such as a slow database query.
@@ -132,8 +131,7 @@ allowing checks before or after deployment initiation.
 It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
 environment and confirming software health against SLOs like performance and
 user experience.
-
-* For example, KLT can run pre-deployment checks to ensure that your application 
+For example: KLT can run pre-deployment checks to ensure that your application 
 is ready to be deployed. These checks can include things like linting your code,
 running unit tests, and scanning for security vulnerabilities. KLT can also deploy
 your applications to a variety of environments, such as production, staging, and

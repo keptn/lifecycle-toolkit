@@ -3,13 +3,11 @@ title: Restart an Application Deployment
 description: Learn how to restart an unsuccessful Keptn Application Deployment.
 icon: concepts
 layout: quickstart
-weight: 30
+weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-## Restart an Application Deployment
-
-A [KeptnApp](../../yaml-crd-ref/app.md] can fail
+A [KeptnApp](../../yaml-crd-ref/app.md) can fail
 because of an unsuccessful pre-deployment evaluation
 or pre-deployment task.
 For example, this happens if the target value of a
@@ -17,7 +15,7 @@ For example, this happens if the target value of a
 resource is misconfigured
 or a pre-deployment evaluation checks the wrong URL.
 
-Use the `spec.revision` field of `KeptnApp`
+Increment the `spec.revision` field of `KeptnApp`
 to retry a `KeptnApp` deployment
 without incrementing the version of the `KeptnApp`
 After you fix the configuration
@@ -131,7 +129,6 @@ To fix the deployment of this application,
 we first need to fix the task that has failed earlier.
 To do so, edit the `pre-deployment-check` `KeptnTaskDefinition`:
 
-
 ```shell
 kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-deployment-check
 ```
@@ -203,7 +200,7 @@ pre-pre-deployment-check-65056   podtato-head   0.1.1                           
 ```
 <!-- markdownlint-enable MD013 -->
 
-Notice that, for both the `KeptnAppVersions` and `KeptnTasks`,
-the previous failed instances are still available.
+Notice that the previous failed instances are still available
+for both `KeptnAppVersions` and `KeptnTasks`.
 This may be useful historical data to keep track of
 what went wrong during earlier deployment attempts.

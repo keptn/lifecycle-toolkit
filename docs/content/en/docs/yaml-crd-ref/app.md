@@ -60,7 +60,7 @@ spec:
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed.
     See
-    [Restart an Application Deployment](../implementing/restart-an-application-deployment)
+    [Restart an Application Deployment](../implementing/restart-application-deployment/)
     for a longer discussion of this.
   * **workloads**
     * **name** - name of this Kubernetes
@@ -139,5 +139,5 @@ The `spec.revision` field is introduced in v1alpha2.
 
 ## See also
 
-- [Restart an Application Deployment](../implementing/restart-an-application-deployment)
-- [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+* [Restart an Application Deployment](../implementing/restart-application-deployment/)
+* [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

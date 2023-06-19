@@ -15,7 +15,7 @@ It contains information about:
 - Tasks referenced by `KeptnApp` are defined in a
   [KeptnTaskDefinition](taskdefinition.md) resource.
   `KeptnApp` identifies the task by the value of the `metadata.name` field
-  and does not need to understand what runtime is used to define the task.
+  and does not need to understand what runner is used to define the task.
 
 ## Synopsis
 
@@ -148,7 +148,6 @@ spec:
 
 - [KeptnTaskDefinition](taskdefinition.md)
 - [Working with tasks](../implementing/tasks)
-- [Working with container runtimes](../implementing/container.md)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../getting-started/orchestrate)
 [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

@@ -13,7 +13,7 @@ as part of the pre- and post-deployment phases of a
 [KeptnWorkload](../../concepts/workloads).
 
 A Keptn task executes as a
-[runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
+runner
 in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes

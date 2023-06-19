@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
   and
-  [Custom container examples](#examples-for-a-custom-container).
+  [Custom container examples](#examples-for-a-custom-runtime-container).
 * Use the pre-defined `deno-runtime` runner
   to define tasks using Deno scripts,
   which use a syntax similar to JavaScript and Typescript,
@@ -41,13 +41,13 @@ differentiated by the `spec` section:
   See
   [Yaml synopsis for Deno-runtime container](#yaml-synopsis-for-deno-runtime-container)
   and
-  [Deno-runtime examples](#examples-for-deno-runtime).
+  [Deno-runtime examples](#examples-for-deno-runtime-runner).
 * Use the pre-defined `python-runtime` runner
   to define your task using Python 3.
   See
-  [Yaml synopsis for python-runtime](#yaml-synopsis-for-python-runtime-container)
+  [Yaml synopsis for python-runtime](#yaml-synopsis-for-python-runtime-runner)
   and
-  [Python-container examples](#examples-for-a-python-runtime).
+  [Python-container examples](#examples-for-a-python-runtime-runner).
 
 ## Yaml Synopsis for all containers
 
@@ -571,7 +571,7 @@ This task is then referenced in
 This is a a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command.
 
-## Examples for a python container
+## Examples for a python-runtime runner
 
 ### Example 1: inline code for a python-runtime runner
 

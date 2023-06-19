@@ -22,8 +22,9 @@ which is one of the following,
 differentiated by the `spec` section:
 
 * The `custom-runtime` runner provides
-  a standard Kubernetes application container.
-  You the runner, an application,
+  a standard Kubernetes application container
+  that is run as part of a Kubernetes job..
+  You define the runner, an application,
   and its runtime dependencies.
   This gives you the flexibility
   to define tasks using the lanugage and facilities of your choice,
@@ -31,7 +32,7 @@ differentiated by the `spec` section:
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
   and
-  [Custom container examples](#examples-for-a-custom-runtime-container).
+  [Examples for a custom-runtime container](#examples-for-a-custom-runtime-container).
 * Use the pre-defined `deno-runtime` runner
   to define tasks using Deno scripts,
   which use a syntax similar to JavaScript and Typescript,

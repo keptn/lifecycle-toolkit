@@ -142,7 +142,7 @@ spec:
 
 ## Differences between versions
 
-- The `spec.Revision` field is introduced in v1alpha2.
+- The `spec.revision` field is introduced in v1alpha2.
 
 ## See also
 

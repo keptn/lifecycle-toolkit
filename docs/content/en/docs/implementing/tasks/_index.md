@@ -12,9 +12,7 @@ as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../../concepts/workloads).
 
-A Keptn task executes as a
-runner
-in an application
+A Keptn task executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
@@ -34,7 +32,7 @@ To implement a Keptn task:
 
 This page provides information to help you create your tasks:
 
-- Code your task in a [runtime](#runtimes-and-containers)
+- Code your task in an appropriate [runner](#runners-and-containers)
 - Understand how to use [Context](#context)
   that contains a Kubernetes cluster, a user, a namespace,
   the application name, workload name, and version.
@@ -44,7 +42,7 @@ This page provides information to help you create your tasks:
   and [pass secrets to a function](#pass-secrets-to-a-function)
   if necessary.
 
-## Runtimes and containers
+## Runners and containers
 
 Each `KeptnTaskDefinition` can use exactly one container with one runner.
 The runner you use determines the language you can use

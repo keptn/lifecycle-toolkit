@@ -12,18 +12,20 @@ as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../../concepts/workloads.md).
 
-A Keptn task runs as an application
+A Keptn task executes as a
+[runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
+in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
-A task definition includes a function
+A `KeptnTaskDefinition` includes a function
 that defines the action taken by that task.
 
 To implement a Keptn task:
 
 - Define a
   [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
-  resource that defines the container
+  resource that defines the runner to use for the container
 - [Annotate your workloads](../integrate/#annotate-workloads)
   to integrate your task with Kubernetes
 - Add your task to the  [KeptnApp](../yaml-crd-ref/app.md)
@@ -32,7 +34,7 @@ To implement a Keptn task:
 
 This page provides information to help you create your tasks:
 
-- Code your task in a [container](#containers)
+- Code your task in a [runtime](#runtimes-and-containers)
 - Understand how to use [Context](#context)
   that contains a Kubernetes cluster, a user, a namespace,
   the application name, workload name, and version.
@@ -42,33 +44,31 @@ This page provides information to help you create your tasks:
   and [pass secrets to a function](#pass-secrets-to-a-function)
   if necessary.
 
-## Containers
+## Runtimes and containers
 
-Each `KeptnTaskDefinition` can use exactly one container,
-which can use the `container-runtime`, the `deno-runtime`,
-or the `python-runtime`.
-The type of runtime you use determines the language you can use
+Each `KeptnTaskDefinition` can use exactly one container with one runner.
+The runner you use determines the language you can use
 to define the task.
 The `spec` section of the `KeptnTaskDefinition`
-defines the runtime to use for the container:
+defines the runner to use for the container:
 
-- The `container-runtime` provides
+- The `container-runtime` runner provides
   a pure custom Kubernetes application container
   that you define to includes a runtime,  an application
   and its runtime dependencies.
   This gives you the greatest flexibility
   to define tasks using the lanugage and facilities of your choice
 
-KLT also includes two "pre-defined" runtimes:
+KLT also includes two "pre-defined" runners:
 
-- Use the `deno-runtime` to define tasks using Deno scripts,
+- Use the `deno-runtime` runner to define tasks using Deno scripts,
   which use JavaScript/Typescript syntax with a few limitations.
   You can use this to specify simple actions
   without having to define a container.
-- Use the `python-runtime` container
+- Use the `python-runtime` runner
   to define your task using Python 3.
 
-For the pre-defined runtime containers (`deno-runtime` and `python-runtime`,
+For the pre-defined runners (`deno-runtime` and `python-runtime`),
 the actual code to be executed
 can be configured in one of four different ways:
 
@@ -81,7 +81,7 @@ can be configured in one of four different ways:
 
 See the
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
-reference page for the synopsis and examples or each container type.
+reference page for the synopsis and examples for each runner.
 
 ## Context
 

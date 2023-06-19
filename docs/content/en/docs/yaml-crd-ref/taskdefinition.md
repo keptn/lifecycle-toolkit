@@ -10,44 +10,48 @@ as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../concepts/workloads/).
 
-A Keptn task runs as an application
+A Keptn task executes as a
+[runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
+in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
 
-Each `KeptnTaskDefinition` can use exactly one container,
+Each `KeptnTaskDefinition` can use exactly one container with one runner.
 which is one of the following,
 differentiated by the `spec` section:
 
-* The `custom-runtime` provides custom Kubernetes application containers,
-  that you define to includes a runtime,  an application
+* The `custom-runtime` runner provides
+  a standard Kubernetes application container.
+  You the runner, an application,
   and its runtime dependencies.
-  This gives you the flexibility,
+  This gives you the flexibility
   to define tasks using the lanugage and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
   and
   [Custom container examples](#examples-for-a-custom-container).
-* The pre-defined `deno-runtime` container
-  that you can use to define tasks using Deno scripts,
-  which is basically JavaScript/Typescript with a few limitations.
+* Use the pre-defined `deno-runtime` runner
+  to define tasks using Deno scripts,
+  which use a syntax similar to JavaScript and Typescript,
+  with a few limitations.
   You can use this to specify simple actions
   without having to define a container.
   See
   [Yaml synopsis for Deno-runtime container](#yaml-synopsis-for-deno-runtime-container)
   and
   [Deno-runtime examples](#examples-for-deno-runtime).
-* The pre-defined `python-runtime` container
-  that can be used to define your task using Python 3.
+* Use the pre-defined `python-runtime` runner
+  to define your task using Python 3.
   See
-  [Yaml synopsis for python-container](#yaml-synopsis-for-python-runtime-container)
+  [Yaml synopsis for python-runtime](#yaml-synopsis-for-python-runtime-container)
   and
-  [Python-container examples](#examples-for-a-python-container).
+  [Python-container examples](#examples-for-a-python-runtime).
 
 ## Yaml Synopsis for all containers
 
-The `KeptnTaskDefinition` Yaml files for all container runtimes
+The `KeptnTaskDefinition` Yaml files for all runners
 include the same lines at the top.
 These are described here.
 
@@ -86,22 +90,24 @@ but timeouts seem to be measured in seconds.
 * **spec**
   * **function | python | container** -- Define the container type
   to use for this task.
-  Each task can use one container type:
-    * **function** -- Use a `deno-runtime` container
+  Each task can use one type of runner,
+  identified by this field:
+    * **function** -- Use a `deno-runtime` runner
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
     [Yaml synopsis for deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
-    * **python** -- Use a `python-runtime` container
+    * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
     [Yaml synopsis for python-runtime container](#yaml-synopsis-for-python-runtime-container).
-    * **container** -- Use a `container-runtime` container,
-    which is a standard Kubernetes container
-    for which you define the image, runtime parameters, etc.
-    and code the functionality to match the container you define.
-    See
-    [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
+    * **container** -- Use the runner defined
+      for the `container-runtime` container.
+      This is a standard Kubernetes container
+      for which you define the image, runner, runtime parameters, etc.
+      and code the functionality to match the container you define.
+      See
+      [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
@@ -112,16 +118,17 @@ but timeouts seem to be measured in seconds.
 
 ## Yaml Synopsis for deno-runtime container
 
-When using the deno-runtime container to define a task,
-the `function` is coded in JavaScript
-and executed in
-[Deno](https://deno.com/runtime),
+When using the `deno-runtime` runner to define a task,
+the `function` is coded in Deno-script
+(which is mostly the same as JavaScript and TypeScript)
+and executed in the
+[Deno](https://deno.com/runtime) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
 for permissions and importing data
 so a script that works properly elsewhere
-may not function out of the box when run in Deno.
+may not function out of the box when run in the `deno-runtime` runner.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -144,7 +151,7 @@ spec:
   * **function** -- Code to be executed,
     expressed as a [Deno](https://deno.land/) script.
     Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
-    for more information about the runtime.
+    for more information about this runner.
 
     The `function` can be defined as one of the following:
 
@@ -267,10 +274,10 @@ almost anything that you implemented with JES for Keptn v1.
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-## Yaml Synopsis for Python-runtime container
+## Yaml Synopsis for Python-runtime runner
 
-The `python-runtime` is built on the `container-runtime`
-provides a way easily define a task using Python 3.
+The `python-runtime` runner is built on the `container-runtime` runner
+to provide a way easily define a task using Python 3.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide a Python script
 and KLT sets up the container and runs the script as part of the task.
@@ -292,12 +299,12 @@ spec:
 
 TODO: Check synopsis above
 
-### Spec used only for python-runtime definitions
+### Spec used only for the python-runtime runner
 
-The `python-container` can be used to define tasks using  Python 3 code.
+The `python-runtime` runner is used to define tasks using  Python 3 code.
 
 * **spec**
-  * **python** -- Identifies this as a Python container
+  * **python** -- Identifies this as a Python runner.
     * **inline** -- Include the actual Python 3.1 code to execute.
       For example, the following example
       prints data stored in the parameters map:
@@ -415,7 +422,7 @@ Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
 
-## Examples for deno-runtime
+## Examples for deno-runtime runner
 
 ### Example 1: inline script for a Deno script
 
@@ -539,9 +546,7 @@ data:
     console.log(targetDate);
 ```
 
-## Examples for a custom container
-
-### Example 1: Custom container
+## Examples for a custom-runtime container
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
  see
@@ -568,13 +573,13 @@ then spawns a shell and runs the `sleep 30` command.
 
 ## Examples for a python container
 
-### Example 1: inline code for a Python container
+### Example 1: inline code for a python-runtime runner
 
 You can embed python code directly in the task definition.
 This example prints data stored in the parameters map:
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_inline.yaml" code="true" lang="yaml" >}}
 
-### Example 2: httpRef for a Python container
+### Example 2: httpRef for a python-runtime runner
 
 You can refer to code stored online.
 For example, we have a few examples available
@@ -582,18 +587,18 @@ For example, we have a few examples available
 Consider the following:
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
 
-### Example 3: functionRef for a Python container
+### Example 3: functionRef for a python-runtime runner
 
 You can refer to an existing `KeptnTaskDefinition`.
 This example calls the inline example
 but overrides the data printed with what is specified in the task:
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_recursive.yaml" code="true" lang="yaml" >}}
 
-### Example 4: ConfigMapRef for a Python container
+### Example 4: ConfigMapRef for a python-runtime runner
 
 {{< readfile file="/yaml_py/taskdefinition_pyfunction_configmap.yaml" code="true" lang="yaml" >}}
 
-### Allowed libraries for the Python runtime
+### Allowed libraries for the python-runtime runner
 
 The following example shows how to use few of the allowed packages, namely:
 requests, json, git, and yaml:

@@ -22,7 +22,7 @@ based on prometheus metrics.
 
 For information about installing and configuring
 the software required, see
-[OpenTelemetry observability](../../../docs/implementing/otel/)
+[OpenTelemetry observability](../../../docs/implementing/otel.md/)
 in the documentation.
 
 ## Seeing the OpenTelemetry Collector in action

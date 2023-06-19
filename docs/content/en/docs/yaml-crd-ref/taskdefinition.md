@@ -45,11 +45,11 @@ differentiated by the `spec` section:
 * Use the pre-defined `python-runtime` runner
   to define your task using Python 3.
   See
-  [Yaml synopsis for python-runtime](#yaml-synopsis-for-python-runtime-runner)
+  [Yaml synopsis for python-runtime runner](#yaml-synopsis-for-python-runtime-runner)
   and
-  [Python-container examples](#examples-for-a-python-runtime-runner).
+  [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
 
-## Yaml Synopsis for all containers
+## Yaml Synopsis for all runners
 
 The `KeptnTaskDefinition` Yaml files for all runners
 include the same lines at the top.
@@ -100,7 +100,7 @@ but timeouts seem to be measured in seconds.
     * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
-    [Yaml synopsis for python-runtime container](#yaml-synopsis-for-python-runtime-container).
+    [Yaml synopsis for python-runtime runner](#yaml-synopsis-for-python-runtime-runner)
     * **container** -- Use the runner defined
       for the `container-runtime` container.
       This is a standard Kubernetes container

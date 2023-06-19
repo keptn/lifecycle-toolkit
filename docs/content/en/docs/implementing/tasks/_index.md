@@ -10,7 +10,7 @@ A
 resource defines tasks that the Keptn Lifecycle Toolkit runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
-[KeptnWorkload](../../concepts/workloads.md).
+[KeptnWorkload](../../concepts/workloads).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -28,7 +28,7 @@ To implement a Keptn task:
   resource that defines the runner to use for the container
 - [Annotate your workloads](../integrate/#annotate-workloads)
   to integrate your task with Kubernetes
-- Add your task to the  [KeptnApp](../yaml-crd-ref/app.md)
+- Add your task to the  [KeptnApp](../../yaml-crd-ref/app.md)
   resource that associates your `KeptnTaskDefinition`
   with the pre- and post-deployment tasks that should run in it
 

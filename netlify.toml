@@ -15,10 +15,10 @@ HUGO_ENABLEGITINFO = "true"
 # https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
 HUGOxPARAMSxGITHUB_BRANCH="$BRANCH"
 
-[context.deploy-preview]
+[context.deploy-preview.environment]
 HUGO_ENV = "development"
 
-[context.branch-deploy]
+[context.branch-deploy.environment]
 HUGO_ENV = "staging"
 
 [context.production.environment]

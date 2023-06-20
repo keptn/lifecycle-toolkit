@@ -14,6 +14,8 @@ versions:
 mermaid:
   enable: true
 
+currentversion: main
+
 links:
   developer:
     - desc: Development takes place here!

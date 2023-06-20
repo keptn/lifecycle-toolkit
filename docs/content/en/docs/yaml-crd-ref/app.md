@@ -64,8 +64,10 @@ spec:
     to trigger another deployment of a `KeptnApp` of the same version.
     For example, increment this number to restart a `KeptnApp` version
     that failed to deploy, perhaps because a
-    `preDeploymentEvaluation` or `preDeploymentTask` failed
-    for reasons that may be transient.
+    `preDeploymentEvaluation` or `preDeploymentTask` failed.
+    See
+    [Restart an Application Deployment](../implementing/restart-application-deployment/)
+    for a longer discussion of this.
   - **workloads**
     - **name** - name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
@@ -150,4 +152,5 @@ spec:
 - [Working with tasks](../implementing/tasks)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../getting-started/orchestrate)
-[Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+- [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+- [Restart an Application Deployment](../implementing/restart-application-deployment/)

@@ -1,7 +1,7 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 VOLUMES := -v $(ROOT_DIR):/src 
 # renovate: datasource=docker depName=klakegg/hugo
-HUGO_VERSION := 0.107.0
+HUGO_VERSION := 0.111.3
 IMAGE := klakegg/hugo:$(HUGO_VERSION)-ext
 PORT := 1314
 DOCKER_CMD := docker run --rm -t -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""

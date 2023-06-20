@@ -207,7 +207,7 @@ jobs:
     if: needs.release-please.outputs.releases_created == 'true'
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
-    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.0.2-beta1
+    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.2
     secrets: inherit
 
   update-examples:

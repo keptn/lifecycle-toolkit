@@ -15,9 +15,6 @@ For example, this happens if the target value of a
 resource is misconfigured
 or a pre-deployment evaluation checks the wrong URL.
 
-Increment the `spec.revision` field of `KeptnApp`
-to retry a `KeptnApp` deployment
-without incrementing the version of the `KeptnApp`
 After you fix the configuration
 that caused the pre-deployment evaluation or task to fail,
 you can increment the `spec.revision` value

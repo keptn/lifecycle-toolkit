@@ -244,7 +244,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-  container
+  container:
     name: <container-name>
     image: <image-name>
     <other fields>
@@ -288,7 +288,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-    python
+    python:
       inline | httpRef | functionRef | ConfigMapRef
       parameters:
         map:

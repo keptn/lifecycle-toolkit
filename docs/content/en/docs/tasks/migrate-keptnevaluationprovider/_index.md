@@ -7,7 +7,7 @@ weight: 20
 hidechildren: true # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-## Migrate KeptnEvaluationProvider to KeptmMetricsProvider
+## Migrate KeptnEvaluationProvider to KeptnMetricsProvider
 
 Due to the recent changes by splitting the `klt-operator` into two separate operators: `lifecycle-operator` and
 `metrics-operator` (introduced in version 0.7.0), some of the functionality and behavior have been moved,

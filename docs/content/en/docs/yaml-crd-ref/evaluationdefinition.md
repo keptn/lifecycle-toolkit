@@ -50,7 +50,7 @@ spec:
       [KeptnMetric](metric.md) object that contains the value,
       identified by `name` and `namespace`
     * **evaluationTarget** -- Desired value of the query,
-       expressed as an arithmatic formula,
+       expressed as an arithmetic formula,
        usually less than (`<`) or greater than (`>`)
        This is used to define success or failure criteria
        for the referenced `KeptnMetric` in order to pass or fail

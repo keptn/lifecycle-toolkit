@@ -1,28 +1,30 @@
 [build]
 base = "docs/"
 publish = "public/"
-command = "hugo -b $DEPLOY_PRIME_URL"
+
+# On netlify our branch will always be the one we are currently building for
+# important information regarding naming
+# https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
+command = "HUGOxPARAMSxGITHUB_BRANCH=$BRANCH HUGOxPARAMSxCURRENTVERSION=$BRANCH hugo -b $DEPLOY_PRIME_URL"
 ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . ../netlify.toml"
 
 [build.environment]
 # added specifically a docker image, so the versions within makefile and netlify documentation match
 # renovate: datasource=docker depName=klakegg/hugo
-HUGO_VERSION = "0.107.0"
+HUGO_VERSION = "0.111.3"
 HUGO_ENABLEGITINFO = "true"
 
-# On netlify our branch will always be the one we are currently building for
-# important information regarding naming 
-# https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
-HUGOxPARAMSxGITHUB_BRANCH="$BRANCH"
-
-[context.deploy-preview]
+[context.deploy-preview.environment]
 HUGO_ENV = "development"
 
-[context.branch-deploy]
+[context.branch-deploy.environment]
 HUGO_ENV = "staging"
 
 [context.production.environment]
 HUGO_ENV = "production"
 
 [context.production]
-command = "hugo -b $URL"
+# On netlify our branch will always be the one we are currently building for
+# important information regarding naming
+# https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
+command = "HUGOxPARAMSxGITHUB_BRANCH=$BRANCH HUGOxPARAMSxCURRENTVERSION=$BRANCH hugo -b $URL"

@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
-  name: scheduled-deployment
+  name: scheduled-deployment-inline
 spec:
   python:
     parameters:

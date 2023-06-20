@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230601122212-9eafb78b51d6
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230620112140-7c4d2abcb84e
 	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230601125711-bb916f3e3875
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0

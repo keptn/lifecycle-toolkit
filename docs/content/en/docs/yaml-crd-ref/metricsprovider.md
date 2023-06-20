@@ -30,6 +30,7 @@ spec:
   secretKeyRef:
     name: <secret-name>
     key: <secret-key-that-holds-token>
+    optional: true
 ```
 
 ## Fields

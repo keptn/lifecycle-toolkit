@@ -134,7 +134,7 @@ Tasks are resources that are defined in a
 file.
 In our example, the tasks are defined in the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
-file
+file.
 As an example,
 we have a `notify` task that composes some markdown text
 to be sent as Slack notifications
@@ -164,6 +164,13 @@ or pulled in from a remote webserver that is specified.
 For this example, the code to be executed is embedded in this file
 although, in practice,
 this script would probably be located on a remote webserver.
+
+Note that, beginning with KLT 0.8.0,
+you can also use Python 3 to define your task,
+or you can define a standard Kubernetes container
+that uses the image, runner, and runtime dependencies that you choose.
+For more information, see
+[Working with Keptn tasks](../../implementing/tasks).
 
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.

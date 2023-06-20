@@ -165,7 +165,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	}, resultingJob.Annotations)
 }
 
-func TestKeptnTaskReconciler_updateJob(t *testing.T) {
+func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"
 
@@ -199,16 +199,9 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = fakeClient.Create(context.TODO(), task)
 	require.Nil(t, err)
 
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: namespace,
-		},
-	}
-
 	task.Status.JobName = job.Name
 
-	err = r.updateJob(context.TODO(), req, task)
-	require.Nil(t, err)
+	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateFailed, task.Status.Status)
 
@@ -222,8 +215,7 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = fakeClient.Status().Update(context.TODO(), job)
 	require.Nil(t, err)
 
-	err = r.updateJob(context.TODO(), req, task)
-	require.Nil(t, err)
+	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
@@ -255,6 +247,7 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 			AppName:        "my-app",
 			AppVersion:     "0.1.0",
 			TaskDefinition: taskDefinitionName,
+			Type:           apicommon.PostDeploymentCheckType,
 		},
 	}
 }

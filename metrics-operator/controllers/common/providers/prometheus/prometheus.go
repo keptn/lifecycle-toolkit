@@ -30,19 +30,52 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		return "", nil, err
 	}
 	api := prometheus.NewAPI(client)
-	result, w, err := api.Query(
-		ctx,
-		metric.Spec.Query,
-		queryTime,
-		[]prometheus.Option{}...,
-	)
+	var result model.Value
+	var warnings prometheus.Warnings
+	
+	if metric.Spec.Range != nil {
 
-	if err != nil {
-		return "", nil, err
+		queryInterval, err := time.ParseDuration(metric.Spec.Range.Interval)
+		if err != nil {
+			return "", nil, err
+		}
+		endTime := queryTime.Add(queryInterval)
+
+		queryRange := prometheus.Range{
+			Start: queryTime,
+			End: endTime,
+		}
+
+		r, w, err := api.QueryRange(
+			ctx,
+			metric.Spec.Query,
+			queryRange,
+			[]prometheus.Option{}...,
+		)
+
+		if err != nil {
+			return "", nil, err
+		}
+		result = r
+		warnings = w
+
+	} else {
+
+		r, w, err := api.Query(
+			ctx,
+			metric.Spec.Query,
+			queryTime,
+			[]prometheus.Option{}...,
+		)
+		if err != nil {
+			return "", nil, err
+		}
+		result = r
+		warnings = w
 	}
-
-	if len(w) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + w[0])
+	
+	if len(warnings) != 0 {
+		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 	}
 
 	// check if we can cast the result to a vector, it might be another data struct which we can't process

@@ -602,7 +602,7 @@ but overrides the data printed with what is specified in the task:
 The following example shows how to use some of the allowed packages, namely:
 requests, json, git, and yaml:
 
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_configmap.yaml">}}
+{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_inline_printargs_py.yaml">}}
 
 ### Passing secrets, environment variables and modifying the python command
 

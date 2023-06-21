@@ -48,7 +48,7 @@ with a command like the following:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.1/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.8.0/manifest.yaml
 kubectl wait --for=condition=Available deployment/lifecycle-operator -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
 

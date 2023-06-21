@@ -13,7 +13,7 @@ based on prometheus metrics.
   execute the following command:
 
   ```shell
-  `make install
+  make install
   ```
 
 - Deploy the PodTatoHead Demo Application: `make deploy-podtatohead`

@@ -1,5 +1,156 @@
 # Changelog
 
+## [0.8.0](https://github.com/keptn/lifecycle-toolkit/compare/v0.7.1...v0.8.0) (2023-06-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **operator:** support python-runtime runner for KeptnTasks
+* **operator:** support container-runtime runner for KeptnTasks
+
+### Features
+
+* add python-runtime ([#1496](https://github.com/keptn/lifecycle-toolkit/issues/1496)) ([76a4bd9](https://github.com/keptn/lifecycle-toolkit/commit/76a4bd92607d05c16c63ccc4c1dd91e35cb4d6b0))
+* add validating webhook for KeptnTaskDefinition ([#1514](https://github.com/keptn/lifecycle-toolkit/issues/1514)) ([d55a7ef](https://github.com/keptn/lifecycle-toolkit/commit/d55a7ef421f15305ef711babe9ba0b682dbf65ef))
+* **cert-manager:** additional options for targeting WebhookConfigurations and CRDs ([#1276](https://github.com/keptn/lifecycle-toolkit/issues/1276)) ([dadd70b](https://github.com/keptn/lifecycle-toolkit/commit/dadd70b2d63d458c881bda2d6f5755ac257f32e2))
+* **metrics-operator:** introduce ErrMsg field into KeptnMetric status ([#1365](https://github.com/keptn/lifecycle-toolkit/issues/1365)) ([092d284](https://github.com/keptn/lifecycle-toolkit/commit/092d28499a74d0ac11c69400bc9454ee2285366d))
+* **operator:** adapt TaskDefinition validation webhook to consider python and deno runtime ([#1534](https://github.com/keptn/lifecycle-toolkit/issues/1534)) ([59cdfc8](https://github.com/keptn/lifecycle-toolkit/commit/59cdfc882b7075244a91f0aaf6633d843d9e0099))
+* **operator:** introduce fallback search to KLT default namespace when KeptnEvaluationDefinition is not found ([#1359](https://github.com/keptn/lifecycle-toolkit/issues/1359)) ([d5ddf26](https://github.com/keptn/lifecycle-toolkit/commit/d5ddf266a737d3a69d5919f4231a03732c59694f))
+* **operator:** support container-runtime runner for KeptnTasks ([02ce860](https://github.com/keptn/lifecycle-toolkit/commit/02ce86023b3db175481b859f379cb4298d03566a))
+* **operator:** support python-runtime runner for KeptnTasks ([b79f7c4](https://github.com/keptn/lifecycle-toolkit/commit/b79f7c421d15a8456d50754b631bef61fc0c8dd8))
+* **operator:** trim KeptnAppVersion name that exceed max limit ([#1296](https://github.com/keptn/lifecycle-toolkit/issues/1296)) ([0bf2f9e](https://github.com/keptn/lifecycle-toolkit/commit/0bf2f9e78f6a65d79eed0135e49289816e9a2533))
+
+
+### Bug Fixes
+
+* added the missing link  ([#1537](https://github.com/keptn/lifecycle-toolkit/issues/1537)) ([27fb2c2](https://github.com/keptn/lifecycle-toolkit/commit/27fb2c23bdda13efa047d4101ea8db6595d936a1))
+* **cert-manager:** avoid index-out-of-bounds error when updating webhook configs ([#1497](https://github.com/keptn/lifecycle-toolkit/issues/1497)) ([0f28b8c](https://github.com/keptn/lifecycle-toolkit/commit/0f28b8c2b5854944d9b0e72fee97a6bc91f39bea))
+* **helm-chart:** fix Python runtime version number ([#1586](https://github.com/keptn/lifecycle-toolkit/issues/1586)) ([05572ec](https://github.com/keptn/lifecycle-toolkit/commit/05572ec6a1a6dd7a56c786333af046eea19929bd))
+* **metrics-operator:** improve error handling in metrics providers ([#1466](https://github.com/keptn/lifecycle-toolkit/issues/1466)) ([9801e5d](https://github.com/keptn/lifecycle-toolkit/commit/9801e5dfe9e17fc6c30ef832d97439955964fdcc))
+* **metrics-operator:** introduce IsStatusSet method to KeptnMetric ([#1427](https://github.com/keptn/lifecycle-toolkit/issues/1427)) ([24a60f5](https://github.com/keptn/lifecycle-toolkit/commit/24a60f5e6f8f3a383dfce554d644bfd974c4b5fd))
+* **operator:** use new RuntimeSpec instead of FunctionSpec ([#1529](https://github.com/keptn/lifecycle-toolkit/issues/1529)) ([6189317](https://github.com/keptn/lifecycle-toolkit/commit/61893175eb73d3f559c7086c09c8939485dd23d3))
+* remove scarf redirect from containers images ([#1443](https://github.com/keptn/lifecycle-toolkit/issues/1443)) ([a20b2e7](https://github.com/keptn/lifecycle-toolkit/commit/a20b2e707fd2c0bb03b661c6a6cca272eb088ee1))
+* restore go files ([#1371](https://github.com/keptn/lifecycle-toolkit/issues/1371)) ([9a4a6fd](https://github.com/keptn/lifecycle-toolkit/commit/9a4a6fd026bbdbfe986449373bad2b116c34b3d4))
+
+
+### Other
+
+* add example for python task definition ([#1554](https://github.com/keptn/lifecycle-toolkit/issues/1554)) ([908b03d](https://github.com/keptn/lifecycle-toolkit/commit/908b03d7ae6d4e6e5136257611f0c402f32e08f0))
+* bump up helm chart version ([#1351](https://github.com/keptn/lifecycle-toolkit/issues/1351)) ([737d478](https://github.com/keptn/lifecycle-toolkit/commit/737d4782c6c90c77930f58590dcd1098b68b6ef1))
+* **cert-manager:** updated readme of cert-manager ([#1393](https://github.com/keptn/lifecycle-toolkit/issues/1393)) ([12fcca8](https://github.com/keptn/lifecycle-toolkit/commit/12fcca82b904ba2f2ca72347cb176771d84d63df))
+* minor refactoring of the evaluation controller ([#1356](https://github.com/keptn/lifecycle-toolkit/issues/1356)) ([4398e96](https://github.com/keptn/lifecycle-toolkit/commit/4398e9677ca60a4dd10bd7198479796f36f26026))
+* **operator:** bump OTel dependencies to the latest version ([#1419](https://github.com/keptn/lifecycle-toolkit/issues/1419)) ([a7475c2](https://github.com/keptn/lifecycle-toolkit/commit/a7475c2ae13479fed55fa4a322af3c2a47649fa1))
+* **operator:** explicitly define ImagePullPolicy of Job container to IfNotPresent ([#1509](https://github.com/keptn/lifecycle-toolkit/issues/1509)) ([bb916f3](https://github.com/keptn/lifecycle-toolkit/commit/bb916f3e3875ec4b3c3e5efbb9f1a65be2a58196))
+* **operator:** make use of status.jobName when searching for job in KeptnTask controller ([#1436](https://github.com/keptn/lifecycle-toolkit/issues/1436)) ([28dd6b7](https://github.com/keptn/lifecycle-toolkit/commit/28dd6b77c4cacd038539e30ac8275d6f63d39155))
+* **operator:** refactor KeptnTask controller logic ([#1536](https://github.com/keptn/lifecycle-toolkit/issues/1536)) ([ed85fc9](https://github.com/keptn/lifecycle-toolkit/commit/ed85fc972cd676ca0be05dae10aabf90e969d503))
+* **operator:** refactor keptntaskcontroller to use builder interface ([#1450](https://github.com/keptn/lifecycle-toolkit/issues/1450)) ([a3f5e5b](https://github.com/keptn/lifecycle-toolkit/commit/a3f5e5bc3fc8bd8073d264c30c39a38fc09d364e))
+* **operator:** use List() when fetching KeptnWorkloadInstances for KeptnAppVersion ([#1456](https://github.com/keptn/lifecycle-toolkit/issues/1456)) ([ecd8c48](https://github.com/keptn/lifecycle-toolkit/commit/ecd8c487b22b11bea0646a3c5b2a1f9a22c80d2f))
+* remove code duplication ([#1372](https://github.com/keptn/lifecycle-toolkit/issues/1372)) ([da66c80](https://github.com/keptn/lifecycle-toolkit/commit/da66c80653b4a992fd94e49b067f4a21bdf3978b))
+* remove decoder injector interface from webhook ([#1563](https://github.com/keptn/lifecycle-toolkit/issues/1563)) ([7850766](https://github.com/keptn/lifecycle-toolkit/commit/785076613942995fdda8882dcbb74b4b1963675e))
+* remove space in python sample folder ([#1550](https://github.com/keptn/lifecycle-toolkit/issues/1550)) ([53443ac](https://github.com/keptn/lifecycle-toolkit/commit/53443ac4042e5f78e402df7378770fd163b5167c))
+* standardize generation of resource names ([#1472](https://github.com/keptn/lifecycle-toolkit/issues/1472)) ([f7abcb0](https://github.com/keptn/lifecycle-toolkit/commit/f7abcb096838c0071c07b95bf6ff938de9be4975))
+* use cert-manager library in lifecycle-operator and metrics-operator to reduce code duplication ([#1379](https://github.com/keptn/lifecycle-toolkit/issues/1379)) ([831fc46](https://github.com/keptn/lifecycle-toolkit/commit/831fc46d9e4ebb059473f137ef6c012373c6179c))
+* website edit links should point to page ([#1566](https://github.com/keptn/lifecycle-toolkit/issues/1566)) ([8b62f33](https://github.com/keptn/lifecycle-toolkit/commit/8b62f3355afc178f15416b930ea1c77844f2b02c))
+
+
+### Dependency Updates
+
+* update anchore/sbom-action action to v0.14.2 ([#1401](https://github.com/keptn/lifecycle-toolkit/issues/1401)) ([9085785](https://github.com/keptn/lifecycle-toolkit/commit/9085785b669bbc5bdd418afa6e9bd2f81c788653))
+* update aquasecurity/trivy-action action to v0.11.0 ([#1531](https://github.com/keptn/lifecycle-toolkit/issues/1531)) ([66c9505](https://github.com/keptn/lifecycle-toolkit/commit/66c95058235deddac86daaa6bf897ae680181052))
+* update aquasecurity/trivy-action action to v0.11.2 ([#1551](https://github.com/keptn/lifecycle-toolkit/issues/1551)) ([2d588db](https://github.com/keptn/lifecycle-toolkit/commit/2d588dbfd2405b9ff09b68a38f6b3ff5e6779d63))
+* update busybox docker tag to v1.36.1 ([#1437](https://github.com/keptn/lifecycle-toolkit/issues/1437)) ([9ba5cae](https://github.com/keptn/lifecycle-toolkit/commit/9ba5cae8b3f0be8b380e28883530f97db76773dc))
+* update checkmarx/kics-github-action action to v1.7.0 ([#1435](https://github.com/keptn/lifecycle-toolkit/issues/1435)) ([f9d609c](https://github.com/keptn/lifecycle-toolkit/commit/f9d609c47545c8fa772329056606891534a6eed6))
+* update curlimages/curl docker tag to v8.1.0 ([#1439](https://github.com/keptn/lifecycle-toolkit/issues/1439)) ([9e90d17](https://github.com/keptn/lifecycle-toolkit/commit/9e90d17c211709b357b40ef8f0843a9e1bf0364f))
+* update curlimages/curl docker tag to v8.1.1 ([#1455](https://github.com/keptn/lifecycle-toolkit/issues/1455)) ([d1279a9](https://github.com/keptn/lifecycle-toolkit/commit/d1279a9fe0f09177449b20d4b3fc8f0f3c10d81a))
+* update curlimages/curl docker tag to v8.1.2 ([#1530](https://github.com/keptn/lifecycle-toolkit/issues/1530)) ([ef3e89e](https://github.com/keptn/lifecycle-toolkit/commit/ef3e89e148afd1d5dd54ea47f7973ac8532dd203))
+* update dependency argoproj/argo-cd to v2.7.1 ([#1374](https://github.com/keptn/lifecycle-toolkit/issues/1374)) ([9b9a973](https://github.com/keptn/lifecycle-toolkit/commit/9b9a973a95ca59e91927695f92c0d56389be3f4f))
+* update dependency argoproj/argo-cd to v2.7.2 ([#1423](https://github.com/keptn/lifecycle-toolkit/issues/1423)) ([e381f7f](https://github.com/keptn/lifecycle-toolkit/commit/e381f7fc6d79703b9f32dbf49331247107597b20))
+* update dependency argoproj/argo-cd to v2.7.3 ([#1512](https://github.com/keptn/lifecycle-toolkit/issues/1512)) ([6146e79](https://github.com/keptn/lifecycle-toolkit/commit/6146e79a62d12de37fec9218c5f6f7acd2255b82))
+* update dependency argoproj/argo-cd to v2.7.4 ([#1541](https://github.com/keptn/lifecycle-toolkit/issues/1541)) ([712bd9a](https://github.com/keptn/lifecycle-toolkit/commit/712bd9aa8ee08c6de61a6cb63d7633b3ef00bf38))
+* update dependency autoprefixer to v10.4.14 ([#1560](https://github.com/keptn/lifecycle-toolkit/issues/1560)) ([a07261e](https://github.com/keptn/lifecycle-toolkit/commit/a07261ee6b3600f2106b547576e51f93c327655b))
+* update dependency golangci/golangci-lint to v1.53.2 ([#1538](https://github.com/keptn/lifecycle-toolkit/issues/1538)) ([e387822](https://github.com/keptn/lifecycle-toolkit/commit/e3878222a7994a253b12923e852c0e25c49756af))
+* update dependency helm/helm to v3.12.0 ([#1440](https://github.com/keptn/lifecycle-toolkit/issues/1440)) ([aff755d](https://github.com/keptn/lifecycle-toolkit/commit/aff755d4539310787d47a448f1fc6600ffd04c33))
+* update dependency jaegertracing/jaeger to v1.45.0 ([#1407](https://github.com/keptn/lifecycle-toolkit/issues/1407)) ([dab62de](https://github.com/keptn/lifecycle-toolkit/commit/dab62dea8b5c0a45baba9d9b3e33c1e6f6f640e4))
+* update dependency jaegertracing/jaeger-operator to v1.44.0 ([#1258](https://github.com/keptn/lifecycle-toolkit/issues/1258)) ([dab73fb](https://github.com/keptn/lifecycle-toolkit/commit/dab73fb94f85022d84436453a84bf19f7f95cc5c))
+* update dependency jaegertracing/jaeger-operator to v1.45.0 ([#1478](https://github.com/keptn/lifecycle-toolkit/issues/1478)) ([7bc4feb](https://github.com/keptn/lifecycle-toolkit/commit/7bc4feb66cd303235a407f9341cd723562262dca))
+* update dependency kubernetes-sigs/controller-tools to v0.12.0 ([#1383](https://github.com/keptn/lifecycle-toolkit/issues/1383)) ([0a6b7e7](https://github.com/keptn/lifecycle-toolkit/commit/0a6b7e795a9e58425ab6baacf38a82a22dbbc0c8))
+* update dependency kubernetes-sigs/kustomize to v5.0.3 ([#1402](https://github.com/keptn/lifecycle-toolkit/issues/1402)) ([fad37af](https://github.com/keptn/lifecycle-toolkit/commit/fad37afd14cd781c9561d43dd2f1af6824973693))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 65b4139 ([#1429](https://github.com/keptn/lifecycle-toolkit/issues/1429)) ([57fdcdd](https://github.com/keptn/lifecycle-toolkit/commit/57fdcddcf73c71dde07641cb13f9c7b16cff6cf5))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 7c4d2ab ([#1510](https://github.com/keptn/lifecycle-toolkit/issues/1510)) ([36d0c23](https://github.com/keptn/lifecycle-toolkit/commit/36d0c23ea66646b873e5c4b571b6c1c4b3102dfd))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 9eafb78 ([#1454](https://github.com/keptn/lifecycle-toolkit/issues/1454)) ([b66ad6f](https://github.com/keptn/lifecycle-toolkit/commit/b66ad6fab019640380a11acf837b3589605e6219))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to e381f7f ([#1422](https://github.com/keptn/lifecycle-toolkit/issues/1422)) ([daedf87](https://github.com/keptn/lifecycle-toolkit/commit/daedf878eeb8d00d717e5746b46dd651c6fba8de))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to 36d0c23 ([#1511](https://github.com/keptn/lifecycle-toolkit/issues/1511)) ([3b59742](https://github.com/keptn/lifecycle-toolkit/commit/3b59742d3ad2793a628a9679ba4e7c3bb4a8c488))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to 57fdcdd ([#1430](https://github.com/keptn/lifecycle-toolkit/issues/1430)) ([54a9384](https://github.com/keptn/lifecycle-toolkit/commit/54a93840094e7dd3c9799e5e0a8ae889d51bb2ac))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to bb916f3 ([#1463](https://github.com/keptn/lifecycle-toolkit/issues/1463)) ([4292570](https://github.com/keptn/lifecycle-toolkit/commit/4292570ec3256b9aa2291f5abc5769ef22e3cdf2))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to e381f7f ([#1268](https://github.com/keptn/lifecycle-toolkit/issues/1268)) ([f0f7edf](https://github.com/keptn/lifecycle-toolkit/commit/f0f7edf7041d438b8d8804ad9341ef878ed625de))
+* update golang docker tag to v1.20.4 ([#1346](https://github.com/keptn/lifecycle-toolkit/issues/1346)) ([8fedf0f](https://github.com/keptn/lifecycle-toolkit/commit/8fedf0f11c6f4e55e1ac47ab8e80705e189ffff8))
+* update helm/kind-action action to v1.7.0 ([#1479](https://github.com/keptn/lifecycle-toolkit/issues/1479)) ([fb22707](https://github.com/keptn/lifecycle-toolkit/commit/fb22707ee148bb5c3ae2a724ca1bde3c0d5df929))
+* update kubernetes packages (patch) ([#1432](https://github.com/keptn/lifecycle-toolkit/issues/1432)) ([7f5b3ab](https://github.com/keptn/lifecycle-toolkit/commit/7f5b3abb87ebe8e0c040e415f69ed12e25ebb7fd))
+* update module github.com/argoproj/argo-rollouts to v1.5.0 ([#1408](https://github.com/keptn/lifecycle-toolkit/issues/1408)) ([2f75e73](https://github.com/keptn/lifecycle-toolkit/commit/2f75e739ca8fa218b3d15ccf657a5d85530eecf5))
+* update module github.com/argoproj/argo-rollouts to v1.5.1 ([#1513](https://github.com/keptn/lifecycle-toolkit/issues/1513)) ([de95b50](https://github.com/keptn/lifecycle-toolkit/commit/de95b50ae10da0e0e6c40eb5545fd98bc0f5ffcb))
+* update module github.com/benbjohnson/clock to v1.3.4 ([#1403](https://github.com/keptn/lifecycle-toolkit/issues/1403)) ([f88dfd5](https://github.com/keptn/lifecycle-toolkit/commit/f88dfd5c0d7a544d94054cce6693ebd3d88f0a9f))
+* update module github.com/benbjohnson/clock to v1.3.5 ([#1464](https://github.com/keptn/lifecycle-toolkit/issues/1464)) ([abf10bf](https://github.com/keptn/lifecycle-toolkit/commit/abf10bfaf033a1f57b8f65d3c7127dd962926ed4))
+* update module github.com/datadog/datadog-api-client-go/v2 to v2.13.0 ([#1519](https://github.com/keptn/lifecycle-toolkit/issues/1519)) ([d774568](https://github.com/keptn/lifecycle-toolkit/commit/d77456836530c9a456f03a8f4330082514077388))
+* update module github.com/imdario/mergo to v0.3.16 ([#1482](https://github.com/keptn/lifecycle-toolkit/issues/1482)) ([9eafb78](https://github.com/keptn/lifecycle-toolkit/commit/9eafb78b51d60d13af44cad281c8c631b02773c3))
+* update module github.com/onsi/ginkgo/v2 to v2.11.0 ([#1553](https://github.com/keptn/lifecycle-toolkit/issues/1553)) ([7c4d2ab](https://github.com/keptn/lifecycle-toolkit/commit/7c4d2abcb84e672d5c800fed0ed59a0672d112c3))
+* update module github.com/onsi/ginkgo/v2 to v2.9.4 ([#1384](https://github.com/keptn/lifecycle-toolkit/issues/1384)) ([2ed8dd7](https://github.com/keptn/lifecycle-toolkit/commit/2ed8dd7a7d62a44bab22cc1da11f80e02fd129f8))
+* update module github.com/onsi/ginkgo/v2 to v2.9.5 ([#1433](https://github.com/keptn/lifecycle-toolkit/issues/1433)) ([fcdd9fe](https://github.com/keptn/lifecycle-toolkit/commit/fcdd9fea3860ba9d5ec52b3733a48258df4e8549))
+* update module github.com/onsi/ginkgo/v2 to v2.9.7 ([#1517](https://github.com/keptn/lifecycle-toolkit/issues/1517)) ([225c04b](https://github.com/keptn/lifecycle-toolkit/commit/225c04b6e9c5a848dc5e2f37239c77d893bec539))
+* update module github.com/onsi/gomega to v1.27.7 ([#1473](https://github.com/keptn/lifecycle-toolkit/issues/1473)) ([50f7415](https://github.com/keptn/lifecycle-toolkit/commit/50f7415a832f2cc4e90db5faf51f17cf471558cc))
+* update module github.com/open-feature/go-sdk to v1.4.0 ([#1516](https://github.com/keptn/lifecycle-toolkit/issues/1516)) ([a2ef768](https://github.com/keptn/lifecycle-toolkit/commit/a2ef76846ed9853a5fe2bbe88d0ae35cf1fb82f8))
+* update module github.com/prometheus/client_golang to v1.15.1 ([#1386](https://github.com/keptn/lifecycle-toolkit/issues/1386)) ([8b73046](https://github.com/keptn/lifecycle-toolkit/commit/8b730461a9892f5ab06e51ee9519ec6fa7d83125))
+* update module github.com/prometheus/common to v0.44.0 ([#1452](https://github.com/keptn/lifecycle-toolkit/issues/1452)) ([af22685](https://github.com/keptn/lifecycle-toolkit/commit/af2268566b74b251da17dec5576af3cd03159482))
+* update module github.com/stretchr/testify to v1.8.3 ([#1434](https://github.com/keptn/lifecycle-toolkit/issues/1434)) ([65b4139](https://github.com/keptn/lifecycle-toolkit/commit/65b41399b2e0d5c4109af484a80d4bb2c56f9215))
+* update module github.com/stretchr/testify to v1.8.4 ([#1515](https://github.com/keptn/lifecycle-toolkit/issues/1515)) ([c732492](https://github.com/keptn/lifecycle-toolkit/commit/c732492a85397f4b986383b5d37b6d73e1dada5b))
+* update module golang.org/x/net to v0.10.0 ([#1453](https://github.com/keptn/lifecycle-toolkit/issues/1453)) ([65a3e4b](https://github.com/keptn/lifecycle-toolkit/commit/65a3e4b402d693a64dc9be452aead9c4773d6945))
+* update module google.golang.org/grpc to v1.54.1 ([#1404](https://github.com/keptn/lifecycle-toolkit/issues/1404)) ([a5d9b19](https://github.com/keptn/lifecycle-toolkit/commit/a5d9b19901f673768cef63dcc1606aafbc5a1b51))
+* update module google.golang.org/grpc to v1.55.0 ([#1480](https://github.com/keptn/lifecycle-toolkit/issues/1480)) ([d5a8e7c](https://github.com/keptn/lifecycle-toolkit/commit/d5a8e7cbf0095119b646f23b74891dcb231e2e0c))
+* update module k8s.io/klog/v2 to v2.100.1 ([#1324](https://github.com/keptn/lifecycle-toolkit/issues/1324)) ([6524d58](https://github.com/keptn/lifecycle-toolkit/commit/6524d583dc9d99bd67b9a599f48f78b6d89a3877))
+* update module k8s.io/kubernetes to v1.25.10 ([#1475](https://github.com/keptn/lifecycle-toolkit/issues/1475)) ([e65715c](https://github.com/keptn/lifecycle-toolkit/commit/e65715cfe98eebfcdee599253a1e63e482773f4d))
+* update octokit/request-action action to v2.1.8 ([#1524](https://github.com/keptn/lifecycle-toolkit/issues/1524)) ([dcc66a0](https://github.com/keptn/lifecycle-toolkit/commit/dcc66a03a1eacfc3e6ac9a094cb430ba7d38314c))
+* update octokit/request-action action to v2.1.9 ([#1533](https://github.com/keptn/lifecycle-toolkit/issues/1533)) ([bba7339](https://github.com/keptn/lifecycle-toolkit/commit/bba73398c9e2b2f076618f8161f0d4fe74df8207))
+* update sigstore/cosign-installer action to v3.0.3 ([#1308](https://github.com/keptn/lifecycle-toolkit/issues/1308)) ([ac98fe5](https://github.com/keptn/lifecycle-toolkit/commit/ac98fe566f2652eebdd6e578a6f3491df9e471d1))
+* update sigstore/cosign-installer action to v3.0.5 ([#1438](https://github.com/keptn/lifecycle-toolkit/issues/1438)) ([1fba2b4](https://github.com/keptn/lifecycle-toolkit/commit/1fba2b4985a424c728ca02747c56a343fcf3fdbe))
+
+
+### Docs
+
+* add cluster requirements ([#1364](https://github.com/keptn/lifecycle-toolkit/issues/1364)) ([e06b01e](https://github.com/keptn/lifecycle-toolkit/commit/e06b01e4b3723b16b8479f3b22fa3021e8dead55))
+* add content to implementing/otel page ([#1492](https://github.com/keptn/lifecycle-toolkit/issues/1492)) ([452c3a9](https://github.com/keptn/lifecycle-toolkit/commit/452c3a917cfe2679553fbecc46c133da4887dc2d))
+* add docs for Python runtime ([#1549](https://github.com/keptn/lifecycle-toolkit/issues/1549)) ([2e53fda](https://github.com/keptn/lifecycle-toolkit/commit/2e53fda17183bd1fcffa0d8aaa03c305088465b4))
+* add info about automatic application discovery ([#1353](https://github.com/keptn/lifecycle-toolkit/issues/1353)) ([d42d023](https://github.com/keptn/lifecycle-toolkit/commit/d42d023d1d431782deb0c3ef8fa20fa2f2375ad3))
+* added comments to document the meaning of CRD properties ([#1360](https://github.com/keptn/lifecycle-toolkit/issues/1360)) ([a8bc440](https://github.com/keptn/lifecycle-toolkit/commit/a8bc440a4f15f624455c513373033c78a31a53b5))
+* content for KeptnTaskDefinition ref and tasks guide ([#1392](https://github.com/keptn/lifecycle-toolkit/issues/1392)) ([13b0495](https://github.com/keptn/lifecycle-toolkit/commit/13b04956a02a0384bfc1ad6b043e901613d1d5b2))
+* create "observability" getting started guide ([#1376](https://github.com/keptn/lifecycle-toolkit/issues/1376)) ([4815986](https://github.com/keptn/lifecycle-toolkit/commit/48159862bf89b8cc1692500af7b05487a6cc03cb))
+* create keptn metrics getting started ([#1375](https://github.com/keptn/lifecycle-toolkit/issues/1375)) ([8de6d8f](https://github.com/keptn/lifecycle-toolkit/commit/8de6d8f8ca34c576466d9cc8b32d1d3865123ad8))
+* create KeptnApp reference page ([#1391](https://github.com/keptn/lifecycle-toolkit/issues/1391)) ([4aa141a](https://github.com/keptn/lifecycle-toolkit/commit/4aa141a069b8b7d25c508ff92309ad460120beb4))
+* create KeptnConfig yaml ref page ([#1369](https://github.com/keptn/lifecycle-toolkit/issues/1369)) ([e40292c](https://github.com/keptn/lifecycle-toolkit/commit/e40292ce995070a492187f5dcc7db363e03eb260))
+* create pre/post-deploy getting started ([#1362](https://github.com/keptn/lifecycle-toolkit/issues/1362)) ([d602115](https://github.com/keptn/lifecycle-toolkit/commit/d602115ef4b158b04be3c630ca45c6e4f39fc0f3))
+* delete obsolete pages ([#1520](https://github.com/keptn/lifecycle-toolkit/issues/1520)) ([96e69c2](https://github.com/keptn/lifecycle-toolkit/commit/96e69c2a10e9a0446b1992a880ec74400bbe0cfe))
+* document container-runtime and python-runtime runners ([#1579](https://github.com/keptn/lifecycle-toolkit/issues/1579)) ([3834b70](https://github.com/keptn/lifecycle-toolkit/commit/3834b709da4552a07c8acd8699d1e8a583a621bd))
+* enhance install page ([#1399](https://github.com/keptn/lifecycle-toolkit/issues/1399)) ([025709e](https://github.com/keptn/lifecycle-toolkit/commit/025709e3147abef79d2ddbecb795db0c5e8bf2a8))
+* final polish of getting started guides ([#1449](https://github.com/keptn/lifecycle-toolkit/issues/1449)) ([30e6647](https://github.com/keptn/lifecycle-toolkit/commit/30e664703c3b42aa5c2049535d528f69cbcfe4b4))
+* fix edit links ([#1583](https://github.com/keptn/lifecycle-toolkit/issues/1583)) ([1384679](https://github.com/keptn/lifecycle-toolkit/commit/138467970e966c90a1bd8fa428b4c5efe0a9bd50))
+* fix getting started guides ([#1447](https://github.com/keptn/lifecycle-toolkit/issues/1447)) ([6035e55](https://github.com/keptn/lifecycle-toolkit/commit/6035e552d3f46e2553603f711db008784ff99d0e))
+* fix link to v1 docs ([#1461](https://github.com/keptn/lifecycle-toolkit/issues/1461)) ([a7f54ad](https://github.com/keptn/lifecycle-toolkit/commit/a7f54ad22c6b13f6bee7dcced2e3ab71bb1be365))
+* fix markdown links ([#1414](https://github.com/keptn/lifecycle-toolkit/issues/1414)) ([b2392c1](https://github.com/keptn/lifecycle-toolkit/commit/b2392c1d6a81df92adf6228167a52233eb1757ae))
+* fix readme links to point to website instead of repo files ([#1344](https://github.com/keptn/lifecycle-toolkit/issues/1344)) ([e5f0344](https://github.com/keptn/lifecycle-toolkit/commit/e5f034425dd1012c899d60fb2ff9d755853924aa))
+* fix typo ([#1578](https://github.com/keptn/lifecycle-toolkit/issues/1578)) ([fe5bbea](https://github.com/keptn/lifecycle-toolkit/commit/fe5bbea0773cf212ce0d9bc72c09182ad5bb8916))
+* fix typos ([#1562](https://github.com/keptn/lifecycle-toolkit/issues/1562)) ([be47052](https://github.com/keptn/lifecycle-toolkit/commit/be47052fe76312aab413d29e5132cc88b1fdc8d6))
+* improve list on install landing page ([#1400](https://github.com/keptn/lifecycle-toolkit/issues/1400)) ([3d23e29](https://github.com/keptn/lifecycle-toolkit/commit/3d23e29b82d1296627900850b19af7ea2eb30d87))
+* mention Prometheus in intro ([#1405](https://github.com/keptn/lifecycle-toolkit/issues/1405)) ([2c51231](https://github.com/keptn/lifecycle-toolkit/commit/2c51231fd700009c1588259de1974e1dfa80e8b8))
+* metrics & evaluation ref and guides ([#1385](https://github.com/keptn/lifecycle-toolkit/issues/1385)) ([7712bfa](https://github.com/keptn/lifecycle-toolkit/commit/7712bfae84a21adaf6341ca02ec3589d0459854f))
+* misspelled file name, misordered pages ([#1363](https://github.com/keptn/lifecycle-toolkit/issues/1363)) ([be3c2f1](https://github.com/keptn/lifecycle-toolkit/commit/be3c2f1b469a15292bbd698af2200c0a4fb4002e))
+* refactor contributing guide - general guidelines ([#1411](https://github.com/keptn/lifecycle-toolkit/issues/1411)) ([7170eec](https://github.com/keptn/lifecycle-toolkit/commit/7170eec563efcaa149dd9bdfb8153a26f846638d))
+* refactor contributing guide - linter requirements ([#1412](https://github.com/keptn/lifecycle-toolkit/issues/1412)) ([2ccdec7](https://github.com/keptn/lifecycle-toolkit/commit/2ccdec7e3aafbfda8bb223441cefefbf092084ea))
+* refactor contributing guide - local building ([#1484](https://github.com/keptn/lifecycle-toolkit/issues/1484)) ([751552c](https://github.com/keptn/lifecycle-toolkit/commit/751552cb7d5c4acea0b8eb4d55171aabca0675d9))
+* refactor contributing guide - source file structure ([#1523](https://github.com/keptn/lifecycle-toolkit/issues/1523)) ([c97b4b9](https://github.com/keptn/lifecycle-toolkit/commit/c97b4b9cc5a02b2ff39a3fb23aa79f69667dd27b))
+* regenerate CRD docs ([#1507](https://github.com/keptn/lifecycle-toolkit/issues/1507)) ([672e281](https://github.com/keptn/lifecycle-toolkit/commit/672e281f1b44a7e83449c32e08a9de4a44c8d287))
+* remove old "Tasks" section from docs ([#1572](https://github.com/keptn/lifecycle-toolkit/issues/1572)) ([8f0f4f0](https://github.com/keptn/lifecycle-toolkit/commit/8f0f4f0eb4276ba399e1ab77915ef41e690a09db))
+* small edit of original Getting Started guide ([#1367](https://github.com/keptn/lifecycle-toolkit/issues/1367)) ([0fd922a](https://github.com/keptn/lifecycle-toolkit/commit/0fd922ad161fb30dcf834d87aec225f48d619f4d))
+* update KLT intro page ([#1495](https://github.com/keptn/lifecycle-toolkit/issues/1495)) ([d1db5d2](https://github.com/keptn/lifecycle-toolkit/commit/d1db5d2f054ed56911bc3e91507f9d539dc5829e))
+* updated the misspelled word ([#1544](https://github.com/keptn/lifecycle-toolkit/issues/1544)) ([0cb7f14](https://github.com/keptn/lifecycle-toolkit/commit/0cb7f14ae0f6f7844051219e823261a99c6dfe54))
+
 ## [0.7.1](https://github.com/keptn/lifecycle-toolkit/compare/v0.7.0...v0.7.1) (2023-05-03)
 
 

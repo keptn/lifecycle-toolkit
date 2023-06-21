@@ -51,7 +51,7 @@ and
 and
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 in the namespaces where KLT is enabled.
-If KLT finds any of hese resources and the resource has either
+If KLT finds any of these resources and the resource has either
 the keptn.sh or the kubernetes recommended labels,
 it creates a `KeptnWorkload` resource for the version it detects.
 

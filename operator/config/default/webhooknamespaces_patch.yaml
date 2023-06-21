@@ -25,3 +25,21 @@ webhooks:
             - "keptn-lifecycle-toolkit-system"
             - "observability"
             - "monitoring"
+  - name: gpod.keptn.sh
+    namespaceSelector:
+      matchExpressions:
+        - key: control-plane
+          operator: NotIn
+          values:
+            - "lifecycle-operator"
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - "kube-system"
+            - "kube-public"
+            - "kube-node-lease"
+            - "cert-manager"
+            - "keptn-lifecycle-toolkit-system"
+            - "observability"
+            - "monitoring"
+            

@@ -61,7 +61,7 @@ type KeptnWorkloadInstanceReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
 // +kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
-// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets;daemonsets,verbs=get;list;watch
 // +kubebuilder:rbac:groups=argoproj.io,resources=rollouts,verbs=get;list;watch
 
@@ -137,6 +137,12 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		if !result.Continue {
 			return result.Result, err
 		}
+	}
+
+	// pre-evaluation checks done at this moment, we can remove the gate
+	if err := controllercommon.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
+		r.Log.Error(err, "could not remove SchedullingGates")
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
 	// Wait for deployment of Workload

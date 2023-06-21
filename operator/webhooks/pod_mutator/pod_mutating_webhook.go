@@ -4,23 +4,21 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"hash/fnv"
 	"net/http"
 	"reflect"
 	"strings"
 
-	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/semconv"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,10 +41,6 @@ type PodMutatingWebhook struct {
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
-
-const InvalidAnnotationMessage = "Invalid annotations"
-
-var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 //
@@ -71,20 +65,20 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	// check if Lifecycle Controller is enabled for this namespace
-	namespace := &corev1.Namespace{}
-	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
+	enabled, err := common.IsNamespaceEnabled(ctx, req.Namespace, a.Client)
+	if err != nil {
 		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 
-	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
+	if enabled {
 		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	podIsAnnotated := a.isPodAnnotated(pod)
+	podIsAnnotated, err := common.IsPodOrParentAnnotated(ctx, &req, pod, a.Client)
 	logger.Info("Checked if pod is annotated.")
 
 	if !podIsAnnotated {

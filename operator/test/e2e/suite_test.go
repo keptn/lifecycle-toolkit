@@ -25,10 +25,13 @@ import (
 	"time"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	. "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
+	apiv1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -78,6 +81,17 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
 
+	annotatedNamespace := &apiv1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "mydefault",
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	}
+	err = k8sClient.Create(ctx, annotatedNamespace)
+	Expect(ignoreAlreadyExists(err)).NotTo(HaveOccurred(), "could not create namespace")
+
 	wg = &sync.WaitGroup{}
 
 	go func() {
@@ -85,7 +99,9 @@ var _ = BeforeSuite(func() {
 		time.Sleep(3 * time.Second) // wait for test to start
 		wg.Wait()
 		fmt.Println("SUITE FINISHED")
-		err := testEnv.Stop()
+		err := k8sClient.Delete(ctx, annotatedNamespace)
+		Expect(err).NotTo(HaveOccurred(), "could not remove namespace")
+		err = testEnv.Stop()
 		Expect(err).ToNot(HaveOccurred())
 	}()
 

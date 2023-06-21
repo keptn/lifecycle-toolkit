@@ -43,6 +43,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/operator/controllers/options"
+	"github.com/keptn/lifecycle-toolkit/operator/webhooks/gating"
 	"github.com/keptn/lifecycle-toolkit/operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
@@ -329,12 +330,12 @@ func main() {
 			SetPodName(env.PodName).
 			SetManagerProvider(
 				webhook.NewWebhookManagerProvider(
-					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+					mgr.GetWebhookServer().(*ctrlWebhook.DefaultServer).Options.CertDir, "tls.key", "tls.crt"),
 			).
 			SetCertificateWatcher(
 				certificates.NewCertificateWatcher(
 					mgr.GetAPIReader(),
-					mgr.GetWebhookServer().CertDir,
+					mgr.GetWebhookServer().(*ctrlWebhook.DefaultServer).Options.CertDir,
 					env.PodNamespace,
 					certCommon.SecretName,
 					setupLog,
@@ -357,6 +358,15 @@ func main() {
 					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
 					Decoder:  decoder,
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
+				},
+			},
+			"/gate-v1-pod": {
+				Handler: &gating.PodGatingWebhook{
+					Client:   mgr.GetClient(),
+					Tracer:   otel.Tracer("keptn/gatewebhook"),
+					Decoder:  decoder,
+					Recorder: mgr.GetEventRecorderFor("keptn/gatewebhook"),
+					Log:      ctrl.Log.WithName("Gates Mutating Webhook"),
 				},
 			},
 		}); err != nil {

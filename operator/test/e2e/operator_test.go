@@ -43,7 +43,15 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:        name,
 					Annotations: annotations,
-					Namespace:   "default",
+					Namespace:   "mydefault",
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							Kind:       "ReplicaSet",
+							UID:        "123",
+							Name:       "test-123",
+							APIVersion: "1.0.0",
+						},
+					},
 				},
 				Spec: apiv1.PodSpec{
 					SchedulerName: "",
@@ -76,6 +84,10 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 
 			It(" should be assigned to keptn scheduler", func() {
 				Expect(newPod.Spec.SchedulerName == "keptn-scheduler")
+			})
+			
+			It(" should be gated if namespace annotated", func() {
+				Expect(newPod.Spec.SchedulingGates).To(ContainElement(apiv1.PodSchedulingGate{Name: "klt-gated"}))
 			})
 		})
 	})

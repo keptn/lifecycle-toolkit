@@ -1,7 +1,7 @@
 ---
-title: Migration strategy
-description: General guidelines for migrating your deployment to KLT
-weight: 10
+title: Set up Kubernetes deployment environment
+description: Set up Kubernetes cluster with a deployment engine for your software
+weight: 20
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

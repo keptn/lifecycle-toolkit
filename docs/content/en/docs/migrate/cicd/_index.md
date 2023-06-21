@@ -1,7 +1,7 @@
 ---
-title: Migration strategy
-description: General guidelines for migrating your deployment to KLT
-weight: 10
+title: Migrate CI/CD functionality to KOT
+description: Translate Keptn v1 CI/CD funtionality to KLT resources
+weight: 50
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

@@ -1,7 +1,7 @@
 ---
-title: Migration strategy
-description: General guidelines for migrating your deployment to KLT
-weight: 10
+title: Convert JES services to Keptn tasks
+description: How to turn JES services into Keptn tasks
+weight: 70
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
@@ -11,7 +11,4 @@ Information that is published here has been reviewed for technical accuracy
 but the format and content is still evolving.
 We hope you will contribute your experiences
 and questions that you have.
-
-No two migrations are alike but these are some general guidelines
-for how to approach the project:
 

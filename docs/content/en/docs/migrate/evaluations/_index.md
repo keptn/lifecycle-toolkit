@@ -1,7 +1,7 @@
 ---
-title: Migration strategy
-description: General guidelines for migrating your deployment to KLT
-weight: 10
+title: Migrate Quality Gates to Keptn Evaluations
+description: How to define Keptn Evaluations for some Quality Gates checks
+weight: 60
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
@@ -12,6 +12,4 @@ but the format and content is still evolving.
 We hope you will contribute your experiences
 and questions that you have.
 
-No two migrations are alike but these are some general guidelines
-for how to approach the project:
 

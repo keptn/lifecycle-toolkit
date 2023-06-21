@@ -47,7 +47,7 @@ This section currently includes the following topics:
   KLT begins to accumulate information that you can view
   for your deployment.
 
-* [Migrate CI/CD functionality]((cicd)
+* [Migrate CI/CD functionality](cicd)
 
 * [Migrate Quality Gates to Keptn Evaluations](evaluations)
 

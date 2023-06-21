@@ -11,5 +11,3 @@ Information that is published here has been reviewed for technical accuracy
 but the format and content is still evolving.
 We hope you will contribute your experiences
 and questions that you have.
-
-

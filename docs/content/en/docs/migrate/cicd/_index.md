@@ -14,4 +14,3 @@ and questions that you have.
 
 No two migrations are alike but these are some general guidelines
 for how to approach the project:
-

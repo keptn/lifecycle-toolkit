@@ -86,7 +86,7 @@ Development of the Keptn Lifecycle Toolkit began in 2022
 in response to industry trends and feedback from Keptn users.
 
 Specifically, Cloud Native GitOps has shifted complexity
-from devopment to operations.
+from development to operations.
 GitOps promotes a microservice-based paradigm
 where each development team runs,configures,
 and builds their own Git repository
@@ -118,28 +118,28 @@ and use a variety of tools
 to validate whether your overall deployment is actually healthy.
 But it has flaws in the GitOps world:
 
-- Single-pod ready does not mean application ready.
+* Single-pod ready does not mean application ready.
   If you deploy different services in two different pods,
   and they are ready,
   it does not mean that your overall deployment is actually healthy
 
-- Very difficult to integrate Keptn into all the different tools,
+* Very difficult to integrate Keptn into all the different tools,
   especially with many development teams using different tools
   because they had to trigger Keptn from each pipeline.
   We saw that a serial integration approach would work better.
 
-- Keptn v1 does not use native Kubernetes CRDs
+* Keptn v1 does not use native Kubernetes CRDs
   to configure SLIs/SLOs, tasks, and other thing
   that are part of the environment where the application deployment lives.
   Instead, it uses its own Git repo and its own configuration files.
 
-- As OpenTelementry and Prometheus have become more prevalent,
+* As OpenTelementry and Prometheus have become more prevalent,
   it makes sense to extract the data
   and provide the results in OpenTelemetry and Prometheus
   rather than storing the data in a special Keptn database
   that can be accessed using Keptn APIs.
 
-- Keptn V1 can not define an application
+* Keptn V1 can not define an application
   as a sum of separate microservices,
   each of which may be deployed at different times
   using different tools.
@@ -156,11 +156,11 @@ KLT uses Kubernetes capabilities
 to do pre- and post-deployment checks.
 This means that:
 
-- Information is observable and is made available
+* Information is observable and is made available
   using OpenTelemetry
-- We can provide traces that capture information
+* We can provide traces that capture information
   about how long each step takes for the entire deployment cycle
-- KLT knows when each workload is being deployed
+* KLT knows when each workload is being deployed
   and which version of the workload/service
   belongs to this version of the application.
 and we know which version is being deployed.
@@ -168,25 +168,25 @@ We can also provide traces.
 And we can say that this set of workloads and which versions
 comprise the application
 
-- When the operator detects a new version of a service,
+* When the operator detects a new version of a service,
   it can execute pre- and post-deployment evaluations and tasks.
 
 ## Why to choose KLT
 
-- You are running (or moving towards) GitOps
-- Your application is being assembled
+* You are running (or moving towards) GitOps
+* Your application is being assembled
   from a set of microservices,
   each of which is developed in its own repo
 
 ## Why to choose Keptn v1
 
-- You are not using Kubernetes to deploy your application
-- You are developing your software as an application
+* You are not using Kubernetes to deploy your application
+* You are developing your software as an application
   in a monolithic repository
   rather than assembling it from multiple repos,
   each of which develops a microservice that is part of the application.
-- You need the sophisticated SLI/SLO evaluation provided by quality gates,
+* You need the sophisticated SLI/SLO evaluation provided by quality gates,
   including the ability to weight different SLIs
   and receive a composite score
-- You want the sophisticated remediation facilities
+* You want the sophisticated remediation facilities
   that Keptn v1 provides

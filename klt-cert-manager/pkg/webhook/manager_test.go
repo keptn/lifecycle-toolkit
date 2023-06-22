@@ -31,23 +31,23 @@ func TestCreateOptions(t *testing.T) {
 	})
 	t.Run("configures webhooks server", func(t *testing.T) {
 		provider := NewWebhookManagerProvider("certs-dir", "key-file", "cert-file")
-		expectedWebhookServer := &webhook.Server{}
+		expectedWebhookServer := webhook.NewServer(webhook.Options{})
 
 		mgr := &fake.MockManager{
-			GetWebhookServerFunc: func() *webhook.Server {
+			GetWebhookServerFunc: func() webhook.Server {
 				return expectedWebhookServer
 			},
 		}
 
 		provider.SetupWebhookServer(mgr)
 
-		assert.Equal(t, "certs-dir", expectedWebhookServer.CertDir)
-		assert.Equal(t, "key-file", expectedWebhookServer.KeyName)
-		assert.Equal(t, "cert-file", expectedWebhookServer.CertName)
+		assert.Equal(t, "certs-dir", expectedWebhookServer.(*webhook.DefaultServer).Options.CertDir)
+		assert.Equal(t, "key-file", expectedWebhookServer.(*webhook.DefaultServer).Options.KeyName)
+		assert.Equal(t, "cert-file", expectedWebhookServer.(*webhook.DefaultServer).Options.CertName)
 
 		mgrWebhookServer := mgr.GetWebhookServer()
-		assert.Equal(t, "certs-dir", mgrWebhookServer.CertDir)
-		assert.Equal(t, "key-file", mgrWebhookServer.KeyName)
-		assert.Equal(t, "cert-file", mgrWebhookServer.CertName)
+		assert.Equal(t, "certs-dir", mgrWebhookServer.(*webhook.DefaultServer).Options.CertDir)
+		assert.Equal(t, "key-file", mgrWebhookServer.(*webhook.DefaultServer).Options.KeyName)
+		assert.Equal(t, "cert-file", mgrWebhookServer.(*webhook.DefaultServer).Options.CertName)
 	})
 }

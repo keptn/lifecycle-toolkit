@@ -5,16 +5,20 @@ weight: 5
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-The Keptn products provide tool-agnostic ways
+The Keptn project provides tool-agnostic ways
 to manage and observe software deployment.
 Keptn connects to the tools you choose
 through an open event standard
 to automate delivery and remediation sequences.
 
-Two different products are available:
+TODO: Adam comment: "Keptn v1 does.  KLT doesn't use the NATS
+eventing at all.
+KLT emits events to Kubernetes - but that's opinionated to Kubernetes.
 
-* **First Generation:** Keptn v1.y.z LTS, referred to as "Keptn v1"
-* **Second Generation:** Keptn Lifecycle Toolkit, referred to as KLT
+Two different sub-projects are available:
+
+* Generation:** Keptn v1.y.z LTS, referred to as "Keptn v1"
+* Generation:** Keptn Lifecycle Toolkit, referred to as KLT
 
 In this page, we give a high-level overview
 of each of these products
@@ -36,6 +40,17 @@ and the LTS (Long-Term Support) version was released.
 Keptn v1 is designed for the classic monolithic development world,
 where many developers work against a single Git repository
 on different components that have dependencies within that monolith.
+
+TODO: Adam comment:
+This section IMO isn't correct.
+This sets the tone that Keptn LTS is irrelevant to anyone on microservices.
+That's not true.
+Keptn LTS is perfectly capable of being used in a microservices architecture.
+
+Indeed, the sentenceparagraph below alludes to this:
+Keptn v1 is a general purpose orchestration engine
+for cloud and non-cloud native tooling on Kubernetes.
+
 Software applications are developed
 using tools like Jenkins to run Continuous Integration.
 By building, testing, and validating the entire application
@@ -62,7 +77,9 @@ that ensure that deployments get into production safely.
 The quality gates feature enables you to define
 sophisticated analyses of the health of your deployment
 at each stage.
-They use Service-Level Indicators (SLIs),
+You define queries that are executed against your monitoring software
+(Prometheus, Dynatrace, or Datadog).
+The metrics returnd form Service-Level Indicators (SLIs),
 which is information provided as queries to your monitoring software
 (such as Prometheus, Dynatrace, or DataDog),
 and allow you to define Service Level Objectives (SLOs)
@@ -170,6 +187,10 @@ comprise the application
 
 * When the operator detects a new version of a service,
   it can execute pre- and post-deployment evaluations and tasks.
+
+TODO: Adam comment:
+This section should also cover the other "tools" in the "toolkit"
+like the metrics server & it's raison d'etre.
 
 ## Why to choose KLT
 

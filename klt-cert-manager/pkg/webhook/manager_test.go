@@ -24,10 +24,11 @@ func TestCreateOptions(t *testing.T) {
 		options := provider.createOptions(scheme.Scheme, "test-namespace")
 
 		assert.NotNil(t, options)
-		assert.Equal(t, "test-namespace", options.Namespace)
+		assert.Equal(t, []string{"test-namespace"}, options.Cache.Namespaces)
 		assert.Equal(t, scheme.Scheme, options.Scheme)
 		assert.Equal(t, metricsBindAddress, options.MetricsBindAddress)
-		assert.Equal(t, port, options.Port)
+		assert.Equal(t, webhook.NewServer(webhook.Options{Port: port}), options.WebhookServer)
+
 	})
 	t.Run("configures webhooks server", func(t *testing.T) {
 		provider := NewWebhookManagerProvider("certs-dir", "key-file", "cert-file")

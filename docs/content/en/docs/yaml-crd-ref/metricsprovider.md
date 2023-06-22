@@ -65,7 +65,7 @@ spec:
   * **secretKeyRef**
     * **name:** -- Name of the token for this data provider
     * **key:** -- Key for this data provider
-    * **optional** -- Boolean value that specifies whether the secret `key` is required
+    * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
 

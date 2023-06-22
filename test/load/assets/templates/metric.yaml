@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetric
 metadata:
   name: keptnmetric-load-test-{{.Iteration}}-{{.Replica}}
@@ -8,3 +8,5 @@ spec:
     name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 30
+  range:
+    interval: "5m"

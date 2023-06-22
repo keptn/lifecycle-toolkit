@@ -15,7 +15,7 @@ certificateOperator:
       labelSelectorValue: "true"
     image:
       repository: ghcr.io/keptn/certificate-operator
-      tag: v0.7.1
+      tag: v0.8.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -67,7 +67,7 @@ lifecycleOperator:
       seccompProfile:
         type: RuntimeDefault
     env:
-      functionRunnerImage: ghcr.io/keptn/functions-runtime:v0.7.1
+      functionRunnerImage: ghcr.io/keptn/functions-runtime:v0.8.0
       keptnAppControllerLogLevel: "0"
       keptnAppCreationRequestControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"
@@ -78,10 +78,10 @@ lifecycleOperator:
       keptnWorkloadInstanceControllerLogLevel: "0"
       optionsControllerLogLevel: "0"
       otelCollectorUrl: otel-collector:4317
-      pythonRunnerImage: ghcr.io/keptn/python-runtime:0.0.0
+      pythonRunnerImage: ghcr.io/keptn/python-runtime:v0.8.0
     image:
       repository: ghcr.io/keptn/lifecycle-operator
-      tag: v0.7.1
+      tag: v0.8.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -148,7 +148,7 @@ metricsOperator:
       metricsControllerLogLevel: "0"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: v0.7.1
+      tag: v0.8.0
     livenessProbe:
       httpGet:
         path: /healthz
@@ -211,7 +211,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: v0.7.1
+      tag: v0.8.0
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

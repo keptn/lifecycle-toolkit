@@ -45,6 +45,7 @@ func TestBuilder_Run(t *testing.T) {
 	mockManager.GetAPIReaderFunc = func() client.Reader {
 		return newFakeClient()
 	}
+
 	webhookServer := webhook.NewServer(webhook.Options{})
 	mockManager.GetWebhookServerFunc = func() webhook.Server {
 		return webhookServer

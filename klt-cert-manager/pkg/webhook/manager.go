@@ -38,7 +38,7 @@ func (provider WebhookProvider) createOptions(scheme *runtime.Scheme, namespace 
 	return ctrl.Options{
 		Scheme:             scheme,
 		MetricsBindAddress: metricsBindAddress,
-		Port:               port,
+		WebhookServer:      webhook.NewServer(webhook.Options{Port: port}),
 		Namespace:          namespace,
 	}
 }

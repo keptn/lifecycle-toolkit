@@ -67,6 +67,7 @@ _Appears in:_
 | `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object |
 | `query` _string_ | Query represents the query to be run |
 | `fetchIntervalSeconds` _integer_ | FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric |
+| `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which data is to be queried |
 
 
 
@@ -134,5 +135,19 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name of the provider |
+
+
+#### RangeSpec
+
+
+
+RangeSpec defines the time range for which data is to be queried
+
+_Appears in:_
+- [KeptnMetricSpec](#keptnmetricspec)
+
+| Field | Description |
+| --- | --- |
+| `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 
 

@@ -82,7 +82,7 @@ func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, 
 		metric.Spec.Query,
 		startTime.Unix(), queryTime.Unix(),
 	))
-		queryRange := prometheus.Range{
+	queryRange := prometheus.Range{
 		Start: startTime,
 		End:   queryTime,
 		Step:  time.Duration(metric.Spec.FetchIntervalSeconds) * time.Second,

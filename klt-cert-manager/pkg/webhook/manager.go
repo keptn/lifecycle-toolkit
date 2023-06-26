@@ -3,8 +3,8 @@ package webhook
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"sigs.k8s.io/controller-runtime/pkg/manager/options"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
@@ -40,7 +40,7 @@ func (provider WebhookProvider) createOptions(scheme *runtime.Scheme, namespace 
 		Scheme:             scheme,
 		MetricsBindAddress: metricsBindAddress,
 		WebhookServer:      webhook.NewServer(webhook.Options{Port: port}),
-		Cache: options.Cache{
+		Cache: cache.Options{
 			Namespaces: []string{namespace},
 		},
 	}

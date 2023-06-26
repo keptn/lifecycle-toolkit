@@ -35,7 +35,7 @@ The Keptn Lifecycle Toolkit implements a
 that blocks the binding of the pods to a node
 until all the pre-conditions are fulfilled.
 
-A Kubernetes deployment is started by the following command:
+A Kubernetes deployment is applied to the cluster by the following command:
 
 ```shell
 kubectl apply -f deployment.yaml

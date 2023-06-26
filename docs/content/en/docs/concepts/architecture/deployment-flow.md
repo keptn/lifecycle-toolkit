@@ -26,8 +26,8 @@ resource.
 
 ## Kubernetes events
 
-A [Kubernetes Event](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
-is emitted at each phase
+[Kubernetes Events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
+are emitted at each phase
 to provide additional Observability of the execution flow.
 
 The Keptn Lifecycle Toolkit implements a

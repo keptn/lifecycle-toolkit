@@ -42,14 +42,19 @@ Or would you just dig in and do them all?
      to create the basic KeptnApp resource.
      You can then manually modify that resource as needed
      but easily create the basic structure.
-1. Install and configure OpenTelemetry.
-1. Install and configure the data providers you want to use.
-   Prometheus, Dynatrace, and Datadog are currently supported.
-   KLT can access multiple data providers
-   and multiple copies of each data provider.
-1. Populate a KeptnMetricsProvider for each copy
-   of each data provider you are using.
-1. Other steps
+
+1. Set up Keptn Metrics and Observability.
+   - Configure your data sources as `KeptnMetricProviders`.
+   - Install and configure OpenTelemetry.
+   - Install and configure the data providers you want to use.
+     Prometheus, Dynatrace, and Datadog are currently supported.
+     KLT can access multiple data providers
+     and multiple copies of each data provider.
+   - Populate a KeptnMetricsProvider for each copy
+     of each data provider you are using.
+   - Run some deployments and use the metrics and observability features
+     to monitor the process
+1. Set up CI/CD tasks
 1. Convert "simple" quality gates into KeptnMetric
    and KeptnEvaluation resources.
    TODO: Yeah, this will be a big section!

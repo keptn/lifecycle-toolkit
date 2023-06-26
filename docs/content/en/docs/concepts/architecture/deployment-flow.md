@@ -19,9 +19,10 @@ The execution flow goes through six main phases:
 * Completed
 
 Within each phase,
-the order of execution is determined
-by the order in which evaluations and tasks are listed in the
-[KeptnApp](../../yaml-crd-ref/app/)
+all tasks are executed in parallel.
+They are not affected by the order
+in which evaluations and tasks are listed in the
+[KeptnApp](../../yaml-crd-ref/app.md/)
 resource.
 
 ## Kubernetes events
@@ -35,15 +36,20 @@ The Keptn Lifecycle Toolkit implements a
 that blocks the binding of the pods to a node
 until all the pre-conditions are fulfilled.
 
-A Kubernetes deployment is applied to the cluster by the following command:
+A Kubernetes deployment is started by the deployment engine
+that is implemented
+(such as Flux or Argo)
+or can be started by the following command:
 
 ```shell
 kubectl apply -f deployment.yaml
 ```
 
-TODO: Should this mention anything
-about deployment engines like Flux?
-Maybe they just call ``kubectl apply` under the hood?
+KLT does not care how a deployment manifest is applied to the cluster.
+Both kubectl and Flux/Argo send the manifest to the Kubernetes API
+so KLT does not differentiate the actual deployment options.
+This also means that one Keptn Application
+can include services that are deployed with different methods.
 
 The deployment is created
 but the created pods are blocked and in pending state

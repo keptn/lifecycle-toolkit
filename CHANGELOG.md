@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.8.1](https://github.com/keptn/lifecycle-toolkit/compare/v0.8.0...v0.8.1) (2023-06-26)
+
+
+### Features
+
+* add support for timeframe in `KeptnMetric` ([#1471](https://github.com/keptn/lifecycle-toolkit/issues/1471)) ([4d9ceb7](https://github.com/keptn/lifecycle-toolkit/commit/4d9ceb7a630ad8007f2583040f24ec514870006d))
+
+
+### Docs
+
+* `deno` rather than `function` for deno-runtime runner ([#1611](https://github.com/keptn/lifecycle-toolkit/issues/1611)) ([72f5b82](https://github.com/keptn/lifecycle-toolkit/commit/72f5b82c6e4cf20114b5d716bda7fab99fe72ae9))
+* re-generate CRD docs ([#1612](https://github.com/keptn/lifecycle-toolkit/issues/1612)) ([36845da](https://github.com/keptn/lifecycle-toolkit/commit/36845da8397d9067192498bb563f45d42ef60079))
+* set up Migration Guide ([#1506](https://github.com/keptn/lifecycle-toolkit/issues/1506)) ([c2e9f4a](https://github.com/keptn/lifecycle-toolkit/commit/c2e9f4a29890ab384769ca4c679b60efdbda3f57))
+
+
+### Dependency Updates
+
+* update busybox docker tag to v1.36.1 ([#1595](https://github.com/keptn/lifecycle-toolkit/issues/1595)) ([6770912](https://github.com/keptn/lifecycle-toolkit/commit/6770912c5c7fb3562db51835edb468cc6866e85c))
+
 ## [0.8.0](https://github.com/keptn/lifecycle-toolkit/compare/v0.7.1...v0.8.0) (2023-06-21)
 
 

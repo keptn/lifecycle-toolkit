@@ -1,6 +1,8 @@
 package webhook
 
 import (
+	"log"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
@@ -47,7 +49,17 @@ func (provider WebhookProvider) createOptions(scheme *runtime.Scheme, namespace 
 }
 
 func (provider WebhookProvider) SetupWebhookServer(mgr manager.Manager) {
+	if mgr == nil {
+		log.Fatal("Invalid manager provided")
+		return
+	}
 	webhookServer := mgr.GetWebhookServer()
+
+	if webhookServer == nil {
+		log.Fatal("Webhook server not found in the manager")
+		return
+	}
+
 	webhookServer.(*webhook.DefaultServer).Options.CertDir = provider.certificateDirectory
 	webhookServer.(*webhook.DefaultServer).Options.KeyName = provider.keyFileName
 	webhookServer.(*webhook.DefaultServer).Options.CertName = provider.certificateFileName

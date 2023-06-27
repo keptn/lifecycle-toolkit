@@ -15,7 +15,7 @@ and questions that you have.
 The Keptn Lifecycle Toolkit (KLT) supplements Kubernetes deployments
 done with tools such as Argo CD, Flux, or even `kubectl -apply`.
 This is a major paradigm switch from Keptn v1,
-which works best when it  orchestrates deployments.
+which works best when it orchestrates deployments.
 
 Consequently, the first step in your migration path
 is to set up a new Kubernetes cluster

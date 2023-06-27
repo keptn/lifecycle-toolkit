@@ -78,9 +78,15 @@ func Test_prometheus(t *testing.T) {
 				HttpClient: http.Client{},
 				Log:        ctrl.Log.WithName("testytest"),
 			}
-			obj := metricsapi.KeptnMetric{
+			obj1 := metricsapi.KeptnMetric{
 				Spec: metricsapi.KeptnMetricSpec{
 					Query: "my-query",
+				},
+			}
+			obj2 := metricsapi.KeptnMetric{
+				Spec: metricsapi.KeptnMetricSpec{
+					Query: "my-query",
+					Range: &metricsapi.RangeSpec{ Interval: "5m"},
 				},
 			}
 			p := metricsapi.KeptnMetricsProvider{
@@ -94,13 +100,18 @@ func Test_prometheus(t *testing.T) {
 					TargetServer: svr.URL,
 				},
 			}
-			r, raw, e := kpp.EvaluateQuery(context.TODO(), obj, p)
-			require.Equal(t, tt.out, r)
-			require.Equal(t, tt.outraw, raw)
-			if tt.wantError != (e != nil) {
-				t.Errorf("want error: %t, got: %v", tt.wantError, e)
+			r1, raw1, e1 := kpp.EvaluateQuery(context.TODO(), obj1, p)
+			require.Equal(t, tt.out, r1)
+			require.Equal(t, tt.outraw, raw1)
+			if tt.wantError != (e1 != nil) {
+				t.Errorf("want error: %t, got: %v", tt.wantError, e1)
 			}
-
+			r2, raw2, e2 := kpp.EvaluateQuery(context.TODO(), obj2, p)
+			require.Equal(t, tt.out, r2)
+			require.Equal(t, tt.outraw, raw2)
+			if tt.wantError != (e2 != nil) {
+				t.Errorf("want error: %t, got: %v", tt.wantError, e2)
+			}
 		})
 
 	}

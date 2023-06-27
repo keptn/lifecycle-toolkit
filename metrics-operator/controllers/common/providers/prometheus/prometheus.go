@@ -77,15 +77,17 @@ func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, 
 	}
 	// Convert type Duration to type Time
 	startTime := queryTime.Add(-queryInterval).UTC()
+	stepDuration := time.Duration(metric.Spec.FetchIntervalSeconds) * time.Second
 	r.Log.Info(fmt.Sprintf(
-		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
+		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d&step=%v",
 		metric.Spec.Query,
 		startTime.Unix(), queryTime.Unix(),
+		stepDuration,
 	))
 	queryRange := prometheus.Range{
 		Start: startTime,
 		End:   queryTime,
-		Step:  time.Duration(metric.Spec.FetchIntervalSeconds) * time.Second,
+		Step:  stepDuration,
 	}
 	result, warnings, err := api.QueryRange(
 		ctx,

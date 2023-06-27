@@ -29,43 +29,25 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	}
 
 	api := prometheus.NewAPI(client)
-	var result model.Value
-	var warnings prometheus.Warnings
 	if metric.Spec.Range != nil {
-		result, warnings, err = evaluateQueryWithRange(ctx, metric, r, api)
+		result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
 		if err != nil {
 			return "", nil, err
 		}
+		if len(warnings) != 0 {
+			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		}
+		return getResultForRange(result, r)
 	} else {
-		result, warnings, err = evaluateQueryWithoutRange(ctx, metric, r, api)
+		result, warnings, err := evaluateQueryWithoutRange(ctx, metric, r, api)
 		if err != nil {
 			return "", nil, err
 		}
+		if len(warnings) != 0 {
+			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		}
+		return getResulForNoRange(result, r)
 	}
-	if len(warnings) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
-	}
-	// check if we can cast the result to a vector, it might be another data struct which we can't process
-	resultVector, ok := result.(model.Vector)
-	if !ok {
-		return "", nil, fmt.Errorf("could not cast result")
-	}
-
-	// We are only allowed to return one value, if not the query may be malformed
-	// we are using two different errors to give the user more information about the result
-	if len(resultVector) == 0 {
-		r.Log.Info("No values in query result")
-		return "", nil, fmt.Errorf("no values in query result")
-	} else if len(resultVector) > 1 {
-		r.Log.Info("Too many values in the query result")
-		return "", nil, fmt.Errorf("too many values in the query result")
-	}
-	value := resultVector[0].Value.String()
-	b, err := resultVector[0].Value.MarshalJSON()
-	if err != nil {
-		return "", nil, err
-	}
-	return value, b, nil
 }
 
 func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
@@ -77,7 +59,7 @@ func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, 
 	}
 	// Convert type Duration to type Time
 	startTime := queryTime.Add(-queryInterval).UTC()
-	stepDuration := time.Duration(metric.Spec.FetchIntervalSeconds) * time.Second
+	stepDuration := queryInterval
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d&step=%v",
 		metric.Spec.Query,
@@ -118,4 +100,53 @@ func evaluateQueryWithoutRange(ctx context.Context, metric metricsapi.KeptnMetri
 		return nil, nil, err
 	}
 	return result, warnings, nil
+}
+
+func getResultForRange(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+	// check if we can cast the result to a matrix
+	resultMatrix, ok := result.(model.Matrix)
+	if !ok {
+		return "", nil, fmt.Errorf("could not cast result")
+	}
+	// We are only allowed to return one value, if not the query may be malformed
+	// we are using two different errors to give the user more information about the result
+	// There can be more than 1 values in the matrixResults but we are defining the step
+	// as the interval itself, hence there can only be one value.
+	// This logic should be changed, once we work onto the aggreation functions.
+	if len(resultMatrix) == 0 {
+		r.Log.Info("No values in query result")
+		return "", nil, fmt.Errorf("no values in query result")
+	} else if len(resultMatrix) > 1 {
+		r.Log.Info("Too many values in the query result")
+		return "", nil, fmt.Errorf("too many values in the query result")
+	}
+	value := resultMatrix[0].Values[0].Value.String()
+	b, err := resultMatrix[0].Values[0].Value.MarshalJSON()
+	if err != nil {
+		return "", nil, err
+	}
+	return value, b, nil
+}
+
+func getResulForNoRange(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+	// check if we can cast the result to a vector
+	resultVector, ok := result.(model.Vector)
+	if !ok {
+		return "", nil, fmt.Errorf("could not cast result")
+	}
+	// We are only allowed to return one value, if not the query may be malformed
+	// we are using two different errors to give the user more information about the result
+	if len(resultVector) == 0 {
+		r.Log.Info("No values in query result")
+		return "", nil, fmt.Errorf("no values in query result")
+	} else if len(resultVector) > 1 {
+		r.Log.Info("Too many values in the query result")
+		return "", nil, fmt.Errorf("too many values in the query result")
+	}
+	value := resultVector[0].Value.String()
+	b, err := resultVector[0].Value.MarshalJSON()
+	if err != nil {
+		return "", nil, err
+	}
+	return value, b, nil
 }

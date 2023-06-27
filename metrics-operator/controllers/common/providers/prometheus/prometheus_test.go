@@ -86,7 +86,7 @@ func Test_prometheus(t *testing.T) {
 			obj2 := metricsapi.KeptnMetric{
 				Spec: metricsapi.KeptnMetricSpec{
 					Query: "my-query",
-					Range: &metricsapi.RangeSpec{ Interval: "5m"},
+					Range: &metricsapi.RangeSpec{Interval: "5m"},
 				},
 			}
 			p := metricsapi.KeptnMetricsProvider{

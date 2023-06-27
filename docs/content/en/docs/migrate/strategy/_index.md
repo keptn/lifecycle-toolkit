@@ -24,7 +24,8 @@ TODO: Make the KLT terms links to relevant documentation
 ## How many namespaces?
 
 What set of these resources, etc need to be in the same namespace?
-User has flexibility to decide.  See the Kubernetes
+User has flexibility to decide.
+See the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 documentation for some basic information.
 You can also search and find lots of "Best Practices for Namespaces"

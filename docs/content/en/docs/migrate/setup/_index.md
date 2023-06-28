@@ -28,17 +28,17 @@ regardless of the deployment engine used.
 
 So the first steps of your migration are:
 
-* Check the [Requirements](../install/reqs.md) page
+* Check the [Requirements](../../install/reqs.md) page
   to ensure that the Kubernetes cluster you create
   is appropriate for KLT.
-* Create your [Kubernetes cluster](../install/k8s.md).
+* Create your [Kubernetes cluster](../../install/k8s.md).
 * Install the deployment engine(s) in that cluster,
   following the documentation for each tool.
 * Set up deployments for all components
   that should be built as part of your software.
 * Test the deployments to ensure that they are working correctly.
 
-[Prepare your cluster for KLT](../install/k8s/#prepare-your-cluster-for-klt)
+[Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
 lists other software that you will need to install in your cluster
 to use Keptn Metrics and the standardized observability feature.
 You can install these now or later.

@@ -67,7 +67,7 @@ spec:
 
 ## Usage
 
-A `KeptnMetricsProvider` resource must be located 
+A `KeptnMetricsProvider` resource must be located
 in the same namespace as the
 [KeptnMetric](metric.md)
 resources that are associated with it.

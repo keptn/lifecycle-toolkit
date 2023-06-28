@@ -31,7 +31,10 @@ resources
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+or
+[pod](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+resources.
 Metrics are collected only for the resources that are annotated.
 
 To view DORA metrics, run the following command:

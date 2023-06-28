@@ -77,7 +77,8 @@ you need to do the following:
    - Follow the instructions in
      [Annotate workload](../../implementing/integrate/#basic-annotations)
      to integrate the Lifecycle Toolkit into your Kubernetes cluster
-     by applying basic annotations to your `Deployment` resource.
+     by applying basic annotations
+     to your workload and pod` resources.
    - Follow the instructions in
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a Keptn application that aggragates

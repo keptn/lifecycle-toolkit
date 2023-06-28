@@ -37,7 +37,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		if len(warnings) != 0 {
 			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 		}
-		return getResultForRange(result, r)
+		return getResultForMatrix(result, r)
 	} else {
 		result, warnings, err := evaluateQueryWithoutRange(ctx, metric, r, api)
 		if err != nil {
@@ -46,7 +46,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		if len(warnings) != 0 {
 			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 		}
-		return getResulForNoRange(result, r)
+		return getResultForVector(result, r)
 	}
 }
 

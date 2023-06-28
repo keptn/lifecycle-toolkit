@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ../../operator/config/default
   - ../../klt-cert-manager/config/default
-  - ../../metrics-operator/config/default
   - ../../scheduler/manifests/install
 
 # replace the default namespace with {{ include "chart.namespace" . }}

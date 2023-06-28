@@ -131,6 +131,7 @@ metricsManagerConfig:
     webhook:
       port: 9443
 metricsOperator:
+  enabled: true
   manager:
     containerSecurityContext:
       allowPrivilegeEscalation: false

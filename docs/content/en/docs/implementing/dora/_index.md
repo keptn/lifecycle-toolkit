@@ -33,7 +33,7 @@ resources
 and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 or
-[pod](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+[Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 resources.
 Metrics are collected only for the resources that are annotated.
 

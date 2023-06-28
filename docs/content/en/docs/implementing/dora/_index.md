@@ -33,7 +33,8 @@ resources
 and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 or
-[Pods](https://kubernetes.io/docs/concepts/workloads/pods/).
+[Pods](https://kubernetes.io/docs/concepts/workloads/pods/)).
+
 Metrics are collected only for the resources that are annotated.
 
 To view DORA metrics, run the following command:

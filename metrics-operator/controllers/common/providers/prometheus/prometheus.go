@@ -101,7 +101,7 @@ func evaluateQueryWithoutRange(ctx context.Context, metric metricsapi.KeptnMetri
 	return result, warnings, nil
 }
 
-func getResultForRange(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+func getResultForMatrix(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
 	// check if we can cast the result to a matrix
 	resultMatrix, ok := result.(model.Matrix)
 	if !ok {
@@ -110,7 +110,7 @@ func getResultForRange(result model.Value, r *KeptnPrometheusProvider) (string, 
 	// We are only allowed to return one value, if not the query may be malformed
 	// we are using two different errors to give the user more information about the result
 	// There can be more than 1 values in the matrixResults but we are defining the step
-	// as the interval itself, hence there can only be one value.
+	// parameter as the interval itself, hence there can only be one value.
 	// This logic should be changed, once we work onto the aggreation functions.
 	if len(resultMatrix) == 0 {
 		r.Log.Info("No values in query result")
@@ -127,7 +127,7 @@ func getResultForRange(result model.Value, r *KeptnPrometheusProvider) (string, 
 	return value, b, nil
 }
 
-func getResulForNoRange(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+func getResultForVector(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
 	// check if we can cast the result to a vector
 	resultVector, ok := result.(model.Vector)
 	if !ok {

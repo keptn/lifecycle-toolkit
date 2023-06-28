@@ -33,18 +33,17 @@ documents published on the web.
 
 Considerations:
 
-* KLT primarily operates on Workloads (each of which has its own CRD)
-  and Keptn Applications, (each of which has its own CRD
-  and is defined by the value of the `part-of` annotation
-  to each Workload.
-* Each Keptn Metrics and evaluation resource
-  identifies the namespace to which it applies.
-  * If you want to share the Keptn Metrics and evaluation resources
-    between a large number of workloads and applications,
-    locate them all in the same namespace
-  * If you want to use different metrics and evaluation resources
-    for different groups of workloads and applications,
-    put each "group" in a separate namespace
+* KLT primarily operates on Kubernetes Workload resources
+  and Keptn Application resources
+  that are activated and defined by annotations to each Workload.
+* `KeptnMetricProvider` resources need to be located
+  in the same namespace as the associated `KeptnMetrics`.
+  But `KeptnEvaluationDefinition` resources
+  that are used for pre- and post-deployment
+  can reference metrics from any namespace.
+  So you can create `KeptnMetrics` in a `keptn-lifecycle-toolkit` namespace
+  and use those metrics in `KeptnEvaluationDefinition` resources
+  from any namespace in the cluster.
 * Each `KeptnApp` resource identifies the namespace to which it belongs
   * If you configure multiple namespaces,
     you can have `KeptnApp` resources with the same name

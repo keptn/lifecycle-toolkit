@@ -59,10 +59,21 @@ spec:
 ## Usage
 
 A `KeptnEvaluationDefinition` references one or more
-[KeptnMetric](metric.md) CRDs.
+[KeptnMetric](metric.md) resources.
 When multiple `KeptnMetric`s are used,
 the Keptn Lifecycle Toolkit considers the evaluation successful
 if **all** metrics meet their `evaluationTarget`.
+
+The `KeptnMetric` resource and associated
+[KeptnMetricsProvider](metricsprovider.md)
+resource must be located in the same namespace
+but the `KeptnEvaluationDefinition` resources
+can reference metrics from any namespace in the cluster.
+This means that you can create `KeptnMetricsProvider`
+and `KeptnMetric` resources
+in a cluster-wide `keptn-lifecycle-toolkit` namespace
+and use those metrics in evaluations
+on all namespaces in the cluster.
 
 ## Example
 

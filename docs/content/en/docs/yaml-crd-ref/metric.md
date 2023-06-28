@@ -62,6 +62,23 @@ spec:
 
 ## Usage
 
+A `KeptnMetric` resource must be located
+in the same namespace as the associated
+[KeptnMetricsProvider](metricsprovider.md)
+resource.
+`KeptnMetric` resources are used to generate metrics for the cluster
+and are used as the SLI (Service Level Indicator) for
+[KeptnEvaluationDefinition](evaluationdefinition.md)
+resources that are used for pre- and post-deployment evaluations.
+
+`KeptnEvaluationDefinition` resources can reference metrics
+from any namespace.
+This means that you can create `KeptnMetricsProvider`
+and `KeptnMetric` resources
+in a cluster-wide `keptn-lifecycle-toolkit` namespace
+and access those metrics in evaluations
+on all namespaces in the cluster.
+
 ## Example
 
 This example pulls metrics from the data provider

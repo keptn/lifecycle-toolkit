@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-operator-metrics-service
+  name: {{ include "chart.fullname" . }}-webhook-service
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    control-plane: lifecycle-operator
   {{- include "chart.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.lifecycleOperatorMetricsService.type }}
+  type: {{ .Values.webhookService.type }}
   selector:
     control-plane: lifecycle-operator
   {{- include "chart.selectorLabels" . | nindent 4 }}
   ports:
-	{{- .Values.lifecycleOperatorMetricsService.ports | toYaml | nindent 2 -}}
+	{{- .Values.webhookService.ports | toYaml | nindent 2 -}}

@@ -15,7 +15,7 @@ spec:
     webhook:
       clientConfig:
         service:
-          name: '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
+          name: '{{ include "chart.fullname" . }}-webhook-service'
           namespace: '{{ .Release.Namespace }}'
           path: /convert
       conversionReviewVersions:

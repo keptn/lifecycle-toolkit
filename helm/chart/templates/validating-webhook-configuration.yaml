@@ -1,7 +1,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-validating-webhook-configuration
+  name: {{ include "chart.fullname" . }}-validating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "chart.fullname" . }}-
   labels:
@@ -11,7 +11,7 @@ webhooks:
   - v1
   clientConfig:
     service:
-      name: '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
+      name: '{{ include "chart.fullname" . }}-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
   failurePolicy: Fail

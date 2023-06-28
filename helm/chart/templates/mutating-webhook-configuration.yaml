@@ -1,7 +1,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-mutating-webhook-configuration
+  name: {{ include "chart.fullname" . }}-mutating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "chart.fullname" . }}-
   labels:
@@ -13,7 +13,7 @@ webhooks:
   - v1
   clientConfig:
     service:
-      name: '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
+      name: '{{ include "chart.fullname" . }}-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /mutate-v1-pod
   failurePolicy: Fail

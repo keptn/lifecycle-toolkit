@@ -1,0 +1,6 @@
+dependencies:
+- name: klt-metrics-operator
+  repository: file://../../metrics-operator/chart
+  version: 0.1.0
+digest: sha256:5626077edc5cffc614439393b3af7c9f979a80b358d8d162266461c1244bfa4f
+generated: "2023-06-28T13:20:17.805973+02:00"

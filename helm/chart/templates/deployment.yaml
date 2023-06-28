@@ -21,7 +21,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-operator
+  name: {{ include "chart.fullname" . }}-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}
@@ -125,7 +125,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-operator
+  name: {{ include "chart.fullname" . }}-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -133,7 +133,7 @@ metadata:
     keptn.sh/inject-cert: "true"
   {{- include "chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.lifecycleOperator.replicas }}
+  replicas: {{ .Values.operator.replicas }}
   selector:
     matchLabels:
       control-plane: lifecycle-operator
@@ -167,43 +167,39 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.manager.env.functionRunnerImage | quote }}
+          value: {{ .Values.operator.manager.env.functionRunnerImage | quote }}
         - name: PYTHON_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.manager.env.pythonRunnerImage | quote }}
+          value: {{ .Values.operator.manager.env.pythonRunnerImage | quote }}
         - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.lifecycleOperator.manager.env.otelCollectorUrl | quote }}
+          value: {{ .Values.operator.manager.env.otelCollectorUrl | quote }}
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppControllerLogLevel | quote
-            }}
+          value: {{ .Values.operator.manager.env.keptnAppControllerLogLevel | quote }}
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel
+          value: {{ .Values.operator.manager.env.keptnAppCreationRequestControllerLogLevel
             | quote }}
         - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel
-            | quote }}
-        - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel
-            | quote }}
-        - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskControllerLogLevel | quote
+          value: {{ .Values.operator.manager.env.keptnAppVersionControllerLogLevel | quote
             }}
+        - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.operator.manager.env.keptnEvaluationControllerLogLevel | quote
+            }}
+        - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.operator.manager.env.keptnTaskControllerLogLevel | quote }}
         - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel
-            | quote }}
+          value: {{ .Values.operator.manager.env.keptnTaskDefinitionControllerLogLevel     quote }}
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel
-            | quote }}
+          value: {{ .Values.operator.manager.env.keptnWorkloadControllerLogLevel | quote
+            }}
         - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel
+          value: {{ .Values.operator.manager.env.keptnWorkloadInstanceControllerLogLevel
             | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.optionsControllerLogLevel | quote
-            }}
+          value: {{ .Values.operator.manager.env.optionsControllerLogLevel | quote }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.lifecycleOperator.manager.image.repository }}:{{ .Values.lifecycleOperator.manager.image.tag
+        image: {{ .Values.operator.manager.image.repository }}:{{ .Values.operator.manager.image.tag
           | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.lifecycleOperator.manager.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.operator.manager.imagePullPolicy }}
         name: manager
         ports:
         - containerPort: 9443
@@ -212,29 +208,26 @@ spec:
         - containerPort: 2222
           name: metrics
           protocol: TCP
-        resources: {{- toYaml .Values.lifecycleOperator.manager.resources | nindent 10 }}
+        resources: {{- toYaml .Values.operator.manager.resources | nindent 10 }}
         securityContext:
-          allowPrivilegeEscalation: {{ .Values.lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation
+          allowPrivilegeEscalation: {{ .Values.operator.manager.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.capabilities
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.operator.manager.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
-          privileged: {{ .Values.lifecycleOperator.manager.containerSecurityContext.privileged
+          privileged: {{ .Values.operator.manager.containerSecurityContext.privileged }}
+          runAsGroup: {{ .Values.operator.manager.containerSecurityContext.runAsGroup }}
+          runAsNonRoot: {{ .Values.operator.manager.containerSecurityContext.runAsNonRoot
             }}
-          runAsGroup: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsGroup
-            }}
-          runAsNonRoot: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsNonRoot
-            }}
-          runAsUser: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsUser
-            }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.seccompProfile
+          runAsUser: {{ .Values.operator.manager.containerSecurityContext.runAsUser }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.operator.manager.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs/
           name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
-        {{- if .Values.lifecycleOperator.manager.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.livenessProbe "context" $) | nindent 10 }}
+        {{- if .Values.operator.manager.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.operator.manager.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -243,8 +236,8 @@ spec:
          initialDelaySeconds: 15
          periodSeconds: 20
         {{- end }}
-        {{- if .Values.lifecycleOperator.manager.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.readinessProbe "context" $) | nindent 10 }}
+        {{- if .Values.operator.manager.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.operator.manager.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -256,7 +249,7 @@ spec:
       imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: {{ include "chart.fullname" . }}-lifecycle-operator
+      serviceAccountName: {{ include "chart.fullname" . }}-operator
       terminationGracePeriodSeconds: 10
       volumes:
       - emptyDir: {}

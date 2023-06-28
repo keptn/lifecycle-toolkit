@@ -2,7 +2,6 @@ package prometheus
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -76,7 +75,7 @@ func Test_prometheus(t *testing.T) {
 			outraw:    []byte("\"1\""),
 			wantError: false,
 			hasRange:  false,
-		}, /////////////////////////////////////////////////////////////
+		},
 		{
 			name:      "warnings with range",
 			in:        promWarnPayloadWithRange,

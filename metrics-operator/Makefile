@@ -47,6 +47,14 @@ HASH?=$(shell git rev-parse HEAD)
 .PHONY: all
 all: build
 
+HELMIFY ?=  $(LOCALBIN)/helmify
+
+.PHONY: helmify
+helmify: $(HELMIFY) ## Download helmify locally if necessary.
+$(HELMIFY): $(LOCALBIN)
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@1060b5d08806e40bfd9f38c3e8a9a302ab38e71a
+
+
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
@@ -108,6 +116,13 @@ install: manifests ## Install CRDs into the K8s cluster specified in ~/.kube/con
 .PHONY: uninstall
 uninstall: manifests ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	kustomize build config/crd | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
+
+.PHONY: helm-package
+helm-package: release-manifests helmify
+	echo "building helm overlay"
+	kustomize build ./helm-overlay  > helmchart.yaml
+	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
+	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv chart
 
 .PHONY: release-manifests
 release-manifests: manifests

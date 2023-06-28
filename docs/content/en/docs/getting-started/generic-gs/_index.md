@@ -167,6 +167,8 @@ You can watch the state of the pods using:
 kubectl get pods -n podtato-kubectl
 ```
 
+</details>
+
 Furthermore, you can port-forward the podtato-head service
 to your local machine and access the application via your browser:
 

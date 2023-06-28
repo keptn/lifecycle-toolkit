@@ -39,10 +39,16 @@ Considerations:
   to each Workload.
 * Each Keptn Metrics and evaluation resource
   identifies the namespace to which it applies.
-* Each `KeptnApp` resource does identify the namespace to which it belongs
-  so, if you configure multiple namespaces,
-  you can have `KeptnApp` resources with the same name
-  in multiple namespaces without having them conflict.
+  * If you want to share the Keptn Metrics and evaluation resources
+    between a large number of workloads and applications,
+    locate them all in the same namespace
+  * If you want to use different metrics and evaluation resources
+    for different groups of workloads and applications,
+    put each "group" in a separate namespace
+* Each `KeptnApp` resource identifies the namespace to which it belongs
+  * If you configure multiple namespaces,
+    you can have `KeptnApp` resources with the same name
+    in multiple namespaces without having them conflict.
 * You do not need separate namespaces for separate versions of your application.
   The `KeptnApp` resource includes fields to define
   the `version` as well as a `revision`

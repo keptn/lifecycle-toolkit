@@ -13,7 +13,7 @@ We hope you will contribute your experiences
 and questions that you have.
 
 The Keptn Lifecycle Toolkit (KLT) supplements Kubernetes deployments
-done with tools such as Argo CD, Flux, or even `kubectl -apply`.
+done with tools such as Argo CD, Flux, or even `kubectl apply`.
 This is a major paradigm switch from Keptn v1,
 which works best when it orchestrates deployments.
 

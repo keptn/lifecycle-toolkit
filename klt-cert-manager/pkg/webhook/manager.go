@@ -53,18 +53,14 @@ func (provider WebhookProvider) SetupWebhookServer(mgr manager.Manager) {
 		log.Fatal("Invalid manager provided")
 		return
 	}
-
-	// Get the webhook server from the manager.
 	webhookServer := mgr.GetWebhookServer()
+
 	if webhookServer == nil {
 		log.Fatal("Webhook server not found in the manager")
 		return
 	}
 
-	// Set the certificate directory, key name, and certificate name on the webhook server.
-	webhookServer.(*webhook.DefaultServer).Options = webhook.Options{
-		CertDir:  provider.certificateDirectory,
-		KeyName:  provider.keyFileName,
-		CertName: provider.certificateFileName,
-	}
+	webhookServer.(*webhook.DefaultServer).Options.CertDir = provider.certificateDirectory
+	webhookServer.(*webhook.DefaultServer).Options.KeyName = provider.keyFileName
+	webhookServer.(*webhook.DefaultServer).Options.CertName = provider.certificateFileName
 }

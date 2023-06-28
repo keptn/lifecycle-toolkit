@@ -25,12 +25,12 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v0.38.1
 	go.opentelemetry.io/otel/trace v1.15.1
 	google.golang.org/grpc v1.55.0
-	k8s.io/api v0.26.5
-	k8s.io/apiextensions-apiserver v0.26.5
-	k8s.io/apimachinery v0.26.5
-	k8s.io/apiserver v0.26.5
-	k8s.io/client-go v0.26.5
-	sigs.k8s.io/controller-runtime v0.14.6
+	k8s.io/api v0.27.1
+	k8s.io/apiextensions-apiserver v0.27.1
+	k8s.io/apimachinery v0.27.1
+	k8s.io/apiserver v0.27.1
+	k8s.io/client-go v0.27.1
+	sigs.k8s.io/controller-runtime v0.15.0
 )
 
 require (

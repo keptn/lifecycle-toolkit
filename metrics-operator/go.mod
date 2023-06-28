@@ -14,15 +14,15 @@ require (
 	github.com/prometheus/client_golang v1.15.1
 	github.com/prometheus/common v0.44.0
 	github.com/stretchr/testify v1.8.4
-	k8s.io/api v0.26.5
-	k8s.io/apiextensions-apiserver v0.26.5
-	k8s.io/apimachinery v0.26.5
-	k8s.io/apiserver v0.26.5
-	k8s.io/client-go v0.26.5
-	k8s.io/component-base v0.26.5
+	k8s.io/api v0.27.1
+	k8s.io/apiextensions-apiserver v0.27.1
+	k8s.io/apimachinery v0.27.1
+	k8s.io/apiserver v0.27.1
+	k8s.io/client-go v0.27.1
+	k8s.io/component-base v0.27.1
 	k8s.io/klog/v2 v2.100.1
 	k8s.io/metrics v0.26.5
-	sigs.k8s.io/controller-runtime v0.14.6
+	sigs.k8s.io/controller-runtime v0.15.0
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 )
 

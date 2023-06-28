@@ -329,12 +329,12 @@ func main() {
 			SetPodName(env.PodName).
 			SetManagerProvider(
 				webhook.NewWebhookManagerProvider(
-					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+					mgr.GetWebhookServer().(*ctrlWebhook.DefaultServer).Options.CertDir, "tls.key", "tls.crt"),
 			).
 			SetCertificateWatcher(
 				certificates.NewCertificateWatcher(
 					mgr.GetAPIReader(),
-					mgr.GetWebhookServer().CertDir,
+					mgr.GetWebhookServer().(*ctrlWebhook.DefaultServer).Options.CertDir,
 					env.PodNamespace,
 					certCommon.SecretName,
 					setupLog,

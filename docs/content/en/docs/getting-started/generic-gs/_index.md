@@ -166,6 +166,7 @@ You can watch the state of the pods using:
 ```shell
 kubectl get pods -n podtato-kubectl
 ```
+
 </details>
 
 Furthermore, you can port-forward the podtato-head service

@@ -80,7 +80,7 @@ resources that are used for pre- and post-deployment evaluations.
 from any namespace.
 This means that you can create `KeptnMetricsProvider`
 and `KeptnMetric` resources
-in a cluster-wide namespace (e.g. in `keptn-lifecycle-toolkit-system`)
+in a centralized namespace (e.g. in `keptn-lifecycle-toolkit-system`)
 and access those metrics in evaluations
 on all namespaces in the cluster.
 

@@ -39,7 +39,7 @@ Some considerations for KLT:
 * [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
   resources need to be located
   in the same namespace as the associated
-  [KeptnMetric](../../yaml-crd-ref/metric)
+  [KeptnMetric](../../yaml-crd-ref/metric.md)
   resources.
   But
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
@@ -115,13 +115,13 @@ and has no corresponding KLT component.
 However, the logic of the stages can be useful
 when architecting the migration:
 
-  * **deployment stage** -- KLT does not itself deploy the software
+* **deployment stage** -- KLT does not itself deploy the software
     but rather depends on a deployment engine.
     However, a `deployment` stage may define sequences of tasks
     that should be translated into
-    [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+    [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
     resources that are executed pre- and post-deployment
-  * **testing stage** may define sequences of tasks
+* **testing stage** may define sequences of tasks
     that should be translated into `KeptnTaskDefinition` resources
     that are executed pre- and post-deployment.
 

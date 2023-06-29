@@ -111,7 +111,7 @@ func getResultForMatrix(result model.Value, r *KeptnPrometheusProvider) (string,
 	// we are using two different errors to give the user more information about the result
 	// There can be more than 1 values in the matrixResults but we are defining the step
 	// parameter as the interval itself, hence there can only be one value.
-	// This logic should be changed, once we work onto the aggreation functions.
+	// This logic should be changed, once we work onto the aggregation functions.
 	if len(resultMatrix) == 0 {
 		r.Log.Info("No values in query result")
 		return "", nil, fmt.Errorf("no values in query result")

@@ -38,7 +38,7 @@ but instructions are provided if you need them.
 The most common modification required when beginning the migration process
 is to replace the default KLT `cert-manager` with another cert-manager.
 See
-[Use your own cert-manager](install/cert-manager.md) for details.
+[Use your own cert-manager](../../install/cert-manager.md) for details.
 
 ## Enable KLT
 
@@ -46,13 +46,13 @@ To enable KLT, annotate the
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 resource for each namespace where you want to run KLT.
 See
-[Enable KLT for your cluster](/install/#enable-klt-for-your-cluster)
+[Enable KLT for your cluster](../../install/install.md/#enable-klt-for-your-cluster)
 for details.
 
 ## Integrate KLT with your Workloads
 
 Follow the instructions in
-[Basic annotations](implementing/integrate/#basic-annotations)
+[Basic annotations](../../implementing/integrate/#basic-annotations)
 to annotate your
 [Workloads](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
@@ -69,11 +69,11 @@ in these annotations.
 Recommended but optional is that you also populate the
 `keptn.sh/app` or `app.kubernetes.io/part-of` annotation
 to identify the workloads that should be included in each
-[KeptnApp](../../yaml-crd-ref/app)
+[KeptnApp](../../yaml-crd-ref/app.md)
 resource
 so that KLT can automatically generate the `KeptnApp` resources you need.
 See
-[Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery.md)
+[Use Keptn automatic app discovery](../../implementing/integrate.md/#use-keptn-automatic-app-discovery)
 for more details.
 
 In some cases, the Keptn v1 `projects` you have defined

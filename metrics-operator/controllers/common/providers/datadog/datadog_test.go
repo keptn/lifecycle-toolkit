@@ -46,9 +46,17 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -63,12 +71,13 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.Error(t, e)
-	require.Contains(t, e.Error(), "Token is missing required scope")
-	require.Equal(t, []byte(ddErrorPayload), raw)
-	require.Empty(t, r)
+	for _, metric := range metrics {
+		r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.Error(t, e)
+		require.Contains(t, e.Error(), "Token is missing required scope")
+		require.Equal(t, []byte(ddErrorPayload), raw)
+		require.Empty(t, r)
+	}
 }
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {
@@ -92,9 +101,17 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -109,11 +126,12 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.Nil(t, e)
-	require.Equal(t, []byte(ddPayload), raw)
-	require.Equal(t, fmt.Sprintf("%.3f", 89.116), r)
+	for _, metric := range metrics {
+		r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.Nil(t, e)
+		require.Equal(t, []byte(ddPayload), raw)
+		require.Equal(t, fmt.Sprintf("%.3f", 89.116), r)
+	}
 }
 func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -136,9 +154,17 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -153,11 +179,12 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.Equal(t, "", r)
-	require.Equal(t, []byte("garbage"), raw)
-	require.NotNil(t, e)
+	for _, metric := range metrics {
+		r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.Equal(t, "", r)
+		require.Equal(t, []byte("garbage"), raw)
+		require.NotNil(t, e)
+	}
 }
 func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -167,9 +194,17 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	defer svr.Close()
 
 	kdd := setupTest()
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	p := metricsapi.KeptnMetricsProvider{
@@ -177,10 +212,11 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+	for _, metric := range metrics {
+		_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.NotNil(t, e)
+		require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+	}
 }
 func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -192,9 +228,17 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 	secretName := "datadogSecret"
 
 	kdd := setupTest()
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -209,10 +253,11 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.NotNil(t, e)
-	require.True(t, errors.IsNotFound(e))
+	for _, metric := range metrics {
+		_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.NotNil(t, e)
+		require.True(t, errors.IsNotFound(e))
+	}
 }
 func TestEvaluateQuery_RefNonExistingKey(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -233,9 +278,17 @@ func TestEvaluateQuery_RefNonExistingKey(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -250,10 +303,11 @@ func TestEvaluateQuery_RefNonExistingKey(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "secret does not contain DD_CLIENT_API_KEY or DD_CLIENT_APP_KEY"))
+	for _, metric := range metrics {
+		_, _, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		require.NotNil(t, e)
+		require.True(t, strings.Contains(e.Error(), "secret does not contain DD_CLIENT_API_KEY or DD_CLIENT_APP_KEY"))
+	}
 }
 func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -276,9 +330,17 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metric := metricsapi.KeptnMetric{
-		Spec: metricsapi.KeptnMetricSpec{
-			Query: "system.cpu.idle{*}",
+	metrics := [2]metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
 		},
 	}
 	b := true
@@ -293,13 +355,13 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
-	t.Log(string(raw))
-	require.Nil(t, raw)
-	require.Equal(t, "", r)
-	require.True(t, strings.Contains(e.Error(), "no values in query result"))
-
+	for _, metric := range metrics {
+		r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+		t.Log(string(raw))
+		require.Nil(t, raw)
+		require.Equal(t, "", r)
+		require.True(t, strings.Contains(e.Error(), "no values in query result"))
+	}
 }
 func TestGetSingleValue_EmptyPoints(t *testing.T) {
 	kdd := setupTest()

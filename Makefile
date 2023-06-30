@@ -86,11 +86,9 @@ helm-package:
 .PHONY: build-release-manifests
 build-release-manifests:
 	$(MAKE) -C operator generate
-	$(MAKE) -C klt-cert-manager generate
 
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
-	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
 
 .PHONY: build-deploy-operator
 build-deploy-operator:

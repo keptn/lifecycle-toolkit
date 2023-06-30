@@ -8,5 +8,8 @@ dependencies:
 - name: cert-manager
   repository: file://../../klt-cert-manager/chart
   version: 0.1.0
-digest: sha256:7216f4fce830753dd2b3565cfe02014af4cd67660997c200e7059e3df0cd6abc
-generated: "2023-06-30T10:12:16.487246+02:00"
+- name: scheduler
+  repository: file://../../scheduler/chart
+  version: 0.1.0
+digest: sha256:8d0564185a1b29200b3fc18761298d6a0480f82ee62003ee0189bd7097ff2cd8
+generated: "2023-06-30T11:19:23.394164+02:00"

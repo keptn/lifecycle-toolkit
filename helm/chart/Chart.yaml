@@ -58,3 +58,6 @@ dependencies:
   - name: cert-manager
     version: 0.1.0
     repository: "file://../../klt-cert-manager/chart"
+  - name: scheduler
+    version: 0.1.0
+    repository: "file://../../scheduler/chart"

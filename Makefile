@@ -71,22 +71,6 @@ kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
-.PHONY: release-helm-manifests
-release-helm-manifests: helmify
-	echo "building helm overlay"
-	kustomize build ./helm/overlay  > helmchart.yaml
-	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
-	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
-
-.PHONY: helm-package
-helm-package:
-	$(MAKE) build-release-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-	$(MAKE) release-helm-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-
-.PHONY: build-release-manifests
-build-release-manifests:
-	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
-
 .PHONY: build-deploy-operator
 build-deploy-operator:
 	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)

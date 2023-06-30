@@ -70,7 +70,7 @@ spec:
         - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
           value: {{ .Values.operator.manager.env.keptnTaskControllerLogLevel | quote }}
         - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.operator.manager.env.keptnTaskDefinitionControllerLogLevel     quote }}
+          value: {{ .Values.operator.manager.env.keptnTaskDefinitionControllerLogLevel | quote }}
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
           value: {{ .Values.operator.manager.env.keptnWorkloadControllerLogLevel | quote
             }}

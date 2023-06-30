@@ -73,7 +73,7 @@ to identify the workloads that should be included in each
 resource
 so that KLT can automatically generate the `KeptnApp` resources you need.
 See
-[Use Keptn automatic app discovery](../../implementing/integrate.md/#use-keptn-automatic-app-discovery)
+[Use Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
 for more details.
 
 In some cases, the Keptn v1 `projects` you have defined

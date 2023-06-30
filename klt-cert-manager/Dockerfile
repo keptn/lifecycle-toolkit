@@ -36,7 +36,7 @@ FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
-    org.opencontainers.image.title="Keptn Lifecycle Certificate Manager" \
+    org.opencontainers.image.title="Keptn Lifecycle Toolkit Certificate Manager" \
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
@@ -49,7 +49,7 @@ FROM gcr.io/distroless/static-debian11:nonroot AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/klt-cert-manager" \
     org.opencontainers.image.url="https://keptn.sh" \
-    org.opencontainers.image.title="Keptn Lifecycle Certificate Manager" \
+    org.opencontainers.image.title="Keptn Lifecycle Toolkit Certificate Manager" \
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 

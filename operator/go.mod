@@ -8,8 +8,8 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230620112140-7c4d2abcb84e
-	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230620114621-36d0c23ea666
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230630070122-4ad9bbf74960
+	github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.8
@@ -25,11 +25,11 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v0.38.1
 	go.opentelemetry.io/otel/trace v1.15.1
 	google.golang.org/grpc v1.55.0
-	k8s.io/api v0.26.5
-	k8s.io/apiextensions-apiserver v0.26.5
-	k8s.io/apimachinery v0.26.5
-	k8s.io/apiserver v0.26.5
-	k8s.io/client-go v0.26.5
+	k8s.io/api v0.26.6
+	k8s.io/apiextensions-apiserver v0.26.6
+	k8s.io/apimachinery v0.26.6
+	k8s.io/apiserver v0.26.6
+	k8s.io/client-go v0.26.6
 	sigs.k8s.io/controller-runtime v0.14.6
 )
 
@@ -94,7 +94,7 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/component-base v0.26.5 // indirect
+	k8s.io/component-base v0.26.6 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect

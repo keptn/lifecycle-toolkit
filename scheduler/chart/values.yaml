@@ -1,0 +1,53 @@
+config:
+  schedulerConfigYaml:
+    leaderElection:
+      leaderElect: false
+    profiles:
+    - plugins:
+        permit:
+          enabled:
+          - name: KLCPermit
+      schedulerName: keptn-scheduler
+imagePullSecrets: []
+kubernetesClusterDomain: cluster.local
+scheduler:
+  nodeSelector: {}
+  replicas: 1
+  scheduler:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      otelCollectorUrl: otel-collector:4317
+    image:
+      repository: ghcr.io/keptn/scheduler
+      tag: v0.8.0
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+      initialDelaySeconds: 15
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 10259
+        scheme: HTTPS
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 20Mi
+  tolerations: []
+  topologySpreadConstraints: []

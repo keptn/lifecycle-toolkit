@@ -8,3 +8,4 @@ bin/
 
 # Reports from suite tests
 report.*
+helmchart.yaml

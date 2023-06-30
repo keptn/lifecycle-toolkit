@@ -1,0 +1,43 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# import the default deployment as the base
+resources:
+  - ../manifests/install
+
+# replace the default namespace with {{ include "chart.namespace" . }}
+# .Release.Namespace has not been used so that a custom _helpers.tpl file can maintain the expected behaviour of
+# helm install -n
+patches:
+  - patch: |
+      - op: add
+        path: '/webhooks/0/namespaceSelector/matchExpressions/-'
+        value:
+          key: kubernetes.io/metadata.name
+          operator: "NotIn"
+          values:
+            - '{{ .Release.Namespace }}'
+    target:
+      kind: MutatingWebhookConfiguration
+      name: "(lifecycle-mutating-webhook-configuration)"
+
+  - patch: |
+      - op: replace
+        path: '/spec/service/namespace'
+        value: '{{ .Release.Namespace }}'
+      - op: replace
+        path: '/spec/service/name'
+        value: '{{ include "chart.fullname" . }}-metrics-operator-service'
+    target:
+      kind: APIService
+      name: "(v1beta2.custom.metrics.k8s.io)"
+
+  - patch: |
+      - op: replace
+        path: '/spec/service/namespace'
+        value: '{{ .Release.Namespace }}'
+      - op: replace
+        path: '/spec/service/name'
+        value: '{{ include "chart.fullname" . }}-metrics-operator-service'
+    target:
+      kind: APIService
+      name: "(v1beta1.custom.metrics.k8s.io)"

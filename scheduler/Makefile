@@ -60,6 +60,14 @@ all: build
 .PHONY: build
 build: build-scheduler
 
+HELMIFY ?=  $(LOCALBIN)/helmify
+
+.PHONY: helmify
+helmify: $(HELMIFY) ## Download helmify locally if necessary.
+$(HELMIFY): $(LOCALBIN)
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@1060b5d08806e40bfd9f38c3e8a9a302ab38e71a
+
+
 .PHONY: build-scheduler
 build-scheduler:
 	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '\
@@ -98,6 +106,14 @@ test: manifests fmt vet envtest## Run tests.
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
+
+
+.PHONY: helm-package
+helm-package: release-manifests helmify
+	echo "building helm overlay"
+	kustomize build ./helm-overlay  > helmchart.yaml
+	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
+	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv chart
 
 .PHONY: release-manifests
 release-manifests:

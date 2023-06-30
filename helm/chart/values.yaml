@@ -1,0 +1,8 @@
+lifecycleOperator:
+  enabled: true
+metricsOperator:
+  enabled: true
+certManager:
+  enabled: true
+scheduler:
+  enabled: true

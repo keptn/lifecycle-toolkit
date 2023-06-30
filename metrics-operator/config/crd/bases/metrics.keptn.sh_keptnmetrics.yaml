@@ -212,6 +212,16 @@ spec:
               query:
                 description: Query represents the query to be run
                 type: string
+              range:
+                description: Range represents the time range for which data is to
+                  be queried
+                properties:
+                  interval:
+                    default: 5m
+                    description: Interval specifies the duration of the time interval
+                      for the data query
+                    type: string
+                type: object
             required:
             - fetchIntervalSeconds
             - provider

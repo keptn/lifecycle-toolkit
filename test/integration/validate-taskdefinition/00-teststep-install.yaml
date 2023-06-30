@@ -1,0 +1,22 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+apply:
+  - td_good_container.yaml
+  - td_good_function.yaml
+  - td_good_python.yaml
+  - td_good_deno.yaml
+commands:
+  - command: kubectl apply -f td_bad_empty.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_container_function.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_container_python.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_container_deno.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_function_python.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_function_deno.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f td_bad_python_deno.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test

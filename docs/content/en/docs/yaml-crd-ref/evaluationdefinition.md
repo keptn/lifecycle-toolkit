@@ -50,7 +50,7 @@ spec:
       [KeptnMetric](metric.md) object that contains the value,
       identified by `name` and `namespace`
     * **evaluationTarget** -- Desired value of the query,
-       expressed as an arithmatic formula,
+       expressed as an arithmetic formula,
        usually less than (`<`) or greater than (`>`)
        This is used to define success or failure criteria
        for the referenced `KeptnMetric` in order to pass or fail
@@ -59,10 +59,21 @@ spec:
 ## Usage
 
 A `KeptnEvaluationDefinition` references one or more
-[KeptnMetric](metric.md) CRDs.
+[KeptnMetric](metric.md) resources.
 When multiple `KeptnMetric`s are used,
 the Keptn Lifecycle Toolkit considers the evaluation successful
 if **all** metrics meet their `evaluationTarget`.
+
+The `KeptnMetric` resource and associated
+[KeptnMetricsProvider](metricsprovider.md)
+resource must be located in the same namespace
+but the `KeptnEvaluationDefinition` resources
+can reference metrics from any namespace in the cluster.
+This means that you can create `KeptnMetricsProvider`
+and `KeptnMetric` resources
+in a centralized namespace (e.g. in `keptn-lifecycle-toolkit-system`)
+and use those metrics in evaluations
+on all namespaces in the cluster.
 
 ## Example
 

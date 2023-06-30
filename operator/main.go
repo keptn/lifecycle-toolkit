@@ -57,6 +57,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 var (
@@ -308,6 +309,10 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
+	if err = (&lifecyclev1alpha3.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
+		os.Exit(1)
+	}
 	// +kubebuilder:scaffold:builder
 
 	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
@@ -339,12 +344,20 @@ func main() {
 			)
 
 		setupLog.Info("starting webhook and manager")
+
+		decoder, err := admission.NewDecoder(mgr.GetScheme())
+		if err != nil {
+			setupLog.Error(err, "unable to initialize decoder")
+			os.Exit(1)
+		}
+
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
 					Client:   mgr.GetClient(),
 					Tracer:   otel.Tracer("keptn/webhook"),
 					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
+					Decoder:  decoder,
 					Log:      ctrl.Log.WithName("Mutating Webhook"),
 				},
 			},

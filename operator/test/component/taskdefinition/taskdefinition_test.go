@@ -13,6 +13,7 @@ import (
 	"k8s.io/apiserver/pkg/storage/names"
 )
 
+//nolint:dupl
 var _ = Describe("Taskdefinition", Ordered, func() {
 	var (
 		taskDefinitionName string
@@ -41,7 +42,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: &klcv1alpha3.FunctionSpec{
+						Function: &klcv1alpha3.RuntimeSpec{
 							Inline: klcv1alpha3.Inline{
 								Code: "console.log(Hello);",
 							},
@@ -82,25 +83,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 
-			It("TaskDefinition referencing existing Configmap", func() {
-				By("Create TaskDefinition")
-				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      taskDefinitionName,
-						Namespace: namespace,
-					},
-					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: &klcv1alpha3.FunctionSpec{
-							ConfigMapReference: klcv1alpha3.ConfigMapReference{
-								Name: "my-configmap",
-							},
-						},
-					},
-				}
-
-				err := k8sClient.Create(context.TODO(), taskDefinition)
-				Expect(err).To(BeNil())
-
+			It("TaskDefinition referencing existing Configmap defaulting to Deno", func() {
 				By("Create ConfigMap")
 
 				configmap = &v1.ConfigMap{
@@ -113,7 +96,76 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					},
 				}
 
-				err = k8sClient.Create(context.TODO(), configmap)
+				err := k8sClient.Create(context.TODO(), configmap)
+				Expect(err).To(BeNil())
+
+				By("Create TaskDefinition")
+				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinitionName,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+						Function: &klcv1alpha3.RuntimeSpec{
+							ConfigMapReference: klcv1alpha3.ConfigMapReference{
+								Name: configmap.Name,
+							},
+						},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), taskDefinition)
+				Expect(err).To(BeNil())
+
+				By("Check if TaskDefinition was updated")
+
+				taskDefinition2 := &klcv1alpha3.KeptnTaskDefinition{}
+				Eventually(func(g Gomega) {
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{
+						Namespace: namespace,
+						Name:      taskDefinition.Name,
+					}, taskDefinition2)
+					g.Expect(err).To(BeNil())
+					g.Expect(taskDefinition2.Status.Function.ConfigMap).To(Equal(configmap.Name))
+
+				}, "30s").Should(Succeed())
+
+				err = k8sClient.Delete(context.TODO(), configmap)
+				common.LogErrorIfPresent(err)
+			})
+
+			It("TaskDefinition referencing existing Configmap for Python runtime", func() {
+				By("Create ConfigMap")
+
+				configmap = &v1.ConfigMap{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-configmap",
+						Namespace: namespace,
+					},
+					Data: map[string]string{
+						"code": "print(\"Hello, World!\")",
+					},
+				}
+
+				err := k8sClient.Create(context.TODO(), configmap)
+				Expect(err).To(BeNil())
+
+				By("Create TaskDefinition")
+				taskDefinition = &klcv1alpha3.KeptnTaskDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      taskDefinitionName,
+						Namespace: namespace,
+					},
+					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+						Python: &klcv1alpha3.RuntimeSpec{
+							ConfigMapReference: klcv1alpha3.ConfigMapReference{
+								Name: configmap.Name,
+							},
+						},
+					},
+				}
+
+				err = k8sClient.Create(context.TODO(), taskDefinition)
 				Expect(err).To(BeNil())
 
 				By("Check if TaskDefinition was updated")
@@ -141,7 +193,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-						Function: &klcv1alpha3.FunctionSpec{
+						Function: &klcv1alpha3.RuntimeSpec{
 							ConfigMapReference: klcv1alpha3.ConfigMapReference{
 								Name: "my-configmap-non-existing",
 							},
@@ -163,7 +215,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 					g.Expect(err).NotTo(BeNil())
 				}, "30s").Should(Succeed())
 
-				By("Check that TaskDefinition was not updated")
+				By("Check that TaskDefinition Status was not updated")
 
 				taskDefinition2 := &klcv1alpha3.KeptnTaskDefinition{}
 				Eventually(func(g Gomega) {
@@ -172,7 +224,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Name:      taskDefinition.Name,
 					}, taskDefinition2)
 					g.Expect(err).To(BeNil())
-					g.Expect(taskDefinition2.Status.Function.ConfigMap).NotTo(Equal(configmap.Name))
+					g.Expect(taskDefinition2.Status.Function.ConfigMap).NotTo(Equal("my-configmap-non-existing"))
 
 				}, "30s").Should(Succeed())
 

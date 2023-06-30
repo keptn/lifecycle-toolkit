@@ -2,6 +2,7 @@ package keptntask
 
 import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -9,21 +10,25 @@ import (
 
 // ContainerBuilder implements container builder interface for python
 type ContainerBuilder struct {
-	taskDef *klcv1alpha3.KeptnTaskDefinition
+	spec *klcv1alpha3.ContainerSpec
 }
 
-func NewContainerBuilder(taskDef *klcv1alpha3.KeptnTaskDefinition) *ContainerBuilder {
+func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
 	return &ContainerBuilder{
-		taskDef: taskDef,
+		spec: options.containerSpec,
 	}
 }
 
-func (c *ContainerBuilder) CreateContainerWithVolumes(ctx context.Context) (*corev1.Container, []corev1.Volume, error) {
-	return c.taskDef.Spec.Container.Container, c.generateVolumes(), nil
+func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
+	return c.spec.Container, nil
+}
+
+func (c *ContainerBuilder) CreateVolume(ctx context.Context) (*corev1.Volume, error) {
+	return c.generateVolume(), nil
 }
 
 func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
-	quantity, ok := c.taskDef.Spec.Container.Resources.Limits["memory"]
+	quantity, ok := c.spec.Resources.Limits["memory"]
 	if ok {
 		return &corev1.EmptyDirVolumeSource{
 			SizeLimit: &quantity,
@@ -38,16 +43,14 @@ func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
 	}
 }
 
-func (c *ContainerBuilder) generateVolumes() []corev1.Volume {
-	if !c.taskDef.IsVolumeMountPresent() {
-		return []corev1.Volume{}
+func (c *ContainerBuilder) generateVolume() *corev1.Volume {
+	if !common.IsVolumeMountPresent(c.spec) {
+		return nil
 	}
-	return []corev1.Volume{
-		{
-			Name: c.taskDef.Spec.Container.VolumeMounts[0].Name,
-			VolumeSource: corev1.VolumeSource{
-				EmptyDir: c.getVolumeSource(),
-			},
+	return &corev1.Volume{
+		Name: c.spec.VolumeMounts[0].Name,
+		VolumeSource: corev1.VolumeSource{
+			EmptyDir: c.getVolumeSource(),
 		},
 	}
 }

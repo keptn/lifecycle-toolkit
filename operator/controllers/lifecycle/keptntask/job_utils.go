@@ -24,7 +24,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if definition.SpecExists() {
+	if controllercommon.SpecExists(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -33,11 +33,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 
 	task.Status.JobName = jobName
 	task.Status.Status = apicommon.StatePending
-	err = r.Client.Status().Update(ctx, task)
-	if err != nil {
-		r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
-	}
-	r.Log.Info("updated configmap status reference for: " + definition.Name)
+
 	return nil
 }
 
@@ -58,17 +54,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	return job.Name, nil
 }
 
-func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
-	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
-	if err != nil {
-		task.Status.JobName = ""
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", task, "JobReferenceRemoved", "removed Job Reference as Job could not be found", "")
-		err = r.Client.Status().Update(ctx, task)
-		if err != nil {
-			r.Log.Error(err, "could not remove job reference for: "+task.Name)
-		}
-		return err
-	}
+func (r *KeptnTaskReconciler) updateTaskStatus(job *batchv1.Job, task *klcv1alpha3.KeptnTask) {
 	if len(job.Status.Conditions) > 0 {
 		if job.Status.Conditions[0].Type == batchv1.JobComplete {
 			task.Status.Status = apicommon.StateSucceeded
@@ -78,8 +64,8 @@ func (r *KeptnTaskReconciler) updateJob(ctx context.Context, req ctrl.Request, t
 			task.Status.Reason = job.Status.Conditions[0].Reason
 		}
 	}
-	return nil
 }
+
 func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namespace string) (*batchv1.Job, error) {
 	job := &batchv1.Job{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: jobName, Namespace: namespace}, job)
@@ -101,6 +87,7 @@ func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
 		taskContext.ObjectType = "Application"
 		taskContext.AppVersion = task.Spec.AppVersion
 	}
+	taskContext.TaskType = string(task.Spec.Type)
 	taskContext.AppName = task.Spec.AppName
 
 	return taskContext
@@ -134,25 +121,38 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 	}
 
 	builderOpt := BuilderOptions{
-		Client:   r.Client,
-		req:      request,
-		Log:      r.Log,
-		task:     task,
-		taskDef:  definition,
-		recorder: r.Recorder,
+		Client:        r.Client,
+		req:           request,
+		Log:           r.Log,
+		task:          task,
+		containerSpec: definition.Spec.Container,
+		funcSpec:      controllercommon.GetRuntimeSpec(definition),
+		recorder:      r.Recorder,
+		Image:         controllercommon.GetRuntimeImage(definition),
+		MountPath:     controllercommon.GetRuntimeMountPath(definition),
+		ConfigMap:     definition.Status.Function.ConfigMap,
 	}
 
-	builder := getJobRunnerBuilder(builderOpt)
+	builder := NewJobRunnerBuilder(builderOpt)
 	if builder == nil {
 		return nil, controllererrors.ErrNoTaskDefinitionSpec
 	}
 
-	container, volumes, err := builder.CreateContainerWithVolumes(ctx)
+	container, err := builder.CreateContainer(ctx)
 	if err != nil {
-		return nil, controllererrors.ErrCannotMarshalParams
+		return nil, fmt.Errorf("could not create container for Job: %w", err)
+	}
+
+	volume, err := builder.CreateVolume(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("could not create volume for Job: %w", err)
+	}
+
+	if volume != nil {
+		job.Spec.Template.Spec.Volumes = []corev1.Volume{*volume}
 	}
 
 	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
-	job.Spec.Template.Spec.Volumes = volumes
+
 	return job, nil
 }

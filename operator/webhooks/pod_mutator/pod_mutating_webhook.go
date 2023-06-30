@@ -39,7 +39,7 @@ import (
 type PodMutatingWebhook struct {
 	Client   client.Client
 	Tracer   trace.Tracer
-	decoder  *admission.Decoder
+	Decoder  *admission.Decoder
 	Recorder record.EventRecorder
 	Log      logr.Logger
 }
@@ -65,7 +65,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	pod := &corev1.Pod{}
 
-	err := a.decoder.Decode(req, pod)
+	err := a.Decoder.Decode(req, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}
@@ -121,15 +121,6 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	return admission.PatchResponseFromRaw(req.Object.Raw, marshaledPod)
-}
-
-// PodMutatingWebhook implements admission.DecoderInjector.
-// A decoder will be automatically injected.
-
-// InjectDecoder injects the decoder.
-func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
-	a.decoder = d
-	return nil
 }
 
 func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {

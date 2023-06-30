@@ -1,9 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "chart.fullname" . }}-role
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - klt-certs
+  resources:
+  - secrets
+  verbs:
+  - get
+  - patch
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
-  name: certificate-operator-role
+  name: {{ include "chart.fullname" . }}-role
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -43,29 +71,3 @@ rules:
   - get
   - list
   - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  creationTimestamp: null
-  name: certificate-operator-role
-  namespace: keptn-lifecycle-toolkit-system
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resourceNames:
-  - klt-certs
-  resources:
-  - secrets
-  verbs:
-  - get
-  - patch
-  - update

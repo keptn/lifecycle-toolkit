@@ -49,8 +49,9 @@ version: 0.2.4
 # It is recommended to use it with quotes.
 appVersion: "v0.8.0" # x-release-please-version
 dependencies:
-  - name: klt-metrics-operator
-    alias: metricsOperator
+  - name: metrics-operator
     version: 0.1.0
     repository: "file://../../metrics-operator/chart"
-    condition: metricsOperator.enabled
+  - name: cert-manager
+    version: 0.1.0
+    repository: "file://../../klt-cert-manager/chart"

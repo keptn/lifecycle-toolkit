@@ -1,6 +1,9 @@
 dependencies:
-- name: klt-metrics-operator
+- name: metrics-operator
   repository: file://../../metrics-operator/chart
   version: 0.1.0
-digest: sha256:5626077edc5cffc614439393b3af7c9f979a80b358d8d162266461c1244bfa4f
-generated: "2023-06-28T13:20:17.805973+02:00"
+- name: cert-manager
+  repository: file://../../klt-cert-manager/chart
+  version: 0.1.0
+digest: sha256:c02f599f95afbc921af1022ac223fe502cdde97dac87d0ea501ff4a4e33e7c93
+generated: "2023-06-30T09:47:15.457998+02:00"

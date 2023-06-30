@@ -1,0 +1,44 @@
+certificateOperator:
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      labelSelectorKey: keptn.sh/inject-cert
+      labelSelectorValue: "true"
+    image:
+      repository: ghcr.io/keptn/certificate-operator
+      tag: v0.8.0
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 25m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+imagePullSecrets: []
+kubernetesClusterDomain: cluster.local

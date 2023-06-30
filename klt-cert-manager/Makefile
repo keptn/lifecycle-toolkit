@@ -1,4 +1,3 @@
-
 # Image URL to use all building/pushing image targets
 IMG ?= certificate-operator:latest
 # RELEASE_REGISTRY is the container registry to push into.
@@ -19,6 +18,12 @@ VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.25.0
 
+## Tool Versions
+# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
+KUSTOMIZE_VERSION?=v5.0.3
+# renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
+CONTROLLER_TOOLS_VERSION?=v0.12.0
+
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
 GOBIN=$(shell go env GOPATH)/bin
@@ -34,6 +39,12 @@ SHELL = /usr/bin/env bash -o pipefail
 .PHONY: all
 all: build
 
+HELMIFY ?=  $(LOCALBIN)/helmify
+
+.PHONY: helmify
+helmify: $(HELMIFY) ## Download helmify locally if necessary.
+$(HELMIFY): $(LOCALBIN)
+	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@1060b5d08806e40bfd9f38c3e8a9a302ab38e71a
 
 #### developer build   ####
 .PHONY: clean
@@ -94,6 +105,19 @@ ifndef ignore-not-found
   ignore-not-found = false
 endif
 
+.PHONY: helm-package
+helm-package: release-manifests helmify
+	echo "building helm overlay"
+	kustomize build ./helm-overlay  > helmchart.yaml
+	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
+	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv chart
+
+.PHONY: release-manifests
+release-manifests: manifests
+	echo "building default overlay"
+	kustomize build config/default > config/rendered/release.yaml
+	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml
+
 .PHONY: deploy
 deploy: ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && kustomize edit set image controller=${IMG}
@@ -114,13 +138,6 @@ $(LOCALBIN):
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
 ENVTEST ?= $(LOCALBIN)/setup-envtest
-
-## Tool Versions
-
-# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.0.3
-# renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION?=v0.12.0
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize
@@ -183,8 +200,3 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
-
-.PHONY: release-manifests
-release-manifests:
-	kustomize build config/default > config/rendered/release.yaml
-	envsubst < config/rendered/release.yaml > tmp.yaml; mv tmp.yaml config/rendered/release.yaml

@@ -1,8 +1,6 @@
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
-
-# RELEASE_REGISTRY is the container registry to push
-# into.
+# RELEASE_REGISTRY is the container registry to push into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
@@ -21,7 +19,7 @@ BUILDENVVAR=CGO_ENABLED=0
 VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
-ENVTEST_K8S_VERSION=1.24.2
+ENVTEST_K8S_VERSION = 1.25.0
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
@@ -95,6 +93,7 @@ test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 ##@ Build
+
 .PHONY: build
 build: generate ## Build manager binary.
 	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X common.gitCommit=$(HASH) -X common.buildTime=$(BUILD_TIME) -X common.buildVersion=$(TAG)' -o bin/manager main.go

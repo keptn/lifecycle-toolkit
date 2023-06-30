@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "chart.fullname" . }}-keptn-scheduler
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-scheduler
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    component: scheduler
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.scheduler.replicas }}
+  selector:
+    matchLabels:
+      component: scheduler
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: scheduler
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - command:
+        - /bin/kube-scheduler
+        - --config=/etc/kubernetes/scheduler-config.yaml
+        env:
+        - name: OTEL_COLLECTOR_URL
+          value: {{ .Values.scheduler.scheduler.env.otelCollectorUrl | quote }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.scheduler.scheduler.image.repository }}:{{ .Values.scheduler.scheduler.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.scheduler.scheduler.imagePullPolicy }}
+        name: scheduler
+        resources: {{- toYaml .Values.scheduler.scheduler.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          privileged: {{ .Values.scheduler.scheduler.containerSecurityContext.privileged
+            }}
+          readOnlyRootFilesystem: {{ .Values.scheduler.scheduler.containerSecurityContext.readOnlyRootFilesystem
+            }}
+          runAsNonRoot: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsNonRoot
+            }}
+          runAsUser: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsUser }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        volumeMounts:
+        - mountPath: /etc/kubernetes
+          name: scheduler-config
+          readOnly: true
+        {{- if .Values.scheduler.scheduler.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 10259
+           scheme: HTTPS
+         initialDelaySeconds: 15
+        {{- end }}
+        {{- if .Values.scheduler.scheduler.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /healthz
+           port: 10259
+           scheme: HTTPS
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      serviceAccountName: {{ include "chart.fullname" . }}-keptn-scheduler
+      volumes:
+      - configMap:
+          name: {{ include "chart.fullname" . }}-config
+        name: scheduler-config
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}

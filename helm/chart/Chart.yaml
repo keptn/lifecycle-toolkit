@@ -49,6 +49,9 @@ version: 0.2.4
 # It is recommended to use it with quotes.
 appVersion: "v0.8.0" # x-release-please-version
 dependencies:
+  - name: lifecycle-operator
+    version: 0.1.0
+    repository: "file://../../operator/chart"
   - name: metrics-operator
     version: 0.1.0
     repository: "file://../../metrics-operator/chart"

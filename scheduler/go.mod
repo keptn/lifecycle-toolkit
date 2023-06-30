@@ -20,7 +20,7 @@ require (
 	k8s.io/client-go v0.25.11
 	k8s.io/component-base v0.25.11
 	k8s.io/klog/v2 v2.100.1
-	k8s.io/kubernetes v1.25.10
+	k8s.io/kubernetes v1.25.11
 	sigs.k8s.io/controller-runtime v0.13.1
 )
 
@@ -108,7 +108,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.25.0 // indirect
 	k8s.io/cloud-provider v0.25.4 // indirect
-	k8s.io/component-helpers v0.25.10 // indirect
+	k8s.io/component-helpers v0.25.11 // indirect
 	k8s.io/csi-translation-lib v0.25.4 // indirect
 	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 // indirect
 	k8s.io/kube-scheduler v0.0.0 // indirect
@@ -133,7 +133,7 @@ replace (
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.25.11
 	k8s.io/code-generator => k8s.io/code-generator v0.25.11
 	k8s.io/component-base => k8s.io/component-base v0.25.11
-	k8s.io/component-helpers => k8s.io/component-helpers v0.25.10
+	k8s.io/component-helpers => k8s.io/component-helpers v0.25.11
 	k8s.io/controller-manager => k8s.io/controller-manager v0.25.11
 	k8s.io/cri-api => k8s.io/cri-api v0.25.11
 	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.25.11
@@ -143,7 +143,7 @@ replace (
 	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.25.11
 	k8s.io/kubectl => k8s.io/kubectl v0.25.11
 	k8s.io/kubelet => k8s.io/kubelet v0.25.11
-	k8s.io/kubernetes => k8s.io/kubernetes v1.25.10
+	k8s.io/kubernetes => k8s.io/kubernetes v1.25.11
 	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.25.11
 	k8s.io/metrics => k8s.io/metrics v0.25.11
 	k8s.io/mount-utils => k8s.io/mount-utils v0.25.11

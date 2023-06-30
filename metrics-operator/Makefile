@@ -93,7 +93,6 @@ test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 ##@ Build
-
 .PHONY: build
 build: generate ## Build manager binary.
 	$(COMMONENVVAR) $(BUILDENVVAR) go build -ldflags '-w -X common.gitCommit=$(HASH) -X common.buildTime=$(BUILD_TIME) -X common.buildVersion=$(TAG)' -o bin/manager main.go

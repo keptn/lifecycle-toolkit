@@ -1,0 +1,79 @@
+imagePullSecrets: []
+kubernetesClusterDomain: cluster.local
+managerConfig:
+  controllerManagerConfigYaml:
+    health:
+      healthProbeBindAddress: :8081
+    leaderElection:
+      leaderElect: true
+      resourceName: 6b866dd9.keptn.sh
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+operator:
+  manager:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    env:
+      functionRunnerImage: ghcr.io/keptn/functions-runtime:v0.8.0
+      keptnAppControllerLogLevel: "0"
+      keptnAppCreationRequestControllerLogLevel: "0"
+      keptnAppVersionControllerLogLevel: "0"
+      keptnEvaluationControllerLogLevel: "0"
+      keptnTaskControllerLogLevel: "0"
+      keptnTaskDefinitionControllerLogLevel: "0"
+      keptnWorkloadControllerLogLevel: "0"
+      keptnWorkloadInstanceControllerLogLevel: "0"
+      optionsControllerLogLevel: "0"
+      otelCollectorUrl: otel-collector:4317
+      pythonRunnerImage: ghcr.io/keptn/python-runtime:v0.8.0
+    image:
+      repository: ghcr.io/keptn/lifecycle-operator
+      tag: v0.8.0
+    imagePullPolicy: Always
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+  nodeSelector: {}
+  replicas: 1
+  tolerations: []
+  topologySpreadConstraints: []
+operatorMetricsService:
+  ports:
+  - name: metrics
+    port: 2222
+    protocol: TCP
+    targetPort: metrics
+  type: ClusterIP
+webhookService:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+  type: ClusterIP

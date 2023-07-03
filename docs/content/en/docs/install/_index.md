@@ -1,7 +1,7 @@
 ---
 title: Installation and upgrade
 description: Learn how to install, configure, and upgrade the Keptn Lifecycle Toolkit
-weight: 15
+weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

@@ -5,7 +5,7 @@ metadata:
 spec:
   container:
     name: keptntaskdefinition1
-    image: busybox:1.36.0
+    image: busybox:1.36.1
     resources:
       limits:
         memory: "200Mi"

@@ -39,13 +39,7 @@ spec:
         - command:
             - /manager
           args:
-            - webhook-server
             - --leader-elect
-            # Secure port for the metrics adapter
-            - --adapter-port=6443
-            - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
-            # Log level for the metrics adapter
-            - --v=10
           image: controller:latest
           name: manager
           ports:

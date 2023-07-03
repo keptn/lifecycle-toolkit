@@ -63,7 +63,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703122848-59db60f67d29 // indirect
+	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703123552-c3811719cd8f
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect

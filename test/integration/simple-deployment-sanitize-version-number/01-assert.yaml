@@ -8,7 +8,7 @@ metadata:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkloadInstance
 metadata:
-  name: waiter-waiter-0.4.0_1
+  name: waiter-waiter-0.4.0-1
 status:
   currentPhase: Completed
   deploymentStatus: Succeeded

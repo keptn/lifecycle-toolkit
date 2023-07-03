@@ -9,6 +9,8 @@ require (
 	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
 	//github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230630070122-4ad9bbf74960
+	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703132045-faaaf3f73aef // indirect
+
 	//github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0
@@ -55,7 +57,7 @@ require (
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703130357-596563336536 // indirect
+	//github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703130357-596563336536 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-logr/zapr v1.2.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect

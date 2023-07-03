@@ -60,7 +60,7 @@ dependencies:
   - name: cert-manager
     version: 0.1.0
     repository: "file://../../klt-cert-manager/chart"
-    condition: certManager.enabled
+    condition: certificateOperator.enabled
   - name: scheduler
     version: 0.1.0
     repository: "file://../../scheduler/chart"

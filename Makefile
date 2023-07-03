@@ -71,40 +71,63 @@ kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
+.PHONY: build-deploy-helm
+build-deploy-helm: build-dev-environment
+	helm upgrade --install klt ./helm/chart \
+		--set metrics-operator.metricsOperator.manager.image.repository=$(RELEASE_REGISTRY)/metrics-operator \
+		--set metrics-operator.metricsOperator.manager.image.tag=$(TAG) \
+		--set lifecycle-operator.operator.manager.image.repository=$(RELEASE_REGISTRY)/lifecycle-operator \
+		--set lifecycle-operator.operator.manager.image.tag=$(TAG) \
+		--set cert-manager.certificateOperator.manager.image.repository=$(RELEASE_REGISTRY)/certificate-operator \
+		--set cert-manager.certificateOperator.manager.image.tag=$(TAG) \
+		--set scheduler.scheduler.scheduler.image.repository=$(RELEASE_REGISTRY)/scheduler \
+		--set scheduler.scheduler.scheduler.image.tag=$(TAG) \
+
 .PHONY: build-deploy-operator
-build-deploy-operator:
+build-deploy-operator: build-operator
+	kubectl apply -f operator/config/rendered/release.yaml
+
+.PHONY: build-operator
+build-operator:
 	$(MAKE) -C operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 
-	kubectl apply -f operator/config/rendered/release.yaml
-
 .PHONY: build-deploy-metrics-operator
-build-deploy-metrics-operator:
+build-deploy-metrics-operator: build-metrics-operator
+	kubectl apply -f metrics-operator/config/rendered/release.yaml
+
+.PHONY: build-metrics-operator
+build-metrics-operator:
 	$(MAKE) -C metrics-operator release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C metrics-operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 
-	kubectl apply -f metrics-operator/config/rendered/release.yaml
-
 .PHONY: build-deploy-scheduler
-build-deploy-scheduler:
+build-deploy-scheduler: build-scheduler
+	kubectl apply -f scheduler/config/rendered/release.yaml
+
+.PHONY: build-scheduler
+build-scheduler:
 	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -f scheduler/config/rendered/release.yaml
 
 .PHONY: build-deploy-certmanager
-build-deploy-certmanager:
+build-deploy-certmanager: build-certmanager
+	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
+
+.PHONY: build-certmanager
+build-certmanager:
 	$(MAKE) -C klt-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C klt-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
+
+.PHONY: build-dev-environment
+build-dev-environment: build-certmanager build-operator build-metrics-operator build-scheduler
 
 
 include docs/Makefile

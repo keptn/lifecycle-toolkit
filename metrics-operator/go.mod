@@ -1,4 +1,4 @@
-module github.com/keptn/lifecycle-toolkit/metrics-operator
+module github.com/geoffrey1330/lifecycle-toolkit/metrics-operator
 
 go 1.20
 

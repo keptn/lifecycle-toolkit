@@ -30,6 +30,7 @@ spec:
   secretKeyRef:
     name: <secret-name>
     key: <secret-key-that-holds-token>
+    optional: true | false
 ```
 
 ## Fields
@@ -64,6 +65,7 @@ spec:
   * **secretKeyRef**
     * **name:** -- Name of the token for this data provider
     * **key:** -- Key for this data provider
+    * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
 

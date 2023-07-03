@@ -1,4 +1,4 @@
-module github.com/geoffrey1330/lifecycle-toolkit/metrics-operator
+module github.com/keptn/lifecycle-toolkit/metrics-operator
 
 go 1.20
 
@@ -21,7 +21,7 @@ require (
 	k8s.io/client-go v0.27.2
 	k8s.io/component-base v0.27.2
 	k8s.io/klog/v2 v2.100.1
-	k8s.io/metrics v0.26.5
+	k8s.io/metrics v0.27.0
 	sigs.k8s.io/controller-runtime v0.15.0
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 )

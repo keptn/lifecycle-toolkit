@@ -5,11 +5,11 @@ go 1.20
 require (
 	github.com/argoproj/argo-rollouts v1.5.1
 	github.com/benbjohnson/clock v1.3.5
+	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703132045-faaaf3f73aef
+	github.com/geoffrey1330/lifecycle-toolkit/metrics-operator v0.0.0-20230703132045-faaaf3f73aef
 	github.com/go-logr/logr v1.2.4
 	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703132045-faaaf3f73aef // indirect
-	github.com/geoffrey1330/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	//github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0
@@ -104,5 +104,7 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+require github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703122848-59db60f67d29 // indirect
 
 replace golang.org/x/net => golang.org/x/net v0.10.0

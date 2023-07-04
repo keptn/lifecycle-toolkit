@@ -1,7 +1,7 @@
 package fake
 
 import (
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/geoffrey1330/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/options/v1alpha1"
 	corev1 "k8s.io/api/core/v1"

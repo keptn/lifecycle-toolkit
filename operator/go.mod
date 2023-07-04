@@ -9,7 +9,7 @@ require (
 	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703132045-faaaf3f73aef // indirect
-
+	github.com/geoffrey1330/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	//github.com/keptn/lifecycle-toolkit/metrics-operator v0.0.0-20230627093608-472eac0c8e2b
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0

@@ -6,7 +6,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+
+	metricsapi "github.com/geoffrey1330/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"

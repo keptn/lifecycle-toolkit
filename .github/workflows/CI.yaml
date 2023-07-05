@@ -195,20 +195,20 @@ jobs:
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
 
-  integration_tests_helm:
+  integration_tests:
     name: Integration Tests
-    needs: [prepare_ci_run, build_image]
+    needs:
+      - prepare_ci_run
+      - build_image
+    strategy:
+      matrix:
+        helm-install:
+          - "true"
+          - "false"
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-      helm-install: true
+      helm-install: ${{ matrix.helm-install }}
     uses: ./.github/workflows/integration-test.yml
-
-  integration_tests_manifest:
-    name: Integration Tests
-    needs: [ prepare_ci_run, build_image ]
-    with:
-      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-      helm-install: false
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

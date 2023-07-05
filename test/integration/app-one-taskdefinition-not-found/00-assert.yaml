@@ -4,12 +4,12 @@ metadata:
   name: podtato-head-1.3-6b86b273
 status:
   currentPhase: AppPreDeployTasks
-  postDeploymentEvaluationStatus: Deprecated
-  postDeploymentStatus: Deprecated
-  preDeploymentEvaluationStatus: Deprecated
-  preDeploymentStatus: Failed
-  status: Failed
-  workloadOverallStatus: Deprecated
+  postDeploymentEvaluationStatus: Pending
+  postDeploymentStatus: Pending
+  preDeploymentEvaluationStatus: Pending
+  preDeploymentStatus: Unknown
+  status: Progressing
+  workloadOverallStatus: Pending
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTask

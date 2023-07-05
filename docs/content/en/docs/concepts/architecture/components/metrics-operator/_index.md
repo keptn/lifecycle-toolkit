@@ -69,15 +69,15 @@ CR.
 The steps in which the controller fetches metrics are given below:
 
 1. Fetch the `KeptnMetric` object to be reconciled.
-   - If the object is not found,
+   * If the object is not found,
      it returns and lets Kubernetes handle deleting all associated resources.
 1. If the object is found, the code checks
    whether the metric has been updated within the interval
    that is defined in the `spec.fetchintervalseconds` field.
-   -  If not, it skips reconciling and requeues the request for later.
+   * If not, it skips reconciling and requeues the request for later.
 1. If the metric should be reconciled,
    it fetches the provider defined in the `spec.provider.name` field.
-   - If the provider is not found,
+   * If the provider is not found,
      it returns and requeues the request for later.
 1. If the provider is found,
    it loads the provider and evaluates the query

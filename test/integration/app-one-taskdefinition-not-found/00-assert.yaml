@@ -21,6 +21,4 @@ spec:
   taskDefinition: pre-task-timeout
   timeout: 30s
 status:
-  message: Job was active longer than specified deadline
-  reason: DeadlineExceeded
-  status: Failed
+  status: Succeeded

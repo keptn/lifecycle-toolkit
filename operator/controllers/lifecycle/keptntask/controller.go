@@ -29,7 +29,6 @@ import (
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
@@ -136,7 +135,6 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
-		Owns(&batchv1.Job{}).
 		Complete(r)
 }
 

@@ -195,11 +195,20 @@ jobs:
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
 
-  integration_tests:
+  integration_tests_helm:
     name: Integration Tests
     needs: [prepare_ci_run, build_image]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      helm-install: true
+    uses: ./.github/workflows/integration-test.yml
+
+  integration_tests_manifest:
+    name: Integration Tests
+    needs: [ prepare_ci_run, build_image ]
+    with:
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      helm-install: false
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

@@ -21,7 +21,7 @@ inputs:
   helm-install:
     required: false
     description: "Install KLT via helm instead of manifest if true"
-    default: "false"
+    default: "true"
 runs:
   using: "composite"
   steps:

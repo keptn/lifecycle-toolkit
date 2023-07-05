@@ -2,6 +2,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: python-secret
+  namespace: podtato-kubectl
 spec:
   python:
     httpRef:
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mypysecret
+  namespace: podtato-kubectl
 type: Opaque
 data:
   SECURE_DATA: dG9rZW46IG15dG9rZW4=

@@ -19,5 +19,5 @@ for i in $(seq 1 $RETRY_COUNT); do
     fi
 done
 
-echo "Retried ${RETRY_COUNT} times, but custom metric value did not meet the condition. Exiting..."
+echo "Retried ${RETRY_COUNT} times, but expected number of resources could not be verified. Exiting..."
 exit 1

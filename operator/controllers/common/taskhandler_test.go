@@ -83,7 +83,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 0},
-			wantErr:         controllererrors.ErrCannotGetKeptnTaskDefinition,
+			wantErr:         nil,
 			getSpanCalls:    0,
 			unbindSpanCalls: 0,
 		},

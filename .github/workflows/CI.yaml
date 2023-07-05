@@ -203,11 +203,11 @@ jobs:
     strategy:
       matrix:
         helm-install:
-          - "true"
-          - "false"
+          - value: "true"
+          - value: "false"
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-      helm-install: ${{ matrix.helm-install }}
+      helm-install: ${{ matrix.helm-install.value }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

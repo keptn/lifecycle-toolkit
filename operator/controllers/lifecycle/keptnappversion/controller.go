@@ -88,15 +88,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	ctx, ctxAppTrace, span, endSpan := r.setupSpansContexts(ctx, appVersion)
 	defer endSpan()
 
-	defer func() {
-		err = r.Client.Status().Update(ctx, appVersion)
-		if err != nil {
-			if err != nil {
-				r.Log.Error(err, "could not update KeptnAppVersion status", "KeptnAppVersion", appVersion.Name)
-			}
-		}
-	}()
-
 	phase := apicommon.PhaseAppPreDeployment
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
@@ -171,6 +162,11 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
+	err = r.Client.Status().Update(ctx, appVersion)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return ctrl.Result{Requeue: true}, err
+	}
 	// AppVersion is completed at this place
 
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
@@ -184,6 +180,11 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 	}
 
 	attrs := appVersion.GetMetricsAttributes()
+
+	err := r.Client.Status().Update(ctx, appVersion)
+	if err != nil {
+		return ctrl.Result{Requeue: true}, err
+	}
 
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)

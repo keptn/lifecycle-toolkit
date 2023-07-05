@@ -23,4 +23,4 @@
 
  echo "Retried ${RETRY_COUNT} times, but expected number of ${RESOURCE_TYPE} could not be verified. Exiting..."
  exit 1
- 
+

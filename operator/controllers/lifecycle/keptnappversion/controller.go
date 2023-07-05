@@ -179,12 +179,12 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 		appVersion.SetEndTime()
 	}
 
-	attrs := appVersion.GetMetricsAttributes()
-
 	err := r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
 	}
+
+	attrs := appVersion.GetMetricsAttributes()
 
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)

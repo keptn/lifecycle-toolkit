@@ -164,7 +164,7 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.True(t, errors.IsNotFound(e))
 		require.Equal(t, []byte(nil), raw)
@@ -201,7 +201,7 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.Equal(t, "", r)
 		t.Log(string(raw))
@@ -240,7 +240,7 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj:= range objects{
+	for _, obj := range objects {
 		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.Equal(t, "", r)
 		t.Log(string(raw), e)
@@ -262,7 +262,7 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.NotNil(t, e)
 		require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
@@ -288,7 +288,7 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.NotNil(t, e)
 		require.True(t, errors.IsNotFound(e))
@@ -325,7 +325,7 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.NotNil(t, e)
 		require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
@@ -361,7 +361,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects{
+	for _, obj := range objects {
 		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
 		require.Nil(t, e)
 		require.Equal(t, []byte(dtpayload), raw)

@@ -77,7 +77,8 @@ you need to do the following:
    - Follow the instructions in
      [Annotate workload](../../implementing/integrate/#basic-annotations)
      to integrate the Lifecycle Toolkit into your Kubernetes cluster
-     by applying basic annotations to your `Deployment` resource.
+     by applying basic annotations
+     to your workload and pod resources.
    - Follow the instructions in
      [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
      to create a Keptn application that aggragates
@@ -89,43 +90,14 @@ you need to do the following:
 
 ## DORA metrics
 
-DORA metrics are an industry-standard set of measurements;
-see the following for a description:
-
-- [What are DORA Metrics and Why Do They Matter?](https://codeclimate.com/blog/dora-metrics)
-- [Are you an Elite DevOps Performer?
-   Find out with the Four Keys Project](https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance)
-
-DORA metrics provide information such as:
-
-- How many deployments happened in the last six hours?
-- Time between deployments
-- Deployment time between versions
-- Average time between versions.
+DORA metrics are an industry-standard set of measurements
+about your deployments.
 
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
-Metrics are collected only for the `Deployment` resources
-that are annotated.
-
-To view DORA metrics, run the following command:
-
-```shell
-kubectl port-forward -n keptn-lifecycle-toolkit-system \
-   svc/lifecycle-operator-metrics-service 2222
-```
-
-Then view the metrics at:
-
-```shell
-http://localhost:2222/metrics
-```
-
-DORA metrics are also displayed on Grafana
-or whatever dashboard application you choose.
-For example:
-
-![DORA metrics](assets/dynatrace_dora_dashboard.png)
+See
+[DORA metrics](../../implementing/dora)
+for more details.
 
 ## Using OpenTelemetry
 

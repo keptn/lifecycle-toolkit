@@ -132,6 +132,8 @@ func main() {
 		Development: true,
 	}
 	opts.BindFlags(flag.CommandLine)
+	// parse the flags, so we ensure they can be set to something else than their default values
+	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 

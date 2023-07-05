@@ -43,10 +43,9 @@ type DynatraceData struct {
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 	query := url.QueryEscape(metric.Spec.Query)
-	interval := metric.Spec.Range.Interval
 	var qURL string
 	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "?writtenSince=" + interval
+		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "?writtenSince=" + metric.Spec.Range.Interval
 	} else {
 		qURL = baseURL + "v2/metrics/query?metricSelector=" + query
 	}

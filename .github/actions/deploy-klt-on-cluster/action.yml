@@ -84,11 +84,14 @@ runs:
 
     - name: Install lifecycle-toolkit with helm
       if: ${{ inputs.helm-install == 'true'  }}
+      env:
+        RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
       run: |
         echo "Installing KLT using helm"
+        make helm-package
         helm version
-        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz \
+        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ./helm/chart  \
           --set scheduler.scheduler.imagePullPolicy=Never \
           --set lifecycleOperator.manager.imagePullPolicy=Never \
           --set metricsOperator.manager.imagePullPolicy=Never \

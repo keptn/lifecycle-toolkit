@@ -76,9 +76,9 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateFailed))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 			})
-			It("succeed task if taskDefiniton for Deno is present in default KLT namespace", func() {
+			It("succeed task if taskDefinition for Deno is present in default KLT namespace", func() {
 				By("create default KLT namespace")
 
 				ns := &v1.Namespace{

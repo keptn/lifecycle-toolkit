@@ -4,8 +4,6 @@ description: Access DORA metrics for your cluster
 weight: 65
 ---
 
-## DORA metrics
-
 DORA metrics are an industry-standard set of measurements
 that are included in the Keptn Lifecycle Toolkit.
 see the following for a description:

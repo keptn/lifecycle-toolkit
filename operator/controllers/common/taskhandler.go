@@ -91,9 +91,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				&taskStatus,
 			)
 			if err != nil {
-				// log the error, but continue to proceed with other tasks that may be created
-				r.Log.Error(err, "Could not create task", "task", taskDefinitionName)
-				continue
+				return nil, summary, err
 			}
 		} else {
 			r.handleTaskExists(

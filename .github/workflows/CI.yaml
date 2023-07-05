@@ -209,7 +209,6 @@ jobs:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm-install }}
     uses: ./.github/workflows/integration-test.yml
-    uses: ./.github/workflows/integration-test.yml
 
   load-tests:
     name: Load Tests

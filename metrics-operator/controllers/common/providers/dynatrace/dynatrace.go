@@ -45,7 +45,7 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 	query := url.QueryEscape(metric.Spec.Query)
 	var qURL string
 	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "?writtenSince=" + metric.Spec.Range.Interval
+		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "?writtenSince=now-" + metric.Spec.Range.Interval
 	} else {
 		qURL = baseURL + "v2/metrics/query?metricSelector=" + query
 	}

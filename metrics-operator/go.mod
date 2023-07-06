@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.14.0
 	github.com/benbjohnson/clock v1.3.5
-	github.com/geoffrey1330/lifecycle-toolkit/klt-cert-manager v0.0.0-20230703123552-c3811719cd8f
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230630070122-4ad9bbf74960
 	github.com/go-logr/logr v1.2.4
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0

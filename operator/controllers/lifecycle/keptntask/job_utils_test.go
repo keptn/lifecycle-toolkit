@@ -7,6 +7,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -26,8 +27,6 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
 
-	fakeRecorder := &record.FakeRecorder{}
-
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
@@ -41,10 +40,10 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)
@@ -100,8 +99,6 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 
 	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
 
-	fakeRecorder := &record.FakeRecorder{}
-
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
@@ -115,10 +112,10 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)
@@ -173,8 +170,6 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
 
-	fakeRecorder := &record.FakeRecorder{}
-
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
@@ -188,10 +183,10 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)

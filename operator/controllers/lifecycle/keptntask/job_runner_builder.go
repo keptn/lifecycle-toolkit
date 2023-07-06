@@ -3,9 +3,9 @@ package keptntask
 import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -20,7 +20,7 @@ type JobRunnerBuilder interface {
 // BuilderOptions contains everything needed to build the current job
 type BuilderOptions struct {
 	client.Client
-	recorder      record.EventRecorder
+	EventSender   controllercommon.EventSender
 	req           ctrl.Request
 	Log           logr.Logger
 	task          *klcv1alpha3.KeptnTask

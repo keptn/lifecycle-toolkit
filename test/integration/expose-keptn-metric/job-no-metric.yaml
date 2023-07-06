@@ -26,8 +26,8 @@ spec:
             - -ec
             - |
               curl -s $SVCNAME.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/api/v1/metrics/$NAMESPACE/$NAME > ~/out.txt
-              if grep -F "$NAME" ~/out.txt  
-              then  
+              if grep -F "$NAME" ~/out.txt
+              then
                 exit 1
               fi
       restartPolicy: Never

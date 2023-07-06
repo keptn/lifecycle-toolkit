@@ -18,5 +18,5 @@ for i in $(seq 1 $RETRY_COUNT); do
 done
 echo "Retried ${RETRY_COUNT} times, but correct log message was not found. Exiting..."
 kubectl logs -n "$NAMESPACE" -l control-plane=lifecycle-operator --tail=-1 > logs.txt
-cat log.txt
+cat logs.txt
 exit 1

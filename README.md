@@ -41,7 +41,6 @@ for information about installing and implementing KLT
 as well as migrating to KLT from
 [Keptn v1](https://keptn.sh/docs/).
 
-
 <!---x-release-please-end-->
 
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,

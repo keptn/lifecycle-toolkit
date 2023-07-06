@@ -52,4 +52,3 @@ to check whether it has reached the desired state.
 If it detects that the referenced object has reached its desired state,
 (e.g. all pods of a deployment are up and running),
 it triggers a `PostDeploymentCheck`.
-

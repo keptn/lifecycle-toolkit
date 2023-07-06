@@ -167,7 +167,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
-
 	// AppVersion is completed at this place
 
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)

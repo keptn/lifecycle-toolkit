@@ -56,5 +56,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests
+          name: logs-integration-tests-${{ inputs.helm-install }}
           path: .github/scripts/logs

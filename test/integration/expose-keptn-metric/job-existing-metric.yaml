@@ -25,7 +25,8 @@ spec:
             - /bin/sh
             - -ec
             - |
-              curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/metrics > ~/out.txt
+              svcName=$(kubectl get svc -n keptn-lifecycle-toolkit-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }")
+              curl -s ${svcName}.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/metrics > ~/out.txt
               echo ~/out.txt
               if grep -Fxq "# HELP $NAME $NAME" ~/out.txt
               then
@@ -39,7 +40,8 @@ spec:
             - /bin/sh
             - -ec
             - |
-              curl -s metrics-operator-service.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/api/v1/metrics/$NAMESPACE/$NAME > ~/out.txt
+              svcName=$(kubectl get svc -n keptn-lifecycle-toolkit-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }")
+              curl -s ${svcName}.keptn-lifecycle-toolkit-system.svc.cluster.local:9999/api/v1/metrics/$NAMESPACE/$NAME > ~/out.txt
               echo ~/out.txt
               if grep -F "$NAME" ~/out.txt
               then

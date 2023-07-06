@@ -198,7 +198,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	r := &KeptnAppVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(recorder),
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,

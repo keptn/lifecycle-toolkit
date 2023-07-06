@@ -53,7 +53,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -80,7 +80,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -107,7 +107,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -134,7 +134,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -161,7 +161,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -189,7 +189,7 @@ func TestPhaseHandler(t *testing.T) {
 			handler: PhaseHandler{
 				SpanHandler: &SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{

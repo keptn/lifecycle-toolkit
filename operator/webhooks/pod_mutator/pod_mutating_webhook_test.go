@@ -10,6 +10,7 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	fakeclient "github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -26,11 +27,11 @@ import (
 
 func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		resource *metav1.ObjectMeta
@@ -84,11 +85,11 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			if got := a.getOwnerReference(tt.args.resource); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getOwnerReference() = %v, want %v", got, tt.want)
@@ -99,11 +100,11 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 
 func TestPodMutatingWebhook_getAppName(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		pod *corev1.Pod
@@ -160,11 +161,11 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			if got := a.getAppName(tt.args.pod); got != tt.want {
 				t.Errorf("getAppName() = %v, want %v", got, tt.want)
@@ -175,11 +176,11 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 
 func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		pod *corev1.Pod
@@ -240,11 +241,11 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			if got := a.getWorkloadName(tt.args.pod); got != tt.want {
 				t.Errorf("getWorkloadName() = %v, want %v", got, tt.want)
@@ -365,11 +366,11 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 
 func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		pod *corev1.Pod
@@ -448,11 +449,11 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			got := a.isPodAnnotated(tt.args.pod)
 			if got != tt.want {
@@ -536,11 +537,11 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		ctx context.Context
@@ -690,11 +691,11 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			got := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
 			if got != tt.want {
@@ -706,11 +707,11 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 
 func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		sourceResource *metav1.ObjectMeta
@@ -849,11 +850,11 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			got := a.copyResourceLabelsIfPresent(tt.args.sourceResource, tt.args.targetPod)
 			if got != tt.want {
@@ -868,11 +869,11 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 
 func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 	type fields struct {
-		Client   client.Client
-		Tracer   trace.Tracer
-		Decoder  *admission.Decoder
-		Recorder record.EventRecorder
-		Log      logr.Logger
+		Client      client.Client
+		Tracer      trace.Tracer
+		Decoder     *admission.Decoder
+		EventSender controllercommon.EventSender
+		Log         logr.Logger
 	}
 	type args struct {
 		pod *corev1.Pod
@@ -929,11 +930,11 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &PodMutatingWebhook{
-				Client:   tt.fields.Client,
-				Tracer:   tt.fields.Tracer,
-				Decoder:  tt.fields.Decoder,
-				Recorder: tt.fields.Recorder,
-				Log:      tt.fields.Log,
+				Client:      tt.fields.Client,
+				Tracer:      tt.fields.Tracer,
+				Decoder:     tt.fields.Decoder,
+				EventSender: tt.fields.EventSender,
+				Log:         tt.fields.Log,
 			}
 			got := a.isAppAnnotationPresent(tt.args.pod)
 			if got != tt.want {
@@ -957,17 +958,15 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	decoder, err := admission.NewDecoder(runtime.NewScheme())
 	require.Nil(t, err)
 
 	wh := &PodMutatingWebhook{
-		Client:   fakeClient,
-		Tracer:   tr,
-		Decoder:  decoder,
-		Recorder: recorder,
-		Log:      testr.New(t),
+		Client:      fakeClient,
+		Tracer:      tr,
+		Decoder:     decoder,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
 	}
 
 	pod := &corev1.Pod{
@@ -1022,17 +1021,15 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	decoder, err := admission.NewDecoder(runtime.NewScheme())
 	require.Nil(t, err)
 
 	wh := &PodMutatingWebhook{
-		Client:   fakeClient,
-		Tracer:   tr,
-		Decoder:  decoder,
-		Recorder: recorder,
-		Log:      testr.New(t),
+		Client:      fakeClient,
+		Tracer:      tr,
+		Decoder:     decoder,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
 	}
 
 	pod := &corev1.Pod{
@@ -1145,17 +1142,15 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	decoder, err := admission.NewDecoder(runtime.NewScheme())
 	require.Nil(t, err)
 
 	wh := &PodMutatingWebhook{
-		Client:   fakeClient,
-		Tracer:   tr,
-		Decoder:  decoder,
-		Recorder: recorder,
-		Log:      testr.New(t),
+		Client:      fakeClient,
+		Tracer:      tr,
+		Decoder:     decoder,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
 	}
 
 	pod := &corev1.Pod{
@@ -1255,17 +1250,15 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	decoder, err := admission.NewDecoder(runtime.NewScheme())
 	require.Nil(t, err)
 
 	wh := &PodMutatingWebhook{
-		Client:   fakeClient,
-		Tracer:   tr,
-		Decoder:  decoder,
-		Recorder: recorder,
-		Log:      testr.New(t),
+		Client:      fakeClient,
+		Tracer:      tr,
+		Decoder:     decoder,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
 	}
 
 	pod := &corev1.Pod{

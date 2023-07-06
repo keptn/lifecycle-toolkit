@@ -37,3 +37,19 @@ to check whether it has reached the desired state.
 If it detects that the referenced object has reached its desired state
 (e.g. all pods of a deployment are up and running),
 it knows that a `PostDeploymentCheck` can be triggered.
+
+## KeptnWorkloadInstance
+
+A `KeptnWorkloadInstance` executes
+the pre- and post deployment checks of a workload.
+In its state, it keeps track of the current status of all checks
+as well as the overall state of the Pre Deployment phase,
+which can be used by the scheduler to tell
+that a pod is allowed to be placed on a node.
+`KeptnWorkloadInstance` resources
+refer to the respective Deployment/StatefulSet/ReplicaSet,
+to check whether it has reached the desired state.
+If it detects that the referenced object has reached its desired state,
+(e.g. all pods of a deployment are up and running),
+it triggers a `PostDeploymentCheck`.
+

@@ -9,6 +9,12 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 ### Keptn Cert Manager
 
+The Keptn Cert Manager automatically configures TLS certificates to
+[secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
+You can instead
+[configure your own certificate manager](https://lifecycle.keptn.sh/docs/install/cert-manager/)
+for this purpose.
+
 The Lifecycle Toolkit includes a Mutating Webhook
 that requires TLS certificates to be mounted as a volume in its pod.
 In version 0.6.0 and later, the certificate creation

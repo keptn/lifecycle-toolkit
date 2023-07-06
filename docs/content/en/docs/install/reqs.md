@@ -24,6 +24,9 @@ Kustomize Version: v4.5.4
 Server Version: v1.24.0
 ```
 
+KLT is not currently compatible with
+[vcluster])https://github.com/loft-sh/vcluster).
+
 ## Resource requirements
 
 ## cert-manager

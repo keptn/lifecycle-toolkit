@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -25,6 +24,5 @@ func TestEventSender_SendK8sEvent(t *testing.T) {
 
 	event := <-fakeRecorder.Events
 
-	require.Equal(t, strings.Contains(event, fmt.Sprintf("%s: reason-long / Namespace: ns, Name: app, Version: ver1", common.PhaseAppDeployment.LongName)), true)
-
+	require.Contains(t, event, fmt.Sprintf("%s: reason-long / Namespace: ns, Name: app, Version: ver1", common.PhaseAppDeployment.LongName))
 }

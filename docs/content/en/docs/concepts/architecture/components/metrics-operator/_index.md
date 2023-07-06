@@ -14,7 +14,7 @@ to generate a variety of reports and dashboards
 that provide insights into the health and performance
 of the application and infrastructure.
 
-While Kubernetes does have two metrics servers, they have limitations,
+While Kubernetes does have two ways to extend the metric API server, they have limitations,
 especially that their custom and external APIs
 only allow you to use a single instance of a single observability platform
 such as Prometheus, Dynatrace or Datadog.

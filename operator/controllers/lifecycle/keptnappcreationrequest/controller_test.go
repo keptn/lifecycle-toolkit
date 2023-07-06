@@ -46,7 +46,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 		},
 		Spec: klcv1alpha3.KeptnWorkloadSpec{
 			AppName: appName,
-			Version: "1.0",
+			Version: "1.0+rc0",
 		},
 	}
 
@@ -83,6 +83,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 	require.NotEmpty(t, kApp)
 
 	require.NotEmpty(t, kApp.Spec.Version)
+	// the App version is the same of the single workload
 	require.Equal(t, workload1.Spec.Version, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
 	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{

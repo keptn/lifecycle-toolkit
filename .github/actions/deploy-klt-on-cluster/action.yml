@@ -5,12 +5,12 @@ inputs:
     required: false
     description: "Version of kind that should be used"
     # renovate: datasource=github-releases depName=kubernetes-sigs/kind
-    default: "v0.17.0"
+    default: "v0.18.0"
   k8s-version:
     required: false
     description: "Kubernetes that should be used"
     # renovate: datasource=github-releases depName=kubernetes/kubernetes
-    default: "v1.25.3"
+    default: "v1.27.1"
   runtime_tag:
     description: "Tag for the runner image"
     required: true

@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,7 +46,7 @@ const traceComponentName = "keptn/operator/workload"
 type KeptnWorkloadReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	Recorder      record.EventRecorder
+	EventSender   controllercommon.EventSender
 	Log           logr.Logger
 	TracerFactory controllercommon.TracerFactory
 }
@@ -105,10 +104,10 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			r.Log.Error(err, "could not create Workload Instance")
 			span.SetStatus(codes.Error, err.Error())
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, "WorkloadInstanceNotCreated", "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+			r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, "WorkloadInstanceNotCreated", "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 			return ctrl.Result{}, err
 		}
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseCreateWorklodInstance, "Normal", workloadInstance, "WorkloadInstanceCreated", "created KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+		r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Normal", workloadInstance, "WorkloadInstanceCreated", "created KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 		workload.Status.CurrentVersion = workload.Spec.Version
 		if err := r.Client.Status().Update(ctx, workload); err != nil {
 			r.Log.Error(err, "could not update Current Version of Workload")

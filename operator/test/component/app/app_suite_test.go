@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -39,7 +40,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnapp.KeptnAppReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		Recorder:      k8sManager.GetEventRecorderFor("test-app-controller"),
+		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-app-controller")),
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}

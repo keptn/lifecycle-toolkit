@@ -27,6 +27,8 @@ The meaning of these fields is:
 
 * **title** -- title displayed for the section or file
 * **description** -- subtext displayed for the section or subsection
+* **icon** -- optional field specifying an icon associated with the section
+* **layout** -- layout template to be used for rendering the section
 * **weight** -- order in which section or subsection is displayed relative to other sections and
   subsections at the same level.
 

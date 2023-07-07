@@ -77,11 +77,10 @@ In this guide, we use:
 * [Jaeger](https://jaegertracing.io) for Traces
 * [Grafana](https://github.com/grafana/) for Dashboarding
 
-Install these with the following commands:
+Install these together with the KLT with the following command:
 
 ```shell
-make install-observability
-make restart-lifecycle-toolkit
+make install
 ```
 
 > **Note**
@@ -166,6 +165,7 @@ You can watch the state of the pods using:
 ```shell
 kubectl get pods -n podtato-kubectl
 ```
+
 </details>
 
 Furthermore, you can port-forward the podtato-head service

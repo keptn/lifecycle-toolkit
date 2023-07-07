@@ -62,7 +62,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-  function | python | container
+  deno | python | container
   ...
   retries: <integer>
   timeout: <duration-in-seconds>
@@ -88,11 +88,11 @@ but timeouts seem to be measured in seconds.
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec**
-  * **function | python | container** -- Define the container type
+  * **deno | python | container** -- Define the container type
   to use for this task.
   Each task can use one type of runner,
   identified by this field:
-    * **function** -- Use a `deno-runtime` runner
+    * **deno** -- Use a `deno-runtime` runner
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
@@ -119,7 +119,7 @@ but timeouts seem to be measured in seconds.
 ## Yaml Synopsis for deno-runtime container
 
 When using the `deno-runtime` runner to define a task,
-the `function` is coded in Deno-script
+the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
 [Deno](https://deno.com/runtime) runner,
@@ -136,7 +136,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-  function:
+  deno:
     inline | httpRef | functionRef | ConfigMapRef
     parameters:
       map:
@@ -148,12 +148,12 @@ spec:
 ### Spec fields for deno-runtime definitions
 
 * **spec**
-  * **function** -- Code to be executed,
-    expressed as a [Deno](https://deno.land/) script.
+  * **deno** -- Specify that the task uses the `deno-runtime`
+    and is expressed as a [Deno](https://deno.land/) script.
     Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
     for more information about this runner.
 
-    The `function` can be defined as one of the following:
+    The task can be defined as one of the following:
 
     * **inline** - Include the actual executable code to execute.
       This can be written as a full-fledged Deno script
@@ -161,7 +161,7 @@ spec:
       For example:
 
       ```yaml
-      function:
+      deno:
         inline:
           code: |
             console.log("Deployment Task has been executed");
@@ -174,7 +174,7 @@ spec:
       ```yaml
       name: hello-keptn-http
         spec:
-            function:
+            deno:
               httpRef:
                 url: "https://www.example.com/yourscript.js"
       ```
@@ -189,7 +189,7 @@ spec:
 
        ```yaml
        spec:
-         function:
+         deno:
            functionRef:
              name: slack-notification
        ```
@@ -276,8 +276,8 @@ almost anything that you implemented with JES for Keptn v1.
 
 ## Yaml Synopsis for Python-runtime runner
 
-The `python-runtime` runner is built on the `container-runtime` runner
-to provide a way easily define a task using Python 3.
+The `python-runtime` runner provides a way
+to easily define a task using Python 3.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide a Python script
 and KLT sets up the container and runs the script as part of the task.
@@ -432,7 +432,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-inline
 spec:
-  function:
+  deno:
     inline:
       code: |
         let text = Deno.env.get("DATA");
@@ -454,7 +454,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
 spec:
-  function:
+  deno:
     httpRef:
       url: "https://www.example.com/yourscript.js"
 ```
@@ -480,7 +480,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
 spec:
-  function:
+  deno:
     functionRef:
       name: slack-notification
     parameters:
@@ -501,7 +501,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: keptntaskdefinition-sample
 spec:
-  function:
+  deno:
     configMapRef:
       name: dev-configmap
 ```
@@ -636,9 +636,16 @@ API Reference:
 
 The `KeptnTaskDefinition` support for
 the `container-runtime` and `python-runtime` is introduced in v0.8.0.
-This modifies the synopsis in two ways:
+This modifies the synopsis in the following ways:
 
 * Add the `spec.container` field.
+* Add the `python` descriptor for the `python-runtime` runner.
+* Add the `container` descriptor for the `container-runtime` runner.
+* Add the `deno` descriptor to replace `function`
+  for the `deno-runtime` runner.
+  The `function` identifier for the `deno-runtime` runner
+  is deprecated;
+  it still works for v 0.8.0 but will be dropped from future releases.
 * The `spec.function` field is changed to be a pointer receiver.
   This aligns it with the `spec.container` field,
   which must be a pointer,

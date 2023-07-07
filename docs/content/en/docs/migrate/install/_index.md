@@ -92,6 +92,7 @@ before introducing the complexity of multiple Keptn Applications.
 
 KLT begins collecting DORA metrics for your cluster
 as soon as you annotate the Workload resources you are using.
-See (link to implementing/dora doc)
+See
+[Dora metrics](../../implementing/dora.md)
 for more information about DORA metrics
 and how to view them.

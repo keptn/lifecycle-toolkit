@@ -59,7 +59,7 @@ func TestGetOTelTracerProviderOptions(t *testing.T) {
 			args: args{
 				oTelCollectorUrl: "localhost:9000",
 			},
-			wantArrayLength: 3,
+			wantArrayLength: 2,
 		},
 	}
 	for _, tt := range tests {

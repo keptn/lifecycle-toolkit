@@ -13,7 +13,7 @@ import (
 func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
 		Client:      r.Client,
-		Recorder:    r.Recorder,
+		EventSender: r.EventSender,
 		Log:         r.Log,
 		Tracer:      r.getTracer(),
 		Scheme:      r.Scheme,

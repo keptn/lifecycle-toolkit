@@ -10,14 +10,13 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type PhaseHandler struct {
 	client.Client
-	Recorder    record.EventRecorder
+	EventSender EventSender
 	Log         logr.Logger
 	SpanHandler ISpanHandler
 }
@@ -50,7 +49,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	state, err := reconcilePhase(spanPhaseCtx)
 	if err != nil {
 		spanPhaseTrace.AddEvent(phase.LongName + " could not get reconciled")
-		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
 		span.SetStatus(codes.Error, err.Error())
 		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
@@ -73,7 +72,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	}
 
 	piWrapper.SetState(apicommon.StateProgressing)
-	RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }
@@ -92,7 +91,7 @@ func (r PhaseHandler) handleCompletedPhase(state apicommon.KeptnState, piWrapper
 		if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
 			r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, reconcileObject.GetName())
 		}
-		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "Failed", "has failed", piWrapper.GetVersion())
 		piWrapper.DeprecateRemainingPhases(phase)
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
@@ -104,7 +103,7 @@ func (r PhaseHandler) handleCompletedPhase(state apicommon.KeptnState, piWrapper
 	if err := r.SpanHandler.UnbindSpan(reconcileObject, phase.ShortName); err != nil {
 		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, reconcileObject.GetName())
 	}
-	RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "Succeeded", "has succeeded", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: true, Result: ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}}, nil
 }

@@ -10,7 +10,8 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lifecycle-operator
+  labels:
+    control-plane: metrics-operator
   namespace: keptn-lifecycle-toolkit-system
 status:
   readyReplicas: 1
@@ -18,7 +19,8 @@ status:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metrics-operator
+  labels:
+    control-plane: lifecycle-operator
   namespace: keptn-lifecycle-toolkit-system
 status:
   readyReplicas: 1

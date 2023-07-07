@@ -6,7 +6,6 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -44,7 +43,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		}
 
 		if !found {
-			controllercommon.RecordEvent(r.Recorder, phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
+			r.EventSender.SendK8sEvent(phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
 		}
 
 		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{

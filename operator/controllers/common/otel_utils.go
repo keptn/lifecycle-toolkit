@@ -100,12 +100,6 @@ func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProvid
 	var tracerProviderOptions []trace.TracerProviderOption
 	var otelExporter trace.SpanExporter
 
-	stdOutExp, err := newStdOutExporter()
-	if err != nil {
-		return nil, nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
-	}
-	tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(stdOutExp))
-
 	if oTelCollectorUrl != "" {
 		// try to set OTel exporter for Jaeger
 		otelExporter, err := newOTelExporter(oTelCollectorUrl)
@@ -116,6 +110,13 @@ func GetOTelTracerProviderOptions(oTelCollectorUrl string) ([]trace.TracerProvid
 		} else if otelExporter != nil {
 			tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(otelExporter))
 		}
+	} else {
+		// if no collector is set, we use std::out to print trace info
+		stdOutExp, err := newStdOutExporter()
+		if err != nil {
+			return nil, nil, fmt.Errorf("could not create stdout OTel exporter: %w", err)
+		}
+		tracerProviderOptions = append(tracerProviderOptions, trace.WithBatcher(stdOutExp))
 	}
 	tracerProviderOptions = append(tracerProviderOptions, trace.WithResource(newResource()))
 

@@ -21,7 +21,7 @@ inputs:
   helm-install:
     required: false
     description: "Install KLT via helm instead of manifest if true"
-    default: "false"
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -84,15 +84,22 @@ runs:
 
     - name: Install lifecycle-toolkit with helm
       if: ${{ inputs.helm-install == 'true'  }}
+      env:
+        RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
       run: |
         echo "Installing KLT using helm"
+        make helm-package
         helm version
-        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ~/download/artifacts/keptn-lifecycle-toolkit.tgz \
+        helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ./helm/chart  \
           --set scheduler.scheduler.imagePullPolicy=Never \
+          --set scheduler.scheduler.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.imagePullPolicy=Never \
+          --set lifecycleOperator.manager.image.tag=${{ inputs.runtime_tag }} \
           --set metricsOperator.manager.imagePullPolicy=Never \
+          --set metricsOperator.manager.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
           --set certificateOperator.manager.imagePullPolicy=Never \
+          --set certificateOperator.manager.image.tag=${{ inputs.runtime_tag }} \
           --debug --wait --timeout 1m

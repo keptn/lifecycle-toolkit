@@ -46,7 +46,7 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -101,7 +101,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -154,7 +154,7 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -194,7 +194,7 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	defer svr.Close()
 
 	kdd := setupTest()
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -228,7 +228,7 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 	secretName := "datadogSecret"
 
 	kdd := setupTest()
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -278,7 +278,7 @@ func TestEvaluateQuery_RefNonExistingKey(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",
@@ -330,7 +330,7 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 		},
 	}
 	kdd := setupTest(apiToken)
-	metrics := [2]metricsapi.KeptnMetric{
+	metrics := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "system.cpu.idle{*}",

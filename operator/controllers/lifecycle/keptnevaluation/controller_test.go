@@ -247,8 +247,6 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		return tr
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects(objects...).Build()
 
 	provider := metric.NewMeterProvider()
@@ -258,7 +256,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		Client:        fakeClient,
 		Scheme:        fakeClient.Scheme(),
 		Log:           logr.Logger{},
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 		Meters:        controllercommon.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
 	}

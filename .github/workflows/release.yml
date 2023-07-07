@@ -302,7 +302,7 @@ jobs:
     if: needs.release-please.outputs.klt-release-created == 'true'
     with:
       tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
-    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.2
+    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.3
     secrets: inherit
 
   update-examples:

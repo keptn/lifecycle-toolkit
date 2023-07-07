@@ -15,14 +15,13 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 type TaskHandler struct {
 	client.Client
-	Recorder    record.EventRecorder
+	EventSender EventSender
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	Scheme      *runtime.Scheme
@@ -58,7 +57,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
+			r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed
@@ -91,7 +90,9 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				&taskStatus,
 			)
 			if err != nil {
-				return nil, summary, err
+				// log the error, but continue to proceed with other tasks that may be created
+				r.Log.Error(err, "Could not create task", "task", taskDefinitionName)
+				continue
 			}
 		} else {
 			r.handleTaskExists(
@@ -109,7 +110,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
 	}
 	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 	}
 	return newStatus, summary, nil
 }
@@ -131,10 +132,10 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	err = r.Client.Create(ctx, &newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		RecordEvent(r.Recorder, phase, "Warning", reconcileObject, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
-	RecordEvent(r.Recorder, phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
 }

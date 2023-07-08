@@ -369,7 +369,44 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	}
 }
 
-func setupTest(objs ...client.Object) (KeptnDynatraceProvider, [2]metricsapi.KeptnMetric) {
+func TestEvaluateQuery_HappyPathForTimerange(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		p := r.URL.Query().Get("from")
+		require.NotNil(t, p)
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerange(apiToken)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+	require.Nil(t, e)
+	require.Equal(t, []byte(dtpayload), raw)
+	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
+}
+
+func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.KeptnMetric) {
 
 	fakeClient := fake.NewClient(objs...)
 
@@ -378,7 +415,7 @@ func setupTest(objs ...client.Object) (KeptnDynatraceProvider, [2]metricsapi.Kep
 		Log:        ctrl.Log.WithName("testytest"),
 		K8sClient:  fakeClient,
 	}
-	objects := [2]metricsapi.KeptnMetric{
+	objects := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
 				Query: "my-query",
@@ -392,4 +429,22 @@ func setupTest(objs ...client.Object) (KeptnDynatraceProvider, [2]metricsapi.Kep
 		},
 	}
 	return kdp, objects
+}
+
+func setupTestForTimerange(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
+
+	fakeClient := fake.NewClient(objs...)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	obj := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "my-query",
+			Range: &metricsapi.RangeSpec{Interval: "5m"},
+		},
+	}
+	return kdp, obj
 }

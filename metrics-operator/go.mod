@@ -120,4 +120,4 @@ require (
 
 replace golang.org/x/net => golang.org/x/net v0.10.0
 
-replace github.com/keptn/lifecycle-toolkit/klt-cert-manager => /Users/user/Open_Source/Keptn/lifecycle-toolkit/klt-cert-manager
+//replace github.com/keptn/lifecycle-toolkit/klt-cert-manager => /Users/user/Open_Source/Keptn/lifecycle-toolkit/klt-cert-manager

@@ -44,21 +44,21 @@ var _ webhook.Validator = &KeptnMetric{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnMetric) ValidateCreate() error {
-	keptnmetriclog.Info("validate create", "name", r.Name)
+	keptnmetriclog.Info("validate create", "name", r.ObjectMeta.Name)
 
 	return r.validateKeptnMetric()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnMetric) ValidateUpdate(old runtime.Object) error {
-	keptnmetriclog.Info("validate update", "name", r.Name)
+	keptnmetriclog.Info("validate update", "name", r.ObjectMeta.Name)
 
 	return r.validateKeptnMetric()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (r *KeptnMetric) ValidateDelete() error {
-	keptnmetriclog.Info("validate delete", "name", r.Name)
+	keptnmetriclog.Info("validate delete", "name", r.ObjectMeta.Name)
 
 	return nil
 }

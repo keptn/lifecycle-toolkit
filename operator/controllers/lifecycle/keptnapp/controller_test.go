@@ -210,7 +210,7 @@ func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	r := &KeptnAppReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(recorder),
 		Log:           ctrl.Log.WithName("test-appController"),
 		TracerFactory: tf,
 	}

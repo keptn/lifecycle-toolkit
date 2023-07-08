@@ -7,6 +7,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
@@ -58,8 +59,8 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "no definition",
 			options: BuilderOptions{
-				Client:   fake.NewClient(),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -74,8 +75,8 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "definition exists, recursive",
 			options: BuilderOptions{
-				Client:   fake.NewClient(def),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(def),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -89,8 +90,8 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "definition exists, with parameters and secrets",
 			options: BuilderOptions{
-				Client:   fake.NewClient(paramDef, def),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(paramDef, def),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -205,8 +206,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 		{
 			name: "definition exists, no parent",
 			options: BuilderOptions{
-				Client:   fake.NewClient(def),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(def),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -236,8 +237,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 		{
 			name: "definition exists, parent with parameters and secrets",
 			options: BuilderOptions{
-				Client:   fake.NewClient(paramDef, def),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(paramDef, def),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -268,8 +269,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 		{
 			name: "definition exists, parent is of a different runtime",
 			options: BuilderOptions{
-				Client:   fake.NewClient(parentPy, defJS),
-				recorder: &record.FakeRecorder{},
+				Client:      fake.NewClient(parentPy, defJS),
+				EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},

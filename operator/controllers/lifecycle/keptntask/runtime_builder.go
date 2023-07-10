@@ -157,11 +157,7 @@ func (fb *RuntimeBuilder) getParams(ctx context.Context) (*RuntimeExecutionParam
 	if len(fb.options.task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, fb.options.task.Spec.Parameters.Inline)
 		if err != nil {
-<<<<<<< HEAD
-			fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
-=======
-			fb.options.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateFailed, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
->>>>>>> normalize all k8s Events in the system; remove duplicates
+			fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateFailed, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 			return nil, err
 		}
 	}

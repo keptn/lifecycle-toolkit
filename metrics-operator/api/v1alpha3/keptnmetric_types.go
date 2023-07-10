@@ -64,6 +64,7 @@ type RangeSpec struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
 // +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
+// +kubebuilder:printcolumn:name="Interval",type=string,JSONPath=`.spec.range.interval`
 // +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
 // +kubebuilder:storageversion
 

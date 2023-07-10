@@ -363,6 +363,53 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 		require.True(t, strings.Contains(e.Error(), "no values in query result"))
 	}
 }
+
+func TestEvaluateQuery_WrongInterval(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(ddPayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
+		},
+	}
+	kdd := setupTest(apiToken)
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "system.cpu.idle{*}",
+			Range: &metricsapi.RangeSpec{Interval: "5mins"},
+		},
+	}
+	b := true
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Optional: &b,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdd.EvaluateQuery(context.TODO(), metric, p)
+	require.Error(t, e)
+	require.Contains(t, e.Error(), "unknown unit \"mins\" in duration \"5mins\"")
+	require.Equal(t, []byte(nil), raw)
+	require.Empty(t, r)
+}
+
 func TestGetSingleValue_EmptyPoints(t *testing.T) {
 	kdd := setupTest()
 	var points [][]*float64

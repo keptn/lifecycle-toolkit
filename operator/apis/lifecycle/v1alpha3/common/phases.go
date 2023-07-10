@@ -109,3 +109,9 @@ func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCar
 func (pid PhaseTraceID) GetPhaseTraceID(phase string) propagation.MapCarrier {
 	return pid[GetShortPhaseName(phase)]
 }
+
+var (
+	PhaseStateFinished = "Finished"
+	PhaseStateStarted  = "Started"
+	PhaseStateFailed   = "Failed"
+)

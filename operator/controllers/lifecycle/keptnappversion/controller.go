@@ -103,7 +103,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if appVersion.Status.CurrentPhase == "" {
 		appVersion.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		r.EventSender.SendK8sEvent(phase, "Normal", appVersion, "Started", "have started", appVersion.GetVersion())
 	}
 
 	if !appVersion.IsPreDeploymentSucceeded() {
@@ -160,7 +159,6 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 	}
 
-	r.EventSender.SendK8sEvent(phase, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
 	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
@@ -182,6 +180,8 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 	if err != nil {
 		return ctrl.Result{Requeue: true}, err
 	}
+
+	r.EventSender.SendK8sEvent(apicommon.PhaseCompleted, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
 
 	attrs := appVersion.GetMetricsAttributes()
 

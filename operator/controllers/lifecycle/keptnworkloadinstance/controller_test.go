@@ -938,7 +938,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
 	// one of the previous reconciliation loops that lead to the first phase being reached
 	expectedEvents := []string{
-		"WorkloadPostDeployEvaluationsFinished",
+		"CompletedFinished",
 	}
 
 	for _, e := range expectedEvents {

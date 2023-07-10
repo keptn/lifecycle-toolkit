@@ -113,7 +113,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if workloadInstance.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}
 
 	if !workloadInstance.IsPreDeploymentSucceeded() {
@@ -191,6 +190,8 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		return ctrl.Result{Requeue: true}, err
 	}
 
+	r.EventSender.SendK8sEvent(apicommon.PhaseCompleted, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
+
 	attrs := workloadInstance.GetMetricsAttributes()
 
 	// metrics: add deployment duration
@@ -203,8 +204,6 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
 		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadInstance.Name)
 	}
-
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 
 	return ctrl.Result{}, nil
 }

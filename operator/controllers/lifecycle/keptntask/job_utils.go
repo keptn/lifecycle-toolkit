@@ -20,7 +20,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	jobName := ""
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 
@@ -46,11 +46,11 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	err = r.Client.Create(ctx, job)
 	if err != nil {
 		r.Log.Error(err, "could not create job")
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, "JobNotCreated", fmt.Sprintf("could not create Job: %s ", task.Name), "")
+		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateFailed, fmt.Sprintf("could not create Job: %s ", task.Name), "")
 		return job.Name, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", task, "JobCreated", fmt.Sprintf("created Job: %s ", task.Name), "")
+	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", task, apicommon.PhaseStateSucceeded, fmt.Sprintf("created Job: %s ", task.Name), "")
 	return job.Name, nil
 }
 

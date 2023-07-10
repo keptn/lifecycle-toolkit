@@ -55,7 +55,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -105,9 +105,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	for _, ns := range newStatus {
 		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
 	}
-	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
-	}
+
 	return newStatus, summary, nil
 }
 
@@ -128,10 +126,10 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 	err = r.Client.Create(ctx, &newEvaluation)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnEvaluation")
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "CreateFailed", "could not create KeptnEvaluation", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnEvaluation", piWrapper.GetVersion())
 		return "", err
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateSucceeded, "created", piWrapper.GetVersion())
 
 	return newEvaluation.Name, nil
 }
@@ -145,7 +143,7 @@ func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha3.K
 			k8sEventMessage = fmt.Sprintf("%s\n%s", k8sEventMessage, msg)
 		}
 	}
-	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, "Failed", k8sEventMessage, piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateFailed, k8sEventMessage, piWrapper.GetVersion())
 }
 
 func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateEvaluationAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha3.ItemStatus) {
@@ -190,7 +188,7 @@ func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWr
 		if evaluationStatus.Status.IsSucceeded() {
 			spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
 			spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", evaluation, "Succeeded", "evaluation succeeded", piWrapper.GetVersion())
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", evaluation, apicommon.PhaseStateSucceeded, "evaluation succeeded", piWrapper.GetVersion())
 		} else {
 			spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
 			r.emitEvaluationFailureEvents(evaluation, spanEvaluationTrace, piWrapper)

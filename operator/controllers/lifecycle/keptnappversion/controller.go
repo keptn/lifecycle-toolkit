@@ -181,7 +181,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseCompleted, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
+	r.EventSender.SendK8sEvent(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "is finished", appVersion.GetVersion())
 
 	attrs := appVersion.GetMetricsAttributes()
 

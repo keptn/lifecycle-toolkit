@@ -31,18 +31,18 @@ func (r *KeptnTaskDefinitionReconciler) reconcileConfigMap(ctx context.Context, 
 	if (cm == nil || reflect.DeepEqual(cm, &corev1.ConfigMap{})) && functionCm != nil { //cm does not exist or new taskdef with inline func
 		err := r.Client.Create(ctx, functionCm)
 		if err != nil {
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, "ConfigMapNotCreated", "could not create configmap", "")
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not create configmap", "")
 			return
 		}
-		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", functionCm, "ConfigMapCreated", "created configmap", "")
+		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", functionCm, apicommon.PhaseStateSucceeded, "created configmap", "")
 
 	} else if !reflect.DeepEqual(cm, functionCm) && functionCm != nil { //cm and inline func exists but differ
 		err := r.Client.Update(ctx, functionCm)
 		if err != nil {
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, "ConfigMapNotUpdated", "uould not update configmap", "")
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "uould not update configmap", "")
 			return
 		}
-		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", functionCm, "ConfigMapUpdated", "updated configmap", "")
+		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Normal", functionCm, apicommon.PhaseStateSucceeded, "updated configmap", "")
 	}
 	//nothing changed
 }

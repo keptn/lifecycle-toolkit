@@ -57,7 +57,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
+			r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed
@@ -109,9 +109,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 	for _, ns := range newStatus {
 		summary = apicommon.UpdateStatusSummary(ns.Status, summary)
 	}
-	if apicommon.GetOverallState(summary) != apicommon.StateSucceeded {
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
-	}
+
 	return newStatus, summary, nil
 }
 
@@ -132,10 +130,10 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	err = r.Client.Create(ctx, &newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "CreateFailed", "could not create KeptnTask", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, "Created", "created", piWrapper.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateSucceeded, "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
 }

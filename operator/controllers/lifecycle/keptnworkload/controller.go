@@ -104,10 +104,10 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			r.Log.Error(err, "could not create Workload Instance")
 			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, "WorkloadInstanceNotCreated", "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+			r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, apicommon.PhaseStateFailed, "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 			return ctrl.Result{}, err
 		}
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Normal", workloadInstance, "WorkloadInstanceCreated", "created KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+		r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Normal", workloadInstance, apicommon.PhaseStateSucceeded, "created KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 		workload.Status.CurrentVersion = workload.Spec.Version
 		if err := r.Client.Status().Update(ctx, workload); err != nil {
 			r.Log.Error(err, "could not update Current Version of Workload")

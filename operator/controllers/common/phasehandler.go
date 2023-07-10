@@ -43,7 +43,6 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 		piWrapper.SetCurrentPhase(phase.ShortName)
 	}
 
-	r.Log.Info(phase.LongName + " not finished")
 	spanPhaseCtx, spanPhaseTrace, err := r.SpanHandler.GetSpan(ctxTrace, tracer, reconcileObject, phase.ShortName)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
@@ -52,7 +51,7 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	state, err := reconcilePhase(spanPhaseCtx)
 	if err != nil {
 		spanPhaseTrace.AddEvent(phase.LongName + " could not get reconciled")
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "ReconcileErrored", "could not get reconciled", piWrapper.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateReconcileError, "could not get reconciled", piWrapper.GetVersion())
 		span.SetStatus(codes.Error, err.Error())
 		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
@@ -71,7 +70,6 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	}
 
 	piWrapper.SetState(apicommon.StateProgressing)
-	r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, "NotFinished", "has not finished", piWrapper.GetVersion())
 
 	return &PhaseResult{Continue: false, Result: requeueResult}, nil
 }

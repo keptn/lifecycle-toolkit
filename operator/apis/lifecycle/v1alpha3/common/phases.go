@@ -26,6 +26,8 @@ var phases = []KeptnPhaseType{
 	PhaseAppDeployment,
 	PhaseReconcileEvaluation,
 	PhaseReconcileTask,
+	PhaseReconcileWorkload,
+	PhaseUpdateWorkload,
 	PhaseCreateEvaluation,
 	PhaseCreateTask,
 	PhaseCreateApp,
@@ -33,6 +35,9 @@ var phases = []KeptnPhaseType{
 	PhaseCreateWorklodInstance,
 	PhaseCreateAppVersion,
 	PhaseCompleted,
+	PhaseAppCompleted,
+	PhaseWorkloadCompleted,
+	PhaseDeprecateAppVersion,
 	PhaseDeprecated,
 }
 
@@ -89,13 +94,18 @@ var (
 	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
 	PhaseReconcileEvaluation    = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
 	PhaseReconcileTask          = KeptnPhaseType{LongName: "Reconcile Task", ShortName: "ReconcileTask"}
+	PhaseReconcileWorkload      = KeptnPhaseType{LongName: "Reconcile Workloads", ShortName: "ReconcileWorkload"}
 	PhaseCreateEvaluation       = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "CreateEvaluation"}
 	PhaseCreateTask             = KeptnPhaseType{LongName: "Create Task", ShortName: "CreateTask"}
 	PhaseCreateApp              = KeptnPhaseType{LongName: "Create App", ShortName: "CreateApp"}
 	PhaseCreateWorkload         = KeptnPhaseType{LongName: "Create Workload", ShortName: "CreateWorkload"}
+	PhaseUpdateWorkload         = KeptnPhaseType{LongName: "Update Workload", ShortName: "UpdateWorkload"}
 	PhaseCreateWorklodInstance  = KeptnPhaseType{LongName: "Create WorkloadInstance", ShortName: "CreateWorkloadInstance"}
 	PhaseCreateAppVersion       = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
+	PhaseDeprecateAppVersion    = KeptnPhaseType{LongName: "Deprecate AppVersion", ShortName: "DeprecateAppVersion"}
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
+	PhaseAppCompleted           = KeptnPhaseType{LongName: "App Completed", ShortName: "AppCompleted"}
+	PhaseWorkloadCompleted      = KeptnPhaseType{LongName: "Workload Completed", ShortName: "WorkloadCompleted"}
 	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
 )
 
@@ -111,7 +121,12 @@ func (pid PhaseTraceID) GetPhaseTraceID(phase string) propagation.MapCarrier {
 }
 
 var (
-	PhaseStateFinished = "Finished"
-	PhaseStateStarted  = "Started"
-	PhaseStateFailed   = "Failed"
+	PhaseStateFinished         = "Finished"
+	PhaseStateStarted          = "Started"
+	PhaseStateFailed           = "Failed"
+	PhaseStateStatusChanged    = "StatusChanged"
+	PhaseStateSucceeded        = "Succeeded"
+	PhaseStateReconcileError   = "ReconcileError"
+	PhaseStateReconcileTimeout = "ReconcileTimeout"
+	PhaseStateNotFound         = "NotFound"
 )

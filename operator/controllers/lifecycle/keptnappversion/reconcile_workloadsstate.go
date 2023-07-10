@@ -14,10 +14,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	var summary apicommon.StatusSummary
 	summary.Total = len(appVersion.Spec.Workloads)
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "ReconcileWorkload",
-		LongName:  "Reconcile Workloads",
-	}
+	phase := apicommon.PhaseReconcileWorkload
 
 	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Spec.AppName)
 	if err != nil {
@@ -43,7 +40,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		}
 
 		if !found {
-			r.EventSender.SendK8sEvent(phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
+			r.EventSender.SendK8sEvent(phase, "Warning", appVersion, apicommon.PhaseStateNotFound, "workloadInstance not found", appVersion.GetVersion())
 		}
 
 		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{

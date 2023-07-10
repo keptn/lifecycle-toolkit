@@ -190,7 +190,7 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseCompleted, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
+	r.EventSender.SendK8sEvent(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "is finished", workloadInstance.GetVersion())
 
 	attrs := workloadInstance.GetMetricsAttributes()
 
@@ -224,9 +224,8 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 
 func (r *KeptnWorkloadInstanceReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) {
 	if appPreEvalStatus.IsFailed() {
-		r.EventSender.SendK8sEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", workloadInstance, apicommon.PhaseStateFailed, "has failed since app has failed", workloadInstance.GetVersion())
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 }
 
 func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) (context.Context, trace.Span, func(span trace.Span, workloadInstance *klcv1alpha3.KeptnWorkloadInstance)) {
@@ -274,8 +273,6 @@ func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx cont
 		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadInstance)
 		return true, nil
 	}
-
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
 
 	// set the App trace id if not already set
 	if len(workloadInstance.Spec.TraceId) < 1 {

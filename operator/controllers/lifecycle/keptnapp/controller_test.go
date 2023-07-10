@@ -90,7 +90,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 				},
 			},
 			wantErr: nil,
-			event:   `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`,
+			event:   `Normal CreateAppVersionSucceeded Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`,
 		},
 		{
 			name: "test simple notfound should not return error nor event",
@@ -167,7 +167,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Nil(t, err)
 
 	event := <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`)
+	assert.Matches(t, event, `Normal CreateAppVersionSucceeded Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`)
 
 	err = controllercommon.UpdateAppRevision(r.Client, "myapp", 2)
 	require.Nil(t, err)
@@ -182,10 +182,10 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Nil(t, err)
 
 	event = <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-d4735e3a, Version: 1.0.0`)
+	assert.Matches(t, event, `Normal CreateAppVersionSucceeded Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-d4735e3a, Version: 1.0.0`)
 
 	event = <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionDeprecated Create AppVersion: deprecated KeptnAppVersions for KeptnAppVersion: myapp-1.0.0-d4735e3a / Namespace: default, Name: myapp, Version: 1.0.0`)
+	assert.Matches(t, event, `Normal DeprecateAppVersionSucceeded Deprecate AppVersion: deprecated KeptnAppVersions for KeptnAppVersion: myapp-1.0.0-d4735e3a / Namespace: default, Name: myapp, Version: 1.0.0`)
 }
 
 func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {

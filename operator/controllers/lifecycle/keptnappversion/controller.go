@@ -172,7 +172,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
 
 	if !appVersion.IsEndTimeSet() {
-		appVersion.Status.CurrentPhase = apicommon.PhaseAppCompleted.ShortName
+		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		appVersion.SetEndTime()
 	}
 

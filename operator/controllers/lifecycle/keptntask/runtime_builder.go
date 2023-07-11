@@ -212,7 +212,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 	var parentJobParams RuntimeExecutionParams
 	parentDefinition, err := controllercommon.GetTaskDefinition(fb.options.Client, fb.options.Log, ctx, fb.options.funcSpec.FunctionReference.Name, fb.options.req.Namespace)
 	if err != nil {
-		fmt.Sprintf("could not finc KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition)
+		fb.options.Log.Error(err, fmt.Sprintf("could not finc KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition))
 		fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err
 	}
@@ -225,7 +225,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 	// merge parameter to make sure we use child task data for env var and secrets
 	err = mergo.Merge(params, parentJobParams)
 	if err != nil {
-		fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition)
+		fb.options.Log.Error(err, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition))
 		fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateFailed, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err
 	}

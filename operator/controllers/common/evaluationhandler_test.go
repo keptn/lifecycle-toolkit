@@ -20,6 +20,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
+//nolint:dupl
 func TestEvaluationHandler(t *testing.T) {
 	tests := []struct {
 		name            string

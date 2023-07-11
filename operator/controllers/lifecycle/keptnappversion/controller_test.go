@@ -232,7 +232,7 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
 func createFinishedAppVersionStatus() lfcv1alpha3.KeptnAppVersionStatus {
 	return lfcv1alpha3.KeptnAppVersionStatus{
-		CurrentPhase:                       apicommon.PhaseAppCompleted.ShortName,
+		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
 		PreDeploymentStatus:                apicommon.StateSucceeded,
 		PostDeploymentStatus:               apicommon.StateSucceeded,
 		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,

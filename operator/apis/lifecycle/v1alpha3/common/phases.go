@@ -38,6 +38,7 @@ var phases = []KeptnPhaseType{
 	PhaseWorkloadCompleted,
 	PhaseDeprecateAppVersion,
 	PhaseDeprecated,
+	PhaseAppCompleted,
 }
 
 func (p KeptnPhaseType) IsEvaluation() bool {
@@ -104,6 +105,7 @@ var (
 	PhaseDeprecateAppVersion      = KeptnPhaseType{LongName: "Deprecate AppVersion", ShortName: "DeprecateAppVersion"}
 	PhaseAppCompleted             = KeptnPhaseType{LongName: "App Completed", ShortName: "AppCompleted"}
 	PhaseWorkloadCompleted        = KeptnPhaseType{LongName: "Workload Completed", ShortName: "WorkloadCompleted"}
+	PhaseCompleted                = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseDeprecated               = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
 )
 

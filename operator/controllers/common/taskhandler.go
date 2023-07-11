@@ -133,7 +133,6 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateSucceeded, "created", piWrapper.GetVersion())
 
 	return newTask.Name, nil
 }

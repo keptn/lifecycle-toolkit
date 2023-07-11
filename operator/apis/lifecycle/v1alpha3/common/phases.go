@@ -30,7 +30,7 @@ var phases = []KeptnPhaseType{
 	PhaseUpdateWorkload,
 	PhaseCreateEvaluation,
 	PhaseCreateTask,
-	PhaseCreateApp,
+	PhaseCreateAppCreationRequest,
 	PhaseCreateWorkload,
 	PhaseCreateWorklodInstance,
 	PhaseCreateAppVersion,
@@ -81,30 +81,30 @@ func GetShortPhaseName(phase string) string {
 }
 
 var (
-	PhaseWorkloadPreDeployment  = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
-	PhaseWorkloadPostDeployment = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}
-	PhaseWorkloadPreEvaluation  = KeptnPhaseType{LongName: "Workload Pre-Deployment Evaluations", ShortName: "WorkloadPreDeployEvaluations"}
-	PhaseWorkloadPostEvaluation = KeptnPhaseType{LongName: "Workload Post-Deployment Evaluations", ShortName: "WorkloadPostDeployEvaluations"}
-	PhaseWorkloadDeployment     = KeptnPhaseType{LongName: "Workload Deployment", ShortName: "WorkloadDeploy"}
-	PhaseAppPreDeployment       = KeptnPhaseType{LongName: "App Pre-Deployment Tasks", ShortName: "AppPreDeployTasks"}
-	PhaseAppPostDeployment      = KeptnPhaseType{LongName: "App Post-Deployment Tasks", ShortName: "AppPostDeployTasks"}
-	PhaseAppPreEvaluation       = KeptnPhaseType{LongName: "App Pre-Deployment Evaluations", ShortName: "AppPreDeployEvaluations"}
-	PhaseAppPostEvaluation      = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
-	PhaseAppDeployment          = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
-	PhaseReconcileEvaluation    = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
-	PhaseReconcileTask          = KeptnPhaseType{LongName: "Reconcile Task", ShortName: "ReconcileTask"}
-	PhaseReconcileWorkload      = KeptnPhaseType{LongName: "Reconcile Workloads", ShortName: "ReconcileWorkload"}
-	PhaseCreateEvaluation       = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "CreateEvaluation"}
-	PhaseCreateTask             = KeptnPhaseType{LongName: "Create Task", ShortName: "CreateTask"}
-	PhaseCreateApp              = KeptnPhaseType{LongName: "Create App", ShortName: "CreateApp"}
-	PhaseCreateWorkload         = KeptnPhaseType{LongName: "Create Workload", ShortName: "CreateWorkload"}
-	PhaseUpdateWorkload         = KeptnPhaseType{LongName: "Update Workload", ShortName: "UpdateWorkload"}
-	PhaseCreateWorklodInstance  = KeptnPhaseType{LongName: "Create WorkloadInstance", ShortName: "CreateWorkloadInstance"}
-	PhaseCreateAppVersion       = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
-	PhaseDeprecateAppVersion    = KeptnPhaseType{LongName: "Deprecate AppVersion", ShortName: "DeprecateAppVersion"}
-	PhaseAppCompleted           = KeptnPhaseType{LongName: "App Completed", ShortName: "AppCompleted"}
-	PhaseWorkloadCompleted      = KeptnPhaseType{LongName: "Workload Completed", ShortName: "WorkloadCompleted"}
-	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
+	PhaseWorkloadPreDeployment    = KeptnPhaseType{LongName: "Workload Pre-Deployment Tasks", ShortName: "WorkloadPreDeployTasks"}
+	PhaseWorkloadPostDeployment   = KeptnPhaseType{LongName: "Workload Post-Deployment Tasks", ShortName: "WorkloadPostDeployTasks"}
+	PhaseWorkloadPreEvaluation    = KeptnPhaseType{LongName: "Workload Pre-Deployment Evaluations", ShortName: "WorkloadPreDeployEvaluations"}
+	PhaseWorkloadPostEvaluation   = KeptnPhaseType{LongName: "Workload Post-Deployment Evaluations", ShortName: "WorkloadPostDeployEvaluations"}
+	PhaseWorkloadDeployment       = KeptnPhaseType{LongName: "Workload Deployment", ShortName: "WorkloadDeploy"}
+	PhaseAppPreDeployment         = KeptnPhaseType{LongName: "App Pre-Deployment Tasks", ShortName: "AppPreDeployTasks"}
+	PhaseAppPostDeployment        = KeptnPhaseType{LongName: "App Post-Deployment Tasks", ShortName: "AppPostDeployTasks"}
+	PhaseAppPreEvaluation         = KeptnPhaseType{LongName: "App Pre-Deployment Evaluations", ShortName: "AppPreDeployEvaluations"}
+	PhaseAppPostEvaluation        = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
+	PhaseAppDeployment            = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
+	PhaseReconcileEvaluation      = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
+	PhaseReconcileTask            = KeptnPhaseType{LongName: "Reconcile Task", ShortName: "ReconcileTask"}
+	PhaseReconcileWorkload        = KeptnPhaseType{LongName: "Reconcile Workloads", ShortName: "ReconcileWorkload"}
+	PhaseCreateEvaluation         = KeptnPhaseType{LongName: "Create Evaluation", ShortName: "CreateEvaluation"}
+	PhaseCreateTask               = KeptnPhaseType{LongName: "Create Task", ShortName: "CreateTask"}
+	PhaseCreateAppCreationRequest = KeptnPhaseType{LongName: "Create AppCreationRequest", ShortName: "CreateAppCreationRequest"}
+	PhaseCreateWorkload           = KeptnPhaseType{LongName: "Create Workload", ShortName: "CreateWorkload"}
+	PhaseUpdateWorkload           = KeptnPhaseType{LongName: "Update Workload", ShortName: "UpdateWorkload"}
+	PhaseCreateWorklodInstance    = KeptnPhaseType{LongName: "Create WorkloadInstance", ShortName: "CreateWorkloadInstance"}
+	PhaseCreateAppVersion         = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
+	PhaseDeprecateAppVersion      = KeptnPhaseType{LongName: "Deprecate AppVersion", ShortName: "DeprecateAppVersion"}
+	PhaseAppCompleted             = KeptnPhaseType{LongName: "App Completed", ShortName: "AppCompleted"}
+	PhaseWorkloadCompleted        = KeptnPhaseType{LongName: "Workload Completed", ShortName: "WorkloadCompleted"}
+	PhaseDeprecated               = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
 )
 
 type PhaseTraceID map[string]propagation.MapCarrier
@@ -123,7 +123,6 @@ var (
 	PhaseStateStarted          = "Started"
 	PhaseStateFailed           = "Failed"
 	PhaseStateStatusChanged    = "StatusChanged"
-	PhaseStateSucceeded        = "Succeeded"
 	PhaseStateReconcileError   = "ReconcileError"
 	PhaseStateReconcileTimeout = "ReconcileTimeout"
 	PhaseStateNotFound         = "NotFound"

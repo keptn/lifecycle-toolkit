@@ -248,9 +248,6 @@ func TestEvaluationHandler(t *testing.T) {
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
-			events: []string{
-				"ReconcileEvaluationSucceeded",
-			},
 		},
 	}
 

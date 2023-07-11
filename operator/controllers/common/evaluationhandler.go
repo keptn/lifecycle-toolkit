@@ -129,7 +129,6 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnEvaluation", piWrapper.GetVersion())
 		return "", err
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateSucceeded, "created", piWrapper.GetVersion())
 
 	return newEvaluation.Name, nil
 }
@@ -188,7 +187,6 @@ func (r EvaluationHandler) handleEvaluationExists(phaseCtx context.Context, piWr
 		if evaluationStatus.Status.IsSucceeded() {
 			spanEvaluationTrace.AddEvent(evaluation.Name + " has finished")
 			spanEvaluationTrace.SetStatus(codes.Ok, "Finished")
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", evaluation, apicommon.PhaseStateSucceeded, "evaluation succeeded", piWrapper.GetVersion())
 		} else {
 			spanEvaluationTrace.AddEvent(evaluation.Name + " has failed")
 			r.emitEvaluationFailureEvents(evaluation, spanEvaluationTrace, piWrapper)

@@ -179,7 +179,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, spanWorkloadTrace trace.Span, span trace.Span, phase apicommon.KeptnPhaseType) (ctrl.Result, error) {
 	if !workloadInstance.IsEndTimeSet() {
-		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
+		workloadInstance.Status.CurrentPhase = apicommon.PhaseWorkloadCompleted.ShortName
 		workloadInstance.Status.Status = apicommon.StateSucceeded
 		workloadInstance.SetEndTime()
 	}

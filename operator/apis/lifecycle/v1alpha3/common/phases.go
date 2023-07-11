@@ -34,7 +34,6 @@ var phases = []KeptnPhaseType{
 	PhaseCreateWorkload,
 	PhaseCreateWorklodInstance,
 	PhaseCreateAppVersion,
-	PhaseCompleted,
 	PhaseAppCompleted,
 	PhaseWorkloadCompleted,
 	PhaseDeprecateAppVersion,
@@ -103,7 +102,6 @@ var (
 	PhaseCreateWorklodInstance  = KeptnPhaseType{LongName: "Create WorkloadInstance", ShortName: "CreateWorkloadInstance"}
 	PhaseCreateAppVersion       = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
 	PhaseDeprecateAppVersion    = KeptnPhaseType{LongName: "Deprecate AppVersion", ShortName: "DeprecateAppVersion"}
-	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseAppCompleted           = KeptnPhaseType{LongName: "App Completed", ShortName: "AppCompleted"}
 	PhaseWorkloadCompleted      = KeptnPhaseType{LongName: "Workload Completed", ShortName: "WorkloadCompleted"}
 	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}

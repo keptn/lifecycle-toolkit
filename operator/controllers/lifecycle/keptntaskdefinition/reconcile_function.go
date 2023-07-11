@@ -39,7 +39,7 @@ func (r *KeptnTaskDefinitionReconciler) reconcileConfigMap(ctx context.Context, 
 		err := r.Client.Update(ctx, functionCm)
 		if err != nil {
 			r.Log.Error(err, "could not update ConfigMap")
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "uould not update configmap", "")
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not update configmap", "")
 			return
 		}
 	}

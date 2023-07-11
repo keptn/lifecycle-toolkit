@@ -103,6 +103,28 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
 }
 ```
 
+## Querying Metrics over a Timerange
+
+You can query metrics over a specified timeframe.
+Let's suppose you mention the `range.interval` field to be `5m`,
+now the Keptn Metrics Operator would query the metrics for the
+last 5 minutes which means the
+`from = currentTime - range.interval` and `to = currentTime`.
+
+```yaml
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetric
+metadata:
+  name: good-metric
+spec:
+  provider:
+    name: my-provider
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
+  fetchIntervalSeconds: 10
+  range:
+    interval: "5m"
+```
+
 ## Using the HorizontalPodAutoscaler
 
 Use the Kubernetes Custom Metrics API

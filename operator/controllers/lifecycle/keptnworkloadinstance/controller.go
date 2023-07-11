@@ -190,7 +190,7 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "is finished", workloadInstance.GetVersion())
+	r.EventSender.SendK8sEvent(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "has finished", workloadInstance.GetVersion())
 
 	attrs := workloadInstance.GetMetricsAttributes()
 

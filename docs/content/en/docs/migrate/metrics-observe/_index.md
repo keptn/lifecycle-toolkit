@@ -85,7 +85,7 @@ For example, the `KeptnMetricProvider` resource
 for a Prometheus data source that does not use a secret
 could look like:
 
-```
+```yaml
 apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetricsProvider
 metadata:
@@ -98,7 +98,6 @@ spec:
 The `KeptnMetricProvider resource for a Dynatrace data source
 that uses a secret could look like:
 
-```
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider

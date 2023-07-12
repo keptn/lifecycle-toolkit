@@ -63,7 +63,7 @@ To test KeptnTasks using the Container runtime, you can use the following comman
 docker run -v $(pwd)/test.sh:/test.sh -e SCRIPT=/test.sh -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken" }' -it ghcr.io/keptn/container-runtime:${VERSION}
 ```
 
-Please replace ${VERSION} with the desired version of the Keptn Lifecycle Toolkit or the respective runtime version.
+Please replace `${VERSION}` with the desired version of the Keptn Lifecycle Toolkit or the respective runtime version.
 
 ### Docker with function on webserver (function in this repo)
 

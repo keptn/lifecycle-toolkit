@@ -8,8 +8,14 @@ docker build -t keptnsandbox/klc-runtime:${VERSION} .
 
 ## Usage
 
-The Keptn function runtime uses [Deno](https://deno.land/)
-to execute Javascript/Typescript code.
+The Keptn function runtime allows the execution of code written in various programming languages. The Keptn Lifecycle Toolkit supports the following runtime options:
+
+- [Deno](https://deno.land/) Runtime: Uses Deno to execute 
+  JavaScript/TypeScript code.
+- Python Runtime: Uses Python to execute Python code.
+- Container Runtime: Executes code inside a containerized 
+  environment.
+
 The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.
 The Keptn Lifecycle Toolkit passes parameters of `KeptnTask`s and
@@ -31,6 +37,33 @@ Replace `${VERSION}` with the KLT version of your choice.
 ```sh
 docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/functions-runtime:${VERSION}
 ```
+## Testing with Different Runtimes
+
+### Deno Runtime
+
+To test KeptnTasks locally using the Deno runtime, you can use the following command:
+
+```shell
+docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken" }' -it ghcr.io/keptn/functions-runtime:${VERSION}
+```
+
+### Python Runtime
+
+To test KeptnTasks using the Python runtime, you can use the following command:
+
+```shell
+docker run -v $(pwd)/test.py:/test.py -e SCRIPT=/test.py -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken" }' -it ghcr.io/keptn/python-runtime:${VERSION}
+```
+
+### Container Runtime
+
+To test KeptnTasks using the Container runtime, you can use the following command:
+
+```shell
+docker run -v $(pwd)/test.sh:/test.sh -e SCRIPT=/test.sh -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken" }' -it ghcr.io/keptn/container-runtime:${VERSION}
+```
+
+Please replace ${VERSION} with the desired version of the Keptn Lifecycle Toolkit or the respective runtime version.
 
 ### Docker with function on webserver (function in this repo)
 

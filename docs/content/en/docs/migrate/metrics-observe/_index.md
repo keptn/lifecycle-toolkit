@@ -12,8 +12,8 @@ but the format and content is still evolving.
 We hope you will contribute your experiences
 and questions that you have.
 
-The Keptn Lifecycle Toolkit can be migrated to
-Keptn Metrics and Keptn Evaluations.
+The SLIs and SLOs used for Keptn v1 quality gates can be ported to
+KLT Keptn Metrics and Keptn Evaluations.
 
 Note that KLT includes additional observability features
 that are not included in Keptn v1 by default:
@@ -36,12 +36,12 @@ Notice the paradigm differences:
 * Each query that is specified in your Keptn v1
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/) file
   is converted into its own
-  [KeptnMetric](../../yaml-crd-ref/metric) resource.
+  [KeptnMetric](../../yaml-crd-ref/metric.md) resource.
   Note that KLT supports using multiple instances of multiple data providers.
 * Simple Keptn v1 comparisons that are defined in
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files can be converted to
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
   resources.
   Keptn v1 calculations that use weighting and scoring
   cannot currently be converted to `KeptnEvaluationDefinition` resources.
@@ -67,7 +67,8 @@ Note the following:
 
 To configure a data source into your KLT cluster:
 
-1. Create a secret if your data source uses one.  See
+1. Create a secret if your data source uses one.
+   See
    [Create secret text](../../implementing/tasks/#create-secret-text).
 1. Install and configure each instance of each data source
    into your KLT cluster,

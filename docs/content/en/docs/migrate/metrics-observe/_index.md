@@ -19,7 +19,7 @@ Note that KLT includes additional observability features
 that are not included in Keptn v1 by default:
 
 * [Dora metrics](../../implementing/dora)
-* [OpenTelemetry observability](../../implementing/otel)
+* [OpenTelemetry observability](../../implementing/otel.md)
 
 Keptn v1 Quality Gates can be migrated into KLT metrics
 and KLT evaluations.
@@ -74,7 +74,7 @@ To configure a data source into your KLT cluster:
    into your KLT cluster,
    following the instructions provided by the data source provider.
    See
-   [Prepare your cluster for KLT](../../install/k8s/#prepare-your-cluster-for-klt)
+   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
 for links.
    KLT supports using multiple instances of multiple data sources.
 1. Define a

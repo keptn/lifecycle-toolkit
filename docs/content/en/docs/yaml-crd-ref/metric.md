@@ -62,7 +62,7 @@ spec:
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
   * **range**
-    * **interval** -- Timeframe for which the metric would be queried.
+    * **interval** -- Timeframe for which the metric would be queried. Defaults to 5m.
 
 ## Usage
 

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
+	metricsapi "github.com/keptn/lifecycle-toolkit/operator/testapi/metrics/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	v1 "k8s.io/api/core/v1"
@@ -249,7 +249,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
-							Message: fmt.Sprintf("KeptnMetric.metrics.keptn.sh \"%s\" not found", evaluationDefinition.Spec.Objectives[0].KeptnMetricRef.Name),
+							Message: fmt.Sprintf("keptnmetrics.metrics.keptn.sh \"%s\" not found", evaluationDefinition.Spec.Objectives[0].KeptnMetricRef.Name),
 						},
 					}))
 				}, "30s").Should(Succeed())

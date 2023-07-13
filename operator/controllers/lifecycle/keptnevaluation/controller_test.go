@@ -10,7 +10,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
-	metricsapi "github.com/keptn/lifecycle-toolkit/operator/testapi/metrics/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"

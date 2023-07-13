@@ -6,7 +6,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	metricsapi "github.com/keptn/lifecycle-toolkit/operator/testapi/metrics/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"

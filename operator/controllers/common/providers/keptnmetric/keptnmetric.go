@@ -32,7 +32,7 @@ func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alph
 	}
 
 	rawValue, ok, err := unstructured.NestedString(metric.UnstructuredContent(), "status", "rawValue")
-	if !ok || err != nil {
+	if !ok || err != nil || rawValue == "" {
 		err := fmt.Errorf("empty raWvalue for: %s", objective.KeptnMetricRef.Name)
 		p.Log.Error(err, "KeptnMetric has no rawValue")
 		return "", nil, err

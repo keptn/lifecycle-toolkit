@@ -36,7 +36,8 @@ To create your own custom dashboards in Grafana,
 follow these steps:
 
 - Log in to your Grafana instance.
-- Click on the "+" icon in the left-hand menu and select 
+- Click on the "+" icon in the left-hand menu 
+  and select 
   "Dashboard" to create a new dashboard.
 - On the new dashboard page, you'll see a toolbar at the top 
   with various options.

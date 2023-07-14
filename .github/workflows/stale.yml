@@ -22,20 +22,19 @@ jobs:
           stale-pr-message: |
             This issue has been automatically marked as stale because it has not had recent activity. It will be
             closed if no further activity occurs. Thank you for your contributions.
-jobs:
-  stale:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/stale@v8
-        with:
-          days-before-stale: 21
-          stale-issue-message: |
-            This issue will be unassigned soon if no further activity is seen. If the asignees are active please provide any update.
-          include-only-assigned: true
-          remove-stale-when-updated: true
-          only-issue-labels: 'good first issue'
-jobs:
-  stale:
+  stale1:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/stale@v8
+         with:
+           days-before-stale: 21
+           stale-issue-message: |
+             This issue will be unassigned soon if no further activity is seen. If the asignees are active please provide any update.
+           include-only-assigned: true
+           remove-stale-when-updated: true
+           only-issue-labels: 'good first issue'  
+
+  stale2:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/stale@v8
@@ -47,3 +46,4 @@ jobs:
           remove-stale-when-updated: true
           only-issue-labels: 'good first issue'
           stale-issue-label: 'to be unassigned'
+    

@@ -49,7 +49,8 @@ docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http:
 
 ### Python Runtime
 
-To test KeptnTasks using the Python runtime, you can use the following command:
+To test KeptnTasks using the Python runtime,
+you can use the following command:
 
 ```shell
 docker run -v $(pwd)/test.py:/test.py -e SCRIPT=/test.py -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken" }' -it ghcr.io/keptn/python-runtime:${VERSION}

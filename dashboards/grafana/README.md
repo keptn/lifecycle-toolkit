@@ -21,24 +21,23 @@ The dashboards can be changed in the Grafana UI.
 To export dashboards,
 follow these steps:
 
-- Access your Grafana instance.
-- Open the dashboard you want to modify.
-- Click on the "Share" button located in the top toolbar.
+- Access your Grafana instance. 
+- Open the dashboard you want to modify.  
+- Click on the "Share" button located in the top toolbar.  
 - From the dropdown menu, select "Export" to export the 
-  dashboard as a JSON file.
-- Save the exported JSON file.
+  dashboard as a JSON file.  
+- Save the exported JSON file.  
 - Replace the corresponding dashboard file in this folder 
-  with your modified JSON file.
+  with your modified JSON file.  
 
 ## Creating custom dashboards
 
 To create your own custom dashboards in Grafana,
 follow these steps:
 
-- Log in to your Grafana instance.
+- Log in to your Grafana instance.  
 - Click on the "+" icon in the left-hand menu 
-  and select 
-  "Dashboard" to create a new dashboard.
+  and select "Dashboard" to create a new dashboard.
 - On the new dashboard page, you'll see a toolbar at the top 
   with various options.
 - Click on the "Add panel" button to add panels to your 

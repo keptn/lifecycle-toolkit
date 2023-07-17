@@ -30,8 +30,10 @@ jobs:
           days-before-stale: 21
           stale-issue-message: |
             This issue will be unassigned in a week if no further activity is seen. 
-            If you are active please provide an update on the status of the issue and if you would like to continue working on it.
+            If you are active please provide an update on the status of the issue and if you would like to continue 
+            working on it.
           include-only-assigned: true
+          remove-stale-when-updated: true
           only-issue-labels: 'good first issue'  
 
   to-be-unassigned-label:

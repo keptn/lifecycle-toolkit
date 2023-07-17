@@ -22,3 +22,26 @@ jobs:
           stale-pr-message: |
             This issue has been automatically marked as stale because it has not had recent activity. It will be
             closed if no further activity occurs. Thank you for your contributions.
+
+  stale-good-first-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          days-before-stale: 21
+          stale-issue-message: |
+            This issue will be unassigned in 1 week if no further activity is seen.
+            If you are active please provide an update on the status of the issue and if you would like to continue
+            working on it.
+          include-only-assigned: true
+          remove-stale-when-updated: true
+          only-issue-labels: 'good first issue'
+
+      - uses: actions/stale@v8
+        with:
+          days-before-stale: 28
+          stale-issue-message: |
+            This issue will be labelled 'to be unassigned' because no response has been encountered.
+          include-only-assigned: true
+          only-issue-labels: 'good first issue'
+          stale-issue-label: 'to be unassigned'

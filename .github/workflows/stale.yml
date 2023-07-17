@@ -47,4 +47,4 @@ jobs:
           include-only-assigned: true
           only-issue-labels: 'good first issue'
           stale-issue-label: 'to be unassigned'
-    
+

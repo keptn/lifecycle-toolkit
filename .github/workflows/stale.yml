@@ -34,7 +34,7 @@ jobs:
             working on it.
           include-only-assigned: true
           remove-stale-when-updated: true
-          only-issue-labels: 'good first issue'  
+          only-issue-labels: 'good first issue'
 
   to-be-unassigned-label:
     runs-on: ubuntu-latest

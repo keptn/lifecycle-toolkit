@@ -36,6 +36,7 @@ jobs:
           include-only-assigned: true
           remove-stale-when-updated: true
           only-issue-labels: 'good first issue'
+
       - uses: actions/stale@v8
         with:
           days-before-stale: 28

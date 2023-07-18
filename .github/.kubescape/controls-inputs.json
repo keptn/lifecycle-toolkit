@@ -5,7 +5,8 @@
     "*.ghcr.io",
     ".*azurecr.io",
     "docker.io",
-    "ghcr.io"
+    "ghcr.io",
+    "localhost:5000"
   ],
   "max_critical_vulnerabilities": [
     "5"

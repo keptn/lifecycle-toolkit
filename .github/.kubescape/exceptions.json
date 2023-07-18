@@ -110,9 +110,9 @@
       }
     ],
     "posturePolicies": [
-        {
-            "controlID": "C-0037"
-        }
+      {
+        "controlID": "C-0037"
+      }
     ]
   },
   {
@@ -138,9 +138,9 @@
       }
     ],
     "posturePolicies": [
-        {
-            "controlID": "C-0007"
-        }
+      {
+        "controlID": "C-0007"
+      }
     ]
   },
   {
@@ -159,9 +159,9 @@
       }
     ],
     "posturePolicies": [
-        {
-            "controlID": "C-0039"
-        }
+      {
+        "controlID": "C-0039"
+      }
     ]
   },
   {
@@ -180,9 +180,9 @@
       }
     ],
     "posturePolicies": [
-        {
-            "controlID": "C-0042"
-        }
+      {
+        "controlID": "C-0042"
+      }
     ]
   },
   {
@@ -200,9 +200,30 @@
       }
     ],
     "posturePolicies": [
-        {
-            "controlID": "C-0237"
+      {
+        "controlID": "C-0237"
+      }
+    ]
+  },
+  {
+    "name": "ignore-wrongly-found-key-env-vars",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "certificate-operator"
         }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0012"
+      }
     ]
   }
 ]

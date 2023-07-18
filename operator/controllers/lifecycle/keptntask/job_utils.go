@@ -127,7 +127,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		task:          task,
 		containerSpec: definition.Spec.Container,
 		funcSpec:      controllercommon.GetRuntimeSpec(definition),
-		EventSender:   r.EventSender,
+		eventSender:   r.EventSender,
 		Image:         controllercommon.GetRuntimeImage(definition),
 		MountPath:     controllercommon.GetRuntimeMountPath(definition),
 		ConfigMap:     definition.Status.Function.ConfigMap,

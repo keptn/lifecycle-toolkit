@@ -20,7 +20,7 @@ type JobRunnerBuilder interface {
 // BuilderOptions contains everything needed to build the current job
 type BuilderOptions struct {
 	client.Client
-	EventSender   controllercommon.EventSender
+	eventSender   controllercommon.EventSender
 	req           ctrl.Request
 	Log           logr.Logger
 	task          *klcv1alpha3.KeptnTask

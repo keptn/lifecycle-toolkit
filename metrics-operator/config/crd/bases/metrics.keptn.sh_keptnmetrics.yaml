@@ -173,6 +173,9 @@ spec:
     - jsonPath: .spec.query
       name: Query
       type: string
+    - jsonPath: .spec.range.interval
+      name: Interval
+      type: string
     - jsonPath: .status.value
       name: Value
       type: string

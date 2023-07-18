@@ -1343,3 +1343,40 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 		},
 	}, workload.Spec)
 }
+
+func TestPodMutatingWebhook_calculateVersion(t *testing.T) {
+
+	tests := []struct {
+		name string
+		pod  *corev1.Pod
+		want string
+	}{
+		{
+			name: "simple tag",
+			pod: &corev1.Pod{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{Image: "ciao:1.0.0"},
+					},
+				}},
+			want: "1.0.0",
+		}, {
+			name: "local registry",
+			pod: &corev1.Pod{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{Image: "localhost:5000/node-web-app:1.0.0"},
+					},
+				}},
+			want: "1.0.0",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodMutatingWebhook{}
+			if got := a.calculateVersion(tt.pod); got != tt.want {
+				t.Errorf("calculateVersion() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

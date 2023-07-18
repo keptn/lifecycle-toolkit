@@ -241,8 +241,9 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 
 	if len(pod.Spec.Containers) == 1 {
 		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		if len(image) > 1 && image[1] != "" && image[1] != "latest" {
-			return image[1]
+		lenImg := len(image) - 1
+		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
+			return image[lenImg]
 		}
 	}
 

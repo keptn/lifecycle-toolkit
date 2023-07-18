@@ -121,6 +121,7 @@ require (
 )
 
 replace (
+	github.com/docker/distribution v2.8.1+incompatible => github.com/docker/distribution v2.8.2
 	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
 	golang.org/x/net => golang.org/x/net v0.10.0
 	k8s.io/api => k8s.io/api v0.25.11

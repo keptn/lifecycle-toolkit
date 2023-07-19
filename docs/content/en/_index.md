@@ -40,8 +40,8 @@ cascade:
  <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">
   Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
  </a>
-    <a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/keptn/lifecycle-toolkit/releases">
-  Releases <i class="fab fa-github ml-2 "></i>
+    <a class="btn btn-lg btn-secondary mr-3 mb-4" href="{{< relref "/docs/install" >}}">
+  Get Started <i class="fab fa-rocket ml-2 "></i>
  </a>
 </div>
 </div>

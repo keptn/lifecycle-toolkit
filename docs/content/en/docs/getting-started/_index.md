@@ -5,7 +5,7 @@ weight: 15
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This section provides excercises to introduce you to
+This section provides exercises to introduce you to
 the Keptn Lifecycle Toolkit.
 Choose the exercise that interests you the most.
 

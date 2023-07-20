@@ -33,7 +33,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -48,7 +47,7 @@ type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
 	Log           logr.Logger
-	Recorder      record.EventRecorder
+	EventSender   controllercommon.EventSender
 	TracerFactory controllercommon.TracerFactory
 	Meters        apicommon.KeptnMeters
 	SpanHandler   controllercommon.ISpanHandler
@@ -91,7 +90,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	phase := apicommon.PhaseAppPreDeployment
 	phaseHandler := controllercommon.PhaseHandler{
 		Client:      r.Client,
-		Recorder:    r.Recorder,
+		EventSender: r.EventSender,
 		Log:         r.Log,
 		SpanHandler: r.SpanHandler,
 	}
@@ -104,7 +103,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if appVersion.Status.CurrentPhase == "" {
 		appVersion.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Started", "have started", appVersion.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Normal", appVersion, "Started", "have started", appVersion.GetVersion())
 	}
 
 	if !appVersion.IsPreDeploymentSucceeded() {
@@ -161,13 +160,12 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 	}
 
-	controllercommon.RecordEvent(r.Recorder, phase, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
+	r.EventSender.SendK8sEvent(phase, "Normal", appVersion, "Finished", "is finished", appVersion.GetVersion())
 	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
-
 	// AppVersion is completed at this place
 
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)

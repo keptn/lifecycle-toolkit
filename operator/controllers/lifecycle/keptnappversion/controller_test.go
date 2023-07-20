@@ -19,6 +19,7 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -160,7 +161,7 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	return r
 }
 
-func setupReconciler() (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
 	//setup logger
 	opts := zap.Options{
 		Development: true,
@@ -185,13 +186,19 @@ func setupReconciler() (*KeptnAppVersionReconciler, chan string, *fake.ITracerMo
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
 	}
 
-	fakeClient := fake.NewClient()
+	workloadInstanceIndexer := func(obj client.Object) []string {
+		workloadInstance, _ := obj.(*lfcv1alpha3.KeptnWorkloadInstance)
+		return []string{workloadInstance.Spec.AppName}
+	}
+
+	fake.SetupSchemes()
+	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(recorder),
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,

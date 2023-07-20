@@ -27,6 +27,7 @@ module:
             - "mentorship"
         - source: "README.md"
           target: "./content/community/_index.md"
+
   proxy: direct
 languages:
   en:
@@ -38,5 +39,8 @@ menu:
     - name: Keptn v1
       params:
         rel: external
-      url: https://keptn.sh/
+      url: https://v1.keptn.sh/
       weight: 1
+
+ignoreErrors:
+  - "error-remote-getjson"

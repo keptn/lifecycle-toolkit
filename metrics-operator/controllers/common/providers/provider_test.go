@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
@@ -24,6 +25,11 @@ func TestFactory(t *testing.T) {
 		{
 			providerType: DynatraceProviderType,
 			provider:     &dynatrace.KeptnDynatraceProvider{},
+			err:          false,
+		},
+		{
+			providerType: DynatraceDQLProviderType,
+			provider:     dynatrace.NewKeptnDynatraceDQLProvider(fake.NewClient()),
 			err:          false,
 		},
 		{

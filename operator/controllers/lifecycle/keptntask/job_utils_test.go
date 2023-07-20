@@ -7,6 +7,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -26,8 +27,6 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
 
-	fakeRecorder := &record.FakeRecorder{}
-
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
@@ -41,10 +40,10 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)
@@ -78,16 +77,16 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
-	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
 	require.Equal(t, map[string]string{
-		"label1":             "label2",
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
 		"keptn.sh/app":       "my-app",
 		"keptn.sh/task-name": "my-task",
 		"keptn.sh/version":   "",
 		"keptn.sh/workload":  "my-workload",
-	}, resultingJob.Labels)
-	require.Equal(t, map[string]string{
-		"annotation1": "annotation2",
 	}, resultingJob.Annotations)
 }
 
@@ -99,8 +98,6 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	cm := makeConfigMap(cmName, namespace)
 
 	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
-
-	fakeRecorder := &record.FakeRecorder{}
 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
@@ -115,10 +112,10 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)
@@ -152,28 +149,26 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	require.Equal(t, namespace, resultingJob.Namespace)
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
-	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 4)
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
 	require.Equal(t, map[string]string{
-		"label1":             "label2",
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
 		"keptn.sh/app":       "my-app",
 		"keptn.sh/task-name": "my-task",
 		"keptn.sh/version":   "",
 		"keptn.sh/workload":  "my-workload",
-	}, resultingJob.Labels)
-	require.Equal(t, map[string]string{
-		"annotation1": "annotation2",
 	}, resultingJob.Annotations)
 }
 
-func TestKeptnTaskReconciler_updateJob(t *testing.T) {
+func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"
 
 	job := makeJob("my.job", namespace)
 
 	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
-
-	fakeRecorder := &record.FakeRecorder{}
 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
@@ -188,10 +183,10 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
-		Client:   fakeClient,
-		Recorder: fakeRecorder,
-		Log:      ctrl.Log.WithName("task-controller"),
-		Scheme:   fakeClient.Scheme(),
+		Client:      fakeClient,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)
@@ -199,16 +194,9 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = fakeClient.Create(context.TODO(), task)
 	require.Nil(t, err)
 
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: namespace,
-		},
-	}
-
 	task.Status.JobName = job.Name
 
-	err = r.updateJob(context.TODO(), req, task)
-	require.Nil(t, err)
+	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateFailed, task.Status.Status)
 
@@ -222,8 +210,7 @@ func TestKeptnTaskReconciler_updateJob(t *testing.T) {
 	err = fakeClient.Status().Update(context.TODO(), job)
 	require.Nil(t, err)
 
-	err = r.updateJob(context.TODO(), req, task)
-	require.Nil(t, err)
+	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
@@ -255,6 +242,7 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 			AppName:        "my-app",
 			AppVersion:     "0.1.0",
 			TaskDefinition: taskDefinitionName,
+			Type:           apicommon.PostDeploymentCheckType,
 		},
 	}
 }
@@ -272,7 +260,7 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 			},
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: klcv1alpha3.FunctionSpec{
+			Function: &klcv1alpha3.RuntimeSpec{
 				ConfigMapReference: klcv1alpha3.ConfigMapReference{
 					Name: configMapName,
 				},

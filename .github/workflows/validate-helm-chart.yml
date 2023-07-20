@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate helm charts
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+          RELEASE_REGISTRY: ghcr.io/keptn
         run: make helm-package
 
       - name: Install readme generator
@@ -71,7 +71,7 @@ jobs:
 
       - name: Generate helm charts
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+          RELEASE_REGISTRY: ghcr.io/keptn
         run: make helm-package
 
       - name: Compare YAML file changes
@@ -81,7 +81,7 @@ jobs:
             echo "There are no changes in the manifests"
           else
             echo ""
-            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.keptn.sh/keptn"
+            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.io/keptn"
             echo ""
             echo "=========== Diff ==========="
             git diff

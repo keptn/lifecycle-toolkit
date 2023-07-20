@@ -39,13 +39,7 @@ spec:
         - command:
             - /manager
           args:
-            - webhook-server
             - --leader-elect
-            # Secure port for the metrics adapter
-            - --adapter-port=6443
-            - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
-            # Log level for the metrics adapter
-            - --v=10
           image: controller:latest
           name: manager
           ports:
@@ -66,7 +60,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: FUNCTION_RUNNER_IMAGE
-              value: ghcr.keptn.sh/keptn/functions-runtime:v0.7.1 # x-release-please-version
+              value: ghcr.io/keptn/functions-runtime:v0.8.1 # x-release-please-version
+            - name: PYTHON_RUNNER_IMAGE
+              value: ghcr.io/keptn/python-runtime:v0.8.1 # x-release-please-version
             - name: OTEL_COLLECTOR_URL
               value: otel-collector:4317
             - name: KEPTN_APP_CONTROLLER_LOG_LEVEL

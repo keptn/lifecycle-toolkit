@@ -18,23 +18,19 @@ package keptntask
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
-	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,7 +43,7 @@ const traceComponentName = "keptn/operator/task"
 type KeptnTaskReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	Recorder      record.EventRecorder
+	EventSender   controllercommon.EventSender
 	Log           logr.Logger
 	Meters        apicommon.KeptnMeters
 	TracerFactory controllercommon.TracerFactory
@@ -84,21 +80,21 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	task.SetStartTime()
 
-	defer func(task *klcv1alpha3.KeptnTask) {
+	defer func() {
 		err := r.Client.Status().Update(ctx, task)
 		if err != nil {
-			r.Log.Error(err, "could not update status")
+			r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
 		}
-	}(task)
+	}()
 
-	jobExists, err := r.JobExists(ctx, *task, req.Namespace)
-	if err != nil {
+	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
+	if err != nil && !errors.IsNotFound(err) {
 		r.Log.Error(err, "Could not check if job is running")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	if !jobExists {
+	if job == nil {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
@@ -110,11 +106,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	if !task.Status.Status.IsCompleted() {
-		err := r.updateJob(ctx, req, task)
-		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
+		r.updateTaskStatus(job, task)
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
@@ -142,31 +134,7 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
-		Owns(&batchv1.Job{}).
 		Complete(r)
-}
-
-func (r *KeptnTaskReconciler) JobExists(ctx context.Context, task klcv1alpha3.KeptnTask, namespace string) (bool, error) {
-	jobList := &batchv1.JobList{}
-
-	jobLabels := client.MatchingLabels{}
-	for k, v := range task.CreateKeptnLabels() {
-		jobLabels[k] = v
-	}
-
-	if len(jobLabels) == 0 {
-		return false, fmt.Errorf(controllererrors.ErrNoLabelsFoundTask, task.Name)
-	}
-
-	if err := r.Client.List(ctx, jobList, client.InNamespace(namespace), jobLabels); err != nil {
-		return false, err
-	}
-
-	if len(jobList.Items) > 0 {
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func (r *KeptnTaskReconciler) getTracer() controllercommon.ITracer {

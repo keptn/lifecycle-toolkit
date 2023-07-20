@@ -146,7 +146,8 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "my-mutating-webhook-config",
+				Name:   "my-mutating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -167,7 +168,8 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with validatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "my-validating-webhook-config",
+				Name:   "my-validating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{

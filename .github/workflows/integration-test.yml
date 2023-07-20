@@ -2,14 +2,14 @@ name: Integration-Test
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
+      runtime_tag:
         description: "Tag for the functions runner image"
         type: "string"
         required: true
       helm-install:
-        description: "Decides wheter to install via helm"
+        description: "Decides whether to install via helm"
         type: "boolean"
-        default: false
+        default: true
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=kudobuilder/kuttl
@@ -29,7 +29,7 @@ jobs:
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
-          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          runtime_tag: ${{ inputs.runtime_tag }}
           helm-install: ${{ inputs.helm-install }}
 
       - name: Install and expose Prometheus
@@ -56,5 +56,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests
+          name: logs-integration-tests-${{ inputs.helm-install }}
           path: .github/scripts/logs

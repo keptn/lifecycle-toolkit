@@ -23,6 +23,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -32,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,7 +47,7 @@ const traceComponentName = "keptn/operator/app"
 type KeptnAppReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	Recorder      record.EventRecorder
+	EventSender   controllercommon.EventSender
 	Log           logr.Logger
 	TracerFactory controllercommon.TracerFactory
 }
@@ -105,10 +105,10 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err != nil {
 			r.Log.Error(err, "could not create AppVersion")
 			span.SetStatus(codes.Error, err.Error())
-			controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Warning", appVersion, "AppVersionNotCreated", "Could not create KeptnAppVersion", appVersion.Spec.Version)
+			r.EventSender.SendK8sEvent(common.PhaseCreateAppVersion, "Warning", appVersion, "AppVersionNotCreated", "Could not create KeptnAppVersion", appVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
-		controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Normal", appVersion, "AppVersionCreated", "created KeptnAppVersion", appVersion.Spec.Version)
+		r.EventSender.SendK8sEvent(common.PhaseCreateAppVersion, "Normal", appVersion, "AppVersionCreated", "created KeptnAppVersion", appVersion.Spec.Version)
 
 		app.Status.CurrentVersion = app.Spec.Version
 		if err := r.Client.Status().Update(ctx, app); err != nil {
@@ -159,9 +159,6 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	}
 
 	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
-	if len(appVersion.ObjectMeta.Name) > common.MaxK8sObjectLength {
-		appVersion.ObjectMeta.Name = common.TruncateString(appVersion.ObjectMeta.Name, common.MaxK8sObjectLength)
-	}
 	appVersion.Spec.TraceId = appTraceContextCarrier
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {
@@ -175,10 +172,10 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
-			controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Warning", app, "AppVersionNotDeprecated", fmt.Sprintf("could not deprecate KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
+			r.EventSender.SendK8sEvent(common.PhaseCreateAppVersion, "Warning", app, "AppVersionNotDeprecated", fmt.Sprintf("could not deprecate KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 			return err
 		}
-		controllercommon.RecordEvent(r.Recorder, common.PhaseCreateAppVersion, "Normal", app, "AppVersionDeprecated", fmt.Sprintf("deprecated KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
+		r.EventSender.SendK8sEvent(common.PhaseCreateAppVersion, "Normal", app, "AppVersionDeprecated", fmt.Sprintf("deprecated KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 	}
 	return nil
 }
@@ -188,9 +185,10 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 	lastResultErr = nil
 	for i := app.Generation - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha3.KeptnAppVersion{}
-		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.Name + "-" + app.Spec.Version + "-" + common.Hash(i)}, deprecatedAppVersion); err != nil {
+		appVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, app.Name, app.Spec.Version, common.Hash(i))
+		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: appVersionName}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {
-				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", app.Name+"-"+app.Spec.Version+"-"+common.Hash(i)))
+				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", appVersionName))
 				lastResultErr = err
 			}
 		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {

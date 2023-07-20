@@ -51,11 +51,14 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 	//nolint:gci
 	longName := `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremloremax`
 	//nolint:gci
-	trimmedName := `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustrylorem`
+	trimmedName := `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypeset-version-5feceb66`
 
 	app := &lfcv1alpha3.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: longName,
+		},
+		Spec: lfcv1alpha3.KeptnAppSpec{
+			Version: "version",
 		},
 	}
 	r, _, _ := setupReconciler()
@@ -207,7 +210,7 @@ func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	r := &KeptnAppReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(recorder),
 		Log:           ctrl.Log.WithName("test-appController"),
 		TracerFactory: tf,
 	}

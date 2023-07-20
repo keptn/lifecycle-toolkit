@@ -15,6 +15,6 @@ customRules:
   - "./docs/rules/max-one-sentence-per-line.js"
 
 ignores:
-  - "CHANGELOG.md"
+  - "**/CHANGELOG.md"
   - "node_modules"
   - "docs/tmp"

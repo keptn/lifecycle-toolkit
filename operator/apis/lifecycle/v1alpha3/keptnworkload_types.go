@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -102,7 +103,7 @@ func init() {
 }
 
 func (w KeptnWorkload) GetWorkloadInstanceName() string {
-	return strings.ToLower(w.Name + "-" + w.Spec.Version)
+	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, w.Name, w.Spec.Version)
 }
 
 func (w KeptnWorkload) SetSpanAttributes(span trace.Span) {

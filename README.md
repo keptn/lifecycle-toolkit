@@ -29,7 +29,7 @@ beta ![status](https://img.shields.io/badge/status-beta-yellow) )
 stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
 
-For more info about the features, please refer to our [documentation](./docs/content/en/docs/).
+For more info about the features, please refer to our [documentation](https://lifecycle.keptn.sh/docs/).
 
 ## Watch the KubeCon 2022 Detroit Demo
 
@@ -59,7 +59,7 @@ For installing the Lifecycle Toolkit via manifests use:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.7.1/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.8.1/manifest.yaml
 ```
 
 <!---x-release-please-end-->
@@ -447,7 +447,7 @@ spec:
 
 > **Note**
 The KeptnMetricsProvider is a new resource in KLT 0.7.0.
-The [migration documentation](./docs/content/en/docs/tasks/migrate-keptnevaluationprovider/_index.md)
+The [migration documentation](https://lifecycle.keptn.sh/docs/tasks/migrate-keptnevaluationprovider/)
 provides information about how to upgrade from 0.6.0 and earlier versions to 0.7.0.
 
 ### KeptnMetric

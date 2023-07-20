@@ -7,43 +7,34 @@ weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Use Kubernetes annotations and labels
-to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster.
-
-The Keptn Lifecycle Toolkit monitors resources
+The Keptn Lifecycle Toolkit works
+on top of the default scheduler for the cluster
+so it can trace all activities of all deployment workloads on the cluster,
+no matter what tool is used for the deployment.
+This same mechanism allows KLT to inject pre- and post-deployment checks
+into all deployment workloads.
+KLT monitors resources
 that have been applied into the Kubernetes cluster
 and reacts if it finds a workload with special annotations/labels.
-This is a four-step process:
+The Keptn Lifecycle Toolkit uses metadata
+to identify the workloads of interest.
 
-* [Enable the target namespace](#enable-target-namespace)
+To integrate KLT with your applications,
+you need to populate the metadata it needs
+with either Keptn or Kubernetes annotations and labels.
+
+This requires two steps:
+
 * [Annotate your workload(s)](#annotate-workloads)
 * Define a Keptn application that references those workloads.
   You have two options:
 
-  * [Define Keptn resources](#define-keptn-custom-resources-for-the-application)
+  * [Define KeptnApp manually](#define-keptnapp-manually)
     for the application
   * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
     that enables the observability features provided by the Lifecycle Toolkit
     for existing applications,
     without requiring you to manually create any KeptnApp resources.
-
-## Enable target namespace
-
-To enable the Keptn Lifecycle Controller in your cluster,
-annotate the Kubernetes
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/);
-for example:
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: simplenode-dev
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
-```
-
-This annotation tells the webhook to handle the namespace.
 
 ## Annotate workload(s)
 
@@ -60,9 +51,13 @@ and
 and
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 in the namespaces where KLT is enabled.
-If KLT finds any of hese resources and the resource has either
+If KLT finds any of these resources and the resource has either
 the keptn.sh or the kubernetes recommended labels,
 it creates a `KeptnWorkload` resource for the version it detects.
+
+> Note: Annotations are not required if you are only using the
+  `metrics-operator` component of KLT
+  to observe Keptn metrics.
 
 ### Basic annotations
 
@@ -145,6 +140,13 @@ the post-deployment checks start.
 
 ## Define a Keptn application
 
+A Keptn application defines the workloads
+to be included in your Keptn Application.
+It does this by aggregating multiple workloads
+that belong to a logical app into a single
+[KeptnApp](../../yaml-crd-ref/app.md)
+resource.
+
   You have two options:
 
 * Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
@@ -158,15 +160,36 @@ the post-deployment checks start.
     for existing applications,
     without requiring you to manually create any KeptnApp resources
 
-### Define Keptn custom resources for the application
+### Define KeptnApp manually
 
-Manually create a YAML file for the
+You can manually create a YAML file for the
 [KeptnApp](../../yaml-crd-ref/app.md) resource
 that references the workloads to be included
 along with any
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-resource that you want
+resources that you want.
+
+See the
+[keptn-app.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-app.yaml.tmp)
+file for an example.
+You see the `metadata` that names this `KeptnApp`
+and identifies the namespace where it lives:
+
+```yaml
+metadata:
+  name: simpleapp
+  namespace: simplenode-dev
+```
+
+You can also see the `spec.workloads` list
+that defines the workloads to be included
+and any pre-/post-deployment
+tasks and evaluations to be performed.
+In this simple example,
+we only have one workload and one evaluation defined
+but most production apps will have multiple workloads,
+multiple tasks, and multiple evaluations defined.
 
 ### Use Keptn automatic app discovery
 

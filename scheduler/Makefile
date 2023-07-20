@@ -15,7 +15,7 @@
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
-TAG?="v0.7.1" # x-release-please-version
+TAG?="v0.8.1" # x-release-please-version
 CHART_APPVERSION?=""
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins
@@ -46,7 +46,7 @@ $(LOCALBIN):
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION ?= v5.0.3
+KUSTOMIZE_VERSION ?= v5.1.0
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize

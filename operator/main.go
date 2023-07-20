@@ -28,7 +28,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
@@ -57,6 +56,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 var (
@@ -70,7 +70,6 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha2.AddToScheme(scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
-	utilruntime.Must(metricsapi.AddToScheme(scheme))
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -131,6 +130,8 @@ func main() {
 		Development: true,
 	}
 	opts.BindFlags(flag.CommandLine)
+	// parse the flags, so we ensure they can be set to something else than their default values
+	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
@@ -175,7 +176,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           taskLogger.V(env.KeptnTaskControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptntask-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptntask-controller")),
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
@@ -186,10 +187,10 @@ func main() {
 
 	taskDefinitionLogger := ctrl.Log.WithName("KeptnTaskDefinition Controller")
 	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Log:      taskDefinitionLogger.V(env.KeptnTaskDefinitionControllerLogLevel),
-		Recorder: mgr.GetEventRecorderFor("keptntaskdefinition-controller"),
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         taskDefinitionLogger.V(env.KeptnTaskDefinitionControllerLogLevel),
+		EventSender: controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptntaskdefinition-controller")),
 	}
 	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
@@ -201,7 +202,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           appLogger.V(env.KeptnAppControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnapp-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnapp-controller")),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
@@ -225,7 +226,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           workloadLogger.V(env.KeptnWorkloadControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnworkload-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkload-controller")),
 		TracerFactory: controllercommon.GetOtelInstance(),
 	}
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
@@ -238,7 +239,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           workloadInstanceLogger.V(env.KeptnWorkloadInstanceControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnworkloadinstance-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkloadinstance-controller")),
 		Meters:        keptnMeters,
 		TracerFactory: controllercommon.GetOtelInstance(),
 		SpanHandler:   spanHandler,
@@ -253,7 +254,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           appVersionLogger.V(env.KeptnAppVersionControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnappversion-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnappversion-controller")),
 		TracerFactory: controllercommon.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
@@ -268,7 +269,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		Log:           evaluationLogger.V(env.KeptnEvaluationControllerLogLevel),
-		Recorder:      mgr.GetEventRecorderFor("keptnevaluation-controller"),
+		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnevaluation-controller")),
 		TracerFactory: controllercommon.GetOtelInstance(),
 		Meters:        keptnMeters,
 		Namespace:     env.PodNamespace,
@@ -306,6 +307,10 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
 		os.Exit(1)
 	}
+	if err = (&lifecyclev1alpha3.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
+		os.Exit(1)
+	}
 	// +kubebuilder:scaffold:builder
 
 	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
@@ -337,13 +342,21 @@ func main() {
 			)
 
 		setupLog.Info("starting webhook and manager")
+
+		decoder, err := admission.NewDecoder(mgr.GetScheme())
+		if err != nil {
+			setupLog.Error(err, "unable to initialize decoder")
+			os.Exit(1)
+		}
+
 		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
-					Client:   mgr.GetClient(),
-					Tracer:   otel.Tracer("keptn/webhook"),
-					Recorder: mgr.GetEventRecorderFor("keptn/webhook"),
-					Log:      ctrl.Log.WithName("Mutating Webhook"),
+					Client:      mgr.GetClient(),
+					Tracer:      otel.Tracer("keptn/webhook"),
+					EventSender: controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptn/webhook")),
+					Decoder:     decoder,
+					Log:         ctrl.Log.WithName("Mutating Webhook"),
 				},
 			},
 		}); err != nil {

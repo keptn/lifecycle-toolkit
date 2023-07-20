@@ -94,6 +94,7 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+          check-latest: true
 
       - name: Unit Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
@@ -125,6 +126,8 @@ jobs:
             folder: "scheduler/"
           - name: "functions-runtime"
             folder: "functions-runtime/"
+          - name: "python-runtime"
+            folder: "python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
@@ -174,14 +177,14 @@ jobs:
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime'
+        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
           CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml for tests
-        if: matrix.config.name != 'functions-runtime'
+        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest-test
@@ -194,30 +197,36 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: [prepare_ci_run, build_image]
+    needs:
+      - prepare_ci_run
+      - build_image
+    strategy:
+      matrix:
+        helm: [true, false]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      helm-install: ${{ matrix.helm }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:
     name: Load Tests
     needs: [prepare_ci_run, build_image]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/load-test.yml
 
   e2e_tests:
     name: End to End Tests
     needs: [prepare_ci_run, build_image]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
 
   performance_tests:
     name: Performance Tests
     needs: [prepare_ci_run, build_image]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/performance-test.yml
 
   helm_charts_build:
@@ -238,7 +247,7 @@ jobs:
 
       - name: Generate helm charts
         env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
+          RELEASE_REGISTRY: ghcr.io/keptn
         run: make helm-package
 
       - name: Copy charts from klt to helm repo

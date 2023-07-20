@@ -268,6 +268,11 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 }
 
 func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
+	// for single workload applications, the workload version is the application version
+	if len(workloads) == 1 {
+		return workloads[0].Spec.Version
+	}
+
 	versionString := ""
 
 	// iterate over all workloads and add their names + version

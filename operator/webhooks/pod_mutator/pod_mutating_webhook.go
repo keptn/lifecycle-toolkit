@@ -14,6 +14,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/semconv"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -24,7 +25,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -36,11 +36,11 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client   client.Client
-	Tracer   trace.Tracer
-	decoder  *admission.Decoder
-	Recorder record.EventRecorder
-	Log      logr.Logger
+	Client      client.Client
+	Tracer      trace.Tracer
+	Decoder     *admission.Decoder
+	EventSender controllercommon.EventSender
+	Log         logr.Logger
 }
 
 const InvalidAnnotationMessage = "Invalid annotations"
@@ -64,7 +64,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	pod := &corev1.Pod{}
 
-	err := a.decoder.Decode(req, pod)
+	err := a.Decoder.Decode(req, pod)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}
@@ -83,21 +83,12 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	podIsAnnotated, err := a.isPodAnnotated(pod)
+	podIsAnnotated := a.isPodAnnotated(pod)
 	logger.Info("Checked if pod is annotated.")
-
-	if err != nil {
-		span.SetStatus(codes.Error, InvalidAnnotationMessage)
-		return admission.Errored(http.StatusBadRequest, err)
-	}
 
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated, err = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
-		if err != nil {
-			span.SetStatus(codes.Error, InvalidAnnotationMessage)
-			return admission.Errored(http.StatusBadRequest, err)
-		}
+		podIsAnnotated = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if podIsAnnotated {
@@ -105,11 +96,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		pod.Spec.SchedulerName = "keptn-scheduler"
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
-		isAppAnnotationPresent, err := a.isAppAnnotationPresent(pod)
-		if err != nil {
-			span.SetStatus(codes.Error, InvalidAnnotationMessage)
-			return admission.Errored(http.StatusBadRequest, err)
-		}
+		isAppAnnotationPresent := a.isAppAnnotationPresent(pod)
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 		logger.Info("Attributes from annotations set")
 
@@ -135,22 +122,9 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	return admission.PatchResponseFromRaw(req.Object.Raw, marshaledPod)
 }
 
-// PodMutatingWebhook implements admission.DecoderInjector.
-// A decoder will be automatically injected.
-
-// InjectDecoder injects the decoder.
-func (a *PodMutatingWebhook) InjectDecoder(d *admission.Decoder) error {
-	a.decoder = d
-	return nil
-}
-
-func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
-	workload, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	version, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-
-	if len(workload) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
-		return false, ErrTooLongAnnotations
-	}
+func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
+	_, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	_, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
@@ -159,28 +133,28 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) (bool, error) {
 			}
 			pod.Annotations[apicommon.VersionAnnotation] = a.calculateVersion(pod)
 		}
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }
 
-func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
 	podOwner := a.getOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
-		return false, nil
+		return false
 	}
 
 	switch podOwner.Kind {
 	case "ReplicaSet":
 		rs := &appsv1.ReplicaSet{}
 		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
-			return false, nil
+			return false
 		}
 		a.Log.Info("Done fetching RS")
 
 		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
 		if rsOwner.UID == "" {
-			return false, nil
+			return false
 		}
 
 		if rsOwner.Kind == "Rollout" {
@@ -197,13 +171,13 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		ds := &appsv1.DaemonSet{}
 		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
 	default:
-		return false, nil
+		return false
 	}
 }
 
-func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) (bool, error) {
+func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
 	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
-		return false, nil
+		return false
 	}
 	objectContainerMetaData := metav1.ObjectMeta{
 		Labels:      objectContainer.GetLabels(),
@@ -212,7 +186,7 @@ func (a *PodMutatingWebhook) fetchParentObjectAndCopyLabels(ctx context.Context,
 	return a.copyResourceLabelsIfPresent(&objectContainerMetaData, pod)
 }
 
-func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) (bool, error) {
+func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
 	var gotWorkloadName, gotVersion bool
 
@@ -223,10 +197,6 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 	postDeploymentChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentTaskAnnotation, "")
 	preEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = getLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
-
-	if len(workloadName) > apicommon.MaxWorkloadNameLength || len(version) > apicommon.MaxVersionLength {
-		return false, ErrTooLongAnnotations
-	}
 
 	if len(targetPod.Annotations) == 0 {
 		targetPod.Annotations = make(map[string]string)
@@ -247,26 +217,23 @@ func (a *PodMutatingWebhook) copyResourceLabelsIfPresent(sourceResource *metav1.
 		setMapKey(targetPod.Annotations, apicommon.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
 		setMapKey(targetPod.Annotations, apicommon.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
 
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }
 
-func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) (bool, error) {
-	app, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+func (a *PodMutatingWebhook) isAppAnnotationPresent(pod *corev1.Pod) bool {
+	_, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
-		if len(app) > apicommon.MaxAppNameLength {
-			return false, ErrTooLongAnnotations
-		}
-		return true, nil
+		return true
 	}
 
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string)
 	}
 	pod.Annotations[apicommon.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	return false, nil
+	return false
 }
 
 func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
@@ -274,8 +241,9 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 
 	if len(pod.Spec.Containers) == 1 {
 		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		if len(image) > 1 && image[1] != "" && image[1] != "latest" {
-			return image[1]
+		lenImg := len(image) - 1
+		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
+			return image[lenImg]
 		}
 	}
 
@@ -311,12 +279,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
 		return nil
 	}
 
@@ -336,12 +304,12 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
-	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
+	a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
 
 	return nil
 }
@@ -366,12 +334,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
 			logger.Error(err, "Could not create App")
-			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+		a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 		return nil
 	}
 
@@ -465,7 +433,7 @@ func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-	return strings.ToLower(applicationName + "-" + workloadName)
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, applicationName, workloadName)
 }
 
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {

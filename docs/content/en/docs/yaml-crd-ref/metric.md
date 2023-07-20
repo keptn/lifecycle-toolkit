@@ -26,6 +26,8 @@ spec:
     name: "<named-provider>"
   query: "<query>"
   fetchIntervalSeconds: <#-seconds>
+  range:
+    interval: "<timeframe>"
 ```
 
 ## Fields
@@ -59,8 +61,28 @@ spec:
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
+  * **range**
+    * **interval** -- Timeframe for which the metric would be queried.
+    Defaults to 5m.
 
 ## Usage
+
+A `KeptnMetric` resource must be located
+in the same namespace as the associated
+[KeptnMetricsProvider](metricsprovider.md)
+resource.
+`KeptnMetric` resources are used to generate metrics for the cluster
+and are used as the SLI (Service Level Indicator) for
+[KeptnEvaluationDefinition](evaluationdefinition.md)
+resources that are used for pre- and post-deployment evaluations.
+
+`KeptnEvaluationDefinition` resources can reference metrics
+from any namespace.
+This means that you can create `KeptnMetricsProvider`
+and `KeptnMetric` resources
+in a centralized namespace (e.g. in `keptn-lifecycle-toolkit-system`)
+and access those metrics in evaluations
+on all namespaces in the cluster.
 
 ## Example
 
@@ -79,6 +101,8 @@ spec:
     name: "my-provider"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
+  range:
+    interval: "5m"
 ```
 
 ## Files

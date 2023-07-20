@@ -536,4 +536,10 @@ to the corresponding doc source in the `lifecycle-toolkit` documentation.
 `git commit -sm "docs: i did something"`
 
 1. PRs with a single commit are very strictly checked for the above conventional commit messages.
-PRs with multiple commits are less strict as they use the pull request title instead.
+1. Be sure that the PR description is complete and meaningful.
+1. If this PR is associated with an `issue`,
+    reference that issue with one of the following phrases:
+    
+    ```
+    fixes <link-to-github-issue>
+    closes <link-to-github-issue>

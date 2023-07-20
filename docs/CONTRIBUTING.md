@@ -528,8 +528,9 @@ to the corresponding doc source in the `lifecycle-toolkit` documentation.
 1. Sign every commit! `git commit -sm "message"`
 1. Always run `cd docs` then `make markdownlint` to show issues.
 1. If your PR has one commit, make it semantic.
-Make it all lowercase.
-Make the commit message conform to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard:
+1. Begin the message with the `docs:` string
+1. Use lowercase for the first word after `docs:` .
+1. Make the commit message conform to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard:
 
 `git commit -sm "docs: i did something"`
 

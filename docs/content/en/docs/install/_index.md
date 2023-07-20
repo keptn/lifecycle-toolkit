@@ -1,52 +1,335 @@
 ---
-title: Installation and upgrade
-description: Learn how to install, configure, and upgrade the Keptn Lifecycle Toolkit
+title: Installation
+description: Learn how to install the Keptn Lifecycle Toolkit
 weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This section provides details about how to install and configure
-the components of the Keptn Lifecycle Toolkit
-either as a local cluster you use for study, testing, and demonstrations
-or as part of an existing production cluster.
-The steps are:
+Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy. The following is an imperative walkthrough.
 
-1. Understand the [Software versions and resources](reqs.md)
-   that are required.
-1. Be sure that your cluster includes the components discussed in
-   [Prepare your cluster for KLT](k8s.md/#prepare-your-cluster-for-klt).
-1. [Bring or create your Kubernetes cluster](k8s.md).
-1. [Replace the default cert-manager](cert-manager.md) (optional).
-   This step is only required if you want to replace
-   the default KLT cert-manager with another cert-manager.
-1. [Install the Keptn Lifecycle Toolkit](install.md).
-1. [Enable Keptn Lifecycle Toolkit](install.md/#enable-klt-for-your-cluster).
-   This step is not required if you only want to run Keptn Metrics
-   but is required for all other KLT features.
+If you prefer a GitOps / declarative-based approach follow [this demo instead](https://exmaple.com).
 
-1. Run the following command to ensure that your Kuberetes cluster
-   is ready to implement the Lifecycle Toolkit:
+## Prerequisites
+- A Kubernetes cluster (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+- [Helm](https://helm.io) CLI available
 
-   ```shell
-   kubectl get pods -n keptn-lifecycle-toolkit-system
-   ```
+## Objectives
+- Install Keptn Lifecycle Toolkit on your cluster
+- Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
 
-   You should see pods for the following components:
-   - certificate-operator (or another cert manager)
-   - lifecycle-operator
-   - scheduler
-   - metrics-operator
+## Step 1: Install Keptn Lifecycle Toolkit
 
-Unless you are only using the customized Keptn metrics feature,
-you now need to: follow the instructions in
-[Annotate workload](../implementing/integrate/#basic-annotations)
-to integrate the Lifecycle Toolkit into your Kubernetes cluster
-by applying basic annotations to your `Deployment` resource.
-and create appropriate `KeptnApp` resources,
-each of which aggregates all `workloads` of your application into a single
-[KeptnApp](../yaml-crd-ref/app.md) resource.
+Install Keptn Lifecycle Toolkit using Helm:
 
-This section also includes:
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
 
-1. How to [Upgrade](upgrade.md)
-   to a new version of the Keptn Lifecycle Toolkit
+## Create Namespace for Demo Application
+
+Create an annotated namespace for the demo application. The annotation tells the KLT operator to watch this namespace.
+
+```shell
+kubectl create namespace keptndemo
+kubectl annotate namespace keptndemo keptn.sh/lifecycle-toolkit=enabled
+```
+
+## Deploy Demo Application
+
+It is time to deploy the demo application. Use `kubectl` to apply this manifest:
+
+```shell
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: keptndemo
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: keptndemoapp
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/version: 0.0.1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+
+## Explore Keptn
+
+Keptn is now aware of your deployments and is generating DORA statistics about them.
+
+Keptn has created a CRD to track your application. The name of which is based on the `part-of` label.
+
+```shell
+kubectl -n keptndemo get keptnapp
+```
+
+Keptn also creates a new application version every time you increment the `version` label:
+
+```shell
+kubectl -n keptndemo get keptnappversion
+```
+
+Keptn applications are a collection of workloads. By default, Keptn will build KeptnApp CRDs based on the labels you provide.
+
+In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
+
+```shell
+kubectl -n keptndemo get keptnworkloads
+```
+
+## View DORA Metrics
+
+Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
+
+Retrieve the service name with:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
+```
+
+Then port-forward to the name of your service:
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward service/YOURNAME 2222
+```
+
+Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for metrics starting with `keptn_`.
+
+## View DORA metrics in a better way
+
+It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install two new Observability components to help us:
+
+- Jaeger to store and view traces
+- An OpenTelemetry collector to scrape the metrics from the above metrics endpoint and the OpenTelemetry traces of deployments emitted by KLT. The OTEL collector will then send this data to Prometheus and Jaeger respectively
+- Prometheus to store the metrics
+- Jaeger to store the OpenTelemetry deployment traces
+- Grafana (and some prebuilt dashboards) to visualise the data
+
+### Install Jaeger
+
+Save this file as `jaeger.yaml`:
+
+```shell
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+spec:
+  strategy: allInOne
+```
+
+```shell
+kubectl create namespace observability
+kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.46.0/jaeger-operator.yaml -n observability
+kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=300s
+kubectl apply -f jaeger.yaml -n keptn-lifecycle-toolkit-system
+kubectl wait --for=condition=available deployment/jaeger -n keptn-lifecycle-toolkit-system --timeout=300s
+```
+
+### Install Kube-Prometheus Stack
+
+This will install:
+
+- Prometheus
+- Prometheus Configuration
+- Grafana & default dashboards
+
+```shell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --create-namespace --wait
+```
+
+### Install OpenTelemetry Collector
+
+Save this file and use kubectl to apply it:
+
+**collector.yaml**
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-conf
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    app: opentelemetry
+    component: otel-collector-conf
+data:
+  otel-collector-config: |
+    receivers:
+      # Make sure to add the otlp receiver.
+      # This will open up the receiver on port 4317
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: 'otel-collector'
+              scrape_interval: 5s
+              static_configs:
+                - targets: ['keptn-klt-lifecycle-operator-metrics-service:2222']
+    processors:
+    extensions:
+      health_check: {}
+    exporters:
+      jaeger:
+        endpoint: "jaeger-collector:14250"
+        tls:
+          insecure: true
+      prometheus:
+        endpoint: 0.0.0.0:8889
+      logging:
+
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: []
+          exporters: [jaeger]
+
+        metrics:
+          receivers: [otlp,prometheus]
+          processors: []
+          exporters: [prometheus, logging]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  ports:
+    - name: otlp # Default endpoint for otlp receiver.
+      port: 4317
+      protocol: TCP
+      targetPort: 4317
+      nodePort: 30080
+    - name: metrics # Default endpoint for metrics.
+      port: 8889
+      protocol: TCP
+      targetPort: 8889
+  selector:
+    component: otel-collector
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  selector:
+    matchLabels:
+      app: opentelemetry
+      component: otel-collector
+  minReadySeconds: 5
+  progressDeadlineSeconds: 120
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8889"
+        prometheus.io/scrape: "true"
+      labels:
+        app: opentelemetry
+        component: otel-collector
+    spec:
+      containers:
+        - command:
+            - "/otelcol"
+            - "--config=/conf/otel-collector-config.yaml"
+          env:
+            - name: GOGC
+              value: "80"
+          image: otel/opentelemetry-collector:0.60.0
+          name: otel-collector
+          resources:
+            limits:
+              cpu: 400m
+              memory: 1Gi
+            requests:
+              cpu: 75m
+              memory: 200Mi
+          ports:
+            - containerPort: 4317 # Default endpoint for otlp receiver.
+            - containerPort: 8889 # Default endpoint for querying metrics.
+          volumeMounts:
+            - name: otel-collector-config-vol
+              mountPath: /conf
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 13133 # Health Check extension default port.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 13133 # Health Check extension default port.
+      volumes:
+        - configMap:
+            name: otel-collector-conf
+            items:
+              - key: otel-collector-config
+                path: otel-collector-config.yaml
+          name: otel-collector-config-vol
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    serviceapp: otel-collector
+  name: otel-collector
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 30s
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - keptn-lifecycle-toolkit-system
+  selector:
+    matchLabels:
+      app: opentelemetry
+```
+
+Now apply it:
+
+```shell
+kubectl apply -f collector.yaml
+```
+
+### Install Prometheus
+
+TODO
+
+### Install Jaeger
+
+TODO
+
+### Install Grafana and Dashboards
+
+TODO
+

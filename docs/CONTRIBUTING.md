@@ -528,6 +528,7 @@ to the corresponding doc source in the `lifecycle-toolkit` documentation.
 
 1. Sign every commit! `git commit -sm "message"`
 1. Always run `cd docs` then `make markdownlint` to show issues.
+    - Run `make markdownlint-fix` to correct many common errors.
 1. Make the PR title semantic and meaningful,
      usually beginning with a verb.
 1. Begin the message with the `docs:` string

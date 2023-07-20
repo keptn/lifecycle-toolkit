@@ -109,29 +109,26 @@ Keptn can run tasks and SLO evaluations before and after deployment. You haven't
 kubectl -n keptndemo get keptnappversion -o wide
 ```
 
-The pod will be runnings when the `PHASE` is `Completed`.
+The pod will be running when the `PHASE` is `Completed`.
 
 Keptn applications are a collection of workloads. By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
 
 In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
 
 ```shell
-kubectl -n keptndemo get keptnworkloads
+
 ```
 
 ## View DORA Metrics
 
 Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
-Retrieve the service name with:
+These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
+
+To see these raw metrics, port-forward to the name of your service:
 
 ```shell
-kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
-```
-
-Then port-forward to the name of your service:
-```shell
-kubectl -n keptn-lifecycle-toolkit-system port-forward service/YOURNAME 2222
+kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
 ```
 
 Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for metrics starting with `keptn_`.

@@ -13,7 +13,7 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout v0.20.0
 	go.opentelemetry.io/otel/sdk v0.20.0
 	go.opentelemetry.io/otel/trace v0.20.0
-	google.golang.org/grpc v1.55.0
+	google.golang.org/grpc v1.56.2
 	k8s.io/api v0.25.11
 	k8s.io/apimachinery v0.25.11
 	k8s.io/apiserver v0.25.11

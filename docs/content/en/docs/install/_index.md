@@ -131,6 +131,8 @@ spec:
   strategy: allInOne
 ```
 
+Install and configure Jaeger:
+
 ```shell
 kubectl create namespace observability
 kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.46.0/jaeger-operator.yaml -n observability
@@ -138,6 +140,14 @@ kubectl wait --for=condition=available deployment/jaeger-operator -n observabili
 kubectl apply -f jaeger.yaml -n keptn-lifecycle-toolkit-system
 kubectl wait --for=condition=available deployment/jaeger -n keptn-lifecycle-toolkit-system --timeout=300s
 ```
+
+Port-forward to access Jaeger:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
+```
+
+Jaeger is available on `http://localhost:16686`
 
 ### Install Kube-Prometheus Stack
 

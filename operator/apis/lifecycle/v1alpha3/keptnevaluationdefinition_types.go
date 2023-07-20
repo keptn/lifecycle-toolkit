@@ -23,11 +23,67 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+// PassThreshold defines the required score for an evaluation to be successful
+type PassThreshold struct {
+	// PassPercentage defines the threshold which needs to be reached for an evaluation to pass.
+	PassPercentage float32 `json:"passPercentage"`
+	// WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning'  status.
+	WarningPercentage float32 `json:"passPercentage"`
+}
+
+// ComparisonTarget defines how the target value for a comparison based evaluation is calculated. Only one of its field can be set
+type ComparisonTarget struct {
+	IncreaseByPercent *float32 `json:"increaseByPercent,omitempty"`
+	DecreaseByPercent *float32 `json:"decreaseByPercent,omitempty"`
+	IncreaseBy        *float32 `json:"increaseBy,omitempty"`
+	DecreaseBy        *float32 `json:"decreaseBy,omitempty"`
+	Equal             *bool    `json:"equal,omitempty"`
+}
+
+type TargetValue struct {
+	FixedValue *float32          `json:"fixedValue,omitempty"`
+	Comparison *ComparisonTarget `json:"compareValue,omitempty"`
+}
+
+type Target struct {
+	LessThanOrEqual    *TargetValue `json:"lessThanOrEqual,omitempty"`
+	LessThan           *TargetValue `json:"lessThan,omitempty"`
+	GreaterThan        *TargetValue `json:"greaterThan,omitempty"`
+	GreaterThanOrEqual *TargetValue `json:"greaterThanOrEqual,omitempty"`
+	EqualTo            *TargetValue `json:"equalTo,omitempty"`
+}
+
+type Criteria struct {
+	Targets []Target `json:"targets"`
+}
+
+type OrCombinedCriteriaSet struct {
+	// AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass
+	AnyOf []Criteria `json:"anyOf"`
+}
+
+type SLOTarget struct {
+	Pass    OrCombinedCriteriaSet `json:"pass"`
+	Warning OrCombinedCriteriaSet `json:"warning"`
+}
+
+type ComparisonSpec struct {
+	CompareWith         string `json:"compareWith"`
+	IncludeWarning      bool   `json:"includeWarning"`
+	NumberOfComparisons int    `json:"numberOfComparisons"`
+	AggregationFunction string `json:"aggregationFunction"`
+}
+
 // KeptnEvaluationDefinitionSpec defines the desired state of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionSpec struct {
 	// Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
 	// KeptnEvaluationDefinition to be successful.
 	Objectives []Objective `json:"objectives"`
+	// TotalScore allows to define a minimum required score for passing an evaluation.
+	// If this is not defined, all objectives have to be successful for the evaluation to pass.
+	TotalScore *PassThreshold `json:"totalScore"`
+	// Comparison defines which previous KeptnEvaluations should be taken into consideration for comparison based targets
+	Comparison *ComparisonSpec `json:"comparison,omitempty"`
 }
 
 type Objective struct {
@@ -35,7 +91,14 @@ type Objective struct {
 	KeptnMetricRef KeptnMetricReference `json:"keptnMetricRef"`
 	// EvaluationTarget specifies the target value for the references KeptnMetric.
 	// Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
+	// Likely to be deprecated and replaced by SLOTargets
 	EvaluationTarget string `json:"evaluationTarget"`
+	// SLOTargets provide a more flexible way to define targets for a metric.
+	SLOTargets *SLOTarget `json:"slo_targets"`
+	// Weight defines how much the Objective affects the overall score. Defaults to 1.
+	Weight int `json:"weight"`
+	// KeyObjective defines if the Objective is mandatory for an KeptnEvaluation to pass
+	KeyObjective bool `json:"keyObjective"`
 }
 
 type KeptnMetricReference struct {

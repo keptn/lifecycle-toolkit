@@ -44,7 +44,7 @@ Multiple workloads can also be logically grouped and evaluated
 as a single cohesive unit called a `KeptnApp`.
 In other words, a `KeptnApp` is a collection of multiple workloads.
 
-KLT is tool- and vendor neutral and does not depend on particular GitOps tooling.
+KLT is tool and vendor neutral and does not depend on particular GitOps tooling.
 KLT emits signals at every stage
 (Kubernetes events, OpenTelemetry metrics and traces)
 to ensure that your deployments are observable.

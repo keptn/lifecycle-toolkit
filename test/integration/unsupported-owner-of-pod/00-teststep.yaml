@@ -2,4 +2,3 @@ apiVersion: kuttl.dev/v1
 kind: TestStep
 commands:
   - script: kubectl annotate ns $NAMESPACE keptn.sh/lifecycle-toolkit='enabled'
-

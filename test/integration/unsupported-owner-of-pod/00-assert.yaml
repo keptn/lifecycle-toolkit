@@ -3,4 +3,3 @@ kind: Pod
 metadata:
   labels:
     app: test
-  name: test

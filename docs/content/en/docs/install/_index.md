@@ -7,7 +7,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy. The following is an imperative walkthrough.
 
-If you prefer a GitOps / declarative-based approach follow [this demo instead](https://exmaple.com).
+If you prefer a GitOps / declarative-based approach follow [this demo instead](https://example.com).
 
 ## Prerequisites
 - A Kubernetes cluster (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))

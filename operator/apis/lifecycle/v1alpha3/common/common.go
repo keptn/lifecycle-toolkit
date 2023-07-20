@@ -9,6 +9,7 @@ import (
 	operatorcommon "github.com/keptn/lifecycle-toolkit/operator/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const WorkloadAnnotation = "keptn.sh/workload"
@@ -199,4 +200,9 @@ func MergeMaps(m1 map[string]string, m2 map[string]string) map[string]string {
 		merged[key] = value
 	}
 	return merged
+}
+
+// IsOwnerSupported returns whether the owner of the given object is supported to be considered a KeptnWorklooad
+func IsOwnerSupported(owner metav1.OwnerReference) bool {
+	return owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout"
 }

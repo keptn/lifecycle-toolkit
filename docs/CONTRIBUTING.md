@@ -61,10 +61,11 @@ please create an issue on the GitHub repository:
 
 ## Contributing for Windows User or via a Cloud Environment
 
-Windows users will most likely not have `make` installed.
-Linux or MacOS users may not wish to download tools just to contribute to docs.
-
-In both scenarios, GitHub codespaces can be used as a pre-built and pre-configured development environment.
+GitHub codespaces can be used as a pre-built and pre-configured development environment.
+This is especially useful for Windows users
+who may not have `make` installed.
+It is also useful for Linux and MacOS users
+who may not wish to download tools just to contribute to docs.
 
 Review [this video](https://www.youtube.com/watch?v=sFNzOhZw7Eg) to see how this works.
 

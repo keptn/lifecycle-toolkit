@@ -171,7 +171,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
-			r.EventSender.SendK8sEvent(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate KeptnAppVersions for KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
+			r.EventSender.SendK8sEvent(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate outdated revisions of KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 			return err
 		}
 	}

@@ -638,3 +638,5 @@ metadata:
   creationTimestamp: null
   name: grafana-dashboard-keptn-workloads
   namespace: monitoring
+  labels:
+    grafana_dashboard: "1"

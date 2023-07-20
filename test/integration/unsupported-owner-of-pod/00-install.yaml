@@ -12,7 +12,8 @@ spec:
         keptn.sh/workload: waiter
         keptn.sh/version: "0.4"
     spec:
+      restartPolicy: Never
       containers:
         - name: init-myservice
           image: busybox:1.36.1
-          command: ['sh', '-c', 'sleep 30']
+          command: ['sh', '-c', 'sleep 60']

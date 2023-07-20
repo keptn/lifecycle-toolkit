@@ -85,8 +85,9 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	if ownerRef.Kind == "" {
-		logger.Info("owner of pod is not supported by KLT", "namespace", req.Namespace)
-		return admission.Allowed("namespace is not enabled for lifecycle controller")
+		msg := "owner of pod is not supported by lifecycle controller"
+		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		return admission.Allowed(msg)
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))

@@ -31,11 +31,21 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-
 
 ## Create Namespace for Demo Application
 
-Create an annotated namespace for the demo application. The annotation tells the KLT operator to watch this namespace.
+Save this file as `namespace.yaml`. The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keptndemo
+  annotations:
+    keptn.sh/lifecycle-toolkit: enabled
+```
+
+Create the namespace:
 
 ```shell
-kubectl create namespace keptndemo
-kubectl annotate namespace keptndemo keptn.sh/lifecycle-toolkit=enabled
+kubectl apply -f namespace.yaml
 ```
 
 ## Deploy Demo Application

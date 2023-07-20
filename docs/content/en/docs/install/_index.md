@@ -79,6 +79,20 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app.kubernetes.io/name: nginx
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
 ```
 
 Now apply:
@@ -115,9 +129,15 @@ Keptn applications are a collection of workloads. By default, Keptn will build `
 
 In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
 
-```shell
+## View your application
 
+Port-forward to expose your app on `http://localhost:8080`:
+
+```shell
+kubectl -n keptndemo port-forward svc/nginx 8080
 ```
+
+You should see the "Welcome to nginx" page.
 
 ## View DORA Metrics
 
@@ -135,14 +155,13 @@ Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for
 
 ## View DORA metrics in a better way
 
-It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install two new Observability components to help us:
+It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install new Observability components to help us:
 
-- Cert manager - Jaeger requires cert-manager
-- Jaeger to store and view traces
-- An OpenTelemetry collector to scrape the metrics from the above metrics endpoint and the OpenTelemetry traces of deployments emitted by KLT. The OTEL collector will then send this data to Prometheus and Jaeger respectively
-- Prometheus to store the metrics
-- Jaeger to store the OpenTelemetry deployment traces
-- Grafana (and some prebuilt dashboards) to visualise the data
+- Cert manager: Jaeger requires cert-manager
+- Jaeger: Store and view DORA deployment traces
+- Prometheus: Store DORA metrics
+- OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint.Forward this data to Prometheus
+- Grafana (and some prebuilt dashboards): Visualise the data
 
 ### Install Cert-Manager
 

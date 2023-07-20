@@ -59,7 +59,7 @@ please create an issue on the GitHub repository:
   include that information in your description of the issue
   or in a comment to the issue.
 
-## Contributing for Windows User or via a Cloud Environment
+## Use Github codespaces for development
 
 GitHub codespaces can be used as a pre-built and pre-configured development environment.
 This is especially useful for Windows users

@@ -16,6 +16,8 @@ If you prefer a GitOps / declarative-based approach follow [this demo instead](h
 ## Objectives
 - Install Keptn Lifecycle Toolkit on your cluster
 - Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
+- View DORA Metrics
+- Install Grafana and Observability tooling to view DORA metrics
 
 ## Step 1: Install Keptn Lifecycle Toolkit
 
@@ -38,7 +40,9 @@ kubectl annotate namespace keptndemo keptn.sh/lifecycle-toolkit=enabled
 
 ## Deploy Demo Application
 
-It is time to deploy the demo application. Use `kubectl` to apply this manifest:
+It is time to deploy the demo application.
+
+Save this manifest as `app.yaml`:
 
 ```shell
 apiVersion: apps/v1
@@ -67,6 +71,12 @@ spec:
         - containerPort: 80
 ```
 
+Now apply:
+
+```shell
+kubectl apply -f app.yaml
+```
+
 ## Explore Keptn
 
 Keptn is now aware of your deployments and is generating DORA statistics about them.
@@ -83,7 +93,15 @@ Keptn also creates a new application version every time you increment the `versi
 kubectl -n keptndemo get keptnappversion
 ```
 
-Keptn applications are a collection of workloads. By default, Keptn will build KeptnApp CRDs based on the labels you provide.
+Keptn can run tasks and SLO evaluations before and after deployment. You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
+
+```shell
+kubectl -n keptndemo get keptnappversion -o wide
+```
+
+The pod will be runnings when the `PHASE` is `Completed`.
+
+Keptn applications are a collection of workloads. By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
 
 In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
 
@@ -112,12 +130,21 @@ Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for
 
 It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install two new Observability components to help us:
 
+- Cert manager - Jaeger requires cert-manager
 - Jaeger to store and view traces
 - An OpenTelemetry collector to scrape the metrics from the above metrics endpoint and the OpenTelemetry traces of deployments emitted by KLT. The OTEL collector will then send this data to Prometheus and Jaeger respectively
 - Prometheus to store the metrics
 - Jaeger to store the OpenTelemetry deployment traces
 - Grafana (and some prebuilt dashboards) to visualise the data
 
+### Install Cert-Manager
+
+```shell
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.2/cert-manager.crds.yaml
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/cert-manager --create-namespace --wait
+```
 ### Install Jaeger
 
 Save this file as `jaeger.yaml`:
@@ -131,7 +158,7 @@ spec:
   strategy: allInOne
 ```
 
-Install and configure Jaeger:
+Install Jaeger to store and visualise traces:
 
 ```shell
 kubectl create namespace observability
@@ -149,6 +176,17 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
 
 Jaeger is available on `http://localhost:16686`
 
+### Install Grafana dashboards
+
+```shell
+kubectl create ns monitoring
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboardDatasources.yaml
+```
+
 ### Install Kube-Prometheus Stack
 
 This will install:
@@ -160,14 +198,15 @@ This will install:
 ```shell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --create-namespace --wait
+helm install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --wait
 ```
 
 ### Install OpenTelemetry Collector
 
-Save this file and use kubectl to apply it:
+This OpenTelemetry collector will scrape the metrics from KLT every 5 seconds and forward them to Prometheus.
 
-**collector.yaml**
+Save this file as **collector.yaml**:
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -197,10 +236,6 @@ data:
     extensions:
       health_check: {}
     exporters:
-      jaeger:
-        endpoint: "jaeger-collector:14250"
-        tls:
-          insecure: true
       prometheus:
         endpoint: 0.0.0.0:8889
       logging:
@@ -208,11 +243,6 @@ data:
     service:
       extensions: [health_check]
       pipelines:
-        traces:
-          receivers: [otlp]
-          processors: []
-          exporters: [jaeger]
-
         metrics:
           receivers: [otlp,prometheus]
           processors: []
@@ -274,15 +304,15 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.60.0
+          image: otel/opentelemetry-collector:0.81.0
           name: otel-collector
           resources:
             limits:
               cpu: 400m
               memory: 1Gi
             requests:
-              cpu: 75m
-              memory: 200Mi
+              cpu: 10m
+              memory: 20Mi
           ports:
             - containerPort: 4317 # Default endpoint for otlp receiver.
             - containerPort: 8889 # Default endpoint for querying metrics.
@@ -331,15 +361,17 @@ Now apply it:
 kubectl apply -f collector.yaml
 ```
 
-### Install Prometheus
+## Access Grafana
 
-TODO
+```shell
+kubectl -n monitoring port-forward svc/observability-stack-grafana 80
+```
 
-### Install Jaeger
+Grafana is now available on: `http://localhost`
 
-TODO
+- Grafana username: `admin`
+- Grafana password: `prom-operator`
 
-### Install Grafana and Dashboards
-
-TODO
-
+# TODO
+1. Understand why Grafana dashboards are not imported
+2. Understand why Grafana datasources are not set

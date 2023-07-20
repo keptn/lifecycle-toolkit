@@ -224,6 +224,11 @@ spec:
                     description: Interval specifies the duration of the time interval
                       for the data query
                     type: string
+                  step:
+                    default: 1m
+                    description: Step represents the query resolution step width for
+                      the data query
+                    type: string
                 type: object
             required:
             - fetchIntervalSeconds

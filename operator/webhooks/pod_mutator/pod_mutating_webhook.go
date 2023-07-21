@@ -81,6 +81,15 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
 
+	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
+
+	if ownerRef.Kind == "" {
+		msg := "owner of pod is not supported by lifecycle controller"
+		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		return admission.Allowed(msg)
+	}
+
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated := a.isPodAnnotated(pod)
@@ -139,7 +148,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
-	podOwner := a.getOwnerReference(&pod.ObjectMeta)
+	podOwner := a.getOwnerReference(pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false
 	}
@@ -152,7 +161,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 		a.Log.Info("Done fetching RS")
 
-		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
+		rsOwner := a.getOwnerReference(rs.ObjectMeta)
 		if rsOwner.UID == "" {
 			return false
 		}
@@ -381,7 +390,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	return &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
@@ -441,11 +450,11 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+func (a *PodMutatingWebhook) getOwnerReference(resource metav1.ObjectMeta) metav1.OwnerReference {
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
-			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout" {
+			if apicommon.IsOwnerSupported(owner) {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name

@@ -3,10 +3,10 @@ module github.com/keptn/lifecycle-toolkit/operator
 go 1.20
 
 require (
+	dario.cat/mergo v1.0.0
 	github.com/argoproj/argo-rollouts v1.5.1
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
-	github.com/imdario/mergo v0.3.16
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230630070122-4ad9bbf74960
 	github.com/magiconair/properties v1.8.7
@@ -68,6 +68,7 @@ require (
 	github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect
+	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect

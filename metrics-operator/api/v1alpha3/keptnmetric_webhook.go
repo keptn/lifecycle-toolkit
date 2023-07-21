@@ -97,7 +97,7 @@ func (s *KeptnMetric) validateRangeInterval() *field.Error {
 }
 
 func (s *KeptnMetric) validateRangeStep() *field.Error {
-	if s.Spec.Range == nil {
+	if s.Spec.Range == nil || s.Spec.Range.Step == "" {
 		return nil
 	}
 	_, err := time.ParseDuration(s.Spec.Range.Step)

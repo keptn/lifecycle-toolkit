@@ -181,17 +181,6 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 					Step:     "",
 				},
 			},
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"create-with-empty-step",
-				field.ErrorList{
-					field.Invalid(
-						field.NewPath("spec").Child("range").Child("step"),
-						"",
-						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
-					),
-				},
-			),
 		},
 		{
 			name: "create-with-right-step",

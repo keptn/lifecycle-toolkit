@@ -19,6 +19,11 @@ If you prefer a GitOps / declarative-based approach follow [this demo instead](h
 - View DORA Metrics
 - Install Grafana and Observability tooling to view DORA metrics
 
+## System Overview
+By the end of this page, here is what will be built. This system will be built in stages.
+
+![system overview](assets/install01.png)
+
 ## Step 1: Install Keptn Lifecycle Toolkit
 
 Install Keptn Lifecycle Toolkit using Helm:
@@ -277,10 +282,23 @@ This will install:
 - Prometheus Configuration
 - Grafana & default dashboards
 
+Save this file as `values.yaml`:
+
+```yaml
+grafana:
+  adminPassword: admin
+  sidecar.datasources.defaultDatasourceEnabled: false
+prometheus:
+  additionalScrapeConfigs:
+    - job_name: "scrape_klt"
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['keptn-klt-lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
+```
 ```shell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --set grafana.adminPassword=admin --set grafana.sidecar.datasources.defaultDatasourceEnabled=false --wait
+helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --values=values.yaml --wait
 ```
 
 ### Install OpenTelemetry Collector

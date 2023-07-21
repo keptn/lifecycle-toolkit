@@ -208,9 +208,65 @@ Jaeger is available on `http://localhost:16686`
 kubectl create ns monitoring
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-config.yaml
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-applications grafana_dashboard="1"
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-overview grafana_dashboard="1"
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboardDatasources.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-workloads grafana_dashboard="1"
+```
+
+### Install Grafana datasources
+
+This file will configure Grafana to look at the Jaeger service and hte Prometheus service on the cluster.
+
+Save this file as `datasources.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  labels:
+    grafana_datasource: "1"
+  name: grafana-datasources
+  namespace: monitoring
+stringData:
+  datasources.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "access": "proxy",
+                "editable": false,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://observability-stack-kube-p-prometheus.monitoring.svc:9090",
+                "version": 1
+            },
+            {
+                "orgId":1,
+                "name":"Jaeger",
+                "type":"jaeger",
+                "typeName":"Jaeger",
+                "typeLogoUrl":"public/app/plugins/datasource/jaeger/img/jaeger_logo.svg",
+                "access":"proxy",
+                "url":"http://jaeger-query.keptn-lifecycle-toolkit-system.svc.cluster.local:16686",
+                "user":"",
+                "database":"",
+                "basicAuth":false,
+                "isDefault":false,
+                "jsonData":{"spanBar":{"type":"None"}},
+                "readOnly":false
+            }
+        ]
+    }
+```
+
+Now apply it:
+
+```shell
+kubectl apply -f datasources.yaml
 ```
 
 ### Install Kube-Prometheus Stack
@@ -224,7 +280,7 @@ This will install:
 ```shell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --wait
+helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --set grafana.adminPassword=admin --set grafana.sidecar.datasources.defaultDatasourceEnabled=false --wait
 ```
 
 ### Install OpenTelemetry Collector
@@ -396,8 +452,7 @@ kubectl -n monitoring port-forward svc/observability-stack-grafana 80
 Grafana is now available on: `http://localhost`
 
 - Grafana username: `admin`
-- Grafana password: `prom-operator`
+- Grafana password: `admin`
 
 # TODO
-1. Understand why Grafana dashboards are not imported
-2. Understand why Grafana datasources are not set
+1. Understand why Grafana datasources are not set

@@ -131,6 +131,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx
+  namespace: keptndemo
 spec:
   selector:
     app.kubernetes.io/name: nginx
@@ -152,14 +153,32 @@ Keptn is now aware of your deployments and is generating DORA statistics about t
 
 Keptn has created a CRD to track your application. The name of which is based on the `part-of` label.
 
+It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CRD.
+
 ```shell
 kubectl -n keptndemo get keptnapp
 ```
 
-Keptn also creates a new application version every time you increment the `version` label:
+Expected output:
+
+```shell
+NAME           AGE
+keptndemoapp   2s
+```
+
+Keptn also creates a new application version every time you increment the `version` label..
+
+The `PHASE` will change as the deployment progresses. A successful deployment is shown as `PHASE=Completed`
 
 ```shell
 kubectl -n keptndemo get keptnappversion
+```
+
+Expected output:
+
+```shell
+NAME                      APPNAME        VERSION   PHASE
+keptndemoapp-0.0.1-***    keptndemoapp   0.0.1     Completed
 ```
 
 Keptn can run tasks and SLO evaluations before and after deployment. You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
@@ -167,8 +186,6 @@ Keptn can run tasks and SLO evaluations before and after deployment. You haven't
 ```shell
 kubectl -n keptndemo get keptnappversion -o wide
 ```
-
-The pod will be running when the `PHASE` is `Completed`.
 
 Keptn applications are a collection of workloads. By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
 
@@ -199,6 +216,8 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecyc
 ```
 
 Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for metrics starting with `keptn_`.
+
+![keptn prometheus metrics](assets/keptnprommetrics.png)
 
 ## Make DORA metrics more user friendly
 
@@ -377,11 +396,29 @@ Apply your update:
 kubectl apply -f app.yaml
 ```
 
-You should now see two `keptnappversions`:
+After about 30 seconds you should now see two `keptnappversions`:
 
 ```shell
 kubectl -n keptndemo get keptnappversion
 ```
 
+Expected output:
 
+```shell
+NAME                          APPNAME        VERSION   PHASE
+keptndemoapp-0.0.1-6b86b273   keptndemoapp   0.0.1     Completed
+keptndemoapp-0.0.2-d4735e3a   keptndemoapp   0.0.2     AppDeploy
+```
 
+Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`. This signals that the deployment was successful and the pod is running.
+
+View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
+
+![keptn applications dashboard](assets/keptnapplications.png)
+
+![deployment trace](assets/deploymenttrace.png)
+
+## TODO
+
+- What's next? Metrics server tutorial? Pre and post evaluation tasks?
+- Cleanup instructions (`kind delete cluster`)

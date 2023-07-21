@@ -33,11 +33,12 @@ A simple deployment will occur. Keptn will monitor the deployment and generate:
 - An OpenTelemetry trace per deployment
 - DORA metrics
 
-![the basics](assetts/install02.png)
+![the basics](assets/install02.png)
 
 Notice though that the metrics and traces have nowhere to go. That will be fixed in a subsequent step.
 
 ## Step 1: Install Keptn Lifecycle Toolkit
+
 
 Install Keptn Lifecycle Toolkit using Helm:
 
@@ -45,6 +46,32 @@ Install Keptn Lifecycle Toolkit using Helm:
 helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+Keptn will need to know where to send OpenTelemetry traces. Of course, Jaeger is not yet installed so traces have nowhere to go (yet), but creating this configuration now means the system is preconfigured.
+
+Save this file as `collectorconfig.yaml`:
+
+```yaml
+---
+apiVersion: options.keptn.sh/v1alpha1
+kind: KeptnConfig
+metadata:
+  name: keptnconfig-sample
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  OTelCollectorUrl: 'jaeger-collector.keptn-lifecycle-toolkit-system.svc.cluster.local:4317'
+  keptnAppCreationRequestTimeoutSeconds: 30
+```
+
+Apply the file and restart KLT to pick up the new config:
+
+```shell
+kubectl apply -f collectorconfig.yaml
+kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator
+kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator --watch
+kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l component=scheduler
+kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component=scheduler --watch
 ```
 
 ## Create Namespace for Demo Application
@@ -157,13 +184,15 @@ kubectl -n keptndemo port-forward svc/nginx 8080
 
 You should see the "Welcome to nginx" page.
 
+![nginx demo app](assets/nginx.png)
+
 ## View DORA Metrics
 
 Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
 These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
 
-To see these raw metrics, port-forward to the name of your service:
+To see these raw metrics, port-forward to the lifecycle operator metrics service:
 
 ```shell
 kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
@@ -171,7 +200,7 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecyc
 
 Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for metrics starting with `keptn_`.
 
-## View DORA metrics in a better way
+## Make DORA metrics more user friendly
 
 It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install new Observability components to help us:
 
@@ -181,7 +210,11 @@ It is much more user friendly to provide dashboards for metrics, logs and traces
 - OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint.Forward this data to Prometheus
 - Grafana (and some prebuilt dashboards): Visualise the data
 
-### Install Cert-Manager
+![add observability](assets/install01.png)
+
+## Install Cert Manager
+
+Jaeger requires Cert Manager, so install it now:
 
 ```shell
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.2/cert-manager.crds.yaml
@@ -189,7 +222,7 @@ helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/cert-manager --create-namespace --wait
 ```
-### Install Jaeger
+## Install Jaeger
 
 Save this file as `jaeger.yaml`:
 
@@ -220,7 +253,10 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
 
 Jaeger is available on `http://localhost:16686`
 
-### Install Grafana dashboards
+
+## Install Grafana dashboards
+
+Create some Keptn Grafana dashboards that will be available when Grafana is installed and started:
 
 ```shell
 kubectl create ns monitoring
@@ -233,7 +269,7 @@ kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/
 kubectl -n monitoring label cm/grafana-dashboard-keptn-workloads grafana_dashboard="1"
 ```
 
-### Install Grafana datasources
+## Install Grafana datasources
 
 This file will configure Grafana to look at the Jaeger service and the Prometheus service on the cluster.
 
@@ -287,7 +323,7 @@ Now apply it:
 kubectl apply -f datasources.yaml
 ```
 
-### Install Kube-Prometheus Stack
+## Install kube prometheus stack
 
 This will install:
 
@@ -322,7 +358,30 @@ helm upgrade --install observability-stack prometheus-community/kube-prometheus-
 kubectl -n monitoring port-forward svc/observability-stack-grafana 80
 ```
 
-Grafana is now available on: `http://localhost`
-
 - Grafana username: `admin`
 - Grafana password: `admin`
+
+View the Keptn dashboards at: `http://localhost/dashboards?query=keptn`
+
+Remember that Jaeger and Grafana weren't installed during the first deployment - so expect the dashboards to look a little empty.
+
+## Deploy v0.0.2 and populate Grafana
+
+By triggering a new deployment, Keptn will track this deployment and the Grafana dashboards will actually have data.
+
+Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2`.
+
+Apply your update:
+
+```shell
+kubectl apply -f app.yaml
+```
+
+You should now see two `keptnappversions`:
+
+```shell
+kubectl -n keptndemo get keptnappversion
+```
+
+
+

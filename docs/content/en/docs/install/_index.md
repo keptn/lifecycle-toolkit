@@ -24,6 +24,19 @@ By the end of this page, here is what will be built. This system will be built i
 
 ![system overview](assets/install01.png)
 
+## The Basics: A Deployment, Keptn and DORA Metrics
+
+Let's start with the basics. Here is what we will now build.
+
+A simple deployment will occur. Keptn will monitor the deployment and generate:
+
+- An OpenTelemetry trace per deployment
+- DORA metrics
+
+![the basics](assetts/install02.png)
+
+Notice though that the metrics and traces have nowhere to go. That will be fixed in a subsequent step.
+
 ## Step 1: Install Keptn Lifecycle Toolkit
 
 Install Keptn Lifecycle Toolkit using Helm:

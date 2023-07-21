@@ -289,176 +289,18 @@ grafana:
   adminPassword: admin
   sidecar.datasources.defaultDatasourceEnabled: false
 prometheus:
-  additionalScrapeConfigs:
-    - job_name: "scrape_klt"
-      scrape_interval: 5s
-      static_configs:
-        - targets: ['keptn-klt-lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: "scrape_klt"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['keptn-klt-lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
 ```
+
 ```shell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --values=values.yaml --wait
-```
-
-### Install OpenTelemetry Collector
-
-This OpenTelemetry collector will scrape the metrics from KLT every 5 seconds and forward them to Prometheus.
-
-Save this file as **collector.yaml**:
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: otel-collector-conf
-  namespace: keptn-lifecycle-toolkit-system
-  labels:
-    app: opentelemetry
-    component: otel-collector-conf
-data:
-  otel-collector-config: |
-    receivers:
-      # Make sure to add the otlp receiver.
-      # This will open up the receiver on port 4317
-      otlp:
-        protocols:
-          grpc:
-            endpoint: "0.0.0.0:4317"
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: 'otel-collector'
-              scrape_interval: 5s
-              static_configs:
-                - targets: ['keptn-klt-lifecycle-operator-metrics-service:2222']
-    processors:
-    extensions:
-      health_check: {}
-    exporters:
-      prometheus:
-        endpoint: 0.0.0.0:8889
-      logging:
-
-    service:
-      extensions: [health_check]
-      pipelines:
-        metrics:
-          receivers: [otlp,prometheus]
-          processors: []
-          exporters: [prometheus, logging]
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
-  labels:
-    app: opentelemetry
-    component: otel-collector
-spec:
-  ports:
-    - name: otlp # Default endpoint for otlp receiver.
-      port: 4317
-      protocol: TCP
-      targetPort: 4317
-      nodePort: 30080
-    - name: metrics # Default endpoint for metrics.
-      port: 8889
-      protocol: TCP
-      targetPort: 8889
-  selector:
-    component: otel-collector
-  type: NodePort
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
-  labels:
-    app: opentelemetry
-    component: otel-collector
-spec:
-  selector:
-    matchLabels:
-      app: opentelemetry
-      component: otel-collector
-  minReadySeconds: 5
-  progressDeadlineSeconds: 120
-  replicas: 1
-  template:
-    metadata:
-      annotations:
-        prometheus.io/path: "/metrics"
-        prometheus.io/port: "8889"
-        prometheus.io/scrape: "true"
-      labels:
-        app: opentelemetry
-        component: otel-collector
-    spec:
-      containers:
-        - command:
-            - "/otelcol"
-            - "--config=/conf/otel-collector-config.yaml"
-          env:
-            - name: GOGC
-              value: "80"
-          image: otel/opentelemetry-collector:0.81.0
-          name: otel-collector
-          resources:
-            limits:
-              cpu: 400m
-              memory: 1Gi
-            requests:
-              cpu: 10m
-              memory: 20Mi
-          ports:
-            - containerPort: 4317 # Default endpoint for otlp receiver.
-            - containerPort: 8889 # Default endpoint for querying metrics.
-          volumeMounts:
-            - name: otel-collector-config-vol
-              mountPath: /conf
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 13133 # Health Check extension default port.
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 13133 # Health Check extension default port.
-      volumes:
-        - configMap:
-            name: otel-collector-conf
-            items:
-              - key: otel-collector-config
-                path: otel-collector-config.yaml
-          name: otel-collector-config-vol
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  labels:
-    serviceapp: otel-collector
-  name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
-spec:
-  endpoints:
-    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-      interval: 30s
-      port: metrics
-  namespaceSelector:
-    matchNames:
-      - keptn-lifecycle-toolkit-system
-  selector:
-    matchLabels:
-      app: opentelemetry
-```
-
-Now apply it:
-
-```shell
-kubectl apply -f collector.yaml
 ```
 
 ## Access Grafana
@@ -471,6 +313,3 @@ Grafana is now available on: `http://localhost`
 
 - Grafana username: `admin`
 - Grafana password: `admin`
-
-# TODO
-1. Understand why Grafana datasources are not set

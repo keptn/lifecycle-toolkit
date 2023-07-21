@@ -2,6 +2,7 @@ package keptnappversion
 
 import (
 	"context"
+	"fmt"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"

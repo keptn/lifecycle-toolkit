@@ -2,6 +2,7 @@ package keptnappversion
 
 import (
 	"context"
+	"fmt"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
@@ -14,10 +15,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	var summary apicommon.StatusSummary
 	summary.Total = len(appVersion.Spec.Workloads)
 
-	phase := apicommon.KeptnPhaseType{
-		ShortName: "ReconcileWorkload",
-		LongName:  "Reconcile Workloads",
-	}
+	phase := apicommon.PhaseReconcileWorkload
 
 	workloadInstanceList, err := r.getWorkloadInstanceList(ctx, appVersion.Namespace, appVersion.Spec.AppName)
 	if err != nil {
@@ -43,7 +41,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		}
 
 		if !found {
-			r.EventSender.SendK8sEvent(phase, "Warning", appVersion, "NotFound", "workloadInstance not found", appVersion.GetVersion())
+			r.EventSender.SendK8sEvent(phase, "Warning", appVersion, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnWorkloadInstance for KeptnWorkload: %s ", w.Name), appVersion.GetVersion())
 		}
 
 		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{

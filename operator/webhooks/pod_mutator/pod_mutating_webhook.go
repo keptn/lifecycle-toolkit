@@ -288,12 +288,11 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
 		return nil
 	}
 
@@ -313,12 +312,10 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendK8sEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
-
-	a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
 
 	return nil
 }
@@ -342,13 +339,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		appCreationRequest = newAppCreationRequest
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
-			logger.Error(err, "Could not create App")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			logger.Error(err, "Could not create AppCreationRequest")
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 		return nil
 	}
 

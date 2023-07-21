@@ -801,72 +801,6 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileNoActionRequired(t *testing.T)
 	require.NotNil(t, result)
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotStartBeforeAppPreEvaluationIsDone(t *testing.T) {
-	r, eventChannel, _ := setupReconciler()
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1alpha3.KeptnWorkloadInstance{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{},
-	}
-
-	err := r.Client.Create(context.TODO(), wi)
-
-	require.Nil(t, err)
-
-	err = controllercommon.AddAppVersion(
-		r.Client,
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1alpha3.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1alpha3.KeptnAppVersionStatus{},
-	)
-	require.Nil(t, err)
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.Nil(t, err)
-	require.True(t, result.Requeue)
-
-	expectedEvents := []string{
-		"AppPreDeployEvaluationsNotFinished",
-	}
-
-	for _, e := range expectedEvents {
-		event := <-eventChannel
-		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
-		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-	}
-}
-
 func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) {
 	r, eventChannel, _ := setupReconciler()
 
@@ -938,14 +872,104 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
 	// one of the previous reconciliation loops that lead to the first phase being reached
 	expectedEvents := []string{
-		"WorkloadPostDeployEvaluationsFinished",
+		"CompletedFinished",
 	}
 
 	for _, e := range expectedEvents {
 		event := <-eventChannel
-		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
+		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadinstance")
 		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
 		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+}
+
+func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {
+	r, eventChannel, _ := setupReconciler()
+
+	testNamespace := "some-ns"
+
+	wi := &klcv1alpha3.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "some-wi",
+			Namespace: testNamespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+				AppName: "some-app",
+				Version: "1.0.0",
+				PreDeploymentTasks: []string{
+					"task",
+				},
+			},
+			WorkloadName:    "some-app-some-workload",
+			PreviousVersion: "",
+			TraceId:         nil,
+		},
+		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{
+			DeploymentStatus:               apicommon.StatePending,
+			PreDeploymentStatus:            apicommon.StateProgressing,
+			PostDeploymentStatus:           apicommon.StatePending,
+			PreDeploymentEvaluationStatus:  apicommon.StatePending,
+			PostDeploymentEvaluationStatus: apicommon.StatePending,
+			CurrentPhase:                   apicommon.PhaseWorkloadPreDeployment.ShortName,
+			Status:                         apicommon.StateProgressing,
+			PreDeploymentTaskStatus: []klcv1alpha3.ItemStatus{
+				{
+					Name:           "pre-task",
+					DefinitionName: "task",
+					Status:         apicommon.StateFailed,
+				},
+			},
+		},
+	}
+
+	err := r.Client.Create(context.TODO(), wi)
+
+	require.Nil(t, err)
+
+	err = controllercommon.AddAppVersion(
+		r.Client,
+		testNamespace,
+		"some-app",
+		"1.0.0",
+		[]klcv1alpha3.KeptnWorkloadRef{
+			{
+				Name:    "some-workload",
+				Version: "1.0.0",
+			},
+		},
+		klcv1alpha3.KeptnAppVersionStatus{
+			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+		},
+	)
+	require.Nil(t, err)
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: testNamespace,
+			Name:      "some-wi",
+		},
+	}
+
+	result, err := r.Reconcile(context.TODO(), req)
+
+	require.Nil(t, err)
+
+	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
+
+	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
+	// one of the previous reconciliation loops that lead to the first phase being reached
+	expectedEvents := []string{
+		"WorkloadPreDeployTasksFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		require.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadinstance")
+		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
 }
 

@@ -72,7 +72,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //
 //nolint:gocyclo
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for Keptn Workload Instance")
+	r.Log.Info("Searching for KeptnWorkloadInstance")
 
 	// retrieve workload instance
 	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
@@ -82,7 +82,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if err != nil {
-		r.Log.Error(err, "Workload Instance not found")
+		r.Log.Error(err, "WorkloadInstance not found")
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadInstancesMsg, err)
 	}
 
@@ -113,7 +113,6 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if workloadInstance.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
-		r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "Started", "have started", workloadInstance.GetVersion())
 	}
 
 	if !workloadInstance.IsPreDeploymentSucceeded() {
@@ -191,6 +190,8 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		return ctrl.Result{Requeue: true}, err
 	}
 
+	r.EventSender.SendK8sEvent(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "has finished", workloadInstance.GetVersion())
+
 	attrs := workloadInstance.GetMetricsAttributes()
 
 	// metrics: add deployment duration
@@ -203,8 +204,6 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
 		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadInstance.Name)
 	}
-
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "Finished", "is finished", workloadInstance.GetVersion())
 
 	return ctrl.Result{}, nil
 }
@@ -225,9 +224,8 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 
 func (r *KeptnWorkloadInstanceReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) {
 	if appPreEvalStatus.IsFailed() {
-		r.EventSender.SendK8sEvent(phase, "Warning", workloadInstance, "Failed", "has failed since app has failed", workloadInstance.GetVersion())
+		r.EventSender.SendK8sEvent(phase, "Warning", workloadInstance, apicommon.PhaseStateFailed, "has failed since app has failed", workloadInstance.GetVersion())
 	}
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "NotFinished", "Pre evaluations tasks for app not finished", workloadInstance.GetVersion())
 }
 
 func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) (context.Context, trace.Span, func(span trace.Span, workloadInstance *klcv1alpha3.KeptnWorkloadInstance)) {
@@ -275,8 +273,6 @@ func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx cont
 		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadInstance)
 		return true, nil
 	}
-
-	r.EventSender.SendK8sEvent(phase, "Normal", workloadInstance, "FinishedSuccess", "Pre evaluations tasks for app have finished successfully", workloadInstance.GetVersion())
 
 	// set the App trace id if not already set
 	if len(workloadInstance.Spec.TraceId) < 1 {

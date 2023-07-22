@@ -51,4 +51,4 @@ refer to the respective Deployment/StatefulSet/ReplicaSet,
 to check whether it has reached the desired state.
 If it detects that the referenced object has reached its desired state,
 (e.g. all pods of a deployment are up and running),
-it triggers a `PostDeploymentCheck`.
+it triggers the post deployment checks, which can consist of multiple `KeptnTasks` and `KeptnEvaluations`.

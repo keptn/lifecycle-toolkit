@@ -5,40 +5,47 @@ weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy. The following is an imperative walkthrough.
+Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy.
+The following is an imperative walkthrough.
 
 If you prefer a GitOps / declarative-based approach follow [this demo instead](https://example.com).
 
 ## Prerequisites
+
 - A Kubernetes cluster (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
 - [Helm](https://helm.io) CLI available
 
 ## Objectives
+
 - Install Keptn Lifecycle Toolkit on your cluster
 - Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
 - View DORA Metrics
 - Install Grafana and Observability tooling to view DORA metrics
 
 ## System Overview
-By the end of this page, here is what will be built. This system will be built in stages.
+
+By the end of this page, here is what will be built.
+This system will be built in stages.
 
 ![system overview](assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
-Let's start with the basics. Here is what we will now build.
+Let's start with the basics.
+Here is what we will now build.
 
-A simple deployment will occur. Keptn will monitor the deployment and generate:
+A simple deployment will occur.
+Keptn will monitor the deployment and generate:
 
 - An OpenTelemetry trace per deployment
 - DORA metrics
 
 ![the basics](assets/install02.png)
 
-Notice though that the metrics and traces have nowhere to go. That will be fixed in a subsequent step.
+Notice though that the metrics and traces have nowhere to go.
+That will be fixed in a subsequent step.
 
 ## Step 1: Install Keptn Lifecycle Toolkit
-
 
 Install Keptn Lifecycle Toolkit using Helm:
 
@@ -48,7 +55,9 @@ helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-Keptn will need to know where to send OpenTelemetry traces. Of course, Jaeger is not yet installed so traces have nowhere to go (yet), but creating this configuration now means the system is preconfigured.
+Keptn will need to know where to send OpenTelemetry traces.
+Of course, Jaeger is not yet installed so traces have nowhere to go (yet),
+but creating this configuration now means the system is preconfigured.
 
 Save this file as `collectorconfig.yaml`:
 
@@ -76,7 +85,8 @@ kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component
 
 ## Create Namespace for Demo Application
 
-Save this file as `namespace.yaml`. The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
+Save this file as `namespace.yaml`.
+The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
 
 ```yaml
 apiVersion: v1
@@ -151,7 +161,8 @@ kubectl apply -f app.yaml
 
 Keptn is now aware of your deployments and is generating DORA statistics about them.
 
-Keptn has created a CRD to track your application. The name of which is based on the `part-of` label.
+Keptn has created a CRD to track your application.
+The name of which is based on the `part-of` label.
 
 It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CRD.
 
@@ -168,7 +179,8 @@ keptndemoapp   2s
 
 Keptn also creates a new application version every time you increment the `version` label..
 
-The `PHASE` will change as the deployment progresses. A successful deployment is shown as `PHASE=Completed`
+The `PHASE` will change as the deployment progresses.
+A successful deployment is shown as `PHASE=Completed`
 
 ```shell
 kubectl -n keptndemo get keptnappversion
@@ -181,13 +193,15 @@ NAME                      APPNAME        VERSION   PHASE
 keptndemoapp-0.0.1-***    keptndemoapp   0.0.1     Completed
 ```
 
-Keptn can run tasks and SLO evaluations before and after deployment. You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
+Keptn can run tasks and SLO evaluations before and after deployment.
+You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
 
 ```shell
 kubectl -n keptndemo get keptnappversion -o wide
 ```
 
-Keptn applications are a collection of workloads. By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
+Keptn applications are a collection of workloads.
+By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
 
 In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
 
@@ -215,13 +229,15 @@ To see these raw metrics, port-forward to the lifecycle operator metrics service
 kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
 ```
 
-Access metrics in Prometheus format on `http://localhost:2222/metrics`. Look for metrics starting with `keptn_`.
+Access metrics in Prometheus format on `http://localhost:2222/metrics`.
+Look for metrics starting with `keptn_`.
 
 ![keptn prometheus metrics](assets/keptnprommetrics.png)
 
 ## Make DORA metrics more user friendly
 
-It is much more user friendly to provide dashboards for metrics, logs and traces. So let's install new Observability components to help us:
+It is much more user friendly to provide dashboards for metrics, logs and traces.
+So let's install new Observability components to help us:
 
 - Cert manager: Jaeger requires cert-manager
 - Jaeger: Store and view DORA deployment traces
@@ -241,6 +257,7 @@ helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/cert-manager --create-namespace --wait
 ```
+
 ## Install Jaeger
 
 Save this file as `jaeger.yaml`:
@@ -271,7 +288,6 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
 ```
 
 Jaeger is available on `http://localhost:16686`
-
 
 ## Install Grafana dashboards
 
@@ -382,7 +398,8 @@ kubectl -n monitoring port-forward svc/observability-stack-grafana 80
 
 View the Keptn dashboards at: `http://localhost/dashboards?query=keptn`
 
-Remember that Jaeger and Grafana weren't installed during the first deployment - so expect the dashboards to look a little empty.
+Remember that Jaeger and Grafana weren't installed during the first deployment
+so expect the dashboards to look a little empty.
 
 ## Deploy v0.0.2 and populate Grafana
 
@@ -410,7 +427,8 @@ keptndemoapp-0.0.1-6b86b273   keptndemoapp   0.0.1     Completed
 keptndemoapp-0.0.2-d4735e3a   keptndemoapp   0.0.2     AppDeploy
 ```
 
-Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`. This signals that the deployment was successful and the pod is running.
+Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`.
+This signals that the deployment was successful and the pod is running.
 
 View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
 
@@ -418,7 +436,20 @@ View the Keptn Applications Dashboard and you should see the DORA metrics and an
 
 ![deployment trace](assets/deploymenttrace.png)
 
+## More control over KeptnApp
+
+You may have noticed that the `KeptnApp` Custom Resources are created automatically by KLT.
+
+The lifecycle toolkit automatically groups workloads into `KeptnApp` by looking for matching `part-of` annotations.
+Any workloads with the same `part-of` annotation is said to be `part-of` the same `KeptnApp`.
+
+However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
+In this way, you are in full control of what constitutes a Keptn Application.
+See [Define a Keptn Application](../implementing/integrate/) for more information.
+
 ## TODO
 
-- What's next? Metrics server tutorial? Pre and post evaluation tasks?
+- What's next?
+  Metrics server tutorial?
+  Pre and post evaluation tasks?
 - Cleanup instructions (`kind delete cluster`)

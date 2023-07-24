@@ -446,10 +446,3 @@ Any workloads with the same `part-of` annotation is said to be `part-of` the sam
 However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
 In this way, you are in full control of what constitutes a Keptn Application.
 See [Define a Keptn Application](../implementing/integrate/) for more information.
-
-## TODO
-
-- What's next?
-  Metrics server tutorial?
-  Pre and post evaluation tasks?
-- Cleanup instructions (`kind delete cluster`)

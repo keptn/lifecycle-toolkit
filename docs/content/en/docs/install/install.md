@@ -12,7 +12,7 @@ If you prefer a GitOps / declarative-based approach follow [this demo instead](h
 
 ## Prerequisites
 
-- A Kubernetes cluster > 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+- A Kubernetes cluster >= 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
   (`kind create cluster`)
 - [Helm](https://helm.io) CLI available
 

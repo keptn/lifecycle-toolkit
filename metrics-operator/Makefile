@@ -1,24 +1,20 @@
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= docker.io/annadreal/metrics-operator:latest
 
 # RELEASE_REGISTRY is the container registry to push
 # into.
 RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
-RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
+RELEASE_VERSION?=v0.0.1#$(shell git describe --tags --match "v*")
 TAG?="v0.0.1" # x-release-please-version
-RELEASE_IMAGE:=metrics-operator:$(TAG)
+RELEASE_IMAGE:=$(RELEASE_REGISTRY)/metrics-operator:$(TAG)
 CHART_APPVERSION?=""
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
 
-# The RELEASE_VERSION variable can have one of two formats:
-# v20201009-v0.18.800-46-g939c1c0 - automated build for a commit(not a tag) and also a local build
-# v20200521-v0.18.800             - automated build for a tag
-VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION=1.24.2
@@ -239,7 +235,7 @@ BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
 # example.com/memcached-operator-bundle:$VERSION and example.com/memcached-operator-catalog:$VERSION.
-IMAGE_TAG_BASE ?= example.com/memcached-operator
+IMAGE_TAG_BASE ?= docker.io/annadreal/metrics-operator
 
 # BUNDLE_IMG defines the image:tag used for the bundle.
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
@@ -282,6 +278,7 @@ else
 OPERATOR_SDK = $(shell which operator-sdk)
 endif
 endif
+
 
 .PHONY: bundle
 bundle: manifests kustomize operator-sdk ## Generate bundle manifests and metadata, then validate generated files.
@@ -339,3 +336,10 @@ catalog-build: opm ## Build a catalog image.
 catalog-push: ## Push a catalog image.
 	$(MAKE) docker-push IMG=$(CATALOG_IMG)
 
+.PHONY: docker-build
+docker-build: test ## Build docker image with the manager.
+	docker build -t ${IMG} .
+
+.PHONY: docker-push
+docker-push: ## Push docker image with the manager.
+	docker push ${IMG}

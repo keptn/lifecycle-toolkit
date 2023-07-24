@@ -12,7 +12,8 @@ If you prefer a GitOps / declarative-based approach follow [this demo instead](h
 
 ## Prerequisites
 
-- A Kubernetes cluster > 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/)) (`kind create cluster`)
+- A Kubernetes cluster > 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+  (`kind create cluster`)
 - [Helm](https://helm.io) CLI available
 
 ## Objectives
@@ -255,7 +256,7 @@ So let's install new Observability components to help us:
 - Cert manager: Jaeger requires cert-manager
 - Jaeger: Store and view DORA deployment traces
 - Prometheus: Store DORA metrics
-- OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint. Forward this data to Prometheus
+- OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - Grafana (and some prebuilt dashboards): Visualise the data
 
 ![add observability](/docs/install/assets/install01.png)

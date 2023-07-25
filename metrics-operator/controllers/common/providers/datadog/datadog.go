@@ -23,16 +23,11 @@ type KeptnDataDogProvider struct {
 }
 
 // EvaluateQuery fetches the SLI values from datadog provider
-func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, analysisValue metricsapi.AnalysisValue, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	// Assumed default metric duration as 5 minutes
-	// Think a better way to handle this
-	intervalInMin := 5
-	fromTime := time.Now().Add(time.Duration(-intervalInMin) * time.Minute).Unix()
-	toTime := time.Now().Unix()
-	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(analysisValue.Spec.Timeframe.From.Time.Unix())) + "&to=" + strconv.Itoa(int(analysisValue.Spec.Timeframe.To.Time.Unix())) + "&query=" + url.QueryEscape(analysisValue.Status.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")

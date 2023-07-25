@@ -40,12 +40,12 @@ type DynatraceData struct {
 }
 
 // EvaluateQuery fetches the SLI values from dynatrace provider
-func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, analysisValue metricsapi.AnalysisValue, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	query := url.QueryEscape(metric.Spec.Query)
+	query := url.QueryEscape(analysisValue.Status.Query)
 	var qURL string
-	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval
+	if analysisValue.Spec.Timeframe != nil {
+		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-5m"
 	} else {
 		qURL = baseURL + "v2/metrics/query?metricSelector=" + query
 	}

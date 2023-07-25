@@ -19,7 +19,7 @@ type KeptnPrometheusProvider struct {
 }
 
 // EvaluateQuery fetches the SLI values from prometheus provider
-func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, analysisValue metricsapi.AnalysisValue, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
@@ -29,8 +29,8 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	}
 
 	api := prometheus.NewAPI(client)
-	if metric.Spec.Range != nil {
-		result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
+	if analysisValue.Spec.Timeframe != nil {
+		result, warnings, err := evaluateQueryWithRange(ctx, analysisValue, r, api)
 		if err != nil {
 			return "", nil, err
 		}
@@ -39,7 +39,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		}
 		return getResultForMatrix(result, r)
 	} else {
-		result, warnings, err := evaluateQueryWithoutRange(ctx, metric, r, api)
+		result, warnings, err := evaluateQueryWithoutRange(ctx, analysisValue, r, api)
 		if err != nil {
 			return "", nil, err
 		}
@@ -50,29 +50,22 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	}
 }
 
-func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
-	queryTime := time.Now().UTC()
-	// Get the duration
-	queryInterval, err := time.ParseDuration(metric.Spec.Range.Interval)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert type Duration to type Time
-	startTime := queryTime.Add(-queryInterval).UTC()
+func evaluateQueryWithRange(ctx context.Context, analysisValue metricsapi.AnalysisValue, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
+	queryInterval := analysisValue.Spec.Timeframe.To.Time.Sub(analysisValue.Spec.Timeframe.From.Time)
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d&step=%v",
-		metric.Spec.Query,
-		startTime.Unix(), queryTime.Unix(),
+		analysisValue.Status.Query,
+		analysisValue.Spec.Timeframe.From.Time.Unix(), analysisValue.Spec.Timeframe.To.Time.Unix(),
 		queryInterval,
 	))
 	queryRange := prometheus.Range{
-		Start: startTime,
-		End:   queryTime,
+		Start: analysisValue.Spec.Timeframe.From.Time.UTC(),
+		End:   analysisValue.Spec.Timeframe.To.Time.UTC(),
 		Step:  queryInterval,
 	}
 	result, warnings, err := api.QueryRange(
 		ctx,
-		metric.Spec.Query,
+		analysisValue.Status.Query,
 		queryRange,
 		[]prometheus.Option{}...,
 	)
@@ -82,16 +75,16 @@ func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, 
 	return result, warnings, nil
 }
 
-func evaluateQueryWithoutRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
+func evaluateQueryWithoutRange(ctx context.Context, analysisValue metricsapi.AnalysisValue, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
 	queryTime := time.Now().UTC()
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query?query=%s&time=%d",
-		metric.Spec.Query,
+		analysisValue.Status.Query,
 		queryTime.Unix(),
 	))
 	result, warnings, err := api.Query(
 		ctx,
-		metric.Spec.Query,
+		analysisValue.Status.Query,
 		queryTime,
 		[]prometheus.Option{}...,
 	)

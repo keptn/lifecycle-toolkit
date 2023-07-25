@@ -34,9 +34,17 @@ spec:
           spec:
             description: AnalysisTemplateSpec defines the desired state of AnalysisTemplate
             properties:
+              providerRef:
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+                type: object
               query:
                 type: string
             required:
+            - providerRef
             - query
             type: object
           status:

@@ -12,7 +12,7 @@ func NewSLIConverter() *SLIConverter {
 	return &SLIConverter{}
 }
 
-func (c *SLIConverter) Convert(slis map[string]string) []*metricsapi.AnalysisTemplate {
+func (c *SLIConverter) Convert(slis map[string]string, provider string) []*metricsapi.AnalysisTemplate {
 	result := make([]*metricsapi.AnalysisTemplate, 0, len(slis))
 	for key, query := range slis {
 		template := &metricsapi.AnalysisTemplate{
@@ -21,6 +21,9 @@ func (c *SLIConverter) Convert(slis map[string]string) []*metricsapi.AnalysisTem
 			},
 			Spec: metricsapi.AnalysisTemplateSpec{
 				Query: query,
+				ProviderRef: metricsapi.ProviderReference{
+					Name: provider,
+				},
 			},
 		}
 		result = append(result, template)

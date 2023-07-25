@@ -18,6 +18,7 @@ package metrics
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -95,8 +96,23 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{Requeue: false}, err2
 	}
 
+	now := time.Now()
+	num, _ := strconv.Atoi(metric.Spec.Range.Interval)
+
+	analysisValue := metricsapi.AnalysisValue{
+		Spec: metricsapi.AnalysisValueSpec{
+			Timeframe: &metricsapi.TimeframeDefinition{
+				To:   metav1.Time{Time: now},
+				From: metav1.Time{Time: now.Add(time.Duration(num) * time.Minute)},
+			},
+		},
+		Status: metricsapi.AnalysisValueStatus{
+			Query: metric.Spec.Query,
+		},
+	}
+
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
-	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
+	value, rawValue, err := provider.EvaluateQuery(ctx, analysisValue, *metricProvider)
 	if err != nil {
 		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		metric.Status.ErrMsg = err.Error()

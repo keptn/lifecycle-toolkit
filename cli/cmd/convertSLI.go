@@ -12,13 +12,16 @@ import (
 )
 
 const outputFileName = "output"
+const providerName = "provider"
 
 func init() {
 	flags := convertSLICmd.Flags()
 
 	flags.StringP(outputFileName, "o", "manifests.yaml", "Set the output file name")
+	flags.StringP(providerName, "p", "dynatrace", "Set the provider")
 
 	_ = viper.BindPFlag(outputFileName, flags.Lookup(outputFileName))
+	_ = viper.BindPFlag(providerName, flags.Lookup(providerName))
 }
 
 type SLIContent struct {
@@ -66,7 +69,7 @@ var convertSLICmd = &cobra.Command{
 		}
 
 		converter := pkg.NewSLIConverter()
-		templates := converter.Convert(sliContent.Indicators)
+		templates := converter.Convert(sliContent.Indicators, viper.GetString(providerName))
 		for _, t := range templates {
 			fmt.Printf("---------------------------------------------\n")
 			// fmt.Printf("%v\n", t)

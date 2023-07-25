@@ -25,7 +25,12 @@ import (
 
 // AnalysisTemplateSpec defines the desired state of AnalysisTemplate
 type AnalysisTemplateSpec struct {
-	Query string `json:"query"`
+	Query       string            `json:"query"`
+	ProviderRef ProviderReference `json:"providerRef"`
+}
+
+type ProviderReference struct {
+	Name string `json:"name"`
 }
 
 // AnalysisTemplateStatus defines the observed state of AnalysisTemplate

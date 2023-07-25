@@ -18,14 +18,17 @@ package analysisvalue
 
 import (
 	"context"
-
-	"k8s.io/apimachinery/pkg/runtime"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"strings"
+	"time"
 
 	"github.com/go-logr/logr"
-	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // AnalysisValueReconciler reconciles a AnalysisValue object
@@ -34,6 +37,8 @@ type AnalysisValueReconciler struct {
 	Scheme *runtime.Scheme
 	Log    logr.Logger
 }
+
+const MB = 1 << (10 * 2)
 
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=analysisvalues,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=analysisvalues/status,verbs=get;update;patch
@@ -49,16 +54,96 @@ type AnalysisValueReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *AnalysisValueReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	r.Log.Info("Reconciling AnalysisValue")
+	analysisValue := &metricsapi.AnalysisValue{}
 
-	// TODO(user): your logic here
+	if err := r.Client.Get(ctx, req.NamespacedName, analysisValue); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("AnalysisValue resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{}, nil
+		}
+		r.Log.Error(err, "Failed to get the AnalysisValue")
+		return ctrl.Result{}, nil
+	}
+
+	analysisTemplate := &metricsapi.AnalysisTemplate{}
+	if err := r.Client.Get(ctx, types.NamespacedName{Name: analysisValue.Spec.AnalysisTemplate.Name, Namespace: req.Namespace}, analysisTemplate); err != nil {
+		if errors.IsNotFound(err) {
+			// taking down all associated K8s resources is handled by K8s
+			r.Log.Info("AnalysisTemplate resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+		}
+		r.Log.Error(err, "Failed to get the AnalysisTemplate")
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+	}
+
+	analysisValue.Status.Query = generateQuery(analysisTemplate.Spec.Query, analysisValue.Spec.Selectors)
+
+	metricProvider, err := r.fetchProvider(ctx, types.NamespacedName{Name: analysisTemplate.Spec.ProviderRef.Name, Namespace: req.Namespace})
+	if err != nil {
+		if errors.IsNotFound(err) {
+			r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+		r.Log.Error(err, "Failed to retrieve the provider")
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
+	}
+
+	// load the provider
+	provider, err := providers.NewProvider(metricProvider.GetType(), r.Log, r.Client)
+	if err != nil {
+		r.Log.Error(err, "Failed to get the correct Metric Provider")
+		return ctrl.Result{Requeue: false}, err
+	}
+
+	value, rawValue, err := provider.EvaluateQuery(ctx, *analysisValue, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		analysisValue.Status.ErrMsg = err.Error()
+		analysisValue.Status.Value = ""
+		analysisValue.Status.RawValue = cupSize(rawValue)
+	} else {
+		analysisValue.Status.Value = value
+		analysisValue.Status.RawValue = cupSize(rawValue)
+	}
+
+	if err := r.Client.Status().Update(ctx, analysisValue); err != nil {
+		r.Log.Error(err, "Failed to update the AnalysisValue status")
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
 
-// SetupWithManager sets up the controller with the Manager.
+// SetupWithManager sets up the controller with the Manager.RequeueAfter: 10 * time.Second
 func (r *AnalysisValueReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&metricsv1alpha3.AnalysisValue{}).
+		For(&metricsapi.AnalysisValue{}).
 		Complete(r)
+}
+
+func generateQuery(query string, selectors map[string]string) string {
+	for key, value := range selectors {
+		query = strings.Replace(query, "$"+strings.ToUpper(key), value, -1)
+	}
+	return query
+}
+
+func (r *AnalysisValueReconciler) fetchProvider(ctx context.Context, namespacedMetric types.NamespacedName) (*metricsapi.KeptnMetricsProvider, error) {
+	provider := &metricsapi.KeptnMetricsProvider{}
+	if err := r.Client.Get(ctx, namespacedMetric, provider); err != nil {
+		return nil, err
+	}
+	return provider, nil
+}
+
+func cupSize(value []byte) []byte {
+	if len(value) == 0 {
+		return []byte{}
+	}
+	if len(value) > MB {
+		return value[:MB]
+	}
+	return value
 }

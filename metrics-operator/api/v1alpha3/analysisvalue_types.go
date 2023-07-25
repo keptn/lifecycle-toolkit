@@ -25,9 +25,9 @@ import (
 
 // AnalysisValueSpec defines the desired state of AnalysisValue
 type AnalysisValueSpec struct {
-	AnalysisTemplate AnalysisTemplateRef `json:"analysisTemplate"`
-	Timeframe        TimeframeDefinition `json:"timeframe"`
-	Selectors        map[string]string   `json:"selectors,omitempty"`
+	AnalysisTemplate AnalysisTemplateRef  `json:"analysisTemplate"`
+	Timeframe        *TimeframeDefinition `json:"timeframe,omitempty"`
+	Selectors        map[string]string    `json:"selectors,omitempty"`
 }
 
 type TimeframeDefinition struct {
@@ -42,7 +42,10 @@ type AnalysisTemplateRef struct {
 
 // AnalysisValueStatus defines the observed state of AnalysisValue
 type AnalysisValueStatus struct {
-	Value string `json:"value,omitempty"`
+	Query    string `json:"query,omitempty"`
+	Value    string `json:"value,omitempty"`
+	RawValue []byte `json:"rawValue"`
+	ErrMsg   string `json:"errMsg,omitempty"`
 }
 
 //+kubebuilder:object:root=true

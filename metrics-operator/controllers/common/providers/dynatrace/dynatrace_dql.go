@@ -86,14 +86,14 @@ func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatrac
 }
 
 // EvaluateQuery fetches the SLI values from dynatrace provider
-func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, analysisValue metricsapi.AnalysisValue, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
 		return "", nil, err
 	}
 	// submit DQL
-	dqlHandler, err := d.postDQL(ctx, metric.Spec.Query)
+	dqlHandler, err := d.postDQL(ctx, analysisValue.Status.Query)
 	if err != nil {
-		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
+		d.log.Error(err, "Error while posting the DQL query", "query", analysisValue.Status.Query)
 		return "", nil, err
 	}
 	// attend result

@@ -58,6 +58,9 @@ type RangeSpec struct {
 	// Interval specifies the duration of the time interval for the data query
 	// +kubebuilder:default:="5m"
 	Interval string `json:"interval,omitempty"`
+	// Aggregation defines as the type of aggregation function to be applied on the data
+	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
+	Aggregation string `json:"aggregation,omitempty"`
 }
 
 // +kubebuilder:object:root=true

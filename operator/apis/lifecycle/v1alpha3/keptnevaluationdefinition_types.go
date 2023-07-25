@@ -54,17 +54,22 @@ type Target struct {
 }
 
 type Criteria struct {
-	Targets []Target `json:"targets"`
+	// AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass
+	AnyOf []Target `json:"anyOf"`
+	// AllOf contains a list of targets where all of them need to be successful for the Criteria to pass
+	AllOf []Target `json:"allOf"`
 }
 
-type OrCombinedCriteriaSet struct {
+type CriteriaSet struct {
 	// AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass
 	AnyOf []Criteria `json:"anyOf"`
+	// AllOf contains a list of criteria where all of them need to be successful for the CriteriaSet to pass
+	AllOf []Criteria `json:"allOf"`
 }
 
 type SLOTarget struct {
-	Pass    OrCombinedCriteriaSet `json:"pass"`
-	Warning OrCombinedCriteriaSet `json:"warning"`
+	Pass    CriteriaSet `json:"pass"`
+	Warning CriteriaSet `json:"warning"`
 }
 
 type ComparisonSpec struct {

@@ -3,13 +3,140 @@ package slos
 import (
 	"fmt"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"regexp"
 	"strconv"
 	"strings"
 )
+
+type Service struct {
+	Name       string
+	SLIContent string
+	SLOContent string
+}
+
+type Stage struct {
+	Name       string
+	Services   []Service
+	SLIContent string
+	SLOContent string
+}
+
+type Project struct {
+	Name       string
+	SLIContent string
+	SLOContent string
+	Stages     []Stage
+}
+
+type SLIConversion struct {
+	Project  Project
+	Provider string
+}
+
+type EvaluationDefinitionResult struct {
+	EvaluationDefinition *v1alpha3.KeptnEvaluationDefinition
+	Error                error
+}
+
+type MetricResult struct {
+	Metric *unstructured.Unstructured
+	Error  error
+}
+
+type ConversionResult struct {
+	EvaluationDefinition EvaluationDefinitionResult
+	Metrics              []MetricResult
+
+	Name string
+}
+
+type ServiceConversionResult struct {
+	Name string
+	ConversionResult
+}
+
+type StageConversionResult struct {
+	ConversionResult
+	Name     string
+	Services []ServiceConversionResult
+}
+
+type ProjectConversionResult struct {
+	ConversionResult
+	Name   string
+	Stages []StageConversionResult
+}
+
+type SLIConversionResult struct {
+	Name    string
+	Project ProjectConversionResult
+}
+
+func TransformKeptnProject(conversion SLIConversion) SLIConversionResult {
+	result := SLIConversionResult{
+		Name: conversion.Project.Name,
+		Project: ProjectConversionResult{
+			Name:   conversion.Project.Name,
+			Stages: []StageConversionResult{},
+		},
+	}
+
+	if conversion.Project.SLOContent != "" {
+		projectSLOName := common.TruncateString(fmt.Sprintf("%s-slo", conversion.Project.Name), 253)
+		projectEvaluationDefinition, err := TransformSLOToEvaluationDefinition(projectSLOName, conversion.Project.SLOContent)
+
+		result.Project.EvaluationDefinition = EvaluationDefinitionResult{
+			EvaluationDefinition: projectEvaluationDefinition,
+			Error:                err,
+		}
+	}
+
+	for _, stage := range conversion.Project.Stages {
+
+		stageResult := StageConversionResult{
+			Name:     stage.Name,
+			Services: []ServiceConversionResult{},
+		}
+		if stage.SLOContent != "" {
+			stageSLOName := common.TruncateString(fmt.Sprintf("%s-%s-slo", conversion.Project, stage.Name), 253)
+			stageEvaluationDefinition, err := TransformSLOToEvaluationDefinition(stageSLOName, stage.SLOContent)
+			stageResult.EvaluationDefinition = EvaluationDefinitionResult{
+				EvaluationDefinition: stageEvaluationDefinition,
+				Error:                err,
+			}
+		}
+
+		for _, service := range stage.Services {
+			serviceResult := ServiceConversionResult{
+				Name: service.Name,
+			}
+
+			if service.SLOContent != "" {
+				serviceSLOName := common.TruncateString(fmt.Sprintf("%s-%s-%s-slo", conversion.Project, stage.Name, service.Name), 253)
+				serviceEvaluationDefinition, err := TransformSLOToEvaluationDefinition(serviceSLOName, service.SLOContent)
+				serviceResult.EvaluationDefinition = EvaluationDefinitionResult{
+					EvaluationDefinition: serviceEvaluationDefinition,
+					Error:                err,
+				}
+			}
+
+			stageResult.Services = append(stageResult.Services, serviceResult)
+		}
+
+		result.Project.Stages = append(result.Project.Stages, stageResult)
+	}
+	return result
+}
+
+func TransformSLIToMetrics(conversion SLIConversion, name, query string) (*unstructured.Unstructured, error) {
+	// we do not have placeholder support in SLIs, so here we would need to create a KeptnMetric for each combination of project/stage/service
+	return nil, nil
+}
 
 func TransformSLOToEvaluationDefinition(name, sloConfigStr string) (*v1alpha3.KeptnEvaluationDefinition, error) {
 	sloConfig, err := parseSLO([]byte(sloConfigStr))
@@ -50,10 +177,10 @@ func TransformSLOToEvaluationDefinition(name, sloConfigStr string) (*v1alpha3.Ke
 				Namespace: kltNamespace,
 			},
 			SLOTargets: &v1alpha3.SLOTarget{
-				Pass: v1alpha3.OrCombinedCriteriaSet{
+				Pass: v1alpha3.CriteriaSet{
 					AnyOf: []v1alpha3.Criteria{},
 				},
-				Warning: v1alpha3.OrCombinedCriteriaSet{
+				Warning: v1alpha3.CriteriaSet{
 					AnyOf: []v1alpha3.Criteria{},
 				},
 			},
@@ -61,30 +188,33 @@ func TransformSLOToEvaluationDefinition(name, sloConfigStr string) (*v1alpha3.Ke
 			KeyObjective: objective.KeySLI,
 		}
 
-		for _, passTarget := range objective.Pass {
-
-			kltPassCriteria := v1alpha3.Criteria{
-				Targets: []v1alpha3.Target{},
-			}
-
-			for _, criteriaStr := range passTarget.Criteria {
-				kltTarget, err := parseCriteriaString(criteriaStr)
-				if err != nil {
-					// continue with the other criteria
-					continue
-				}
-
-				kltPassCriteria.Targets = append(kltPassCriteria.Targets, *kltTarget)
-			}
-
-			obj.SLOTargets.Pass.AnyOf = append(obj.SLOTargets.Pass.AnyOf, kltPassCriteria)
-
-		}
+		applyTargets(objective.Pass, &obj.SLOTargets.Pass)
+		applyTargets(objective.Warning, &obj.SLOTargets.Warning)
 
 		evaluationDef.Spec.Objectives = append(evaluationDef.Spec.Objectives, obj)
 	}
 
 	return evaluationDef, nil
+}
+
+func applyTargets(objectives []*SLOCriteria, dst *v1alpha3.CriteriaSet) {
+	for _, passTarget := range objectives {
+		kltPassCriteria := v1alpha3.Criteria{
+			AllOf: []v1alpha3.Target{},
+		}
+
+		for _, criteriaStr := range passTarget.Criteria {
+			kltTarget, err := parseCriteriaString(criteriaStr)
+			if err != nil {
+				// continue with the other criteria
+				continue
+			}
+
+			kltPassCriteria.AllOf = append(kltPassCriteria.AllOf, *kltTarget)
+		}
+
+		dst.AnyOf = append(dst.AnyOf, kltPassCriteria)
+	}
 }
 
 func parseCriteriaString(criteria string) (*v1alpha3.Target, error) {
@@ -129,7 +259,6 @@ func parseCriteriaString(criteria string) (*v1alpha3.Target, error) {
 			targetValue.Comparison.DecreaseByPercent = &floatValue
 		} else if strings.HasPrefix(criteria, "+") {
 			criteria = strings.TrimPrefix(criteria, "+")
-			criteria = strings.TrimPrefix(criteria, "-")
 			floatValue := toFloat(criteria)
 			targetValue.Comparison.IncreaseByPercent = &floatValue
 		}

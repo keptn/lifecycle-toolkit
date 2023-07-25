@@ -1,0 +1,20 @@
+# permissions for end users to view analysistemplates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: analysistemplate-viewer-role
+rules:
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysistemplates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysistemplates/status
+  verbs:
+  - get

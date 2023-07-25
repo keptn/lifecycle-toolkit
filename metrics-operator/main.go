@@ -29,12 +29,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -45,6 +39,14 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	analysisvaluecontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysisvalue"
+	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 )
 
 var (
@@ -136,10 +138,22 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
+
+	analysisValueLogger := ctrl.Log.WithName("AnalysisValue Controller")
+	if err = (&analysisvaluecontroller.AnalysisValueReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    analysisValueLogger.V(env.KeptnMetricControllerLogLevel),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "AnalysisValue")
+		os.Exit(1)
+	}
+
 	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
+
 	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

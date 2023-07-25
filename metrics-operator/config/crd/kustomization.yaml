@@ -5,6 +5,7 @@ resources:
   - bases/metrics.keptn.sh_keptnmetricsproviders.yaml
   - bases/metrics.keptn.sh_keptnmetrics.yaml
 - bases/metrics.keptn.sh_analysistemplates.yaml
+- bases/metrics.keptn.sh_analysisvalues.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:
@@ -13,6 +14,7 @@ patchesStrategicMerge:
   # - patches/webhook_in_keptnmetricsproviders.yaml
   - patches/webhook_in_keptnmetrics.yaml
 #- patches/webhook_in_analysistemplates.yaml
+#- patches/webhook_in_analysisvalues.yaml
 # +kubebuilder:scaffold:crdkustomizewebhookpatch
 
 # [CERTMANAGER] To enable cert-manager, uncomment all the sections with [CERTMANAGER] prefix.
@@ -20,6 +22,7 @@ patchesStrategicMerge:
 # - patches/cainjection_in_keptnmetricsproviders.yaml
 # - patches/cainjection_in_keptnmetrics.yaml
 #- patches/cainjection_in_analysistemplates.yaml
+#- patches/cainjection_in_analysisvalues.yaml
 # +kubebuilder:scaffold:crdkustomizecainjectionpatch
 
 # the following config is for teaching kustomize how to do kustomization for CRDs.

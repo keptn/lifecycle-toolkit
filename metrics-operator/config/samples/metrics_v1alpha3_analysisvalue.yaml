@@ -1,0 +1,6 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValue
+metadata:
+  name: analysisvalue-sample
+spec:
+  # TODO(user): Add fields here

@@ -61,4 +61,13 @@ resources:
   kind: AnalysisTemplate
   path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
   version: v1alpha3
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: metrics
+  kind: AnalysisValue
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
 version: "3"

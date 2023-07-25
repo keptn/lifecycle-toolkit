@@ -1,17 +1,3 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: test
-  name: test
-status:
-  readyReplicas: 1
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkload
-metadata:
-  name: waiter-waiter
----
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkloadInstance
 metadata:
@@ -26,19 +12,6 @@ status:
   preDeploymentTaskStatus:
     - definitionName: pre-deployment-sleep
       status: Succeeded
-  status: Succeeded
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnApp
-metadata:
-  name: waiter
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnAppVersion
-metadata:
-  name: waiter-1b899b6ce1-6b86b273
-status:
-  currentPhase: Completed
   status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3

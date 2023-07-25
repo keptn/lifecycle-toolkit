@@ -197,9 +197,15 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: [prepare_ci_run, build_image]
+    needs:
+      - prepare_ci_run
+      - build_image
+    strategy:
+      matrix:
+        helm: [true, false]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      helm-install: ${{ matrix.helm }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

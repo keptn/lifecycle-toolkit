@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -31,10 +32,10 @@ var _ = BeforeSuite(func() {
 
 	////setup controllers here
 	controller := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
-		Client:   k8sManager.GetClient(),
-		Scheme:   k8sManager.GetScheme(),
-		Recorder: k8sManager.GetEventRecorderFor("test-taskdefinition-controller"),
-		Log:      GinkgoLogr,
+		Client:      k8sManager.GetClient(),
+		Scheme:      k8sManager.GetScheme(),
+		EventSender: controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-taskdefinition-controller")),
+		Log:         GinkgoLogr,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

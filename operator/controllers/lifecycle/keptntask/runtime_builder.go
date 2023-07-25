@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
@@ -157,7 +157,7 @@ func (fb *RuntimeBuilder) getParams(ctx context.Context) (*RuntimeExecutionParam
 	if len(fb.options.task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, fb.options.task.Spec.Parameters.Inline)
 		if err != nil {
-			controllercommon.RecordEvent(fb.options.recorder, apicommon.PhaseCreateTask, "Warning", fb.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
+			fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateFailed, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 			return nil, err
 		}
 	}
@@ -211,7 +211,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 	var parentJobParams RuntimeExecutionParams
 	parentDefinition, err := controllercommon.GetTaskDefinition(fb.options.Client, fb.options.Log, ctx, fb.options.funcSpec.FunctionReference.Name, fb.options.req.Namespace)
 	if err != nil {
-		controllercommon.RecordEvent(fb.options.recorder, apicommon.PhaseCreateTask, "Warning", fb.options.task, "TaskDefinitionNotFound", fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
+		fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err
 	}
 	parSpec := controllercommon.GetRuntimeSpec(parentDefinition)
@@ -223,7 +223,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 	// merge parameter to make sure we use child task data for env var and secrets
 	err = mergo.Merge(params, parentJobParams)
 	if err != nil {
-		controllercommon.RecordEvent(fb.options.recorder, apicommon.PhaseCreateTask, "Warning", fb.options.task, "TaskDefinitionMergeFailure", fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
+		fb.options.eventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateFailed, fmt.Sprintf("could not merge KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err
 	}
 

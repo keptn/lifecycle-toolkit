@@ -25,7 +25,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -37,11 +36,11 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client   client.Client
-	Tracer   trace.Tracer
-	Decoder  *admission.Decoder
-	Recorder record.EventRecorder
-	Log      logr.Logger
+	Client      client.Client
+	Tracer      trace.Tracer
+	Decoder     *admission.Decoder
+	EventSender controllercommon.EventSender
+	Log         logr.Logger
 }
 
 const InvalidAnnotationMessage = "Invalid annotations"
@@ -80,6 +79,15 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
 		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
+	}
+
+	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
+
+	if ownerRef.Kind == "" {
+		msg := "owner of pod is not supported by lifecycle controller"
+		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		return admission.Allowed(msg)
 	}
 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
@@ -140,7 +148,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
-	podOwner := a.getOwnerReference(&pod.ObjectMeta)
+	podOwner := a.getOwnerReference(pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false
 	}
@@ -153,7 +161,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 		a.Log.Info("Done fetching RS")
 
-		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
+		rsOwner := a.getOwnerReference(rs.ObjectMeta)
 		if rsOwner.UID == "" {
 			return false
 		}
@@ -242,8 +250,9 @@ func (a *PodMutatingWebhook) calculateVersion(pod *corev1.Pod) string {
 
 	if len(pod.Spec.Containers) == 1 {
 		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		if len(image) > 1 && image[1] != "" && image[1] != "latest" {
-			return image[1]
+		lenImg := len(image) - 1
+		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
+			return image[lenImg]
 		}
 	}
 
@@ -279,12 +288,11 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
 		return nil
 	}
 
@@ -304,12 +312,10 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendK8sEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
-
-	controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
 
 	return nil
 }
@@ -333,13 +339,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		appCreationRequest = newAppCreationRequest
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
-			logger.Error(err, "Could not create App")
-			controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			logger.Error(err, "Could not create AppCreationRequest")
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		controllercommon.RecordEvent(a.Recorder, apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 		return nil
 	}
 
@@ -381,7 +386,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	return &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
@@ -441,11 +446,11 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+func (a *PodMutatingWebhook) getOwnerReference(resource metav1.ObjectMeta) metav1.OwnerReference {
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
-			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout" {
+			if apicommon.IsOwnerSupported(owner) {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name

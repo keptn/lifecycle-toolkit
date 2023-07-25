@@ -41,6 +41,11 @@ menu:
         rel: external
       url: https://v1.keptn.sh/
       weight: 1
+    - name: GitHub
+      params:
+        rel: external
+      url: https://github.com/keptn/lifecycle-toolkit
+      weight: 99
 
 ignoreErrors:
   - "error-remote-getjson"

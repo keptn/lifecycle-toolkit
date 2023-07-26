@@ -7,7 +7,7 @@
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 
 The Keptn Lifecycle Toolkit (KLT) provides a “cloud-native” approach
-for managing the release lifecycle
+for managing the application release lifecycle
 with pre- and post-deployment evaluations and tasks.
 It also supports application health checks,
 metrics, and observability.

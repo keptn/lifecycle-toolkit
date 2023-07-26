@@ -8,7 +8,7 @@ webhooks:
   - v1
   clientConfig:
     service:
-      name: webhook-service
+      name: metrics-webhook-service
       namespace: system
       path: /validate-metrics-keptn-sh-v1alpha3-keptnmetric
   failurePolicy: Fail

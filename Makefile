@@ -108,7 +108,7 @@ build-deploy-metrics-operator:
 	$(MAKE) -C metrics-operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 
-	#kubectl apply -f metrics-operator/config/rendered/release.yaml
+	kubectl apply -f metrics-operator/config/rendered/release.yaml
 
 .PHONY: build-deploy-scheduler
 build-deploy-scheduler:

@@ -56,7 +56,7 @@ as it allows for the collection and exposure of custom metrics,
 which can be used to gain insight into the behavior and performance
 of applications running on a Kubenetes cluster.
 
-The **Metrics controller** fetches metrics from a SLI provider.
+The **Metrics controller** fetches metrics from an SLI provider.
 The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric.md)
 CR and updates its status with the metric value
 provided by the selected metric provider.

@@ -17,164 +17,189 @@ KLT monitors resources
 that have been applied into the Kubernetes cluster
 and reacts if it finds a workload with special annotations/labels.
 The Keptn Lifecycle Toolkit uses metadata
+that is added to the Kubernetes workloads
 to identify the workloads of interest.
 
-To integrate KLT with your applications,
-you need to populate the metadata it needs
-with either Keptn or Kubernetes annotations and labels.
+To integrate KLT with your applications:
 
-This requires two steps:
-
-* [Annotate your workload(s)](#annotate-workloads)
-* Define a Keptn application that references those workloads.
-  You have two options:
-
-  * [Define KeptnApp manually](#define-keptnapp-manually)
-    for the application
-  * [Use the Keptn automatic app discovery capability](#use-keptn-automatic-app-discovery)
-    that enables the observability features provided by the Lifecycle Toolkit
-    for existing applications,
-    without requiring you to manually create any KeptnApp resources.
-
-## Annotate workload(s)
-
-To annotate your
-[Workload](https://kubernetes.io/docs/concepts/workloads/),
-you need to set annotations in your Kubernetes
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) resource.
-
-Note that you do not need to explicitly create a `KeptnWorkload`.
-KLT monitors your `Deployments`,
-[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+* You must first
+[install](../../install/install)
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/),
+[enable](../../install/install//#enable-klt-for-your-cluster)
+KLT.
+* Annotate or label your workloads
+with either Keptn or Kubernetes keys.
+  * [Basic annotations](#basic-annotations)
+    or labels
+    are required for all KLT features except Keptn metrics.
+  * [Pre- and post-deployment checks](#basic-annotations)
+    are required only for the Release lifecycle management feature.
+
+KLT uses these annotations to the Kubernetes workloads to create the
+[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
-[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-in the namespaces where KLT is enabled.
-If KLT finds any of these resources and the resource has either
-the keptn.sh or the kubernetes recommended labels,
-it creates a `KeptnWorkload` resource for the version it detects.
+[KeptnApp](../../yaml-crd-ref/app.md)
+resources that it uses to provide observability
+and release lifecycle management.
 
 > Note: Annotations are not required if you are only using the
   `metrics-operator` component of KLT
   to observe Keptn metrics.
 
-### Basic annotations
+## Basic annotations
 
-The basic keptn.sh annotations are:
+The Keptn Lifecycle Toolkit provides the option
+to automatically discover `KeptnApp` resourcess,
+based on the labels or annotations.
+Because of the OpenTelemetry tracing features
+provided by the Keptn Lifecycle Toolkit,
+this enables the observability features for existing applications,
+without additional Keptn configuration.
+
+KLT monitors your
+[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+and
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/),
+and
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+resources in the namespaces where KLT is enabled.
+If KLT finds any of these resources and the resource has either
+the `keptn.sh` or the `kubernetes` recommended labels,
+it creates appropriate
+[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+and
+[KeptnApp](../../yaml-crd-ref/app)
+resources for the version it detects.
+
+The basic keptn.sh keys that can be used for labels or annotations are:
 
 ```yaml
-keptn.sh/app: myAwesomeAppName
 keptn.sh/workload: myAwesomeWorkload
 keptn.sh/version: myAwesomeWorkloadVersion
+keptn.sh/app: myAwesomeAppName
 ```
 
-Alternatively, you can use Kubernetes
-[Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
-to annotate your workload:
+Alternatively, you can use Kubernete keys for label or annotations.
+These are part of the Kubernetes
+[Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
 
 ```yaml
-app.kubernetes.io/part-of: myAwesomeAppName
 app.kubernetes.io/name: myAwesomeWorkload
 app.kubernetes.io/version: myAwesomeWorkloadVersion
+app.kubernetes.io/part-of: myAwesomeAppName
 ```
 
-Note the following:
+These keys are defined as:
 
-* The Keptn Annotations/Labels take precedence
-  over the Kubernetes recommended labels.
-* If the Workload has no version annotation/labels
+* `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
+  of the generated
+  [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+  that represents the Workload.
+* `keptn.sh/version` or `app.kubernetes.io/version`:
+  Determines the version of the `KeptnWorkload`
+  that represents the Workload.
+  If the Workload has no version annotation/labels
   and the pod has only one container,
   the Lifecycle Toolkit takes the image tag as version
   (if it is not "latest").
+* `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
+   of the generated `KeptnApp` representing your Application.
+   All Workloads that share the same value for this label
+   are consolidated into the same `KeptnApp` resource.
+
+   If this label/annotation is omitted,
+   KLT creates a `KeptnApp` resource for each `KeptnWorkload`
+   and your observability output does not trace
+   the combined workloads that constitute your deployed application.
+
+The Keptn annotations/labels take precedence
+over the Kubernetes annotations/labels
+and annotations take precedence over labels.
 
 This process is demonstrated in the
-[Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Mintes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+[Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video.
 
-### Pre- and post-deployment checks
+See
+[Keptn Applications and Keptn Workloads](../../concepts/architecture/keptn-apps/)
+for architectural information about how `KeptnApp` and `KeptnWorkloads`
+are implemented.
 
-Further annotations are necessary
-to run pre- and post-deployment checks:
+## Pre- and post-deployment checks
+
+To implement the Keptn Release Lifecycle feature
+that handles pre- and post-deployment evaluations and tasks,
+do the following:
+
+* Define the
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
+  resource for each evaluation you want.
+  You will also need to define the necessary
+  [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider)
+  and
+  [KeptnMetric](../../yaml-crd-ref/metric)
+  resource for each instance of each data source
+  used for the `KeptnEvaluationDefinition` resources you define.
+* Define a
+  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+  resource for each task you want to execute.
+  See
+  [Working with Keptn tasks](../tasks)
+  for more information.
+* Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
+  ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+  [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+  [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+  and
+  [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+  to include each evaluation and task you want run
+  for specific workloads.
+* Manually edit all
+  [KeptnApp](../../yaml-crd-ref/app) resources
+  to specify evaluations and tasks to be run for the `KeptnApp`.
+
+These annotations do not affect `KeptnApp` resources.
+To define pre- and post-deployment evaluations and tasks for a `KeptnApp`,
+you must manually edit the YAML file to add them.
+
+### Annotations to workloads
+
+Specify one of the following annotations/label for each evaluation or task
+you want to execute:
 
 ```yaml
-keptn.sh/pre-deployment-tasks: verify-infrastructure-problems
-keptn.sh/post-deployment-tasks: slack-notification,performance-test
+keptn.sh/pre-deployment-evaluations: <`EvaluationDefinition`-name>
+keptn.sh/pre-deployment-tasks: <`TaskDefinition`-name>
+keptn.sh/post-deployment-evaluations: <`EvaluationDefinition`-name>
+keptn.sh/post-deployment-tasks: <`TaskDefinition`-name>
 ```
 
 The value of these annotations are
 Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-called `KeptnTaskDefinition`s.
+called
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+resources
 These resources contain re-usable "functions"
 that can execute before and after the deployment.
-In this example, before the deployment starts,
-a check for open problems in your infrastructure is performed.
-If everything is fine, the deployment continues and afterward,
-a slack notification is sent with the result of the deployment
-and a pipeline to run performance tests is invoked.
-Otherwise, the deployment is kept in a pending state
+For example, before the deployment starts,
+you might run a check for open problems in your infrastructure
+and invoke a pipeline to run performance tests.
+The deployment is kept in a pending state
 until the infrastructure is capable of accepting deployments again.
 
-A more comprehensive example can be found in our
-[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
-where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
-to run some simple pre-deployment checks.
+If everything is fine, the deployment continues and afterward,
+a slack notification is sent with the result of the deployment
 
-To run the example, use the following commands:
+## Use Keptn automatic app discovery
 
-```shell
-cd ./examples/podtatohead-deployment/
-kubectl apply -f .
-```
+The automatically generated `KeptnApp` file
+aggregates the workloads to include in you application
+based on annotations made to the workloads themselves.
+This enables you to run KLT observability features on your cluster.
 
-Afterward, you can monitor the status of the deployment using
-
-```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
-```
-
-The deployment for a Workload stays in a `Pending`
-state until the respective pre-deployment check is successfully completed.
-Afterwards, the deployment starts and when the workload is deployed,
-the post-deployment checks start.
-
-## Define a Keptn application
-
-A Keptn application defines the workloads
-to be included in your Keptn Application.
-It does this by aggregating multiple workloads
-that belong to a logical app into a single
-[KeptnApp](../../yaml-crd-ref/app.md)
-resource.
-
-  You have two options:
-
-* Create a [KeptnApp](../../yaml-crd-ref/app.md) resource
-    that references the workloads that should be included
-    along with any
-    [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
-    and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-    resources that you want
-* Use the Keptn automatic app discovery capability
-    that enables the observability features provided by the Lifecycle Toolkit
-    for existing applications,
-    without requiring you to manually create any KeptnApp resources
-
-### Define KeptnApp manually
-
-You can manually create a YAML file for the
-[KeptnApp](../../yaml-crd-ref/app.md) resource
-that references the workloads to be included
-along with any
-[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
-and [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-resources that you want.
-
-See the
-[keptn-app.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-app.yaml.tmp)
-file for an example.
-You see the `metadata` that names this `KeptnApp`
-and identifies the namespace where it lives:
+The generated `KeptnApp` file includes `metadata`
+that names this `KeptnApp` and identifies the Namespace where it resides.
 
 ```yaml
 metadata:
@@ -182,49 +207,21 @@ metadata:
   namespace: simplenode-dev
 ```
 
-You can also see the `spec.workloads` list
-that defines the workloads to be included
-and any pre-/post-deployment
-tasks and evaluations to be performed.
-In this simple example,
-we only have one workload and one evaluation defined
-but most production apps will have multiple workloads,
-multiple tasks, and multiple evaluations defined.
+It also includes a `spec.workloads` list
+that defines the workloads to be included.
 
-### Use Keptn automatic app discovery
-
-The Keptn Lifecycle Toolkit provides the option
-to automatically discover `KeptnApp`s,
-based on the recommended Kubernetes labels `app.kubernetes.io/part-of`,
-`app.kubernetes.io/name` `app.kubernetes.io/version`.
-Because of the OpenTelemetry tracing features
-provided by the Keptn Lifecycle Toolkit,
-this enables the observability features for existing applications,
-without creating any Keptn-related custom resources.
-
-To enable the automatic discovery of `KeptnApp`s for your existing applications,
-the following steps are required:
-
-1. Enable KLT for the namespace where your application runs
-   following the instructions above
-1. Make sure the following Kubernetes labels and/or annotations are present
-   in the pod template specs of your Workloads
-   (`Deployments`, `StatefulSets`, `DaemonSets`, and `ReplicaSets`)
-   within your application:
-
-    * `app.kubernetes.io/name`: Determines the name
-       of the generated `KeptnWorkload` representing the Workload.
-    * `app.kubernetes.io/version`: Determines the version
-       of the `KeptnWorkload` representing the Workload.
-    * `app.kubernetes.io/part-of`: Determines the name
-       of the generated `KeptnApp` representing your Application.
-
-       All Workloads that share the same value for this label
-       are consolidated into the same `KeptnApp`.
+Pre-/post-deployment tasks and evaluations for the `KeptnApp`
+can also be added to this resource manually
+but this is not required for observability.
 
 As an example, consider the following application,
-consisting of several deployments,
-which is going to be deployed into a KLT-enabled namespace:
+consisting of multiple deployments,
+which is going to be deployed into a KLT-enabled namespace.
+Note that:
+
+1. KLT is enabled for the namespace where your application runs.
+1. The `Deployment` workloads are annotated appropriately.
+   This example does not use other workloads.
 
 ```yaml
 apiVersion: v1
@@ -297,3 +294,29 @@ by using the OpenTelemetry tracing features
 that are provided by the Keptn Lifecycle Toolkit:
 
 ![Application deployment trace](assets/trace.png)
+
+## Example of pre- and post-deployment actions
+
+A comprehensive example of pre- and post-deployment
+evaluations and tasks can be found in our
+[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
+where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
+to run some simple pre-deployment checks.
+
+To run the example, use the following commands:
+
+```shell
+cd ./examples/podtatohead-deployment/
+kubectl apply -f .
+```
+
+Afterward, you can monitor the status of the deployment using
+
+```shell
+kubectl get keptnworkloadinstance -n podtato-kubectl -w
+```
+
+The deployment for a Workload stays in a `Pending`
+state until the respective pre-deployment check is successfully completed.
+Afterwards, the deployment starts and when the workload is deployed,
+the post-deployment checks start.

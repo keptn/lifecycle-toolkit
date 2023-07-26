@@ -45,6 +45,9 @@ spec:
 
 ## Fields
 
+The first set of fields are created automatically
+when the app discovery feature generates the `KeptnApp` resource:
+
 - **apiVersion** -- API version being used.
 - **kind** -- Resource type.
    Must be set to `KeptnApp`
@@ -78,6 +81,11 @@ spec:
       Changing this number causes a new execution
       of checks for this workload only,
       not the entire application.
+
+The remaining fields are required only when implementing
+the release lifecycle management feature.
+If used, these fields must be populated manually:
+
   - **preDeploymentTasks** -- list each task
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
@@ -85,11 +93,14 @@ spec:
   - **postDeploymentTasks** -- list each task
     to be run as part of the post-deployment stage.
     Task names must match the value of the `metadata.name` field
-    for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
+    for the associated
+    [KeptnTaskDefinition](taskdefinition.md)
+    resource.
   - **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
-    for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
+    for the associated
+    [KeptnEvaluationDefinition](evaluationdefinition.md)
     resource.
   - **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
@@ -109,17 +120,26 @@ into the repository of the deployment engine
 (ArgoCD, Flux, etc)
 and is then deployed by that deployment engine.
 
-You can create a `KeptnApp` resource as a standard YAML manifest
-or you can use the
+A `KeptnApp` resource is created automatically, using the
 [automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
-feature to automatically generate a `KeptnApp` resource
-based on Keptn or [recommended Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
+feature to generate a `KeptnApp` resource
+based on the
+[basic annotations](../../implementing/integrate/#basic-annotations)
+that are applied to any of the workload resources.
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.
 
-## Examples
+The release lifecycle management feature
+allows you to define pre- and post-deployment
+evaluations and tasks to be run for the `KeptnApp` as a whole.
+These must be added to the `KeptnApp` manifest manually.
+Note that all evaluations or tasks for a specific stage
+(such as `preDeploymentTasks`)
+are executed in parallel.
+If you have a series of tasks that should be executed sequentially,
+you can code them all into a single `KeptnTaskDefinition`.
 
-### Example
+## Example
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -149,7 +169,9 @@ spec:
 ## See also
 
 - [KeptnTaskDefinition](taskdefinition.md)
+- [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Working with tasks](../implementing/tasks)
+- [Architecture of KeptnWorkloads and KeptnTasks](../concepts/architecture/keptn-apps/)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../getting-started/orchestrate)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

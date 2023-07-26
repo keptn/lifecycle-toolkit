@@ -72,11 +72,54 @@ and
   to the basic `KeptnApp` manifest to define
   the evaluations and tasks you want to run pre- and post-deployment.
 
+The `KeptnApp` resources that are generated automatically
+contain the identifications required to run the KLT observability features.
+The `spec.workloads.name` and a `spec.workloads.version` fields
+that define evaluations and tasks to be run
+pre- and post-deployment are not generated automatically
+but must be input manually.
+
 By default, the `KeptnApp` resources are updated every 30 seconds
 when any of the Workloads have been modified;
 The timeout is provided because it may take some time
 to apply all `KeptnWorkload` resources to the cluster.
 This interval can be modified for the cluster by changing the value
 of the `keptnAppCreationRequestTimeoutSeconds` field in the
-[KeptnConfig](../../../yaml-crd-ref/config.md)
+[KeptnConfig](../../yaml-crd-ref/config)
 resource.
+
+## How basic annotations are implemented
+
+The [Basic annotations](../../../implementing/integrate/#basic-annotations)
+page gives instructions for applying the annotations or labels
+that identify the pods that KLT should manage.
+
+Three `keptn.sh` and three `app.kubernetes.io` keys are recognized.
+They are equivalent and you can use either of them
+and they can be implemented as either annotations or labels.
+Annotations take precedence over labels,
+and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys.
+In other words:
+
+* The operator first checks if the `keptn.sh/` key is present
+  in the annotations, and then in the labels.
+* If neither is the case, it looks for the `app.kubernetes.io/` equivalent,
+  again first in the annotations, then in the labels.
+
+KLT automatically generates appropriate
+[KeptnApp](../../../yaml-crd-ref/app)
+resources that are used for observability,
+based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
+annotation/label is poulated:
+resource for each defined group.
+that together constitute a single deployable Keptn Application.
+
+* If either of these labels/allotations are populated,
+  KLT automatically generates a `KeptnApp` resource
+  that includes all workloads that have the same annotation/label,
+  thus creating a `KeptnApp` resource for each defined grouping
+
+* If only the `workload` and `version` annotations/labels are available
+  (in other words, neither the `keptn.sh/app`
+  or `app.kubernetes.io/part-of` annotation/label is populated),
+  one `KeptnApp` resource is created automatically for each workload.

@@ -122,7 +122,7 @@ kind: Namespace
 metadata:
   name: podtato-kubectl
   annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"  # this lines tells the webhook to handle the namespace
+    keptn.sh/lifecycle-toolkit: "enabled"  # this line tells the webhook to handle the namespace
 ```
 
 The mutating webhook only modifies resources in the annotated namespace

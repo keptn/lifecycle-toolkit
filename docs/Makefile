@@ -4,7 +4,15 @@ VOLUMES := -v $(ROOT_DIR):/src
 HUGO_VERSION := 0.111.3
 IMAGE := klakegg/hugo:$(HUGO_VERSION)-ext
 PORT := 1314
+
+INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
+
+ifdef INTERACTIVE
+# is a terminal
+DOCKER_CMD := docker run --rm -it -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
+else
 DOCKER_CMD := docker run --rm -t -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
+endif
 
 .PHONY: build server clean shell
 

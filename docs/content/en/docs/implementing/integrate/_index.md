@@ -108,23 +108,69 @@ These keys are defined as:
    All Workloads that share the same value for this label
    are consolidated into the same `KeptnApp` resource.
 
-   If this label/annotation is omitted,
-   KLT creates a `KeptnApp` resource for each `KeptnWorkload`
-   and your observability output does not trace
-   the combined workloads that constitute your deployed application.
+KLT automatically generates appropriate
+[KeptnApp](../../../yaml-crd-ref/app.md)
+resources that are used for observability,
+based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
+annotation/label is poulated:
+resource for each defined group.
+that together constitute a single deployable Keptn Application.
 
-The Keptn annotations/labels take precedence
-over the Kubernetes annotations/labels
-and annotations take precedence over labels.
+* If either of these labels/allotations are populated,
+  KLT automatically generates a `KeptnApp` resource
+  that includes all workloads that have the same annotation/label,
+  thus creating a `KeptnApp` resource for each defined grouping
 
-This process is demonstrated in the
-[Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
-video.
+* If only the `workload` and `version` annotations/labels are available
+  (in other words, neither the `keptn.sh/app`
+  or `app.kubernetes.io/part-of` annotation/label is populated),
+  KLT creates a `KeptnApp` resource for each `KeptnWorkload`
+  and your observability output does not trace
+  the combined workloads that constitute your deployed application.
 
 See
 [Keptn Applications and Keptn Workloads](../../concepts/architecture/keptn-apps/)
 for architectural information about how `KeptnApp` and `KeptnWorkloads`
 are implemented.
+
+## Annotations vs. labels
+
+The same keys can be used as
+[annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
+or
+[labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/).
+Both annotations and labels are can be attached to Kubernetes objects.
+Some key differences between the two:
+
+* Annotations
+  - Are not used to identify and select objects
+  - Can contain up to 262144 chars
+  - Metadata in an annotation can be small or large,
+    structured or unstructured,
+    and can include characters not permitted by labels
+
+* Labels
+  - Can be used to select objects
+    and to find collections of objects that satisfy certain conditions
+  - Can contain up to 63 chars
+  - Are appropriate for identifying attributes of objects
+    that are meaningful and relevant to users
+    but do not directly imply semantics to the core system
+
+Annotations take precedence over labels,
+and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys. 
+In other words: 
+
+* The operator first checks if the `keptn.sh/` key is present
+  in the annotations, and then in the labels.
+* If neither is the case, it looks for the `app.kubernetes.io/` equivalent,
+  again first in the annotations, then in the labels.
+
+In general, annotations are more appropriate than labels
+for integrating KLT with your applications
+because they store references, names, and version information
+so the 63 char limitation is quite restrictive.
+However labels can be used if you specifically need them.
 
 ## Pre- and post-deployment checks
 

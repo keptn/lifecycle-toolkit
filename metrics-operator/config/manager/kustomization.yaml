@@ -21,4 +21,4 @@ patches:
 images:
 - name: controller
   newName: docker.io/annadreal/metrics-operator
-  newTag: latest
+  newTag: v0.0.1

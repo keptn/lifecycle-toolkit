@@ -398,8 +398,8 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 			},
 		},
 		Spec: klcv1alpha3.KeptnWorkloadSpec{
-			AppName:                   strings.ToLower(applicationName),
-			Version:                   strings.ToLower(version),
+			AppName:                   applicationName,
+			Version:                   version,
 			ResourceReference:         klcv1alpha3.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind, Name: ownerRef.Name},
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,

@@ -9,10 +9,11 @@ INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
 
 ifdef INTERACTIVE
 # is a terminal
-DOCKER_CMD := docker run --rm -it -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
+INTERACTIVE_FLAG := "-it"
 else
-DOCKER_CMD := docker run --rm -t -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
+INTERACTIVE_FLAG := "-t"
 endif
+DOCKER_CMD := docker run --rm $(INTERACTIVE_FLAG) -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
 
 .PHONY: build server clean shell
 

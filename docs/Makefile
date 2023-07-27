@@ -9,9 +9,9 @@ INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
 
 ifdef INTERACTIVE
 # is a terminal
-INTERACTIVE_FLAG := "-it"
+INTERACTIVE_FLAG := -it
 else
-INTERACTIVE_FLAG := "-t"
+INTERACTIVE_FLAG := -t
 endif
 DOCKER_CMD := docker run --rm $(INTERACTIVE_FLAG) -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
 

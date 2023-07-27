@@ -1364,8 +1364,8 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 			Namespace: "default",
 			Annotations: map[string]string{
 				apicommon.WorkloadAnnotation: "my-workload",
-				apicommon.VersionAnnotation:  "0.1",
-				apicommon.AppAnnotation:      "my-app",
+				apicommon.VersionAnnotation:  "V0.1",
+				apicommon.AppAnnotation:      "my-App",
 			},
 			OwnerReferences: []metav1.OwnerReference{
 				{
@@ -1417,7 +1417,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, "my-app", kacr.Spec.AppName)
+	require.Equal(t, "my-app", kacr.Spec.AppName) // this makes sure that everything is lowercase
 	// here we do not want a single-service annotation
 	require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation])
 
@@ -1432,7 +1432,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
-		Version: "0.1",
+		Version: "v0.1",
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",

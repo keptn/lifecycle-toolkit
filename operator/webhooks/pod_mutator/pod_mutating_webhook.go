@@ -357,8 +357,8 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 }
 
 func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
-	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	version := a.getVersion(pod)
+	applicationName := a.getAppName(pod)
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
@@ -444,6 +444,11 @@ func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName)
+}
+
+func (a *PodMutatingWebhook) getVersion(pod *corev1.Pod) string {
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	return strings.ToLower(version)
 }
 
 func (a *PodMutatingWebhook) getOwnerReference(resource metav1.ObjectMeta) metav1.OwnerReference {

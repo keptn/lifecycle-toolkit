@@ -24,11 +24,11 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v0.38.1
 	go.opentelemetry.io/otel/trace v1.15.1
 	google.golang.org/grpc v1.56.2
-	k8s.io/api v0.26.6
-	k8s.io/apiextensions-apiserver v0.26.6
-	k8s.io/apimachinery v0.26.6
-	k8s.io/apiserver v0.26.6
-	k8s.io/client-go v0.26.6
+	k8s.io/api v0.26.7
+	k8s.io/apiextensions-apiserver v0.26.7
+	k8s.io/apimachinery v0.26.7
+	k8s.io/apiserver v0.26.7
+	k8s.io/client-go v0.26.7
 	sigs.k8s.io/controller-runtime v0.14.6
 )
 
@@ -94,7 +94,7 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/component-base v0.26.6 // indirect
+	k8s.io/component-base v0.26.7 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect

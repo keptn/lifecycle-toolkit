@@ -67,7 +67,7 @@ The timeout is provided because it may take some time
 to apply all `KeptnWorkload` resources to the cluster.
 This interval can be modified for the cluster by changing the value
 of the `keptnAppCreationRequestTimeoutSeconds` field in the
-[KeptnConfig](../../yaml-crd-ref/config)
+[KeptnConfig](../../../yaml-crd-ref/config.md)
 resource.
 
 ## How basic annotations are implemented
@@ -89,7 +89,7 @@ In other words:
   again first in the annotations, then in the labels.
 
 KLT automatically generates appropriate
-[KeptnApp](../../../yaml-crd-ref/app)
+[KeptnApp](../../../yaml-crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is poulated:

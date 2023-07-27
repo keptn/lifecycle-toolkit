@@ -44,10 +44,8 @@ you now need to:
   [Annotate workload](../implementing/integrate/#basic-annotations)
   to integrate the Lifecycle Toolkit into your Kubernetes cluster
   by applying basic annotations to your `Deployment` resource.
-- Follow the instructions in
-  [Define a Keptn application](../implementing/integrate/#define-a-keptn-application)
-  to create a Keptn application that aggragates
-  all the `workloads` for your deployment into a single
+  and create appropriate `KeptnApp` resources,
+  each of which aggragates `workloads` for your deployment into a single
   [KeptnApp](../yaml-crd-ref/app.md) resource.
 
 This section also includes:

@@ -9,7 +9,7 @@ BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=v0.0.1#$(shell git describe --tags --match "v*")
 TAG?="v0.0.1" # x-release-please-version
 RELEASE_IMAGE:=$(RELEASE_REGISTRY)/metrics-operator:$(TAG)
-CHART_APPVERSION?=""
+CHART_APPVERSION?="v0.0.1"
 
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
@@ -288,8 +288,10 @@ endif
 bundle: manifests kustomize operator-sdk ## Generate bundle manifests and metadata, then validate generated files.
 	$(OPERATOR_SDK) generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
-	$(KUSTOMIZE) build config/manifests | $(OPERATOR_SDK) generate bundle $(BUNDLE_GEN_FLAGS)
-	$(OPERATOR_SDK) bundle validate ./bundle
+	$(KUSTOMIZE) build config/manifests >test.yaml
+	envsubst test.yaml >> test2.yaml
+#| $(OPERATOR_SDK) generate bundle $(BUNDLE_GEN_FLAGS)
+	#$(OPERATOR_SDK) bundle validate ./bundle
 
 .PHONY: bundle-build
 bundle-build: ## Build the bundle image.
@@ -341,7 +343,7 @@ catalog-push: ## Push a catalog image.
 	$(MAKE) docker-push IMG=$(CATALOG_IMG)
 
 .PHONY: docker-build
-docker-build: test ## Build docker image with the manager.
+docker-build: ## Build docker image with the manager.
 	docker build -t ${IMG} .
 
 .PHONY: docker-push

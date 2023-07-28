@@ -19,7 +19,7 @@ Status of the different features:
   K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
 - ![status](https://img.shields.io/badge/status-alpha-orange)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
-- ![status](https://img.shields.io/badge/status-beta-yellow)
+- ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates for
   [secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
 
@@ -28,6 +28,8 @@ alpha ![status](https://img.shields.io/badge/status-alpha-orange) )
 beta ![status](https://img.shields.io/badge/status-beta-yellow) )
 stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
+
+The status follows the [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 
 For more info about the features, please refer to our [documentation](https://lifecycle.keptn.sh/docs/).
 
@@ -59,7 +61,7 @@ For installing the Lifecycle Toolkit via manifests use:
 <!---x-release-please-start-version-->
 
 ```shell
-kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.8.0/manifest.yaml
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.8.1/manifest.yaml
 ```
 
 <!---x-release-please-end-->

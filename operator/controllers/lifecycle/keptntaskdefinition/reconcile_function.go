@@ -6,7 +6,6 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -32,18 +31,17 @@ func (r *KeptnTaskDefinitionReconciler) reconcileConfigMap(ctx context.Context, 
 	if (cm == nil || reflect.DeepEqual(cm, &corev1.ConfigMap{})) && functionCm != nil { //cm does not exist or new taskdef with inline func
 		err := r.Client.Create(ctx, functionCm)
 		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", functionCm, "ConfigMapNotCreated", "could not create configmap", "")
+			r.Log.Error(err, "could not create ConfigMap")
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not create configmap", "")
 			return
 		}
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", functionCm, "ConfigMapCreated", "created configmap", "")
-
 	} else if !reflect.DeepEqual(cm, functionCm) && functionCm != nil { //cm and inline func exists but differ
 		err := r.Client.Update(ctx, functionCm)
 		if err != nil {
-			controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Warning", functionCm, "ConfigMapNotUpdated", "uould not update configmap", "")
+			r.Log.Error(err, "could not update ConfigMap")
+			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not update configmap", "")
 			return
 		}
-		controllercommon.RecordEvent(r.Recorder, apicommon.PhaseReconcileTask, "Normal", functionCm, "ConfigMapUpdated", "updated configmap", "")
 	}
 	//nothing changed
 }

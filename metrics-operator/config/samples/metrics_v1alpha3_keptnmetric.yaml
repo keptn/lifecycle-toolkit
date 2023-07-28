@@ -13,3 +13,5 @@ spec:
     name: some-name
   query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
   fetchIntervalSeconds: 10
+  range:
+    interval: "5m"

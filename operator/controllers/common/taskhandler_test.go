@@ -83,8 +83,48 @@ func TestTaskHandler(t *testing.T) {
 			},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 0},
-			wantErr:         controllererrors.ErrCannotGetKeptnTaskDefinition,
+			wantErr:         nil,
 			getSpanCalls:    0,
+			unbindSpanCalls: 0,
+		},
+		{
+			name: "tasks not started - could not find taskDefinition of one task",
+			object: &v1alpha3.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1alpha3.KeptnAppVersionSpec{
+					KeptnAppSpec: v1alpha3.KeptnAppSpec{
+						PreDeploymentTasks: []string{"task-def", "other-task-def"},
+					},
+				},
+			},
+			taskDef: &v1alpha3.KeptnTaskDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: KLTNamespace,
+					Name:      "task-def",
+				},
+			},
+			taskObj: v1alpha3.KeptnTask{},
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1alpha3.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentCheckType,
+			},
+			wantStatus: []v1alpha3.ItemStatus{
+				{
+					DefinitionName: "task-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-task-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 2, Pending: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
 			unbindSpanCalls: 0,
 		},
 		{
@@ -333,7 +373,7 @@ func TestTaskHandler(t *testing.T) {
 			handler := TaskHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -404,7 +444,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 			handler := TaskHandler{
 				SpanHandler: &kltfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
-				Recorder:    record.NewFakeRecorder(100),
+				EventSender: NewEventSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,

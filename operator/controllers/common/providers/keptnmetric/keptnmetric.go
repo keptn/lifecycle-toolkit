@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -24,17 +24,30 @@ func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alph
 		return "", nil, err
 	}
 
-	if !metric.IsStatusSet() {
-		err := fmt.Errorf("empty value for: %s", metric.Name)
+	value, ok, err := unstructured.NestedString(metric.UnstructuredContent(), "status", "value")
+	if !ok || err != nil || value == "" {
+		err := fmt.Errorf("empty value for: %s", objective.KeptnMetricRef.Name)
 		p.Log.Error(err, "KeptnMetric has no value")
 		return "", nil, err
 	}
 
-	return metric.Status.Value, metric.Status.RawValue, nil
+	rawValue, ok, err := unstructured.NestedString(metric.UnstructuredContent(), "status", "rawValue")
+	if !ok || err != nil || rawValue == "" {
+		err := fmt.Errorf("empty raWvalue for: %s", objective.KeptnMetricRef.Name)
+		p.Log.Error(err, "KeptnMetric has no rawValue")
+		return "", nil, err
+	}
+
+	return value, []byte(rawValue), nil
 }
 
-func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (*metricsapi.KeptnMetric, error) {
-	metric := &metricsapi.KeptnMetric{}
+func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (*unstructured.Unstructured, error) {
+	metric := &unstructured.Unstructured{
+		Object: map[string]interface{}{
+			"kind":       "KeptnMetric",
+			"apiVersion": "metrics.keptn.sh/v1alpha3",
+		},
+	}
 
 	if objective.KeptnMetricRef.Namespace != "" {
 		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: objective.KeptnMetricRef.Namespace}, metric); err != nil {

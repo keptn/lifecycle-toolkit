@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.12.0
+ARG CONTROLLER_TOOLS_VERSION=v0.12.1
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 # Copy the go source

@@ -64,13 +64,16 @@ func (r *KeptnMetric) ValidateDelete() error {
 }
 
 func (s *KeptnMetric) validateKeptnMetric() error {
-	var allErrs field.ErrorList //defined as a list to allow returning multiple validation errors
+	var allErrs field.ErrorList // defined as a list to allow returning multiple validation errors
 	var err *field.Error
 	if err = s.validateRangeInterval(); err != nil {
 		allErrs = append(allErrs, err)
 	}
-	if err = s.validateAggregation(); err != nil {
+	if err = s.validateRangeStep(); err != nil {
 		allErrs = append(allErrs, err)
+	}
+  if err = s.validateAggregation(); err != nil {
+	  allErrs = append(allErrs, err)
 	}
 	if len(allErrs) == 0 {
 		return nil
@@ -90,6 +93,21 @@ func (s *KeptnMetric) validateRangeInterval() *field.Error {
 		return field.Invalid(
 			field.NewPath("spec").Child("range").Child("interval"),
 			s.Spec.Range.Interval,
+			errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
+		)
+	}
+	return nil
+}
+
+func (s *KeptnMetric) validateRangeStep() *field.Error {
+	if s.Spec.Range == nil || s.Spec.Range.Step == "" {
+		return nil
+	}
+	_, err := time.ParseDuration(s.Spec.Range.Step)
+	if err != nil {
+		return field.Invalid(
+			field.NewPath("spec").Child("range").Child("step"),
+			s.Spec.Range.Step,
 			errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
 		)
 	}

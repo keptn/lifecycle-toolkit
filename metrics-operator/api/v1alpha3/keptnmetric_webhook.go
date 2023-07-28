@@ -72,8 +72,8 @@ func (s *KeptnMetric) validateKeptnMetric() error {
 	if err = s.validateRangeStep(); err != nil {
 		allErrs = append(allErrs, err)
 	}
-  if err = s.validateAggregation(); err != nil {
-	  allErrs = append(allErrs, err)
+	if err = s.validateAggregation(); err != nil {
+		allErrs = append(allErrs, err)
 	}
 	if len(allErrs) == 0 {
 		return nil

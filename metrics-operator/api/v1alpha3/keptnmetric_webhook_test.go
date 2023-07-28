@@ -463,8 +463,8 @@ func TestKeptnMetric_validateAggregation(t *testing.T) {
 			verb: "update",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval:    "5m",
-					Step:        "1m",
+					Interval: "5m",
+					Step:     "1m",
 				},
 			},
 			want: apierrors.NewInvalid(

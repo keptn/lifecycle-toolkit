@@ -48,12 +48,10 @@ and release lifecycle management.
 
 ## Basic annotations
 
-The Keptn Lifecycle Toolkit provides the option
-to automatically discover `KeptnApp` resourcess,
-based on the labels or annotations.
-Because of the OpenTelemetry tracing features
-provided by the Keptn Lifecycle Toolkit,
-this enables the observability features for existing applications,
+The Keptn Lifecycle Toolkit automatically discovers `KeptnApp` resources,
+based on the annotations or labels.
+This enables the KLT observability features
+(based on OpenTelemetry) for existing applications,
 without additional Keptn configuration.
 
 KLT monitors your
@@ -65,14 +63,14 @@ and
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 resources in the namespaces where KLT is enabled.
 If KLT finds any of these resources and the resource has either
-the `keptn.sh` or the `kubernetes` recommended labels,
+the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
 [KeptnApp](../../yaml-crd-ref/app)
 resources for the version it detects.
 
-The basic keptn.sh keys that can be used for labels or annotations are:
+The basic keptn.sh keys that can be used for annotations or labels are:
 
 ```yaml
 keptn.sh/workload: myAwesomeWorkload
@@ -83,9 +81,6 @@ keptn.sh/app: myAwesomeAppName
 Alternatively, you can use Kubernete keys for annotations or labels.
 These are part of the Kubernetes
 [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/):
-Alternatively, you can use Kubernete keys for label or annotations.
-These are part of the Kubernetes
-[Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
 
 ```yaml
 app.kubernetes.io/name: myAwesomeWorkload
@@ -181,17 +176,27 @@ that handles pre- and post-deployment evaluations and tasks,
 do the following:
 
 * Define the
+  [KeptnMetric](../../yaml-crd-ref/metric)
+  and
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
-  resource for each evaluation you want.
-  You will also need to define the necessary
+  resources for each evaluation you want.
+  A `KeptnEvaluationDefinition` compares the value
+  of a `KeptnMetric` to the threshold that is specified.
+* You will also need to define the necessary
   [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider)
   and
-  [KeptnMetric](../../yaml-crd-ref/metric)
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.
 * Define a
   [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
   resource for each task you want to execute.
+  `KeptnTaskDefinition`  resources contain re-usable "functions"
+  that can execute before and after the deployment.
+  For example, before the deployment starts,
+  you might run a check for open problems in your infrastructure
+  and invoke a pipeline to run performance tests.
+  The deployment is kept in a pending state
+  until the infrastructure is capable of accepting deployments again.
   See
   [Working with Keptn tasks](../tasks)
   for more information.

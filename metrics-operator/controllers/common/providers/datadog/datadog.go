@@ -27,11 +27,10 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	// Assumed default metric duration as 5 minutes
-	// Think a better way to handle this
-	intervalInMin := 5
-	fromTime := time.Now().Add(time.Duration(-intervalInMin) * time.Minute).Unix()
-	toTime := time.Now().Unix()
+	fromTime, toTime, err := getTimeRange(metric)
+	if err != nil {
+		return "", nil, err
+	}
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
@@ -104,4 +103,18 @@ func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
 		return 0
 	}
 	return sum / float64(count)
+}
+
+func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, error) {
+	var intervalInMin string
+	if metric.Spec.Range != nil {
+		intervalInMin = metric.Spec.Range.Interval
+	} else {
+		intervalInMin = "5m"
+	}
+	intervalDuration, err := time.ParseDuration(intervalInMin)
+	if err != nil {
+		return 0, 0, err
+	}
+	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), nil
 }

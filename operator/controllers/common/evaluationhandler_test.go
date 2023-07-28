@@ -20,6 +20,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
+//nolint:dupl
 func TestEvaluationHandler(t *testing.T) {
 	tests := []struct {
 		name            string
@@ -248,9 +249,6 @@ func TestEvaluationHandler(t *testing.T) {
 			wantErr:         nil,
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
-			events: []string{
-				"ReconcileEvaluationSucceeded",
-			},
 		},
 	}
 

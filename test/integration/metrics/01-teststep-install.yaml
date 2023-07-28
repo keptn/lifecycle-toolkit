@@ -5,6 +5,7 @@ apply:
   - goodmetric2.yaml
   - goodmetric3.yaml
   - goodmetric4.yaml
+  - goodmetric5.yaml
 commands:
-  - command: kubectl apply -f badmetric.yaml
+  - command: kubectl apply -f badmetric1.yaml badmetric2.yaml
     ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test

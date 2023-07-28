@@ -50,6 +50,27 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	}
 }
 
+// EvaluateQueryForStep fetches the SLI values from prometheus provider
+func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
+	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	api := prometheus.NewAPI(client)
+	result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
+	if err != nil {
+		return nil, nil, err
+	}
+	if len(warnings) != 0 {
+		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+	}
+	return getResultForStepMatrix(result, r)
+}
+
 func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
 	queryTime := time.Now().UTC()
 	// Get the duration
@@ -57,18 +78,28 @@ func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, 
 	if err != nil {
 		return nil, nil, err
 	}
+	var stepInterval time.Duration
+	if metric.Spec.Range.Step != "" {
+		stepTime := metric.Spec.Range.Step
+		stepInterval, err = time.ParseDuration(stepTime)
+		if err != nil {
+			return nil, nil, err
+		}
+	} else {
+		stepInterval = queryInterval
+	}
 	// Convert type Duration to type Time
 	startTime := queryTime.Add(-queryInterval).UTC()
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d&step=%v",
 		metric.Spec.Query,
 		startTime.Unix(), queryTime.Unix(),
-		queryInterval,
+		stepInterval,
 	))
 	queryRange := prometheus.Range{
 		Start: startTime,
 		End:   queryTime,
-		Step:  queryInterval,
+		Step:  stepInterval,
 	}
 	result, warnings, err := api.QueryRange(
 		ctx,
@@ -148,4 +179,29 @@ func getResultForVector(result model.Value, r *KeptnPrometheusProvider) (string,
 		return "", nil, err
 	}
 	return value, b, nil
+}
+
+func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]string, []byte, error) {
+	// check if we can cast the result to a matrix
+	resultMatrix, ok := result.(model.Matrix)
+	if !ok {
+		return nil, nil, fmt.Errorf("could not cast result")
+	}
+
+	if len(resultMatrix) == 0 {
+		r.Log.Info("No values in query result")
+		return nil, nil, fmt.Errorf("no values in query result")
+	} else if len(resultMatrix) > 1 {
+		r.Log.Info("Too many values in the query result")
+		return nil, nil, fmt.Errorf("too many values in the query result")
+	}
+	var resultSlice []string
+	for i := 0; i < len(resultMatrix[0].Values); i++ {
+		resultSlice[i] = resultMatrix[0].Values[i].Value.String()
+	}
+	b, err := resultMatrix[0].MarshalJSON()
+	if err != nil {
+		return nil, nil, err
+	}
+	return resultSlice, b, nil
 }

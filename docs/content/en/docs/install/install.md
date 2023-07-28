@@ -181,3 +181,7 @@ to say "show me KLT-enabled namespaces in dev":
 ```
 kubectl get namespaces -l 'keptn.sh/lifecyle-toolkit in (enabled),tier in (dev)'
 ```
+
+After enabling KLT for your namespace(s),
+you are ready to
+[Integrate KLT with your applications](../implementing/integrate).

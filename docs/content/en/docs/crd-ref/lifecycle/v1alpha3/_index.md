@@ -446,8 +446,6 @@ _Appears in:_
 | `objectives` _[Objective](#objective) array_ | Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this KeptnEvaluationDefinition to be successful. |
 
 
-
-
 #### KeptnEvaluationList
 
 
@@ -511,8 +509,6 @@ _Appears in:_
 | --- | --- |
 | `targetServer` _string_ |  |
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
-
-
 
 
 #### KeptnEvaluationSpec

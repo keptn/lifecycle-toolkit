@@ -381,8 +381,6 @@ _Appears in:_
 | `objectives` _[Objective](#objective) array_ |  |
 
 
-
-
 #### KeptnEvaluationList
 
 
@@ -446,8 +444,6 @@ _Appears in:_
 | --- | --- |
 | `targetServer` _string_ |  |
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
-
-
 
 
 #### KeptnEvaluationSpec

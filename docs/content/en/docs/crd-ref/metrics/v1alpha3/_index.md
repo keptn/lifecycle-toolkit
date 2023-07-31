@@ -138,8 +138,6 @@ _Appears in:_
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
 
 
-
-
 #### ProviderRef
 
 

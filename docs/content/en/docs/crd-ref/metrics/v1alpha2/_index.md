@@ -135,8 +135,6 @@ _Appears in:_
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
 
 
-
-
 #### ProviderRef
 
 

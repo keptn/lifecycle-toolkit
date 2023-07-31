@@ -379,8 +379,6 @@ _Appears in:_
 | `objectives` _[Objective](#objective) array_ |  |
 
 
-
-
 #### KeptnEvaluationList
 
 
@@ -444,8 +442,6 @@ _Appears in:_
 | --- | --- |
 | `targetServer` _string_ |  |
 | `secretName` _string_ |  |
-
-
 
 
 #### KeptnEvaluationSpec

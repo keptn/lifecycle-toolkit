@@ -19,7 +19,7 @@ and run pre- and post-deployment tasks.
 In its state, it keeps track of the currently active `Workload Instances`,
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
-which the scheduler can use to determine whether the deployment should proceed.
+which the scheduler can use to determine whether the pods belonging to a workload should proceed.
 When it detects that the referenced object has reached its desired state
 (e.g. all pods of a deployment are up and running),
 it knows that a`PostDeploymentCheck` can be triggered.

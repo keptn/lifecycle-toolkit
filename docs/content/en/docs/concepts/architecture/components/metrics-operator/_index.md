@@ -95,17 +95,15 @@ The steps in which the controller fetches metrics are given below:
 
    ```yaml
    properties:
-         errMsg:
-           description: ErrMsg provides the error details
-                        if the query could not be evaluated
-           type: string
-         lastUpdated:
-           description: LastUpdated shows the time
-                        when the status data was last updated
-           format: date-time
-           type: string
-         rawValue:
-           description: RawValue shows the resulting value, in raw format
-           format: byte
-           type: string
+     errMsg:
+       description: provides error details if the query could not be evaluated
+       type: string
+     lastUpdated:
+       description: time when the status data was last updated
+       format: date-time
+       type: string
+     rawValue:
+       description: shows the resulting value, in raw format
+       format: byte
+       type: string
    ```

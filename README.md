@@ -146,7 +146,7 @@ In this case the webhook does not generate an app,
 but it will expect that the user will provide one.
 The webhook should be as fast as possible
 and should not create/change any resource.
-Additionally, computes a version string,
+Additionally, it computes a version string,
 using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).
 Next, it looks for an existing instance of a `Workload CRD`

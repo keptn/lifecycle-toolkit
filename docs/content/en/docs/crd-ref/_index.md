@@ -30,7 +30,7 @@ Use `kubectl` to inspect the current contents of any Keptn resource:
    in the `namespace1` namespace, the command is:
 
    ```shell
-   kubectl get keptnapp -n namespace1
+   kubectl get keptnapps -n namespace1
    ```
 
 1. Get the current manifest for the specified resource.

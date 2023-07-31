@@ -85,13 +85,14 @@ The steps in which the controller fetches metrics are given below:
    it stores the fetched value
    in the metric status field of the `KeptnMetric` object.
 1. If the evaluation fails,
-   the error and reason is also provided in the metric status.
-   The result is also stored as a raw value
-   so that, if we get something unexpected
-   (such as a forbidden code),
-   the user can also view it there.
+   the error and reason is also provided in the
+   [MetricStatus](../../../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
+   resource.
+   The error is described in human-readable language
+   and as raw data to help identify the source of the problem
+   (such as a forbidden code).
 
-   The metric status field includes the following information:
+   The `MetricStatus` resource includes the following information:
 
    ```yaml
    properties:

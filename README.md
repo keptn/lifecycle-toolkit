@@ -125,8 +125,7 @@ metadata:
     keptn.sh/lifecycle-toolkit: "enabled"  # this line tells the webhook to handle the namespace
 ```
 
-The mutating webhook only modifies resources in the annotated namespace
-that have Keptn annotations.
+The mutating webhook only modifies specifically annotated resources in the annotated namespace.
 When the webhook receives a request for a new pod,
 it looks for the workload annotations:
 

@@ -217,7 +217,7 @@ resource for the data provider you are using.
 
 The queries defined for the Keptn v1 SLIs
 should be translated into
-[KeptnMetric](../../yaml-crd-ref/metric)
+[KeptnMetric](../../yaml-crd-ref/metric.md)
 resources.
 Note that KLT allows you to support multiple data providers
 and multiple instances of each data provider for your SLI's

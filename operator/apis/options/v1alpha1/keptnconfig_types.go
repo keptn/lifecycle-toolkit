@@ -48,7 +48,7 @@ type KeptnConfig struct {
 
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
 	// Status unused field
-	Status metav1.Status
+	Status metav1.Status `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

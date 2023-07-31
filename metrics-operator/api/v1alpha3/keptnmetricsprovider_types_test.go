@@ -12,7 +12,7 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 		TypeMeta   metav1.TypeMeta
 		ObjectMeta metav1.ObjectMeta
 		Spec       KeptnMetricsProviderSpec
-		Status     KeptnMetricsProviderStatus
+		Status     metav1.Status
 	}
 	tests := []struct {
 		name   string
@@ -66,7 +66,7 @@ func TestKeptnMetricsProvider_HasSecretDefined(t *testing.T) {
 		TypeMeta   metav1.TypeMeta
 		ObjectMeta metav1.ObjectMeta
 		Spec       KeptnMetricsProviderSpec
-		Status     KeptnMetricsProviderStatus
+		Status     metav1.Status
 	}
 	tests := []struct {
 		name   string

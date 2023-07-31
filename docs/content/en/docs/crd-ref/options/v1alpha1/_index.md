@@ -33,7 +33,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnConfig`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnConfigSpec](#keptnconfigspec)_ |  |
-| `Status` _[Status](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#status-v1-meta)_ | Status unused field |
+| `status` _[Status](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#status-v1-meta)_ | unused field |
 
 
 #### KeptnConfigList

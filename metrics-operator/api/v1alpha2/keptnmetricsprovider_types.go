@@ -29,10 +29,6 @@ type KeptnMetricsProviderSpec struct {
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
-// KeptnMetricsProviderStatus defines the observed state of KeptnMetricsProvider
-type KeptnMetricsProviderStatus struct {
-}
-
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=keptnmetricsproviders,shortName=kmp
@@ -42,8 +38,9 @@ type KeptnMetricsProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnMetricsProviderSpec   `json:"spec,omitempty"`
-	Status KeptnMetricsProviderStatus `json:"status,omitempty"`
+	Spec KeptnMetricsProviderSpec `json:"spec,omitempty"`
+	// unused field
+	Status metav1.Status `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

@@ -35,12 +35,6 @@ type Objective struct {
 	EvaluationTarget string `json:"evaluationTarget"`
 }
 
-// KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition
-type KeptnEvaluationDefinitionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
@@ -50,8 +44,9 @@ type KeptnEvaluationDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnEvaluationDefinitionSpec   `json:"spec,omitempty"`
-	Status KeptnEvaluationDefinitionStatus `json:"status,omitempty"`
+	Spec KeptnEvaluationDefinitionSpec `json:"spec,omitempty"`
+	// unused field
+	Status metav1.Status `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

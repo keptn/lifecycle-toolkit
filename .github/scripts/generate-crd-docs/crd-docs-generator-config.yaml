@@ -1,7 +1,6 @@
 processor:
   useRawDocstring: true
-  ignoreTypes:
-    - "(KeptnEvaluationDefinition|KeptnMetricsProvider|KeptnEvaluationProvider)Status$"
+  ignoreTypes: []
   ignoreFields:
     - "TypeMeta$"
 

@@ -47,7 +47,7 @@ type KeptnConfig struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
-	// Status unused field
+	// unused field
 	Status metav1.Status `json:"status,omitempty"`
 }
 

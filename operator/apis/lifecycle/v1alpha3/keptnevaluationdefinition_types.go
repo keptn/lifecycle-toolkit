@@ -45,12 +45,6 @@ type KeptnMetricReference struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
-// KeptnEvaluationDefinitionStatus defines the observed state of KeptnEvaluationDefinition.
-type KeptnEvaluationDefinitionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:storageversion
@@ -63,8 +57,8 @@ type KeptnEvaluationDefinition struct {
 
 	// Spec describes the desired state of the KeptnEvaluationDefinition.
 	Spec KeptnEvaluationDefinitionSpec `json:"spec,omitempty"`
-	// Status describes the current state of the KeptnEvaluationDefinition.
-	Status KeptnEvaluationDefinitionStatus `json:"status,omitempty"`
+	// unused field
+	Status metav1.Status `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

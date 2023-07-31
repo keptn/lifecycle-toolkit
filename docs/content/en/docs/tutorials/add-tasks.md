@@ -5,5 +5,13 @@ weight: 10
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-> This tutorial assumes you have already completed the [installation guide](/docs/install/install).
+> This tutorial assumes you have already completed the [getting started guide](../getting-started.md).
 > Please ensure you've finished that before attempting this guide.
+
+# KLT Pre and Post Deployment Tasks
+
+When KLT is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations both pre-deployment (before the pod is scheduled) and post-deployment (after hte post is scheduled).
+
+Go to the [pre and post deployment checks page](../implementing/integrate#pre--and-post-deployment-checks) to find out more.
+
+_! TODO: Move the content from the above page to here. Help us improve the Keptn documentation by [opening an issue](https://github.com/keptn/lifecycle-toolkit/issues/new) to fix this documentation !_

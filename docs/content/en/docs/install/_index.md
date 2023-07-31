@@ -45,7 +45,7 @@ you now need to:
   to integrate the Lifecycle Toolkit into your Kubernetes cluster
   by applying basic annotations to your `Deployment` resource.
   and create appropriate `KeptnApp` resources,
-  each of which aggragates `workloads` for your deployment into a single
+  each of which aggregates all `workloads` of your application into a single
   [KeptnApp](../yaml-crd-ref/app.md) resource.
 
 This section also includes:

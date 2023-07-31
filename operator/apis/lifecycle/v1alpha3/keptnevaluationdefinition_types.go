@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -41,7 +42,7 @@ type ComparisonTarget struct {
 }
 
 type TargetValue struct {
-	FixedValue *float32          `json:"fixedValue,omitempty"`
+	FixedValue *float64          `json:"fixedValue,omitempty"`
 	Comparison *ComparisonTarget `json:"compareValue,omitempty"`
 }
 
@@ -53,6 +54,23 @@ type Target struct {
 	EqualTo            *TargetValue `json:"equalTo,omitempty"`
 }
 
+func (t Target) Evaluate(val float64) TargetResult {
+	result := TargetResult{
+		Target:   t,
+		Violated: false,
+	}
+
+	if t.EqualTo != nil && t.EqualTo.FixedValue != nil {
+		result.Violated = !(*t.EqualTo.FixedValue == val)
+	} else if t.LessThanOrEqual != nil && t.LessThanOrEqual.FixedValue != nil {
+		result.Violated = !(val <= *t.LessThanOrEqual.FixedValue)
+	} else if t.LessThan != nil && t.LessThan.FixedValue != nil {
+		result.Violated = !(val < *t.LessThan.FixedValue)
+	}
+
+	return result
+}
+
 type Criteria struct {
 	// AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass
 	AnyOf []Target `json:"anyOf"`
@@ -60,11 +78,82 @@ type Criteria struct {
 	AllOf []Target `json:"allOf"`
 }
 
+func (c Criteria) Evaluate(val float64) CriteriaResult {
+	result := CriteriaResult{
+		ViolatedTargets: []TargetResult{},
+	}
+
+	if c.AllOf != nil && len(c.AllOf) > 0 {
+		result.Violated = false
+		for _, target := range c.AllOf {
+			targetResult := target.Evaluate(val)
+			if targetResult.Violated {
+				result.Violated = true
+				result.ViolatedTargets = append(result.ViolatedTargets, targetResult)
+			}
+		}
+	} else if c.AnyOf != nil && len(c.AnyOf) > 0 {
+		result.Violated = true
+		for _, target := range c.AllOf {
+			targetResult := target.Evaluate(val)
+			if targetResult.Violated {
+				result.ViolatedTargets = append(result.ViolatedTargets, targetResult)
+			} else {
+				result.Violated = false
+			}
+		}
+	}
+	return result
+}
+
 type CriteriaSet struct {
 	// AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass
 	AnyOf []Criteria `json:"anyOf"`
 	// AllOf contains a list of criteria where all of them need to be successful for the CriteriaSet to pass
 	AllOf []Criteria `json:"allOf"`
+}
+
+type TargetResult struct {
+	Target
+	Violated bool
+}
+
+type CriteriaResult struct {
+	ViolatedTargets []TargetResult
+	Violated        bool
+}
+
+type CriteriaSetResult struct {
+	ViolatedCriteria []CriteriaResult
+	Violated         bool
+}
+
+func (cs CriteriaSet) Evaluate(val float64) CriteriaSetResult {
+	result := CriteriaSetResult{
+		ViolatedCriteria: []CriteriaResult{},
+	}
+
+	if cs.AllOf != nil && len(cs.AllOf) > 0 {
+		result.Violated = false
+		for _, criteria := range cs.AllOf {
+			criteriaResult := criteria.Evaluate(val)
+			if criteriaResult.Violated {
+				result.Violated = true
+				result.ViolatedCriteria = append(result.ViolatedCriteria, criteriaResult)
+			}
+		}
+	} else if cs.AnyOf != nil && len(cs.AnyOf) > 0 {
+		result.Violated = true
+		for _, criteria := range cs.AllOf {
+			criteriaResult := criteria.Evaluate(val)
+			if criteriaResult.Violated {
+				result.ViolatedCriteria = append(result.ViolatedCriteria, criteriaResult)
+			} else {
+				result.Violated = false
+			}
+		}
+	}
+	return result
 }
 
 type SLOTarget struct {
@@ -104,6 +193,45 @@ type Objective struct {
 	Weight int `json:"weight"`
 	// KeyObjective defines if the Objective is mandatory for an KeptnEvaluation to pass
 	KeyObjective bool `json:"keyObjective"`
+}
+
+type ObjectiveResult struct {
+	Value        float64
+	Score        float64
+	KeyObjective bool
+	Error        error
+}
+
+func (obj *Objective) Evaluate(values map[string]float64) ObjectiveResult {
+	result := ObjectiveResult{
+		KeyObjective: obj.KeyObjective,
+		Score:        0.0,
+	}
+	// get the value
+	val, ok := values[obj.KeptnMetricRef.Name]
+	if !ok {
+		result.Error = errors.New("required value not available")
+		return result
+	}
+
+	result.Value = val
+
+	// check 'pass'  criteria
+	passEvaluation := obj.SLOTargets.Pass.Evaluate(val)
+
+	// if pass criteria are successful, we can return without checking 'Warning criteria'
+	if len(passEvaluation.ViolatedCriteria) == 0 {
+		result.Score = float64(obj.Weight)
+		return result
+	}
+
+	warnEvaluation := obj.SLOTargets.Warning.Evaluate(val)
+
+	if len(warnEvaluation.ViolatedCriteria) == 0 {
+		result.Score = float64(obj.Weight) / 2
+	}
+
+	return result
 }
 
 type KeptnMetricReference struct {

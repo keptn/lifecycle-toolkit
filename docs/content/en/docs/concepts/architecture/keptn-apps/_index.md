@@ -54,12 +54,24 @@ Implementing Keptn applications provides the following benefits:
 * You can define post-deployment evaluations and tasks
   that run only after all the workloads have completed successfully.
 
-The `KeptnApp` resources that are generated automatically
-contain the identifications required to run the KLT observability features.
-The `spec.workloads.name` and a `spec.workloads.version` fields
-that define evaluations and tasks to be run
-pre- and post-deployment are not generated automatically
-but must be input manually.
+You control the content of a `KeptnApp` resource
+with annotations or labels that are applied to each
+[Workload](https://kubernetes.io/docs/concepts/workloads/)
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+and
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
+
+* The annotations described in
+  [Basic annotations](../../../implementing/integrate/#basic-annotations)
+  are used to automatically generate `KeptnApp` resources
+  that contain the identifications required
+  to run the KLT observability features.
+* You must manually add the annotations described in
+  [Pre- and post-deployment checks](../../../implementing/integrate/#pre--and-post-deployment-checks)
+  to the basic `KeptnApp` manifest to define
+  the evaluations and tasks you want to run pre- and post-deployment.
 
 By default, the `KeptnApp` resources are updated every 30 seconds
 when any of the Workloads have been modified;

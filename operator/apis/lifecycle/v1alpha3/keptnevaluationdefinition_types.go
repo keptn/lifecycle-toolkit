@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -27,9 +26,9 @@ import (
 // PassThreshold defines the required score for an evaluation to be successful
 type PassThreshold struct {
 	// PassPercentage defines the threshold which needs to be reached for an evaluation to pass.
-	PassPercentage float32 `json:"passPercentage"`
+	PassPercentage float64 `json:"passPercentage"`
 	// WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning'  status.
-	WarningPercentage float32 `json:"passPercentage"`
+	WarningPercentage float64 `json:"passPercentage"`
 }
 
 // ComparisonTarget defines how the target value for a comparison based evaluation is calculated. Only one of its field can be set
@@ -54,60 +53,11 @@ type Target struct {
 	EqualTo            *TargetValue `json:"equalTo,omitempty"`
 }
 
-func (t Target) Evaluate(val float64) TargetResult {
-	result := TargetResult{
-		Target:   t,
-		Violated: false,
-	}
-
-	if t.EqualTo != nil && t.EqualTo.FixedValue != nil {
-		result.Violated = !(*t.EqualTo.FixedValue == val)
-	} else if t.LessThanOrEqual != nil && t.LessThanOrEqual.FixedValue != nil {
-		result.Violated = !(val <= *t.LessThanOrEqual.FixedValue)
-	} else if t.LessThan != nil && t.LessThan.FixedValue != nil {
-		result.Violated = !(val < *t.LessThan.FixedValue)
-	} else if t.GreaterThan != nil && t.GreaterThan.FixedValue != nil {
-		result.Violated = !(val > *t.GreaterThan.FixedValue)
-	} else if t.GreaterThanOrEqual != nil && t.GreaterThanOrEqual.FixedValue != nil {
-		result.Violated = !(val >= *t.GreaterThanOrEqual.FixedValue)
-	}
-
-	return result
-}
-
 type Criteria struct {
 	// AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass
 	AnyOf []Target `json:"anyOf"`
 	// AllOf contains a list of targets where all of them need to be successful for the Criteria to pass
 	AllOf []Target `json:"allOf"`
-}
-
-func (c Criteria) Evaluate(val float64) CriteriaResult {
-	result := CriteriaResult{
-		ViolatedTargets: []TargetResult{},
-	}
-
-	if c.AllOf != nil && len(c.AllOf) > 0 {
-		result.Violated = false
-		for _, target := range c.AllOf {
-			targetResult := target.Evaluate(val)
-			if targetResult.Violated {
-				result.Violated = true
-				result.ViolatedTargets = append(result.ViolatedTargets, targetResult)
-			}
-		}
-	} else if c.AnyOf != nil && len(c.AnyOf) > 0 {
-		result.Violated = true
-		for _, target := range c.AllOf {
-			targetResult := target.Evaluate(val)
-			if targetResult.Violated {
-				result.ViolatedTargets = append(result.ViolatedTargets, targetResult)
-			} else {
-				result.Violated = false
-			}
-		}
-	}
-	return result
 }
 
 type CriteriaSet struct {
@@ -130,34 +80,6 @@ type CriteriaResult struct {
 type CriteriaSetResult struct {
 	ViolatedCriteria []CriteriaResult
 	Violated         bool
-}
-
-func (cs CriteriaSet) Evaluate(val float64) CriteriaSetResult {
-	result := CriteriaSetResult{
-		ViolatedCriteria: []CriteriaResult{},
-	}
-
-	if cs.AllOf != nil && len(cs.AllOf) > 0 {
-		result.Violated = false
-		for _, criteria := range cs.AllOf {
-			criteriaResult := criteria.Evaluate(val)
-			if criteriaResult.Violated {
-				result.Violated = true
-				result.ViolatedCriteria = append(result.ViolatedCriteria, criteriaResult)
-			}
-		}
-	} else if cs.AnyOf != nil && len(cs.AnyOf) > 0 {
-		result.Violated = true
-		for _, criteria := range cs.AllOf {
-			criteriaResult := criteria.Evaluate(val)
-			if criteriaResult.Violated {
-				result.ViolatedCriteria = append(result.ViolatedCriteria, criteriaResult)
-			} else {
-				result.Violated = false
-			}
-		}
-	}
-	return result
 }
 
 type SLOTarget struct {
@@ -204,38 +126,6 @@ type ObjectiveResult struct {
 	Score        float64
 	KeyObjective bool
 	Error        error
-}
-
-func (obj *Objective) Evaluate(values map[string]float64) ObjectiveResult {
-	result := ObjectiveResult{
-		KeyObjective: obj.KeyObjective,
-		Score:        0.0,
-	}
-	// get the value
-	val, ok := values[obj.KeptnMetricRef.Name]
-	if !ok {
-		result.Error = errors.New("required value not available")
-		return result
-	}
-
-	result.Value = val
-
-	// check 'pass'  criteria
-	passEvaluation := obj.SLOTargets.Pass.Evaluate(val)
-
-	// if pass criteria are successful, we can return without checking 'Warning criteria'
-	if len(passEvaluation.ViolatedCriteria) == 0 {
-		result.Score = float64(obj.Weight)
-		return result
-	}
-
-	warnEvaluation := obj.SLOTargets.Warning.Evaluate(val)
-
-	if len(warnEvaluation.ViolatedCriteria) == 0 {
-		result.Score = float64(obj.Weight) / 2
-	}
-
-	return result
 }
 
 type KeptnMetricReference struct {

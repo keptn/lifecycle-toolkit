@@ -14,8 +14,12 @@ type MetricValue struct {
 	Value float64
 }
 
+type AnalysisEvaluator struct {
+	ObjectiveEvaluator IObjectiveEvaluator
+}
+
 type IObjectiveEvaluator interface {
-	Evaluate(values map[string]float32, objective v1alpha3.Objective) v1alpha3.ObjectiveResult
+	Evaluate(values map[string]float64, objective v1alpha3.Objective) v1alpha3.ObjectiveResult
 }
 
 type ICriteriaSetEvaluator interface {
@@ -154,13 +158,40 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]float64, obj v1alpha3.O
 }
 
 type AnalysisResult struct {
+	ObjectiveResults []v1alpha3.ObjectiveResult
+	TotalScore       float64
+	MaximumScore     float64
+	Pass             bool
+	Warning          bool
 }
 
-func EvaluateAnalysis(values map[string]float64, ed v1alpha3.KeptnEvaluationDefinition) (*AnalysisResult, error) {
-	result := &AnalysisResult{}
+func (ae *AnalysisEvaluator) EvaluateAnalysis(values map[string]float64, ed v1alpha3.KeptnEvaluationDefinition) (*AnalysisResult, error) {
+	result := &AnalysisResult{
+		ObjectiveResults: []v1alpha3.ObjectiveResult{},
+	}
 
+	keyObjectiveFailed := false
 	for _, objective := range ed.Spec.Objectives {
-		objective.Evaluate(values)
+		result.MaximumScore += float64(objective.Weight)
+		objectiveResult := ae.ObjectiveEvaluator.Evaluate(values, objective)
+		result.TotalScore += objectiveResult.Score
+		if objectiveResult.Score == 0 && objectiveResult.KeyObjective {
+			keyObjectiveFailed = true
+		}
+		result.ObjectiveResults = append(result.ObjectiveResults, objectiveResult)
+	}
+
+	achievedPercentage := result.TotalScore / result.MaximumScore
+
+	if achievedPercentage >= ed.Spec.TotalScore.PassPercentage {
+		result.Pass = true
+	} else if achievedPercentage >= ed.Spec.TotalScore.WarningPercentage {
+		result.Warning = true
+	}
+
+	if keyObjectiveFailed {
+		result.Pass = false
+		result.Warning = false
 	}
 
 	return result, nil

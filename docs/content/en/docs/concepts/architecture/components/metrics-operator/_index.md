@@ -93,7 +93,7 @@ The steps in which the controller fetches metrics are given below:
 
    The metric status field includes the following information:
 
-   ```
+   ```yaml
    properties:
          errMsg:
            description: ErrMsg provides the error details

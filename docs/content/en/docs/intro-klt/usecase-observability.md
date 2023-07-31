@@ -1,7 +1,7 @@
 ---
 title: Standardize observability
 description: How the KLT standardizes access to observability data for Kubernetes deployments
-weight: 45
+weight: 10
 ---
 
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.

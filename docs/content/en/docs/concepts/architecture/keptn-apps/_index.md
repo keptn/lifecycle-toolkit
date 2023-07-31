@@ -13,7 +13,7 @@ A
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
-It can execute the pre- and post-deployment checks of a Workload
+It can execute the pre- and post-deployment evaluations of a Workload
 and run pre- and post-deployment tasks.
 
 In its state, it keeps track of the currently active `Workload Instances`,

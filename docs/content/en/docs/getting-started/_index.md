@@ -1,7 +1,7 @@
 ---
 title: Getting started
 description: Familiarize yourself with the Keptn Lifecycle Toolkit
-weight: 30
+weight: 20
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

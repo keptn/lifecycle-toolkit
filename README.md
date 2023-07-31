@@ -41,8 +41,6 @@ for information about installing and implementing KLT
 as well as migrating to KLT from
 [Keptn v1](https://keptn.sh/docs/).
 
-<!---x-release-please-end-->
-
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data.
 To install it, follow
@@ -143,9 +141,7 @@ keptn.sh/app: "your-app-name"
 ```
 
 In this case the webhook does not generate an app,
-but it will expect that the user will provide one.
-The webhook should be as fast as possible
-and should not create/change any resource.
+but it expects that the user will provide one.
 Additionally, it computes a version string,
 using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).

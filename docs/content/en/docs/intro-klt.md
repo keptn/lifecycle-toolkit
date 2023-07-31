@@ -2,7 +2,7 @@
 title: Introduction to the Keptn Lifecycle Toolkit
 linktitle: Introduction to the Keptn Lifecycle Toolkit
 description: Understand the Keptn Lifecycle Toolkit
-weight: 05
+weight: 10
 cascade:
   github_subdir: "docs/content/en/docs"
   path_base_for_github_subdir: "/content/en/docs-dev"

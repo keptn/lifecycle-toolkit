@@ -1,225 +1,466 @@
 ---
-title: KLT End-to-end exercise
-description: Implement full deployment orchestration
-weight: 85
+title: Install KLT
+description: Install the Keptn Lifecycle Toolkit
+weight: 10
+hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This page gives instructions for installing the Keptn Lifecycle Toolkit
-and running a simple Keptn application to familiarize yourself
-with how the Keptn Lifecycle Toolkit works and
-implements full deployment orchestration.
-
-You will learn how to do the following:
-
-* Use the Keptn Lifecycle Toolkit to control the deployment of your application
-* Connect the lifecycle-toolkit to Prometheus
-* Use pre-deployment tasks to check if a dependency is met before deploying a workload
-* Use post-deployment tasks on an application level to send a notification
+Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy.
+The following is an imperative walkthrough.
 
 ## Prerequisites
 
-To complete this exercise, you need:
+- A Kubernetes cluster >= 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+  (`kind create cluster`)
+- [Helm](https://helm.io) CLI available
 
-* A Kubernetes cluster running Kubernetes 1.24 or later.
+## Objectives
 
-* [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-installed on your system.
+- Install Keptn Lifecycle Toolkit on your cluster
+- Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
+- View DORA Metrics
+- Install Grafana and Observability tooling to view DORA metrics
 
-You can use an existing cluster
-or you can create a local cluster to use; see
-[Create local Kubernetes cluster](../../install/k8s.md/#create-local-kubernetes-cluster)
-for details.
+## System Overview
 
-Run the following and verify that both client and server versions
-are running Kubernetes versions greater than or equal to v1.24.
-In this example, both client and server are at v1.24.0
-so are appropriate for the Keptn Lifecycle Toolkit.
+By the end of this page, here is what will be built.
+This system will be built in stages.
 
-```shell
-kubectl version --short
-```
+![system overview](/docs/install/assets/install01.png)
 
-The output should look like the following
+## The Basics: A Deployment, Keptn and DORA Metrics
 
-```shell
-Client Version: v1.24.0
-Kustomize Version: v4.5.4
-Server Version: v1.24.0
-```
+Let's start with the basics.
+Here is what we will now build.
 
-## Clone the repository for this exercise
+A deployment will occur.
+Keptn will monitor the deployment and generate:
 
-We provide a repository that contains the sample application
-used in this exercise
-as well as some helper scripts
-that make it easier for you to set up your environment.
-Use the following command to clone this repository:
+- An OpenTelemetry trace per deployment
+- DORA metrics
 
-```shell
-git clone https://github.com/keptn-sandbox/lifecycle-toolkit-examples.git
-cd lifecycle-toolkit-examples
-```
+![the basics](/docs/install/assets/install02.png)
 
-## Install the required observability features
+Notice though that the metrics and traces have nowhere to go.
+That will be fixed in a subsequent step.
 
-The Keptn Lifecycle Toolkit emits OpenTelemetry data as standard
-but the toolkit does not come pre-bundled with observability backend tooling.
-This is deliberate as it provides flexibility
-for you to bring your own observability backend
-that consumes this emitted data.
+## Step 1: Install Keptn Lifecycle Toolkit
 
-In order to use the observability features of the lifecycle toolkit,
-we need a monitoring and tracing backend.
-
-In this guide, we use:
-
-* [Prometheus](https://prometheus.io/) for Metrics
-* [Jaeger](https://jaegertracing.io) for Traces
-* [Grafana](https://github.com/grafana/) for Dashboarding
-
-Install these together with the KLT with the following command:
+Install Keptn Lifecycle Toolkit using Helm:
 
 ```shell
-make install
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-> **Note**
-To export traces to the OpenTelemetry Collector, you need a
- [KeptnConfig](../../yaml-crd-ref/config.md)
- CRD with `spec.OTelCollectorUrl` specified
- in the namespace where KLT is installed.
+Keptn will need to know where to send OpenTelemetry traces.
+Of course, Jaeger is not yet installed so traces have nowhere to go (yet),
+but creating this configuration now means the system is preconfigured.
 
-## The Demo Application
+Save this file as `collectorconfig.yaml`:
 
-For this demonstration, we use a slightly modified version of
-[the PodTatoHead](https://github.com/podtato-head/podtato-head) application.
+```yaml
+---
+apiVersion: options.keptn.sh/v1alpha1
+kind: KeptnConfig
+metadata:
+  name: keptnconfig-sample
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  OTelCollectorUrl: 'jaeger-collector.keptn-lifecycle-toolkit-system.svc.cluster.local:4317'
+  keptnAppCreationRequestTimeoutSeconds: 30
+```
 
-<!-- markdown-link-check-disable-next-line -->
-![img.png](assets/podtatohead.png)
-
-Over time, we will evolve this application
-from a simple manifest to a Keptn-managed application:
-
-* We install it with **kubectl**
-  then add pre- and post-deployment tasks.
-  * For this, we check if the entry service is available
-    before the other services are scheduled.
-* We then add evaluations to ensure
-    that our infrastructure is in good shape before we deploy the application.
-* Finally, we evolve to a GitOps driven deployment
-  and notify an external webhook service when the deployment has finished.
-
-## Install the Demo Application (Version 1)
-
-In the first version of the Demo application,
-the Keptn Lifecycle Toolkit evaluates metrics provided by Prometheus
-and checks if the specified amount of CPUs are available
-before deploying the application
-
-To install it, simply apply the manifest:
+Apply the file and restart KLT to pick up the new config:
 
 ```shell
-make deploy-version-1
+kubectl apply -f collectorconfig.yaml
+kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator
+kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator --watch
+kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l component=scheduler
+kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component=scheduler --watch
 ```
 
-You can watch the progress of the deployment as follows:
+## Create Namespace for Demo Application
 
-### Watch workload state
+Save this file as `namespace.yaml`.
+The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
 
-When the Lifecycle Toolkit detects workload labels
-("app.kubernetes.io/name" or "keptn.sh/workload") on a resource,
-a KeptnWorkloadInstance (kwi) resource is created.
-Using this resource you can watch the progress of the deployment.
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keptndemo
+  annotations:
+    keptn.sh/lifecycle-toolkit: enabled
+```
+
+Create the namespace:
 
 ```shell
-kubectl get keptnworkloadinstances -n podtato-kubectl
+kubectl apply -f namespace.yaml
 ```
 
-This shows the current status of the Workloads
-and in which phase they are at the moment.
-You can get more detailed information about the workloads
-by describing one of the resources:
+## Deploy Demo Application
+
+It is time to deploy the demo application.
+
+Save this manifest as `app.yaml`:
 
 ```shell
-kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: keptndemo
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: keptndemoapp
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/version: 0.0.1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: keptndemo
+spec:
+  selector:
+    app.kubernetes.io/name: nginx
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
 ```
 
-> **Note**
-The event stream of the object contains more detailed information
-
-<details>
-<summary>Watch application state</summary>
-Although you didn't specify an application in your manifest,
-the Lifecycle Toolkit assumes that this is a single-service application
-and creates an ApplicationVersion (kav) resource for you.
-
-Using `kubectl get keptnappversions -n podtato-kubectl`,
-you can see the state of these resources.
-</details>
-
-<details>
-<summary>Watch pods</summary>
-Obviously, you should see that the pods are starting normally.
-You can watch the state of the pods using:
+Now apply:
 
 ```shell
-kubectl get pods -n podtato-kubectl
+kubectl apply -f app.yaml
 ```
 
-</details>
+Keptn looks for these 3 labels:
 
-Furthermore, you can port-forward the podtato-head service
-to your local machine and access the application via your browser:
+- `app.kubernetes.io/part-of`
+- `app.kubernetes.io/name`
+- `app.kubernetes.io/version`
+
+These are [Kubernetes recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/#labels)
+but if you want to use different labels, you can swap for:
+
+- `keptn.sh/app` instead of `app.kubernetes.io/part-of`
+- `keptn.sh/workload` instead of `app.kubernetes.io/name`
+- `keptn.sh/version` instead of `app.kubernetes.io/version`
+
+## Explore Keptn
+
+Keptn is now aware of your deployments and is generating DORA statistics about them.
+
+Keptn has created a CRD to track your application.
+The name of which is based on the `part-of` label.
+
+It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CRD.
 
 ```shell
-make port-forward-grafana
+kubectl -n keptndemo get keptnapp
 ```
 
-In your browser (<http://localhost:3000>),
-log in with the user `admin` and the password `admin`).
-You can open the Dashboard `Keptn Applications`
-and see the current state of the application,
-which should be similar to the following:
-
-<!-- markdown-link-check-disable-next-line -->
-![grafana.png](assets/grafana.png)
-
-In this screen you get the following information:
-
-* Successful/Failed Deployments
-* Time between Deployments
-* Deployment Time per Version
-* The link to the Trace of the deployment
-
-After some time (~60 seconds),
-you should see one more failed deployment in your dashboard.
-You can click on the link to the trace and see the reason for the failure:
-
-<!-- markdown-link-check-disable-next-line -->
-![trace-failed.png](assets/trace-failed.png)
-
-In this case, we see the name of the failed pre-deployment evaluation
-and the reason for the failure.
-In this case, the minimum amount of CPUs is not met.
-This is a problem we can solve by changing the threshold in the evaluation file.
-
-## Install the Demo Application (Version 2)
-
-To achieve this, we changed the operator in the evaluation file
-(sample-app/version-2/app-pre-deploy-eval) from `<` to `>`
-and applied the new manifest:
+Expected output:
 
 ```shell
-kubectl apply -f sample-app/version-2
+NAME           AGE
+keptndemoapp   2s
 ```
 
-After this, you can inspect the new state of the application
-using the same commands as before.
-You should see that the deployment is now successful
-and that the trace is also updated.
-You should also see in the Grafana Dashboards
-that the deployment was successful.
+Keptn also creates a new application version every time you increment the `version` label..
 
-Congratulations!
-You have successfully deployed an application
-using the Keptn Lifecycle Toolkit!
+The `PHASE` will change as the deployment progresses.
+A successful deployment is shown as `PHASE=Completed`
+
+```shell
+kubectl -n keptndemo get keptnappversion
+```
+
+Expected output:
+
+```shell
+NAME                      APPNAME        VERSION   PHASE
+keptndemoapp-0.0.1-***    keptndemoapp   0.0.1     Completed
+```
+
+Keptn can run tasks and SLO evaluations before and after deployment.
+You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
+
+```shell
+kubectl -n keptndemo get keptnappversion -o wide
+```
+
+Keptn applications are a collection of workloads.
+By default, Keptn will build `KeptnApp` CRDs based on the labels you provide.
+
+In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
+
+## View your application
+
+Port-forward to expose your app on `http://localhost:8080`:
+
+```shell
+kubectl -n keptndemo port-forward svc/nginx 8080
+```
+
+You should see the "Welcome to nginx" page.
+
+![nginx demo app](/docs/install/assets/nginx.png)
+
+## View DORA Metrics
+
+Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
+
+These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
+
+To see these raw metrics, port-forward to the lifecycle operator metrics service:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
+```
+
+Access metrics in Prometheus format on `http://localhost:2222/metrics`.
+Look for metrics starting with `keptn_`.
+
+![keptn prometheus metrics](/docs/install/assets/keptnprommetrics.png)
+
+## Make DORA metrics more user friendly
+
+It is much more user friendly to provide dashboards for metrics, logs and traces.
+So let's install new Observability components to help us:
+
+- Cert manager: Jaeger requires cert-manager
+- Jaeger: Store and view DORA deployment traces
+- Prometheus: Store DORA metrics
+- OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
+- Grafana (and some prebuilt dashboards): Visualise the data
+
+![add observability](/docs/install/assets/install01.png)
+
+## Install Cert Manager
+
+Jaeger requires Cert Manager, so install it now:
+
+```shell
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.2/cert-manager.crds.yaml
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/cert-manager --create-namespace --wait
+```
+
+## Install Jaeger
+
+Save this file as `jaeger.yaml`:
+
+```shell
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+spec:
+  strategy: allInOne
+```
+
+Install Jaeger to store and visualise the deployment traces generated by Keptn:
+
+```shell
+kubectl create namespace observability
+kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.46.0/jaeger-operator.yaml -n observability
+kubectl wait --for=condition=available deployment/jaeger-operator -n observability --timeout=300s
+kubectl apply -f jaeger.yaml -n keptn-lifecycle-toolkit-system
+kubectl wait --for=condition=available deployment/jaeger -n keptn-lifecycle-toolkit-system --timeout=300s
+```
+
+Port-forward to access Jaeger:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
+```
+
+Jaeger is available on `http://localhost:16686`
+
+## Install Grafana dashboards
+
+Create some Keptn Grafana dashboards that will be available when Grafana is installed and started:
+
+```shell
+kubectl create ns monitoring
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-applications grafana_dashboard="1"
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-overview grafana_dashboard="1"
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl -n monitoring label cm/grafana-dashboard-keptn-workloads grafana_dashboard="1"
+```
+
+## Install Grafana datasources
+
+This file will configure Grafana to look at the Jaeger service and the Prometheus service on the cluster.
+
+Save this file as `datasources.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  labels:
+    grafana_datasource: "1"
+  name: grafana-datasources
+  namespace: monitoring
+stringData:
+  datasources.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "access": "proxy",
+                "editable": false,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://observability-stack-kube-p-prometheus.monitoring.svc:9090",
+                "version": 1
+            },
+            {
+                "orgId":1,
+                "name":"Jaeger",
+                "type":"jaeger",
+                "typeName":"Jaeger",
+                "typeLogoUrl":"public/app/plugins/datasource/jaeger/img/jaeger_logo.svg",
+                "access":"proxy",
+                "url":"http://jaeger-query.keptn-lifecycle-toolkit-system.svc.cluster.local:16686",
+                "user":"",
+                "database":"",
+                "basicAuth":false,
+                "isDefault":false,
+                "jsonData":{"spanBar":{"type":"None"}},
+                "readOnly":false
+            }
+        ]
+    }
+```
+
+Now apply it:
+
+```shell
+kubectl apply -f datasources.yaml
+```
+
+## Install kube prometheus stack
+
+This will install:
+
+- Prometheus
+- Prometheus Configuration
+- Grafana & default dashboards
+
+Save this file as `values.yaml`:
+
+```yaml
+grafana:
+  adminPassword: admin
+  sidecar.datasources.defaultDatasourceEnabled: false
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: "scrape_klt"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['keptn-klt-lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
+```
+
+```shell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --values=values.yaml --wait
+```
+
+## Access Grafana
+
+```shell
+kubectl -n monitoring port-forward svc/observability-stack-grafana 80
+```
+
+- Grafana username: `admin`
+- Grafana password: `admin`
+
+View the Keptn dashboards at: `http://localhost/dashboards`
+
+Remember that Jaeger and Grafana weren't installed during the first deployment
+so expect the dashboards to look a little empty.
+
+## Deploy v0.0.2 and populate Grafana
+
+By triggering a new deployment, Keptn will track this deployment and the Grafana dashboards will actually have data.
+
+Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2`.
+
+Apply your update:
+
+```shell
+kubectl apply -f app.yaml
+```
+
+After about 30 seconds you should now see two `keptnappversions`:
+
+```shell
+kubectl -n keptndemo get keptnappversion
+```
+
+Expected output:
+
+```shell
+NAME                          APPNAME        VERSION   PHASE
+keptndemoapp-0.0.1-6b86b273   keptndemoapp   0.0.1     Completed
+keptndemoapp-0.0.2-d4735e3a   keptndemoapp   0.0.2     AppDeploy
+```
+
+Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`.
+This signals that the deployment was successful and the pod is running.
+
+View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
+
+![keptn applications dashboard](/docs/install/assets/keptnapplications.png)
+
+![deployment trace](/docs/install/assets/deploymenttrace.png)
+
+## More control over KeptnApp
+
+You may have noticed that the `KeptnApp` Custom Resources are created automatically by KLT.
+
+The lifecycle toolkit automatically groups workloads into `KeptnApp` by looking for matching `part-of` annotations.
+Any workloads with the same `part-of` annotation is said to be `part-of` the same `KeptnApp`.
+
+However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
+In this way, you are in full control of what constitutes a Keptn Application.
+See [Define a Keptn Application](../implementing/integrate/#define-keptnapp-manually) for more information.
+
+## What's next?
+
+Keptn can run pre and post deployment tasks and SLO evaluations automatically.
+
+Continue to Keptn learning journey by [adding deployment tasks](https://example.com).

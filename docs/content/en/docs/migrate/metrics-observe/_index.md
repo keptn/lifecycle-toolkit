@@ -18,7 +18,7 @@ KLT Keptn Metrics and Keptn Evaluations.
 Note that KLT includes additional observability features
 that are not included in Keptn v1 by default:
 
-* [Dora metrics](../../implementing/dora)
+* [DORA metrics](../../implementing/dora)
 * [OpenTelemetry observability](../../implementing/otel.md)
 
 Keptn v1 Quality Gates can be migrated into KLT metrics

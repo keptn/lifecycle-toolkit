@@ -128,7 +128,7 @@ when architecting the migration:
     Note that all `KeptnTask` resources at the same level
     (either pre-deployment or post-deployment)
     execute in parallel
-    where as Keptn v1 sequences and tasks could execute in parallel.
+    whereas Keptn v1 sequences and tasks could execute in parallel.
     If you have actions that need to execute sequentially,
     create a single `KeptnTaskDefinition` that calls each action in order.
     If you have tasks that can execute in parallel,

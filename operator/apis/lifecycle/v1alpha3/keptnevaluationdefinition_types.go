@@ -66,6 +66,10 @@ func (t Target) Evaluate(val float64) TargetResult {
 		result.Violated = !(val <= *t.LessThanOrEqual.FixedValue)
 	} else if t.LessThan != nil && t.LessThan.FixedValue != nil {
 		result.Violated = !(val < *t.LessThan.FixedValue)
+	} else if t.GreaterThan != nil && t.GreaterThan.FixedValue != nil {
+		result.Violated = !(val > *t.GreaterThan.FixedValue)
+	} else if t.GreaterThanOrEqual != nil && t.GreaterThanOrEqual.FixedValue != nil {
+		result.Violated = !(val >= *t.GreaterThanOrEqual.FixedValue)
 	}
 
 	return result

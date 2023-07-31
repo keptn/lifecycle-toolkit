@@ -20,7 +20,7 @@ Keptn APIs follow API versioning conventions recommended by Kubernetes.
 Keptn generates most of the resources it needs
 without requiring manual input.
 [Manifest CRD Reference](../yaml-crd-ref)
-contains reference pages for the few manifests
+contains reference pages for the manifests
 that must be populated manually.
 
 Use `kubectl` to inspect the current contents of any Keptn resource:

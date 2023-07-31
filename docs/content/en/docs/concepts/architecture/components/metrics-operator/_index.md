@@ -57,13 +57,13 @@ of applications running on a Kubenetes cluster.
 
 The **Metrics controller** fetches metrics from an SLI provider.
 The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric.md)
-CR and updates its status with the metric value
+resource and updates its status with the metric value
 provided by the selected metric provider.
 Each `KeptnMetric` is identified by `name`
 and is associated with an instance of an observability platform
 that is defined in a
 [KeptnMetricsProvider](../../../../yaml-crd-ref/metricsprovider.md)
-CR.
+resource.
 
 The steps in which the controller fetches metrics are given below:
 
@@ -82,4 +82,30 @@ The steps in which the controller fetches metrics are given below:
    it loads the provider and evaluates the query
    defined in the `spec.query` field.
 1. If the evaluation is successful,
-   it stores the fetched value in the status of the `KeptnMetric` object.
+   it stores the fetched value
+   in the metric status field of the `KeptnMetric` object.
+1. If the evaluation fails,
+   the error and reason is also provided in the metric status.
+   The result is also stored as a raw value
+   so that, if we get something unexpected
+   (such as a forbidden code),
+   the user can also view it there.
+
+   The metric status field includes the following information:
+
+   ```
+   properties:
+         errMsg:
+           description: ErrMsg provides the error details
+                        if the query could not be evaluated
+           type: string
+         lastUpdated:
+           description: LastUpdated shows the time
+                        when the status data was last updated
+           format: date-time
+           type: string
+         rawValue:
+           description: RawValue shows the resulting value, in raw format
+           format: byte
+           type: string
+   ```

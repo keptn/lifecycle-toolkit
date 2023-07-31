@@ -26,7 +26,7 @@ it knows that a`PostDeploymentCheck` can be triggered.
 
 The KeptnWorkload resources are created automatically
 by the mutating webhook as soon as a pod for the workload
-(i.e. deployment, statefulset, daemonset, replicaset)
+(i.e. `Deployment`, `StatefulSet`, `DaemonSet`, `ReplicaSet`)
 is about to be started.
 The KeptnWorkloads are created automatically and without delay by the webhook.
 

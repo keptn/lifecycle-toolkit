@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const ExtraLongName = "loooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ooooooo01234567891234567890123456789"
@@ -412,6 +413,79 @@ func Test_MergeMaps(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.Equal(t, MergeMaps(tt.In1, tt.In2), tt.Want)
+		})
+	}
+}
+
+func TestIsOwnerSupported(t *testing.T) {
+	type args struct {
+		owner v1.OwnerReference
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "Deployment -> true",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "Deployment",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "DaemonSet-> true",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "DaemonSet",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "ReplicaSet-> true",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "ReplicaSet",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "StatefulSet-> true",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "StatefulSet",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "Rollout-> true",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "Rollout",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "Job-> false",
+			args: args{
+				owner: v1.OwnerReference{
+					Kind: "Job",
+				},
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsOwnerSupported(tt.args.owner); got != tt.want {
+				t.Errorf("IsOwnerSupported() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

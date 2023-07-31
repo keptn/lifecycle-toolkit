@@ -81,6 +81,15 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Allowed("namespace is not enabled for lifecycle controller")
 	}
 
+	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
+
+	if ownerRef.Kind == "" {
+		msg := "owner of pod is not supported by lifecycle controller"
+		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		return admission.Allowed(msg)
+	}
+
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated := a.isPodAnnotated(pod)
@@ -139,7 +148,7 @@ func (a *PodMutatingWebhook) isPodAnnotated(pod *corev1.Pod) bool {
 }
 
 func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
-	podOwner := a.getOwnerReference(&pod.ObjectMeta)
+	podOwner := a.getOwnerReference(pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false
 	}
@@ -152,7 +161,7 @@ func (a *PodMutatingWebhook) copyAnnotationsIfParentAnnotated(ctx context.Contex
 		}
 		a.Log.Info("Done fetching RS")
 
-		rsOwner := a.getOwnerReference(&rs.ObjectMeta)
+		rsOwner := a.getOwnerReference(rs.ObjectMeta)
 		if rsOwner.UID == "" {
 			return false
 		}
@@ -279,12 +288,11 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotCreated", "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadCreated", "created KeptnWorkload", workload.Spec.Version)
 		return nil
 	}
 
@@ -304,12 +312,10 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, "WorkloadNotUpdated", "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendK8sEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
-
-	a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Normal", workload, "WorkloadUpdated", "updated KeptnWorkload", workload.Spec.Version)
 
 	return nil
 }
@@ -333,13 +339,12 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		appCreationRequest = newAppCreationRequest
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
-			logger.Error(err, "Could not create App")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Warning", appCreationRequest, "AppCreationRequestNotCreated", "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			logger.Error(err, "Could not create AppCreationRequest")
+			a.EventSender.SendK8sEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
 
-		a.EventSender.SendK8sEvent(apicommon.PhaseCreateApp, "Normal", appCreationRequest, "AppCreationRequestCreated", "created KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 		return nil
 	}
 
@@ -352,8 +357,8 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 }
 
 func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
-	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	version := a.getVersion(pod)
+	applicationName := a.getAppName(pod)
 
 	var preDeploymentTasks []string
 	var postDeploymentTasks []string
@@ -381,7 +386,7 @@ func (a *PodMutatingWebhook) generateWorkload(ctx context.Context, pod *corev1.P
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	ownerRef := a.getOwnerReference(&pod.ObjectMeta)
+	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	return &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
@@ -441,11 +446,16 @@ func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {
 	return strings.ToLower(applicationName)
 }
 
-func (a *PodMutatingWebhook) getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+func (a *PodMutatingWebhook) getVersion(pod *corev1.Pod) string {
+	version, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	return strings.ToLower(version)
+}
+
+func (a *PodMutatingWebhook) getOwnerReference(resource metav1.ObjectMeta) metav1.OwnerReference {
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
-			if owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout" {
+			if apicommon.IsOwnerSupported(owner) {
 				reference.UID = owner.UID
 				reference.Kind = owner.Kind
 				reference.Name = owner.Name

@@ -73,13 +73,13 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 
 func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
-	r, eventChannel, tracer := setupReconciler()
+	r, _, tracer := setupReconciler()
 
 	tests := []struct {
-		name    string
-		req     ctrl.Request
-		wantErr error
-		event   string //check correct events are generated
+		name           string
+		req            ctrl.Request
+		wantErr        error
+		appVersionName string
 	}{
 		{
 			name: "test simple create appVersion",
@@ -90,7 +90,6 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 				},
 			},
 			wantErr: nil,
-			event:   `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`,
 		},
 		{
 			name: "test simple notfound should not return error nor event",
@@ -131,13 +130,13 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 				t.Errorf("Reconcile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if tt.event != "" {
-				event := <-eventChannel
-				assert.Matches(t, event, tt.event)
+			if tt.appVersionName != "" {
+				keptnappversion := &lfcv1alpha3.KeptnAppVersion{}
+				err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
+				require.Nil(t, err)
 			}
 
 		})
-
 	}
 
 	// check correct traces
@@ -152,7 +151,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 }
 
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
-	r, eventChannel, _ := setupReconciler()
+	r, _, _ := setupReconciler()
 
 	err := controllercommon.AddApp(r.Client, "myapp")
 	require.Nil(t, err)
@@ -166,8 +165,9 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 
 	require.Nil(t, err)
 
-	event := <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-6b86b273, Version: 1.0.0`)
+	keptnappversion := &lfcv1alpha3.KeptnAppVersion{}
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
+	require.Nil(t, err)
 
 	err = controllercommon.UpdateAppRevision(r.Client, "myapp", 2)
 	require.Nil(t, err)
@@ -181,11 +181,12 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 
 	require.Nil(t, err)
 
-	event = <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionCreated Create AppVersion: created KeptnAppVersion / Namespace: default, Name: myapp-1.0.0-d4735e3a, Version: 1.0.0`)
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-d4735e3a"}, keptnappversion)
+	require.Nil(t, err)
 
-	event = <-eventChannel
-	assert.Matches(t, event, `Normal CreateAppVersionAppVersionDeprecated Create AppVersion: deprecated KeptnAppVersions for KeptnAppVersion: myapp-1.0.0-d4735e3a / Namespace: default, Name: myapp, Version: 1.0.0`)
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateDeprecated, keptnappversion.Status.Status)
 }
 
 func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {

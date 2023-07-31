@@ -17,6 +17,7 @@ import (
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -34,7 +35,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 		Log         logr.Logger
 	}
 	type args struct {
-		resource *metav1.ObjectMeta
+		resource metav1.ObjectMeta
 	}
 	tests := []struct {
 		name   string
@@ -45,7 +46,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 		{
 			name: "Test simple return when UID and Kind is set",
 			args: args{
-				resource: &metav1.ObjectMeta{
+				resource: metav1.ObjectMeta{
 					UID: "the-pod-uid",
 					OwnerReferences: []metav1.OwnerReference{
 						{
@@ -65,7 +66,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 		{
 			name: "Test return is input argument if owner is not found",
 			args: args{
-				resource: &metav1.ObjectMeta{
+				resource: metav1.ObjectMeta{
 					UID: "the-pod-uid",
 					OwnerReferences: []metav1.OwnerReference{
 						{
@@ -1007,6 +1008,102 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 	require.True(t, resp.Allowed)
 }
 
+func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
+	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "default",
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	})
+
+	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	decoder, err := admission.NewDecoder(runtime.NewScheme())
+	require.Nil(t, err)
+
+	wh := &PodMutatingWebhook{
+		Client:      fakeClient,
+		Tracer:      tr,
+		Decoder:     decoder,
+		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
+	}
+
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: "default",
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.VersionAnnotation:  "0.1",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: "batchv1",
+					Kind:       "Job",
+					Name:       "my-job",
+					UID:        "1234",
+				},
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "example-container",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+
+	// Convert the Pod object to a byte array
+	podBytes, err := json.Marshal(pod)
+	require.Nil(t, err)
+
+	// Create an AdmissionRequest object
+	request := admissionv1.AdmissionRequest{
+		UID:       "12345",
+		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
+		Operation: admissionv1.Create,
+		Object: runtime.RawExtension{
+			Raw: podBytes,
+		},
+		Namespace: "default",
+	}
+
+	resp := wh.Handle(context.TODO(), admission.Request{
+		AdmissionRequest: request,
+	})
+
+	require.NotNil(t, resp)
+	require.True(t, resp.Allowed)
+
+	// if we get an unsupported owner for the pod, we expect not to have any KLT resources to have been created
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-workload",
+	}, kacr)
+
+	require.NotNil(t, err)
+	require.True(t, errors.IsNotFound(err))
+
+	workload := &klcv1alpha3.KeptnWorkload{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-workload-my-workload",
+	}, workload)
+
+	require.NotNil(t, err)
+	require.True(t, errors.IsNotFound(err))
+}
+
 func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -1267,8 +1364,8 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 			Namespace: "default",
 			Annotations: map[string]string{
 				apicommon.WorkloadAnnotation: "my-workload",
-				apicommon.VersionAnnotation:  "0.1",
-				apicommon.AppAnnotation:      "my-app",
+				apicommon.VersionAnnotation:  "V0.1",
+				apicommon.AppAnnotation:      "my-App",
 			},
 			OwnerReferences: []metav1.OwnerReference{
 				{
@@ -1320,7 +1417,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, "my-app", kacr.Spec.AppName)
+	require.Equal(t, "my-app", kacr.Spec.AppName) // this makes sure that everything is lowercase
 	// here we do not want a single-service annotation
 	require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation])
 
@@ -1335,7 +1432,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
-		Version: "0.1",
+		Version: "v0.1",
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",

@@ -1,7 +1,7 @@
 ---
 title: Manage release lifecycle
 description: How KLT orchestrates pre- and post-deployment evaluations and tasks
-weight: 55
+weight: 20
 ---
 
 In this exercise, we will configure the Keptn Lifecyle Toolkit

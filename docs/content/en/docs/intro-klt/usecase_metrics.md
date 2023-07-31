@@ -1,7 +1,7 @@
 ---
 title: Custom Keptn metrics
 description: Enhance your deployment with custom Keptn metrics
-weight: 25
+weight: 30
 ---
 
 The Custom Keptn metrics component of the Keptn Lifecycle Toolkit

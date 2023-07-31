@@ -135,7 +135,7 @@ keptn.sh/workload: "some-workload-name"
 
 The mutation consists in changing the scheduler used for the deployment
 with the Keptn Scheduler.
-Webhook then creates a workload and app resource per annotated resource.
+The webhook then creates a workload and app resource per annotated resource.
 You can also specify a custom app definition with the annotation:
 
 ```yaml

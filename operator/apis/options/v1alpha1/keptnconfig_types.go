@@ -38,12 +38,6 @@ type KeptnConfigSpec struct {
 	KeptnAppCreationRequestTimeoutSeconds uint `json:"keptnAppCreationRequestTimeoutSeconds,omitempty"`
 }
 
-// KeptnConfigStatus defines the observed state of KeptnConfig
-type KeptnConfigStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
@@ -52,8 +46,8 @@ type KeptnConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnConfigSpec   `json:"spec,omitempty"`
-	Status KeptnConfigStatus `json:"status,omitempty"`
+	Spec   KeptnConfigSpec `json:"spec,omitempty"`
+	Status metav1.Status
 }
 
 // +kubebuilder:object:root=true

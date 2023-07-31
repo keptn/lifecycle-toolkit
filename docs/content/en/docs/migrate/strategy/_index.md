@@ -125,6 +125,15 @@ when architecting the migration:
     that should be translated into `KeptnTaskDefinition` resources
     that are executed pre- and post-deployment.
 
+    Note that all `KeptnTask` resources at the same level
+    (either pre-deployment or post-deployment)
+    execute in parallel
+    where as Keptn v1 sequences and tasks could execute in parallel.
+    If you have actions that need to execute sequentially,
+    create a single `KeptnTaskDefinition` that calls each action in order.
+    If you have tasks that can execute in parallel,
+    migrating to KLT may improve the performance of the deployment.
+
 ### sequence
 
 A sequence is an ordered and user-defined sequence of tasks
@@ -147,7 +156,7 @@ When migrating, these sequences of tasks can often be translated into
 resources that are defined to run either pre- or post-deployment
 of the pod-scheduling phase.
 
-The shipyard file is a general purpose workflow engine
+The `shipyard` file is a general purpose workflow engine
 that is backed by cloud events.
 It is not opinionated to a tool, platform, technology,
 or a particular "slice" of the lifecycle.
@@ -162,7 +171,7 @@ that may or may not have anything to do with an application's lifecycle.
 When migrating to KLT,
 tasks that are not part of the lifecycle workflow
 should not be handled by KLT
-but should instead be handled by pipeline engine tools being used
+but should instead be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
 
 ### task
@@ -211,7 +220,8 @@ should be translated into
 [KeptnMetric](../../yaml-crd-ref/metric)
 resources.
 Note that KLT allows you to support multiple data providers
-and multiple instances of each data provider for your SLI's.
+and multiple instances of each data provider for your SLI's
+whereas Keptn v1 only allows you to use one SLI per project.
 
 ### SLOs
 

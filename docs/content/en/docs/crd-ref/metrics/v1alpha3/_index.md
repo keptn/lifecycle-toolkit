@@ -35,6 +35,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetric`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  |
+| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  |
 
 
 #### KeptnMetricList
@@ -70,6 +71,21 @@ _Appears in:_
 | `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which data is to be queried |
 
 
+#### KeptnMetricStatus
+
+
+
+KeptnMetricStatus defines the observed state of KeptnMetric
+
+_Appears in:_
+- [KeptnMetric](#keptnmetric)
+
+| Field | Description |
+| --- | --- |
+| `value` _string_ | Value represents the resulting value |
+| `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
 #### KeptnMetricsProvider
@@ -87,6 +103,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetricsProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  |
+| `status` _[KeptnMetricsProviderStatus](#keptnmetricsproviderstatus)_ |  |
 
 
 #### KeptnMetricsProviderList

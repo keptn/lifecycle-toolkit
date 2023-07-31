@@ -1,6 +1,6 @@
 ---
-title: Manifest CRD Reference
-description: Reference pages for the manifest YAML files that must be populated
+title: CRD Reference
+description: Reference pages for the manifest files that must be populated
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---

@@ -1,7 +1,7 @@
 ---
 title: Migrating to the Keptn Lifecycle Toolkit
 description: Notes to help you migrate from Keptn v1 to KLT
-weight: 20
+weight: 900
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

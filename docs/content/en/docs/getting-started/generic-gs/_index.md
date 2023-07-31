@@ -1,6 +1,6 @@
 ---
-title: Install KLT
-description: Install the Keptn Lifecycle Toolkit
+title: Getting Started with KLT
+description: Getting started with the Keptn Lifecycle Toolkit
 weight: 10
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---

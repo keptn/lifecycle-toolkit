@@ -13,7 +13,7 @@ import (
 func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	evaluationHandler := controllercommon.EvaluationHandler{
 		Client:      r.Client,
-		Recorder:    r.Recorder,
+		EventSender: r.EventSender,
 		Log:         r.Log,
 		Tracer:      r.getTracer(),
 		Scheme:      r.Scheme,

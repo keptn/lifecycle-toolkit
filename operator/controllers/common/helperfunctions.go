@@ -10,7 +10,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/lifecycle/interfaces"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -40,13 +39,6 @@ func GetOldStatus(name string, statuses []klcv1alpha3.ItemStatus) apicommon.Kept
 	}
 
 	return oldstatus
-}
-
-// RecordEvent creates k8s Event and adds it to Eventqueue
-func RecordEvent(recorder record.EventRecorder, phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, shortReason string, longReason string, version string) {
-	msg := setEventMessage(phase, reconcileObject, longReason, version)
-	annotations := setAnnotations(reconcileObject, phase)
-	recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s%s", phase.ShortName, shortReason), msg)
 }
 
 func setEventMessage(phase apicommon.KeptnPhaseType, reconcileObject client.Object, longReason string, version string) string {

@@ -17,7 +17,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.12.0"
+  CONTROLLER_TOOLS_VERSION: "v0.12.1"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -197,9 +197,15 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: [prepare_ci_run, build_image]
+    needs:
+      - prepare_ci_run
+      - build_image
+    strategy:
+      matrix:
+        helm: [true, false]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      helm-install: ${{ matrix.helm }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

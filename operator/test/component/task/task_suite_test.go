@@ -41,7 +41,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptntask.KeptnTaskReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		Recorder:      k8sManager.GetEventRecorderFor("test-task-controller"),
+		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-task-controller")),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},

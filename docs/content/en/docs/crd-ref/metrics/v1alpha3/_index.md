@@ -149,5 +149,6 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
+| `step` _string_ | Step represents the query resolution step width for the data query |
 
 

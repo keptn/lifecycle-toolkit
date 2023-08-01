@@ -22,7 +22,7 @@ Status of the different features:
   K8s Custom Metrics: expose your Observability platform via the [Keptn Metric API](https://lifecycle.keptn.sh/docs/implementing/evaluatemetrics/)
 - ![status](https://img.shields.io/badge/status-alpha-orange)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
-- ![status](https://img.shields.io/badge/status-beta-yellow)
+- ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates with the
   [Keptn Certificate Manager](https://lifecycle.keptn.sh/docs/concepts/architecture/cert-manager/).
   You can instead
@@ -34,12 +34,50 @@ alpha ![status](https://img.shields.io/badge/status-alpha-orange) )
 beta ![status](https://img.shields.io/badge/status-beta-yellow) )
 stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
+The status follows the [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
+
+For more info about the features, please refer to our [documentation](https://lifecycle.keptn.sh/docs/).
 
 See the Keptn Lifecycle Toolkit
 [documentation](https://lifecycle.keptn.sh/docs/)
 for information about installing and implementing KLT
 as well as migrating to KLT from
 [Keptn v1](https://keptn.sh/docs/).
+=======
+
+
+## Watch the KubeCon 2022 Detroit Demo
+
+Click to watch it on YouTube:
+
+[![Keptn Lifecycle Toolkit in a Nutshell](https://img.youtube.com/vi/K-cvnZ8EtGc/0.jpg)](https://www.youtube.com/watch?v=K-cvnZ8EtGc)
+
+## Deploy the latest release
+
+### Known Limitations
+
+- Kubernetes >=1.24 is needed to deploy the Lifecycle Toolkit
+- The Lifecycle Toolkit is currently not compatible with [vcluster](https://github.com/loft-sh/vcluster)
+
+### Installation
+
+Use the following command sequence to install the latest release of the Keptn Lifecycle Toolkit:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+For installing the Lifecycle Toolkit via manifests use:
+
+<!---x-release-please-start-version-->
+
+```shell
+kubectl apply -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.8.1/manifest.yaml
+```
+
+<!---x-release-please-end-->
 
 The Lifecycle Toolkit uses the OpenTelemetry collector to provide a vendor-agnostic implementation of how to receive,
 process and export telemetry data.

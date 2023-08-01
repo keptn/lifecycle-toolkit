@@ -6,11 +6,11 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
+	metricsapi "github.com/keptn/lifecycle-toolkit/operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
@@ -34,7 +34,8 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 			Namespace: namespace,
 		},
 		Status: metricsapi.KeptnMetricStatus{
-			Value: "10",
+			Value:    "10",
+			RawValue: []byte("10"),
 		},
 	}
 
@@ -102,7 +103,8 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 			Namespace: namespace,
 		},
 		Status: metricsapi.KeptnMetricStatus{
-			Value: "10",
+			Value:    "10",
+			RawValue: []byte("10"),
 		},
 	}
 
@@ -170,7 +172,8 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 			Namespace: namespace,
 		},
 		Status: metricsapi.KeptnMetricStatus{
-			Value: "10",
+			Value:    "10",
+			RawValue: []byte("10"),
 		},
 	}
 
@@ -247,8 +250,6 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		return tr
 	}}
 
-	recorder := record.NewFakeRecorder(100)
-
 	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects(objects...).Build()
 
 	provider := metric.NewMeterProvider()
@@ -258,7 +259,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		Client:        fakeClient,
 		Scheme:        fakeClient.Scheme(),
 		Log:           logr.Logger{},
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(record.NewFakeRecorder(100)),
 		Meters:        controllercommon.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
 	}

@@ -40,7 +40,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnappversion.KeptnAppVersionReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		Recorder:      k8sManager.GetEventRecorderFor("test-appversion-controller"),
+		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		SpanHandler:   &controllercommon.SpanHandler{},

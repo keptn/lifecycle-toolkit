@@ -152,7 +152,7 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 		require.Equal(t, 1, len(r.Header["Authorization"]))
 	}))
 	defer svr.Close()
-	kdp, obj := setupTest()
+	kdp, objects := setupTest()
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -164,11 +164,12 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.True(t, errors.IsNotFound(e))
-	require.Equal(t, []byte(nil), raw)
-	require.Equal(t, "", r)
-
+	for _, obj := range objects {
+		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.True(t, errors.IsNotFound(e))
+		require.Equal(t, []byte(nil), raw)
+		require.Equal(t, "", r)
+	}
 }
 
 func TestEvaluateQuery_APIError(t *testing.T) {
@@ -188,7 +189,7 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	kdp, obj := setupTest(apiToken)
+	kdp, objects := setupTest(apiToken)
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -200,12 +201,14 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.Equal(t, "", r)
-	t.Log(string(raw))
-	require.Equal(t, errorResponse, raw) //we still return the raw answer to help user debug
-	require.NotNil(t, e)
-	require.Contains(t, e.Error(), "Token is missing required scope.")
+	for _, obj := range objects {
+		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.Equal(t, "", r)
+		t.Log(string(raw))
+		require.Equal(t, errorResponse, raw) //we still return the raw answer to help user debug
+		require.NotNil(t, e)
+		require.Contains(t, e.Error(), "Token is missing required scope.")
+	}
 }
 
 func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
@@ -225,7 +228,7 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 		},
 	}
 
-	kdp, obj := setupTest(apiToken)
+	kdp, objects := setupTest(apiToken)
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -237,11 +240,13 @@ func TestEvaluateQuery_WrongPayloadHandling(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.Equal(t, "", r)
-	t.Log(string(raw), e)
-	require.Equal(t, []byte("garbage"), raw) //we still return the raw answer to help user debug
-	require.NotNil(t, e)
+	for _, obj := range objects {
+		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.Equal(t, "", r)
+		t.Log(string(raw), e)
+		require.Equal(t, []byte("garbage"), raw) //we still return the raw answer to help user debug
+		require.NotNil(t, e)
+	}
 }
 
 func TestEvaluateQuery_MissingSecret(t *testing.T) {
@@ -250,16 +255,18 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	kdp, obj := setupTest()
+	kdp, objects := setupTest()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			TargetServer: svr.URL,
 		},
 	}
-	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+	for _, obj := range objects {
+		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.NotNil(t, e)
+		require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+	}
 }
 
 func TestEvaluateQuery_SecretNotFound(t *testing.T) {
@@ -268,7 +275,7 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	kdp, obj := setupTest()
+	kdp, objects := setupTest()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -281,9 +288,11 @@ func TestEvaluateQuery_SecretNotFound(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.NotNil(t, e)
-	require.True(t, errors.IsNotFound(e))
+	for _, obj := range objects {
+		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.NotNil(t, e)
+		require.True(t, errors.IsNotFound(e))
+	}
 }
 
 func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
@@ -302,7 +311,7 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	kdp, obj := setupTest(apiToken)
+	kdp, objects := setupTest(apiToken)
 
 	missingKey := "key_not_found"
 	p := metricsapi.KeptnMetricsProvider{
@@ -316,10 +325,11 @@ func TestEvaluateQuery_RefNotExistingKey(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
-	_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
+	for _, obj := range objects {
+		_, _, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.NotNil(t, e)
+		require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
+	}
 }
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {
@@ -338,7 +348,46 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	kdp, obj := setupTest(apiToken)
+	kdp, objects := setupTest(apiToken)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	for _, obj := range objects {
+		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
+		require.Nil(t, e)
+		require.Equal(t, []byte(dtpayload), raw)
+		require.Equal(t, fmt.Sprintf("%f", 50.0), r)
+	}
+}
+
+func TestEvaluateQuery_HappyPathForTimerange(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		p := r.URL.Query().Get("from")
+		require.NotNil(t, p)
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerange(apiToken)
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -357,7 +406,32 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
 }
 
-func setupTest(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
+func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.KeptnMetric) {
+
+	fakeClient := fake.NewClient(objs...)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	objects := []metricsapi.KeptnMetric{
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "my-query",
+			},
+		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "my-query",
+				Range: &metricsapi.RangeSpec{Interval: "5m"},
+			},
+		},
+	}
+	return kdp, objects
+}
+
+func setupTestForTimerange(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
 
 	fakeClient := fake.NewClient(objs...)
 
@@ -369,6 +443,7 @@ func setupTest(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnM
 	obj := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "my-query",
+			Range: &metricsapi.RangeSpec{Interval: "5m"},
 		},
 	}
 	return kdp, obj

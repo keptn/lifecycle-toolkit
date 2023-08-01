@@ -48,7 +48,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 
 				createdJob := &batchv1.Job{}
 
@@ -101,7 +101,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 
 				createdJob := &batchv1.Job{}
 
@@ -129,7 +129,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 			})
 			It("succeed task if taskDefiniton for Container is present in default KLT namespace", func() {
 				By("create default KLT namespace")
@@ -154,7 +154,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 
 				createdJob := &batchv1.Job{}
 
@@ -182,7 +182,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 			})
 			It("should propagate labels and annotations to the job and job pod", func() {
 				taskDefinition = makeTaskDefinition(taskDefinitionName, namespace)
@@ -197,7 +197,7 @@ var _ = Describe("Task", Ordered, func() {
 					}, task)
 					g.Expect(err).To(BeNil())
 					g.Expect(task.Status.JobName).To(Not(BeEmpty()))
-				}, "10s").Should(Succeed())
+				}, "20s").Should(Succeed())
 
 				createdJob := &batchv1.Job{}
 

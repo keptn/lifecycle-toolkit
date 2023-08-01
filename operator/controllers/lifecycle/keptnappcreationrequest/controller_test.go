@@ -20,6 +20,85 @@ import (
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
+func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(t *testing.T) {
+	r, fakeClient, theClock := setupReconcilerAndClient(t)
+
+	const namespace = "my-namespace"
+	const appName = "my-app"
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "my-kacr",
+			Namespace:         namespace,
+			CreationTimestamp: metav1.Time{Time: theClock.Now()},
+		},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+			AppName: appName,
+		},
+	}
+
+	err := fakeClient.Create(context.TODO(), kacr)
+	require.Nil(t, err)
+
+	workload1 := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "w1",
+			Namespace: namespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: appName,
+			Version: "1.0+rc0",
+		},
+	}
+
+	err = fakeClient.Create(context.TODO(), workload1)
+	require.Nil(t, err)
+
+	request := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: kacr.Namespace,
+			Name:      kacr.Name,
+		},
+	}
+	// invoke the first reconciliation
+	res, err := r.Reconcile(context.TODO(), request)
+
+	require.Nil(t, err)
+	require.Equal(t, 30*time.Second, res.RequeueAfter)
+
+	// turn the clock forward
+	theClock.Add(1 * time.Minute)
+
+	// reconcile again - now we should get a KeptnApp as a result
+	res, err = r.Reconcile(context.TODO(), request)
+
+	require.Nil(t, err)
+	require.False(t, res.Requeue)
+	require.Zero(t, res.RequeueAfter)
+
+	kApp := &klcv1alpha3.KeptnApp{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, kApp)
+
+	require.NotEmpty(t, kApp.Spec.Version)
+	// the App version is the same of the single workload
+	require.Equal(t, workload1.Spec.Version, kApp.Spec.Version)
+	require.Len(t, kApp.Spec.Workloads, 1)
+	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+		Name:    workload1.Name,
+		Version: workload1.Spec.Version,
+	})
+
+	// verify that the creationRequest has been deleted
+	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
+
+	require.True(t, errors.IsNotFound(err))
+}
+
 func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 

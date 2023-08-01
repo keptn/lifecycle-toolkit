@@ -45,7 +45,7 @@ Note that Hugo updates the rendered documentation each time you write the file.
 
 1. Enter the following in a browser to view the website:
 
-    `http://localhost:1314/docs-dev/`
+    `http://localhost:1314`
 
    > **Note**
    By default, Hugo serves the local docs on port 1313.

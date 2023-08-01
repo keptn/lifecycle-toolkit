@@ -1,4 +1,4 @@
 apiVersion: kuttl.dev/v1
 kind: TestStep
 commands:
-  - script: ./verify-tasks.sh
+  - script: ../common-scripts/verify-number-of-resources.sh "job" "1"

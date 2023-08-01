@@ -46,7 +46,7 @@ spec:
      Each objective is expressed as a `keptnMetricRef`
      and an `evaluationTarget` value.
 
-    * **KeptnMericRef** -- A reference to the
+    * **KeptnMetricRef** -- A reference to the
       [KeptnMetric](metric.md) object that contains the value,
       identified by `name` and `namespace`
     * **evaluationTarget** -- Desired value of the query,

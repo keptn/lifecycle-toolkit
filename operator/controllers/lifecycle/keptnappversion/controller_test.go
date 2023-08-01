@@ -11,9 +11,9 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/operator/controllers/common/fake"
-	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -50,11 +50,14 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			wantErr: nil,
 			events: []string{
 				`AppPreDeployTasksStarted`,
-				`AppPreDeployTasksSucceeded`,
-				`AppPreDeployEvaluationsSucceeded`,
-				`AppDeploySucceeded`,
-				`AppPostDeployTasksSucceeded`,
-				`AppPostDeployEvaluationsSucceeded`,
+				`AppPreDeployTasksFinished`,
+				`AppPreDeployEvaluationsStarted`,
+				`AppPreDeployEvaluationsFinished`,
+				`AppDeployStarted`,
+				`AppDeployFinished`,
+				`AppPostDeployTasksStarted`,
+				`AppPostDeployTasksFinished`,
+				`AppPostDeployEvaluationsStarted`,
 				`AppPostDeployEvaluationsFinished`,
 			},
 			startTrace: true,
@@ -69,25 +72,21 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			},
 			wantErr: nil,
 		},
-		{
-			name: "existing appVersion has finished",
-			req: ctrl.Request{
-				NamespacedName: types.NamespacedName{
-					Namespace: "default",
-					Name:      "myfinishedapp-1.0.0",
-				},
-			},
-			wantErr:    nil,
-			events:     []string{`AppPostDeployEvaluationsFinished`},
-			startTrace: true,
-		},
+	}
+
+	pendingStatus := lfcv1alpha3.KeptnAppVersionStatus{
+		CurrentPhase:                   "",
+		Status:                         apicommon.StatePending,
+		PreDeploymentStatus:            apicommon.StatePending,
+		PreDeploymentEvaluationStatus:  apicommon.StatePending,
+		WorkloadOverallStatus:          apicommon.StatePending,
+		PostDeploymentStatus:           apicommon.StatePending,
+		PostDeploymentEvaluationStatus: apicommon.StatePending,
 	}
 
 	//setting up fakeclient CRD data
 
-	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StatePending})
-	require.Nil(t, err)
-	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, pendingStatus)
 	require.Nil(t, err)
 
 	traces := 0
@@ -102,22 +101,133 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			if tt.events != nil {
 				for _, e := range tt.events {
 					event := <-eventChannel
-					assert.Equal(t, strings.Contains(event, tt.req.Name), true, "wrong appversion")
-					assert.Equal(t, strings.Contains(event, tt.req.Namespace), true, "wrong namespace")
-					assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+					require.Equal(t, strings.Contains(event, tt.req.Name), true, "wrong appversion")
+					require.Equal(t, strings.Contains(event, tt.req.Namespace), true, "wrong namespace")
+					require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 				}
 
 			}
 			if tt.startTrace {
 				//A different trace for each app-version
-				assert.Equal(t, tracer.StartCalls()[traces].SpanName, "reconcile_app_version")
-				assert.Equal(t, tracer.StartCalls()[traces].Ctx.Value(CONTEXTID), tt.req.Name)
+				require.Equal(t, tracer.StartCalls()[traces].SpanName, "reconcile_app_version")
+				require.Equal(t, tracer.StartCalls()[traces].Ctx.Value(CONTEXTID), tt.req.Name)
 				traces++
 			}
 		})
 
 	}
 
+}
+
+func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
+	r, eventChannel, tracer, _ := setupReconciler()
+
+	status := lfcv1alpha3.KeptnAppVersionStatus{
+		CurrentPhase:        apicommon.PhaseAppPreDeployment.ShortName,
+		Status:              apicommon.StateProgressing,
+		PreDeploymentStatus: apicommon.StateProgressing,
+		PreDeploymentTaskStatus: []lfcv1alpha3.ItemStatus{
+			{
+				Name:           "pre-task",
+				DefinitionName: "task",
+				Status:         apicommon.StateFailed,
+			},
+		},
+		PreDeploymentEvaluationStatus:  apicommon.StatePending,
+		WorkloadOverallStatus:          apicommon.StatePending,
+		PostDeploymentStatus:           apicommon.StatePending,
+		PostDeploymentEvaluationStatus: apicommon.StatePending,
+	}
+
+	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
+	app := &lfcv1alpha3.KeptnAppVersion{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       appVersionName,
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1alpha3.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1alpha3.KeptnAppSpec{
+				Version: "1.0.0",
+				PreDeploymentTasks: []string{
+					"task",
+				},
+			},
+			AppName: "myapp",
+			TraceId: map[string]string{
+				"traceparent": "parent-trace",
+			},
+		},
+		Status: status,
+	}
+	err := r.Client.Create(context.TODO(), app)
+	require.Nil(t, err)
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	expectedEvents := []string{
+		"AppPreDeployTasksFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
+		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
+	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
+
+	require.Nil(t, err)
+
+	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
+}
+
+func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
+	r, eventChannel, tracer, _ := setupReconciler()
+
+	err := controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	require.Nil(t, err)
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myfinishedapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	expectedEvents := []string{
+		"CompletedFinished",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
+		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
+	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
+
+	require.Nil(t, err)
+
+	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
 }
 
 func createFinishedAppVersionStatus() lfcv1alpha3.KeptnAppVersionStatus {
@@ -198,7 +308,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	r := &KeptnAppVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		Recorder:      recorder,
+		EventSender:   controllercommon.NewEventSender(recorder),
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,

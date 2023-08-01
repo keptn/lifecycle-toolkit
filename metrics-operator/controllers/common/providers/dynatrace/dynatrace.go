@@ -95,6 +95,56 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 	return r, b, nil
 }
 
+func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
+	query := url.QueryEscape(metric.Spec.Query)
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "/" + metric.Spec.Range.Step
+
+	d.Log.Info("Running query: " + qURL)
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+	if err != nil {
+		d.Log.Error(err, "Error while creating request")
+		return nil, nil, err
+	}
+
+	token, err := getDTSecret(ctx, provider, d.K8sClient)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req.Header.Set("Authorization", "Api-Token "+token)
+	res, err := d.HttpClient.Do(req)
+
+	if err != nil {
+		d.Log.Error(err, "Error while creating request")
+		return nil, nil, err
+	}
+	defer func() {
+		err := res.Body.Close()
+		if err != nil {
+			d.Log.Error(err, "Could not close request body")
+		}
+	}()
+
+	// we ignore the error here because we fail later while unmarshalling
+	b, _ := io.ReadAll(res.Body)
+	result := DynatraceResponse{}
+	err = json.Unmarshal(b, &result)
+	if err != nil {
+		d.Log.Error(err, "Error while parsing response")
+		return nil, b, err
+	}
+	if !reflect.DeepEqual(result.Error, Error{}) {
+		err = fmt.Errorf(ErrAPIMsg, result.Error.Message)
+		d.Log.Error(err, "Error from Dynatrace provider")
+		return nil, b, err
+	}
+	r := d.getResultSlice(result)
+	return r, b, nil
+}
+
 func (d *KeptnDynatraceProvider) normalizeAPIURL(url string) string {
 	out := url
 	if !strings.HasSuffix(out, "/") {
@@ -124,4 +174,16 @@ func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float6
 		return 0
 	}
 	return sum / float64(count)
+}
+
+func (d *KeptnDynatraceProvider) getResultSlice(result DynatraceResponse) []string {
+	var resultSlice []string
+	for _, r := range result.Result {
+		for _, points := range r.Data {
+			for i, v := range points.Values {
+				resultSlice[i] = fmt.Sprintf("%f", v)
+			}
+		}
+	}
+	return resultSlice
 }

@@ -406,6 +406,44 @@ func TestEvaluateQuery_HappyPathForTimerange(t *testing.T) {
 	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
 }
 
+func TestEvaluateQuery_HappyPathForTimerangeWithStep(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		p := r.URL.Query().Get("from")
+		require.NotNil(t, p)
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Nil(t, e)
+	require.Equal(t, []byte(dtpayload), raw)
+	require.Equal(t, []string{"50","50","50","50","50"}, r)
+}
+
+
 func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.KeptnMetric) {
 
 	fakeClient := fake.NewClient(objs...)
@@ -444,6 +482,28 @@ func setupTestForTimerange(objs ...client.Object) (KeptnDynatraceProvider, metri
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "my-query",
 			Range: &metricsapi.RangeSpec{Interval: "5m"},
+		},
+	}
+	return kdp, obj
+}
+
+func setupTestForTimerangeWithStep(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
+
+	fakeClient := fake.NewClient(objs...)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	obj := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "my-query",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+				Step: "1m",
+				Aggregation: "max",
+			},
 		},
 	}
 	return kdp, obj

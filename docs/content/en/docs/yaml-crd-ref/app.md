@@ -124,7 +124,7 @@ A `KeptnApp` resource is created automatically, using the
 [automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 feature to generate a `KeptnApp` resource
 based on the
-[basic annotations](../../implementing/integrate/#basic-annotations)
+[basic annotations](../implementing/integrate/#basic-annotations)
 that are applied to any of the workload resources.
 This allows you to use the KLT observability features for existing resources
 without manually populating any Keptn related resources.

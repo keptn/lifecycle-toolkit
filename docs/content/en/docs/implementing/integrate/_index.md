@@ -139,23 +139,23 @@ Both annotations and labels are can be attached to Kubernetes objects.
 Some key differences between the two:
 
 * Annotations
-  - Are not used to identify and select objects
-  - Can contain up to 262144 chars
-  - Metadata in an annotation can be small or large,
+  * Are not used to identify and select objects
+  * Can contain up to 262144 chars
+  * Metadata in an annotation can be small or large,
     structured or unstructured,
     and can include characters not permitted by labels
 
 * Labels
-  - Can be used to select objects
+  * Can be used to select objects
     and to find collections of objects that satisfy certain conditions
-  - Can contain up to 63 chars
-  - Are appropriate for identifying attributes of objects
+  * Can contain up to 63 chars
+  * Are appropriate for identifying attributes of objects
     that are meaningful and relevant to users
     but do not directly imply semantics to the core system
 
 Annotations take precedence over labels,
-and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys. 
-In other words: 
+and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys.
+In other words:
 
 * The operator first checks if the `keptn.sh/` key is present
   in the annotations, and then in the labels.

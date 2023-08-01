@@ -24,3 +24,34 @@ func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) v1alpha3.Tar
 
 	return result
 }
+
+type Target struct {
+	v1alpha3.Target
+}
+
+func (t *Target) Evaluate(val float64) v1alpha3.TargetResult {
+	result := v1alpha3.TargetResult{
+		Target:   t.Target,
+		Violated: false,
+	}
+
+	if t.EqualTo != nil && t.EqualTo.FixedValue != nil {
+		result.Violated = !(*t.EqualTo.FixedValue == val)
+	} else if t.LessThanOrEqual != nil && t.LessThanOrEqual.FixedValue != nil {
+		result.Violated = !(val <= *t.LessThanOrEqual.FixedValue)
+	} else if t.LessThan != nil && t.LessThan.FixedValue != nil {
+		result.Violated = !(val < *t.LessThan.FixedValue)
+	} else if t.GreaterThan != nil && t.GreaterThan.FixedValue != nil {
+		result.Violated = !(val > *t.GreaterThan.FixedValue)
+	} else if t.GreaterThanOrEqual != nil && t.GreaterThanOrEqual.FixedValue != nil {
+		result.Violated = !(val >= *t.GreaterThanOrEqual.FixedValue)
+	}
+
+	return result
+}
+
+type TargetFactory struct{}
+
+func (TargetFactory) GetTarget(target v1alpha3.Target) ITarget {
+	return &Target{Target: target}
+}

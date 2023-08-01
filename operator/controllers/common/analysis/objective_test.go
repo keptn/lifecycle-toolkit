@@ -56,7 +56,6 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Value:        10.0,
 				Score:        2,
 				KeyObjective: false,
-				Error:        nil,
 			},
 		},
 	}

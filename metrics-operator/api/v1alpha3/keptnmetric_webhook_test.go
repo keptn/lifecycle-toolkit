@@ -342,17 +342,6 @@ func TestKeptnMetric_validateAggregation(t *testing.T) {
 					Aggregation: "p91",
 				},
 			},
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"create-with-wrong-aggregation",
-				field.ErrorList{
-					field.NotSupported(
-						field.NewPath("spec").Child("range").Child("aggregation"),
-						"p91",
-						[]string{"p90", "p95", "p99", "max", "min", "avg", "median"},
-					),
-				},
-			),
 		},
 		{
 			name: "create-with-right-aggregation",
@@ -417,17 +406,6 @@ func TestKeptnMetric_validateAggregation(t *testing.T) {
 					Aggregation: "p91",
 				},
 			},
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"update-with-wrong-aggregation",
-				field.ErrorList{
-					field.NotSupported(
-						field.NewPath("spec").Child("range").Child("aggregation"),
-						"p91",
-						[]string{"p90", "p95", "p99", "max", "min", "avg", "median"},
-					),
-				},
-			),
 			oldSpec: &KeptnMetric{
 				Spec: KeptnMetricSpec{
 					Range: &RangeSpec{

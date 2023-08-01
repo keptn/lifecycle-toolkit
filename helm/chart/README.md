@@ -94,7 +94,7 @@ checks
 | `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime <!---x-release-please-version-->   | `ghcr.io/keptn/functions-runtime:v0.8.1` |
 | `lifecycleOperator.manager.env.pythonRunnerImage`                             | specify image for python task runtime <!---x-release-please-version--> | `ghcr.io/keptn/python-runtime:v0.8.1`    |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                                     | `ghcr.io/keptn/lifecycle-operator`       |
-| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image <!---x-release-please-version-->          | `v0.8.1`                                 |
+| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                                           | `v0.8.1`                                 |
 | `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                                  | `Always`                                 |
 | `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container                             |                                          |
 | `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container                            |                                          |

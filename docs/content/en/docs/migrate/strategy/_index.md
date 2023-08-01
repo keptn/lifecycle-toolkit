@@ -20,7 +20,7 @@ but must be rewritten to utilize KLT components.
 
 ## How many namespaces?
 
-You have significan flexibility to decide how many namespaces to use
+You have significant flexibility to decide how many namespaces to use
 and how to set them up.
 See the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)

@@ -18,7 +18,8 @@ generate-configmaps:
 	kubectl create configmap grafana-dashboard-keptn-overview -n monitoring --from-file=./grafana_dashboard_overview.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-overview.yaml
 	kubectl create configmap grafana-dashboard-keptn-applications -n monitoring --from-file=./grafana_dashboard_applications.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-applications.yaml
 	kubectl create configmap grafana-dashboard-keptn-workloads -n monitoring --from-file=./grafana_dashboard_workloads.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-workloads.yaml
-	cp configmap/* ../../examples/support/observability/config/prometheus
+	kubectl apply -f /configmap
+	#cp configmap/* ../../examples/support/observability/config/prometheus
 
 .PHONY: import
 import:

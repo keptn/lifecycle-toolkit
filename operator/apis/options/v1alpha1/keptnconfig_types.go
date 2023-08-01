@@ -38,6 +38,8 @@ type KeptnConfigSpec struct {
 	KeptnAppCreationRequestTimeoutSeconds uint `json:"keptnAppCreationRequestTimeoutSeconds,omitempty"`
 }
 
+type EmptyStatus struct{}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
@@ -48,7 +50,7 @@ type KeptnConfig struct {
 
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
 	// unused field
-	Status metav1.Status `json:"status,omitempty"`
+	Status EmptyStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

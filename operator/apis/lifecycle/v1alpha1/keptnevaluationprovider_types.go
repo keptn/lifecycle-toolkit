@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha1/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,7 +41,7 @@ type KeptnEvaluationProvider struct {
 
 	Spec KeptnEvaluationProviderSpec `json:"spec,omitempty"`
 	// unused field
-	Status metav1.Status `json:"status,omitempty"`
+	Status common.EmptyStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -29,6 +29,8 @@ type KeptnMetricsProviderSpec struct {
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
+type EmptyStatus struct{}
+
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=keptnmetricsproviders,shortName=kmp
@@ -40,7 +42,7 @@ type KeptnMetricsProvider struct {
 
 	Spec KeptnMetricsProviderSpec `json:"spec,omitempty"`
 	// unused field
-	Status metav1.Status `json:"status,omitempty"`
+	Status EmptyStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

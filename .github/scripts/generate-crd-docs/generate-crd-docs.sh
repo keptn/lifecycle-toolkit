@@ -28,6 +28,7 @@ fi
 echo "Running CRD docs auto-generator..."
 
 for api_group in "$OPERATOR_API_ROOT"*; do
+
   sanitized_api_group="${api_group#$OPERATOR_API_ROOT}"
   INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
 
@@ -39,7 +40,6 @@ for api_group in "$OPERATOR_API_ROOT"*; do
     envsubst < './.github/scripts/generate-crd-docs/templates/index-template.md' > "$INDEX_PATH"
     unset API_GROUP
   fi
-
   for api_version in "$api_group"/*; do
     sanitized_api_version="${api_version#$OPERATOR_API_ROOT$sanitized_api_group/}"
 
@@ -69,6 +69,8 @@ for api_group in "$OPERATOR_API_ROOT"*; do
 done
 
 # Metrics API
+
+
 sanitized_api_group="metrics"
 INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
 
@@ -83,7 +85,6 @@ fi
 
 for api_version in "$METRICS_API_ROOT"*; do
   sanitized_api_version="${api_version#$METRICS_API_ROOT}"
-
   OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
 
   echo "Arguments:"

@@ -20,6 +20,8 @@ Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API gr
 
 
 
+
+
 #### KeptnMetric
 
 
@@ -103,7 +105,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetricsProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  |
-| `status` _[Status](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#status-v1-meta)_ | unused field |
+| `status` _[EmptyStatus](#emptystatus)_ | unused field |
 
 
 #### KeptnMetricsProviderList

@@ -209,7 +209,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnAppCreationRequest`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppCreationRequestSpec](#keptnappcreationrequestspec)_ | Spec describes the desired state of the KeptnAppCreationRequest. |
-| `status` _[KeptnAppCreationRequestStatus](#keptnappcreationrequeststatus)_ | Status describes the current state of the KeptnAppCreationRequest. |
+| `status` _[EmptyStatus](#emptystatus)_ | Status describes the current state of the KeptnAppCreationRequest. |
 
 
 #### KeptnAppCreationRequestList
@@ -240,8 +240,6 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `appName` _string_ | AppName is the name of the KeptnApp the KeptnAppCreationRequest should create if no user-defined object with that name is found. |
-
-
 
 
 #### KeptnAppList
@@ -413,7 +411,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationDefinition`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ | Spec describes the desired state of the KeptnEvaluationDefinition. |
-| `status` _[Status](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#status-v1-meta)_ | unused field |
+| `status` _[EmptyStatus](#emptystatus)_ | unused field |
 
 
 #### KeptnEvaluationDefinitionList
@@ -477,7 +475,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
-| `status` _[Status](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#status-v1-meta)_ | unused field |
+| `status` _[EmptyStatus](#emptystatus)_ | unused field |
 
 
 #### KeptnEvaluationProviderList

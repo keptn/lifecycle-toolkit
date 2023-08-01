@@ -106,10 +106,10 @@ These keys are defined as:
    are consolidated into the same `KeptnApp` resource.
 
 KLT automatically generates appropriate
-[KeptnApp](../../../yaml-crd-ref/app.md)
+[KeptnApp](../../yaml-crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
-annotation/label is poulated:
+annotation/label is populated:
 
 * If either of these annotations/labels are populated,
   KLT automatically generates a `KeptnApp` resource

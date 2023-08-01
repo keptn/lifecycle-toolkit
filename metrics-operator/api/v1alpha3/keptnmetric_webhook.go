@@ -121,7 +121,7 @@ func (s *KeptnMetric) validateAggregation() *field.Error {
 	if s.Spec.Range.Step != "" && s.Spec.Range.Aggregation == "" {
 		return field.Required(
 			field.NewPath("spec").Child("range").Child("aggregation"),
-			errors.New("Aggregation field is required if defining the step field").Error(),
+			errors.New("Forbidden! Aggregation field is required if defining the step field").Error(),
 		)
 	}
 	if s.Spec.Range.Step == "" && s.Spec.Range.Aggregation != "" {

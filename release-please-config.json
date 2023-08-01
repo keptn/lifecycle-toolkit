@@ -12,13 +12,12 @@
       "prerelease": false,
       "monorepo-tags": "klt",
       "draft": false,
-      "exclude-paths": ["klt-cert-manager", "metrics-operator"],
+      "exclude-paths": ["klt-cert-manager", "lifecycle-operator", "metrics-operator"],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
         "helm/chart/Chart.yaml",
         "Makefile",
-        "operator/Makefile",
         "scheduler/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
@@ -30,6 +29,17 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "cert-manager",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
+      ]
+    },
+    "lifecycle-operator": {
+      "package-name": "lifecycle-operator",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "lifecycle-operator",
       "prerelease": false,
       "draft": false,
       "extra-files": [

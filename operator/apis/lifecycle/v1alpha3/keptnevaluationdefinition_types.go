@@ -122,10 +122,12 @@ type Objective struct {
 }
 
 type ObjectiveResult struct {
-	Value        float64
-	Score        float64
-	KeyObjective bool
-	Error        error
+	PassResult    CriteriaSetResult
+	WarningResult CriteriaSetResult
+	Value         float64
+	Score         float64
+	KeyObjective  bool
+	Error         error
 }
 
 type KeptnMetricReference struct {

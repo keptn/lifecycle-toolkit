@@ -43,8 +43,7 @@ resources that it uses to provide observability
 and release lifecycle management.
 
 > Note: Annotations are not required if you are only using the
-  `metrics-operator` component of KLT
-  to observe Keptn metrics.
+  `metrics-operator` component of KLT to observe Keptn metrics.
 
 ## Basic annotations
 

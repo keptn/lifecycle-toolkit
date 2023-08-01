@@ -136,7 +136,7 @@
 ## @param   lifecycleOperator.manager.env.pythonRunnerImage specify image for python task runtime <!---x-release-please-version-->
 
 ## @param   lifecycleOperator.manager.image.repository specify registry for manager image
-## @param   lifecycleOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.image.tag  select tag for manager image
 ## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image
 
 ## @extra  lifecycleOperator.manager.livenessProbe custom livenessprobe for manager container

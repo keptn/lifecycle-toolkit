@@ -175,7 +175,7 @@ that handles pre- and post-deployment evaluations and tasks,
 do the following:
 
 * Define the
-  [KeptnMetric](../../yaml-crd-ref/metric)
+  [KeptnMetric](../../yaml-crd-ref/metric.md)
   and
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
   resources for each evaluation you want.

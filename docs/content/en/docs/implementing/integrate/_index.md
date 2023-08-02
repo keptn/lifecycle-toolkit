@@ -25,7 +25,7 @@ To integrate KLT with your applications:
 * You must first
 [install](../../install/install.md)
 and
-[enable](../../install/install//#enable-klt-for-your-cluster)
+[enable](../../install/install.md/#enable-klt-for-your-cluster)
 KLT.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.

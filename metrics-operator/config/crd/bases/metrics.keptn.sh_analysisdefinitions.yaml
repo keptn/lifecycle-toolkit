@@ -1,0 +1,487 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.0
+  name: analysisdefinitions.metrics.keptn.sh
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisDefinition
+    listKind: AnalysisDefinitionList
+    plural: analysisdefinitions
+    singular: analysisdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisDefinition is the Schema for the analysisdefinitions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
+            properties:
+              objective:
+                items:
+                  description: Objective defines a list of objectives
+                  properties:
+                    analysisTemplateRef:
+                      description: AnalysisTemplateRef defines a reference to the
+                        used AnalysisTemplate
+                      properties:
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      required:
+                      - name
+                      - namespace
+                      type: object
+                    keyObjective:
+                      default: false
+                      description: KeyObjective defines the meaning that the analysis
+                        fails if the objective is not met
+                      type: boolean
+                    sloTargets:
+                      description: SLOTargets defines a list of SLOTargests
+                      properties:
+                        pass:
+                          description: Pass defines limit up to which an evaluation
+                            is successful
+                          properties:
+                            allOf:
+                              description: AllOf contains a list of targets where
+                                all of them need to be successful for the Criteria
+                                to pass
+                              items:
+                                properties:
+                                  allOf:
+                                    description: AllOf contains a list of criteria
+                                      where all of them need to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                  anyOf:
+                                    description: AnyOf contains a list of criteria
+                                      where any of them needs to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                type: object
+                              type: array
+                            anyOf:
+                              description: AnyOf contains a list of targets where
+                                any of them needs to be successful for the Criteria
+                                to pass
+                              items:
+                                properties:
+                                  allOf:
+                                    description: AllOf contains a list of criteria
+                                      where all of them need to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                  anyOf:
+                                    description: AnyOf contains a list of criteria
+                                      where any of them needs to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                type: object
+                              type: array
+                          type: object
+                        warning:
+                          description: Warning defines the border where the result
+                            is not pass and not fail
+                          properties:
+                            allOf:
+                              description: AllOf contains a list of targets where
+                                all of them need to be successful for the Criteria
+                                to pass
+                              items:
+                                properties:
+                                  allOf:
+                                    description: AllOf contains a list of criteria
+                                      where all of them need to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                  anyOf:
+                                    description: AnyOf contains a list of criteria
+                                      where any of them needs to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                type: object
+                              type: array
+                            anyOf:
+                              description: AnyOf contains a list of targets where
+                                any of them needs to be successful for the Criteria
+                                to pass
+                              items:
+                                properties:
+                                  allOf:
+                                    description: AllOf contains a list of criteria
+                                      where all of them need to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                  anyOf:
+                                    description: AnyOf contains a list of criteria
+                                      where any of them needs to be successful for
+                                      the CriteriaSet to pass
+                                    items:
+                                      properties:
+                                        equalTo:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        greaterThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThan:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                        lessThanOrEqual:
+                                          properties:
+                                            fixedValue:
+                                              type: integer
+                                          required:
+                                          - fixedValue
+                                          type: object
+                                      type: object
+                                    type: array
+                                type: object
+                              type: array
+                          type: object
+                      required:
+                      - pass
+                      type: object
+                    weight:
+                      default: 1
+                      description: Weigeht defines the importance of one SLI over
+                        the others
+                      type: integer
+                  required:
+                  - analysisTemplateRef
+                  - sloTargets
+                  type: object
+                type: array
+              totalScore:
+                description: Score defines the required score for an evaluation to
+                  be successful
+                properties:
+                  passPercentage:
+                    description: PassPercentage defines the threshold which needs
+                      to be reached for an evaluation to pass.
+                    type: integer
+                  warningPercentage:
+                    description: WarningPercentage defines the threshold which needs
+                      to be reached for an evaluation to pass with a 'warning' status.
+                    type: integer
+                required:
+                - passPercentage
+                - warningPercentage
+                type: object
+            required:
+            - totalScore
+            type: object
+          status:
+            description: AnalysisDefinitionStatus defines the observed state of AnalysisDefinition
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

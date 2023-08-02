@@ -1,0 +1,24 @@
+# permissions for end users to edit analysisdefinitions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: analysisdefinition-editor-role
+rules:
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisdefinitions/status
+  verbs:
+  - get

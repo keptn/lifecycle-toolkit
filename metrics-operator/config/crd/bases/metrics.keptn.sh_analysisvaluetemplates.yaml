@@ -1,0 +1,63 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.0
+  name: analysisvaluetemplates.metrics.keptn.sh
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisValueTemplate
+    listKind: AnalysisValueTemplateList
+    plural: analysisvaluetemplates
+    singular: analysisvaluetemplate
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisValueTemplate is the Schema for the analysisvaluetemplates
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec contains the specification for the AnalysisValueTemplate
+            properties:
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run. It can include
+                  placeholders that are defined using the go template syntax (https://pkg.go.dev/text/template).
+                type: string
+            required:
+            - provider
+            - query
+            type: object
+          status:
+            description: AnalysisValueTemplateStatus defines the observed state of
+              AnalysisValueTemplate
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

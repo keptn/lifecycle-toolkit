@@ -4,6 +4,7 @@
 resources:
   - bases/metrics.keptn.sh_keptnmetricsproviders.yaml
   - bases/metrics.keptn.sh_keptnmetrics.yaml
+  - bases/metrics.keptn.sh_analysisvaluetemplates.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

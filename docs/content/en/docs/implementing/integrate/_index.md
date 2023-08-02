@@ -187,7 +187,7 @@ do the following:
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.
 * Define a
-  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
   resource for each task you want to execute.
   `KeptnTaskDefinition`  resources contain re-usable "functions"
   that can execute before and after the deployment.

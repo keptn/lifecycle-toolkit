@@ -23,7 +23,7 @@ to identify the workloads of interest.
 To integrate KLT with your applications:
 
 * You must first
-[install](../../install/install)
+[install](../../install/install.md)
 and
 [enable](../../install/install//#enable-klt-for-your-cluster)
 KLT.

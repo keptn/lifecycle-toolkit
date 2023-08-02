@@ -16,6 +16,7 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.12.1"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
+  PUBLISHABLE_ITEMS: '[".", "operator", "klt-cert-manager"]'
 
 jobs:
   release-please:
@@ -50,63 +51,20 @@ jobs:
           echo "Anything to release:          ${{ steps.release.outputs.releases_created }}"
           echo "Paths to be released:         ${{ steps.release.outputs.paths_released }}"
 
-      - name: Create build matrix
+      - name: Create release matrix
         id: build-matrix
         uses: actions/github-script@v6
         env:
-          RELEASE_KLT: ${{ steps.release.outputs.release_created }}
-          RELEASE_CERT_MANAGER: ${{ steps.release.outputs.klt-cert-manager--release_created }}
-          RELEASE_METRICS_OPERATOR: ${{ steps.release.outputs.metrics-operator--release_created }}
-          KLT_TAG: ${{ steps.release.outputs.tag_name }}
-          CERT_MANAGER_TAG: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
-          METRICS_OPERATOR_TAG: ${{ steps.release.outputs.metrics-operator--tag_name }}
+          CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
         with:
           script: |
-            const { RELEASE_KLT, RELEASE_CERT_MANAGER, RELEASE_METRICS_OPERATOR, KLT_TAG, CERT_MANAGER_TAG, METRICS_OPERATOR_TAG } = process.env
-
-            var result = []
-            if (RELEASE_KLT === "true") {
-              result.push(...[
-                {
-                    name: "lifecycle-operator",
-                    folder: "lifecycle-operator/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "scheduler",
-                    folder: "scheduler/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "functions-runtime",
-                    folder: "functions-runtime/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "python-runtime",
-                    folder: "python-runtime/",
-                    tagName: KLT_TAG
-                }
-              ])
-            }
-
-            if (RELEASE_CERT_MANAGER === "true") {
-              result.push({
-                  name: "certificate-operator",
-                  folder: "klt-cert-manager/",
-                  tagName: CERT_MANAGER_TAG
-              })
-            }
-
-            if (RELEASE_METRICS_OPERATOR === "true") {
-              result.push({
-                  name: "metrics-operator",
-                  folder: "metrics-operator/",
-                  tagName: METRICS_OPERATOR_TAG
-              })
-            }
-
-            return { config: result }
+            const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');
+            console.log("changed items", changedItems);
+            const eligibleItems = JSON.parse(process.env.PUBLISHABLE_ITEMS || '[]');
+            console.log("eligible items", eligibleItems);
+            const itemsToPublish = changedItems.filter(i => eligibleItems.includes(i));
+            console.log("items to publish", itemsToPublish);
+            return itemsToPublish;
 
   build-release:
     if: needs.release-please.outputs.releases-created == 'true'

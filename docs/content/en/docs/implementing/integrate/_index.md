@@ -182,7 +182,7 @@ do the following:
   A `KeptnEvaluationDefinition` compares the value
   of a `KeptnMetric` to the threshold that is specified.
 * You will also need to define the necessary
-  [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider)
+  [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
   and
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.

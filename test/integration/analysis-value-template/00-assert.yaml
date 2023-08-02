@@ -1,0 +1,4 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: analysisvaluetemplate-sample

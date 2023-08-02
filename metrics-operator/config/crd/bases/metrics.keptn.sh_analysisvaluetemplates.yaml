@@ -14,7 +14,14 @@ spec:
     singular: analysisvaluetemplate
   scope: Namespaced
   versions:
-  - name: v1alpha3
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    name: v1alpha3
     schema:
       openAPIV3Schema:
         description: AnalysisValueTemplate is the Schema for the analysisvaluetemplates

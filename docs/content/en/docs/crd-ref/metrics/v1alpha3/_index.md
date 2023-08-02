@@ -13,10 +13,63 @@ description: Reference information for metrics.keptn.sh/v1alpha3
 Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API group
 
 ### Resource Types
+- [AnalysisValueTemplate](#analysisvaluetemplate)
+- [AnalysisValueTemplateList](#analysisvaluetemplatelist)
 - [KeptnMetric](#keptnmetric)
 - [KeptnMetricList](#keptnmetriclist)
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
+
+
+
+#### AnalysisValueTemplate
+
+
+
+AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
+
+_Appears in:_
+- [AnalysisValueTemplateList](#analysisvaluetemplatelist)
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `AnalysisValueTemplate`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[AnalysisValueTemplateSpec](#analysisvaluetemplatespec)_ | Spec contains the specification for the AnalysisValueTemplate |
+| `status` _[AnalysisValueTemplateStatus](#analysisvaluetemplatestatus)_ |  |
+
+
+#### AnalysisValueTemplateList
+
+
+
+AnalysisValueTemplateList contains a list of AnalysisValueTemplate
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `AnalysisValueTemplateList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[AnalysisValueTemplate](#analysisvaluetemplate) array_ |  |
+
+
+#### AnalysisValueTemplateSpec
+
+
+
+AnalysisValueTemplateSpec defines the desired state of AnalysisValueTemplate
+
+_Appears in:_
+- [AnalysisValueTemplate](#analysisvaluetemplate)
+
+| Field | Description |
+| --- | --- |
+| `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object |
+| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax (https://pkg.go.dev/text/template). |
+
 
 
 
@@ -147,6 +200,7 @@ _Appears in:_
 ProviderRef represents the provider object
 
 _Appears in:_
+- [AnalysisValueTemplateSpec](#analysisvaluetemplatespec)
 - [KeptnMetricSpec](#keptnmetricspec)
 
 | Field | Description |

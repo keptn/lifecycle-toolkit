@@ -32,12 +32,6 @@ type AnalysisValueTemplateSpec struct {
 	Query string `json:"query"`
 }
 
-// AnalysisValueTemplateStatus defines the observed state of AnalysisValueTemplate
-type AnalysisValueTemplateStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
@@ -49,8 +43,8 @@ type AnalysisValueTemplate struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec contains the specification for the AnalysisValueTemplate
-	Spec   AnalysisValueTemplateSpec   `json:"spec,omitempty"`
-	Status AnalysisValueTemplateStatus `json:"status,omitempty"`
+	Spec   AnalysisValueTemplateSpec `json:"spec,omitempty"`
+	Status EmptyStatus               `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

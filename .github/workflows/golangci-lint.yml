@@ -28,7 +28,7 @@ jobs:
       matrix:
         config:
           - name: "lifecycle-operator"
-            folder: "operator/"
+            folder: "lifecycle-operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"

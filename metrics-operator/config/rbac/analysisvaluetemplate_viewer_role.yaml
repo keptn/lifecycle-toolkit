@@ -2,26 +2,19 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: analysisvaluetemplate-viewer-role
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: metrics-operator
-    app.kubernetes.io/part-of: metrics-operator
-    app.kubernetes.io/managed-by: kustomize
   name: analysisvaluetemplate-viewer-role
 rules:
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - analysisvaluetemplates
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - analysisvaluetemplates/status
-  verbs:
-  - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates/status
+    verbs:
+      - get

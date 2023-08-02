@@ -131,7 +131,7 @@ spec:
   version: "latest"
   workloads:
   - name: podtato-head-left-arm
-    version: "myvers12.5"
+    version: "my_vers12.5"
   - name: podtato-head-left-leg
     version: "my_v24"
   postDeploymentTasks:

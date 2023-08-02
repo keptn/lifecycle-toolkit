@@ -44,7 +44,6 @@ func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 						Key: "my-secret-key",
 					},
 				},
-				Status: v1alpha3.KeptnEvaluationProviderStatus{},
 			},
 			wantErr: false,
 			wantObj: &KeptnEvaluationProvider{
@@ -76,7 +75,6 @@ func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
 				Spec:       KeptnEvaluationProviderSpec{},
-				Status:     KeptnEvaluationProviderStatus{},
 			}
 			if err := dst.ConvertFrom(tt.srcObj); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertFrom() error = %v, wantErr %v", err, tt.wantErr)
@@ -121,7 +119,6 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 						Key: "apiToken",
 					},
 				},
-				Status: KeptnEvaluationProviderStatus{},
 			},
 			wantErr: false,
 			wantObj: &v1alpha3.KeptnEvaluationProvider{
@@ -144,7 +141,6 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 						Key: "apiToken",
 					},
 				},
-				Status: v1alpha3.KeptnEvaluationProviderStatus{},
 			},
 		},
 	}
@@ -154,7 +150,6 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
 				Spec:       v1alpha3.KeptnEvaluationProviderSpec{},
-				Status:     v1alpha3.KeptnEvaluationProviderStatus{},
 			}
 			if err := tt.src.ConvertTo(&dst); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertTo() error = %v, wantErr %v", err, tt.wantErr)
@@ -170,12 +165,7 @@ func TestKeptnEvalProvider_ConvertFrom_Errorcase(t *testing.T) {
 	// A random different object is used here to simulate a different API version
 	testObj := v2.ExternalJob{}
 
-	dst := &KeptnEvaluationProvider{
-		TypeMeta:   v1.TypeMeta{},
-		ObjectMeta: v1.ObjectMeta{},
-		Spec:       KeptnEvaluationProviderSpec{},
-		Status:     KeptnEvaluationProviderStatus{},
-	}
+	dst := &KeptnEvaluationProvider{}
 
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)

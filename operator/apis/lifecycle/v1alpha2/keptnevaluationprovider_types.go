@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"strings"
 
+	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -32,12 +33,6 @@ type KeptnEvaluationProviderSpec struct {
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
-// KeptnEvaluationProviderStatus defines the observed state of KeptnEvaluationProvider
-type KeptnEvaluationProviderStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnevaluationproviders,shortName=kep
@@ -47,8 +42,9 @@ type KeptnEvaluationProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnEvaluationProviderSpec   `json:"spec,omitempty"`
-	Status KeptnEvaluationProviderStatus `json:"status,omitempty"`
+	Spec KeptnEvaluationProviderSpec `json:"spec,omitempty"`
+	// unused field
+	Status common.EmptyStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

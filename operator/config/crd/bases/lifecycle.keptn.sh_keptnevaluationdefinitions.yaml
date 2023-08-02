@@ -60,8 +60,7 @@ spec:
             - source
             type: object
           status:
-            description: KeptnEvaluationDefinitionStatus defines the observed state
-              of KeptnEvaluationDefinition
+            description: unused field
             type: object
         type: object
     served: true
@@ -112,8 +111,7 @@ spec:
             - source
             type: object
           status:
-            description: KeptnEvaluationDefinitionStatus defines the observed state
-              of KeptnEvaluationDefinition
+            description: unused field
             type: object
         type: object
     served: true
@@ -175,7 +173,7 @@ spec:
             - objectives
             type: object
           status:
-            description: Status describes the current state of the KeptnEvaluationDefinition.
+            description: unused field
             type: object
         type: object
     served: true

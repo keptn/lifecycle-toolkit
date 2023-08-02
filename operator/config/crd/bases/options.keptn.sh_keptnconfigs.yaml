@@ -46,7 +46,7 @@ spec:
                 type: integer
             type: object
           status:
-            description: KeptnConfigStatus defines the observed state of KeptnConfig
+            description: unused field
             type: object
         type: object
     served: true

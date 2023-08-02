@@ -1,9 +1,9 @@
 processor:
   useRawDocstring: true
-  ignoreTypes: []
+  ignoreTypes:
+    - "nomatch" # this needs to be in place as a workaround to avoid generation bugs
   ignoreFields:
-    - "status$"
     - "TypeMeta$"
-
+    - "EmptyStatus$"
 render:
   kubernetesVersion: 1.24

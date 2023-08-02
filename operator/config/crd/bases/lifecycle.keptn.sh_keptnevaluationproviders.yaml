@@ -46,8 +46,7 @@ spec:
             - targetServer
             type: object
           status:
-            description: KeptnEvaluationProviderStatus defines the observed state
-              of KeptnEvaluationProvider
+            description: unused field
             type: object
         type: object
     served: true
@@ -100,8 +99,7 @@ spec:
             - targetServer
             type: object
           status:
-            description: KeptnEvaluationProviderStatus defines the observed state
-              of KeptnEvaluationProvider
+            description: unused field
             type: object
         type: object
     served: true
@@ -154,8 +152,7 @@ spec:
             - targetServer
             type: object
           status:
-            description: KeptnEvaluationProviderStatus defines the observed state
-              of KeptnEvaluationProvider
+            description: unused field
             type: object
         type: object
     served: true

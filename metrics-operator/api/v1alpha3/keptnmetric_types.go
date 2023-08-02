@@ -33,8 +33,6 @@ type KeptnMetricSpec struct {
 	FetchIntervalSeconds uint `json:"fetchIntervalSeconds"`
 	// Range represents the time range for which data is to be queried
 	Range *RangeSpec `json:"range,omitempty"`
-	// Foo is a new field
-	Foo string `json:"foo"`
 }
 
 // KeptnMetricStatus defines the observed state of KeptnMetric

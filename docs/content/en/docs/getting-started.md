@@ -46,7 +46,7 @@ That will be fixed in a subsequent step.
 
 ## Step 1: Install Keptn Lifecycle Toolkit
 
-Install Keptn Lifecycle Toolkit using Helm:
+Install the Keptn Lifecycle Toolkit using Helm:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh

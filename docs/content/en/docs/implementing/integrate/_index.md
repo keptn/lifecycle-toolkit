@@ -177,7 +177,7 @@ do the following:
 * Define the
   [KeptnMetric](../../yaml-crd-ref/metric.md)
   and
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
   resources for each evaluation you want.
   A `KeptnEvaluationDefinition` compares the value
   of a `KeptnMetric` to the threshold that is specified.

@@ -208,7 +208,7 @@ do the following:
   to include each evaluation and task you want run
   for specific workloads.
 * Manually edit all
-  [KeptnApp](../../yaml-crd-ref/app) resources
+  [KeptnApp](../../yaml-crd-ref/app.md) resources
   to specify evaluations and tasks to be run for the `KeptnApp`.
 
 These annotations do not affect `KeptnApp` resources.

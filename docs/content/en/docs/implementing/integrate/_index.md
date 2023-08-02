@@ -66,7 +66,7 @@ the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
-[KeptnApp](../../yaml-crd-ref/app)
+[KeptnApp](../../yaml-crd-ref/app.md)
 resources for the version it detects.
 
 The basic keptn.sh keys that can be used for annotations or labels are:

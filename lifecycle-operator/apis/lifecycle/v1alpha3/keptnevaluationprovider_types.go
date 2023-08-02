@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -31,9 +30,9 @@ type KeptnEvaluationProviderSpec struct {
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:storageversion
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
+// +kubebuilder:subresource:status
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
 type KeptnEvaluationProvider struct {
@@ -42,10 +41,10 @@ type KeptnEvaluationProvider struct {
 
 	Spec KeptnEvaluationProviderSpec `json:"spec,omitempty"`
 	// unused field
-	Status common.EmptyStatus `json:"status,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
 type KeptnEvaluationProviderList struct {

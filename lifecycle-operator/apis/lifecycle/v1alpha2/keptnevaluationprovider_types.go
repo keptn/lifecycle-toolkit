@@ -19,7 +19,6 @@ package v1alpha2
 import (
 	"strings"
 
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha2/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -44,7 +43,7 @@ type KeptnEvaluationProvider struct {
 
 	Spec KeptnEvaluationProviderSpec `json:"spec,omitempty"`
 	// unused field
-	Status common.EmptyStatus `json:"status,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

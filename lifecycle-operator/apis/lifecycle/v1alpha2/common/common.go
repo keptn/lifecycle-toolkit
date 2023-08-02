@@ -36,8 +36,6 @@ var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha3")
 var ErrCannotCastKeptnWorkloadInstance = errors.New("cannot cast KeptnWorkloadInstance to v1alpha3")
 var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot cast KeptnEvaluationDefinition to v1alpha3")
 
-type EmptyStatus struct{}
-
 type KeptnState string
 
 const (

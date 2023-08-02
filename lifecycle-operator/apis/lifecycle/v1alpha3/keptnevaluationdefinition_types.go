@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"github.com/keptn/lifecycle-toolkit/operator/apis/lifecycle/v1alpha3/common"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -46,10 +45,10 @@ type KeptnMetricReference struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:storageversion
-//+kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
+// +kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
 
 // KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
 type KeptnEvaluationDefinition struct {
@@ -59,10 +58,10 @@ type KeptnEvaluationDefinition struct {
 	// Spec describes the desired state of the KeptnEvaluationDefinition.
 	Spec KeptnEvaluationDefinitionSpec `json:"spec,omitempty"`
 	// unused field
-	Status common.EmptyStatus `json:"status,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionList struct {

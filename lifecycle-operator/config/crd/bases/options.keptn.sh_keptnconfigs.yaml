@@ -47,7 +47,7 @@ spec:
             type: object
           status:
             description: unused field
-            type: object
+            type: string
         type: object
     served: true
     storage: true

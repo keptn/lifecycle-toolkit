@@ -1,7 +1,7 @@
 processor:
   useRawDocstring: true
   ignoreTypes:
-    - "nomatch" # this needs to be in place as a workaround to avoid generation bugs
+    - "EmptyStatus$"
   ignoreFields:
     - "TypeMeta$"
     - "EmptyStatus$"

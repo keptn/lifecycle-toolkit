@@ -32,8 +32,8 @@ type KeptnAppCreationRequestSpec struct {
 	AppName string `json:"appName"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API
 type KeptnAppCreationRequest struct {
@@ -43,10 +43,10 @@ type KeptnAppCreationRequest struct {
 	// Spec describes the desired state of the KeptnAppCreationRequest.
 	Spec KeptnAppCreationRequestSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnAppCreationRequest.
-	Status common.EmptyStatus `json:"status,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // KeptnAppCreationRequestList contains a list of KeptnAppCreationRequest
 type KeptnAppCreationRequestList struct {

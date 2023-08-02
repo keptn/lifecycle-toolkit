@@ -44,7 +44,7 @@ spec:
             type: object
           status:
             description: Status describes the current state of the KeptnAppCreationRequest.
-            type: object
+            type: string
         type: object
     served: true
     storage: true

@@ -34,8 +34,6 @@ const AppTypeAnnotation = "keptn.sh/app-type"
 const MinKLTNameLen = 80
 const MaxK8sObjectLength = 253
 
-type EmptyStatus struct{}
-
 type AppType string
 
 const (

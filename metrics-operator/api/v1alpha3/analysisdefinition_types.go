@@ -40,7 +40,7 @@ type Objective struct {
 	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// SLOTargets defines a list of SLOTargests
-	SLOTargets *SLOTarget `json:"sloTargets,omitempty"`
+	SLOTargets SLOTarget `json:"sloTargets,omitempty"`
 	// Weigeht defines the importance of one SLI over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`

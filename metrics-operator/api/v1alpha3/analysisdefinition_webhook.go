@@ -72,10 +72,6 @@ func (r *AnalysisDefinition) ValidateDelete() error {
 }
 
 func (o *Objective) validate() error {
-	if o.SLOTargets == nil {
-		return nil
-	}
-
 	if o.SLOTargets.Pass == nil && o.SLOTargets.Warning != nil {
 		return fmt.Errorf("Warning criteria cannot be set without Pass criteria")
 	}

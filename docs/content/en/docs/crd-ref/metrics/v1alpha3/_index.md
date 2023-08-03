@@ -37,7 +37,7 @@ _Appears in:_
 | `kind` _string_ | `AnalysisDefinition`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[AnalysisDefinitionSpec](#analysisdefinitionspec)_ |  |
-| `status` _[AnalysisDefinitionStatus](#analysisdefinitionstatus)_ |  |
+| `status` _string_ | unused field |
 
 
 #### AnalysisDefinitionList
@@ -69,8 +69,6 @@ _Appears in:_
 | --- | --- |
 | `objectives` _[Objective](#objective) array_ |  |
 | `totalScore` _[Score](#score)_ |  |
-
-
 
 
 #### Criteria
@@ -322,6 +320,6 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `fixedValue` _integer_ |  |
+| `fixedValue` _Quantity_ |  |
 
 

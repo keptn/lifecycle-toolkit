@@ -63,14 +63,14 @@ func TestObjective_validate(t *testing.T) {
 		{
 			name: "neither pass nor warning set",
 			obj: Objective{
-				SLOTargets: &SLOTarget{},
+				SLOTargets: SLOTarget{},
 			},
 			wantErr: nil,
 		},
 		{
 			name: "only pass set",
 			obj: Objective{
-				SLOTargets: &SLOTarget{
+				SLOTargets: SLOTarget{
 					Pass: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -91,7 +91,7 @@ func TestObjective_validate(t *testing.T) {
 		{
 			name: "only warning set",
 			obj: Objective{
-				SLOTargets: &SLOTarget{
+				SLOTargets: SLOTarget{
 					Warning: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -112,7 +112,7 @@ func TestObjective_validate(t *testing.T) {
 		{
 			name: "warning not set properly",
 			obj: Objective{
-				SLOTargets: &SLOTarget{
+				SLOTargets: SLOTarget{
 					Warning: &CriteriaSet{
 						AnyOf: []Criteria{
 							{},
@@ -138,7 +138,7 @@ func TestObjective_validate(t *testing.T) {
 		{
 			name: "warning and pass set properly",
 			obj: Objective{
-				SLOTargets: &SLOTarget{
+				SLOTargets: SLOTarget{
 					Warning: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -197,7 +197,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: &SLOTarget{
+							SLOTargets: SLOTarget{
 								Pass: &CriteriaSet{
 									AnyOf: []Criteria{
 										{},
@@ -216,7 +216,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: &SLOTarget{
+							SLOTargets: SLOTarget{
 								Pass: &CriteriaSet{
 									AnyOf: []Criteria{
 										{

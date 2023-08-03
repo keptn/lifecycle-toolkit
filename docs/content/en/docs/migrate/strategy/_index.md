@@ -154,7 +154,7 @@ For example:
   into a Kubenetes `StateFulSet` workload; see
   [Workload Resources](https://kubernetes.io/docs/concepts/workloads/controllers/)
   for more information.
-* A Keptnv1 service that runs a webserver
+* A Keptn v1 service that runs a webserver
   can probably be translated into
   a Kubernetes `Deployment` workload.
 

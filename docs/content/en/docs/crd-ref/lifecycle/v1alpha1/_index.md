@@ -63,6 +63,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `evaluationDefinitionName` _string_ |  |
+| `status` _KeptnState_ |  |
 | `evaluationName` _string_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
@@ -80,6 +81,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `value` _string_ |  |
+| `status` _KeptnState_ |  |
 | `message` _string_ |  |
 
 
@@ -173,6 +175,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnApp`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppSpec](#keptnappspec)_ |  |
+| `status` _[KeptnAppStatus](#keptnappstatus)_ |  |
 
 
 #### KeptnAppList
@@ -211,6 +214,18 @@ _Appears in:_
 | `postDeploymentEvaluations` _string array_ |  |
 
 
+#### KeptnAppStatus
+
+
+
+KeptnAppStatus defines the observed state of KeptnApp
+
+_Appears in:_
+- [KeptnApp](#keptnapp)
+
+| Field | Description |
+| --- | --- |
+| `currentVersion` _string_ |  |
 
 
 #### KeptnAppVersion
@@ -228,6 +243,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnAppVersion`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppVersionSpec](#keptnappversionspec)_ |  |
+| `status` _[KeptnAppVersionStatus](#keptnappversionstatus)_ |  |
 
 
 #### KeptnAppVersionList
@@ -268,6 +284,32 @@ _Appears in:_
 | `traceId` _object (keys:string, values:string)_ |  |
 
 
+#### KeptnAppVersionStatus
+
+
+
+KeptnAppVersionStatus defines the observed state of KeptnAppVersion
+
+_Appears in:_
+- [KeptnAppVersion](#keptnappversion)
+
+| Field | Description |
+| --- | --- |
+| `preDeploymentStatus` _KeptnState_ |  |
+| `postDeploymentStatus` _KeptnState_ |  |
+| `preDeploymentEvaluationStatus` _KeptnState_ |  |
+| `postDeploymentEvaluationStatus` _KeptnState_ |  |
+| `workloadOverallStatus` _KeptnState_ |  |
+| `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  |
+| `currentPhase` _string_ |  |
+| `preDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  |
+| `postDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  |
+| `preDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  |
+| `postDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  |
+| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
+| `status` _KeptnState_ |  |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 
 
 #### KeptnEvaluation
@@ -285,6 +327,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluation`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationSpec](#keptnevaluationspec)_ |  |
+| `status` _[KeptnEvaluationStatus](#keptnevaluationstatus)_ |  |
 
 
 #### KeptnEvaluationDefinition
@@ -302,6 +345,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationDefinition`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ |  |
+| `status` _string_ | unused field |
 
 
 #### KeptnEvaluationDefinitionList
@@ -335,8 +379,6 @@ _Appears in:_
 | `objectives` _[Objective](#objective) array_ |  |
 
 
-
-
 #### KeptnEvaluationList
 
 
@@ -368,6 +410,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
+| `status` _string_ | unused field |
 
 
 #### KeptnEvaluationProviderList
@@ -401,8 +444,6 @@ _Appears in:_
 | `secretName` _string_ |  |
 
 
-
-
 #### KeptnEvaluationSpec
 
 
@@ -425,6 +466,22 @@ _Appears in:_
 | `checkType` _CheckType_ |  |
 
 
+#### KeptnEvaluationStatus
+
+
+
+KeptnEvaluationStatus defines the observed state of KeptnEvaluation
+
+_Appears in:_
+- [KeptnEvaluation](#keptnevaluation)
+
+| Field | Description |
+| --- | --- |
+| `retryCount` _integer_ |  |
+| `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ |  |
+| `overallStatus` _KeptnState_ |  |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 
 
 #### KeptnTask
@@ -442,6 +499,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnTask`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnTaskSpec](#keptntaskspec)_ |  |
+| `status` _[KeptnTaskStatus](#keptntaskstatus)_ |  |
 
 
 #### KeptnTaskDefinition
@@ -459,6 +517,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnTaskDefinition`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)_ |  |
+| `status` _[KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)_ |  |
 
 
 #### KeptnTaskDefinitionList
@@ -491,6 +550,18 @@ _Appears in:_
 | `function` _[FunctionSpec](#functionspec)_ |  |
 
 
+#### KeptnTaskDefinitionStatus
+
+
+
+KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
+
+_Appears in:_
+- [KeptnTaskDefinition](#keptntaskdefinition)
+
+| Field | Description |
+| --- | --- |
+| `function` _[FunctionStatus](#functionstatus)_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file |
 
 
 #### KeptnTaskList
@@ -531,6 +602,22 @@ _Appears in:_
 | `checkType` _CheckType_ |  |
 
 
+#### KeptnTaskStatus
+
+
+
+KeptnTaskStatus defines the observed state of KeptnTask
+
+_Appears in:_
+- [KeptnTask](#keptntask)
+
+| Field | Description |
+| --- | --- |
+| `jobName` _string_ |  |
+| `status` _KeptnState_ |  |
+| `message` _string_ |  |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 
 
 #### KeptnWorkload
@@ -548,6 +635,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnWorkload`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ |  |
+| `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ |  |
 
 
 #### KeptnWorkloadInstance
@@ -565,6 +653,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnWorkloadInstance`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)_ |  |
+| `status` _[KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)_ |  |
 
 
 #### KeptnWorkloadInstanceList
@@ -606,6 +695,31 @@ _Appears in:_
 | `traceId` _object (keys:string, values:string)_ |  |
 
 
+#### KeptnWorkloadInstanceStatus
+
+
+
+KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
+
+_Appears in:_
+- [KeptnWorkloadInstance](#keptnworkloadinstance)
+
+| Field | Description |
+| --- | --- |
+| `preDeploymentStatus` _KeptnState_ |  |
+| `deploymentStatus` _KeptnState_ |  |
+| `preDeploymentEvaluationStatus` _KeptnState_ |  |
+| `postDeploymentEvaluationStatus` _KeptnState_ |  |
+| `postDeploymentStatus` _KeptnState_ |  |
+| `preDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  |
+| `postDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  |
+| `preDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  |
+| `postDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
+| `currentPhase` _string_ |  |
+| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
+| `status` _KeptnState_ |  |
 
 
 #### KeptnWorkloadList
@@ -662,6 +776,18 @@ _Appears in:_
 | `resourceReference` _[ResourceReference](#resourcereference)_ |  |
 
 
+#### KeptnWorkloadStatus
+
+
+
+KeptnWorkloadStatus defines the observed state of KeptnWorkload
+
+_Appears in:_
+- [KeptnWorkload](#keptnworkload)
+
+| Field | Description |
+| --- | --- |
+| `currentVersion` _string_ |  |
 
 
 #### Objective
@@ -759,6 +885,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `taskDefinitionName` _string_ |  |
+| `status` _KeptnState_ |  |
 | `taskName` _string_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
@@ -776,5 +903,6 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  |
+| `status` _KeptnState_ |  |
 
 

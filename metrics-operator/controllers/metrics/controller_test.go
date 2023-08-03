@@ -29,7 +29,6 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			Type: "prometheus",
 		},
-		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
 	client := fake.NewClient(&provider)
@@ -151,7 +150,6 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			Type: "unsupported-type",
 		},
-		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
 	supportedProvider := &metricsapi.KeptnMetricsProvider{
@@ -163,7 +161,6 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			TargetServer: "http://keptn.sh",
 			Type:         "prometheus",
 		},
-		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
 	oldSupportedProvider := &metricsapi.KeptnMetricsProvider{
@@ -174,7 +171,6 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			TargetServer: "http://keptn.sh",
 		},
-		Status: metricsapi.KeptnMetricsProviderStatus{},
 	}
 
 	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, unsupportedProvider, supportedProvider, oldSupportedProvider)

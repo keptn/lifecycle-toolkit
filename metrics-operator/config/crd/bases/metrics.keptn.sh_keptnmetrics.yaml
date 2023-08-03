@@ -219,6 +219,19 @@ spec:
                 description: Range represents the time range for which data is to
                   be queried
                 properties:
+                  aggregation:
+                    description: 'Aggregation defines as the type of aggregation function
+                      to be applied on the data. Accepted values: p90, p95, p99, max,
+                      min, avg, median'
+                    enum:
+                    - p90
+                    - p95
+                    - p99
+                    - max
+                    - min
+                    - avg
+                    - median
+                    type: string
                   interval:
                     default: 5m
                     description: Interval specifies the duration of the time interval

@@ -61,7 +61,7 @@ jobs:
             const kltMatrix = [
               {
                   name: "lifecycle-operator",
-                  folder: "operator/",
+                  folder: "lifecycle-operator/",
                   tagName: KLT_TAG
               },
               {
@@ -199,12 +199,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Cache build tools operator
+      - name: Cache build tools lifecycle-operator
         if: needs.release-please.outputs.klt-release-created == 'true'
-        id: cache-build-tools-operator
+        id: cache-build-tools-lifecycle-operator
         uses: actions/cache@v3
         with:
-          path: ./operator/bin
+          path: ./lifecycle-operator/bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Cache build tools metrics-operator
@@ -245,14 +245,14 @@ jobs:
         run: |
           cd scheduler
           make release-manifests
-          cd ../operator
+          cd ../lifecycle-operator
           make controller-gen release-manifests
           cd ../klt-cert-manager
           make controller-gen release-manifests
           cd ../metrics-operator
           make controller-gen release-manifests
           cd ..
-          echo "---" >> operator/config/rendered/release.yaml
+          echo "---" >> lifecycle-operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
           echo "---" >> klt-cert-manager/config/rendered/release.yaml
           cat >> namespace.yaml << EOF
@@ -264,7 +264,7 @@ jobs:
           ---
           EOF
           cat namespace.yaml \
-            operator/config/rendered/release.yaml \
+            lifecycle-operator/config/rendered/release.yaml \
             scheduler/config/rendered/release.yaml \
             klt-cert-manager/config/rendered/release.yaml \
             metrics-operator/config/rendered/release.yaml > klt-manifest.yaml

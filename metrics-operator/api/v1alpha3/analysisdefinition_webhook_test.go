@@ -132,7 +132,7 @@ func TestObjective_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
 		},
 		{
 			name: "warning and pass set properly",
@@ -207,7 +207,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
 		},
 		{
 			name: "happy path",
@@ -253,9 +253,9 @@ func TestCriteria_validate(t *testing.T) {
 		wantErr  error
 	}{
 		{
-			name:     "either AllOf nor AnyOf set",
+			name:     "neither AllOf nor AnyOf set",
 			criteria: Criteria{},
-			wantErr:  fmt.Errorf("Criteria: AllOf nor Anyof set"),
+			wantErr:  fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
 		},
 		{
 			name: "AllOf and AnyOf set",
@@ -275,7 +275,7 @@ func TestCriteria_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf and Anyof are set simultaneusly"),
+			wantErr: fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneusly"),
 		},
 		{
 			name: "AllOf validation fails",
@@ -338,7 +338,7 @@ func TestCriteriaSet_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf and Anyof are set simultaneusly"),
+			wantErr: fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneusly"),
 		},
 		{
 			name: "AllOf validation fails",
@@ -347,7 +347,7 @@ func TestCriteriaSet_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
 		},
 		{
 			name: "AnyOf validation fails",
@@ -356,7 +356,7 @@ func TestCriteriaSet_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
 		},
 		{
 			name: "happy path",

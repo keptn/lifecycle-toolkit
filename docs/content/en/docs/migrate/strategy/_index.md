@@ -110,15 +110,17 @@ A project is defined by a
 file.
 
 KLT does not recognize projects.
-Some Keptn v1 projects may translate into `KeptnApp` resources
-but many will not.
+Many Keptn v1 projects may translate into `KeptnApp` resources
+but others will not.
+For example, if your Keptn v1 project has a large number of services,
+you may want to aggregate them into separate `KeptnApp` resources.
 A project has a 1:1 mapping to a Git repo,
 but, since few applications are stored in a mono-repo,
 it is difficult to implement a project-as-application paradigm
 
 In general, the Keptn v1 project is a useful as a reference list
 when migrating to KLT
-but does not directly translate to a KLT resource.
+but may not directly translate to a KLT resource.
 
 ### service
 

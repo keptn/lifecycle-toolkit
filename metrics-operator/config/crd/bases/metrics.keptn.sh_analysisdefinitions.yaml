@@ -74,39 +74,61 @@ spec:
                                       where all of them need to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -117,39 +139,61 @@ spec:
                                       where any of them needs to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -168,39 +212,61 @@ spec:
                                       where all of them need to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -211,39 +277,61 @@ spec:
                                       where any of them needs to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -267,39 +355,61 @@ spec:
                                       where all of them need to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -310,39 +420,61 @@ spec:
                                       where any of them needs to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -361,39 +493,61 @@ spec:
                                       where all of them need to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -404,39 +558,61 @@ spec:
                                       where any of them needs to be successful for
                                       the CriteriaSet to pass
                                     items:
+                                      description: Target specifies the supported
+                                        operators for value comparisons
                                       properties:
                                         equalTo:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         greaterThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThan:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
                                         lessThanOrEqual:
                                           properties:
                                             fixedValue:
-                                              type: integer
+                                              anyOf:
+                                              - type: integer
+                                              - type: string
+                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              x-kubernetes-int-or-string: true
                                           required:
                                           - fixedValue
                                           type: object
@@ -475,8 +651,8 @@ spec:
             - totalScore
             type: object
           status:
-            description: AnalysisDefinitionStatus defines the observed state of AnalysisDefinition
-            type: object
+            description: unused field
+            type: string
         type: object
     served: true
     storage: true

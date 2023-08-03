@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -57,7 +58,7 @@ type SLOTarget struct {
 }
 
 type TargetValue struct {
-	FixedValue int `json:"fixedValue"`
+	FixedValue resource.Quantity `json:"fixedValue"`
 }
 
 type CriteriaSet struct {
@@ -74,16 +75,13 @@ type Criteria struct {
 	AllOf []Target `json:"allOf,omitempty"`
 }
 
+// Target specifies the supported operators for value comparisons
 type Target struct {
 	LessThanOrEqual    *TargetValue `json:"lessThanOrEqual,omitempty"`
 	LessThan           *TargetValue `json:"lessThan,omitempty"`
 	GreaterThan        *TargetValue `json:"greaterThan,omitempty"`
 	GreaterThanOrEqual *TargetValue `json:"greaterThanOrEqual,omitempty"`
 	EqualTo            *TargetValue `json:"equalTo,omitempty"`
-}
-
-// AnalysisDefinitionStatus defines the observed state of AnalysisDefinition
-type AnalysisDefinitionStatus struct {
 }
 
 //+kubebuilder:object:root=true
@@ -94,8 +92,9 @@ type AnalysisDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AnalysisDefinitionSpec   `json:"spec,omitempty"`
-	Status AnalysisDefinitionStatus `json:"status,omitempty"`
+	Spec AnalysisDefinitionSpec `json:"spec,omitempty"`
+	// unused field
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

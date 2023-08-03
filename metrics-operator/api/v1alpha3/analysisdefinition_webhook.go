@@ -96,7 +96,7 @@ func (o *Objective) validate() error {
 
 func (c *CriteriaSet) validate() error {
 	if len(c.AllOf) > 0 && len(c.AnyOf) > 0 {
-		return fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneusly")
+		return fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneously")
 	}
 
 	for _, a := range c.AllOf {
@@ -116,7 +116,7 @@ func (c *CriteriaSet) validate() error {
 
 func (c *Criteria) validate() error {
 	if len(c.AllOf) > 0 && len(c.AnyOf) > 0 {
-		return fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneusly")
+		return fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneously")
 	}
 
 	if len(c.AllOf) == 0 && len(c.AnyOf) == 0 {
@@ -155,10 +155,10 @@ func (t *Target) validate() error {
 		counter++
 	}
 	if counter > 1 {
-		return fmt.Errorf("Target: multiple targets set anot allowed per Analysis")
+		return fmt.Errorf("Target: multiple operators can not be set within the same target")
 	}
 	if counter == 0 {
-		return fmt.Errorf("Target: not set")
+		return fmt.Errorf("Target: no operator set")
 	}
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 func TestTarget_validate(t *testing.T) {
@@ -16,25 +17,25 @@ func TestTarget_validate(t *testing.T) {
 		{
 			name:    "no target set",
 			target:  Target{},
-			wantErr: fmt.Errorf("Target: not set"),
+			wantErr: fmt.Errorf("Target: no operator set"),
 		},
 		{
 			name: "multiple targets set",
 			target: Target{
 				LessThanOrEqual: &TargetValue{
-					FixedValue: 5,
+					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
 				LessThan: &TargetValue{
-					FixedValue: 5,
+					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
 			},
-			wantErr: fmt.Errorf("Target: multiple targets set anot allowed per Analysis"),
+			wantErr: fmt.Errorf("Target: multiple operators can not be set within the same target"),
 		},
 		{
 			name: "happy path",
 			target: Target{
 				LessThanOrEqual: &TargetValue{
-					FixedValue: 5,
+					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
 			},
 			wantErr: nil,
@@ -76,7 +77,7 @@ func TestObjective_validate(t *testing.T) {
 								AnyOf: []Target{
 									{
 										EqualTo: &TargetValue{
-											FixedValue: 5,
+											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 										},
 									},
 								},
@@ -97,7 +98,7 @@ func TestObjective_validate(t *testing.T) {
 								AnyOf: []Target{
 									{
 										EqualTo: &TargetValue{
-											FixedValue: 5,
+											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 										},
 									},
 								},
@@ -123,7 +124,7 @@ func TestObjective_validate(t *testing.T) {
 								AnyOf: []Target{
 									{
 										EqualTo: &TargetValue{
-											FixedValue: 5,
+											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 										},
 									},
 								},
@@ -144,7 +145,7 @@ func TestObjective_validate(t *testing.T) {
 								AnyOf: []Target{
 									{
 										EqualTo: &TargetValue{
-											FixedValue: 5,
+											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 										},
 									},
 								},
@@ -157,7 +158,7 @@ func TestObjective_validate(t *testing.T) {
 								AnyOf: []Target{
 									{
 										EqualTo: &TargetValue{
-											FixedValue: 5,
+											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 										},
 									},
 								},
@@ -222,7 +223,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 											AnyOf: []Target{
 												{
 													EqualTo: &TargetValue{
-														FixedValue: 5,
+														FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 													},
 												},
 											},
@@ -263,19 +264,19 @@ func TestCriteria_validate(t *testing.T) {
 				AnyOf: []Target{
 					{
 						EqualTo: &TargetValue{
-							FixedValue: 5,
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
 				},
 				AllOf: []Target{
 					{
 						EqualTo: &TargetValue{
-							FixedValue: 5,
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneusly"),
+			wantErr: fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneously"),
 		},
 		{
 			name: "AllOf validation fails",
@@ -284,7 +285,7 @@ func TestCriteria_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("Target: not set"),
+			wantErr: fmt.Errorf("Target: no operator set"),
 		},
 		{
 			name: "AnyOf validation fails",
@@ -293,7 +294,7 @@ func TestCriteria_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("Target: not set"),
+			wantErr: fmt.Errorf("Target: no operator set"),
 		},
 		{
 			name: "happy path",
@@ -301,7 +302,7 @@ func TestCriteria_validate(t *testing.T) {
 				AnyOf: []Target{
 					{
 						EqualTo: &TargetValue{
-							FixedValue: 5,
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
 				},
@@ -338,7 +339,7 @@ func TestCriteriaSet_validate(t *testing.T) {
 					{},
 				},
 			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneusly"),
+			wantErr: fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneously"),
 		},
 		{
 			name: "AllOf validation fails",
@@ -366,7 +367,7 @@ func TestCriteriaSet_validate(t *testing.T) {
 						AnyOf: []Target{
 							{
 								EqualTo: &TargetValue{
-									FixedValue: 5,
+									FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 								},
 							},
 						},

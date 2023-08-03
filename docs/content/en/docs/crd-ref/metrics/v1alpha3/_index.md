@@ -37,7 +37,7 @@ _Appears in:_
 | `kind` _string_ | `AnalysisValueTemplate`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[AnalysisValueTemplateSpec](#analysisvaluetemplatespec)_ | Spec contains the specification for the AnalysisValueTemplate |
-| `status` _[AnalysisValueTemplateStatus](#analysisvaluetemplatestatus)_ |  |
+| `status` _[EmptyStatus](#emptystatus)_ |  |
 
 
 #### AnalysisValueTemplateList
@@ -69,8 +69,6 @@ _Appears in:_
 | --- | --- |
 | `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object |
 | `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax (https://pkg.go.dev/text/template). |
-
-
 
 
 

@@ -146,7 +146,7 @@ for more information.
 
 For example:
 
-* A Keptnv1 service that runs chaos or load tests
+* A Keptn v1 service that runs chaos or load tests
   can probably be translated into
   a `KeptnTask` using the `container-runner`.
 * A Keptn v1 service that runs a database

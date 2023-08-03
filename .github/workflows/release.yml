@@ -252,9 +252,14 @@ jobs:
           make release-manifests
           cd ../lifecycle-operator
           make controller-gen release-manifests
+          cd ../klt-cert-manager
+          make controller-gen release-manifests
+          cd ../metrics-operator
+          make controller-gen release-manifests
           cd ..
           echo "---" >> lifecycle-operator/config/rendered/release.yaml
           echo "---" >> scheduler/config/rendered/release.yaml
+          echo "---" >> klt-cert-manager/config/rendered/release.yaml
           cat >> namespace.yaml << EOF
           ---
           apiVersion: v1
@@ -265,7 +270,9 @@ jobs:
           EOF
           cat namespace.yaml \
             lifecycle-operator/config/rendered/release.yaml \
-            scheduler/config/rendered/release.yaml > klt-manifest.yaml
+            scheduler/config/rendered/release.yaml \
+            klt-cert-manager/config/rendered/release.yaml \
+            metrics-operator/config/rendered/release.yaml > klt-manifest.yaml
 
       - name: Create Cert-Manager manifest
         if: needs.release-please.outputs.cert-manager-release-created == 'true'

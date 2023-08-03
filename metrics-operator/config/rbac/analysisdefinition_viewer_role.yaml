@@ -4,17 +4,17 @@ kind: ClusterRole
 metadata:
   name: analysisdefinition-viewer-role
 rules:
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - analysisdefinitions
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - analysisdefinitions/status
-  verbs:
-  - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisdefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisdefinitions/status
+    verbs:
+      - get

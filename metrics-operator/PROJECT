@@ -61,4 +61,7 @@ resources:
   kind: AnalysisDefinition
   path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
   version: v1alpha3
+  webhooks:
+    validation: true
+    webhookVersion: v1
 version: "3"

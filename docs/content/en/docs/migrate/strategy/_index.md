@@ -52,8 +52,8 @@ Some key points:
     for a comprehensive reference to all resources
     defined for Keptn.
 
-* KLT is not a continuous delivery tool
-  because it does not provide promotion.
+* KLT is not a delivery tool
+  because it does not deploy applications.
   Instead, it works with standard deployment tools
   such as ArgoCD, Flux, even `kubectl -- apply`.
   KLT then prevents the scheduling and deployment

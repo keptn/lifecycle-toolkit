@@ -345,7 +345,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationDefinition`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ |  |
-| `status` _[EmptyStatus](#emptystatus)_ | unused field |
+| `status` _string_ | unused field |
 
 
 #### KeptnEvaluationDefinitionList
@@ -410,7 +410,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnEvaluationProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
-| `status` _[EmptyStatus](#emptystatus)_ | unused field |
+| `status` _string_ | unused field |
 
 
 #### KeptnEvaluationProviderList

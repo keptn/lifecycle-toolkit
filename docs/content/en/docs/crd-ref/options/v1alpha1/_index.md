@@ -18,8 +18,6 @@ Package v1alpha1 contains API Schema definitions for the options v1alpha1 API gr
 
 
 
-
-
 #### KeptnConfig
 
 
@@ -35,7 +33,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnConfig`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnConfigSpec](#keptnconfigspec)_ |  |
-| `status` _[EmptyStatus](#emptystatus)_ | unused field |
+| `status` _string_ | unused field |
 
 
 #### KeptnConfigList
@@ -65,7 +63,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the operator should use |
+| `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use |
 | `keptnAppCreationRequestTimeoutSeconds` _integer_ | KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery searches for workload to put into the same auto-generated KeptnApp |
 
 

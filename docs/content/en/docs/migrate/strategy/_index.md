@@ -161,7 +161,7 @@ For example:
 ### stage
 
 A stage is a subsection of a project.
-Because KLT is not a continuous delivery tool,
+Because KLT is not a delivery tool,
 it has no concept of a `stage`
 but rather depends on a deployment engine.
 However, the logic of the stages can be useful

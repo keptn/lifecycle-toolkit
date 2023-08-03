@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.0
+    controller-gen.kubebuilder.io/version: v0.12.1
   name: keptnconfigs.options.keptn.sh
 spec:
   group: options.keptn.sh
@@ -46,7 +46,7 @@ spec:
                 type: integer
             type: object
           status:
-            description: KeptnConfigStatus defines the observed state of KeptnConfig
+            description: unused field
             type: object
         type: object
     served: true

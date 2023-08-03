@@ -32,12 +32,6 @@ type KeptnAppCreationRequestSpec struct {
 	AppName string `json:"appName"`
 }
 
-// KeptnAppCreationRequestStatus defines the observed state of KeptnAppCreationRequest
-type KeptnAppCreationRequestStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
@@ -49,7 +43,7 @@ type KeptnAppCreationRequest struct {
 	// Spec describes the desired state of the KeptnAppCreationRequest.
 	Spec KeptnAppCreationRequestSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnAppCreationRequest.
-	Status KeptnAppCreationRequestStatus `json:"status,omitempty"`
+	Status common.EmptyStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

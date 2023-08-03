@@ -10,5 +10,7 @@ github.com/keptn/docs-tooling v0.1.1 h1:IuI0Fgs0JrtffLN05iaRZVkRMbPu6h9bxR4C8q1A
 github.com/keptn/docs-tooling v0.1.1/go.mod h1:x0iT5YsJosz6wzjQke/YaLgiXF6PV+N8QzxSAc2MY/4=
 github.com/keptn/docs-tooling v0.1.2 h1:qKu4U6ugnF7+uQ4buDqYuCehFsGF4bunJYsQWv8MenI=
 github.com/keptn/docs-tooling v0.1.2/go.mod h1:x0iT5YsJosz6wzjQke/YaLgiXF6PV+N8QzxSAc2MY/4=
+github.com/keptn/docs-tooling v0.1.4 h1:nanQzfAjnLOpFBG4JXyGbcCdN83tDAOrZJFVWGpBE1o=
+github.com/keptn/docs-tooling v0.1.4/go.mod h1:x0iT5YsJosz6wzjQke/YaLgiXF6PV+N8QzxSAc2MY/4=
 github.com/twbs/bootstrap v4.6.2+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
 github.com/twbs/bootstrap v5.2.3+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=

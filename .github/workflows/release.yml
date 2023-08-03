@@ -43,19 +43,15 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
-      - name: Release Info
-        run: |
-          echo "Release KLT:                  ${{ steps.release.outputs.release_created }}"
-          echo "Release KLT Cert Manager:     ${{ steps.release.outputs.klt-cert-manager--release_created }}"
-          echo "Release KLT Metrics Operator: ${{ steps.release.outputs.metrics-operator--release_created }}"
-          echo "Anything to release:          ${{ steps.release.outputs.releases_created }}"
-          echo "Paths to be released:         ${{ steps.release.outputs.paths_released }}"
-
       - name: Create release matrix
         id: build-matrix
         uses: actions/github-script@v6
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
+          CERT_MANAGER_TAG: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
+          METRICS_OPERATOR_TAG: ${{ steps.release.outputs.metrics-operator--tag_name }}
+          LIFECYCLE_OPERATOR_TAG: ${{ steps.release.outputs.lifecycle-operator--tag_name }}
+          KLT_TAG: ${{ steps.release.outputs.tag_name }}
         with:
           script: |
             const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');
@@ -72,40 +68,40 @@ jobs:
                         return [{
                             name: item,
                             folder: item,
-                            tagName: "${{ steps.release.outputs.lifecycle-operator--tag_name }}"
+                            tagName: process.env.LIFECYCLE_OPERATOR_TAG
                         }];
                     case "metrics-operator":
                         return [{
                             name: item,
                             folder: item,
-                            tagName: "${{ steps.release.outputs.metrics-operator--tag_name }}"
+                            tagName: process.env.METRICS_OPERATOR_TAG
                         }];
                     case "klt-cert-manager":
                         return [{
                             name: item,
                             folder: item,
-                            tagName: "${{ steps.release.outputs.klt-cert-manager--tag_name }}"
+                            tagName: process.env.CERT_MANAGER_TAG
                         }];
                     case ".":
                         return [
                             {
                               name: "scheduler",
                               folder: "scheduler/",
-                              tagName: "${{ steps.release.outputs.tag_name }}"
+                              tagName: process.env.KLT_TAG
                             },
                             {
                               name: "functions-runtime",
                               folder: "functions-runtime/",
-                              tagName: "${{ steps.release.outputs.tag_name }}"
+                              tagName: process.env.KLT_TAG
                             },
                             {
                               name: "python-runtime",
                               folder: "python-runtime/",
-                              tagName: "${{ steps.release.outputs.tag_name }}"
+                              tagName: process.env.KLT_TAG
                             }
                         ];
                     default:
-                        break;
+                        return [];
                 }
             });
             return releaseMatrix;

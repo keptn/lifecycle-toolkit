@@ -52,6 +52,7 @@ spec:
         component: podtato-head-right-leg
       annotations:
         keptn.sh/workload: "right-leg"
+        keptn.sh/version: "0.1.0"
         keptn.sh/app: "podtato-head"
     spec:
       terminationGracePeriodSeconds: 5

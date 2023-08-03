@@ -67,15 +67,15 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `objectives` _[Objective](#objective) array_ |  |
-| `totalScore` _[Score](#score)_ |  |
+| `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives for evaluation |
+| `totalScore` _[Score](#score)_ | TotalScore defines the required score for an evaluation to be successful |
 
 
 #### Criteria
 
 
 
-
+Criteria defines list of targets for evaluation
 
 _Appears in:_
 - [CriteriaSet](#criteriaset)
@@ -90,7 +90,7 @@ _Appears in:_
 
 
 
-
+CriteriaSet represents the set of evaluation criterias
 
 _Appears in:_
 - [SLOTarget](#slotarget)
@@ -322,18 +322,18 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `lessThanOrEqual` _[TargetValue](#targetvalue)_ |  |
-| `lessThan` _[TargetValue](#targetvalue)_ |  |
-| `greaterThan` _[TargetValue](#targetvalue)_ |  |
-| `greaterThanOrEqual` _[TargetValue](#targetvalue)_ |  |
-| `equalTo` _[TargetValue](#targetvalue)_ |  |
+| `lessThanOrEqual` _[TargetValue](#targetvalue)_ | LessThanOrEqual represents '<=' operator in evaluation analysis |
+| `lessThan` _[TargetValue](#targetvalue)_ | LessThan represents '<' operator in evaluation analysis |
+| `greaterThan` _[TargetValue](#targetvalue)_ | GreaterThan represents '>' operator in evaluation analysis |
+| `greaterThanOrEqual` _[TargetValue](#targetvalue)_ | GreaterThanOrEqual represents '>=' operator in evaluation analysis |
+| `equalTo` _[TargetValue](#targetvalue)_ | EqualTo represents '==' operator in evaluation analysis |
 
 
 #### TargetValue
 
 
 
-
+TargetValue represents the value the result will be compared to
 
 _Appears in:_
 - [Target](#target)

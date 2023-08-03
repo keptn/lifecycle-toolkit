@@ -23,8 +23,10 @@ import (
 
 // AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
 type AnalysisDefinitionSpec struct {
+	// Objectives defines a list of objectives for evaluation
 	Objectives []Objective `json:"objectives,omitempty"`
-	TotalScore Score       `json:"totalScore"`
+	// TotalScore defines the required score for an evaluation to be successful
+	TotalScore Score `json:"totalScore"`
 }
 
 // Score defines the required score for an evaluation to be successful
@@ -57,10 +59,13 @@ type SLOTarget struct {
 	Warning *CriteriaSet `json:"warning,omitempty"`
 }
 
+// TargetValue represents the value the result will be compared to
 type TargetValue struct {
+	// FixedValue defines the value for comparison
 	FixedValue resource.Quantity `json:"fixedValue"`
 }
 
+// CriteriaSet represents the set of evaluation criterias
 type CriteriaSet struct {
 	// AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass
 	AnyOf []Criteria `json:"anyOf,omitempty"`
@@ -68,6 +73,7 @@ type CriteriaSet struct {
 	AllOf []Criteria `json:"allOf,omitempty"`
 }
 
+// Criteria defines list of targets for evaluation
 type Criteria struct {
 	// AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass
 	AnyOf []Target `json:"anyOf,omitempty"`
@@ -77,11 +83,16 @@ type Criteria struct {
 
 // Target specifies the supported operators for value comparisons
 type Target struct {
-	LessThanOrEqual    *TargetValue `json:"lessThanOrEqual,omitempty"`
-	LessThan           *TargetValue `json:"lessThan,omitempty"`
-	GreaterThan        *TargetValue `json:"greaterThan,omitempty"`
+	// LessThanOrEqual represents '<=' operator in evaluation analysis
+	LessThanOrEqual *TargetValue `json:"lessThanOrEqual,omitempty"`
+	// LessThan represents '<' operator in evaluation analysis
+	LessThan *TargetValue `json:"lessThan,omitempty"`
+	// GreaterThan represents '>' operator in evaluation analysis
+	GreaterThan *TargetValue `json:"greaterThan,omitempty"`
+	// GreaterThanOrEqual represents '>=' operator in evaluation analysis
 	GreaterThanOrEqual *TargetValue `json:"greaterThanOrEqual,omitempty"`
-	EqualTo            *TargetValue `json:"equalTo,omitempty"`
+	// EqualTo represents '==' operator in evaluation analysis
+	EqualTo *TargetValue `json:"equalTo,omitempty"`
 }
 
 //+kubebuilder:object:root=true

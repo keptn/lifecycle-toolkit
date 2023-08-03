@@ -264,15 +264,8 @@ jobs:
           ---
           EOF
           cat namespace.yaml \
-<<<<<<< HEAD
             lifecycle-operator/config/rendered/release.yaml \
-            scheduler/config/rendered/release.yaml \
-            klt-cert-manager/config/rendered/release.yaml \
-            metrics-operator/config/rendered/release.yaml > klt-manifest.yaml
-=======
-            operator/config/rendered/release.yaml \
             scheduler/config/rendered/release.yaml > klt-manifest.yaml
->>>>>>> feat: metrics-operator monorepo setup
 
       - name: Create Cert-Manager manifest
         if: needs.release-please.outputs.cert-manager-release-created == 'true'

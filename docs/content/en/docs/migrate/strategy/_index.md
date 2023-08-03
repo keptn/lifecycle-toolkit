@@ -84,7 +84,7 @@ Some key points:
   (implemented as a Kubernetes
   [Workload](https://kubernetes.io/docs/concepts/workloads/)),
   it can execute pre- and post-deployment evaluations and tasks
-  using Kubernetes capabilities..
+  using Kubernetes capabilities.
 
 * KLT provides extensive observability data
   using OpenTelementry and Prometheus

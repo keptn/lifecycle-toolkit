@@ -616,7 +616,7 @@ which prints the help message for the python3 interpreter:
 
 ## More examples
 
-See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
+See the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
 directory for more example `KeptnTaskDefinition` YAML files.
 
 ## Files

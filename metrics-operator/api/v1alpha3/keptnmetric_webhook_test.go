@@ -152,17 +152,29 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 		oldSpec runtime.Object
 	}{
 		{
-			name: "create-with-wrong-step",
+			name: "create-with-right-step-right-aggregation",
 			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval: "5m",
-					Step:     "1mins",
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "p90",
+				},
+			},
+		},
+		{
+			name: "create-with-wrong-step-right-aggregation",
+			verb: "create",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "1mins",
+					Aggregation: "p90",
 				},
 			},
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"create-with-wrong-step",
+				"create-with-wrong-step-right-aggregation",
 				field.ErrorList{
 					field.Invalid(
 						field.NewPath("spec").Child("range").Child("step"),
@@ -173,64 +185,30 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 			),
 		},
 		{
-			name: "create-with-empty-step",
+			name: "create-with-right-step-wrong-aggregation",
 			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval: "5m",
-					Step:     "",
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "p91",
 				},
 			},
 		},
 		{
-			name: "create-with-right-step",
+			name: "create-with-wrong-step-wrong-aggregation",
 			verb: "create",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval: "5m",
-					Step:     "1m",
-				},
-			},
-		},
-		{
-			name: "create-with-wrong-interval-right-step",
-			verb: "update",
-			Spec: KeptnMetricSpec{
-				Range: &RangeSpec{
-					Interval: "5mins",
-					Step:     "1m",
+					Interval:    "5m",
+					Step:        "1mins",
+					Aggregation: "p91",
 				},
 			},
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"create-with-wrong-interval-right-step",
+				"create-with-wrong-step-wrong-aggregation",
 				field.ErrorList{
-					field.Invalid(
-						field.NewPath("spec").Child("range").Child("interval"),
-						"5mins",
-						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
-					),
-				},
-			),
-		},
-		{
-			name: "create-with-wrong-interval-wrong-step",
-			verb: "update",
-			Spec: KeptnMetricSpec{
-				Range: &RangeSpec{
-					Interval: "5mins",
-					Step:     "1mins",
-				},
-			},
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"create-with-wrong-interval-wrong-step",
-				field.ErrorList{
-					field.Invalid(
-						field.NewPath("spec").Child("range").Child("interval"),
-						"5mins",
-						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
-					),
 					field.Invalid(
 						field.NewPath("spec").Child("range").Child("step"),
 						"1mins",
@@ -240,35 +218,91 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 			),
 		},
 		{
-			name: "update-with-right-step",
+			name: "create-with-empty-step-empty-aggregation",
+			verb: "create",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "",
+					Aggregation: "",
+				},
+			},
+		},
+		{
+			name: "create-with-step-empty-aggregation",
+			verb: "create",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "",
+				},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"create-with-step-empty-aggregation",
+				field.ErrorList{
+					field.Required(
+						field.NewPath("spec").Child("range").Child("aggregation"),
+						"Forbidden! Aggregation field is required if defining the step field",
+					),
+				},
+			),
+		},
+		{
+			name: "create-empty-step-with-aggregation",
+			verb: "create",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "",
+					Aggregation: "p90",
+				},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"create-empty-step-with-aggregation",
+				field.ErrorList{
+					field.Required(
+						field.NewPath("spec").Child("range").Child("step"),
+						"Forbidden! Step interval is required for the aggregation to work",
+					),
+				},
+			),
+		},
+		{
+			name: "update-with-right-step-right-aggregation",
 			verb: "update",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval: "5m",
-					Step:     "1m",
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "p90",
 				},
 			},
 			oldSpec: &KeptnMetric{
 				Spec: KeptnMetricSpec{
 					Range: &RangeSpec{
-						Interval: "5m",
-						Step:     "1mins",
+						Interval:    "5m",
+						Step:        "1mins",
+						Aggregation: "p91",
 					},
 				},
 			},
 		},
 		{
-			name: "update-with-wrong-step",
+			name: "update-with-wrong-step-wrong-aggregation",
 			verb: "update",
 			Spec: KeptnMetricSpec{
 				Range: &RangeSpec{
-					Interval: "5m",
-					Step:     "1mins",
+					Interval:    "5m",
+					Step:        "1mins",
+					Aggregation: "p91",
 				},
 			},
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
-				"update-with-wrong-step",
+				"update-with-wrong-step-wrong-aggregation",
 				field.ErrorList{
 					field.Invalid(
 						field.NewPath("spec").Child("range").Child("step"),
@@ -280,8 +314,140 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 			oldSpec: &KeptnMetric{
 				Spec: KeptnMetricSpec{
 					Range: &RangeSpec{
-						Interval: "5m",
-						Step:     "1m",
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
+					},
+				},
+			},
+		},
+		{
+			name: "update-with-wrong-step-right-aggregation",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "1mins",
+					Aggregation: "p90",
+				},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"update-with-wrong-step-right-aggregation",
+				field.ErrorList{
+					field.Invalid(
+						field.NewPath("spec").Child("range").Child("step"),
+						"1mins",
+						"Forbidden! The time interval cannot be parsed. Please check for suitable conventions",
+					),
+				},
+			),
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
+					},
+				},
+			},
+		},
+		{
+			name: "update-with-right-step-wrong-aggregation",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "p91",
+				},
+			},
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
+					},
+				},
+			},
+		},
+		{
+			name: "update-with-empty-step-empty-aggregation",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "",
+					Aggregation: "",
+				},
+			},
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
+					},
+				},
+			},
+		},
+		{
+			name: "update-with-empty-step-with-aggregation",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "",
+					Aggregation: "p90",
+				},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"update-with-empty-step-with-aggregation",
+				field.ErrorList{
+					field.Required(
+						field.NewPath("spec").Child("range").Child("step"),
+						"Forbidden! Step interval is required for the aggregation to work",
+					),
+				},
+			),
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
+					},
+				},
+			},
+		},
+		{
+			name: "update-with-step-empty-aggregation",
+			verb: "update",
+			Spec: KeptnMetricSpec{
+				Range: &RangeSpec{
+					Interval:    "5m",
+					Step:        "1m",
+					Aggregation: "",
+				},
+			},
+			want: apierrors.NewInvalid(
+				schema.GroupKind{Group: "metrics.keptn.sh", Kind: "KeptnMetric"},
+				"update-with-step-empty-aggregation",
+				field.ErrorList{
+					field.Required(
+						field.NewPath("spec").Child("range").Child("aggregation"),
+						"Forbidden! Aggregation field is required if defining the step field",
+					),
+				},
+			),
+			oldSpec: &KeptnMetric{
+				Spec: KeptnMetricSpec{
+					Range: &RangeSpec{
+						Interval:    "5m",
+						Step:        "1m",
+						Aggregation: "p90",
 					},
 				},
 			},
@@ -302,7 +468,7 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 			} else {
 				s = &KeptnMetric{
 					ObjectMeta: metav1.ObjectMeta{Name: tt.name},
-					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval, Step: tt.Spec.Range.Step}},
+					Spec:       KeptnMetricSpec{Range: &RangeSpec{Interval: tt.Spec.Range.Interval, Step: tt.Spec.Range.Step, Aggregation: tt.Spec.Range.Aggregation}},
 				}
 			}
 			var err error

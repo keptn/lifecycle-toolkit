@@ -2,8 +2,8 @@ documentation:
   - docs/**/*
   - "**/*.md"
 
-operator:
-  - operator/**/*
+lifecycle-operator:
+  - lifecycle-operator/**/*
 
 scheduler:
   - scheduler/**/*

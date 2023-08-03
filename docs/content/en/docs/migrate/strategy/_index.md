@@ -149,7 +149,7 @@ For example:
 * A Keptnv1 service that runs chaos or load tests
   can probably be translated into
   a `KeptnTask` using the `container-runner`.
-* A Keptnv1 service that runs a database
+* A Keptn v1 service that runs a database
   can probably be translated
   into a Kubenetes `StateFulSet` workload; see
   [Workload Resources](https://kubernetes.io/docs/concepts/workloads/controllers/)

@@ -82,7 +82,7 @@ spec:
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  secretName webhook-server-cert
+  secretName: webhook-server-cert
 ```
 
 Note the following about these fields:

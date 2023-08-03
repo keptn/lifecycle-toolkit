@@ -117,7 +117,7 @@ For example, if your Keptn v1 project has a large number of services,
 you may want to aggregate them into separate `KeptnApp` resources.
 A project has a 1:1 mapping to a Git repo,
 but, since few applications are stored in a mono-repo,
-it is difficult to implement a project-as-application paradigm
+it is difficult to implement a project-as-application paradigm.
 
 In general, the Keptn v1 project is a useful as a reference list
 when migrating to KLT

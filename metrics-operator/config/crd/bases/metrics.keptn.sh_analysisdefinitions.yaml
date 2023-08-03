@@ -39,9 +39,9 @@ spec:
                 items:
                   description: Objective defines a list of objectives
                   properties:
-                    analysisTemplateRef:
-                      description: AnalysisTemplateRef defines a reference to the
-                        used AnalysisTemplate
+                    analysisValueTemplateRef:
+                      description: AnalysisValueTemplateRef defines a reference to
+                        the used AnalysisValueTemplate
                       properties:
                         name:
                           type: string
@@ -454,7 +454,7 @@ spec:
                         the others
                       type: integer
                   required:
-                  - analysisTemplateRef
+                  - analysisValueTemplateRef
                   - sloTargets
                   type: object
                 type: array

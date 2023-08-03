@@ -243,7 +243,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `analysisTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisTemplateRef defines a reference to the used AnalysisTemplate |
+| `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
 | `sloTargets` _[SLOTarget](#slotarget)_ | SLOTargets defines a list of SLOTargests |
 | `weight` _integer_ | Weigeht defines the importance of one SLI over the others |
 | `keyObjective` _boolean_ | KeyObjective defines the meaning that the analysis fails if the objective is not met |

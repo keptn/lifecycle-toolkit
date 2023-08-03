@@ -36,8 +36,8 @@ type Score struct {
 
 // Objective defines a list of objectives
 type Objective struct {
-	// AnalysisTemplateRef defines a reference to the used AnalysisTemplate
-	AnalysisTemplateRef ObjectReference `json:"analysisTemplateRef"`
+	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
+	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// SLOTargets defines a list of SLOTargests
 	SLOTargets SLOTarget `json:"sloTargets"`
 	// Weigeht defines the importance of one SLI over the others

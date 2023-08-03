@@ -1,7 +1,7 @@
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
-  name: analysisdefinition
+  name: analysisdefinition-empty
 spec:
   objectives:
     - analysisValueTemplateRef:

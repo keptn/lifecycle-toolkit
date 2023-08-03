@@ -100,7 +100,7 @@ build-deploy-operator:
 	$(MAKE) -C lifecycle-operator push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C lifecycle-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 
-	kubectl apply -f operator/config/rendered/release.yaml
+	kubectl apply -f lifecycle-operator/config/rendered/release.yaml
 
 .PHONY: build-deploy-metrics-operator
 build-deploy-metrics-operator:

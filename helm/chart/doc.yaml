@@ -206,7 +206,7 @@
 
 
 ## @param   metricsOperator.manager.image.repository specify registry for manager image
-## @param   metricsOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
+## @param   metricsOperator.manager.image.tag select tag for manager image
 
 ## @param   metricsOperator.manager.env.exposeKeptnMetrics enable metrics exporter
 ## @param   metricsOperator.manager.env.metricsControllerLogLevel sets the log level of Metrics Controller

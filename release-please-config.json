@@ -1,6 +1,6 @@
 {
   "separate-pull-requests": true,
-  "last-release-sha": "b37aed920eb766c33ae765ed740bc5e508ac430a",
+  "last-release-sha": "9bb78bb1c74aeb3524fb258d8c77d8493c42cd4f",
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
   "pull-request-title-pattern": "chore: release${component} ${version}",
@@ -12,7 +12,7 @@
       "prerelease": false,
       "monorepo-tags": "klt",
       "draft": false,
-      "exclude-paths": ["klt-cert-manager"],
+      "exclude-paths": ["klt-cert-manager", "metrics-operator"],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
@@ -20,7 +20,6 @@
         "Makefile",
         "operator/Makefile",
         "scheduler/Makefile",
-        "metrics-operator/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"
@@ -31,6 +30,17 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "cert-manager",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
+      ]
+    },
+    "metrics-operator": {
+      "package-name": "metrics-operator",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "metrics-operator",
       "prerelease": false,
       "draft": false,
       "extra-files": [

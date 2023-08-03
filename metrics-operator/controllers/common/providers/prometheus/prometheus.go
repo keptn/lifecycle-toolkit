@@ -198,7 +198,7 @@ func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]s
 	var resultSlice []string
 	for i, value := range resultMatrix[0].Values {
 		resultSlice[i] = value.Value.String()
-	}	
+	}
 	b, err := resultMatrix[0].MarshalJSON()
 	if err != nil {
 		return nil, nil, err

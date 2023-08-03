@@ -35,7 +35,7 @@ webhooks:
         namespace: system
         path: /validate-metrics-keptn-sh-v1alpha3-analysisdefinition
     failurePolicy: Fail
-    name: vkeptnmetric.kb.io
+    name: vanalysisdefinition.kb.io
     rules:
       - apiGroups:
           - metrics.keptn.sh
@@ -45,5 +45,5 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
-          - analysisdefinition
+          - analysisdefinitions
     sideEffects: None

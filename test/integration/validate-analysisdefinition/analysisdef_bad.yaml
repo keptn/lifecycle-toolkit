@@ -1,7 +1,7 @@
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
-  name: analysisdefinition-sample
+  name: analysisdefinition
 spec:
   objectives:
     - analysisValueTemplateRef:
@@ -9,6 +9,8 @@ spec:
         namespace: keptn-lifecycle-toolkit-system
       sloTargets:
         pass:
+          # anyOf and allOf not allowed at the same time on this level,
+          # validation webhook should fail
           anyOf:
             - allOf:
                 - lessThanOrEqual:

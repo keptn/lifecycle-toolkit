@@ -39,7 +39,7 @@ type Objective struct {
 	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// SLOTargets defines a list of SLOTargests
-	SLOTargets SLOTarget `json:"sloTargets"`
+	SLOTargets *SLOTarget `json:"sloTargets,omitempty"`
 	// Weigeht defines the importance of one SLI over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`
@@ -51,7 +51,7 @@ type Objective struct {
 // SLOTarget defines the Criteria
 type SLOTarget struct {
 	// Pass defines limit up to which an evaluation is successful
-	Pass *CriteriaSet `json:"pass"`
+	Pass *CriteriaSet `json:"pass,omitempty"`
 	// Warning defines the border where the result is not pass and not fail
 	Warning *CriteriaSet `json:"warning,omitempty"`
 }

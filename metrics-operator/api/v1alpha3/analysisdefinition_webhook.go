@@ -72,9 +72,20 @@ func (r *AnalysisDefinition) ValidateDelete() error {
 }
 
 func (o *Objective) validate() error {
-	if err := o.SLOTargets.Pass.validate(); err != nil {
-		return err
+	if o.SLOTargets == nil {
+		return nil
 	}
+
+	if o.SLOTargets.Pass == nil && o.SLOTargets.Warning != nil {
+		return fmt.Errorf("Warning criteria cannot be set without Pass criteria")
+	}
+
+	if o.SLOTargets.Pass != nil {
+		if err := o.SLOTargets.Pass.validate(); err != nil {
+			return err
+		}
+	}
+
 	if o.SLOTargets.Warning != nil {
 		if err := o.SLOTargets.Warning.validate(); err != nil {
 			return err
@@ -86,10 +97,6 @@ func (o *Objective) validate() error {
 func (c *CriteriaSet) validate() error {
 	if len(c.AllOf) > 0 && len(c.AnyOf) > 0 {
 		return fmt.Errorf("CriteriaSet: AllOf and Anyof are set simultaneusly")
-	}
-
-	if len(c.AllOf) == 0 && len(c.AnyOf) == 0 {
-		return fmt.Errorf("CriteriaSet: AllOf nor Anyof set")
 	}
 
 	for _, a := range c.AllOf {

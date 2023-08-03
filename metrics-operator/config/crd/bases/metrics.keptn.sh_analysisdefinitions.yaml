@@ -445,8 +445,6 @@ spec:
                                 type: object
                               type: array
                           type: object
-                      required:
-                      - pass
                       type: object
                     weight:
                       default: 1
@@ -455,7 +453,6 @@ spec:
                       type: integer
                   required:
                   - analysisValueTemplateRef
-                  - sloTargets
                   type: object
                 type: array
               totalScore:

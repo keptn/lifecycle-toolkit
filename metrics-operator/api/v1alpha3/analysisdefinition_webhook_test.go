@@ -55,18 +55,21 @@ func TestObjective_validate(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "no pass set",
+			name:    "no SLOTarget set",
+			obj:     Objective{},
+			wantErr: nil,
+		},
+		{
+			name: "neither pass nor warning set",
 			obj: Objective{
-				SLOTargets: SLOTarget{
-					Pass: &CriteriaSet{},
-				},
+				SLOTargets: &SLOTarget{},
 			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf nor Anyof set"),
+			wantErr: nil,
 		},
 		{
 			name: "only pass set",
 			obj: Objective{
-				SLOTargets: SLOTarget{
+				SLOTargets: &SLOTarget{
 					Pass: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -85,10 +88,35 @@ func TestObjective_validate(t *testing.T) {
 			wantErr: nil,
 		},
 		{
+			name: "only warning set",
+			obj: Objective{
+				SLOTargets: &SLOTarget{
+					Warning: &CriteriaSet{
+						AnyOf: []Criteria{
+							{
+								AnyOf: []Target{
+									{
+										EqualTo: &TargetValue{
+											FixedValue: 5,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			wantErr: fmt.Errorf("Warning criteria cannot be set without Pass criteria"),
+		},
+		{
 			name: "warning not set properly",
 			obj: Objective{
-				SLOTargets: SLOTarget{
-					Warning: &CriteriaSet{},
+				SLOTargets: &SLOTarget{
+					Warning: &CriteriaSet{
+						AnyOf: []Criteria{
+							{},
+						},
+					},
 					Pass: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -104,12 +132,12 @@ func TestObjective_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
 		},
 		{
 			name: "warning and pass set properly",
 			obj: Objective{
-				SLOTargets: SLOTarget{
+				SLOTargets: &SLOTarget{
 					Warning: &CriteriaSet{
 						AnyOf: []Criteria{
 							{
@@ -168,14 +196,18 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: SLOTarget{
-								Pass: &CriteriaSet{},
+							SLOTargets: &SLOTarget{
+								Pass: &CriteriaSet{
+									AnyOf: []Criteria{
+										{},
+									},
+								},
 							},
 						},
 					},
 				},
 			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf nor Anyof set"),
+			wantErr: fmt.Errorf("Criteria: AllOf nor Anyof set"),
 		},
 		{
 			name: "happy path",
@@ -183,7 +215,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: SLOTarget{
+							SLOTargets: &SLOTarget{
 								Pass: &CriteriaSet{
 									AnyOf: []Criteria{
 										{
@@ -292,9 +324,9 @@ func TestCriteriaSet_validate(t *testing.T) {
 		wantErr  error
 	}{
 		{
-			name:     "either AllOf nor AnyOf set",
+			name:     "neither AllOf nor AnyOf set",
 			criteria: CriteriaSet{},
-			wantErr:  fmt.Errorf("CriteriaSet: AllOf nor Anyof set"),
+			wantErr:  nil,
 		},
 		{
 			name: "AllOf and AnyOf set",

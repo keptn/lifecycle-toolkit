@@ -189,7 +189,7 @@ NAME           AGE
 keptndemoapp   2s
 ```
 
-Keptn also creates a new application version every time you increment the `version` label..
+Keptn also creates a new application version every time you increment the `version` label.
 
 The `PHASE` will change as the deployment progresses.
 A successful deployment is shown as `PHASE=Completed`
@@ -309,11 +309,8 @@ Create some Keptn Grafana dashboards that will be available when Grafana is inst
 kubectl create ns monitoring
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-config.yaml
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
-kubectl -n monitoring label cm/grafana-dashboard-keptn-applications grafana_dashboard="1"
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
-kubectl -n monitoring label cm/grafana-dashboard-keptn-overview grafana_dashboard="1"
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
-kubectl -n monitoring label cm/grafana-dashboard-keptn-workloads grafana_dashboard="1"
 ```
 
 ## Install Grafana datasources

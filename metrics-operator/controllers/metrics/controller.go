@@ -18,6 +18,7 @@ package metrics
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -182,43 +183,43 @@ func aggregateValues(stringSlice []string, aggFunc string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "min":
 		val, err := stats.Min(floatSlice)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "median":
 		val, err := stats.Median(floatSlice)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "avg":
 		val, err := stats.Mean(floatSlice)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "p99":
 		val, err := stats.Percentile(floatSlice, 99)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "p90":
 		val, err := stats.Percentile(floatSlice, 90)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	case "p95":
 		val, err := stats.Percentile(floatSlice, 95)
 		if err != nil {
 			return "", err
 		}
-		aggValue = val
+		aggValue = fmt.Sprintf("%v", val)
 	}
 	return aggValue, nil
 }

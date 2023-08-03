@@ -9,6 +9,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230727070347-cba2de5a5cd0
+	github.com/montanaflynn/stats v0.7.1
 	github.com/open-feature/go-sdk v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0

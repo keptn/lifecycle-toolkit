@@ -80,6 +80,10 @@ _Appears in:_
 _Appears in:_
 - [CriteriaSet](#criteriaset)
 
+| Field | Description |
+| --- | --- |
+| `anyOf` _[Target](#target) array_ | AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass |
+| `allOf` _[Target](#target) array_ | AllOf contains a list of criteria where all of them need to be successful for the CriteriaSet to pass |
 
 
 #### CriteriaSet
@@ -307,6 +311,22 @@ _Appears in:_
 | `warningPercentage` _integer_ | WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning' status. |
 
 
+#### Target
+
+
+
+Target specifies the supported operators for value comparisons
+
+_Appears in:_
+- [Criteria](#criteria)
+
+| Field | Description |
+| --- | --- |
+| `lessThanOrEqual` _[TargetValue](#targetvalue)_ |  |
+| `lessThan` _[TargetValue](#targetvalue)_ |  |
+| `greaterThan` _[TargetValue](#targetvalue)_ |  |
+| `greaterThanOrEqual` _[TargetValue](#targetvalue)_ |  |
+| `equalTo` _[TargetValue](#targetvalue)_ |  |
 
 
 #### TargetValue
@@ -318,8 +338,5 @@ _Appears in:_
 _Appears in:_
 - [Target](#target)
 
-| Field | Description |
-| --- | --- |
-| `fixedValue` _Quantity_ |  |
 
 

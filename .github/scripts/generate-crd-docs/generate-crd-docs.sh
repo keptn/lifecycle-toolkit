@@ -63,6 +63,7 @@ for api_group in "$OPERATOR_API_ROOT"*; do
       --source-path="./$api_version" \
       --renderer="$RENDERER" \
       --config "$RENDERER_CONFIG_FILE" \
+      --max-depth 10 \
       --output-path "$OUTPUT_PATH/_index.md"
     echo "---------------------"
   done
@@ -105,6 +106,7 @@ for api_version in "$METRICS_API_ROOT"*; do
     --source-path="./$api_version" \
     --renderer="$RENDERER" \
     --config "$RENDERER_CONFIG_FILE" \
+    --max-depth 10 \
     --output-path "$OUTPUT_PATH/_index.md"
   echo "---------------------"
 done

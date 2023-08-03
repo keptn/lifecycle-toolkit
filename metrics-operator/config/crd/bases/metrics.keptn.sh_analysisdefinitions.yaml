@@ -35,7 +35,7 @@ spec:
           spec:
             description: AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
             properties:
-              objective:
+              objectives:
                 items:
                   description: Objective defines a list of objectives
                   properties:

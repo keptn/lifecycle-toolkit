@@ -22,7 +22,7 @@ import (
 
 // AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
 type AnalysisDefinitionSpec struct {
-	Objectives []Objective `json:"objective,omitempty"`
+	Objectives []Objective `json:"objectives,omitempty"`
 	TotalScore Score       `json:"totalScore"`
 }
 

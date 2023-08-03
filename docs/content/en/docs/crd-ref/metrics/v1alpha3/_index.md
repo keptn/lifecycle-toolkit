@@ -67,7 +67,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `objective` _[Objective](#objective) array_ |  |
+| `objectives` _[Objective](#objective) array_ |  |
 | `totalScore` _[Score](#score)_ |  |
 
 

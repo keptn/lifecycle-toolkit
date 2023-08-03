@@ -15,6 +15,10 @@ spec:
                     fixedValue: 600
                 - lessThan:
                     fixedValue: 600
+          allOf:
+            - allOf:
+                - lessThanOrEqual:
+                    fixedValue: 600
         warning:
           anyOf:
             - allOf:

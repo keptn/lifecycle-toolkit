@@ -39,7 +39,7 @@ This section currently includes the following topics:
   This can be a new installation or an existing installation
   that meets the requirements for KLT.
 
-* [Install and integrate KLT into your cluster](install-integrate]
+* [Install and integrate KLT into your cluster](install)
 
 * [Set up metrics and observability](metrics-observe) --
   When you identify the data-sources being used

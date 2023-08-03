@@ -12,62 +12,93 @@ but the format and content is still evolving.
 We hope you will contribute your experiences
 and questions that you have.
 
+Before you begin the migration project,
+we suggest that you run through the exercises in
+[Getting started](../../getting-started)
+to familiarize yourself with how the Keptn Lifecycle Toolkit works.
+When you are ready to begin the migration,
+follow the instructions in
+[Installation and upgrade](../install)
+to set up your Kubernetes cluster
+and install KLT on it.
+
+On this page, we discuss some of the major paradigm shifts
+in KLT relative to Keptn v1
+and then discuss how elements of your Keptn v1 can be implemented
+for the Keptn Lifecycle Toolkit.
+
+## The Keptn Lifecycle Toolkit paradigm
+
 The Keptn Lifecycle Toolkit uses a different paradigm
-than Keptn v1 and so migration is not a straight-forward process.
+than Keptn v1 and so migration requires technical adjustments.
 Much of the logic and functionality of your Keptn v1 projects
 can be migrated to KLT
 but must be rewritten to utilize KLT components.
 
-## How many namespaces?
+Some key points:
 
-You have significant flexibility to decide how many namespaces to use
-and how to set them up.
-See the Kubernetes
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-documentation for some basic information.
-You can also search and find lots of "Best Practices for Namespaces"
-documents published on the web.
+* KLT uses native Kubernetes CRDs
+  to configure SLIs/SLOs, tasks, and other elements
+  that are part of the environment where the application deployment lives
+  rather than using its own Git repo and its
+  [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
+  file as Keptn V1 does.
+  - See the
+    [CRD Reference](../../yaml-crd-ref)
+    section for pages that describe the Keptn manifests
+    that you populate manually for KLT.
+  - See the
+    [API Reference](../../crd-ref)
+    for a comprehensive reference to all resources
+    defined for Keptn.
 
-Some considerations for KLT:
+* KLT is not a continuous delivery tool
+  because it does not provide promotion.
+  Instead, it works with standard deployment tools
+  such as ArgoCD, Flux, even `kubectl -- apply`.
+  KLT then prevents the scheduling and deployment
+  of workflows if the environment does not meet
+  the user-defined requirements.
 
-* KLT primarily operates on Kubernetes
-  [Workload](https://kubernetes.io/docs/concepts/workloads/)
-  resources and
+* KLT operates on a
   [KeptnApp](../../yaml-crd-ref/app.md)
-   resources
-  that are activated and defined by annotations to each Workload.
-* [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
-  resources need to be located
-  in the same namespace as the associated
-  [KeptnMetric](../../yaml-crd-ref/metric.md)
-  resources.
-  But
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-  resources that are used for pre- and post-deployment
-  can reference metrics from any namespace.
-  So you can create `KeptnMetrics` in a centralized namespace
-  (such as `keptn-lifecycle-toolkit`)
-  and access those metrics in evaluations on all namespaces in the cluster.
-* Each `KeptnApp` resource identifies the namespace to which it belongs.
-  If you configure multiple namespaces,
-  you can have `KeptnApp` resources with the same name
-  in multiple namespaces without having them conflict.
-* You do not need separate namespaces for separate versions of your application.
-  The `KeptnApp` resource includes fields to define
-  the `version` as well as a `revision`
-  (used if you have to rerun a deployment
-  but want to retain the version number).
+  resource
+  that is an amalgamation of multiple Kubernetes workloads,
+  which together comprise the released application.
+  Each workload deploys a separate microservice,
+  which can be deployed at different times using different tools.
 
-So, possible namespace designs run the gamut:
+* KLT integrates with continuous delivery tools
+  to insures that a `KeptnApp` is not deployed
+  if it does not meet the user-defined requirements
+  for all the associated workloads.
+  It also exposes metrics to evaluate the success/status of a deployment.
 
-* Move all the Keptn v1 projects you had into a single namespace
-* Move a group of Keptn v1 projects into a single namespace
-* Define one namespace per Keptn v1 project
-* Define one namespace per Keptn v1 stage
+* KLT provides an operator
+  that can observe and orchestrate application-aware workload life cycles.
+  This operator leverages Kubernetes webhooks
+  and extends the Kubernetes scheduler
+  to support pre- and post-deployment hooks.
+  When the operator detects a new version of a service
+  (implemented as a Kubernetes
+  [Workload](https://kubernetes.io/docs/concepts/workloads/)),
+  it can execute pre- and post-deployment evaluations and tasks
+  using Kubernetes capabilities..
+
+* KLT provides extensive observability data
+  using OpenTelementry and Prometheus
+  rather than storing the data in a special Keptn database.
+  This data can be displayed using Grafana and Jaeger
+  or the dashboard of your choice.
+
+For in-depth information about KLT components
+and how they work, see the
+[Architecture](../../concepts/architecture)
+section.
 
 ## Disposition of Keptn v1 components in KLT
 
-To help you wrap your mind around the process,
+To help you wrap your mind around the migration process,
 this lists Keptn v1 components
 and identifies their possible disposition when you migrate to KLT.
 
@@ -92,7 +123,7 @@ but does not directly translate to a KLT resource.
 ### service
 
 A Keptn v1 service models a smaller chunk of a project.
-Most projects include many services
+Most projects include many services.
 In a micro-services world,
 a service may represent a micro-service
 but it could instead be a wrapper for something else,
@@ -103,36 +134,48 @@ When migrating to KLT,
 you need to analyze what each service is doing
 and translate that into an appropriate resource.
 The closest analogy is a Kubernetes
-[orkload](https://kubernetes.io/docs/concepts/workloads/)
-but some services may become
-[Keptn tasks](../../implementing/tasks/)
-or other resources.
+[workload](https://kubernetes.io/docs/concepts/workloads/)
+but some services may be translated into
+[KeptnTaskDefinition](../../yaml-crd-ref/app.md)
+or other resources.  See
+[Working with Keptn tasks](../../implementing/tasks/)
+for more information.
+
+For example:
+
+* A Keptnv1 service that runs chaos or load tests
+  can probably be translated into
+  a `KeptnTask` using the `container-runner`.
+* A Keptnv1 service that runs a database
+  can probably be translated
+  into a Kubenetes `StateFulSet` workload; see
+  [Workload Resources](https://kubernetes.io/docs/concepts/workloads/controllers/)
+  for more information.
+* A Keptnv1 service that runs a webserver
+  can probably be translated into
+  a Kubernetes `Deployment` workload.
 
 ### stage
 
-A stage is a subsection of a project
-and has no corresponding KLT component.
+A stage is a subsection of a project.
+Because KLT is not a continuous delivery tool,
+it has no concept of a `stage`
+but rather depends on a deployment engine.
 However, the logic of the stages can be useful
 when architecting the migration:
 
-* **deployment stage** -- KLT does not itself deploy the software
-    but rather depends on a deployment engine.
-    However, a `deployment` stage may define sequences of tasks
+* A **deployment stage** -- may define sequences of tasks
     that should be translated into
     [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
     resources that are executed pre- and post-deployment
-* **testing stage** may define sequences of tasks
+* A **testing stage** may define sequences of tasks
     that should be translated into `KeptnTaskDefinition` resources
     that are executed pre- and post-deployment.
 
-    Note that all `KeptnTask` resources at the same level
-    (either pre-deployment or post-deployment)
-    execute in parallel
-    whereas Keptn v1 sequences and tasks could execute in parallel.
-    If you have actions that need to execute sequentially,
-    create a single `KeptnTaskDefinition` that calls each action in order.
-    If you have tasks that can execute in parallel,
-    migrating to KLT may improve the performance of the deployment.
+Stage functionality could be implemented in many different ways.
+Some functionality might be implemented in different namespaces
+or even in different KLT-enabled clusters,
+allowing a tool such as ArgoCD to handle promotion.
 
 ### sequence
 
@@ -169,7 +212,7 @@ or a file movement over a network, or other arbitrary activities
 that may or may not have anything to do with an application's lifecycle.
 
 When migrating to KLT,
-tasks that are not part of the lifecycle workflow
+sequences that are not part of the lifecycle workflow
 should not be handled by KLT
 but should instead be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
@@ -177,11 +220,13 @@ such as Jenkins, Argo Workflows, Flux, and Tekton.
 ### task
 
 Keptn v1 defines some specific types of tasks,
-each of which is translated to KLT resources
-that are appropriate for the activity:
+each of which is translated to a KLT resource
+that is appropriate for the activity:
 
-* A **deployment task** becomes a
-  [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+* A Keptn v1 **deployment task** becomes a
+  [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+  [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+  or [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
   workload.
   You can code
   [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
@@ -202,6 +247,16 @@ that are appropriate for the activity:
   should be coded into the `KeptnTaskDefinition` resource
   as appropriate.
 
+Note that all `KeptnTask` resources at the same level
+(either pre-deployment or post-deployment)
+execute in parallel
+whereas Keptn v1 sequences and tasks can not execute in parallel.
+
+* If you have actions that need to execute sequentially,
+  create a single `KeptnTaskDefinition` that calls each action in order.
+* If you have tasks that can execute in parallel,
+  migrating to KLT may improve the performance of the deployment.
+
 ### SLIs
 
 Keptn v1
@@ -213,15 +268,15 @@ which is configured as a Keptn integration.
 
 When migrating to KLT, you need to define a
 [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
-resource for the data provider you are using.
+resource for the data provider(s) you are using.
+Note that KLT allows you to support multiple data providers
+and multiple instances of each data provider for your SLI's
+whereas Keptn v1 only allows you to use one SLI per project.
 
 The queries defined for the Keptn v1 SLIs
 should be translated into
 [KeptnMetric](../../yaml-crd-ref/metric.md)
 resources.
-Note that KLT allows you to support multiple data providers
-and multiple instances of each data provider for your SLI's
-whereas Keptn v1 only allows you to use one SLI per project.
 
 ### SLOs
 
@@ -230,6 +285,9 @@ of Quality Gates evaluations that are represented by
 [SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/).
 Facilities such as weighting of SLI's and scoring of the evaluation
 do not currently exist.
+This functionality is under development; see
+[Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
+
 However, simple evaluations of an SLI can be defined as
 [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
 resources.
@@ -238,8 +296,8 @@ resources.
 
 KLT does not currently support the same level of
 [remediations](https://keptn.sh/docs/1.0.x/reference/files/remediation/)
-as Keptn v1 does.
-KLT does provide limited "Day 2" facilities:
+as Keptn v1 does
+but it does provide limited "Day 2" facilities:
 
 * Any query that is possible for your data provider post-deployment
   can be defined as a `KeptnMetricDefinition`;
@@ -250,17 +308,19 @@ KLT does provide limited "Day 2" facilities:
   which can detect the need for additional resources
   (more pods, memory, disk space, etc)
   and automatically add those resources to your configuration
-  based on the `ReplicaSet` resources you have defined
+  based on the `ReplicaSet` resources you have defined.
+  See
+  [Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics/#using-the-horizontalpodautoscaler)
+  for more information.
 
 ### Integrations and services in JES
 
 Most functionality coded using the Keptn v1
 [JES](https://github.com/keptn-contrib/job-executor-service)
 (Job Executor Service) facility
-can be defined as tasks using the `container-runtime` runner.
-In most cases, the code from the JES container
 can simply be moved into a `KeptnTaskDefinition` resource
-that uses the `container-runtime` runner.
+that uses the
+[container-runtime runner](../../yaml-crd-ref/taskdefinition/#yaml-synopsis-for-container-runtime).
 If the JES container code is written in JavaScript or TypeScript,
 you may be able to use the `deno-runtime` runner.
 If the JES container code is written in Python 3,

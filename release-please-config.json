@@ -45,6 +45,17 @@
         "Makefile"
       ]
     },
+    "scheduler": {
+      "package-name": "scheduler",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "scheduler",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
+      ]
+    },
     "metrics-operator": {
       "package-name": "metrics-operator",
       "changelog-path": "CHANGELOG.md",

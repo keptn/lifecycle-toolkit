@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"      //nolint:gci
 	"net/http" //nolint:gci
 	"time"
@@ -195,13 +196,24 @@ func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]s
 		r.Log.Info("Too many values in the query result")
 		return nil, nil, fmt.Errorf("too many values in the query result")
 	}
-	var resultSlice []string
+
+	resultSlice := make([]string, len(resultMatrix[0].Values))
 	for i, value := range resultMatrix[0].Values {
 		resultSlice[i] = value.Value.String()
 	}
-	b, err := resultMatrix[0].MarshalJSON()
+
+	b, err := MarshalSlice(resultSlice)
 	if err != nil {
 		return nil, nil, err
 	}
+
 	return resultSlice, b, nil
+}
+
+func MarshalSlice(s []string) ([]byte, error) {
+	b, err := json.Marshal(s)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }

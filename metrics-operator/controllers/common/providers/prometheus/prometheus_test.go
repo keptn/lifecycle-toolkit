@@ -130,7 +130,7 @@ func Test_prometheus(t *testing.T) {
 			name:       "warnings with range and step",
 			in:         promWarnPayloadWithRangeAndStep,
 			outForStep: []string{"1", "1", "1", "1", "1"},
-			outraw:     []byte("\"1\""),
+			outraw:     []byte("[\"1\",\"1\",\"1\",\"1\",\"1\"]"),
 			wantError:  false,
 			hasRange:   true,
 			hasStep:    true,
@@ -163,7 +163,7 @@ func Test_prometheus(t *testing.T) {
 			name:       "happy path with range and step",
 			in:         promPayloadWithRangeAndStep,
 			outForStep: []string{"1", "1", "1", "1", "1"},
-			outraw:     []byte("\"1\""),
+			outraw:     []byte("[\"1\",\"1\",\"1\",\"1\",\"1\"]"),
 			wantError:  false,
 			hasRange:   true,
 			hasStep:    true,
@@ -219,7 +219,7 @@ func Test_prometheus(t *testing.T) {
 						},
 					}
 					r, raw, e := kpp.EvaluateQueryForStep(context.TODO(), obj, p)
-					require.Equal(t, tt.out, r)
+					require.Equal(t, tt.outForStep, r)
 					require.Equal(t, tt.outraw, raw)
 					if tt.wantError != (e != nil) {
 						t.Errorf("want error: %t, got: %v", tt.wantError, e)

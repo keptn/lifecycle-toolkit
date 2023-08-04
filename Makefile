@@ -65,11 +65,6 @@ kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
 
-.PHONY: helm-package
-helm-package:
-	$(MAKE) build-release-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-	$(MAKE) release-helm-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-
 .PHONY: build-release-manifests
 build-release-manifests:
 	$(MAKE) -C lifecycle-operator generate

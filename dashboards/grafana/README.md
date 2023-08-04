@@ -23,10 +23,14 @@ them in this folder.
 
 ## Exporting the dashboards for the Examples
 
-You can prepare the dashboards for the examples and import using the following command:
+You can Import the default dashboards by running: 
+```shell
+make apply-configmaps
+```
+If you prefere to prepare the dashboards for the examples and importing them as json you can use:
 
 ```shell
-make generate
+make import-json
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

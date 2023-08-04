@@ -4,22 +4,21 @@ GRAFANA_USERNAME ?= admin
 GRAFANA_PASSWORD ?= admin
 GRAFANA_PORT ?= 3000
 
-.PHONY: generate
-generate: generate-configmaps generate-import
+.PHONY: import-json
+generate: generate-import import
 
 .PHONY: generate-import
 generate-import:
 	mkdir import | true
 	./utils/generate-import.sh ./import
 
-.PHONY: generate-configmap
+.PHONY: apply-configmaps
 generate-configmaps:
 	mkdir configmap | true
 	kubectl create configmap grafana-dashboard-keptn-overview -n monitoring --from-file=./grafana_dashboard_overview.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-overview.yaml
 	kubectl create configmap grafana-dashboard-keptn-applications -n monitoring --from-file=./grafana_dashboard_applications.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-applications.yaml
 	kubectl create configmap grafana-dashboard-keptn-workloads -n monitoring --from-file=./grafana_dashboard_workloads.json -o yaml --dry-run=client > configmap/grafana-dashboard-keptn-workloads.yaml
 	kubectl apply -f /configmap
-	#cp configmap/* ../../examples/support/observability/config/prometheus
 
 .PHONY: import
 import:

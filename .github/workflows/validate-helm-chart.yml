@@ -22,7 +22,8 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3.7.0
         with:
-          node-version: 16     
+          node-version: 16   
+            
       - name: Install readme generator
         run: |
           git clone https://github.com/bitnami-labs/readme-generator-for-helm.git
@@ -48,3 +49,4 @@ jobs:
             echo ""
             echo "Helm values documentation is correct!"
           fi
+          

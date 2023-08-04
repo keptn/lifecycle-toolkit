@@ -49,6 +49,45 @@ func TestTarget_validate(t *testing.T) {
 	}
 }
 
+func TestScore_validate(t *testing.T) {
+	tests := []struct {
+		name    string
+		score   Score
+		wantErr error
+	}{
+		{
+			name: "happy path",
+			score: Score{
+				PassPercentage:    90,
+				WarningPercentage: 80,
+			},
+			wantErr: nil,
+		},
+		{
+			name: "warn and pass equal",
+			score: Score{
+				PassPercentage:    90,
+				WarningPercentage: 90,
+			},
+			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
+		},
+		{
+			name: "warn higher than pass",
+			score: Score{
+				PassPercentage:    90,
+				WarningPercentage: 95,
+			},
+			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.wantErr, tt.score.validate())
+		})
+	}
+}
+
 func TestObjective_validate(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -185,14 +224,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "no spec set",
-			obj: AnalysisDefinition{
-				Spec: AnalysisDefinitionSpec{},
-			},
-			wantErr: nil,
-		},
-		{
-			name: "failure path",
+			name: "failure path - objective",
 			obj: AnalysisDefinition{
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
@@ -209,6 +241,37 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				},
 			},
 			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
+		},
+		{
+			name: "failure path - score",
+			obj: AnalysisDefinition{
+				Spec: AnalysisDefinitionSpec{
+					Objectives: []Objective{
+						{
+							SLOTargets: SLOTarget{
+								Pass: &CriteriaSet{
+									AnyOf: []Criteria{
+										{
+											AnyOf: []Target{
+												{
+													EqualTo: &TargetValue{
+														FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					TotalScore: Score{
+						PassPercentage:    80,
+						WarningPercentage: 90,
+					},
+				},
+			},
+			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
 		},
 		{
 			name: "happy path",
@@ -232,6 +295,10 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 								},
 							},
 						},
+					},
+					TotalScore: Score{
+						PassPercentage:    80,
+						WarningPercentage: 70,
 					},
 				},
 			},

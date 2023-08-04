@@ -32,8 +32,12 @@ type AnalysisDefinitionSpec struct {
 // Score defines the required score for an evaluation to be successful
 type Score struct {
 	// PassPercentage defines the threshold which needs to be reached for an evaluation to pass.
+	// +kubebuilder:validation:Minimum:=0
+	// +kubebuilder:validation:Maximum:=100
 	PassPercentage int `json:"passPercentage"`
 	// WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning' status.
+	// +kubebuilder:validation:Minimum:=0
+	// +kubebuilder:validation:Maximum:=100
 	WarningPercentage int `json:"warningPercentage"`
 }
 
@@ -43,10 +47,10 @@ type Objective struct {
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// SLOTargets defines a list of SLOTargests
 	SLOTargets SLOTarget `json:"sloTargets,omitempty"`
-	// Weigeht defines the importance of one SLI over the others
+	// Weight can be used to emphasize the importance of one SLI over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`
-	// KeyObjective defines the meaning that the analysis fails if the objective is not met
+	// KeyObjective defines if the objective fails when the SLO Targets are not met
 	// +kubebuilder:default:=false
 	KeyObjective bool `json:"keyObjective,omitempty"`
 }
@@ -67,17 +71,17 @@ type TargetValue struct {
 
 // CriteriaSet represents the set of evaluation criterias
 type CriteriaSet struct {
-	// AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass
+	// AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets)
 	AnyOf []Criteria `json:"anyOf,omitempty"`
-	// AllOf contains a list of targets where all of them need to be successful for the Criteria to pass
+	// AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets)
 	AllOf []Criteria `json:"allOf,omitempty"`
 }
 
 // Criteria defines list of targets for evaluation
 type Criteria struct {
-	// AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass
+	// AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets)
 	AnyOf []Target `json:"anyOf,omitempty"`
-	// AllOf contains a list of criteria where all of them need to be successful for the CriteriaSet to pass
+	// AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets)
 	AllOf []Target `json:"allOf,omitempty"`
 }
 
@@ -98,7 +102,7 @@ type Target struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// AnalysisDefinition is the Schema for the analysisdefinitions API
+// AnalysisDefinition is the Schema for the analysisdefinitions APIs
 type AnalysisDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

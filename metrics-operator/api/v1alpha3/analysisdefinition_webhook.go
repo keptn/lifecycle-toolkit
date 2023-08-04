@@ -26,7 +26,7 @@ import (
 )
 
 // log is for logging in this package.
-var analysisdefinitionlog = logf.Log.WithName("analysisdefinition-resource")
+var analysisdefinitionlog = logf.Log.WithName("analysisdefinition-webhook")
 
 func (r *AnalysisDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
@@ -48,7 +48,7 @@ func (r *AnalysisDefinition) ValidateCreate() error {
 		}
 	}
 
-	return nil
+	return r.Spec.TotalScore.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -61,13 +61,20 @@ func (r *AnalysisDefinition) ValidateUpdate(old runtime.Object) error {
 		}
 	}
 
-	return nil
+	return r.Spec.TotalScore.validate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (r *AnalysisDefinition) ValidateDelete() error {
 	analysisdefinitionlog.Info("validate delete", "name", r.Name)
 
+	return nil
+}
+
+func (s *Score) validate() error {
+	if s.WarningPercentage >= s.PassPercentage {
+		return fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score")
+	}
 	return nil
 }
 

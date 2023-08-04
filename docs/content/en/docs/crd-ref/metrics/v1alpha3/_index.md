@@ -26,7 +26,7 @@ Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API gr
 
 
 
-AnalysisDefinition is the Schema for the analysisdefinitions API
+AnalysisDefinition is the Schema for the analysisdefinitions APIs
 
 _Appears in:_
 - [AnalysisDefinitionList](#analysisdefinitionlist)
@@ -82,8 +82,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `anyOf` _[Target](#target) array_ | AnyOf contains a list of criteria where any of them needs to be successful for the CriteriaSet to pass |
-| `allOf` _[Target](#target) array_ | AllOf contains a list of criteria where all of them need to be successful for the CriteriaSet to pass |
+| `anyOf` _[Target](#target) array_ | AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets) |
+| `allOf` _[Target](#target) array_ | AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets) |
 
 
 #### CriteriaSet
@@ -97,8 +97,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `anyOf` _[Criteria](#criteria) array_ | AnyOf contains a list of targets where any of them needs to be successful for the Criteria to pass |
-| `allOf` _[Criteria](#criteria) array_ | AllOf contains a list of targets where all of them need to be successful for the Criteria to pass |
+| `anyOf` _[Criteria](#criteria) array_ | AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets) |
+| `allOf` _[Criteria](#criteria) array_ | AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets) |
 
 
 #### KeptnMetric
@@ -247,8 +247,8 @@ _Appears in:_
 | --- | --- |
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
 | `sloTargets` _[SLOTarget](#slotarget)_ | SLOTargets defines a list of SLOTargests |
-| `weight` _integer_ | Weigeht defines the importance of one SLI over the others |
-| `keyObjective` _boolean_ | KeyObjective defines the meaning that the analysis fails if the objective is not met |
+| `weight` _integer_ | Weight can be used to emphasize the importance of one SLI over the others |
+| `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the SLO Targets are not met |
 
 
 #### ProviderRef

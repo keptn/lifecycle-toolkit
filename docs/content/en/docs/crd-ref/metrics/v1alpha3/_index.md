@@ -71,36 +71,6 @@ _Appears in:_
 | `totalScore` _[Score](#score)_ | TotalScore defines the required score for an evaluation to be successful |
 
 
-#### Criteria
-
-
-
-Criteria defines list of targets for evaluation
-
-_Appears in:_
-- [CriteriaSet](#criteriaset)
-
-| Field | Description |
-| --- | --- |
-| `anyOf` _[Target](#target) array_ | AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets) |
-| `allOf` _[Target](#target) array_ | AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets) |
-
-
-#### CriteriaSet
-
-
-
-CriteriaSet represents the set of evaluation criterias
-
-_Appears in:_
-- [SLOTarget](#slotarget)
-
-| Field | Description |
-| --- | --- |
-| `anyOf` _[Criteria](#criteria) array_ | AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets) |
-| `allOf` _[Criteria](#criteria) array_ | AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets) |
-
-
 #### KeptnMetric
 
 
@@ -246,9 +216,41 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
-| `sloTargets` _[SLOTarget](#slotarget)_ | SLOTargets defines a list of SLOTargests |
+| `target` _[Target](#target)_ | SLOTargets defines a list of SLOTargests |
 | `weight` _integer_ | Weight can be used to emphasize the importance of one SLI over the others |
 | `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the SLO Targets are not met |
+
+
+#### Operator
+
+
+
+Operator specifies the supported operators for value comparisons
+
+_Appears in:_
+- [Target](#target)
+
+| Field | Description |
+| --- | --- |
+| `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator in evaluation analysis |
+| `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator in evaluation analysis |
+| `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator in evaluation analysis |
+| `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator in evaluation analysis |
+| `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator in evaluation analysis |
+
+
+#### OperatorValue
+
+
+
+OperatorValue represents the value the result will be compared to
+
+_Appears in:_
+- [Operator](#operator)
+
+| Field | Description |
+| --- | --- |
+| `fixedValue` _Quantity_ | FixedValue defines the value for comparison |
 
 
 #### ProviderRef
@@ -281,21 +283,6 @@ _Appears in:_
 | `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 
-#### SLOTarget
-
-
-
-SLOTarget defines the Criteria
-
-_Appears in:_
-- [Objective](#objective)
-
-| Field | Description |
-| --- | --- |
-| `pass` _[CriteriaSet](#criteriaset)_ | Pass defines limit up to which an evaluation is successful |
-| `warning` _[CriteriaSet](#criteriaset)_ | Warning defines the border where the result is not pass and not fail |
-
-
 #### Score
 
 
@@ -315,28 +302,14 @@ _Appears in:_
 
 
 
-Target specifies the supported operators for value comparisons
+SLOTarget defines the Criteria
 
 _Appears in:_
-- [Criteria](#criteria)
+- [Objective](#objective)
 
 | Field | Description |
 | --- | --- |
-| `lessThanOrEqual` _[TargetValue](#targetvalue)_ | LessThanOrEqual represents '<=' operator in evaluation analysis |
-| `lessThan` _[TargetValue](#targetvalue)_ | LessThan represents '<' operator in evaluation analysis |
-| `greaterThan` _[TargetValue](#targetvalue)_ | GreaterThan represents '>' operator in evaluation analysis |
-| `greaterThanOrEqual` _[TargetValue](#targetvalue)_ | GreaterThanOrEqual represents '>=' operator in evaluation analysis |
-| `equalTo` _[TargetValue](#targetvalue)_ | EqualTo represents '==' operator in evaluation analysis |
-
-
-#### TargetValue
-
-
-
-TargetValue represents the value the result will be compared to
-
-_Appears in:_
-- [Target](#target)
-
+| `failure` _[Operator](#operator)_ | Failure defines limit up to which an evaluation fails |
+| `warning` _[Operator](#operator)_ | Warning defines the border where the result is not pass and not fail |
 
 

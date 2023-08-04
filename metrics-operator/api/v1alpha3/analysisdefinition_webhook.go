@@ -79,89 +79,52 @@ func (s *Score) validate() error {
 }
 
 func (o *Objective) validate() error {
-	if o.SLOTargets.Pass == nil && o.SLOTargets.Warning != nil {
-		return fmt.Errorf("Warning criteria cannot be set without Pass criteria")
-	}
-
-	if o.SLOTargets.Pass != nil {
-		if err := o.SLOTargets.Pass.validate(); err != nil {
-			return err
-		}
-	}
-
-	if o.SLOTargets.Warning != nil {
-		if err := o.SLOTargets.Warning.validate(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (c *CriteriaSet) validate() error {
-	if len(c.AllOf) > 0 && len(c.AnyOf) > 0 {
-		return fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneously")
-	}
-
-	for _, a := range c.AllOf {
-		if err := a.validate(); err != nil {
-			return err
-		}
-	}
-
-	for _, a := range c.AnyOf {
-		if err := a.validate(); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (c *Criteria) validate() error {
-	if len(c.AllOf) > 0 && len(c.AnyOf) > 0 {
-		return fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneously")
-	}
-
-	if len(c.AllOf) == 0 && len(c.AnyOf) == 0 {
-		return fmt.Errorf("Criteria: neither AllOf nor AnyOf set")
-	}
-
-	for _, t := range c.AllOf {
-		if err := t.validate(); err != nil {
-			return err
-		}
-	}
-
-	for _, t := range c.AnyOf {
-		if err := t.validate(); err != nil {
-			return err
-		}
+	if err := o.Target.validate(); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (t *Target) validate() error {
+	if t.Failure == nil && t.Warning != nil {
+		return fmt.Errorf("Warning criteria cannot be set without Failure criteria")
+	}
+	if t.Failure != nil {
+		if err := t.Failure.validate(); err != nil {
+			return err
+		}
+	}
+
+	if t.Warning != nil {
+		if err := t.Warning.validate(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (o *Operator) validate() error {
 	counter := 0
-	if t.LessThan != nil {
+	if o.LessThan != nil {
 		counter++
 	}
-	if t.LessThanOrEqual != nil {
+	if o.LessThanOrEqual != nil {
 		counter++
 	}
-	if t.GreaterThan != nil {
+	if o.GreaterThan != nil {
 		counter++
 	}
-	if t.GreaterThanOrEqual != nil {
+	if o.GreaterThanOrEqual != nil {
 		counter++
 	}
-	if t.EqualTo != nil {
+	if o.EqualTo != nil {
 		counter++
 	}
 	if counter > 1 {
-		return fmt.Errorf("Target: multiple operators can not be set within the same target")
+		return fmt.Errorf("Operator: multiple operators can not be set")
 	}
 	if counter == 0 {
-		return fmt.Errorf("Target: no operator set")
+		return fmt.Errorf("Operator: no operator set")
 	}
 	return nil
 }

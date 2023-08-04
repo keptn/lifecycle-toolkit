@@ -46,7 +46,7 @@ type Objective struct {
 	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// SLOTargets defines a list of SLOTargests
-	SLOTargets SLOTarget `json:"sloTargets,omitempty"`
+	Target Target `json:"target,omitempty"`
 	// Weight can be used to emphasize the importance of one SLI over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`
@@ -56,47 +56,31 @@ type Objective struct {
 }
 
 // SLOTarget defines the Criteria
-type SLOTarget struct {
-	// Pass defines limit up to which an evaluation is successful
-	Pass *CriteriaSet `json:"pass,omitempty"`
+type Target struct {
+	// Failure defines limit up to which an evaluation fails
+	Failure *Operator `json:"failure,omitempty"`
 	// Warning defines the border where the result is not pass and not fail
-	Warning *CriteriaSet `json:"warning,omitempty"`
+	Warning *Operator `json:"warning,omitempty"`
 }
 
-// TargetValue represents the value the result will be compared to
-type TargetValue struct {
+// OperatorValue represents the value the result will be compared to
+type OperatorValue struct {
 	// FixedValue defines the value for comparison
 	FixedValue resource.Quantity `json:"fixedValue"`
 }
 
-// CriteriaSet represents the set of evaluation criterias
-type CriteriaSet struct {
-	// AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets)
-	AnyOf []Criteria `json:"anyOf,omitempty"`
-	// AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets)
-	AllOf []Criteria `json:"allOf,omitempty"`
-}
-
-// Criteria defines list of targets for evaluation
-type Criteria struct {
-	// AnyOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical OR of all targets)
-	AnyOf []Target `json:"anyOf,omitempty"`
-	// AllOf contains a list of targets [t1,t2 ...] where the pass criteria is given only if all target pass (logical AND of all targets)
-	AllOf []Target `json:"allOf,omitempty"`
-}
-
-// Target specifies the supported operators for value comparisons
-type Target struct {
+// Operator specifies the supported operators for value comparisons
+type Operator struct {
 	// LessThanOrEqual represents '<=' operator in evaluation analysis
-	LessThanOrEqual *TargetValue `json:"lessThanOrEqual,omitempty"`
+	LessThanOrEqual *OperatorValue `json:"lessThanOrEqual,omitempty"`
 	// LessThan represents '<' operator in evaluation analysis
-	LessThan *TargetValue `json:"lessThan,omitempty"`
+	LessThan *OperatorValue `json:"lessThan,omitempty"`
 	// GreaterThan represents '>' operator in evaluation analysis
-	GreaterThan *TargetValue `json:"greaterThan,omitempty"`
+	GreaterThan *OperatorValue `json:"greaterThan,omitempty"`
 	// GreaterThanOrEqual represents '>=' operator in evaluation analysis
-	GreaterThanOrEqual *TargetValue `json:"greaterThanOrEqual,omitempty"`
+	GreaterThanOrEqual *OperatorValue `json:"greaterThanOrEqual,omitempty"`
 	// EqualTo represents '==' operator in evaluation analysis
-	EqualTo *TargetValue `json:"equalTo,omitempty"`
+	EqualTo *OperatorValue `json:"equalTo,omitempty"`
 }
 
 //+kubebuilder:object:root=true

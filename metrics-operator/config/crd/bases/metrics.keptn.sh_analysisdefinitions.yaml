@@ -57,742 +57,158 @@ spec:
                       description: KeyObjective defines if the objective fails when
                         the SLO Targets are not met
                       type: boolean
-                    sloTargets:
+                    target:
                       description: SLOTargets defines a list of SLOTargests
                       properties:
-                        pass:
-                          description: Pass defines limit up to which an evaluation
-                            is successful
+                        failure:
+                          description: Failure defines limit up to which an evaluation
+                            fails
                           properties:
-                            allOf:
-                              description: AllOf contains a list of targets [t1,t2
-                                ...] where the pass criteria is given only if all
-                                target pass (logical AND of all targets)
-                              items:
-                                description: Criteria defines list of targets for
-                                  evaluation
-                                properties:
-                                  allOf:
-                                    description: AllOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical AND of all
-                                      targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
+                            equalTo:
+                              description: EqualTo represents '==' operator in evaluation
+                                analysis
+                              properties:
+                                fixedValue:
                                   anyOf:
-                                    description: AnyOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical OR of all targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
-                                type: object
-                              type: array
-                            anyOf:
-                              description: AnyOf contains a list of targets [t1,t2
-                                ...] where the pass criteria is given only if all
-                                target pass (logical OR of all targets)
-                              items:
-                                description: Criteria defines list of targets for
-                                  evaluation
-                                properties:
-                                  allOf:
-                                    description: AllOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical AND of all
-                                      targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator in
+                                evaluation analysis
+                              properties:
+                                fixedValue:
                                   anyOf:
-                                    description: AnyOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical OR of all targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
-                                type: object
-                              type: array
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                                in evaluation analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator in evaluation
+                                analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                                in evaluation analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
                           type: object
                         warning:
                           description: Warning defines the border where the result
                             is not pass and not fail
                           properties:
-                            allOf:
-                              description: AllOf contains a list of targets [t1,t2
-                                ...] where the pass criteria is given only if all
-                                target pass (logical AND of all targets)
-                              items:
-                                description: Criteria defines list of targets for
-                                  evaluation
-                                properties:
-                                  allOf:
-                                    description: AllOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical AND of all
-                                      targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
+                            equalTo:
+                              description: EqualTo represents '==' operator in evaluation
+                                analysis
+                              properties:
+                                fixedValue:
                                   anyOf:
-                                    description: AnyOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical OR of all targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
-                                type: object
-                              type: array
-                            anyOf:
-                              description: AnyOf contains a list of targets [t1,t2
-                                ...] where the pass criteria is given only if all
-                                target pass (logical OR of all targets)
-                              items:
-                                description: Criteria defines list of targets for
-                                  evaluation
-                                properties:
-                                  allOf:
-                                    description: AllOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical AND of all
-                                      targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator in
+                                evaluation analysis
+                              properties:
+                                fixedValue:
                                   anyOf:
-                                    description: AnyOf contains a list of targets
-                                      [t1,t2 ...] where the pass criteria is given
-                                      only if all target pass (logical OR of all targets)
-                                    items:
-                                      description: Target specifies the supported
-                                        operators for value comparisons
-                                      properties:
-                                        equalTo:
-                                          description: EqualTo represents '==' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThan:
-                                          description: GreaterThan represents '>'
-                                            operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        greaterThanOrEqual:
-                                          description: GreaterThanOrEqual represents
-                                            '>=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThan:
-                                          description: LessThan represents '<' operator
-                                            in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                        lessThanOrEqual:
-                                          description: LessThanOrEqual represents
-                                            '<=' operator in evaluation analysis
-                                          properties:
-                                            fixedValue:
-                                              anyOf:
-                                              - type: integer
-                                              - type: string
-                                              description: FixedValue defines the
-                                                value for comparison
-                                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                              x-kubernetes-int-or-string: true
-                                          required:
-                                          - fixedValue
-                                          type: object
-                                      type: object
-                                    type: array
-                                type: object
-                              type: array
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                                in evaluation analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator in evaluation
+                                analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                                in evaluation analysis
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
                           type: object
                       type: object
                     weight:

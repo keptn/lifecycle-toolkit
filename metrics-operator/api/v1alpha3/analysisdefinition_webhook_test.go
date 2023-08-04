@@ -8,33 +8,33 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
-func TestTarget_validate(t *testing.T) {
+func TestOperator_validate(t *testing.T) {
 	tests := []struct {
-		name    string
-		target  Target
-		wantErr error
+		name     string
+		operator Operator
+		wantErr  error
 	}{
 		{
-			name:    "no target set",
-			target:  Target{},
-			wantErr: fmt.Errorf("Target: no operator set"),
+			name:     "no operator set",
+			operator: Operator{},
+			wantErr:  fmt.Errorf("Operator: no operator set"),
 		},
 		{
-			name: "multiple targets set",
-			target: Target{
-				LessThanOrEqual: &TargetValue{
+			name: "multiple operators set",
+			operator: Operator{
+				LessThanOrEqual: &OperatorValue{
 					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
-				LessThan: &TargetValue{
+				LessThan: &OperatorValue{
 					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
 			},
-			wantErr: fmt.Errorf("Target: multiple operators can not be set within the same target"),
+			wantErr: fmt.Errorf("Operator: multiple operators can not be set"),
 		},
 		{
 			name: "happy path",
-			target: Target{
-				LessThanOrEqual: &TargetValue{
+			operator: Operator{
+				LessThanOrEqual: &OperatorValue{
 					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
 			},
@@ -44,7 +44,7 @@ func TestTarget_validate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.wantErr, tt.target.validate())
+			require.Equal(t, tt.wantErr, tt.operator.validate())
 		})
 	}
 }
@@ -95,113 +95,35 @@ func TestObjective_validate(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name:    "no SLOTarget set",
+			name:    "no Target set",
 			obj:     Objective{},
-			wantErr: nil,
-		},
-		{
-			name: "neither pass nor warning set",
-			obj: Objective{
-				SLOTargets: SLOTarget{},
-			},
-			wantErr: nil,
-		},
-		{
-			name: "only pass set",
-			obj: Objective{
-				SLOTargets: SLOTarget{
-					Pass: &CriteriaSet{
-						AnyOf: []Criteria{
-							{
-								AnyOf: []Target{
-									{
-										EqualTo: &TargetValue{
-											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
 			wantErr: nil,
 		},
 		{
 			name: "only warning set",
 			obj: Objective{
-				SLOTargets: SLOTarget{
-					Warning: &CriteriaSet{
-						AnyOf: []Criteria{
-							{
-								AnyOf: []Target{
-									{
-										EqualTo: &TargetValue{
-											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-										},
-									},
-								},
-							},
+				Target: Target{
+					Warning: &Operator{
+						EqualTo: &OperatorValue{
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Pass criteria"),
+			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
 		},
 		{
-			name: "warning not set properly",
+			name: "warning and failure set properly",
 			obj: Objective{
-				SLOTargets: SLOTarget{
-					Warning: &CriteriaSet{
-						AnyOf: []Criteria{
-							{},
+				Target: Target{
+					Warning: &Operator{
+						EqualTo: &OperatorValue{
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
-					Pass: &CriteriaSet{
-						AnyOf: []Criteria{
-							{
-								AnyOf: []Target{
-									{
-										EqualTo: &TargetValue{
-											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
-		},
-		{
-			name: "warning and pass set properly",
-			obj: Objective{
-				SLOTargets: SLOTarget{
-					Warning: &CriteriaSet{
-						AnyOf: []Criteria{
-							{
-								AnyOf: []Target{
-									{
-										EqualTo: &TargetValue{
-											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-										},
-									},
-								},
-							},
-						},
-					},
-					Pass: &CriteriaSet{
-						AnyOf: []Criteria{
-							{
-								AnyOf: []Target{
-									{
-										EqualTo: &TargetValue{
-											FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-										},
-									},
-								},
-							},
+					Failure: &Operator{
+						EqualTo: &OperatorValue{
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 						},
 					},
 				},
@@ -229,18 +151,14 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: SLOTarget{
-								Pass: &CriteriaSet{
-									AnyOf: []Criteria{
-										{},
-									},
-								},
+							Target: Target{
+								Failure: &Operator{},
 							},
 						},
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
+			wantErr: fmt.Errorf("Operator: no operator set"),
 		},
 		{
 			name: "failure path - score",
@@ -248,18 +166,10 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: SLOTarget{
-								Pass: &CriteriaSet{
-									AnyOf: []Criteria{
-										{
-											AnyOf: []Target{
-												{
-													EqualTo: &TargetValue{
-														FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-													},
-												},
-											},
-										},
+							Target: Target{
+								Failure: &Operator{
+									EqualTo: &OperatorValue{
+										FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 									},
 								},
 							},
@@ -279,18 +189,10 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 				Spec: AnalysisDefinitionSpec{
 					Objectives: []Objective{
 						{
-							SLOTargets: SLOTarget{
-								Pass: &CriteriaSet{
-									AnyOf: []Criteria{
-										{
-											AnyOf: []Target{
-												{
-													EqualTo: &TargetValue{
-														FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-													},
-												},
-											},
-										},
+							Target: Target{
+								Failure: &Operator{
+									EqualTo: &OperatorValue{
+										FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 									},
 								},
 							},
@@ -314,63 +216,89 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 	}
 }
 
-func TestCriteria_validate(t *testing.T) {
+func TestTarget_validate(t *testing.T) {
 	tests := []struct {
-		name     string
-		criteria Criteria
-		wantErr  error
+		name    string
+		target  Target
+		wantErr error
 	}{
 		{
-			name:     "neither AllOf nor AnyOf set",
-			criteria: Criteria{},
-			wantErr:  fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
+			name:    "neither Failure and Warning set",
+			target:  Target{},
+			wantErr: nil,
 		},
 		{
-			name: "AllOf and AnyOf set",
-			criteria: Criteria{
-				AnyOf: []Target{
-					{
-						EqualTo: &TargetValue{
-							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-						},
-					},
-				},
-				AllOf: []Target{
-					{
-						EqualTo: &TargetValue{
-							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-						},
+			name: "Failure set",
+			target: Target{
+				Failure: &Operator{
+					LessThanOrEqual: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Criteria: AllOf and AnyOf are set simultaneously"),
+			wantErr: nil,
 		},
 		{
-			name: "AllOf validation fails",
-			criteria: Criteria{
-				AllOf: []Target{
-					{},
+			name: "only warning set",
+			target: Target{
+				Warning: &Operator{
+					LessThanOrEqual: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+					},
 				},
 			},
-			wantErr: fmt.Errorf("Target: no operator set"),
+			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
 		},
 		{
-			name: "AnyOf validation fails",
-			criteria: Criteria{
-				AnyOf: []Target{
-					{},
+			name:    "neither failure nor warning set",
+			target:  Target{},
+			wantErr: nil,
+		},
+		{
+			name: "only failure set",
+			target: Target{
+				Failure: &Operator{
+					EqualTo: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+					},
 				},
 			},
-			wantErr: fmt.Errorf("Target: no operator set"),
+			wantErr: nil,
 		},
 		{
-			name: "happy path",
-			criteria: Criteria{
-				AnyOf: []Target{
-					{
-						EqualTo: &TargetValue{
-							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-						},
+			name: "only warning set",
+			target: Target{
+				Warning: &Operator{
+					EqualTo: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+		},
+		{
+			name: "warning not set properly",
+			target: Target{
+				Warning: &Operator{},
+				Failure: &Operator{
+					EqualTo: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: fmt.Errorf("Operator: no operator set"),
+		},
+		{
+			name: "warning and failure set properly",
+			target: Target{
+				Warning: &Operator{
+					EqualTo: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+					},
+				},
+				Failure: &Operator{
+					EqualTo: &OperatorValue{
+						FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 					},
 				},
 			},
@@ -380,74 +308,7 @@ func TestCriteria_validate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.wantErr, tt.criteria.validate())
-		})
-	}
-}
-
-func TestCriteriaSet_validate(t *testing.T) {
-	tests := []struct {
-		name     string
-		criteria CriteriaSet
-		wantErr  error
-	}{
-		{
-			name:     "neither AllOf nor AnyOf set",
-			criteria: CriteriaSet{},
-			wantErr:  nil,
-		},
-		{
-			name: "AllOf and AnyOf set",
-			criteria: CriteriaSet{
-				AnyOf: []Criteria{
-					{},
-				},
-				AllOf: []Criteria{
-					{},
-				},
-			},
-			wantErr: fmt.Errorf("CriteriaSet: AllOf and AnyOf are set simultaneously"),
-		},
-		{
-			name: "AllOf validation fails",
-			criteria: CriteriaSet{
-				AllOf: []Criteria{
-					{},
-				},
-			},
-			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
-		},
-		{
-			name: "AnyOf validation fails",
-			criteria: CriteriaSet{
-				AnyOf: []Criteria{
-					{},
-				},
-			},
-			wantErr: fmt.Errorf("Criteria: neither AllOf nor AnyOf set"),
-		},
-		{
-			name: "happy path",
-			criteria: CriteriaSet{
-				AnyOf: []Criteria{
-					{
-						AnyOf: []Target{
-							{
-								EqualTo: &TargetValue{
-									FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
-								},
-							},
-						},
-					},
-				},
-			},
-			wantErr: nil,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.wantErr, tt.criteria.validate())
+			require.Equal(t, tt.wantErr, tt.target.validate())
 		})
 	}
 }

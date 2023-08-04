@@ -48,10 +48,8 @@ jobs:
         uses: actions/github-script@v6
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
-          CERT_MANAGER_TAG: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
-          METRICS_OPERATOR_TAG: ${{ steps.release.outputs.metrics-operator--tag_name }}
-          LIFECYCLE_OPERATOR_TAG: ${{ steps.release.outputs.lifecycle-operator--tag_name }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
         with:
           script: |
             const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');
@@ -65,30 +63,27 @@ jobs:
             const releaseMatrix = itemsToPublish.map(item => {
                 switch (item) {
                     case "lifecycle-operator":
-                        return [{
-                            name: item,
-                            folder: item,
-                            tagName: process.env.LIFECYCLE_OPERATOR_TAG
-                        }];
+                        return [
+                            {
+                                name: item,
+                                folder: item,
+                                tagName: process.env.ARTIFACT_TAG_NAME
+                            },
+                            {
+                                name: "scheduler",
+                                folder: "scheduler/",
+                                tagName: process.env.ARTIFACT_TAG_NAME
+                            }
+                        ];
                     case "metrics-operator":
-                        return [{
-                            name: item,
-                            folder: item,
-                            tagName: process.env.METRICS_OPERATOR_TAG
-                        }];
                     case "klt-cert-manager":
                         return [{
                             name: item,
                             folder: item,
-                            tagName: process.env.CERT_MANAGER_TAG
+                            tagName: process.env.ARTIFACT_TAG_NAME
                         }];
                     case ".":
                         return [
-                            {
-                              name: "scheduler",
-                              folder: "scheduler/",
-                              tagName: process.env.KLT_TAG
-                            },
                             {
                               name: "functions-runtime",
                               folder: "functions-runtime/",

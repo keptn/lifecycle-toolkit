@@ -12,13 +12,12 @@
       "prerelease": false,
       "monorepo-tags": "klt",
       "draft": false,
-      "exclude-paths": ["klt-cert-manager", "lifecycle-operator", "metrics-operator"],
+      "exclude-paths": ["klt-cert-manager", "lifecycle-operator", "metrics-operator", "scheduler"],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
         "helm/chart/Chart.yaml",
         "Makefile",
-        "scheduler/Makefile",
         "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"
@@ -58,6 +57,15 @@
       ]
     }
   },
+  "plugins": [
+    {
+      "type": "linked-versions",
+      "groupName": "lifecycle-scheduler",
+      "components": [
+        "lifecycle-operator", "scheduler"
+      ]
+    }
+  ],
   "changelog-sections": [
     {
       "type": "feat",

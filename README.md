@@ -34,17 +34,15 @@ alpha ![status](https://img.shields.io/badge/status-alpha-orange) )
 beta ![status](https://img.shields.io/badge/status-beta-yellow) )
 stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
-The status follows the [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
+The status follows the
+[Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 
-For more info about the features, please refer to our [documentation](https://lifecycle.keptn.sh/docs/).
-
-See the Keptn Lifecycle Toolkit
-[documentation](https://lifecycle.keptn.sh/docs/)
-for information about installing and implementing KLT
-as well as migrating to KLT from
+For more info about the features, please refer to our
+[documentation](https://lifecycle.keptn.sh/docs/).
+The documentation also includes information about
+installing the Keptn Lifecycle Toolkit
+and migrating to it from
 [Keptn v1](https://keptn.sh/docs/).
-=======
-
 
 ## Watch the KubeCon 2022 Detroit Demo
 
@@ -235,7 +233,8 @@ kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the 
 kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
 
-Instead, if you want to build and deploy the operator into your cluster directly from the code, you can type:
+Instead, if you want to build and deploy the operator into your cluster
+directly from the code, you can type:
 
 ```bash
 RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
@@ -244,7 +243,6 @@ RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 
 # Build and deploy the dev images to the current kubernetes cluster
 make build-deploy-dev-environment
-
 ```
 
 ## License

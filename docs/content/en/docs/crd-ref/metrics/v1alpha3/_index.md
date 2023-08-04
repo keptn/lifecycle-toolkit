@@ -13,62 +13,11 @@ description: Reference information for metrics.keptn.sh/v1alpha3
 Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API group
 
 ### Resource Types
-- [AnalysisDefinition](#analysisdefinition)
-- [AnalysisDefinitionList](#analysisdefinitionlist)
 - [KeptnMetric](#keptnmetric)
 - [KeptnMetricList](#keptnmetriclist)
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
 
-
-
-#### AnalysisDefinition
-
-
-
-AnalysisDefinition is the Schema for the analysisdefinitions APIs
-
-_Appears in:_
-- [AnalysisDefinitionList](#analysisdefinitionlist)
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
-| `kind` _string_ | `AnalysisDefinition`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `spec` _[AnalysisDefinitionSpec](#analysisdefinitionspec)_ |  |
-| `status` _string_ | unused field |
-
-
-#### AnalysisDefinitionList
-
-
-
-AnalysisDefinitionList contains a list of AnalysisDefinition
-
-
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
-| `kind` _string_ | `AnalysisDefinitionList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[AnalysisDefinition](#analysisdefinition) array_ |  |
-
-
-#### AnalysisDefinitionSpec
-
-
-
-AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
-
-_Appears in:_
-- [AnalysisDefinition](#analysisdefinition)
-
-| Field | Description |
-| --- | --- |
-| `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives to evaluate for an analysis |
-| `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an analysis to be successful |
 
 
 #### KeptnMetric
@@ -189,70 +138,6 @@ _Appears in:_
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
 
 
-#### ObjectReference
-
-
-
-
-
-_Appears in:_
-- [Objective](#objective)
-
-| Field | Description |
-| --- | --- |
-| `name` _string_ | Name defines the name of the referenced object |
-| `namespace` _string_ | Namespace defines the namespace of the referenced object |
-
-
-#### Objective
-
-
-
-Objective defines an objective for analysis
-
-_Appears in:_
-- [AnalysisDefinitionSpec](#analysisdefinitionspec)
-
-| Field | Description |
-| --- | --- |
-| `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate |
-| `target` _[Target](#target)_ | Target defines failure or warning criteria |
-| `weight` _integer_ | Weight can be used to emphasize the importance of one Objective over the others |
-| `keyObjective` _boolean_ | KeyObjective defines whether the whole analysis fails when this objective's target is not met |
-
-
-#### Operator
-
-
-
-Operator specifies the supported operators for value comparisons
-
-_Appears in:_
-- [Target](#target)
-
-| Field | Description |
-| --- | --- |
-| `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator |
-| `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator |
-| `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator |
-| `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator |
-| `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator |
-
-
-#### OperatorValue
-
-
-
-OperatorValue represents the value to which the result is compared
-
-_Appears in:_
-- [Operator](#operator)
-
-| Field | Description |
-| --- | --- |
-| `fixedValue` _Quantity_ | FixedValue defines the value for comparison |
-
-
 #### ProviderRef
 
 
@@ -280,36 +165,6 @@ _Appears in:_
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
-| `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
-
-
-#### Target
-
-
-
-Target defines the failure and warning criteria
-
-_Appears in:_
-- [Objective](#objective)
-
-| Field | Description |
-| --- | --- |
-| `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails |
-| `warning` _[Operator](#operator)_ | Warning defines limits where the result does not pass or fail |
-
-
-#### TotalScore
-
-
-
-TotalScore defines the required score for an analysis to be successful
-
-_Appears in:_
-- [AnalysisDefinitionSpec](#analysisdefinitionspec)
-
-| Field | Description |
-| --- | --- |
-| `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass |
-| `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status |
+| `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 

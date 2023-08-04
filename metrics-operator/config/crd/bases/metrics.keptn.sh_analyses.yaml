@@ -1,0 +1,89 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.1
+  name: analyses.metrics.keptn.sh
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: Analysis
+    listKind: AnalysisList
+    plural: analyses
+    singular: analysis
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.analysisDefinition.name
+      name: AnalysisDefinition
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: Analysis is the Schema for the analyses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnalysisSpec defines the desired state of Analysis
+            properties:
+              analysisDefinition:
+                description: AnalysisDefinition refers to the AnalysisDefinition,
+                  a CRD that stores the AnalysisValuesTemplates
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+              args:
+                additionalProperties:
+                  type: string
+                description: Args corresponds to a map of key/value pairs that can
+                  be used to substitute placeholders in the AnalysisValueTemplate
+                  query. The placeholder must be the capitalized version of the key;
+                  i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})".
+                type: object
+              timeframe:
+                description: Timeframe specifies the range for the corresponding query
+                  in the AnalysisValueTemplate
+                properties:
+                  from:
+                    description: From is the time of start for the query, this field
+                      follows RFC3339 time format
+                    format: date-time
+                    type: string
+                  to:
+                    description: To is the time of end for the query, this field follows
+                      RFC3339 time format
+                    format: date-time
+                    type: string
+                required:
+                - from
+                - to
+                type: object
+            required:
+            - analysisDefinition
+            - timeframe
+            type: object
+          status:
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

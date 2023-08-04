@@ -53,9 +53,8 @@ Some key points:
     defined for Keptn.
 
 * KLT is not a delivery tool
-  because it does not deploy applications.
-  Instead, it focuses on supporting the deployment of your application in your Kubernetes environment.
-  It works with standard deployment tools
+  because it does not provide promotion.
+  Instead, it works with standard deployment tools
   such as ArgoCD, Flux, even `kubectl -- apply`.
   KLT then prevents the scheduling and deployment
   of workflows if the environment does not meet

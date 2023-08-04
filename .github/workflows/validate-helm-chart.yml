@@ -23,12 +23,7 @@ jobs:
         uses: actions/setup-node@v3.7.0
         with:
           node-version: 16
-
-      - name: Generate helm charts
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-        run: make helm-package
-
+          
       - name: Install readme generator
         run: |
           git clone https://github.com/bitnami-labs/readme-generator-for-helm.git

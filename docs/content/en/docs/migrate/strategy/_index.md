@@ -43,11 +43,11 @@ Some key points:
   rather than using its own Git repo and its
   [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
   file as Keptn V1 does.
-  - See the
+  * See the
     [CRD Reference](../../yaml-crd-ref)
     section for pages that describe the Keptn manifests
     that you populate manually for KLT.
-  - See the
+  * See the
     [API Reference](../../crd-ref)
     for a comprehensive reference to all resources
     defined for Keptn.
@@ -140,7 +140,8 @@ The closest analogy is a Kubernetes
 [workload](https://kubernetes.io/docs/concepts/workloads/)
 but some services may be translated into
 [KeptnTaskDefinition](../../yaml-crd-ref/app.md)
-or other resources.  See
+or other resources.
+ See
 [Working with Keptn tasks](../../implementing/tasks/)
 for more information.
 

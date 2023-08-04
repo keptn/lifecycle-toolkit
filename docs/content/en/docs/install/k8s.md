@@ -100,7 +100,6 @@ you can configure KLT to instead use your cert-manager.
 See [Use your own cert-manager](cert-manager.md)
 for detailed instructions.
 
-
 ## How many namespaces?
   
 You have significant flexibility to decide how many namespaces to use
@@ -120,7 +119,7 @@ Some considerations for KLT:
    resources
   that are activated and defined by annotations to each Workload.
 * [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
-  resources need to be located 
+  resources need to be located
   in the same namespace as the associated
   [KeptnMetric](../../yaml-crd-ref/metric.md)
   resources.

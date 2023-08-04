@@ -246,6 +246,7 @@ Look for metrics starting with `keptn_`.
 
 ![keptn prometheus metrics](/docs/install/assets/keptnprommetrics.png)
 
+You need to open a new shell to continue.
 ## Make DORA metrics more user friendly
 
 It is much more user friendly to provide dashboards for metrics, logs and traces.

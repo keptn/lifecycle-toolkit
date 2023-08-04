@@ -10,7 +10,7 @@ A
 resource defines tasks that the Keptn Lifecycle Toolkit runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
-[KeptnWorkload](../../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 A Keptn task executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),

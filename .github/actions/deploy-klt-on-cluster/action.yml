@@ -89,7 +89,6 @@ runs:
       shell: bash
       run: |
         echo "Installing KLT using helm"
-        make helm-package
         helm version
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ./helm/chart  \
           --set scheduler.scheduler.imagePullPolicy=Never \

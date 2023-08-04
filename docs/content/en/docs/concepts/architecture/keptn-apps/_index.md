@@ -16,7 +16,7 @@ with the ability to handle extra phases.
 It can execute the pre- and post-deployment evaluations of a Workload
 and run pre- and post-deployment tasks.
 
-In its state, it keeps track of the currently active `Workload Instances`,
+In its state, it tracks the currently active `Workload Instances`,
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
 which the scheduler can use to determine whether the pods belonging to a workload should proceed.

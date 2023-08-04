@@ -156,7 +156,7 @@ func Test_prometheus(t *testing.T) {
 			in:         promVectorPayloadWithRangeAndStep,
 			outForStep: nil,
 			wantError:  true,
-			hasRange:   false,
+			hasRange:   true,
 			hasStep:    true,
 		},
 		{

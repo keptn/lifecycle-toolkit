@@ -103,8 +103,11 @@ The steps in which the controller fetches metrics are given below:
        description: time when the status data was last updated
        format: date-time
        type: string
+     value:
+       description: resulting value in human-readable language
+       type: string
      rawValue:
-       description: shows the resulting value, in raw format
+       description: resulting value, in raw format
        format: byte
        type: string
    ```

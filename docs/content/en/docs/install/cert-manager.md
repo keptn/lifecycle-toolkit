@@ -56,6 +56,10 @@ and **replace** the following `volumes` definition
        secretName: webhook-server-cert
    ```
 
+Note the name change from `certs-dir` to `cert`.
+This is intentional.
+Kubernetes does not allow replacing an `emptyDir` with a `secret` so the name change resolves this issue.
+
 Each manifest must have the following special annotation:
 
 ```yaml

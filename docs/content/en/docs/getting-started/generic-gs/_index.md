@@ -141,7 +141,7 @@ You can get more detailed information about the workloads
 by describing one of the resources:
 
 ```shell
-kubectl describe keptnworkloadinstances podtato-head-podtato-head-entry -n podtato-kubectl
+kubectl describe keptnworkloadinstances  podtato-head-podtato-head-frontend -n podtato-kubectl
 ```
 
 > **Note**

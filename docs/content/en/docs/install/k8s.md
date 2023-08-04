@@ -115,16 +115,16 @@ Some considerations for KLT:
 * KLT primarily operates on Kubernetes
   [Workload](https://kubernetes.io/docs/concepts/workloads/)
   resources and
-  [KeptnApp](../../yaml-crd-ref/app.md)
+  [KeptnApp](../yaml-crd-ref/app.md)
    resources
   that are activated and defined by annotations to each Workload.
-* [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
+* [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
   resources need to be located
   in the same namespace as the associated
-  [KeptnMetric](../../yaml-crd-ref/metric.md)
+  [KeptnMetric](../yaml-crd-ref/metric.md)
   resources.
   But
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources that are used for pre- and post-deployment
   can reference metrics from any namespace.
   So you can create `KeptnMetrics` in a centralized namespace

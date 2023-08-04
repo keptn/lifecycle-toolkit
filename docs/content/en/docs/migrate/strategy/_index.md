@@ -313,7 +313,7 @@ but it does provide limited "Day 2" facilities:
   and automatically add those resources to your configuration
   based on the `ReplicaSet` resources you have defined.
   See
-  [Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics/#using-the-horizontalpodautoscaler)
+  [Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
   for more information.
 
 ### Integrations and services in JES
@@ -323,7 +323,7 @@ Most functionality coded using the Keptn v1
 (Job Executor Service) facility
 can simply be moved into a `KeptnTaskDefinition` resource
 that uses the
-[container-runtime runner](../../yaml-crd-ref/taskdefinition/#yaml-synopsis-for-container-runtime).
+[container-runtime runner](../../yaml-crd-ref/taskdefinition.md/#yaml-synopsis-for-container-runtime).
 If the JES container code is written in JavaScript or TypeScript,
 you may be able to use the `deno-runtime` runner.
 If the JES container code is written in Python 3,

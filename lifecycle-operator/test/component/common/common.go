@@ -3,7 +3,6 @@ package common
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +10,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
 	ginkgotypes "github.com/onsi/ginkgo/v2/types"

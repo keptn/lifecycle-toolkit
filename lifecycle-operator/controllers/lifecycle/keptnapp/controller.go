@@ -19,13 +19,13 @@ package keptnapp
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"

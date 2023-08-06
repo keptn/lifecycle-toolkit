@@ -19,12 +19,12 @@ package options
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"time"
 
 	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"

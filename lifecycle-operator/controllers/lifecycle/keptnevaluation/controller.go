@@ -19,7 +19,6 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -27,6 +26,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/providers/keptnmetric"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"

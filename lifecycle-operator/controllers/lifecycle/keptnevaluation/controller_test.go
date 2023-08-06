@@ -260,7 +260,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		Client:        fakeClient,
 		Scheme:        fakeClient.Scheme(),
 		Log:           logr.Logger{},
-		EventSender:   controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender:   controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Meters:        telemetry.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
 	}

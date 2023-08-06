@@ -44,7 +44,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
+		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},

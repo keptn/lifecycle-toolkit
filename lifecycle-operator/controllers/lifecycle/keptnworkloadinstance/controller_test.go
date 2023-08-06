@@ -1064,7 +1064,7 @@ func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITr
 	r := &KeptnWorkloadInstanceReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewEventSender(recorder),
+		EventSender:   controllercommon.NewK8sSender(recorder),
 		Log:           ctrl.Log.WithName("test-appController"),
 		TracerFactory: tf,
 		Meters:        controllercommon.InitAppMeters(),

@@ -27,16 +27,11 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	fromTime, toTime, stepInterval, err := getTimeRange(metric)
+	fromTime, toTime, err := getTimeRange(metric)
 	if err != nil {
 		return "", nil, err
 	}
-	var qURL string
-	if metric.Spec.Range.Step != "" {
-		qURL = provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&interval=" + stepInterval + "&query=" + url.QueryEscape(metric.Spec.Query)
-	} else {
-		qURL = provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
-	}
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
@@ -94,6 +89,71 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	return value, b, nil
 }
 
+func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
+	fromTime, toTime, stepInterval, err := getTimeRangeForStep(metric)
+	if err != nil {
+		return nil, nil, err
+	}
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&interval=" + strconv.Itoa(int(stepInterval)) + "&query=" + url.QueryEscape(metric.Spec.Query)
+	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+	if err != nil {
+		d.Log.Error(err, "Error while creating request")
+		return nil, nil, err
+	}
+
+	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Dd-Api-Key", apiKeyVal)
+	req.Header.Set("Dd-Application-Key", appKeyVal)
+
+	res, err := d.HttpClient.Do(req)
+	if err != nil {
+		d.Log.Error(err, "Error while creating request")
+		return nil, nil, err
+	}
+	defer func() {
+		err := res.Body.Close()
+		if err != nil {
+			d.Log.Error(err, "Could not close request body")
+		}
+	}()
+
+	b, _ := io.ReadAll(res.Body)
+	result := datadogV1.MetricsQueryResponse{}
+	err = json.Unmarshal(b, &result)
+	if err != nil {
+		d.Log.Error(err, "Error while parsing response")
+		return nil, b, err
+	}
+
+	if result.Error != nil {
+		err = fmt.Errorf("%s", *result.Error)
+		d.Log.Error(err, "Error from DataDog provider")
+		return nil, b, err
+	}
+
+	if len(result.Series) == 0 {
+		d.Log.Info("No values in query result")
+		return nil, nil, fmt.Errorf("no values in query result")
+	}
+
+	points := (result.Series)[0].Pointlist
+	if len(points) == 0 {
+		d.Log.Info("No metric points in query result")
+		return nil, b, fmt.Errorf("no metric points in query result")
+	}
+
+	r := d.getResultSlice(points)
+	return r, b, nil
+}
+
 func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
 	var sum float64 = 0
 	var count uint64 = 0
@@ -110,7 +170,18 @@ func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
 	return sum / float64(count)
 }
 
-func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, string, error) {
+func (d *KeptnDataDogProvider) getResultSlice(points [][]*float64) []string {
+	resultSlice := make([]string, 0, len(points))
+	for _, point := range points {
+		if point[1] != nil {
+			valueAsString := fmt.Sprintf("%f", *point[1])
+			resultSlice = append(resultSlice, valueAsString)
+		}
+	}
+	return resultSlice
+}
+
+func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, error) {
 	var intervalInMin string
 	if metric.Spec.Range != nil {
 		intervalInMin = metric.Spec.Range.Interval
@@ -119,10 +190,19 @@ func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, string, error) {
 	}
 	intervalDuration, err := time.ParseDuration(intervalInMin)
 	if err != nil {
-		return 0, 0, "", err
+		return 0, 0, err
 	}
-	if metric.Spec.Range.Step != "" {
-		return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), metric.Spec.Range.Step, nil
+	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), nil
+}
+
+func getTimeRangeForStep(metric metricsapi.KeptnMetric) (int64, int64, int64, error) {
+	intervalDuration, err := time.ParseDuration(metric.Spec.Range.Interval)
+	if err != nil {
+		return 0, 0, 0, err
 	}
-	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), "", nil
+	stepDuration, err := time.ParseDuration(metric.Spec.Range.Step)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), stepDuration.Milliseconds(), nil
 }

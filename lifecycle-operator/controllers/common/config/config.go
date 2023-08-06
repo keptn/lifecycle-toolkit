@@ -11,10 +11,13 @@ const defaultKeptnAppCreationRequestTimeout = 30 * time.Second
 type IConfig interface {
 	SetCreationRequestTimeout(value time.Duration)
 	GetCreationRequestTimeout() time.Duration
+	SetCloudEventsEndpoint(endpoint string)
+	GetCloudEventsEndpoint() string
 }
 
 type ControllerConfig struct {
 	keptnAppCreationRequestTimeout time.Duration
+	cloudEventsEndpoint            string
 }
 
 var instance *ControllerConfig
@@ -33,4 +36,12 @@ func (o *ControllerConfig) SetCreationRequestTimeout(value time.Duration) {
 
 func (o *ControllerConfig) GetCreationRequestTimeout() time.Duration {
 	return o.keptnAppCreationRequestTimeout
+}
+
+func (o *ControllerConfig) SetCloudEventsEndpoint(endpoint string) {
+	o.cloudEventsEndpoint = endpoint
+}
+
+func (o *ControllerConfig) GetCloudEventsEndpoint() string {
+	return o.cloudEventsEndpoint
 }

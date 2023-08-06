@@ -19,6 +19,7 @@ package options
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -49,8 +50,8 @@ type KeptnConfigReconciler struct {
 func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for KeptnConfig")
 
-	config := &optionsv1alpha1.KeptnConfig{}
-	err := r.Get(ctx, req.NamespacedName, config)
+	cfg := &optionsv1alpha1.KeptnConfig{}
+	err := r.Get(ctx, req.NamespacedName, cfg)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
 	}
@@ -63,12 +64,15 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		r.initConfig()
 	}
 
-	result, err := r.reconcileOtelCollectorUrl(config)
+	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err
 	}
+	// reconcile config values
+	cfgInstance := config.Instance()
+	cfgInstance.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
 
-	r.LastAppliedSpec = &config.Spec
+	r.LastAppliedSpec = &cfg.Spec
 	return ctrl.Result{}, nil
 }
 

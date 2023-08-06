@@ -514,7 +514,7 @@ The [GitHub CLI](https://cli.github.com/) can be used to download the manifests 
 ```bash
 gh run list --repo keptn/lifecycle-toolkit # find the id of a run
 gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
-kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
+kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the lifecycle-operator
 kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
 

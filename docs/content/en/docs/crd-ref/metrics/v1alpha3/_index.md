@@ -20,8 +20,6 @@ Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API gr
 
 
 
-
-
 #### KeptnMetric
 
 
@@ -105,7 +103,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetricsProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  |
-| `status` _[EmptyStatus](#emptystatus)_ | unused field |
+| `status` _string_ | unused field |
 
 
 #### KeptnMetricsProviderList
@@ -167,5 +165,6 @@ _Appears in:_
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
+| `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 

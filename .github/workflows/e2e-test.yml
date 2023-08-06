@@ -20,7 +20,7 @@ jobs:
       matrix:
         config:
           - name: "lifecycle-operator"
-            folder: "operator/"
+            folder: "lifecycle-operator/"
           - name: "scheduler"
             folder: "scheduler/"
     steps:

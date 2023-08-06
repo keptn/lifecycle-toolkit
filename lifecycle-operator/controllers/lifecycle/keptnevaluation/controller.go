@@ -19,6 +19,7 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -46,10 +47,10 @@ const traceComponentName = "keptn/lifecycle-operator/evaluation"
 type KeptnEvaluationReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	EventSender   controllercommon.EventSender
+	EventSender   controllercommon.IEvent
 	Log           logr.Logger
 	Meters        apicommon.KeptnMeters
-	TracerFactory controllercommon.TracerFactory
+	TracerFactory telemetry.TracerFactory
 	Namespace     string
 }
 
@@ -138,7 +139,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
+		r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
@@ -148,7 +149,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 }
 
 func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) {
-	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileTimeout, "retryCount exceeded", "")
+	r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileTimeout, "retryCount exceeded", "")
 	err := controllererrors.ErrRetryCountExceeded
 	span.SetStatus(codes.Error, err.Error())
 	evaluation.Status.OverallStatus = apicommon.StateFailed
@@ -237,7 +238,7 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
+		r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		return err
 	}
 
@@ -261,6 +262,6 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnEvaluationReconciler) getTracer() controllercommon.ITracer {
+func (r *KeptnEvaluationReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }

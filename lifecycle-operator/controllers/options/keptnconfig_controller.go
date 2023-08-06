@@ -20,11 +20,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"time"
 
 	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -78,7 +78,7 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
 	r.Log.Info(fmt.Sprintf("reconciling Keptn Config: %s", config.Name))
-	otelConfig := controllercommon.GetOtelInstance()
+	otelConfig := telemetry.GetOtelInstance()
 
 	if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
 		r.Log.Error(err, "unable to initialize OTel tracer options")

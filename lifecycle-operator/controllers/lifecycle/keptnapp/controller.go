@@ -19,6 +19,7 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -47,9 +48,9 @@ const traceComponentName = "keptn/lifecycle-operator/app"
 type KeptnAppReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	EventSender   controllercommon.EventSender
+	EventSender   controllercommon.IEvent
 	Log           logr.Logger
-	TracerFactory controllercommon.TracerFactory
+	TracerFactory telemetry.TracerFactory
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete
@@ -105,7 +106,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err != nil {
 			r.Log.Error(err, "could not create AppVersion")
 			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.SendK8sEvent(common.PhaseCreateAppVersion, "Warning", appVersion, common.PhaseStateFailed, "Could not create KeptnAppVersion", appVersion.Spec.Version)
+			r.EventSender.SendEvent(common.PhaseCreateAppVersion, "Warning", appVersion, common.PhaseStateFailed, "Could not create KeptnAppVersion", appVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
 
@@ -171,7 +172,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
-			r.EventSender.SendK8sEvent(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate outdated revisions of KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
+			r.EventSender.SendEvent(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate outdated revisions of KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 			return err
 		}
 	}
@@ -200,6 +201,6 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 	return lastResultErr
 }
 
-func (r *KeptnAppReconciler) getTracer() controllercommon.ITracer {
+func (r *KeptnAppReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }

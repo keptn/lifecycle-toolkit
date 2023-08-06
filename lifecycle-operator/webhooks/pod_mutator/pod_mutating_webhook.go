@@ -39,7 +39,7 @@ type PodMutatingWebhook struct {
 	Client      client.Client
 	Tracer      trace.Tracer
 	Decoder     *admission.Decoder
-	EventSender controllercommon.EventSender
+	EventSender controllercommon.IEvent
 	Log         logr.Logger
 }
 
@@ -288,7 +288,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.SendEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
@@ -312,7 +312,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		a.EventSender.SendK8sEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.SendEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
@@ -340,7 +340,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
 			logger.Error(err, "Could not create AppCreationRequest")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			a.EventSender.SendEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}

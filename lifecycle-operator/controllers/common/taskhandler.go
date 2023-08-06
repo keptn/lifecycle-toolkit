@@ -8,6 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -21,11 +22,11 @@ import (
 
 type TaskHandler struct {
 	client.Client
-	EventSender EventSender
+	EventSender IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	Scheme      *runtime.Scheme
-	SpanHandler ISpanHandler
+	SpanHandler telemetry.ISpanHandler
 }
 
 type CreateTaskAttributes struct {
@@ -57,7 +58,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
-			r.EventSender.SendK8sEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
+			r.EventSender.SendEvent(phase, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if task has already succeeded or failed
@@ -130,7 +131,7 @@ func (r TaskHandler) CreateKeptnTask(ctx context.Context, namespace string, reco
 	err = r.Client.Create(ctx, &newTask)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnTask")
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnTask", piWrapper.GetVersion())
+		r.EventSender.SendEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnTask", piWrapper.GetVersion())
 		return "", err
 	}
 

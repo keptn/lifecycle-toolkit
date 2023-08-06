@@ -31,16 +31,11 @@ type KeptnConfigSpec struct {
 	// OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use
 	// +optional
 	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
-
 	// KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
 	// searches for workload to put into the same auto-generated KeptnApp
 	// +kubebuilder:default:=30
 	// +optional
 	KeptnAppCreationRequestTimeoutSeconds uint `json:"keptnAppCreationRequestTimeoutSeconds,omitempty"`
-
-	// CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator
-	// +optional
-	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
 }
 
 // +kubebuilder:object:root=true

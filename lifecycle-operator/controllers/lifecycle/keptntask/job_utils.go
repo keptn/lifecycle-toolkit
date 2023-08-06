@@ -21,7 +21,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
 		r.Log.Error(err, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition))
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		r.EventSender.SendEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 
@@ -47,7 +47,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	err = r.Client.Create(ctx, job)
 	if err != nil {
 		r.Log.Error(err, "could not create Job")
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateFailed, fmt.Sprintf("could not create Job: %s ", task.Name), "")
+		r.EventSender.SendEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateFailed, fmt.Sprintf("could not create Job: %s ", task.Name), "")
 		return job.Name, err
 	}
 

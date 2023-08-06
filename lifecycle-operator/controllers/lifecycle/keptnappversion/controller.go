@@ -19,6 +19,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -47,10 +48,10 @@ type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
 	Log           logr.Logger
-	EventSender   controllercommon.EventSender
-	TracerFactory controllercommon.TracerFactory
+	EventSender   controllercommon.IEvent
+	TracerFactory telemetry.TracerFactory
 	Meters        apicommon.KeptnMeters
-	SpanHandler   controllercommon.ISpanHandler
+	SpanHandler   telemetry.ISpanHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -181,7 +182,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "has finished", appVersion.GetVersion())
+	r.EventSender.SendEvent(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "has finished", appVersion.GetVersion())
 
 	attrs := appVersion.GetMetricsAttributes()
 

@@ -435,8 +435,8 @@ func TestEvaluateQueryForStep_APIError(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -485,8 +485,8 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -533,8 +533,8 @@ func TestEvaluateQueryForStep_WrongPayloadHandling(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -568,8 +568,8 @@ func TestEvaluateQueryForStep_MissingSecret(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -597,8 +597,8 @@ func TestEvaluateQueryForStep_SecretNotFound(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -642,8 +642,8 @@ func TestEvaluateQueryForStep_RefNonExistingKey(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -690,8 +690,8 @@ func TestEvaluateQueryForStep_EmptyPayload(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "system.cpu.idle{*}",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},
@@ -715,6 +715,106 @@ func TestEvaluateQueryForStep_EmptyPayload(t *testing.T) {
 	require.True(t, strings.Contains(e.Error(), "no values in query result"))
 }
 
+func TestEvaluateQueryForStep_WrongInterval(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(ddPayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
+		},
+	}
+	kdd := setupTest(apiToken)
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "system.cpu.idle{*}",
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5mins",
+				Step:        "1m",
+				Aggregation: "max",
+			},
+		},
+	}
+	b := true
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Optional: &b,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdd.EvaluateQueryForStep(context.TODO(), metric, p)
+	require.Error(t, e)
+	require.Contains(t, e.Error(), "unknown unit \"mins\" in duration \"5mins\"")
+	require.Equal(t, []byte(nil), raw)
+	require.Empty(t, r)
+}
+
+func TestEvaluateQueryForStep_WrongStep(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(ddPayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
+		},
+	}
+	kdd := setupTest(apiToken)
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "system.cpu.idle{*}",
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5m",
+				Step:        "1mins",
+				Aggregation: "max",
+			},
+		},
+	}
+	b := true
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Optional: &b,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdd.EvaluateQueryForStep(context.TODO(), metric, p)
+	require.Error(t, e)
+	require.Contains(t, e.Error(), "unknown unit \"mins\" in duration \"1mins\"")
+	require.Equal(t, []byte(nil), raw)
+	require.Empty(t, r)
+}
+
 func TestGetSingleValue_EmptyPoints(t *testing.T) {
 	kdd := setupTest()
 	var points [][]*float64
@@ -734,7 +834,7 @@ func TestGetSingleValue_HappyPath(t *testing.T) {
 	require.Equal(t, 89.11554133097331, value)
 }
 
-func TestGetResultSlice_EmptyPoints(t *testing.T){
+func TestGetResultSlice_EmptyPoints(t *testing.T) {
 	kdd := setupTest()
 	var points [][]*float64
 	value := kdd.getResultSlice(points)
@@ -742,7 +842,7 @@ func TestGetResultSlice_EmptyPoints(t *testing.T){
 	require.Equal(t, []string{}, value)
 }
 
-func TestGetResultSlice_HappyPath(t *testing.T){
+func TestGetResultSlice_HappyPath(t *testing.T) {
 
 	kdd := setupTest()
 	result := datadogV1.MetricsQueryResponse{}

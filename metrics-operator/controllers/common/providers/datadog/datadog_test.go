@@ -58,6 +58,16 @@ func TestEvaluateQuery_APIError(t *testing.T) {
 				Range: &metricsapi.RangeSpec{Interval: "5m"},
 			},
 		},
+		{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "system.cpu.idle{*}",
+				Range: &metricsapi.RangeSpec{
+					Interval: "5m",
+					Step: "1m",
+					Aggregation: "max",
+				},
+			},
+		},
 	}
 	b := true
 	p := metricsapi.KeptnMetricsProvider{

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.fullname" . }}-metrics-operator-service
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    control-plane: metrics-operator
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.metricsOperatorService.type }}
+  selector:
+    control-plane: metrics-operator
+  {{- include "chart.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.metricsOperatorService.ports | toYaml | nindent 2 -}}

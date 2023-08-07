@@ -30,7 +30,7 @@ Keptn metrics are implemented with two resources:
 ### Define KeptnMetricsProvider resources
 
 You must define a
-[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
+[KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
 for each instance of each data provider you are using.
 
 Note the following:
@@ -50,12 +50,12 @@ To configure a data source into your KLT cluster:
 
 1. Create a secret if your data source uses one.
    See
-   [Create secret text](../../implementing/tasks/#create-secret-text).
+   [Create secret text](../implementing/tasks/#create-secret-text).
 1. Install and configure each instance of each data source
    into your KLT cluster,
    following the instructions provided by the data source provider.
    See
-   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
+   [Prepare your cluster for KLT](../install/k8s.md/#prepare-your-cluster-for-klt)
 for links.
    KLT supports using multiple instances of multiple data sources.
 1. Define a

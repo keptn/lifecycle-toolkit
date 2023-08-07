@@ -57,5 +57,5 @@ Notice the paradigm differences when implementing KLT evaluations:
   but are under development.
 
 For more information about working with Keptn metrics, see the
-[Keptn Metrics](../../implementing/evaluatemetrics)
+[Keptn Metrics](../../implementing/evaluatemetrics.md)
 page.

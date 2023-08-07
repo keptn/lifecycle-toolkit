@@ -231,7 +231,7 @@ Open a browser window and go to `http://localhost:8080`
 
 You should see the "Welcome to nginx" page.
 
-![nginx demo app](assets/nginx.png)
+![nginx demo app](../assets/nginx.png)
 
 ## View DORA Metrics
 
@@ -253,7 +253,7 @@ Open a new terminal window to continue.
 - Access metrics in Prometheus format on `http://localhost:2222/metrics`
 - Look for metrics starting with `keptn_`.
 
-![keptn prometheus metrics](assets/keptnprommetrics.png)
+![keptn prometheus metrics](../assets/keptnprommetrics.png)
 
 Keptn emits various metrics about the state of your system.
 These metrics can then be visualised in Grafana.
@@ -278,7 +278,7 @@ So let's install new Observability components to help us:
 - OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - Grafana (and some prebuilt dashboards): Visualise the data
 
-![add observability](assets/install01.png)
+![add observability](../assets/install01.png)
 
 ## Install Cert Manager
 
@@ -462,9 +462,9 @@ This signals that the deployment was successful and the pod is running.
 
 View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
 
-![keptn applications dashboard](assets/keptnapplications.png)
+![keptn applications dashboard](../assets/keptnapplications.png)
 
-![deployment trace](assets/deploymenttrace.png)
+![deployment trace](../assets/deploymenttrace.png)
 
 ## More control over KeptnApp
 

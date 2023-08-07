@@ -32,14 +32,14 @@ func (r *KeptnTaskDefinitionReconciler) reconcileConfigMap(ctx context.Context, 
 		err := r.Client.Create(ctx, functionCm)
 		if err != nil {
 			r.Log.Error(err, "could not create ConfigMap")
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not create configmap", "")
+			r.EventSender.Emit(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not create configmap", "")
 			return
 		}
 	} else if !reflect.DeepEqual(cm, functionCm) && functionCm != nil { // cm and inline func exists but differ
 		err := r.Client.Update(ctx, functionCm)
 		if err != nil {
 			r.Log.Error(err, "could not update ConfigMap")
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not update configmap", "")
+			r.EventSender.Emit(apicommon.PhaseReconcileTask, "Warning", functionCm, apicommon.PhaseStateFailed, "could not update configmap", "")
 			return
 		}
 	}

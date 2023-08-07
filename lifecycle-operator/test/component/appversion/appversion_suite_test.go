@@ -7,6 +7,7 @@ import (
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -43,7 +44,7 @@ var _ = BeforeSuite(func() {
 		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
-		SpanHandler:   &controllercommon.SpanHandler{},
+		SpanHandler:   &telemetry.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())

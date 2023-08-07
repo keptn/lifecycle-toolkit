@@ -23,7 +23,8 @@ import (
 
 	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -49,8 +50,8 @@ type KeptnConfigReconciler struct {
 func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for KeptnConfig")
 
-	config := &optionsv1alpha1.KeptnConfig{}
-	err := r.Get(ctx, req.NamespacedName, config)
+	cfg := &optionsv1alpha1.KeptnConfig{}
+	err := r.Get(ctx, req.NamespacedName, cfg)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
 	}
@@ -63,18 +64,21 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		r.initConfig()
 	}
 
-	result, err := r.reconcileOtelCollectorUrl(config)
+	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err
 	}
+	// reconcile config values
+	cfgInstance := config.Instance()
+	cfgInstance.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
 
-	r.LastAppliedSpec = &config.Spec
+	r.LastAppliedSpec = &cfg.Spec
 	return ctrl.Result{}, nil
 }
 
 func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
 	r.Log.Info(fmt.Sprintf("reconciling Keptn Config: %s", config.Name))
-	otelConfig := controllercommon.GetOtelInstance()
+	otelConfig := telemetry.GetOtelInstance()
 
 	if err := otelConfig.InitOtelCollector(config.Spec.OTelCollectorUrl); err != nil {
 		r.Log.Error(err, "unable to initialize OTel tracer options")

@@ -25,6 +25,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -47,10 +48,10 @@ type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
 	Log           logr.Logger
-	EventSender   controllercommon.EventSender
-	TracerFactory controllercommon.TracerFactory
+	EventSender   controllercommon.IEvent
+	TracerFactory telemetry.TracerFactory
 	Meters        apicommon.KeptnMeters
-	SpanHandler   controllercommon.ISpanHandler
+	SpanHandler   telemetry.ISpanHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -181,7 +182,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendK8sEvent(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "has finished", appVersion.GetVersion())
+	r.EventSender.Emit(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "has finished", appVersion.GetVersion())
 
 	attrs := appVersion.GetMetricsAttributes()
 

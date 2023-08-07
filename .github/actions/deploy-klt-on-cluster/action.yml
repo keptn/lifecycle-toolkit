@@ -96,10 +96,13 @@ runs:
           --set scheduler.scheduler.image.repository="localhost:5000/keptn/scheduler" \
           --set lifecycleOperator.manager.imagePullPolicy=Never \
           --set lifecycleOperator.manager.image.tag=${{ inputs.runtime_tag }} \
+          --set lifecycleOperator.manager.image.repository="localhost:5000/keptn/manager" \
           --set metricsOperator.manager.imagePullPolicy=Never \
           --set metricsOperator.manager.image.tag=${{ inputs.runtime_tag }} \
+          --set metricsOperator.manager.image.repository="localhost:5000/keptn/manager" \
           --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
           --set certificateOperator.manager.imagePullPolicy=Never \
           --set certificateOperator.manager.image.tag=${{ inputs.runtime_tag }} \
+          --set certificateOperator.manager.image.repository="localhost:5000/keptn/manager" \
           --debug --wait --timeout 1m

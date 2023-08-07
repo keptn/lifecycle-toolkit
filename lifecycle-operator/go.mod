@@ -8,7 +8,7 @@ require (
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230727070347-cba2de5a5cd0
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230807110601-88a54f97c157
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.10

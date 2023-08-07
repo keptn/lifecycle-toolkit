@@ -76,7 +76,8 @@
       "groupName": "lifecycle-scheduler",
       "components": [
         "lifecycle-operator", "scheduler"
-      ]
+      ],
+      "merge": true
     }
   ],
   "changelog-sections": [

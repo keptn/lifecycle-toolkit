@@ -131,9 +131,9 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
           - name: "deno-runtime"
-            folder: "deno-runtime/"
+            folder: "runtimes/deno-runtime/"
           - name: "python-runtime"
-            folder: "python-runtime/"
+            folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:

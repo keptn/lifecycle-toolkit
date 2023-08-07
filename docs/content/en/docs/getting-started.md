@@ -40,7 +40,7 @@ Keptn will monitor the deployment and generate:
 - An OpenTelemetry trace per deployment
 - DORA metrics
 
-![the basics](assets/install02.png)
+![the basics](../assets/install02.png)
 
 Notice though that the metrics and traces have nowhere to go.
 That will be fixed in a subsequent step.

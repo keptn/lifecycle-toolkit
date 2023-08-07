@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.8.0" # x-release-please-version
+TAG?="v0.8.1" # x-release-please-version
 RELEASE_IMAGE:=metrics-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -25,9 +25,9 @@ ENVTEST_K8S_VERSION=1.24.2
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.0.3
+KUSTOMIZE_VERSION?=v5.1.0
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION?=v0.12.0
+CONTROLLER_TOOLS_VERSION?=v0.12.1
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))

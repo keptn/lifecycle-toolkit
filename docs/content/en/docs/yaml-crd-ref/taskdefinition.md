@@ -8,7 +8,7 @@ A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../concepts/workloads/).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -390,7 +390,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../concepts/workloads).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -574,7 +574,7 @@ then spawns a shell and runs the `sleep 30` command.
 
 You can embed python code directly in the task definition.
 This example prints data stored in the parameters map:
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_inline.yaml" >}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_inline.yaml" >}}
 
 ### Example 2: httpRef for a python-runtime runner
 
@@ -584,25 +584,25 @@ For example, we have a few examples available in the
 tree.
 
 Consider the following:
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_configmap.yaml" >}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_configmap.yaml" >}}
 
 ### Example 3: functionRef for a python-runtime runner
 
 You can refer to an existing `KeptnTaskDefinition`.
 This example calls the inline example
 but overrides the data printed with what is specified in the task:
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_recursive.yaml" >}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_recursive.yaml" >}}
 
 ### Example 4: ConfigMapRef for a python-runtime runner
 
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_configmap.yaml" >}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_configmap.yaml" >}}
 
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:
 requests, json, git, and yaml:
 
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_inline_printargs_py.yaml">}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_inline_printargs_py.yaml">}}
 
 ### Passing secrets, environment variables and modifying the python command
 
@@ -612,11 +612,11 @@ and how to modify the python command.
 In this case the container runs with the `-h` option,
 which prints the help message for the python3 interpreter:
 
-{{< embed path="/operator/config/samples/python_execution/taskdefinition_pyfunction_use_envvars.yaml" >}}
+{{< embed path="/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_use_envvars.yaml" >}}
 
 ## More examples
 
-See the [operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/operator/config/samples/function_execution)
+See the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
 directory for more example `KeptnTaskDefinition` YAML files.
 
 ## Files

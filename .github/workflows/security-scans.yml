@@ -108,6 +108,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
+          cache: false
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -145,8 +146,8 @@ jobs:
           go install github.com/yannh/kubeconform/cmd/kubeconform@${{ matrix.version }}
           echo "::endgroup::"
 
-          cd operator/config/default
-          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
+          cd lifecycle-operator/config/default
+          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/lifecycle-operator-manifest.yaml
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
           cd ../../../metrics-operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
@@ -158,9 +159,9 @@ jobs:
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
           cd .. && \
-            echo "---" >> operator-manifest.yaml && \
+            echo "---" >> lifecycle-operator-manifest.yaml && \
             echo "---" >> scheduler-manifest.yaml && \
-            cat operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
+            cat lifecycle-operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
           kubeconform \
             -schema-location default \
             -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
@@ -220,7 +221,7 @@ jobs:
       fail-fast: false
       matrix:
         artifact:
-          - "operator"
+          - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"

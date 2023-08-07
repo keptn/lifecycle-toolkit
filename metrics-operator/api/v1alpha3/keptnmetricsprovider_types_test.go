@@ -12,7 +12,6 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 		TypeMeta   metav1.TypeMeta
 		ObjectMeta metav1.ObjectMeta
 		Spec       KeptnMetricsProviderSpec
-		Status     KeptnMetricsProviderStatus
 	}
 	tests := []struct {
 		name   string
@@ -52,7 +51,6 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 				TypeMeta:   tt.fields.TypeMeta,
 				ObjectMeta: tt.fields.ObjectMeta,
 				Spec:       tt.fields.Spec,
-				Status:     tt.fields.Status,
 			}
 			if got := p.GetType(); got != tt.want {
 				t.Errorf("GetType() = %v, want %v", got, tt.want)
@@ -66,7 +64,6 @@ func TestKeptnMetricsProvider_HasSecretDefined(t *testing.T) {
 		TypeMeta   metav1.TypeMeta
 		ObjectMeta metav1.ObjectMeta
 		Spec       KeptnMetricsProviderSpec
-		Status     KeptnMetricsProviderStatus
 	}
 	tests := []struct {
 		name   string
@@ -136,7 +133,6 @@ func TestKeptnMetricsProvider_HasSecretDefined(t *testing.T) {
 				TypeMeta:   tt.fields.TypeMeta,
 				ObjectMeta: tt.fields.ObjectMeta,
 				Spec:       tt.fields.Spec,
-				Status:     tt.fields.Status,
 			}
 			if got := p.HasSecretDefined(); got != tt.want {
 				t.Errorf("HasSecretDefined() = %v, want %v", got, tt.want)

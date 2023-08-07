@@ -19,11 +19,11 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: 'operator/go.sum'
+          cache-dependency-path: 'lifecycle-operator/go.sum'
           check-latest: true
 
       - name: Execute Component Tests
-        working-directory: operator
+        working-directory: lifecycle-operator
         run: make component-test
 
       - name: Report code coverage

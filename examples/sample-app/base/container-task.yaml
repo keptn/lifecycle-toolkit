@@ -2,6 +2,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: container-sleep
+  namespace: podtato-kubectl
 spec:
   container:
     name: testy-test

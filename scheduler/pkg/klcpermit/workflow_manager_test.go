@@ -174,6 +174,17 @@ func Test_CreateResourceName(t *testing.T) {
 			Min:  100,
 			Want: "str111-str22222-str3",
 		},
+		{
+			Name: "part containing an underscore",
+			Input: []string{
+				"str_1",
+				"str2",
+				"str3",
+			},
+			Max:  20,
+			Min:  100,
+			Want: "str-1-str2-str3",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

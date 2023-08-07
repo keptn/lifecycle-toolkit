@@ -72,7 +72,7 @@ Your observability data may come from multiple observability solutions
 – Prometheus, Dynatrace, Datadog and others – or may be data that comes
 directly from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to data from
-arious sources, simplifying configuration and integration into a single
+various sources, simplifying configuration and integration into a single
 set of metrics.
 
 * **Observability:** The Keptn Lifecycle Toolkit (KLT) ensures observability

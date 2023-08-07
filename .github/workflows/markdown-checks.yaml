@@ -7,16 +7,16 @@ on:
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - '**.md'
-      - 'operator/apis'
-      - 'metrics-operator/api'
+      - 'lifecycle-operator/apis/**'
+      - 'metrics-operator/api/**'
   pull_request:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - '**.md'
-      - 'operator/apis'
-      - 'metrics-operator/api'
+      - 'lifecycle-operator/apis/**'
+      - 'metrics-operator/api/**'
 
 env:
   GO_VERSION: "~1.20"
@@ -76,6 +76,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
+          cache: false
 
       - name: Copy old docs
         run: |

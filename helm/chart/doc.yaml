@@ -50,7 +50,7 @@
 ## @param     certificateOperator.topologySpreadConstraints add topology constraints for cert manager
 
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect enable leader election for multiple replicas of the operator
+## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName define LeaderElectionID
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
@@ -66,7 +66,7 @@
 ## @skip     certificateOperator.manager.containerSecurityContext.seccompProfile.type
 
 ## @param     certificateOperator.manager.image.repository specify repo for manager image
-## @param     certificateOperator.manager.image.tag select tag for manager container <!---x-release-please-version-->
+## @param     certificateOperator.manager.image.tag select tag for manager container
 ## @param     certificateOperator.manager.imagePullPolicy select image pull policy for manager container
 
 ## @param     certificateOperator.manager.env.labelSelectorKey specify the label selector to find resources to generate certificates for
@@ -206,7 +206,7 @@
 
 
 ## @param   metricsOperator.manager.image.repository specify registry for manager image
-## @param   metricsOperator.manager.image.tag  select tag for manager image <!---x-release-please-version-->
+## @param   metricsOperator.manager.image.tag select tag for manager image
 
 ## @param   metricsOperator.manager.env.exposeKeptnMetrics enable metrics exporter
 ## @param   metricsOperator.manager.env.metricsControllerLogLevel sets the log level of Metrics Controller

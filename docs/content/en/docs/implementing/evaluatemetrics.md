@@ -59,7 +59,7 @@ To configure a data source into your KLT cluster:
 for links.
    KLT supports using multiple instances of multiple data sources.
 1. Define a
-   [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
+   [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
    resource for each data source.
 
 For example, the `KeptnMetricProvider` resource

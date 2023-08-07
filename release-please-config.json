@@ -12,13 +12,19 @@
       "prerelease": false,
       "monorepo-tags": "klt",
       "draft": false,
-      "exclude-paths": ["klt-cert-manager", "lifecycle-operator", "metrics-operator", "scheduler"],
+      "exclude-paths": [
+        "klt-cert-manager",
+        "lifecycle-operator",
+        "metrics-operator",
+        "scheduler",
+        "runtimes/deno-runtime",
+        "runtimes/python-runtime"
+      ],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
         "helm/chart/Chart.yaml",
         "Makefile",
-        "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"
       ]
@@ -91,7 +97,8 @@
       "type": "linked-versions",
       "groupName": "lifecycle-operator-and-scheduler",
       "components": [
-        "lifecycle-operator", "scheduler"
+        "lifecycle-operator",
+        "scheduler"
       ],
       "merge": true
     }

@@ -26,11 +26,11 @@ type AnalysisDefinitionSpec struct {
 	// Objectives defines a list of objectives for evaluation
 	Objectives []Objective `json:"objectives,omitempty"`
 	// TotalScore defines the required score for an evaluation to be successful
-	TotalScore Score `json:"totalScore"`
+	TotalScore TotalScore `json:"totalScore"`
 }
 
-// Score defines the required score for an evaluation to be successful
-type Score struct {
+// TotalScore defines the required score for an evaluation to be successful
+type TotalScore struct {
 	// PassPercentage defines the threshold which needs to be reached for an evaluation to pass.
 	// +kubebuilder:validation:Minimum:=0
 	// +kubebuilder:validation:Maximum:=100
@@ -45,7 +45,7 @@ type Score struct {
 type Objective struct {
 	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
-	// SLOTargets defines a list of SLOTargests
+	// Target defines a list of failure of warning criteria
 	Target Target `json:"target,omitempty"`
 	// Weight can be used to emphasize the importance of one SLI over the others
 	// +kubebuilder:default:=1
@@ -55,11 +55,11 @@ type Objective struct {
 	KeyObjective bool `json:"keyObjective,omitempty"`
 }
 
-// SLOTarget defines the Criteria
+// Target defines the failure and warning criteria
 type Target struct {
-	// Failure defines limit up to which an evaluation fails
+	// Failure defines limits up to which an evaluation fails.
 	Failure *Operator `json:"failure,omitempty"`
-	// Warning defines the border where the result is not pass and not fail
+	// Warning defines limits where the result is not pass and not fail
 	Warning *Operator `json:"warning,omitempty"`
 }
 

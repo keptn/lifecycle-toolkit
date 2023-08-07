@@ -58,6 +58,7 @@ for api_group in "$OPERATOR_API_ROOT"*; do
     mkdir -p "$OUTPUT_PATH"
 
     echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
+    # max-depth should be bumped when the number of nested structures of CRDs will exceed 10
     crd-ref-docs \
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \
@@ -101,6 +102,7 @@ for api_version in "$METRICS_API_ROOT"*; do
   mkdir -p "$OUTPUT_PATH"
 
   echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
+  # max-depth should be bumped when the number of nested structures of CRDs will exceed 10
   crd-ref-docs \
     --templates-dir "$TEMPLATE_DIR" \
     --source-path="./$api_version" \

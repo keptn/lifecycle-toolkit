@@ -68,7 +68,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives for evaluation |
-| `totalScore` _[Score](#score)_ | TotalScore defines the required score for an evaluation to be successful |
+| `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an evaluation to be successful |
 
 
 #### KeptnMetric
@@ -216,7 +216,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
-| `target` _[Target](#target)_ | SLOTargets defines a list of SLOTargests |
+| `target` _[Target](#target)_ | Target defines a list of failure of warning criteria |
 | `weight` _integer_ | Weight can be used to emphasize the importance of one SLI over the others |
 | `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the SLO Targets are not met |
 
@@ -283,11 +283,26 @@ _Appears in:_
 | `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 
-#### Score
+#### Target
 
 
 
-Score defines the required score for an evaluation to be successful
+Target defines the failure and warning criteria
+
+_Appears in:_
+- [Objective](#objective)
+
+| Field | Description |
+| --- | --- |
+| `failure` _[Operator](#operator)_ | Failure defines limits up to which an evaluation fails. |
+| `warning` _[Operator](#operator)_ | Warning defines limits where the result is not pass and not fail |
+
+
+#### TotalScore
+
+
+
+TotalScore defines the required score for an evaluation to be successful
 
 _Appears in:_
 - [AnalysisDefinitionSpec](#analysisdefinitionspec)
@@ -296,20 +311,5 @@ _Appears in:_
 | --- | --- |
 | `passPercentage` _integer_ | PassPercentage defines the threshold which needs to be reached for an evaluation to pass. |
 | `warningPercentage` _integer_ | WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning' status. |
-
-
-#### Target
-
-
-
-SLOTarget defines the Criteria
-
-_Appears in:_
-- [Objective](#objective)
-
-| Field | Description |
-| --- | --- |
-| `failure` _[Operator](#operator)_ | Failure defines limit up to which an evaluation fails |
-| `warning` _[Operator](#operator)_ | Warning defines the border where the result is not pass and not fail |
 
 

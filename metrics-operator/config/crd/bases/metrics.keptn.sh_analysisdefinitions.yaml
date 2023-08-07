@@ -58,11 +58,11 @@ spec:
                         the SLO Targets are not met
                       type: boolean
                     target:
-                      description: SLOTargets defines a list of SLOTargests
+                      description: Target defines a list of failure of warning criteria
                       properties:
                         failure:
-                          description: Failure defines limit up to which an evaluation
-                            fails
+                          description: Failure defines limits up to which an evaluation
+                            fails.
                           properties:
                             equalTo:
                               description: EqualTo represents '==' operator in evaluation
@@ -136,8 +136,8 @@ spec:
                               type: object
                           type: object
                         warning:
-                          description: Warning defines the border where the result
-                            is not pass and not fail
+                          description: Warning defines limits where the result is
+                            not pass and not fail
                           properties:
                             equalTo:
                               description: EqualTo represents '==' operator in evaluation

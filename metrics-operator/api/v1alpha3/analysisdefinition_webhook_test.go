@@ -52,12 +52,12 @@ func TestOperator_validate(t *testing.T) {
 func TestScore_validate(t *testing.T) {
 	tests := []struct {
 		name    string
-		score   Score
+		score   TotalScore
 		wantErr error
 	}{
 		{
 			name: "happy path",
-			score: Score{
+			score: TotalScore{
 				PassPercentage:    90,
 				WarningPercentage: 80,
 			},
@@ -65,7 +65,7 @@ func TestScore_validate(t *testing.T) {
 		},
 		{
 			name: "warn and pass equal",
-			score: Score{
+			score: TotalScore{
 				PassPercentage:    90,
 				WarningPercentage: 90,
 			},
@@ -73,7 +73,7 @@ func TestScore_validate(t *testing.T) {
 		},
 		{
 			name: "warn higher than pass",
-			score: Score{
+			score: TotalScore{
 				PassPercentage:    90,
 				WarningPercentage: 95,
 			},
@@ -175,7 +175,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 							},
 						},
 					},
-					TotalScore: Score{
+					TotalScore: TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 90,
 					},
@@ -198,7 +198,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 							},
 						},
 					},
-					TotalScore: Score{
+					TotalScore: TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 70,
 					},

@@ -9,6 +9,7 @@ spec:
         namespace: keptn-lifecycle-toolkit-system
       target:
         failure:
+          # multiple operators should not be defined as part of one item, but as 2 separate list items
           lessThan:
             fixedValue: 600
           greaterThan:

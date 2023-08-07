@@ -71,7 +71,7 @@ func (r *AnalysisDefinition) ValidateDelete() error {
 	return nil
 }
 
-func (s *Score) validate() error {
+func (s *TotalScore) validate() error {
 	if s.WarningPercentage >= s.PassPercentage {
 		return fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score")
 	}

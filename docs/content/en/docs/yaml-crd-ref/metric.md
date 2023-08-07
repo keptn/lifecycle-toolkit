@@ -1,7 +1,7 @@
 ---
 title: KeptnMetric
 description: Define all workloads and checks associated with an application
-weight: 50
+weight: 40
 ---
 
 A `KeptnMetric` represents a metric that is collected from a provider.

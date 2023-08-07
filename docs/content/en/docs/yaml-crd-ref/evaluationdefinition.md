@@ -2,7 +2,7 @@
 title: KeptnEvaluationDefinition
 description: Define an evaluation query
 
-weight: 20
+weight: 50
 ---
 
 A `KeptnEvaluationDefinition` assigns target values

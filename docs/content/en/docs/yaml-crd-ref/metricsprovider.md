@@ -1,8 +1,9 @@
 ---
 title: KeptnMetricsProvider
 description: Define a data provider used for metrics and evaluations
-weight: 55
+weight: 30
 ---
+
 
 `KeptnMetricsProvider` defines an instance of the data provider
 (such as Prometheus, Dynatrace, or Datadog)

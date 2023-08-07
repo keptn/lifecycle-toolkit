@@ -67,8 +67,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives for evaluation |
-| `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an evaluation to be successful |
+| `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives to evaluate for an analysis |
+| `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an analysis to be successful |
 
 
 #### KeptnMetric
@@ -208,7 +208,7 @@ _Appears in:_
 
 
 
-Objective defines a list of objectives
+Objective defines an objective for analysis
 
 _Appears in:_
 - [AnalysisDefinitionSpec](#analysisdefinitionspec)
@@ -216,9 +216,9 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
-| `target` _[Target](#target)_ | Target defines a list of failure of warning criteria |
-| `weight` _integer_ | Weight can be used to emphasize the importance of one SLI over the others |
-| `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the SLO Targets are not met |
+| `target` _[Target](#target)_ | Target defines failure or warning criteria |
+| `weight` _integer_ | Weight can be used to emphasize the importance of one Objective over the others |
+| `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the target is not met |
 
 
 #### Operator
@@ -232,11 +232,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator in evaluation analysis |
-| `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator in evaluation analysis |
-| `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator in evaluation analysis |
-| `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator in evaluation analysis |
-| `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator in evaluation analysis |
+| `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator |
+| `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator |
+| `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator |
+| `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator |
+| `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator |
 
 
 #### OperatorValue
@@ -294,22 +294,22 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `failure` _[Operator](#operator)_ | Failure defines limits up to which an evaluation fails. |
-| `warning` _[Operator](#operator)_ | Warning defines limits where the result is not pass and not fail |
+| `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails. |
+| `warning` _[Operator](#operator)_ | Warning defines limits where the result does not pass or fail |
 
 
 #### TotalScore
 
 
 
-TotalScore defines the required score for an evaluation to be successful
+TotalScore defines the required score for an analysis to be successful
 
 _Appears in:_
 - [AnalysisDefinitionSpec](#analysisdefinitionspec)
 
 | Field | Description |
 | --- | --- |
-| `passPercentage` _integer_ | PassPercentage defines the threshold which needs to be reached for an evaluation to pass. |
-| `warningPercentage` _integer_ | WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning' status. |
+| `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass. |
+| `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status. |
 
 

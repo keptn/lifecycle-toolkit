@@ -23,43 +23,43 @@ import (
 
 // AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
 type AnalysisDefinitionSpec struct {
-	// Objectives defines a list of objectives for evaluation
+	// Objectives defines a list of objectives to evaluate for an analysis
 	Objectives []Objective `json:"objectives,omitempty"`
-	// TotalScore defines the required score for an evaluation to be successful
+	// TotalScore defines the required score for an analysis to be successful
 	TotalScore TotalScore `json:"totalScore"`
 }
 
-// TotalScore defines the required score for an evaluation to be successful
+// TotalScore defines the required score for an analysis to be successful
 type TotalScore struct {
-	// PassPercentage defines the threshold which needs to be reached for an evaluation to pass.
+	// PassPercentage defines the threshold to reach for an analysis to pass.
 	// +kubebuilder:validation:Minimum:=0
 	// +kubebuilder:validation:Maximum:=100
 	PassPercentage int `json:"passPercentage"`
-	// WarningPercentage defines the threshold which needs to be reached for an evaluation to pass with a 'warning' status.
+	// WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status.
 	// +kubebuilder:validation:Minimum:=0
 	// +kubebuilder:validation:Maximum:=100
 	WarningPercentage int `json:"warningPercentage"`
 }
 
-// Objective defines a list of objectives
+// Objective defines an objective for analysis
 type Objective struct {
 	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
-	// Target defines a list of failure of warning criteria
+	// Target defines failure or warning criteria
 	Target Target `json:"target,omitempty"`
-	// Weight can be used to emphasize the importance of one SLI over the others
+	// Weight can be used to emphasize the importance of one Objective over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`
-	// KeyObjective defines if the objective fails when the SLO Targets are not met
+	// KeyObjective defines if the objective fails when the target is not met
 	// +kubebuilder:default:=false
 	KeyObjective bool `json:"keyObjective,omitempty"`
 }
 
 // Target defines the failure and warning criteria
 type Target struct {
-	// Failure defines limits up to which an evaluation fails.
+	// Failure defines limits up to which an analysis fails.
 	Failure *Operator `json:"failure,omitempty"`
-	// Warning defines limits where the result is not pass and not fail
+	// Warning defines limits where the result does not pass or fail
 	Warning *Operator `json:"warning,omitempty"`
 }
 
@@ -71,15 +71,15 @@ type OperatorValue struct {
 
 // Operator specifies the supported operators for value comparisons
 type Operator struct {
-	// LessThanOrEqual represents '<=' operator in evaluation analysis
+	// LessThanOrEqual represents '<=' operator
 	LessThanOrEqual *OperatorValue `json:"lessThanOrEqual,omitempty"`
-	// LessThan represents '<' operator in evaluation analysis
+	// LessThan represents '<' operator
 	LessThan *OperatorValue `json:"lessThan,omitempty"`
-	// GreaterThan represents '>' operator in evaluation analysis
+	// GreaterThan represents '>' operator
 	GreaterThan *OperatorValue `json:"greaterThan,omitempty"`
-	// GreaterThanOrEqual represents '>=' operator in evaluation analysis
+	// GreaterThanOrEqual represents '>=' operator
 	GreaterThanOrEqual *OperatorValue `json:"greaterThanOrEqual,omitempty"`
-	// EqualTo represents '==' operator in evaluation analysis
+	// EqualTo represents '==' operator
 	EqualTo *OperatorValue `json:"equalTo,omitempty"`
 }
 

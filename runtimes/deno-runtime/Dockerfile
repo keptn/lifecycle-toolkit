@@ -8,6 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolki
 
 COPY entrypoint.sh /entrypoint.sh
 
+
 USER deno
 
 ENTRYPOINT /entrypoint.sh

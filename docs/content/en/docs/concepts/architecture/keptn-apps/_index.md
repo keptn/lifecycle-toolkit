@@ -19,16 +19,16 @@ and run pre- and post-deployment tasks.
 In its state, it tracks the currently active `Workload Instances`,
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
-which the scheduler can use to determine whether the pods belonging to a workload should proceed.
+which the scheduler can use to determine
+whether the pods belonging to a workload
+should be created and assigned to a node.
 When it detects that the referenced object has reached its desired state
 (e.g. all pods of a deployment are up and running),
 it knows that a`PostDeploymentCheck` can be triggered.
 
-The KeptnWorkload resources are created automatically
-by the mutating webhook as soon as a pod for the workload
-(i.e. `Deployment`, `StatefulSet`, `DaemonSet`, `ReplicaSet`)
-is about to be started.
-The KeptnWorkloads are created automatically and without delay by the webhook.
+The `KeptnWorkload` resources are created automatically
+and without delay by the mutating webhook
+as soon as the workload manifest is applied.
 
 ## Keptn Applications
 
@@ -59,9 +59,8 @@ with annotations or labels that are applied to each
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
-[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/):
 
 * The annotations described in
   [Basic annotations](../../../implementing/integrate/#basic-annotations)

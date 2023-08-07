@@ -161,28 +161,6 @@ metadata:
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 This annotation tells the webhook to handle the namespace.
 
-You could instead use `labels` with this same key.
-In general, we recommend using annotations rather than labels
-(see
-[Annotations vs.
-labels](../implementing/integrate/#annotations-vs-labels))
-but, in this case, the 63 char limitation is not an issue.
-If this is a label,
-you can get a list of KLT enabled namespaces with a command like:
-
-```shell
-kubectl get namespaces -l keptn.sh/lifecyle-toolkit=enabled
-```
-
-Using labels also enables use of
-[labelSelectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors)
-so you could run a command like the following
-to say "show me KLT-enabled namespaces in dev":
-
-```shell
-kubectl get namespaces -l 'keptn.sh/lifecyle-toolkit in (enabled),tier in (dev)'
-```
-
 After enabling KLT for your namespace(s),
 you are ready to
 [Integrate KLT with your applications](../implementing/integrate).

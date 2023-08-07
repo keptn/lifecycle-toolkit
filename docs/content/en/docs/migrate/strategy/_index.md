@@ -18,7 +18,7 @@ we suggest that you run through the exercises in
 to familiarize yourself with how the Keptn Lifecycle Toolkit works.
 When you are ready to begin the migration,
 follow the instructions in
-[Installation and upgrade](../install)
+[Installation and upgrade](../../install)
 to set up your Kubernetes cluster
 and install KLT on it.
 

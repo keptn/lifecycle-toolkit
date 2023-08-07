@@ -61,7 +61,7 @@ jobs:
             console.log("eligible items", eligibleItems);
             const itemsToPublish = changedItems.filter(i => eligibleItems.includes(i));
             console.log("items to publish", itemsToPublish);
-            
+
             console.log("setting up build matrix...");
             const releaseMatrix = itemsToPublish.map(item => {
                 switch (item) {

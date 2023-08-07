@@ -31,10 +31,9 @@ This system will be built in stages.
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
-Let's start with the basics.
-Here is what we will now build.
+To begin our exploration of the Keptn observability features, we will:
 
-A deployment will occur.
+* Deploy a simple application called `keptndemo`.
 Keptn will monitor the deployment and generate:
 
 - An OpenTelemetry trace per deployment

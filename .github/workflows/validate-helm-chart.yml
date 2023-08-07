@@ -24,6 +24,8 @@ jobs:
         with:
           node-version: 16   
 
+
+          
       - name: Install readme generator
         run: |
           git clone https://github.com/bitnami-labs/readme-generator-for-helm.git

@@ -35,7 +35,7 @@ jobs:
           BASE_URL: https://github.com/cloud-bulldozer/kube-burner/releases
         run: |
           curl -fL \
-            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz" \
+            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-V${KUBE_BURNER_VERSION#v}-linux-x86_64.tar.gz" \
           -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin

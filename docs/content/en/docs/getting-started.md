@@ -27,7 +27,7 @@ The following is an imperative walkthrough.
 By the end of this page, here is what will be built.
 This system will be built in stages.
 
-![system overview](assets/install01.png)
+![system overview](../assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 

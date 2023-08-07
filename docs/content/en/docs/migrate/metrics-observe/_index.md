@@ -15,15 +15,23 @@ and questions that you have.
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
 KLT Keptn Metrics and Keptn Evaluations.
 
-Note that KLT includes additional observability features
-that are not included in Keptn v1 by default:
+By default, KLT includes additional observability features
+that are not included in Keptn v1:
 
 * [DORA metrics](../../implementing/dora)
 * [OpenTelemetry observability](../../implementing/otel.md)
 
 Keptn v1 Quality Gates can be migrated into KLT metrics
 and KLT evaluations.
-Notice the paradigm differences:
+
+> **Note**
+The full SLO capabilities
+provided by Keptn v1 such as weighting and scoring
+are currently under development for KLT.
+You can follow and participate in the design and implementation process at
+[Github epic 1785](https://github.com/keptn/lifecycle-toolkit/pull/1785).
+
+Notice the paradigm differences when implementing KLT evaluations:
 
 * Data providers are installed and configured into your Kubernetes cluster
   using Helm charts and standard practices.
@@ -35,82 +43,19 @@ Notice the paradigm differences:
   This is the only KLT specific configuration that is required.
 * Each query that is specified in your Keptn v1
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/) file
-  is converted into its own
-  [KeptnMetric](../../yaml-crd-ref/metric.md) resource.
+  should be converted into its own
+  [KeptnMetric](../../yaml-crd-ref/metric.md) resource
+  if you are using it for an evaluation.
   Note that KLT supports using multiple instances of multiple data providers.
 * Simple Keptn v1 comparisons that are defined in
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files can be converted to
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
   resources.
-  Keptn v1 calculations that use weighting and scoring
-  cannot currently be converted to `KeptnEvaluationDefinition` resources.
+* Keptn v1 calculations that use weighting and scoring
+  cannot currently be converted to `KeptnEvaluationDefinition` resources
+  but are under development.
 
-## Define KeptnMetricsProvider resources
-
-You must define a
-[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
-for each instance of each data provider you are using.
-
-Note the following:
-
-* Each `KeptnMetricsProvider` resource is bound to a specific namespace.
-* Each `KeptnMetric` resource must be located in the same namespace
-  as the associated `KeptnMetricsProvider` resource.
-* `KeptnEvaluationDefinition` resources can reference metrics
-  from any namespace in the cluster.
-* To define metrics that can be used in evaluations
-  on all namespaces in the cluster,
-  create `KeptnMetricsProvider` and KeptnMetric resources
-  in a centralized namespace
-  such as `keptn-lifecycle-toolkit-system`.
-
-To configure a data source into your KLT cluster:
-
-1. Create a secret if your data source uses one.
-   See
-   [Create secret text](../../implementing/tasks/#create-secret-text).
-1. Install and configure each instance of each data source
-   into your KLT cluster,
-   following the instructions provided by the data source provider.
-   See
-   [Prepare your cluster for KLT](../../install/k8s.md/#prepare-your-cluster-for-klt)
-for links.
-   KLT supports using multiple instances of multiple data sources.
-1. Define a
-   [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
-   resource for each data source.
-
-For example, the `KeptnMetricProvider` resource
-for a Prometheus data source that does not use a secret
-could look like:
-
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus
-  namespace: simplenode-dev
-spec:
-  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
-```
-
-The `KeptnMetricProvider resource for a Dynatrace data source
-that uses a secret could look like:
-
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
-kind: KeptnMetricsProvider
-metadata:
-  name: dynatrace
-  namespace: podtato-kubectl
-spec:
-  targetServer: "<dynatrace-tenant-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
-```
-
-## Create a KeptnMetric resource for each SLI
-
-## Create KeptnEvaluationDefinition resources for SLOs
+For more information about working with Keptn metrics, see the
+[Keptn Metrics](../../implementing/evaluatemetrics)
+page.

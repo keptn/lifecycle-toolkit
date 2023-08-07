@@ -102,7 +102,7 @@ keptn.sh/pre-deployment-tasks: verify-infrastructure-problems
 keptn.sh/post-deployment-tasks: slack-notification,performance-test
 ```
 
-The value of these annotations are
+The value of these annotations corresponds to the name of
 Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)s.

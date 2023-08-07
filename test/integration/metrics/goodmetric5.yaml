@@ -10,3 +10,4 @@ spec:
   range:
     interval: "5m"
     step: "1m"
+    aggregation: "p90"

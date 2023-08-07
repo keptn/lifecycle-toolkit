@@ -19,8 +19,8 @@ Status of the different features:
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
 - ![status](https://img.shields.io/badge/status-alpha-orange)
-  K8s Custom Metrics: expose your Observability platform via the [Keptn Metric API](https://lifecycle.keptn.sh/docs/implementing/evaluatemetrics/)
-- ![status](https://img.shields.io/badge/status-alpha-orange)
+  K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
+- ![status](https://img.shields.io/badge/status-beta-yellow)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates with the
@@ -229,7 +229,7 @@ The [GitHub CLI](https://cli.github.com/) can be used to download the manifests 
 ```bash
 gh run list --repo keptn/lifecycle-toolkit # find the id of a run
 gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
-kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the operator
+kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the lifecycle-operator
 kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
 ```
 

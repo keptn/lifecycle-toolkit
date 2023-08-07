@@ -35,6 +35,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetric`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  |
+| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  |
 
 
 #### KeptnMetricList
@@ -70,6 +71,21 @@ _Appears in:_
 | `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which data is to be queried |
 
 
+#### KeptnMetricStatus
+
+
+
+KeptnMetricStatus defines the observed state of KeptnMetric
+
+_Appears in:_
+- [KeptnMetric](#keptnmetric)
+
+| Field | Description |
+| --- | --- |
+| `value` _string_ | Value represents the resulting value |
+| `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
 #### KeptnMetricsProvider
@@ -87,6 +103,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnMetricsProvider`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  |
+| `status` _string_ | unused field |
 
 
 #### KeptnMetricsProviderList
@@ -121,8 +138,6 @@ _Appears in:_
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
 
 
-
-
 #### ProviderRef
 
 
@@ -150,5 +165,6 @@ _Appears in:_
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
+| `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 

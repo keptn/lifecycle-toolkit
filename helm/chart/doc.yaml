@@ -12,7 +12,7 @@
 ## @param scheduler.scheduler.env.otelCollectorUrl sets url for open telemetry collector
 
 ## @param scheduler.scheduler.image.repository set image repository for scheduler
-## @param scheduler.scheduler.image.tag set image tag for scheduler <!---x-release-please-version-->
+## @param scheduler.scheduler.image.tag set image tag for scheduler
 ## @param scheduler.scheduler.imagePullPolicy set image pull policy for scheduler
 
 ## @extra scheduler.scheduler.livenessProbe customizable liveness probe for the scheduler
@@ -132,8 +132,8 @@
 ## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
 ## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
-## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for deno task runtime <!---x-release-please-version-->
-## @param   lifecycleOperator.manager.env.pythonRunnerImage specify image for python task runtime <!---x-release-please-version-->
+## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for deno task runtime
+## @param   lifecycleOperator.manager.env.pythonRunnerImage specify image for python task runtime
 
 ## @param   lifecycleOperator.manager.image.repository specify registry for manager image
 ## @param   lifecycleOperator.manager.image.tag  select tag for manager image

@@ -13,9 +13,9 @@ import (
 
 func TestEventSender_SendK8sEvent(t *testing.T) {
 	fakeRecorder := record.NewFakeRecorder(100)
-	eventSender := NewEventSender(fakeRecorder)
+	eventSender := newK8sSender(fakeRecorder)
 
-	eventSender.SendK8sEvent(common.PhaseAppDeployment, "pre-event", &v1alpha3.KeptnAppVersion{
+	eventSender.Emit(common.PhaseAppDeployment, "pre-event", &v1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "ns",

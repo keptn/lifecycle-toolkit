@@ -10,6 +10,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -260,7 +261,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		Scheme:        fakeClient.Scheme(),
 		Log:           logr.Logger{},
 		EventSender:   controllercommon.NewEventSender(record.NewFakeRecorder(100)),
-		Meters:        controllercommon.SetUpKeptnTaskMeters(meter),
+		Meters:        telemetry.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
 	}
 	return r, fakeClient

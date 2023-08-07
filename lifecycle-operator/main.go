@@ -33,6 +33,7 @@ import (
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappversion"
@@ -115,7 +116,7 @@ func main() {
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
-	keptnMeters := controllercommon.SetUpKeptnTaskMeters(meter)
+	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()
@@ -164,12 +165,12 @@ func main() {
 	}
 
 	// Enabling OTel
-	err = controllercommon.GetOtelInstance().InitOtelCollector("")
+	err = telemetry.GetOtelInstance().InitOtelCollector("")
 	if err != nil {
 		setupLog.Error(err, "unable to initialize OTel tracer options")
 	}
 
-	spanHandler := &controllercommon.SpanHandler{}
+	spanHandler := &telemetry.SpanHandler{}
 
 	taskLogger := ctrl.Log.WithName("KeptnTask Controller")
 	taskReconciler := &keptntask.KeptnTaskReconciler{
@@ -178,7 +179,7 @@ func main() {
 		Log:           taskLogger.V(env.KeptnTaskControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptntask-controller")),
 		Meters:        keptnMeters,
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
@@ -203,7 +204,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		Log:           appLogger.V(env.KeptnAppControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnapp-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
@@ -227,7 +228,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		Log:           workloadLogger.V(env.KeptnWorkloadControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkload-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
@@ -241,7 +242,7 @@ func main() {
 		Log:           workloadInstanceLogger.V(env.KeptnWorkloadInstanceControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkloadinstance-controller")),
 		Meters:        keptnMeters,
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 		SpanHandler:   spanHandler,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
@@ -255,7 +256,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		Log:           appVersionLogger.V(env.KeptnAppVersionControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnappversion-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
 	}
@@ -270,7 +271,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		Log:           evaluationLogger.V(env.KeptnEvaluationControllerLogLevel),
 		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnevaluation-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		Namespace:     env.PodNamespace,
 	}
@@ -313,7 +314,7 @@ func main() {
 	}
 	// +kubebuilder:scaffold:builder
 
-	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
+	telemetry.SetUpKeptnMeters(meter, mgr.GetClient())
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

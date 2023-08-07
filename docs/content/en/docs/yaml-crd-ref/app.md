@@ -4,7 +4,7 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-A `KeptnApp` resource defines the workloads and checks
+A `KeptnApp` resource lists all the workloads
 that they together constitute a logical application.
 It contains information about:
 

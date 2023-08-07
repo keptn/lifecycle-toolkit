@@ -20,8 +20,7 @@ The following is an imperative walkthrough.
 
 - Install Keptn Lifecycle Toolkit on your cluster
 - Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
-- View DORA Metrics
-- Install Grafana and Observability tooling to view DORA metrics
+- Install Grafana and Observability tooling to view DORA metrics and OpenTelemetry traces
 
 ## System Overview
 

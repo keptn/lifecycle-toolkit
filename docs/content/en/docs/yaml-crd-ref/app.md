@@ -5,7 +5,7 @@ weight: 10
 ---
 
 A `KeptnApp` resource lists all the workloads
-that they together constitute a logical application.
+that constitute a logical application.
 It contains information about:
 
 - All workloads and checks

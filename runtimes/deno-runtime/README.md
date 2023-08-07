@@ -29,7 +29,7 @@ console.log(secret);
 Replace `${VERSION}` with the KLT version of your choice.
 
 ```sh
-docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/functions-runtime:${VERSION}
+docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/deno-runtime:${VERSION}
 ```
 
 ### Docker with function on webserver (function in this repo)
@@ -68,7 +68,7 @@ docker run \
   -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts \
   -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' \
   -it \
-  ghcr.io/keptn/functions-runtime:${VERSION}
+  ghcr.io/keptn/deno-runtime:${VERSION}
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

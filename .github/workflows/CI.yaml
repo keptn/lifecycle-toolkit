@@ -130,8 +130,8 @@ jobs:
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+          - name: "deno-runtime"
+            folder: "deno-runtime/"
           - name: "python-runtime"
             folder: "python-runtime/"
           - name: "certificate-operator"
@@ -186,14 +186,14 @@ jobs:
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
           CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml for tests
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest-test

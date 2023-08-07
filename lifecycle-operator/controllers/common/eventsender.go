@@ -10,7 +10,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/event_mock.go . IEvent:MockEvent
 type IEvent interface {
-	SendEvent(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string)
+	Emit(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string)
 }
 
 // ===== Main =====
@@ -35,7 +35,7 @@ func newK8sSender(recorder record.EventRecorder) IEvent {
 }
 
 // SendEvent creates k8s Event and adds it to Eventqueue
-func (s *k8sEvent) SendEvent(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
+func (s *k8sEvent) Emit(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
 	msg := setEventMessage(phase, reconcileObject, message, version)
 	annotations := setAnnotations(reconcileObject, phase)
 	s.recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s%s", phase.ShortName, status), msg)

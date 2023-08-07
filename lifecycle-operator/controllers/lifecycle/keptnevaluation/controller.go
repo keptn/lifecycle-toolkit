@@ -139,7 +139,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
+		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
@@ -149,7 +149,7 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 }
 
 func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) {
-	r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileTimeout, "retryCount exceeded", "")
+	r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileTimeout, "retryCount exceeded", "")
 	err := controllererrors.ErrRetryCountExceeded
 	span.SetStatus(codes.Error, err.Error())
 	evaluation.Status.OverallStatus = apicommon.StateFailed
@@ -238,7 +238,7 @@ func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.EventSender.SendEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
+		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		return err
 	}
 

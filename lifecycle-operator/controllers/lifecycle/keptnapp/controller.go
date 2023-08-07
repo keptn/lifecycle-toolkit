@@ -106,7 +106,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err != nil {
 			r.Log.Error(err, "could not create AppVersion")
 			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.SendEvent(common.PhaseCreateAppVersion, "Warning", appVersion, common.PhaseStateFailed, "Could not create KeptnAppVersion", appVersion.Spec.Version)
+			r.EventSender.Emit(common.PhaseCreateAppVersion, "Warning", appVersion, common.PhaseStateFailed, "Could not create KeptnAppVersion", appVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
 
@@ -172,7 +172,7 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
-			r.EventSender.SendEvent(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate outdated revisions of KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
+			r.EventSender.Emit(common.PhaseDeprecateAppVersion, "Warning", app, common.PhaseStateFailed, fmt.Sprintf("could not deprecate outdated revisions of KeptnAppVersion: %s", app.GetAppVersionName()), app.Spec.Version)
 			return err
 		}
 	}

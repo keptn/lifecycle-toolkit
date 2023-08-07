@@ -191,7 +191,7 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.SendEvent(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "has finished", workloadInstance.GetVersion())
+	r.EventSender.Emit(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "has finished", workloadInstance.GetVersion())
 
 	attrs := workloadInstance.GetMetricsAttributes()
 
@@ -225,7 +225,7 @@ func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) err
 
 func (r *KeptnWorkloadInstanceReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) {
 	if appPreEvalStatus.IsFailed() {
-		r.EventSender.SendEvent(phase, "Warning", workloadInstance, apicommon.PhaseStateFailed, "has failed since app has failed", workloadInstance.GetVersion())
+		r.EventSender.Emit(phase, "Warning", workloadInstance, apicommon.PhaseStateFailed, "has failed since app has failed", workloadInstance.GetVersion())
 	}
 }
 
@@ -261,11 +261,11 @@ func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx cont
 	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.EventSender.SendEvent(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
+		r.EventSender.Emit(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
 		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
-		r.EventSender.SendEvent(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
+		r.EventSender.Emit(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
 		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
 	}
 

@@ -41,7 +41,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		}
 
 		if !found {
-			r.EventSender.SendEvent(phase, "Warning", appVersion, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnWorkloadInstance for KeptnWorkload: %s ", w.Name), appVersion.GetVersion())
+			r.EventSender.Emit(phase, "Warning", appVersion, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnWorkloadInstance for KeptnWorkload: %s ", w.Name), appVersion.GetVersion())
 		}
 
 		newStatus = append(newStatus, klcv1alpha3.WorkloadStatus{

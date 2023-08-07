@@ -89,7 +89,7 @@
   "plugins": [
     {
       "type": "linked-versions",
-      "groupName": "lifecycle-scheduler",
+      "groupName": "lifecycle-operator-and-scheduler",
       "components": [
         "lifecycle-operator", "scheduler"
       ],

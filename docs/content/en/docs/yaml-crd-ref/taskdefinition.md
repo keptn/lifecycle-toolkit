@@ -8,7 +8,7 @@ A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../concepts/workloads/).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -390,7 +390,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../concepts/workloads).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.

@@ -27,19 +27,20 @@ The following is an imperative walkthrough.
 By the end of this page, here is what will be built.
 This system will be built in stages.
 
-![system overview](/docs/install/assets/install01.png)
+![system overview](assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
 To begin our exploration of the Keptn observability features, we will:
 
 * Deploy a simple application called `keptndemo`.
+
 Keptn will monitor the deployment and generate:
 
 - An OpenTelemetry trace per deployment
 - DORA metrics
 
-![the basics](/docs/install/assets/install02.png)
+![the basics](assets/install02.png)
 
 Notice though that the metrics and traces have nowhere to go.
 That will be fixed in a subsequent step.
@@ -173,7 +174,7 @@ but if you want to use different labels, you can swap for:
 
 Keptn is now aware of your deployments and is generating DORA statistics about them.
 
-Keptn has created a CRD to track your application.
+Keptn has created a resource called a `KeptnApp` to track your application.
 The name of which is based on the `part-of` label.
 
 It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CRD.
@@ -225,28 +226,46 @@ Port-forward to expose your app on `http://localhost:8080`:
 kubectl -n keptndemo port-forward svc/nginx 8080
 ```
 
+Open a browser window and go to `http://localhost:8080`
+
 You should see the "Welcome to nginx" page.
 
-![nginx demo app](/docs/install/assets/nginx.png)
+![nginx demo app](assets/nginx.png)
 
 ## View DORA Metrics
 
 Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
-These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
+These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`
 
-To see these raw metrics, port-forward to the lifecycle operator metrics service:
+To see these raw metrics:
+
+* Port forward to the lifecycle operator metrics service:
 
 ```shell
 kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
 ```
 
-Access metrics in Prometheus format on `http://localhost:2222/metrics`.
-Look for metrics starting with `keptn_`.
+Note that this command will (and should) continue to run in your terminal windows.
+Open a new terminal window to continue.
 
-![keptn prometheus metrics](/docs/install/assets/keptnprommetrics.png)
+* Access metrics in Prometheus format on `http://localhost:2222/metrics`
+* Look for metrics starting with `keptn_`.
 
-You need to open a new shell to continue.
+![keptn prometheus metrics](assets/keptnprommetrics.png)
+
+Keptn emits various metrics about the state of your system.
+These metrics can then be visualised in Grafana.
+
+For example:
+
+* `keptn_app_active` tracks the number of applications that Keptn manages
+* `keptn_deployment_active` tracks the currently live number of deployments occuring.
+  Expect this metrics to be `0` when everything is currently deployed.
+  It will occasionally rise to `n` during deployments and then fall back to `0` when deployments are completed.
+
+There are many other Keptn metrics.
+
 ## Make DORA metrics more user friendly
 
 It is much more user friendly to provide dashboards for metrics, logs and traces.
@@ -258,7 +277,7 @@ So let's install new Observability components to help us:
 - OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - Grafana (and some prebuilt dashboards): Visualise the data
 
-![add observability](/docs/install/assets/install01.png)
+![add observability](assets/install01.png)
 
 ## Install Cert Manager
 
@@ -273,7 +292,7 @@ helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/ce
 
 ## Install Jaeger
 
-Save this file as `jaeger.yaml`:
+Save this file as `jaeger.yaml` (it can be saved anywhere on your computer):
 
 ```shell
 apiVersion: jaegertracing.io/v1
@@ -442,9 +461,9 @@ This signals that the deployment was successful and the pod is running.
 
 View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
 
-![keptn applications dashboard](/docs/install/assets/keptnapplications.png)
+![keptn applications dashboard](assets/keptnapplications.png)
 
-![deployment trace](/docs/install/assets/deploymenttrace.png)
+![deployment trace](assets/deploymenttrace.png)
 
 ## More control over KeptnApp
 

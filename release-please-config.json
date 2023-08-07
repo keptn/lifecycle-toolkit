@@ -68,6 +68,22 @@
       "extra-files": [
         "Makefile"
       ]
+    },
+    "runtimes/python-runtime": {
+      "package-name": "python-runtime",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "python-runtime",
+      "prerelease": false,
+      "draft": false
+    },
+    "runtimes/deno-runtime": {
+      "package-name": "deno-runtime",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "deno-runtime",
+      "prerelease": false,
+      "draft": false
     }
   },
   "plugins": [

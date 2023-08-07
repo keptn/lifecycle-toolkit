@@ -80,24 +80,14 @@ jobs:
                         ];
                     case "metrics-operator":
                     case "klt-cert-manager":
+                    case "runtimes/deno-runtime":
+                    case "runtimes/python-runtime":
                         return [{
                             name: item,
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
                         }];
                     case ".":
-                        return [
-                            {
-                              name: "functions-runtime",
-                              folder: "functions-runtime/",
-                              tagName: process.env.KLT_TAG
-                            },
-                            {
-                              name: "python-runtime",
-                              folder: "python-runtime/",
-                              tagName: process.env.KLT_TAG
-                            }
-                        ];
                     default:
                         return [];
                 }

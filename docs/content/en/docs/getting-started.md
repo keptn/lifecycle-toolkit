@@ -33,7 +33,7 @@ This system will be built in stages.
 
 To begin our exploration of the Keptn observability features, we will:
 
-* Deploy a simple application called `keptndemo`.
+- Deploy a simple application called `keptndemo`.
 
 Keptn will monitor the deployment and generate:
 
@@ -59,7 +59,8 @@ Keptn will need to know where to send OpenTelemetry traces.
 Of course, Jaeger is not yet installed so traces have nowhere to go (yet),
 but creating this configuration now means the system is preconfigured.
 
-Save this file as `collectorconfig.yaml`. It doesn't matter where this file is located on your local machine:
+Save this file as `collectorconfig.yaml`.
+It doesn't matter where this file is located on your local machine:
 
 ```yaml
 ---
@@ -240,7 +241,7 @@ These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint o
 
 To see these raw metrics:
 
-* Port forward to the lifecycle operator metrics service:
+- Port forward to the lifecycle operator metrics service:
 
 ```shell
 kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
@@ -249,8 +250,8 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecyc
 Note that this command will (and should) continue to run in your terminal windows.
 Open a new terminal window to continue.
 
-* Access metrics in Prometheus format on `http://localhost:2222/metrics`
-* Look for metrics starting with `keptn_`.
+- Access metrics in Prometheus format on `http://localhost:2222/metrics`
+- Look for metrics starting with `keptn_`.
 
 ![keptn prometheus metrics](assets/keptnprommetrics.png)
 
@@ -259,8 +260,8 @@ These metrics can then be visualised in Grafana.
 
 For example:
 
-* `keptn_app_active` tracks the number of applications that Keptn manages
-* `keptn_deployment_active` tracks the currently live number of deployments occuring.
+- `keptn_app_active` tracks the number of applications that Keptn manages
+- `keptn_deployment_active` tracks the currently live number of deployments occuring.
   Expect this metrics to be `0` when everything is currently deployed.
   It will occasionally rise to `n` during deployments and then fall back to `0` when deployments are completed.
 

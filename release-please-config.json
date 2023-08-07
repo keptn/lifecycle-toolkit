@@ -36,6 +36,7 @@
     },
     "lifecycle-operator": {
       "package-name": "lifecycle-operator",
+      "component": "lifecycle-operator",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "lifecycle-operator",
@@ -47,6 +48,7 @@
     },
     "scheduler": {
       "package-name": "scheduler",
+      "component": "scheduler",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "scheduler",

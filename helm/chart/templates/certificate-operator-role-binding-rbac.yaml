@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "chart.fullname" . }}-certificate-operator-role-binding
+  name: certificate-operator-role-binding
   namespace: {{ .Release.Namespace | quote }}
   labels:
     app.kubernetes.io/component: rbac
@@ -11,8 +11,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: '{{ include "chart.fullname" . }}-certificate-operator-role'
+  name: 'certificate-operator-role'
 subjects:
 - kind: ServiceAccount
-  name: '{{ include "chart.fullname" . }}-certificate-operator'
+  name: 'certificate-operator'
   namespace: '{{ .Release.Namespace }}'

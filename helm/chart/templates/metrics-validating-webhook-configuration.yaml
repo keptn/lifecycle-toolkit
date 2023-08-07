@@ -1,9 +1,9 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: {{ include "chart.fullname" . }}-metrics-validating-webhook-configuration
+  name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "chart.fullname" . }}-
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/
   labels:
   {{- include "chart.labels" . | nindent 4 }}
 webhooks:
@@ -11,7 +11,7 @@ webhooks:
   - v1
   clientConfig:
     service:
-      name: '{{ include "chart.fullname" . }}-metrics-webhook-service'
+      name: 'metrics-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /validate-metrics-keptn-sh-v1alpha3-keptnmetric
   failurePolicy: Fail

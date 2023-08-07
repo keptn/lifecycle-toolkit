@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-manager-config
+  name: lifecycle-manager-config
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}

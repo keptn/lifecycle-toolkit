@@ -15,7 +15,7 @@ spec:
     webhook:
       clientConfig:
         service:
-          name: '{{ include "chart.fullname" . }}-metrics-webhook-service'
+          name: 'metrics-webhook-service'
           namespace: '{{ .Release.Namespace }}'
           path: /convert
       conversionReviewVersions:

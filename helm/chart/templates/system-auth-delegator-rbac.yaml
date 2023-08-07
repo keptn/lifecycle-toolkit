@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "chart.fullname" . }}-system-auth-delegator
+  name: system-auth-delegator
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}
@@ -11,5 +11,5 @@ roleRef:
   name: system:auth-delegator
 subjects:
 - kind: ServiceAccount
-  name: '{{ include "chart.fullname" . }}-metrics-operator'
+  name: 'metrics-operator'
   namespace: '{{ .Release.Namespace }}'

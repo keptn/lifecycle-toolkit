@@ -1,9 +1,9 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: {{ include "chart.fullname" . }}-lifecycle-mutating-webhook-configuration
+  name: lifecycle-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "chart.fullname" . }}-
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
@@ -13,7 +13,7 @@ webhooks:
   - v1
   clientConfig:
     service:
-      name: '{{ include "chart.fullname" . }}-lifecycle-webhook-service'
+      name: 'lifecycle-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /mutate-v1-pod
   failurePolicy: Fail

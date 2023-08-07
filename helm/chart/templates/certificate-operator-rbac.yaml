@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "chart.fullname" . }}-certificate-operator-role
+  name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}
@@ -28,7 +28,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "chart.fullname" . }}-certificate-operator-role
+  name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}
@@ -75,7 +75,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "chart.fullname" . }}-certificate-operator-rolebinding
+  name: certificate-operator-rolebinding
   namespace: {{ .Release.Namespace | quote }}
   labels:
     app.kubernetes.io/component: rbac
@@ -85,8 +85,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: '{{ include "chart.fullname" . }}-certificate-operator-role'
+  name: 'certificate-operator-role'
 subjects:
 - kind: ServiceAccount
-  name: '{{ include "chart.fullname" . }}-certificate-operator'
+  name: 'certificate-operator'
   namespace: '{{ .Release.Namespace }}'

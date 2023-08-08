@@ -43,12 +43,14 @@ spec:
                   a CRD that stores the AnalysisValuesTemplates
                 properties:
                   name:
+                    description: Name defines the name of the referenced object
                     type: string
                   namespace:
+                    description: Namespace defines the namespace of the referenced
+                      object
                     type: string
                 required:
                 - name
-                - namespace
                 type: object
               args:
                 additionalProperties:

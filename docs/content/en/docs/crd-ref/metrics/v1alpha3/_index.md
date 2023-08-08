@@ -13,11 +13,114 @@ description: Reference information for metrics.keptn.sh/v1alpha3
 Package v1alpha3 contains API Schema definitions for the metrics v1alpha3 API group
 
 ### Resource Types
+- [Analysis](#analysis)
+- [AnalysisDefinition](#analysisdefinition)
+- [AnalysisDefinitionList](#analysisdefinitionlist)
+- [AnalysisList](#analysislist)
 - [KeptnMetric](#keptnmetric)
 - [KeptnMetricList](#keptnmetriclist)
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
 
+
+
+#### Analysis
+
+
+
+Analysis is the Schema for the analyses API
+
+_Appears in:_
+- [AnalysisList](#analysislist)
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `Analysis`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[AnalysisSpec](#analysisspec)_ |  |
+| `status` _string_ |  |
+
+
+#### AnalysisDefinition
+
+
+
+AnalysisDefinition is the Schema for the analysisdefinitions APIs
+
+_Appears in:_
+- [AnalysisDefinitionList](#analysisdefinitionlist)
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `AnalysisDefinition`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[AnalysisDefinitionSpec](#analysisdefinitionspec)_ |  |
+| `status` _string_ | unused field |
+
+
+#### AnalysisDefinitionList
+
+
+
+AnalysisDefinitionList contains a list of AnalysisDefinition
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `AnalysisDefinitionList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[AnalysisDefinition](#analysisdefinition) array_ |  |
+
+
+#### AnalysisDefinitionSpec
+
+
+
+AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
+
+_Appears in:_
+- [AnalysisDefinition](#analysisdefinition)
+
+| Field | Description |
+| --- | --- |
+| `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives to evaluate for an analysis |
+| `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an analysis to be successful |
+
+
+#### AnalysisList
+
+
+
+AnalysisList contains a list of Analysis
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
+| `kind` _string_ | `AnalysisList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[Analysis](#analysis) array_ |  |
+
+
+#### AnalysisSpec
+
+
+
+AnalysisSpec defines the desired state of Analysis
+
+_Appears in:_
+- [Analysis](#analysis)
+
+| Field | Description |
+| --- | --- |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate |
+| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. The placeholder must be the capitalized version of the key; i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})". |
+| `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates |
 
 
 #### KeptnMetric
@@ -33,7 +136,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnMetric`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  |
 | `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  |
 
@@ -50,7 +153,7 @@ KeptnMetricList contains a list of KeptnMetric
 | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnMetricList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnMetric](#keptnmetric) array_ |  |
 
 
@@ -84,7 +187,7 @@ _Appears in:_
 | --- | --- |
 | `value` _string_ | Value represents the resulting value |
 | `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
-| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
 | `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
@@ -101,7 +204,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnMetricsProvider`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  |
 | `status` _string_ | unused field |
 
@@ -118,7 +221,7 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnMetricsProviderList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnMetricsProvider](#keptnmetricsprovider) array_ |  |
 
 
@@ -135,7 +238,72 @@ _Appears in:_
 | --- | --- |
 | `type` _string_ | Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql. |
 | `targetServer` _string_ | TargetServer defined the URL at which the metrics provider is reachable with included port and protocol. |
-| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
+| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
+
+
+#### ObjectReference
+
+
+
+
+
+_Appears in:_
+- [AnalysisSpec](#analysisspec)
+- [Objective](#objective)
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name defines the name of the referenced object |
+| `namespace` _string_ | Namespace defines the namespace of the referenced object |
+
+
+#### Objective
+
+
+
+Objective defines an objective for analysis
+
+_Appears in:_
+- [AnalysisDefinitionSpec](#analysisdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate |
+| `target` _[Target](#target)_ | Target defines failure or warning criteria |
+| `weight` _integer_ | Weight can be used to emphasize the importance of one Objective over the others |
+| `keyObjective` _boolean_ | KeyObjective defines whether the whole analysis fails when this objective's target is not met |
+
+
+#### Operator
+
+
+
+Operator specifies the supported operators for value comparisons
+
+_Appears in:_
+- [Target](#target)
+
+| Field | Description |
+| --- | --- |
+| `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator |
+| `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator |
+| `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator |
+| `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator |
+| `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator |
+
+
+#### OperatorValue
+
+
+
+OperatorValue represents the value to which the result is compared
+
+_Appears in:_
+- [Operator](#operator)
+
+| Field | Description |
+| --- | --- |
+| `fixedValue` _Quantity_ | FixedValue defines the value for comparison |
 
 
 #### ProviderRef
@@ -165,6 +333,51 @@ _Appears in:_
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
-| `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+| `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+
+
+#### Target
+
+
+
+Target defines the failure and warning criteria
+
+_Appears in:_
+- [Objective](#objective)
+
+| Field | Description |
+| --- | --- |
+| `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails |
+| `warning` _[Operator](#operator)_ | Warning defines limits where the result does not pass or fail |
+
+
+#### Timeframe
+
+
+
+
+
+_Appears in:_
+- [AnalysisSpec](#analysisspec)
+
+| Field | Description |
+| --- | --- |
+| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | From is the time of start for the query, this field follows RFC3339 time format |
+| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | To is the time of end for the query, this field follows RFC3339 time format |
+
+
+#### TotalScore
+
+
+
+TotalScore defines the required score for an analysis to be successful
+
+_Appears in:_
+- [AnalysisDefinitionSpec](#analysisdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass |
+| `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status |
 
 

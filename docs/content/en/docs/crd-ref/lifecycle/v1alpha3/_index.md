@@ -66,20 +66,20 @@ _Appears in:_
 | `command` _string array_ | Entrypoint array. Not executed within a shell. The container image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell |
 | `args` _string array_ | Arguments to the entrypoint. The container image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell |
 | `workingDir` _string_ | Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated. |
-| `ports` _[ContainerPort](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerport-v1-core) array_ | List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated. |
-| `envFrom` _[EnvFromSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envfromsource-v1-core) array_ | List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated. |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envvar-v1-core) array_ | List of environment variables to set in the container. Cannot be updated. |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#resourcerequirements-v1-core)_ | Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `volumeMounts` _[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core) array_ | Pod volumes to mount into the container's filesystem. Cannot be updated. |
-| `volumeDevices` _[VolumeDevice](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumedevice-v1-core) array_ | volumeDevices is the list of block devices to be used by the container. |
-| `livenessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `readinessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `startupProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `lifecycle` _[Lifecycle](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#lifecycle-v1-core)_ | Actions that the management system should take in response to container lifecycle events. Cannot be updated. |
+| `ports` _[ContainerPort](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#containerport-v1-core) array_ | List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated. |
+| `envFrom` _[EnvFromSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#envfromsource-v1-core) array_ | List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated. |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#envvar-v1-core) array_ | List of environment variables to set in the container. Cannot be updated. |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#resourcerequirements-v1-core)_ | Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `volumeMounts` _[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#volumemount-v1-core) array_ | Pod volumes to mount into the container's filesystem. Cannot be updated. |
+| `volumeDevices` _[VolumeDevice](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#volumedevice-v1-core) array_ | volumeDevices is the list of block devices to be used by the container. |
+| `livenessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#probe-v1-core)_ | Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
+| `readinessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#probe-v1-core)_ | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
+| `startupProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#probe-v1-core)_ | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
+| `lifecycle` _[Lifecycle](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#lifecycle-v1-core)_ | Actions that the management system should take in response to container lifecycle events. Cannot be updated. |
 | `terminationMessagePath` _string_ | Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated. |
-| `terminationMessagePolicy` _[TerminationMessagePolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#terminationmessagepolicy-v1-core)_ | Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated. |
-| `imagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#pullpolicy-v1-core)_ | Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images |
-| `securityContext` _[SecurityContext](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#securitycontext-v1-core)_ | SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| `terminationMessagePolicy` _[TerminationMessagePolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#terminationmessagepolicy-v1-core)_ | Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated. |
+| `imagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#pullpolicy-v1-core)_ | Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images |
+| `securityContext` _[SecurityContext](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#securitycontext-v1-core)_ | SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | `stdin` _boolean_ | Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false. |
 | `stdinOnce` _boolean_ | Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false |
 | `tty` _boolean_ | Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false. |
@@ -172,8 +172,8 @@ _Appears in:_
 | `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefiniton |
 | `status` _KeptnState_ |  |
 | `name` _string_ | Name is the name of the Evaluation/Task |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the Item (Evaluation/Task) started. |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the Item (Evaluation/Task) started. |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | StartTime represents the time at which the Item (Evaluation/Task) started. |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | EndTime represents the time at which the Item (Evaluation/Task) started. |
 
 
 #### KeptnApp
@@ -189,7 +189,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnApp`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppSpec](#keptnappspec)_ | Spec describes the desired state of the KeptnApp. |
 | `status` _[KeptnAppStatus](#keptnappstatus)_ | Status describes the current state of the KeptnApp. |
 
@@ -207,7 +207,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnAppCreationRequest`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppCreationRequestSpec](#keptnappcreationrequestspec)_ | Spec describes the desired state of the KeptnAppCreationRequest. |
 | `status` _string_ | Status describes the current state of the KeptnAppCreationRequest. |
 
@@ -224,7 +224,7 @@ KeptnAppCreationRequestList contains a list of KeptnAppCreationRequest
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnAppCreationRequestList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnAppCreationRequest](#keptnappcreationrequest) array_ |  |
 
 
@@ -254,7 +254,7 @@ KeptnAppList contains a list of KeptnApp
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnAppList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnApp](#keptnapp) array_ |  |
 
 
@@ -306,7 +306,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnAppVersion`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnAppVersionSpec](#keptnappversionspec)_ | Spec describes the desired state of the KeptnAppVersion. |
 | `status` _[KeptnAppVersionStatus](#keptnappversionstatus)_ | Status describes the current state of the KeptnAppVersion. |
 
@@ -323,7 +323,7 @@ KeptnAppVersionList contains a list of KeptnAppVersion
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnAppVersionList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnAppVersion](#keptnappversion) array_ |  |
 
 
@@ -374,8 +374,8 @@ _Appears in:_
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnAppVersion. |
 | `phaseTraceIDs` _object (keys:string, values:object)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnAppVersion. |
 | `status` _KeptnState_ | Status represents the overall status of the KeptnAppVersion. |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnAppVersion started. |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnAppVersion finished. |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnAppVersion started. |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnAppVersion finished. |
 
 
 #### KeptnEvaluation
@@ -391,7 +391,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluation`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationSpec](#keptnevaluationspec)_ | Spec describes the desired state of the KeptnEvaluation. |
 | `status` _[KeptnEvaluationStatus](#keptnevaluationstatus)_ | Status describes the current state of the KeptnEvaluation. |
 
@@ -409,7 +409,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluationDefinition`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ | Spec describes the desired state of the KeptnEvaluationDefinition. |
 | `status` _string_ | unused field |
 
@@ -426,7 +426,7 @@ KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluationDefinitionList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnEvaluationDefinition](#keptnevaluationdefinition) array_ |  |
 
 
@@ -456,7 +456,7 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluationList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  |
 
 
@@ -473,7 +473,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluationProvider`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
 | `status` _string_ | unused field |
 
@@ -490,7 +490,7 @@ KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnEvaluationProviderList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnEvaluationProvider](#keptnevaluationprovider) array_ |  |
 
 
@@ -506,7 +506,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `targetServer` _string_ |  |
-| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
+| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#secretkeyselector-v1-core)_ |  |
 
 
 #### KeptnEvaluationSpec
@@ -526,7 +526,7 @@ _Appears in:_
 | `appVersion` _string_ | AppVersion defines the version of the KeptnApp for which the KeptnEvaluation is done. |
 | `evaluationDefinition` _string_ | EvaluationDefinition refers to the name of the KeptnEvaluationDefinition which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition can be located in the same namespace as the KeptnEvaluation, or in the KLT namespace. |
 | `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |
-| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |
+| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |
 | `failAction` _string_ |  |
 | `checkType` _CheckType_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. |
 
@@ -545,8 +545,8 @@ _Appears in:_
 | `retryCount` _integer_ | RetryCount indicates how many times the KeptnEvaluation has been attempted already. |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ | EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |
 | `overallStatus` _KeptnState_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the KeptnEvaluation started. |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | StartTime represents the time at which the KeptnEvaluation started. |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. |
 
 
 #### KeptnMetricReference
@@ -577,7 +577,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnTask`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnTaskSpec](#keptntaskspec)_ | Spec describes the desired state of the KeptnTask. |
 | `status` _[KeptnTaskStatus](#keptntaskstatus)_ | Status describes the current state of the KeptnTask. |
 
@@ -595,7 +595,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnTaskDefinition`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)_ | Spec describes the desired state of the KeptnTaskDefinition. |
 | `status` _[KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)_ | Status describes the current state of the KeptnTaskDefinition. |
 
@@ -612,7 +612,7 @@ KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnTaskDefinitionList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnTaskDefinition](#keptntaskdefinition) array_ |  |
 
 
@@ -632,7 +632,7 @@ _Appears in:_
 | `deno` _[RuntimeSpec](#runtimespec)_ | Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on the KeptnTaskDefinitions. |
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job based on the KeptnTaskDefinitions. |
 | `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case of an unsuccessful attempt. |
-| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
 
 
 #### KeptnTaskDefinitionStatus
@@ -661,7 +661,7 @@ KeptnTaskList contains a list of KeptnTask
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnTaskList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnTask](#keptntask) array_ |  |
 
 
@@ -686,7 +686,7 @@ _Appears in:_
 | `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. |
 | `checkType` _CheckType_ | Type indicates whether the KeptnTask is part of the pre- or postDeployment phase. |
 | `retries` _integer_ | Retries indicates how many times the KeptnTask can be attempted in the case of an error before considering the KeptnTask to be failed. |
-| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
 
 
 #### KeptnTaskStatus
@@ -703,8 +703,8 @@ _Appears in:_
 | `jobName` _string_ | JobName is the name of the Job executing the Task. |
 | `status` _KeptnState_ | Status represents the overall state of the KeptnTask. |
 | `message` _string_ | Message contains information about unexpected errors encountered during the execution of the KeptnTask. |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the KeptnTask started. |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the KeptnTask finished. |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | StartTime represents the time at which the KeptnTask started. |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | EndTime represents the time at which the KeptnTask finished. |
 | `reason` _string_ | Reason contains more information about the reason for the last transition of the Job executing the KeptnTask. |
 
 
@@ -721,7 +721,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnWorkload`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ | Spec describes the desired state of the KeptnWorkload. |
 | `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ | Status describes the current state of the KeptnWorkload. |
 
@@ -739,7 +739,7 @@ _Appears in:_
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnWorkloadInstance`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)_ | Spec describes the desired state of the KeptnWorkloadInstance. |
 | `status` _[KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)_ | Status describes the current state of the KeptnWorkloadInstance. |
 
@@ -756,7 +756,7 @@ KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnWorkloadInstanceList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnWorkloadInstance](#keptnworkloadinstance) array_ |  |
 
 
@@ -803,8 +803,8 @@ _Appears in:_
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadInstance. |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadInstance. |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnWorkloadInstance. |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadInstance started. |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished. |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadInstance started. |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished. |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations |
 | `phaseTraceIDs` _object (keys:string, values:object)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance |
 | `status` _KeptnState_ | Status represents the overall status of the KeptnWorkloadInstance. |
@@ -822,7 +822,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
 | `kind` _string_ | `KeptnWorkloadList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `items` _[KeptnWorkload](#keptnworkload) array_ |  |
 
 

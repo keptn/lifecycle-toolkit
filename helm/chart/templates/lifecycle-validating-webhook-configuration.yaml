@@ -5,6 +5,7 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/
   labels:
+      keptn.sh/inject-cert: "true"
   {{- include "chart.labels" . | nindent 4 }}
 webhooks:
 - admissionReviewVersions:

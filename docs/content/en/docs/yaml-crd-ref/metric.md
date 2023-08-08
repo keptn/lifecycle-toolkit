@@ -26,6 +26,12 @@ spec:
     name: "<named-provider>"
   query: "<query>"
   fetchIntervalSeconds: <#-seconds>
+KeptnMetricStatus:
+  properties:
+    value: <resulting value in human-readable language>
+    rawValue: <resulting value, in raw format>
+    errMsg: <error details if the query could not be evaluated>
+    lastUpdated: <time when the status data was last updated>
 ```
 
 ## Fields
@@ -59,6 +65,17 @@ spec:
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
+
+* **KeptnMetricStatus**
+  * KLT fills in this information from the
+    [KeptnMetricStatus](../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
+    resource when the metric is evaluated.
+    It always records the time the metric was last evaluated.
+    If the evaluation is successful,
+    this stores the result in both human-readable and raw format.
+    If the evaluation is not successful,
+    this stores error details that you can use to understand the problem
+    such as a forbidden code.
 
 ## Usage
 

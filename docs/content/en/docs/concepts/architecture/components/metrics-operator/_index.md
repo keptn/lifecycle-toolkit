@@ -6,7 +6,6 @@ weight: 80
 cascade:
 ---
 
-
 The Keptn Metrics Operator collects, processes,
 and analyzes metrics data from a variety of sources.
 Once collected, this data can be used
@@ -67,47 +66,28 @@ resource.
 
 The steps in which the controller fetches metrics are given below:
 
-1. Fetch the `KeptnMetric` object to be reconciled.
-   * If the object is not found,
-     it returns and lets Kubernetes handle deleting all associated resources.
-1. If the object is found, the code checks
-   whether the metric has been updated within the interval
-   that is defined in the `spec.fetchintervalseconds` field.
-   * If not, it skips reconciling and requeues the request for later.
-1. If the metric should be reconciled,
-   it fetches the provider defined in the `spec.provider.name` field.
-   * If the provider is not found,
-     it returns and requeues the request for later.
+1. When a [`KeptnMetric`](../../../../yaml-crd-ref/metric.md)
+   resource is found or modified,
+   the controller checks whether the metric has been updated
+   within the interval that is defined in the `spec.fetchintervalseconds` field.
+   * If not, it skips the reconcilliation process
+     and queues the request for later.
+
+1. The controller attempts to fetch the provider defined in the
+   `spec.provider.name` field.
+   * If this is not possible, the controller reconciles
+     and queues the request for later.
+
 1. If the provider is found,
-   it loads the provider and evaluates the query
+   the controller loads the provider and evaluates the query
    defined in the `spec.query` field.
-1. If the evaluation is successful,
-   it stores the fetched value
-   in the metric status field of the `KeptnMetric` object.
-1. If the evaluation fails,
-   the error and reason is also provided in the
-   [MetricStatus](../../../../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
-   resource.
-   The error is described in human-readable language
-   and as raw data to help identify the source of the problem
-   (such as a forbidden code).
-
-   The `MetricStatus` resource includes the following information:
-
-   ```yaml
-   properties:
-     errMsg:
-       description: provides error details if the query could not be evaluated
-       type: string
-     lastUpdated:
-       description: time when the status data was last updated
-       format: date-time
-       type: string
-     value:
-       description: resulting value in human-readable language
-       type: string
-     rawValue:
-       description: resulting value, in raw format
-       format: byte
-       type: string
-   ```
+   * If the evaluation is successful,
+     it stores the fetched value
+     in the `KeptnMetricStatus` field of the `KeptnMetric` object.
+   * If the evaluation fails,
+     the error and reason is written to the
+     [KeptnMetricStatus](../../../../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
+     resource.
+     The error is described in both human-readable language
+     and as raw data to help identify the source of the problem
+     (such as a forbidden code).

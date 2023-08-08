@@ -215,7 +215,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate |
+| `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate |
 | `target` _[Target](#target)_ | Target defines failure or warning criteria |
 | `weight` _integer_ | Weight can be used to emphasize the importance of one Objective over the others |
 | `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the target is not met |
@@ -243,7 +243,7 @@ _Appears in:_
 
 
 
-OperatorValue represents the value the result will be compared to
+OperatorValue represents the value to which the result is compared
 
 _Appears in:_
 - [Operator](#operator)
@@ -280,7 +280,7 @@ _Appears in:_
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
-| `aggregation` _string_ | Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+| `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
 
 
 #### Target

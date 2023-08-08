@@ -43,7 +43,7 @@ type TotalScore struct {
 
 // Objective defines an objective for analysis
 type Objective struct {
-	// AnalysisValueTemplateRef defines a reference to the used AnalysisValueTemplate
+	// AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef"`
 	// Target defines failure or warning criteria
 	Target Target `json:"target,omitempty"`
@@ -63,7 +63,7 @@ type Target struct {
 	Warning *Operator `json:"warning,omitempty"`
 }
 
-// OperatorValue represents the value the result will be compared to
+// OperatorValue represents the value to which the result is compared
 type OperatorValue struct {
 	// FixedValue defines the value for comparison
 	FixedValue resource.Quantity `json:"fixedValue"`

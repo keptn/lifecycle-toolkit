@@ -42,8 +42,8 @@ spec:
                   description: Objective defines an objective for analysis
                   properties:
                     analysisValueTemplateRef:
-                      description: AnalysisValueTemplateRef defines a reference to
-                        the used AnalysisValueTemplate
+                      description: AnalysisValueTemplateRef refers to the appropriate
+                        AnalysisValueTemplate
                       properties:
                         name:
                           type: string

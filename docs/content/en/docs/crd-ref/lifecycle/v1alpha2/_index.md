@@ -308,7 +308,7 @@ _Appears in:_
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
-| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  |
 | `status` _KeptnState_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
@@ -720,7 +720,7 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `currentPhase` _string_ |  |
-| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  |
 | `status` _KeptnState_ |  |
 
 

@@ -1,3 +1,10 @@
+---
+title: Introduction to Troubleshooting Common Problems with KLT
+linktitle: Introduction to Troubleshooting Common Problems with KLT
+description: Troubleshoot common problems with KLT
+weight: 05
+---
+
 # Troubleshooting Common Problems with KLT
 
 Welcome to the troubleshooting guide for KLT (Keptn Lifecycle Toolkit). 

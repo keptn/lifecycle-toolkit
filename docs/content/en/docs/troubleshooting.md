@@ -6,10 +6,10 @@ This guide will help you address common issues that you might encounter while us
 
 ## KLT is installed but it isn't aware of my workloads
 
-If you're facing an issue where KLT is installed but doesn't seem to be aware of your workloads, follow these steps:
+If you are facing an issue where KLT is installed but doesn't seem to be aware of your workloads, follow these steps:
 
-1. Ensure that the namespace you wish to target is [annotated correctly.](https://lifecycle.keptn.sh/docs/install/install/#enable-klt-for-your-cluster)
-2. Make sure your workloads (e.g., Deployment manifests) have the [three required annotations.](https://lifecycle.keptn.sh/docs/implementing/integrate/#annotate-workloads)
+1. Ensure that the namespace you wish to target is [annotated correctly](https://lifecycle.keptn.sh/docs/install/install/#enable-klt-for-your-cluster).
+2. Make sure your workloads (e.g., Deployment manifests) have the [three required annotations](https://lifecycle.keptn.sh/docs/implementing/integrate/#annotate-workloads).
 
 ## KLT is causing my pods to be pending
 
@@ -26,19 +26,19 @@ kubectl -n prod get pods
 kubectl -n prod logs job/...
 ```
 
-## Pending Pods After Uninstallation
+## I have pending Pods after KLT is uninstalled
 
-> **_NOTE:_**  This section particularly affects to clusters managed by ArgoCD.
+> **_NOTE:_**  This section particularly affects clusters managed by ArgoCD.
 
-If you've uninstalled Keptn Lifecycle Toolkit and are now facing issues scheduling or deleting pods, follow these steps:
+If you have uninstalled Keptn Lifecycle Toolkit and are now facing issues scheduling or deleting pods, follow these steps:
 
-**Issue: ArgoCD doesn't delete various CRDs and webhooks, causing lingering resources.**
+ArgoCD does not delete various CRDs and webhooks, when uninstalling applications, causing lingering resources.
 
 For cleanup instructions, refer to this [issue](https://github.com/keptn/lifecycle-toolkit/issues/1828).
 
 
 ## I cannot see DORA metrics or OpenTelemetry traces
 
-KLT will automatically generate DORA metrics and OTEL traces for every deployment, but by default it doesn't know where to send them. You need an OpenTelemetry collector installed and configured on the cluster.
+KLT will automatically generate DORA metrics and Otel traces for every deployment, but by default it doesn't know where to send them. You need an OpenTelemetry collector installed and configured on the cluster.
 
 [The OpenTelemetry observability page](https://lifecycle.keptn.sh/docs/implementing/otel/) contains more information on how to configure this.

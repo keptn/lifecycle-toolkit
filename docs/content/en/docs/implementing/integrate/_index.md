@@ -227,6 +227,38 @@ keptn.sh/post-deployment-evaluations: <`EvaluationDefinition`-name>
 keptn.sh/post-deployment-tasks: <`TaskDefinition`-name>
 ```
 
+The value of these annotations corresponds to the name of
+Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+called
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)s.
+These resources contain re-usable "functions"
+that can execute before and after the deployment.
+For example, before the deployment starts,
+you might perform a check for open problems in your infrastructure.
+If everything is fine, the deployment continues and afterward,
+a slack notification can be sent with the result of the deployment
+and a pipeline to run performance tests can be invoked.
+Otherwise, the deployment is kept in a pending state
+until the infrastructure is capable of accepting deployments again.
+
+A comprehensive example can be found in our
+[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
+where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
+to run some simple pre-deployment checks.
+
+To run the example, use the following commands:
+
+```shell
+cd ./examples/podtatohead-deployment/
+kubectl apply -f .
+```
+
+Afterward, you can monitor the status of the deployment using
+
+```shell
+kubectl get keptnworkloadinstance -n podtato-kubectl -w
+```
+
 ## Use Keptn automatic app discovery
 
 The automatically generated `KeptnApp` file

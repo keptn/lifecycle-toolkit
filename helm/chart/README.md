@@ -35,7 +35,7 @@ checks
 | `certificateOperator.tolerations`                                                  | customize tolerations for cert manager                                                                                                                        | `[]`                |
 | `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager                                                                                                                     | `[]`                |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
-| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | enable leader election for multiple replicas of the operator                                                                                                  | `true`              |
+| `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | enable leader election for multiple replicas of the lifecycle operator                                                                                        | `true`              |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | setup port for the lifecycle operator admission webhook                                                                                                       | `9443`              |
@@ -136,23 +136,23 @@ checks
 
 ### Keptn Metrics Operator controller
 
-| Name                                                                        | Description                                                   | Value                            |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------- |
-| `metricsOperator.manager.containerSecurityContext`                          | Sets security context privileges                              |                                  |
-| `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                               | `false`                          |
-| `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                               | `["ALL"]`                        |
-| `metricsOperator.manager.containerSecurityContext.privileged`               |                                                               | `false`                          |
-| `metricsOperator.manager.containerSecurityContext.runAsGroup`               |                                                               | `65532`                          |
-| `metricsOperator.manager.containerSecurityContext.runAsNonRoot`             |                                                               | `true`                           |
-| `metricsOperator.manager.containerSecurityContext.runAsUser`                |                                                               | `65532`                          |
-| `metricsOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                               | `RuntimeDefault`                 |
-| `metricsOperator.manager.image.repository`                                  | specify registry for manager image                            | `ghcr.io/keptn/metrics-operator` |
-| `metricsOperator.manager.image.tag`                                         | select tag for manager image <!---x-release-please-version--> | `v0.8.1`                         |
-| `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                                       | `true`                           |
-| `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                      | `0`                              |
-| `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container                    |                                  |
-| `metricsOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container                   |                                  |
-| `metricsOperator.manager.resources`                                         | specify limits and requests for manager container             |                                  |
+| Name                                                                        | Description                                       | Value                            |
+| --------------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
+| `metricsOperator.manager.containerSecurityContext`                          | Sets security context privileges                  |                                  |
+| `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
+| `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
+| `metricsOperator.manager.containerSecurityContext.privileged`               |                                                   | `false`                          |
+| `metricsOperator.manager.containerSecurityContext.runAsGroup`               |                                                   | `65532`                          |
+| `metricsOperator.manager.containerSecurityContext.runAsNonRoot`             |                                                   | `true`                           |
+| `metricsOperator.manager.containerSecurityContext.runAsUser`                |                                                   | `65532`                          |
+| `metricsOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                   | `RuntimeDefault`                 |
+| `metricsOperator.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
+| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `v0.8.1`                         |
+| `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
+| `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
+| `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
+| `metricsOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
+| `metricsOperator.manager.resources`                                         | specify limits and requests for manager container |                                  |
 
 ### Global
 

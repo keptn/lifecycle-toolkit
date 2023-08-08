@@ -15,5 +15,7 @@ metadata:
 spec:
   provider:
     name: my-provider
-  query: 'avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}[1m]))'
+  query: 'avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}))'
   fetchIntervalSeconds: 10
+  range:
+    interval: "1m"

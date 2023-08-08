@@ -58,12 +58,18 @@ type RangeSpec struct {
 	// Interval specifies the duration of the time interval for the data query
 	// +kubebuilder:default:="5m"
 	Interval string `json:"interval,omitempty"`
+	// Step represents the query resolution step width for the data query
+	Step string `json:"step,omitempty"`
+	// Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
+	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
+	Aggregation string `json:"aggregation,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
 // +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
+// +kubebuilder:printcolumn:name="Interval",type=string,JSONPath=`.spec.range.interval`
 // +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
 // +kubebuilder:storageversion
 

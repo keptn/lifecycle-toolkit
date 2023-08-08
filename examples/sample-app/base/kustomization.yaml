@@ -4,6 +4,8 @@ resources:
   - app-post-deploy.yaml
   - provider.yaml
   - metric.yaml
+  - container-task.yaml
+  - python-task.yaml
 
 patchesStrategicMerge:
   - manifest.yaml

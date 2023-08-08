@@ -26,12 +26,14 @@ spec:
     name: "<named-provider>"
   query: "<query>"
   fetchIntervalSeconds: <#-seconds>
-KeptnMetricStatus:
-  properties:
-    value: <resulting value in human-readable language>
-    rawValue: <resulting value, in raw format>
-    errMsg: <error details if the query could not be evaluated>
-    lastUpdated: <time when the status data was last updated>
+  range:
+    interval: "<timeframe>"
+  KeptnMetricStatus:
+    properties:
+      value: <resulting value in human-readable language>
+      rawValue: <resulting value, in raw format>
+      errMsg: <error details if the query could not be evaluated>
+      lastUpdated: <time when the status data was last updated>
 ```
 
 ## Fields
@@ -65,6 +67,9 @@ KeptnMetricStatus:
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
+  * **range**
+    * **interval** -- Timeframe for which the metric would be queried.
+    Defaults to 5m.
 
 * **KeptnMetricStatus**
   * KLT fills in this information from the
@@ -113,6 +118,8 @@ spec:
     name: "my-provider"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
+  range:
+    interval: "5m"
 ```
 
 ## Files

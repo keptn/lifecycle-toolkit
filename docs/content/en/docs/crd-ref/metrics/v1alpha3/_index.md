@@ -200,8 +200,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `name` _string_ |  |
-| `namespace` _string_ |  |
+| `name` _string_ | Name defines the name of the referenced object |
+| `namespace` _string_ | Namespace defines the namespace of the referenced object |
 
 
 #### Objective

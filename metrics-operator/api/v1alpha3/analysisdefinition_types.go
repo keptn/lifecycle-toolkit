@@ -31,11 +31,11 @@ type AnalysisDefinitionSpec struct {
 
 // TotalScore defines the required score for an analysis to be successful
 type TotalScore struct {
-	// PassPercentage defines the threshold to reach for an analysis to pass.
+	// PassPercentage defines the threshold to reach for an analysis to pass
 	// +kubebuilder:validation:Minimum:=0
 	// +kubebuilder:validation:Maximum:=100
 	PassPercentage int `json:"passPercentage"`
-	// WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status.
+	// WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status
 	// +kubebuilder:validation:Minimum:=0
 	// +kubebuilder:validation:Maximum:=100
 	WarningPercentage int `json:"warningPercentage"`
@@ -50,14 +50,14 @@ type Objective struct {
 	// Weight can be used to emphasize the importance of one Objective over the others
 	// +kubebuilder:default:=1
 	Weight int `json:"weight,omitempty"`
-	// KeyObjective defines if the objective fails when the target is not met
+	// KeyObjective defines whether the whole analysis fails when this objective's target is not met
 	// +kubebuilder:default:=false
 	KeyObjective bool `json:"keyObjective,omitempty"`
 }
 
 // Target defines the failure and warning criteria
 type Target struct {
-	// Failure defines limits up to which an analysis fails.
+	// Failure defines limits up to which an analysis fails
 	Failure *Operator `json:"failure,omitempty"`
 	// Warning defines limits where the result does not pass or fail
 	Warning *Operator `json:"warning,omitempty"`

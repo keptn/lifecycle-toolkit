@@ -55,15 +55,15 @@ spec:
                       type: object
                     keyObjective:
                       default: false
-                      description: KeyObjective defines if the objective fails when
-                        the target is not met
+                      description: KeyObjective defines whether the whole analysis
+                        fails when this objective's target is not met
                       type: boolean
                     target:
                       description: Target defines failure or warning criteria
                       properties:
                         failure:
                           description: Failure defines limits up to which an analysis
-                            fails.
+                            fails
                           properties:
                             equalTo:
                               description: EqualTo represents '==' operator
@@ -217,13 +217,13 @@ spec:
                 properties:
                   passPercentage:
                     description: PassPercentage defines the threshold to reach for
-                      an analysis to pass.
+                      an analysis to pass
                     maximum: 100
                     minimum: 0
                     type: integer
                   warningPercentage:
                     description: WarningPercentage defines the threshold to reach
-                      for an analysis to pass with a 'warning' status.
+                      for an analysis to pass with a 'warning' status
                     maximum: 100
                     minimum: 0
                     type: integer

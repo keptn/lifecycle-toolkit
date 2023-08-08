@@ -218,7 +218,7 @@ _Appears in:_
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate |
 | `target` _[Target](#target)_ | Target defines failure or warning criteria |
 | `weight` _integer_ | Weight can be used to emphasize the importance of one Objective over the others |
-| `keyObjective` _boolean_ | KeyObjective defines if the objective fails when the target is not met |
+| `keyObjective` _boolean_ | KeyObjective defines whether the whole analysis fails when this objective's target is not met |
 
 
 #### Operator
@@ -294,7 +294,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails. |
+| `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails |
 | `warning` _[Operator](#operator)_ | Warning defines limits where the result does not pass or fail |
 
 
@@ -309,7 +309,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass. |
-| `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status. |
+| `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass |
+| `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status |
 
 

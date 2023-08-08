@@ -6,4 +6,4 @@ processor:
     - "TypeMeta$"
     - "EmptyStatus$"
 render:
-  kubernetesVersion: 1.26
+  kubernetesVersion: 1.24

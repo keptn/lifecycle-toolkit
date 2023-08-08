@@ -43,8 +43,9 @@ type AnalysisValueTemplate struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec contains the specification for the AnalysisValueTemplate
-	Spec   AnalysisValueTemplateSpec `json:"spec,omitempty"`
-	Status EmptyStatus               `json:"status,omitempty"`
+	Spec AnalysisValueTemplateSpec `json:"spec,omitempty"`
+	// unused field
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

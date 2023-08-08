@@ -60,7 +60,7 @@ type RangeSpec struct {
 	Interval string `json:"interval,omitempty"`
 	// Step represents the query resolution step width for the data query
 	Step string `json:"step,omitempty"`
-	// Aggregation defines as the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
+	// Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
 	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
 	Aggregation string `json:"aggregation,omitempty"`
 }

@@ -4,7 +4,7 @@ Welcome to the troubleshooting guide for KLT (Keptn Lifecycle Toolkit).
 
 This guide will help you address common issues that you might encounter while using KLT for managing your workloads. Below are some common problems and their solutions:
 
-## KLT is installed but KLT isn't aware of my workloads
+## KLT is installed but it isn't aware of my workloads
 
 If you're facing an issue where KLT is installed but doesn't seem to be aware of your workloads, follow these steps:
 

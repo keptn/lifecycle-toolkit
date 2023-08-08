@@ -2,15 +2,15 @@
 
 # CRD docs auto generation script
 #
-# This script goes through all API definitions in the operator/apis folder
+# This script goes through all API definitions in the lifecycle-operator/apis folder
 # and generates docs from code for each API group and version
 #
 # Inputs: None
 
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
-GENERATOR_VERSION=master
+GENERATOR_VERSION=v0.0.9
 API_DOMAIN="keptn.sh"
-OPERATOR_API_ROOT='operator/apis/'
+OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'

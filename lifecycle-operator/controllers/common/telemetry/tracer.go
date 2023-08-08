@@ -1,4 +1,4 @@
-package common
+package telemetry
 
 import "go.opentelemetry.io/otel/trace"
 

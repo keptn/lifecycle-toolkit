@@ -28,7 +28,7 @@ type AnalysisValueTemplateSpec struct {
 	// Provider represents the provider object
 	Provider ProviderRef `json:"provider"`
 	// Query represents the query to be run. It can include placeholders that are defined using the go template
-	// syntax (https://pkg.go.dev/text/template).
+	// syntax.
 	Query string `json:"query"`
 }
 

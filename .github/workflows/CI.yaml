@@ -14,6 +14,8 @@ on:
       - "**.md"
       - "netlify.toml"
 
+# TODO see if all release PRs are green in the end
+
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools

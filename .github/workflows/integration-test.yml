@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       runtime_tag:
-        description: "Tag for the functions runner image"
+        description: "Tag for the deno runner image"
         type: "string"
         required: true
       helm-install:

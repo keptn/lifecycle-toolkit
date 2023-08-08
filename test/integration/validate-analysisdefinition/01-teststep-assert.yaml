@@ -4,4 +4,4 @@ error: # this checks that kubectl get resource fails, AKA bad CRD not added
   - analysisdef_bad.yaml
 assert: # this checks that kubectl get resource succeeds
   - analysisdef_good.yaml
-  - analysisdef_good_empty_pass.yaml
+  - analysisdef_good_empty_fail.yaml

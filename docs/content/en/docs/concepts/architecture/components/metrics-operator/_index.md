@@ -83,7 +83,7 @@ The steps in which the controller fetches metrics are given below:
    defined in the `spec.query` field.
    * If the evaluation is successful,
      it stores the fetched value
-     in the `KeptnMetricStatus` field of the `KeptnMetric` object.
+     in the `status` field of the `KeptnMetric` object.
    * If the evaluation fails,
      the error and reason is written to the
      [KeptnMetricStatus](../../../../crd-ref/metrics/v1alpha3/#keptnmetricstatus)

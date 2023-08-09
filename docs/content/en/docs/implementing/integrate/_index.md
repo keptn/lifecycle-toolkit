@@ -257,6 +257,7 @@ a command like the following:
 ```shell
 kubectl get keptnworkloadinstance -n podtato-kubectl -w
 ```
+
 The generated `KeptnApp` file includes `metadata`
 that names this `KeptnApp` and identifies the Namespace where it resides.
 

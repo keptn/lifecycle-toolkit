@@ -43,7 +43,7 @@ func (e *EventMultiplexer) register(emitter IEvent) {
 func (e *EventMultiplexer) Emit(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
 	for _, emitter := range e.emitters {
 		e.logger.Info(fmt.Sprintf("Emitting event using %T", emitter))
-		emitter.Emit(phase, eventType, reconcileObject, status, message, version)
+		go emitter.Emit(phase, eventType, reconcileObject, status, message, version)
 	}
 }
 

@@ -184,7 +184,9 @@ func TestEventSender_Multiplexer_emit(t *testing.T) {
 	// fire a new event
 	msg := "my special message"
 	emitter.Emit(common.PhaseAppDeployment, "", nil, "", msg, "")
-	// assert we got one event each
+	// assert we got one event
+	// let's wait few seconds so the async emit takes place
+	<-time.After(3 * time.Second)
 	require.Equal(t, 2, len(emitter.emitters))
 	require.Equal(t, 1, len(em1.events))
 	require.Equal(t, 1, len(em2.events))

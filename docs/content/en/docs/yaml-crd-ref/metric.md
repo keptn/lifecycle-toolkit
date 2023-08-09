@@ -72,9 +72,7 @@ spec:
     Defaults to 5m.
 
 * **status**
-  * KLT fills in this information from the
-    [KeptnMetricStatus](../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
-    resource when the metric is evaluated.
+  * KLT fills in this information when the metric is evaluated.
     It always records the time the metric was last evaluated.
     If the evaluation is successful,
     this stores the result in both human-readable and raw format.

@@ -42,7 +42,18 @@ If you have uninstalled Keptn Lifecycle Toolkit and are now facing issues schedu
 
 ArgoCD does not delete various CRDs and webhooks, when uninstalling applications, causing lingering resources.
 
-For cleanup instructions, refer to this [issue](https://github.com/keptn/lifecycle-toolkit/issues/1828).
+### For cleanup instructions :
+
+1. Install KLT & CRDs w/ Argo
+2. Uninstall KLT via Argo
+3. Cluster is frozen. Pods cannot be deleted or scheduled
+
+Trying to schedule a new pod results an `mpod.keptn.sh` error.
+
+Reason: Argo doesn't remove the CRDs and global objects (mutating webhooks) and the
+[default failurePolicy is to fail](https://github.com/keptn/lifecycle-toolkit/blob/650ecba95624ed3dc2bd61bf1f86578f450223a5/operator/config/webhook/manifests.yaml#L17).
+
+to get further information refer to this [issue](https://github.com/keptn/lifecycle-toolkit/issues/1828).
 
 ## I cannot see DORA metrics or OpenTelemetry traces
 

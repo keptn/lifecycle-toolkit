@@ -37,7 +37,7 @@ Notice the paradigm differences when implementing KLT evaluations:
   using Helm charts and standard practices.
 * You must populate a
   [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
-  for each instance of each data source.
+  for each instance of each data provider.
   This resource specifies the URL and namespace for the data source
   and gives it a unique `name` that can be referenced by other resources.
   This is the only KLT specific configuration that is required.

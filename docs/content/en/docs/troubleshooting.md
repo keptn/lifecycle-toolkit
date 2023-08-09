@@ -54,4 +54,5 @@ by default it does not know where to send them.
 You need an OpenTelemetry collector
 installed and configured on the cluster.
 
-[The OpenTelemetry observability page](https://lifecycle.keptn.sh/docs/implementing/otel/) contains more information on how to configure this.
+[The OpenTelemetry observability page](https://lifecycle.keptn.sh/docs/implementing/otel/)
+contains more information on how to configure this.

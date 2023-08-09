@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting Guide
-linktitle: Troubleshooting common problems with KLT
+linktitle: Troubleshooting Guide
 description: Troubleshoot common problems with KLT
 weight: 100
 ---

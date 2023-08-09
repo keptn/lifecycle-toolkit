@@ -2,7 +2,7 @@
 
 # Keptn Lifecycle Toolkit Helm Testing
 #
-# This script supports the comparison of standar values and expected templated results to helm chart
+# This script supports the comparison of standard values and expected templated results to helm chart
 # it is used to make sure changes to the chart are intentional and produce expected outcomes
 
 echo "running simple tests"

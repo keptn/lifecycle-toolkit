@@ -46,7 +46,7 @@ Note the following:
   in a centralized namespace
   such as `keptn-lifecycle-toolkit-system`.
 
-To configure a data source into your KLT cluster:
+To configure a data provider into your KLT cluster:
 
 1. Create a secret if your data source uses one.
    See

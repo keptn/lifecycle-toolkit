@@ -3,7 +3,7 @@
 ## Build
 
 ```shell
-docker build -t lifecycle-toolkit/python-runtime:${VERSION} .
+docker build -t lifecycle-toolkit/runtimes/python-runtime:${VERSION} .
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ Replace `${VERSION}` with the KLT version of your choice.
 ### mounting a python file
 
 ```shell
-docker run -v $(pwd)/samples/hellopy.py:/hellopy.py -e "SCRIPT=hellopy.py" -it lifecycle-toolkit/python-runtime:${VERSION}
+docker run -v $(pwd)/samples/hellopy.py:/hellopy.py -e "SCRIPT=hellopy.py" -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
 Where the file in sample/hellopy.py contains python3 code:
@@ -48,7 +48,7 @@ You can pass python command line arguments by specifying `CMD_ARGS`.
 The following example will print the help of python3:
 
 ```shell
-docker run -e "CMD_ARGS= -help" -it lifecycle-toolkit/python-runtime:${VERSION}
+docker run -e "CMD_ARGS= -help" -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
 ### Pass arguments to your python script
@@ -56,7 +56,7 @@ docker run -e "CMD_ARGS= -help" -it lifecycle-toolkit/python-runtime:${VERSION}
 In this example we pass one argument (-i test.txt) to the script
 
 ```shell
-docker run -v $(pwd)/samples/args.py:/args.py -e "SCRIPT=args.py -i test.txt"  -it lifecycle-toolkit/python-runtime:${VERSION}
+docker run -v $(pwd)/samples/args.py:/args.py -e "SCRIPT=args.py -i test.txt"  -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
 ### Use a script from url
@@ -64,7 +64,7 @@ docker run -v $(pwd)/samples/args.py:/args.py -e "SCRIPT=args.py -i test.txt"  -
 We can call the hellopy.py script downloading it directly from github
 
 ```shell
-docker run -e "SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/python-runtime/samples/hellopy.py" -it lifecycle-toolkit/python-runtime:${VERSION}
+docker run -e "SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/python-runtime/samples/hellopy.py" -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

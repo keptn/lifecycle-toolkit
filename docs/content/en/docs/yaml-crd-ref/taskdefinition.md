@@ -580,7 +580,7 @@ This example prints data stored in the parameters map:
 
 You can refer to code stored online.
 For example, we have a few examples available in the
-[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/python-runtime/samples)
+[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
 tree.
 
 Consider the following:

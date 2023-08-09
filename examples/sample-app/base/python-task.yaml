@@ -6,7 +6,7 @@ metadata:
 spec:
   python:
     httpRef:
-      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/python-runtime/samples/secrets.py
+      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/runtimes/python-runtime/samples/secrets.py
     parameters:
       map:
         user: "myuser"

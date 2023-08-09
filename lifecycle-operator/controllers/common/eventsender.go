@@ -76,10 +76,17 @@ func (e *cloudEvent) Emit(phase apicommon.KeptnPhaseType, eventType string, reco
 	event.SetType(fmt.Sprintf("%s.%s", phase.LongName, status))
 
 	msg := setEventMessage(phase, reconcileObject, message, version)
-	err := event.SetData(ce.ApplicationJSON, map[string]string{
+	err := event.SetData(ce.ApplicationJSON, map[string]interface{}{
 		"message": msg,
 		"type":    eventType,
 		"version": version,
+		"resource": map[string]string{
+			"group":     reconcileObject.GetObjectKind().GroupVersionKind().Group,
+			"kind":      reconcileObject.GetObjectKind().GroupVersionKind().Kind,
+			"version":   reconcileObject.GetObjectKind().GroupVersionKind().Version,
+			"name":      reconcileObject.GetName(),
+			"namespace": reconcileObject.GetNamespace(),
+		},
 	})
 	if err != nil {
 		e.logger.V(5).Info(fmt.Sprintf("Failed to set data for CloudEvent: %v", err))

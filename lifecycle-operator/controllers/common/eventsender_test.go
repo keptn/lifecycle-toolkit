@@ -53,10 +53,12 @@ func TestEventSender_SendCloudEvent(t *testing.T) {
 		require.Equal(t, "POST", r.Method)
 		require.Equal(t, "/", r.URL.Path)
 		require.Equal(t, 1, len(r.Header["Ce-Id"]))
+		require.Equal(t, 1, len(r.Header["Ce-Time"]))
+		require.Equal(t, 1, len(r.Header["Ce-Type"]))
 		data, err := io.ReadAll(r.Body)
 		require.Nil(t, err)
-		expected := fmt.Sprintf("{\"message\":\"%s: %s / Namespace: %s, Name: %s, Version: %s\",\"type\":\"%s\",\"version\":\"%s\"}",
-			phase.LongName, msg, ns, name, version, eventType, version)
+		expected := fmt.Sprintf("{\"message\":\"%s: %s / Namespace: %s, Name: %s, Version: %s\",\"resource\":{\"group\":\"\",\"kind\":\"\",\"name\":\"%s\",\"namespace\":\"%s\",\"version\":\"\"},\"type\":\"%s\",\"version\":\"%s\"}",
+			phase.LongName, msg, ns, name, version, name, ns, eventType, version)
 		require.Equal(t, expected, string(data))
 
 		w.WriteHeader(http.StatusOK)

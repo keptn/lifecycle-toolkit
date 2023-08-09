@@ -38,7 +38,7 @@ Notice the paradigm differences when implementing KLT evaluations:
 * You must populate a
   [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
   for each instance of each data provider.
-  This resource specifies the URL and namespace for the data source
+  This resource specifies the URL and namespace for the data provider
   and gives it a unique `name` that can be referenced by other resources.
   This is the only KLT specific configuration that is required.
 * Each query that is specified in your Keptn v1

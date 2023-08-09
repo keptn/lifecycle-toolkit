@@ -67,7 +67,7 @@ To view DORA metrics, run the following two commands:
 kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
 ```
 
-2. Then port-forward to the name of your service:``
+2. Then port-forward to the name of your service:
 ```shell
 kubectl -n keptn-lifecycle-toolkit-system port-forward service/<YOURNAME> 2222
 ```

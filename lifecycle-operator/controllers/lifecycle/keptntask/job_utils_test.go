@@ -41,7 +41,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -113,7 +113,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -184,7 +184,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}

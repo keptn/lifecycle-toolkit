@@ -40,7 +40,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnworkload.KeptnWorkloadReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-workload-controller")),
+		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workload-controller")),
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}

@@ -85,6 +85,7 @@ var (
 	PhaseCancelled              = KeptnPhaseType{LongName: "Cancelled", ShortName: "Cancelled"}
 )
 
+// PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 type PhaseTraceID map[string]propagation.MapCarrier
 
 func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {

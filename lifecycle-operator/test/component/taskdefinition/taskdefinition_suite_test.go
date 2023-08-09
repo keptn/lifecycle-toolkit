@@ -34,7 +34,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
 		Client:      k8sManager.GetClient(),
 		Scheme:      k8sManager.GetScheme(),
-		EventSender: controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-taskdefinition-controller")),
+		EventSender: controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-taskdefinition-controller")),
 		Log:         GinkgoLogr,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())

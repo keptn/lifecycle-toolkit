@@ -57,7 +57,7 @@ To configure a data provider into your KLT cluster:
    See
    [Prepare your cluster for KLT](../install/k8s.md/#prepare-your-cluster-for-klt)
 for links.
-   KLT supports using multiple instances of multiple data sources.
+   KLT supports using multiple instances of multiple data providers.
 1. Define a
    [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
    resource for each data source.

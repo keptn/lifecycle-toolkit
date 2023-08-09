@@ -1,5 +1,5 @@
 ---
-title: Use KLT with cert-manager.io (optional)
+title: Use Keptn with cert-manager.io (optional)
 description: Replace the default KLT cert-manager
 weight: 30
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -27,10 +27,10 @@ The steps are:
 
 * Install the cert-manager of your choice
   if it is not already installed.
-* Add the `Certificate` and `Issuer` CRs for the cert-manager you are using.
-* Install KLT without the built-in `klt-cert-manager` via helm
+* Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
+* (optional) Install Keptn without the built-in `klt-cert-manager` via Helm
 
-## Add the CR(s) for your cert-manager
+## Add the CR(s) for cert-manager.io
 
 These are the CRs for `cert-manager.io` to be applied to your cluster:
 
@@ -39,13 +39,13 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: klt-certs
-  namespace: <your-klt-namespace>
+  namespace: <your-namespace>
 spec:
   dnsNames:
-  - lifecycle-webhook-service.<your-klt-namespace>.svc
-  - lifecycle-webhook-service.<your-klt-namespace>.svc.cluster.local
-  - metrics-webhook-service.<your-klt-namespace>.svc
-  - metrics-webhook-service.<your-klt-namespace>.svc.cluster.local
+  - lifecycle-webhook-service.<your-namespace>.svc
+  - lifecycle-webhook-service.<your-namespace>.svc.cluster.local
+  - metrics-webhook-service.<your-namespace>.svc
+  - metrics-webhook-service.<your-namespace>.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
@@ -55,7 +55,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: klt-selfsigned-issuer
-  namespace: <your-klt-namespace>
+  namespace: <your-namespace>
 spec:
   selfSigned: {}
 ```
@@ -65,7 +65,7 @@ Note the following about these fields:
 * The `apiVersion` field refers to the API for the cert-manager.
 * The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
   must be `klt-certs`.
-* Substitute the namespace placeholders with your namespace, where KLT is installed.
+* Substitute the namespace placeholders with your namespace, where Keptn is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
 documentation for more details.

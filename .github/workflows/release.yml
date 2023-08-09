@@ -42,7 +42,7 @@ jobs:
         id: release
         with:
           command: manifest
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.KEPTN_BOT_TOKEN }}
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 

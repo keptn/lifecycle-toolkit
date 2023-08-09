@@ -71,7 +71,7 @@ spec:
     * **interval** -- Timeframe for which the metric would be queried.
     Defaults to 5m.
 
-* **KeptnMetricStatus**
+* **status**
   * KLT fills in this information from the
     [KeptnMetricStatus](../crd-ref/metrics/v1alpha3/#keptnmetricstatus)
     resource when the metric is evaluated.

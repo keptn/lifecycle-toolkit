@@ -170,8 +170,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object |
-| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax |
+| `provider` _[ObjectReference](#objectreference)_ | Provider refers to the KeptnMetricsProvider which should be used to retrieve the data |
+| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax. More info on go templating - https://pkg.go.dev/text/template |
 
 
 #### KeptnMetric
@@ -300,6 +300,7 @@ _Appears in:_
 
 _Appears in:_
 - [AnalysisSpec](#analysisspec)
+- [AnalysisValueTemplateSpec](#analysisvaluetemplatespec)
 - [Objective](#objective)
 
 | Field | Description |
@@ -364,7 +365,6 @@ _Appears in:_
 ProviderRef represents the provider object
 
 _Appears in:_
-- [AnalysisValueTemplateSpec](#analysisvaluetemplatespec)
 - [KeptnMetricSpec](#keptnmetricspec)
 
 | Field | Description |

@@ -22,17 +22,16 @@ import (
 
 // AnalysisValueTemplateSpec defines the desired state of AnalysisValueTemplate
 type AnalysisValueTemplateSpec struct {
-	// Provider represents the provider object
-	Provider ProviderRef `json:"provider"`
+	// Provider refers to the KeptnMetricsProvider which should be used to retrieve the data
+	Provider ObjectReference `json:"provider"`
 	// Query represents the query to be run. It can include placeholders that are defined using the go template
-	// syntax
+	// syntax. More info on go templating - https://pkg.go.dev/text/template
 	Query string `json:"query"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
-// +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
 
 // AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
 type AnalysisValueTemplate struct {

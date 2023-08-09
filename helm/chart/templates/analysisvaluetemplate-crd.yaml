@@ -23,9 +23,6 @@ spec:
         - jsonPath: .spec.provider.name
           name: Provider
           type: string
-        - jsonPath: .spec.query
-          name: Query
-          type: string
       name: v1alpha3
       schema:
         openAPIV3Schema:
@@ -48,17 +45,23 @@ spec:
               description: Spec contains the specification for the AnalysisValueTemplate
               properties:
                 provider:
-                  description: Provider represents the provider object
+                  description: Provider refers to the KeptnMetricsProvider which should
+                    be used to retrieve the data
                   properties:
                     name:
-                      description: Name of the provider
+                      description: Name defines the name of the referenced object
+                      type: string
+                    namespace:
+                      description: Namespace defines the namespace of the referenced
+                        object
                       type: string
                   required:
                     - name
                   type: object
                 query:
                   description: Query represents the query to be run. It can include
-                    placeholders that are defined using the go template syntax
+                    placeholders that are defined using the go template syntax. More
+                    info on go templating - https://pkg.go.dev/text/template
                   type: string
               required:
                 - provider

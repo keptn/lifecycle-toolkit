@@ -206,6 +206,6 @@ func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]s
 	if err != nil {
 		return nil, nil, err
 	}
-	
+
 	return resultSlice, b, nil
 }

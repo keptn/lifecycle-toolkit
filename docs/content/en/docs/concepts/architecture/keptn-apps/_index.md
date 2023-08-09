@@ -85,7 +85,7 @@ The timeout is provided because it may take some time
 to apply all `KeptnWorkload` resources to the cluster.
 This interval can be modified for the cluster by changing the value
 of the `keptnAppCreationRequestTimeoutSeconds` field in the
-[KeptnConfig](../../yaml-crd-ref/config.md)
+[KeptnConfig](../../../yaml-crd-ref/config.md)
 resource.
 
 ## How basic annotations are implemented

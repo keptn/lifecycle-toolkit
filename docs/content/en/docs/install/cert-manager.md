@@ -28,6 +28,7 @@ The steps are:
 * Install the cert-manager of your choice
   if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for the cert-manager you are using.
+* Install KLT without `cert-manager` via helm
 
 ## Add the CRD for your cert-manager
 

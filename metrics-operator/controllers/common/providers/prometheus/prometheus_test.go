@@ -6,9 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/prometheus/common/model"
-
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/prometheus/common/model"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -306,7 +305,6 @@ func Test_resultsForMatrix(t *testing.T) {
 				require.Equal(t, tt.wantResultString, resultString)
 				require.Equal(t, tt.wantRaw, raw)
 			}
-
 		})
 	}
 }

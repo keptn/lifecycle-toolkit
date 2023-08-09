@@ -39,7 +39,7 @@ kubectl -n prod logs job/...
 
 ## I have pending Pods after KLT is uninstalled
 
-> **Note**_
+> **Note**_ This section particularly affects clusters managed by ArgoCD.
 
 If you have uninstalled Keptn Lifecycle Toolkit and are now facing issues scheduling or deleting pods, follow these steps:
 

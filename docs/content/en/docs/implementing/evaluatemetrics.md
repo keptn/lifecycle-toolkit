@@ -84,7 +84,7 @@ that uses a secret could look like:
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
-  name: dynatrace
+  name: dynatrace-provider
   namespace: podtato-kubectl
 spec:
   targetServer: "<dynatrace-tenant-url>"

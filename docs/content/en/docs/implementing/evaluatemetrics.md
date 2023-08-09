@@ -77,7 +77,7 @@ spec:
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
 ```
 
-The `KeptnMetricProvider` resource for a Dynatrace data source
+The `KeptnMetricProvider` resource for a Dynatrace provider
 that uses a secret could look like:
 
 ```yaml

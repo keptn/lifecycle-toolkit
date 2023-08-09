@@ -49,4 +49,4 @@ node_modules
 readme-generator-for-helm/
 /out.yaml
 /test.yaml
-/helm_tests_output.yaml
+**helm_tests_output.yaml

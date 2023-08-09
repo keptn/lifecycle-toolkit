@@ -28,7 +28,7 @@ spec:
   fetchIntervalSeconds: <#-seconds>
   range:
     interval: "<timeframe>"
-  KeptnMetricStatus:
+  status:
     properties:
       value: <resulting value in human-readable language>
       rawValue: <resulting value, in raw format>

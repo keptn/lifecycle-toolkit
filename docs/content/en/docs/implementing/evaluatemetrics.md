@@ -70,7 +70,7 @@ could look like:
 apiVersion: metrics.keptn.sh/v1alpha2
 kind: KeptnMetricsProvider
 metadata:
-  name: prometheus
+  name: prometheus-provider
   namespace: simplenode-dev
 spec:
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

@@ -52,5 +52,3 @@ jobs:
 
       - name: Check if Helm template is up to date
         run: ./.github/scripts/helm-test.sh
-
-

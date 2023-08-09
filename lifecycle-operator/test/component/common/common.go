@@ -10,7 +10,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
 	ginkgotypes "github.com/onsi/ginkgo/v2/types"
@@ -63,7 +63,7 @@ type TracerFactory struct {
 	Tracer trace.TracerProvider
 }
 
-func (f *TracerFactory) GetTracer(name string) controllercommon.ITracer {
+func (f *TracerFactory) GetTracer(name string) telemetry.ITracer {
 	return f.Tracer.Tracer(name)
 }
 

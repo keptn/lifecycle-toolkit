@@ -1,0 +1,246 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.1
+  name: analysisdefinitions.metrics.keptn.sh
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisDefinition
+    listKind: AnalysisDefinitionList
+    plural: analysisdefinitions
+    singular: analysisdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisDefinition is the Schema for the analysisdefinitions
+          APIs
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
+            properties:
+              objectives:
+                description: Objectives defines a list of objectives to evaluate for
+                  an analysis
+                items:
+                  description: Objective defines an objective for analysis
+                  properties:
+                    analysisValueTemplateRef:
+                      description: AnalysisValueTemplateRef refers to the appropriate
+                        AnalysisValueTemplate
+                      properties:
+                        name:
+                          description: Name defines the name of the referenced object
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            object
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    keyObjective:
+                      default: false
+                      description: KeyObjective defines whether the whole analysis
+                        fails when this objective's target is not met
+                      type: boolean
+                    target:
+                      description: Target defines failure or warning criteria
+                      properties:
+                        failure:
+                          description: Failure defines limits up to which an analysis
+                            fails
+                          properties:
+                            equalTo:
+                              description: EqualTo represents '==' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                          type: object
+                        warning:
+                          description: Warning defines limits where the result does
+                            not pass or fail
+                          properties:
+                            equalTo:
+                              description: EqualTo represents '==' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                          type: object
+                      type: object
+                    weight:
+                      default: 1
+                      description: Weight can be used to emphasize the importance
+                        of one Objective over the others
+                      type: integer
+                  required:
+                  - analysisValueTemplateRef
+                  type: object
+                type: array
+              totalScore:
+                description: TotalScore defines the required score for an analysis
+                  to be successful
+                properties:
+                  passPercentage:
+                    description: PassPercentage defines the threshold to reach for
+                      an analysis to pass
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                  warningPercentage:
+                    description: WarningPercentage defines the threshold to reach
+                      for an analysis to pass with a 'warning' status
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                required:
+                - passPercentage
+                - warningPercentage
+                type: object
+            required:
+            - totalScore
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -3,7 +3,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"

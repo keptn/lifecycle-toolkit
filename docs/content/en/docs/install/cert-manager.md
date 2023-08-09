@@ -27,73 +27,44 @@ The steps are:
 
 * Install the cert-manager of your choice
   if it is not already installed.
-* Modify the `Deployment` manifest of each KLT operator component.
-* Add the `Certificate` CRD for the cert-manager you are using.
-
-## Modify the KLT manifest
-
-You must modify the KLT manifest for each KLT operator component
-to make it aware of the cert-manager you are using.
-These instructions implement
-[cert-manager.io](https://cert-manager.io/);
-the process is similar for other cert-managers.
-
-To configure KLT to use your cert-manager,
-change the `Deployment` manifest of each KLT operator component
-and **replace** the following `volumes` definition
-
-   ```yaml
-   - emptyDir: {}
-     name: certs-dir
-   ```
-
-   with
-
-   ```yaml
-   - name: cert
-     secret:
-       defaultMode: 420
-       secretName: webhook-server-cert
-   ```
-
-Each manifest must have the following special annotation:
-
-```yaml
-cert-manager.io/inject-ca-from=klt-serving-cert/keptn-lifecycle-toolkit-system
-```
-
-The value of the annotation must match the
-`name/namespace` of the cert-manager CRD discussed below.
+* Add the `Certificate` and `Issuer` CRs for the cert-manager you are using.
 
 ## Add the CRD for your cert-manager
 
-This is the CRD for `cert-manager.io`:
+These are the CRs for `cert-manager.io` to be applied to your cluster:
 
 ```yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: klt-serving-cert 
-  namespace: keptn-lifecycle-toolkit-system
+  name: klt-certs
+  namespace: <your-klt-namespace>
 spec:
   dnsNames:
-  - lifecycle-webhook-service.keptn-lifecycle-toolkit-system.svc
-  - lifecycle-webhook-service.keptn-lifecycle-toolkit-system.svc.cluster.local
+  - lifecycle-webhook-service.<your-klt-namespace>.svc
+  - lifecycle-webhook-service.<your-klt-namespace>.svc.cluster.local
+  - metrics-webhook-service.<your-klt-namespace>.svc
+  - metrics-webhook-service.<your-klt-namespace>.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  secretName webhook-server-cert
+  secretName: klt-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: klt-selfsigned-issuer
+  namespace: <your-klt-namespace>
+spec:
+  selfSigned: {}
 ```
 
 Note the following about these fields:
 
 * The `apiVersion` field refers to the API for the cert-manager.
-* The `metadata` section includes two fields.
-  The value of these fields must match the annotations
-  used in the KLT operator manifests.
-* The value of the `secretName` field
-  must match the value of the `secretName` field used
-  in the `volumes` definition section of the KLT operator manifests above.
+* The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
+  must needs to be `klt-certs`.
+* Substitue the namespace placeholders with your namespace, where KLT is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
 documentation for more details.

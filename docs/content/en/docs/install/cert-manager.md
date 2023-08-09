@@ -28,9 +28,9 @@ The steps are:
 * Install the cert-manager of your choice
   if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for the cert-manager you are using.
-* Install KLT without `cert-manager` via helm
+* Install KLT without the built-in `klt-cert-manager` via helm
 
-## Add the CRD for your cert-manager
+## Add the CR(s) for your cert-manager
 
 These are the CRs for `cert-manager.io` to be applied to your cluster:
 
@@ -65,7 +65,7 @@ Note the following about these fields:
 * The `apiVersion` field refers to the API for the cert-manager.
 * The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
   must be `klt-certs`.
-* Substitue the namespace placeholders with your namespace, where KLT is installed.
+* Substitute the namespace placeholders with your namespace, where KLT is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
 documentation for more details.

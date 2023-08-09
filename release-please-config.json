@@ -89,7 +89,14 @@
       "release-type": "go",
       "monorepo-tags": "deno-runtime",
       "prerelease": false,
-      "draft": false
+      "draft": false,
+      "extra-files": [
+        {
+          "type": "yaml",
+          "path": "helm/chart/values.yaml",
+          "jsonpath": "$.lifecycleOperator.manager.env.functionRunnerImage"
+        }
+      ]
     }
   },
   "plugins": [

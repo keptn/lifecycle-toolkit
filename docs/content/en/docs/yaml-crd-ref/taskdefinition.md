@@ -150,7 +150,7 @@ spec:
 * **spec**
   * **deno** -- Specify that the task uses the `deno-runtime`
     and is expressed as a [Deno](https://deno.land/) script.
-    Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
+    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
     for more information about this runner.
 
     The task can be defined as one of the following:

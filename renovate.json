@@ -26,6 +26,7 @@
     "ghcr.io/keptn/lifecycle-operator",
     "ghcr.io/keptn/scheduler",
     "ghcr.io/keptn/functions-runtime",
+    "ghcr.io/keptn/deno-runtime",
     "ghcr.io/keptn/python-runtime",
     "ghcr.io/keptn/metrics-operator"
   ],

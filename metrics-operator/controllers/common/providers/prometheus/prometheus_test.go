@@ -2,10 +2,11 @@ package prometheus
 
 import (
 	"context"
-	"github.com/prometheus/common/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/prometheus/common/model"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/stretchr/testify/require"
@@ -244,24 +245,26 @@ func Test_prometheus(t *testing.T) {
 	}
 }
 
-func Test_getResultForStepMatrix(t *testing.T) {
+func Test_resultsForMatrix(t *testing.T) {
 	type args struct {
 		result model.Value
 		r      *KeptnPrometheusProvider
 	}
 	tests := []struct {
-		name            string
-		args            args
-		wantResultSlice []string
-		wantRaw         []byte
-		wantErr         bool
+		name             string
+		args             args
+		wantResultSlice  []string
+		wantResultString string
+		wantRaw          []byte
+		wantErr          bool
+		hasStep          bool
 	}{
 		// this is to cover the scenario where we get an empty result matrix from the prometheus API
 		// right now, the prometheus client returns an error in the QueryRange function if that is the case,
 		// but we should do a check for an empty matrix here as well in case the behavior of the QueryRange function
 		// changes
 		{
-			name: "empty matrix - return err",
+			name: "empty matrix with step - return err",
 			args: args{
 				result: model.Matrix{},
 				r:      &KeptnPrometheusProvider{Log: ctrl.Log.WithName("testytest")},
@@ -269,18 +272,41 @@ func Test_getResultForStepMatrix(t *testing.T) {
 			wantResultSlice: nil,
 			wantRaw:         nil,
 			wantErr:         true,
+			hasStep:         true,
+		},
+		{
+			name: "empty matrix without step- return err",
+			args: args{
+				result: model.Matrix{},
+				r:      &KeptnPrometheusProvider{Log: ctrl.Log.WithName("testytest")},
+			},
+			wantResultString: "",
+			wantRaw:          nil,
+			wantErr:          true,
+			hasStep:          false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resultSlice, raw, err := getResultForStepMatrix(tt.args.result, tt.args.r)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getResultForStepMatrix() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			switch tt.hasStep {
+			case true:
+				resultSlice, raw, err := getResultForStepMatrix(tt.args.result, tt.args.r)
+				if (err != nil) != tt.wantErr {
+					t.Errorf("getResultForStepMatrix() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+				require.Equal(t, tt.wantResultSlice, resultSlice)
+				require.Equal(t, tt.wantRaw, raw)
+			case false:
+				resultString, raw, err := getResultForMatrix(tt.args.result, tt.args.r)
+				if (err != nil) != tt.wantErr {
+					t.Errorf("getResultForMatrix() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+				require.Equal(t, tt.wantResultString, resultString)
+				require.Equal(t, tt.wantRaw, raw)
 			}
 
-			require.Equal(t, tt.wantResultSlice, resultSlice)
-			require.Equal(t, tt.wantRaw, raw)
 		})
 	}
 }

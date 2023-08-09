@@ -51,7 +51,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	}
 }
 
-// EvaluateQueryForStep fetches the SLI values from prometheus provider
+// EvaluateQueryForStep fetches the metric values from prometheus provider
 func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()

@@ -73,6 +73,7 @@ metadata:
   name: prometheus-provider
   namespace: simplenode-dev
 spec:
+  type: prometheus
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
 ```
 

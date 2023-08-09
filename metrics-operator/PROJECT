@@ -64,4 +64,12 @@ resources:
   webhooks:
     validation: true
     webhookVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: metrics
+  kind: Analysis
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
 version: "3"

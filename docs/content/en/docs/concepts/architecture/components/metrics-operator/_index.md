@@ -70,7 +70,7 @@ The steps in which the controller fetches metrics are given below:
    resource is found or modified,
    the controller checks whether the metric has been updated
    within the interval that is defined in the `spec.fetchintervalseconds` field.
-   * If not, it skips the reconcilliation process
+   * If not, it skips the reconciliation process
      and queues the request for later.
 
 1. The controller attempts to fetch the provider defined in the

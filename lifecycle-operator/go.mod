@@ -6,12 +6,13 @@ require (
 	dario.cat/mergo v1.0.0
 	github.com/argoproj/argo-rollouts v1.5.1
 	github.com/benbjohnson/clock v1.3.5
+	github.com/cloudevents/sdk-go/v2 v2.14.0
 	github.com/go-logr/logr v1.2.4
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230727070347-cba2de5a5cd0
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230807110601-88a54f97c157
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.11.0
-	github.com/onsi/gomega v1.27.9
+	github.com/onsi/gomega v1.27.10
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/stretchr/testify v1.8.4

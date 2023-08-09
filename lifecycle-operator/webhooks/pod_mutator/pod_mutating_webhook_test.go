@@ -31,7 +31,7 @@ func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -104,7 +104,7 @@ func TestPodMutatingWebhook_getAppName(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -180,7 +180,7 @@ func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -370,7 +370,7 @@ func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -541,7 +541,7 @@ func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -711,7 +711,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -873,7 +873,7 @@ func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
 		Client      client.Client
 		Tracer      trace.Tracer
 		Decoder     *admission.Decoder
-		EventSender controllercommon.EventSender
+		EventSender controllercommon.IEvent
 		Log         logr.Logger
 	}
 	type args struct {
@@ -966,7 +966,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 		Client:      fakeClient,
 		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -1029,7 +1029,7 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 		Client:      fakeClient,
 		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -1125,7 +1125,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 		Client:      fakeClient,
 		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -1246,7 +1246,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		Client:      fakeClient,
 		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -1354,7 +1354,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 		Client:      fakeClient,
 		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 

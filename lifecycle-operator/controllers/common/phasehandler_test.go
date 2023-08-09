@@ -8,6 +8,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,7 +34,7 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "deprecated",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 			},
 			object: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -51,9 +52,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase error",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -78,9 +79,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase pending state",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -105,9 +106,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase progressing state",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -132,9 +133,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase succeeded state",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -159,9 +160,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase failed state",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{
@@ -187,9 +188,9 @@ func TestPhaseHandler(t *testing.T) {
 		{
 			name: "reconcilePhase unknown state",
 			handler: PhaseHandler{
-				SpanHandler: &SpanHandler{},
+				SpanHandler: &telemetry.SpanHandler{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
 			object: &v1alpha3.KeptnAppVersion{

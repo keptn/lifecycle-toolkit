@@ -3,13 +3,13 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.20
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.14.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.15.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230727070347-cba2de5a5cd0
-	github.com/montanaflynn/stats v0.7.1
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230807110601-88a54f97c157
+  github.com/montanaflynn/stats v0.7.1
 	github.com/open-feature/go-sdk v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
@@ -49,6 +49,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

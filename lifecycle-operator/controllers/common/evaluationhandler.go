@@ -8,6 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel/codes"
@@ -21,11 +22,11 @@ import (
 
 type EvaluationHandler struct {
 	client.Client
-	EventSender EventSender
+	EventSender IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	Scheme      *runtime.Scheme
-	SpanHandler ISpanHandler
+	SpanHandler telemetry.ISpanHandler
 }
 
 type CreateEvaluationAttributes struct {
@@ -55,7 +56,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		evaluationExists := false
 
 		if oldstatus != evaluationStatus.Status {
-			r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
+			r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Normal", reconcileObject, apicommon.PhaseStateStatusChanged, fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status), piWrapper.GetVersion())
 		}
 
 		// Check if evaluation has already succeeded or failed
@@ -126,7 +127,7 @@ func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace 
 	err = r.Client.Create(ctx, &newEvaluation)
 	if err != nil {
 		r.Log.Error(err, "could not create KeptnEvaluation")
-		r.EventSender.SendK8sEvent(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnEvaluation", piWrapper.GetVersion())
+		r.EventSender.Emit(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "could not create KeptnEvaluation", piWrapper.GetVersion())
 		return "", err
 	}
 
@@ -142,7 +143,7 @@ func (r EvaluationHandler) emitEvaluationFailureEvents(evaluation *klcv1alpha3.K
 			k8sEventMessage = fmt.Sprintf("%s\n%s", k8sEventMessage, msg)
 		}
 	}
-	r.EventSender.SendK8sEvent(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateFailed, k8sEventMessage, piWrapper.GetVersion())
+	r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateFailed, k8sEventMessage, piWrapper.GetVersion())
 }
 
 func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateEvaluationAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1alpha3.ItemStatus) {

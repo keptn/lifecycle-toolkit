@@ -60,7 +60,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			name: "no definition",
 			options: BuilderOptions{
 				Client:      fake.NewClient(),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -76,7 +76,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			name: "definition exists, recursive",
 			options: BuilderOptions{
 				Client:      fake.NewClient(def),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -91,7 +91,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			name: "definition exists, with parameters and secrets",
 			options: BuilderOptions{
 				Client:      fake.NewClient(paramDef, def),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -207,7 +207,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 			name: "definition exists, no parent",
 			options: BuilderOptions{
 				Client:      fake.NewClient(def),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -238,7 +238,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 			name: "definition exists, parent with parameters and secrets",
 			options: BuilderOptions{
 				Client:      fake.NewClient(paramDef, def),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
@@ -270,7 +270,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 			name: "definition exists, parent is of a different runtime",
 			options: BuilderOptions{
 				Client:      fake.NewClient(parentPy, defJS),
-				eventSender: controllercommon.NewEventSender(record.NewFakeRecorder(100)),
+				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},

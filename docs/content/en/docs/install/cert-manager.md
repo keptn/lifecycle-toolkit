@@ -1,5 +1,5 @@
 ---
-title: Use your own cert-manager (optional)
+title: Use KLT with cert-manager.io (optional)
 description: Replace the default KLT cert-manager
 weight: 30
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -64,7 +64,7 @@ Note the following about these fields:
 
 * The `apiVersion` field refers to the API for the cert-manager.
 * The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
-  must needs to be `klt-certs`.
+  must be `klt-certs`.
 * Substitue the namespace placeholders with your namespace, where KLT is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)

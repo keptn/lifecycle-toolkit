@@ -97,5 +97,5 @@ a light-weight cert-manager that, by default, is installed
 as part of the KLT software.
 If you are using another cert-manager in the cluster,
 you can configure KLT to instead use your cert-manager.
-See [Use your own cert-manager](cert-manager.md)
+See [Use KLT with cert-manager.io](cert-manager.md)
 for detailed instructions.

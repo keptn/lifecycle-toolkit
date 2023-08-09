@@ -42,6 +42,10 @@ spec:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
                 type: string
+              cloudEventsEndpoint:
+                description: CloudEventsEndpoint can be used to set the endpoint where
+                  Cloud Events should be posted by the lifecycle operator
+                type: string
               keptnAppCreationRequestTimeoutSeconds:
                 default: 30
                 description: KeptnAppCreationRequestTimeoutSeconds is used to set the

@@ -373,7 +373,7 @@ func TestTaskHandler(t *testing.T) {
 			handler := TaskHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -444,7 +444,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 			handler := TaskHandler{
 				SpanHandler: &kltfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,

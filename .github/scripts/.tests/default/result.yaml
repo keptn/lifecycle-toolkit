@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: certificate-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kuberentes.io/instance: certificate-operator
     app.kubernetes.io/component: rbac
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: keptn-scheduler
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: lifecycle-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -47,7 +47,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: metrics-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -60,7 +60,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: lifecycle-manager-config
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -86,7 +86,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metrics-manager-config
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -112,7 +112,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: scheduler-config
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -155,7 +155,7 @@ spec:
       clientConfig:
         service:
           name: 'lifecycle-webhook-service'
-          namespace: 'default'
+          namespace: 'helmtests'
           path: /convert
       conversionReviewVersions:
       - v1
@@ -197,7 +197,7 @@ spec:
                 type: array
               preDeploymentEvaluations:
                 items:
-                  type: string
+                  type: strings
                 type: array
               preDeploymentTasks:
                 items:
@@ -493,7 +493,7 @@ spec:
       clientConfig:
         service:
           name: 'lifecycle-webhook-service'
-          namespace: 'default'
+          namespace: 'helmtests'
           path: /convert
       conversionReviewVersions:
       - v1
@@ -1974,7 +1974,7 @@ spec:
       clientConfig:
         service:
           name: 'lifecycle-webhook-service'
-          namespace: 'default'
+          namespace: 'helmtests'
           path: /convert
       conversionReviewVersions:
       - v1
@@ -2158,7 +2158,7 @@ spec:
       clientConfig:
         service:
           name: 'metrics-webhook-service'
-          namespace: 'default'
+          namespace: 'helmtests'
           path: /convert
       conversionReviewVersions:
       - v1
@@ -5006,7 +5006,7 @@ spec:
       clientConfig:
         service:
           name: 'lifecycle-webhook-service'
-          namespace: 'default'
+          namespace: 'helmtests'
           path: /convert
       conversionReviewVersions:
       - v1
@@ -5779,7 +5779,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: certificate-operator-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -5831,7 +5831,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: keptn-scheduler
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6022,7 +6022,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: lifecycle-operator-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6396,7 +6396,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6462,7 +6462,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-server-resources
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6484,7 +6484,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: release-name-klt-server-resources
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6504,7 +6504,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: certificate-operator-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -6521,14 +6521,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/hpa-controller-keptn-metrics-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: release-name-klt-hpa-controller-keptn-metrics
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6542,14 +6542,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: horizontal-pod-autoscaler
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: keptn-scheduler
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6563,14 +6563,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'keptn-scheduler'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6584,14 +6584,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'lifecycle-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/metrics-operator-hpa-controller-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-hpa-controller
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6605,14 +6605,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: horizontal-pod-autoscaler
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6626,14 +6626,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'metrics-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/system-auth-delegator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: system-auth-delegator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6647,14 +6647,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'metrics-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: certificate-operator-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6686,7 +6686,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: leader-election-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -6734,7 +6734,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: lifecycle-operator-leader-election-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6779,7 +6779,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: metrics-operator-leader-election-role
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6824,7 +6824,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: certificate-operator-leader-election-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -6841,14 +6841,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: certificate-operator-role-binding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -6865,14 +6865,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/extension-apiserver-authentication-reader-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: extension-apiserver-authentication-reader
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6886,14 +6886,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'keptn-scheduler'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-leader-election-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6907,14 +6907,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'lifecycle-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6928,14 +6928,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'lifecycle-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/metrics-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-leader-election-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6949,14 +6949,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'metrics-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-rolebinding
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -6970,14 +6970,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'metrics-operator'
-  namespace: 'default'
+  namespace: 'helmtests'
 ---
 # Source: klt/templates/lifecycle-operator-metrics-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: lifecycle-operator-metrics-service
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     control-plane: lifecycle-operator
     helm.sh/chart: klt-0.2.5
@@ -7002,7 +7002,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: lifecycle-webhook-service
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -7025,7 +7025,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: metrics-operator-service
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     control-plane: metrics-operator
     helm.sh/chart: klt-0.2.5
@@ -7057,7 +7057,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: metrics-webhook-service
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -7080,7 +7080,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: certificate-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/component: manager
     app.kubernetes.io/created-by: certificate-operator
@@ -7166,7 +7166,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lifecycle-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
@@ -7295,7 +7295,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metrics-operator
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: metrics-operator
@@ -7408,7 +7408,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduler
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     component: scheduler
     helm.sh/chart: klt-0.2.5
@@ -7487,7 +7487,7 @@ apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta1.custom.metrics.k8s.io
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -7500,7 +7500,7 @@ spec:
   insecureSkipTLSVerify: true
   service:
     name: 'metrics-operator-service'
-    namespace: 'default'
+    namespace: 'helmtests'
   version: v1beta1
   versionPriority: 100
 ---
@@ -7509,7 +7509,7 @@ apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta2.custom.metrics.k8s.io
-  namespace: "default"
+  namespace: "helmtests"
   labels:
     helm.sh/chart: klt-0.2.5
     app.kubernetes.io/name: klt
@@ -7522,7 +7522,7 @@ spec:
   insecureSkipTLSVerify: true
   service:
     name: 'metrics-operator-service'
-    namespace: 'default'
+    namespace: 'helmtests'
   version: v1beta2
   versionPriority: 200
 ---
@@ -7532,7 +7532,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: default/
+    cert-manager.io/inject-ca-from: helmtests/
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
@@ -7547,7 +7547,7 @@ webhooks:
   clientConfig:
     service:
       name: 'lifecycle-webhook-service'
-      namespace: 'default'
+      namespace: 'helmtests'
       path: /mutate-v1-pod
   failurePolicy: Fail
   name: mpod.keptn.sh
@@ -7570,7 +7570,7 @@ webhooks:
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
-      - 'default'
+      - 'helmtests'
   rules:
   - apiGroups:
     - ""
@@ -7589,7 +7589,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: default/
+    cert-manager.io/inject-ca-from: helmtests/
   labels:
     keptn.sh/inject-cert: "true"
     helm.sh/chart: klt-0.2.5
@@ -7603,7 +7603,7 @@ webhooks:
   clientConfig:
     service:
       name: 'lifecycle-webhook-service'
-      namespace: 'default'
+      namespace: 'helmtests'
       path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
@@ -7625,7 +7625,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: default/
+    cert-manager.io/inject-ca-from: helmtests/
   labels:
     keptn.sh/inject-cert: "true"
     helm.sh/chart: klt-0.2.5
@@ -7639,7 +7639,7 @@ webhooks:
   clientConfig:
     service:
       name: 'metrics-webhook-service'
-      namespace: 'default'
+      namespace: 'helmtests'
       path: /validate-metrics-keptn-sh-v1alpha3-keptnmetric
   failurePolicy: Fail
   name: vkeptnmetric.kb.io

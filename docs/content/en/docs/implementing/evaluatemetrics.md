@@ -87,6 +87,7 @@ metadata:
   name: dynatrace-provider
   namespace: podtato-kubectl
 spec:
+  type: dynatrace
   targetServer: "<dynatrace-tenant-url>"
   secretKeyRef:
     name: dt-api-token

@@ -42,7 +42,7 @@ jobs:
             lifecycle-operator
             cert-manager
             metrics-operator
-            functions-runtime
+            
             deno-runtime
             python-runtime
             dashboards

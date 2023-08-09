@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"context"
+	"github.com/prometheus/common/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -239,6 +240,47 @@ func Test_prometheus(t *testing.T) {
 					}
 				}
 			}
+		})
+	}
+}
+
+func Test_getResultForStepMatrix(t *testing.T) {
+	type args struct {
+		result model.Value
+		r      *KeptnPrometheusProvider
+	}
+	tests := []struct {
+		name            string
+		args            args
+		wantResultSlice []string
+		wantRaw         []byte
+		wantErr         bool
+	}{
+		// this is to cover the scenario where we get an empty result matrix from the prometheus API
+		// right now, the prometheus client returns an error in the QueryRange function if that is the case,
+		// but we should do a check for an empty matrix here as well in case the behavior of the QueryRange function
+		// changes
+		{
+			name: "empty matrix - return err",
+			args: args{
+				result: model.Matrix{},
+				r:      &KeptnPrometheusProvider{Log: ctrl.Log.WithName("testytest")},
+			},
+			wantResultSlice: nil,
+			wantRaw:         nil,
+			wantErr:         true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resultSlice, raw, err := getResultForStepMatrix(tt.args.result, tt.args.r)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("getResultForStepMatrix() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			require.Equal(t, tt.wantResultSlice, resultSlice)
+			require.Equal(t, tt.wantRaw, raw)
 		})
 	}
 }

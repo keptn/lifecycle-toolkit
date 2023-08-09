@@ -20,15 +20,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // AnalysisValueTemplateSpec defines the desired state of AnalysisValueTemplate
 type AnalysisValueTemplateSpec struct {
 	// Provider represents the provider object
 	Provider ProviderRef `json:"provider"`
 	// Query represents the query to be run. It can include placeholders that are defined using the go template
-	// syntax.
+	// syntax
 	Query string `json:"query"`
 }
 

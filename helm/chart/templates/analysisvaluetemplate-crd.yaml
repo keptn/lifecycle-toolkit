@@ -58,7 +58,7 @@ spec:
                   type: object
                 query:
                   description: Query represents the query to be run. It can include
-                    placeholders that are defined using the go template syntax.
+                    placeholders that are defined using the go template syntax
                   type: string
               required:
                 - provider

@@ -171,7 +171,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object |
-| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax. |
+| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax |
 
 
 #### KeptnMetric

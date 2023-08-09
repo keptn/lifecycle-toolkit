@@ -67,7 +67,7 @@ the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
-[KeptnApp](../../yaml-crd-ref/app)
+[KeptnApp](../../yaml-crd-ref/app.md)
 resources for the version it detects.
 
 The basic keptn.sh keys that can be used for annotations or labels are:
@@ -176,19 +176,19 @@ that handles pre- and post-deployment evaluations and tasks,
 do the following:
 
 * Define the
-  [KeptnMetric](../../yaml-crd-ref/metric)
+  [KeptnMetric](../../yaml-crd-ref/metric.md)
   and
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition)
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
   resources for each evaluation you want.
   A `KeptnEvaluationDefinition` compares the value
   of a `KeptnMetric` to the threshold that is specified.
 * You will also need to define the necessary
-  [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider)
+  [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
   and
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.
 * Define a
-  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
   resource for each task you want to execute.
   `KeptnTaskDefinition`  resources contain re-usable "functions"
   that can execute before and after the deployment.
@@ -208,7 +208,7 @@ do the following:
   to include each evaluation and task you want run
   for specific workloads.
 * Manually edit all
-  [KeptnApp](../../yaml-crd-ref/app) resources
+  [KeptnApp](../../yaml-crd-ref/app.md) resources
   to specify evaluations and tasks to be run for the `KeptnApp` itself.
 
 ### Annotations to KeptnApp
@@ -231,7 +231,7 @@ keptn.sh/post-deployment-tasks: <`TaskDefinition`-name>
 The value of these annotations corresponds to the name of
 Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called
-[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition)
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 resources
 These resources contain re-usable "functions"
 that can execute before and after the deployment.

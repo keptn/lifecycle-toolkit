@@ -51,7 +51,7 @@ To configure a data provider into your KLT cluster:
 1. Create a secret if your data provider uses one.
    See
    [Create secret text](../implementing/tasks/#create-secret-text).
-1. Install and configure each instance of each data source
+1. Install and configure each instance of each data provider
    into your KLT cluster,
    following the instructions provided by the data source provider.
    See

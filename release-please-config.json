@@ -93,7 +93,7 @@
       "extra-files": [
         {
           "type": "yaml",
-          "path": "helm/chart/values.yaml",
+          "path": "../../helm/chart/values.yaml",
           "jsonpath": "$.lifecycleOperator.manager.env.functionRunnerImage"
         }
       ]

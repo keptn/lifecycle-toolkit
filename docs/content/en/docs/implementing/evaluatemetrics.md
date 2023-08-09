@@ -42,7 +42,7 @@ Note the following:
   from any namespace in the cluster.
 * To define metrics that can be used in evaluations
   on all namespaces in the cluster,
-  create `KeptnMetricsProvider` and KeptnMetric resources
+  create `KeptnMetricsProvider` and `KeptnMetric` resources
   in a centralized namespace
   such as `keptn-lifecycle-toolkit-system`.
 

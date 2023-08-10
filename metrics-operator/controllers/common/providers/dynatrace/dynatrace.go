@@ -96,12 +96,12 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 }
 
 func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	if metric.Spec.Range == nil {
+		return nil, nil, fmt.Errorf("spec.range is not defined!")
+	}
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 	query := url.QueryEscape(metric.Spec.Query)
-	var qURL string
-	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "/" + metric.Spec.Range.Step
-	}
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "/" + metric.Spec.Range.Step
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

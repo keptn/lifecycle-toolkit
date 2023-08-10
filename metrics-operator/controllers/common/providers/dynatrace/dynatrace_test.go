@@ -499,7 +499,7 @@ func TestEvaluateQueryForStep_CorrectHTTP(t *testing.T) {
 		require.Equal(t, 1, len(r.Header["Authorization"]))
 	}))
 	defer svr.Close()
-	kdp, objects := setupTest()
+	kdp, obj := setupTestForTimerangeWithStep()
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -511,12 +511,10 @@ func TestEvaluateQueryForStep_CorrectHTTP(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.True(t, errors.IsNotFound(e))
-		require.Equal(t, []byte(nil), raw)
-		require.Equal(t, []string(nil), r)
-	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.True(t, errors.IsNotFound(e))
+	require.Equal(t, []byte(nil), raw)
+	require.Equal(t, []string(nil), r)
 }
 
 func TestEvaluateQueryForStep_APIError(t *testing.T) {
@@ -536,7 +534,7 @@ func TestEvaluateQueryForStep_APIError(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	kdp, objects := setupTest(apiToken)
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -548,14 +546,12 @@ func TestEvaluateQueryForStep_APIError(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.Equal(t, []string(nil), r)
-		t.Log(string(raw))
-		require.Equal(t, errorResponse, raw) //we still return the raw answer to help user debug
-		require.NotNil(t, e)
-		require.Contains(t, e.Error(), "Token is missing required scope.")
-	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Equal(t, []string(nil), r)
+	t.Log(string(raw))
+	require.Equal(t, errorResponse, raw) //we still return the raw answer to help user debug
+	require.NotNil(t, e)
+	require.Contains(t, e.Error(), "Token is missing required scope.")
 }
 
 func TestEvaluateQueryForStep_WrongPayloadHandling(t *testing.T) {
@@ -575,7 +571,7 @@ func TestEvaluateQueryForStep_WrongPayloadHandling(t *testing.T) {
 		},
 	}
 
-	kdp, objects := setupTest(apiToken)
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -587,13 +583,11 @@ func TestEvaluateQueryForStep_WrongPayloadHandling(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.Equal(t, []string(nil), r)
-		t.Log(string(raw), e)
-		require.Equal(t, []byte("garbage"), raw) //we still return the raw answer to help user debug
-		require.NotNil(t, e)
-	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Equal(t, []string(nil), r)
+	t.Log(string(raw), e)
+	require.Equal(t, []byte("garbage"), raw) //we still return the raw answer to help user debug
+	require.NotNil(t, e)
 }
 
 func TestEvaluateQueryForStep_MissingSecret(t *testing.T) {
@@ -602,18 +596,16 @@ func TestEvaluateQueryForStep_MissingSecret(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	kdp, objects := setupTest()
+	kdp, obj := setupTestForTimerangeWithStep()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.NotNil(t, e)
-		require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
-	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 }
 
 func TestEvaluateQueryForStep_SecretNotFound(t *testing.T) {
@@ -622,7 +614,7 @@ func TestEvaluateQueryForStep_SecretNotFound(t *testing.T) {
 		require.Nil(t, err)
 	}))
 	defer svr.Close()
-	kdp, objects := setupTest()
+	kdp, obj := setupTestForTimerangeWithStep()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -635,11 +627,9 @@ func TestEvaluateQueryForStep_SecretNotFound(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.NotNil(t, e)
-		require.True(t, errors.IsNotFound(e))
-	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.True(t, errors.IsNotFound(e))
 }
 
 func TestEvaluateQueryForStep_RefNotExistingKey(t *testing.T) {
@@ -658,7 +648,7 @@ func TestEvaluateQueryForStep_RefNotExistingKey(t *testing.T) {
 			secretKey: []byte(secretValue),
 		},
 	}
-	kdp, objects := setupTest(apiToken)
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
 
 	missingKey := "key_not_found"
 	p := metricsapi.KeptnMetricsProvider{
@@ -672,11 +662,9 @@ func TestEvaluateQueryForStep_RefNotExistingKey(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
-		require.NotNil(t, e)
-		require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
-	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
 }
 
 func TestEvaluateQuery_HappyPathForTimerangeWithStep(t *testing.T) {

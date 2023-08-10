@@ -152,7 +152,7 @@ spec:
       targetPort: 80
 ```
 
-Now apply:
+Now apply it:
 
 ```shell
 kubectl apply -f app.yaml

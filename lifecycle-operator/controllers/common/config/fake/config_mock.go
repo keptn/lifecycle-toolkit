@@ -14,8 +14,14 @@ import (
 //
 //		// make and configure a mocked config.IConfig
 //		mockedIConfig := &MockConfig{
+//			GetCloudEventsEndpointFunc: func() string {
+//				panic("mock out the GetCloudEventsEndpoint method")
+//			},
 //			GetCreationRequestTimeoutFunc: func() time.Duration {
 //				panic("mock out the GetCreationRequestTimeout method")
+//			},
+//			SetCloudEventsEndpointFunc: func(endpoint string)  {
+//				panic("mock out the SetCloudEventsEndpoint method")
 //			},
 //			SetCreationRequestTimeoutFunc: func(value time.Duration)  {
 //				panic("mock out the SetCreationRequestTimeout method")
@@ -27,16 +33,30 @@ import (
 //
 //	}
 type MockConfig struct {
+	// GetCloudEventsEndpointFunc mocks the GetCloudEventsEndpoint method.
+	GetCloudEventsEndpointFunc func() string
+
 	// GetCreationRequestTimeoutFunc mocks the GetCreationRequestTimeout method.
 	GetCreationRequestTimeoutFunc func() time.Duration
+
+	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
+	SetCloudEventsEndpointFunc func(endpoint string)
 
 	// SetCreationRequestTimeoutFunc mocks the SetCreationRequestTimeout method.
 	SetCreationRequestTimeoutFunc func(value time.Duration)
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// GetCloudEventsEndpoint holds details about calls to the GetCloudEventsEndpoint method.
+		GetCloudEventsEndpoint []struct {
+		}
 		// GetCreationRequestTimeout holds details about calls to the GetCreationRequestTimeout method.
 		GetCreationRequestTimeout []struct {
+		}
+		// SetCloudEventsEndpoint holds details about calls to the SetCloudEventsEndpoint method.
+		SetCloudEventsEndpoint []struct {
+			// Endpoint is the endpoint argument value.
+			Endpoint string
 		}
 		// SetCreationRequestTimeout holds details about calls to the SetCreationRequestTimeout method.
 		SetCreationRequestTimeout []struct {
@@ -44,8 +64,37 @@ type MockConfig struct {
 			Value time.Duration
 		}
 	}
+	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
+	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
+}
+
+// GetCloudEventsEndpoint calls GetCloudEventsEndpointFunc.
+func (mock *MockConfig) GetCloudEventsEndpoint() string {
+	if mock.GetCloudEventsEndpointFunc == nil {
+		panic("MockConfig.GetCloudEventsEndpointFunc: method is nil but IConfig.GetCloudEventsEndpoint was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetCloudEventsEndpoint.Lock()
+	mock.calls.GetCloudEventsEndpoint = append(mock.calls.GetCloudEventsEndpoint, callInfo)
+	mock.lockGetCloudEventsEndpoint.Unlock()
+	return mock.GetCloudEventsEndpointFunc()
+}
+
+// GetCloudEventsEndpointCalls gets all the calls that were made to GetCloudEventsEndpoint.
+// Check the length with:
+//
+//	len(mockedIConfig.GetCloudEventsEndpointCalls())
+func (mock *MockConfig) GetCloudEventsEndpointCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetCloudEventsEndpoint.RLock()
+	calls = mock.calls.GetCloudEventsEndpoint
+	mock.lockGetCloudEventsEndpoint.RUnlock()
+	return calls
 }
 
 // GetCreationRequestTimeout calls GetCreationRequestTimeoutFunc.
@@ -72,6 +121,38 @@ func (mock *MockConfig) GetCreationRequestTimeoutCalls() []struct {
 	mock.lockGetCreationRequestTimeout.RLock()
 	calls = mock.calls.GetCreationRequestTimeout
 	mock.lockGetCreationRequestTimeout.RUnlock()
+	return calls
+}
+
+// SetCloudEventsEndpoint calls SetCloudEventsEndpointFunc.
+func (mock *MockConfig) SetCloudEventsEndpoint(endpoint string) {
+	if mock.SetCloudEventsEndpointFunc == nil {
+		panic("MockConfig.SetCloudEventsEndpointFunc: method is nil but IConfig.SetCloudEventsEndpoint was just called")
+	}
+	callInfo := struct {
+		Endpoint string
+	}{
+		Endpoint: endpoint,
+	}
+	mock.lockSetCloudEventsEndpoint.Lock()
+	mock.calls.SetCloudEventsEndpoint = append(mock.calls.SetCloudEventsEndpoint, callInfo)
+	mock.lockSetCloudEventsEndpoint.Unlock()
+	mock.SetCloudEventsEndpointFunc(endpoint)
+}
+
+// SetCloudEventsEndpointCalls gets all the calls that were made to SetCloudEventsEndpoint.
+// Check the length with:
+//
+//	len(mockedIConfig.SetCloudEventsEndpointCalls())
+func (mock *MockConfig) SetCloudEventsEndpointCalls() []struct {
+	Endpoint string
+} {
+	var calls []struct {
+		Endpoint string
+	}
+	mock.lockSetCloudEventsEndpoint.RLock()
+	calls = mock.calls.SetCloudEventsEndpoint
+	mock.lockSetCloudEventsEndpoint.RUnlock()
 	return calls
 }
 

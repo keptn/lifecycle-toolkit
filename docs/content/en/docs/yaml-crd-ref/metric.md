@@ -28,6 +28,12 @@ spec:
   fetchIntervalSeconds: <#-seconds>
   range:
     interval: "<timeframe>"
+  status:
+    properties:
+      value: <resulting value in human-readable language>
+      rawValue: <resulting value, in raw format>
+      errMsg: <error details if the query could not be evaluated>
+      lastUpdated: <time when the status data was last updated>
 ```
 
 ## Fields
@@ -64,6 +70,15 @@ spec:
   * **range**
     * **interval** -- Timeframe for which the metric would be queried.
     Defaults to 5m.
+
+* **status**
+  * KLT fills in this information when the metric is evaluated.
+    It always records the time the metric was last evaluated.
+    If the evaluation is successful,
+    this stores the result in both human-readable and raw format.
+    If the evaluation is not successful,
+    this stores error details that you can use to understand the problem
+    such as a forbidden code.
 
 ## Usage
 

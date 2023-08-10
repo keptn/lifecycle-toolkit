@@ -41,7 +41,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("test-workloadinstance-controller")),
+		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadinstance-controller")),
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		SpanHandler:   &telemetry.SpanHandler{},

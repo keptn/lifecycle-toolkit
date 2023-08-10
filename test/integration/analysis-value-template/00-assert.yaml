@@ -1,0 +1,8 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: analysis-value-template-sample
+spec:
+  provider:
+    name: some-provider
+  query: "sum(kube_pod_container_resource_limits{resource='{{.Resource}}'}) - sum(kube_node_status_capacity{resource='{{.Resource}}'})"

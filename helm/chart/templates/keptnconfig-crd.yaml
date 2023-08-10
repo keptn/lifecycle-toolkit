@@ -4,6 +4,7 @@ metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.12.1
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
@@ -41,6 +42,10 @@ spec:
               OTelCollectorUrl:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
+                type: string
+              cloudEventsEndpoint:
+                description: CloudEventsEndpoint can be used to set the endpoint where
+                  Cloud Events should be posted by the lifecycle operator
                 type: string
               keptnAppCreationRequestTimeoutSeconds:
                 default: 30

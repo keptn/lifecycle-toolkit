@@ -17,7 +17,7 @@ type ITargetEvaluator interface {
 	Evaluate(val float64, target v1alpha3.Target) TargetResult
 }
 
-//go:generate moq -pkg fake -skip-ensure -out ./fake/objective_evaluator_mock.go . IObjectiveEvaluator
+//go:generate moq -pkg fake -skip-ensure -out ./fake/operator_evaluator_mock.go . IOperatorEvaluator
 type IOperatorEvaluator interface {
 	Evaluate(val float64, criteria v1alpha3.Operator) OperatorResult
 }

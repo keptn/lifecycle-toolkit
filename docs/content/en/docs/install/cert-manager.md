@@ -14,8 +14,8 @@ without the overhead of other cert-managers.
 For a description of the architecture, see
 [Keptn Certificate Manager](../concepts/architecture/cert-manager.md).
 
-KLT also works well with the `cert-manager.io`.
-If you are already `cert-manager.io`,
+KLT also works well with `cert-manager.io`.
+If you are already using `cert-manager.io`,
 you can continue to use it for other components
 and use the KLT cert-manager just for KLT activities
 or you can disable the KLT cert-manager
@@ -25,7 +25,7 @@ If you want KLT to use `cert-manager.io`,
 you must configure it *before* you install KLT.
 The steps are:
 
-* Install the `cert-manager.io` if it is not already installed.
+* Install `cert-manager.io` if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
 * (optional) Install Keptn without the built-in `klt-cert-manager` via Helm
 

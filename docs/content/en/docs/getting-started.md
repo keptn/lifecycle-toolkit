@@ -453,8 +453,8 @@ Expected output:
 
 ```shell
 NAME                          APPNAME        VERSION   PHASE
-keptndemoapp-0.0.1-6b86b273   keptndemoapp   0.0.1     Completed
-keptndemoapp-0.0.2-d4735e3a   keptndemoapp   0.0.2     AppDeploy
+keptndemoapp-0.0.1-***  keptndemoapp   0.0.1     Completed
+keptndemoapp-0.0.2-***  keptndemoapp   0.0.2     AppDeploy
 ```
 
 Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`.

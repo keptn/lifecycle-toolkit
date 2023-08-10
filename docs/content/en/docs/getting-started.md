@@ -275,7 +275,8 @@ So let's install new Observability components to help us:
 - [Cert manager](https://cert-manager.io): Jaeger requires cert-manager
 - [Jaeger](https://jaegertracing.io): Store and view DORA deployment traces
 - [Prometheus](https://prometheus.io): Store DORA metrics
-- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/): Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
+- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/):
+  Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
 ![add observability](../assets/install01.png)
@@ -437,7 +438,8 @@ so expect the dashboards to look a little empty.
 
 By triggering a new deployment, Keptn will track this deployment and the Grafana dashboards will actually have data.
 
-Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2` (or `keptn.sh/version` if you used the Keptn specific labels earlier).
+Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2`
+(or `keptn.sh/version` if you used the Keptn specific labels earlier).
 
 Apply your update:
 

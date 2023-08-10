@@ -440,9 +440,8 @@ func TestEvaluateQuery_HappyPathForTimerangeWithStep(t *testing.T) {
 	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
 	require.Nil(t, e)
 	require.Equal(t, []byte(dtpayload), raw)
-	require.Equal(t, []string{"50","50","50","50","50"}, r)
+	require.Equal(t, []string{"50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000"}, r)
 }
-
 
 func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.KeptnMetric) {
 
@@ -500,8 +499,8 @@ func setupTestForTimerangeWithStep(objs ...client.Object) (KeptnDynatraceProvide
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "my-query",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-				Step: "1m",
+				Interval:    "5m",
+				Step:        "1m",
 				Aggregation: "max",
 			},
 		},

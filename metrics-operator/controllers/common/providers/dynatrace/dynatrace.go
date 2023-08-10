@@ -177,13 +177,28 @@ func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float6
 }
 
 func (d *KeptnDynatraceProvider) getResultSlice(result DynatraceResponse) []string {
-	var resultSlice []string
+	totalValues := 0
 	for _, r := range result.Result {
 		for _, points := range r.Data {
-			for i, v := range points.Values {
-				resultSlice[i] = fmt.Sprintf("%f", v)
+			for _, v := range points.Values {
+				if v != nil {
+					totalValues = totalValues + 1
+				}
+			}
+		}
+	}
+
+	// Initialize resultSlice with the correct length
+	resultSlice := make([]string, 0, totalValues) // Use a slice with capacity, but length 0
+	for _, r := range result.Result {
+		for _, points := range r.Data {
+			for _, v := range points.Values {
+				if v != nil {
+					resultSlice = append(resultSlice, fmt.Sprintf("%f", *v))
+				}
 			}
 		}
 	}
 	return resultSlice
 }
+

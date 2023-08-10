@@ -6,8 +6,9 @@
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 
-This is the primary repository for the Keptn software and documentation.
-Keptn provides a “cloud-native” approach
+This is the primary repository for
+the Keptn Lifecycle Toolkit (KLT) software and documentation.
+KLT provides a “cloud-native” approach
 for managing the application release lifecycle
 metrics, observability, health checks,
 with pre- and post-deployment evaluations and tasks.
@@ -15,7 +16,7 @@ It is an incubating project, under the umbrella of the
 [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
 > **Note**
-  The primary repository for V1 (formerly known as "Keptn") is
+  The primary repository for Keptn v1 is
   [https://github.com/keptn/keptn](https://github.com/keptn/keptn)
 
 ## Goals
@@ -67,26 +68,27 @@ The status follows the
 For more info about Keptn, please see our
 [documentation](https://lifecycle.keptn.sh/docs/), specifically:
 
-- [Introduction to Keptn](https://lifecycle.keptn.sh/docs/intro-klt/)
-  gives an overview of the Keptn facilities.
+- [Introduction to Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs/intro-klt/)
+  gives an overview of the KLT facilities.
 - [Getting started](https://lifecycle.keptn.sh/docs/getting-started/)
-  includes some short exercises to introduce you to Keptn.
+  includes some short exercises to introduce you to KLT.
 - [Installation and upgrade](https://lifecycle.keptn.sh/docs/install/)
   provides information about preparing your Kubernetes cluster
-  then installing and enabling Keptn.
-- [Implementing Keptn applications](https://lifecycle.keptn.sh/docs/implementing/)
-  documents how to integrate Keptn to work with your existing deployment engine
+  then installing and enabling KLT.
+- [Implementing KLT applications](https://lifecycle.keptn.sh/docs/implementing/)
+  documents how to integrate KLT to work with your existing deployment engine
   and implement its variouos features.
 - *Architecture* provides detailed technical information
-  about how Keptn works.
+  about how KLT works.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and
   [API Reference](https://lifecycle.keptn.sh/docs/crd-ref/)
   provide detailed reference material for the custom resources
-  used to configure Keptn.
+  used to configure KLT.
 - [Contributing to Keptn](https://lifecycle.keptn.sh/contribute/)
   provides information about how to contribute to the Keptn project.
 
-You can also find a number of video presentations and demos about Keptn on the
+You can also find a number of video presentations and demos
+about the Keptn Lifecycle Toolkit on the
 [YouTube Keptn channel](https://www.youtube.com/@keptn).
 
 ## Architecture

@@ -2,11 +2,11 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestAssert
 timeout: 30
 commands:
-- command: echo collectors
+  - command: echo collectors
 collectors:
-- type: pod
-  selector: app=test
----  
+  - type: pod
+    selector: app=test
+---
 apiVersion: v1
 kind: Pod
 metadata:

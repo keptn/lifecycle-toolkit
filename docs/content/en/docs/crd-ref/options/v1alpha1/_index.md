@@ -33,6 +33,7 @@ _Appears in:_
 | `kind` _string_ | `KeptnConfig`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KeptnConfigSpec](#keptnconfigspec)_ |  |
+| `status` _string_ | unused field |
 
 
 #### KeptnConfigList
@@ -62,9 +63,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the operator should use |
+| `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use |
 | `keptnAppCreationRequestTimeoutSeconds` _integer_ | KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery searches for workload to put into the same auto-generated KeptnApp |
-
-
+| `cloudEventsEndpoint` _string_ | CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator |
 
 

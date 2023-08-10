@@ -1,7 +1,7 @@
 # Sending Traces and Metrics to the OpenTelemetry Collector
 
 In this example, we will show you an example configuration
-for enabling the operator to send OpenTelemetry traces and metrics to the
+for enabling the lifecycle-operator to send OpenTelemetry traces and metrics to the
 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector).
 The Collector will then be used to forward the gathered data to
 [Jaeger](https://www.jaegertracing.io)

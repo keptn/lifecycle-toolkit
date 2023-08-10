@@ -67,7 +67,7 @@ or on a local cluster you are creating for this exercise,
 you need to do the following:
 
 1. Follow the instructions in
-   [Install and update](../../install)
+   [Install and update](../install)
    to install and enable KLT on your cluster.
 1. Follow the instructions in
    [Basic annotations](../../implementing/integrate/#basic-annotations)
@@ -87,7 +87,7 @@ about your deployments.
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
 See
-[DORA metrics](../../implementing/dora)
+[DORA metrics](../implementing/dora)
 for more details.
 
 ## Using OpenTelemetry
@@ -104,9 +104,9 @@ which allows you to trace everything done in the context of that deployment.
   [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 - Follow the instructions in
-  [OpenTelemetry observability](../../implementing/otel.md)
+  [OpenTelemetry observability](../implementing/otel.md)
   to configure where your OpenTelemetry data is sent.
-  This requires you to define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
+  This requires you to define a [KeptnConfig](../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)

@@ -61,20 +61,20 @@ You may want to complete the other exercises before doing this exercise
 although that is not required:
 
 * In the
-  [Getting started with Keptn metrics](../metrics)
+  [Getting started with Keptn metrics](usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
-* In [Standardize observability](../observability),
+* In [Standardize observability](usecase-observability.md),
   you learn how to standardize access
   to the observability data for your cluster.
 
 If you are installing the Keptn Lifecycle Toolkit on an existing cluster
 or in a local cluster you are creating for this exercise
 and did not previously set up your cluster for the
-[Standardize observability](../observability) exercise,
+[Standardize observability](usecase-observability.md) exercise,
 you need to do the following:
 
 1. Follow the instructions in
-   [Install and update](../../install)
+   [Install and update](../install/_index.md)
    to install and enable KLT on your cluster.
 1. Follow the instructions in
    [Annotate workload](../../implementing/integrate/#basic-annotations)
@@ -89,7 +89,7 @@ you need to do the following:
 
 An `evaluation` is a KeptnMetric that has a defined target value.
 Evaluations are resources that are defined in a
-[KeptinEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+[KeptinEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
 yaml file.
 In our example, evaluations are defined in the
 [keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml)
@@ -146,7 +146,7 @@ spec:
 ```
 
 For more information about sending Slack notifications with KLT, see
-[Implement Slack notifications](../../implementing/slack.md).
+[Implement Slack notifications](../implementing/slack.md).
 The code to be executed is expressed as a
 [Deno](https://deno.land/)
 script, which uses JavaScript syntax.
@@ -161,7 +161,7 @@ you can also use Python 3 to define your task,
 or you can define a standard Kubernetes container
 that uses the image, runner, and runtime dependencies that you choose.
 For more information, see
-[Working with Keptn tasks](../../implementing/tasks).
+[Working with Keptn tasks](../implementing/tasks).
 
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.
@@ -174,7 +174,7 @@ is protected by a secret, the task definition also specifies that secret.
 ## Integrate evaluations and tasks into the cluster
 
 Follow the instructions in
-[Annotate workload](../../implementing/integrate/#pre--and-post-deployment-checks)
+[Annotate workload](../implementing/integrate/#pre--and-post-deployment-checks)
 to integrate the evaluations and tasks you defined
 into the cluster
 by applying annotations to the `Deployment` resource.

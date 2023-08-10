@@ -475,7 +475,7 @@ Any workloads with the same `part-of` annotation are said to be `part-of` the sa
 
 However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
 In this way, you are in full control of what constitutes a Keptn Application.
-See [Define a Keptn Application](../implementing/integrate/#define-keptnapp-manually) for more information.
+See [Define a Keptn Application](implementing/integrate/#define-keptnapp-manually) for more information.
 
 ## What's next?
 

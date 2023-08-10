@@ -3,6 +3,7 @@ kind: TestStep
 error: # this checks that kubectl get resource fails, AKA bad CRD not added
   - badmetric1.yaml
   - badmetric2.yaml
+  - badmetric3.yaml
 assert: # this checks that kubectl get resource succeeds
   - goodmetric1.yaml
   - goodmetric2.yaml

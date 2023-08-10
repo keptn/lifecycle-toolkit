@@ -35,7 +35,7 @@ jobs:
           scopes: |
             helm-chart
             scheduler
-            operator
+            lifecycle-operator
             cert-manager
             metrics-operator
             functions-runtime

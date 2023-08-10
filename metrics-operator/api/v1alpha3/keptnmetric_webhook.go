@@ -72,6 +72,9 @@ func (s *KeptnMetric) validateKeptnMetric() error {
 	if err = s.validateRangeStep(); err != nil {
 		allErrs = append(allErrs, err)
 	}
+	if err = s.validateAggregation(); err != nil {
+		allErrs = append(allErrs, err)
+	}
 	if len(allErrs) == 0 {
 		return nil
 	}
@@ -106,6 +109,25 @@ func (s *KeptnMetric) validateRangeStep() *field.Error {
 			field.NewPath("spec").Child("range").Child("step"),
 			s.Spec.Range.Step,
 			errors.New("Forbidden! The time interval cannot be parsed. Please check for suitable conventions").Error(),
+		)
+	}
+	return nil
+}
+
+func (s *KeptnMetric) validateAggregation() *field.Error {
+	if s.Spec.Range == nil {
+		return nil
+	}
+	if s.Spec.Range.Step != "" && s.Spec.Range.Aggregation == "" {
+		return field.Required(
+			field.NewPath("spec").Child("range").Child("aggregation"),
+			errors.New("Forbidden! Aggregation field is required if defining the step field").Error(),
+		)
+	}
+	if s.Spec.Range.Step == "" && s.Spec.Range.Aggregation != "" {
+		return field.Required(
+			field.NewPath("spec").Child("range").Child("step"),
+			errors.New("Forbidden! Step interval is required for the aggregation to work").Error(),
 		)
 	}
 	return nil

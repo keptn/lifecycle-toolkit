@@ -61,9 +61,8 @@ spec:
             - targetServer
             type: object
           status:
-            description: KeptnMetricsProviderStatus defines the observed state of
-              KeptnMetricsProvider
-            type: object
+            description: unused field
+            type: string
         type: object
     served: true
     storage: false
@@ -122,9 +121,8 @@ spec:
             - targetServer
             type: object
           status:
-            description: KeptnMetricsProviderStatus defines the observed state of
-              KeptnMetricsProvider
-            type: object
+            description: unused field
+            type: string
         type: object
     served: true
     storage: true

@@ -1,7 +1,7 @@
 ---
 title: Migrate Quality Gates to Keptn Evaluations
 description: How to define Keptn Evaluations for some Quality Gates checks
-weight: 60
+weight: 50
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

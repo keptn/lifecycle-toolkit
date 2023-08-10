@@ -165,7 +165,7 @@ Keptn looks for these 3 labels:
 - `app.kubernetes.io/version`
 
 These are [Kubernetes recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/#labels)
-but if you want to use different labels, you can swap for:
+but if you want to use different labels, you can swap them for these KLT specific labels:
 
 - `keptn.sh/app` instead of `app.kubernetes.io/part-of`
 - `keptn.sh/workload` instead of `app.kubernetes.io/name`

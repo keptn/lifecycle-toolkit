@@ -237,7 +237,7 @@ You should see the "Welcome to nginx" page.
 
 Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
-These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`
+These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
 
 To see these raw metrics:
 

@@ -1,7 +1,7 @@
 ---
 global:
-  writeToFile: true
   indexerConfig:
+    type: "local"
     metricsDirectory: collected-metrics
   prometheusURL: http://localhost:9090
 

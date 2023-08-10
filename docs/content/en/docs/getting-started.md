@@ -326,13 +326,15 @@ Jaeger is available on `http://localhost:16686`
 
 Create some Keptn Grafana dashboards that will be available when Grafana is installed and started:
 
+<!---x-release-please-start-version-->
 ```shell
 kubectl create ns monitoring
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-config.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
+<!---x-release-please-end-->
 
 ### Install Grafana datasources
 
@@ -435,7 +437,7 @@ so expect the dashboards to look a little empty.
 
 By triggering a new deployment, Keptn will track this deployment and the Grafana dashboards will actually have data.
 
-Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2`.
+Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.1` to `0.0.2` (or `keptn.sh/version` if you used the Keptn specific labels earlier).
 
 Apply your update:
 

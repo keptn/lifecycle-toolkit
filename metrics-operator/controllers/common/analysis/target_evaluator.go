@@ -6,21 +6,14 @@ type TargetEvaluator struct {
 	OperatorEvaluator IOperatorEvaluator
 }
 
-type TargetResult struct {
-	FailureResult OperatorResult
-	WarningResult OperatorResult
-	Warning       bool
-	Pass          bool
-}
-
 func NewTargetEvaluator(o IOperatorEvaluator) TargetEvaluator {
 	return TargetEvaluator{
 		OperatorEvaluator: o,
 	}
 }
 
-func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) TargetResult {
-	result := TargetResult{
+func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) v1alpha3.TargetResult {
+	result := v1alpha3.TargetResult{
 		Warning: false,
 		Pass:    false,
 	}
@@ -29,17 +22,19 @@ func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) TargetResult
 	result.FailureResult = te.OperatorEvaluator.Evaluate(val, *t.Failure)
 
 	// if failure criteria are met, we can return without checking warning criteria
-	if result.FailureResult.Fullfilled {
+	if result.FailureResult.Fulfilled {
 		return result
 	}
 
-	// check 'warning'  criteria
-	result.WarningResult = te.OperatorEvaluator.Evaluate(val, *t.Warning)
+	// check 'warning' criteria
+	if t.Warning != nil {
+		result.WarningResult = te.OperatorEvaluator.Evaluate(val, *t.Warning)
 
-	// if warning criteria are met, we can return warning
-	if result.WarningResult.Fullfilled {
-		result.Warning = true
-		return result
+		// if warning criteria are met, we can return warning
+		if result.WarningResult.Fulfilled {
+			result.Warning = true
+			return result
+		}
 	}
 
 	// if failure and warning criteria are not met, we pass

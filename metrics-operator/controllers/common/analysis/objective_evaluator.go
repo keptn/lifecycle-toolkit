@@ -11,30 +11,21 @@ type ObjectiveEvaluator struct {
 	TargetEvaluator ITargetEvaluator
 }
 
-type ObjectiveResult struct {
-	Result       TargetResult
-	Value        float64
-	Score        float64
-	KeyObjective bool
-	Failed       bool
-	Error        error
-}
-
 func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	return ObjectiveEvaluator{
 		TargetEvaluator: t,
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) ObjectiveResult {
-	result := ObjectiveResult{
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) v1alpha3.ObjectiveResult {
+	result := v1alpha3.ObjectiveResult{
 		KeyObjective: obj.KeyObjective,
 		Score:        0.0,
 		Failed:       false,
 	}
 
 	// get the value
-	floatVal, err := oe.getValue(values, obj.AnalysisValueTemplateRef.Name)
+	floatVal, err := getValueFromMap(values, obj.AnalysisValueTemplateRef.Name)
 	if err != nil {
 		result.Error = err
 		result.Failed = true
@@ -60,7 +51,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	return result
 }
 
-func (oe *ObjectiveEvaluator) getValue(values map[string]string, name string) (float64, error) {
+func getValueFromMap(values map[string]string, name string) (float64, error) {
 	val, ok := values[name]
 	if !ok {
 		return 0.0, errors.New("required value not available")

@@ -5,7 +5,6 @@ package fake
 
 import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"sync"
 )
 
@@ -15,7 +14,7 @@ import (
 //
 //		// make and configure a mocked analysis.IAnalysisEvaluator
 //		mockedIAnalysisEvaluator := &IAnalysisEvaluatorMock{
-//			EvaluateFunc: func(values map[string]string, ad v1alpha3.AnalysisDefinition) analysis.AnalysisResult {
+//			EvaluateFunc: func(values map[string]string, ad v1alpha3.AnalysisDefinition) v1alpha3.AnalysisResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,7 +25,7 @@ import (
 //	}
 type IAnalysisEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(values map[string]string, ad v1alpha3.AnalysisDefinition) analysis.AnalysisResult
+	EvaluateFunc func(values map[string]string, ad v1alpha3.AnalysisDefinition) v1alpha3.AnalysisResult
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -42,7 +41,7 @@ type IAnalysisEvaluatorMock struct {
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) analysis.AnalysisResult {
+func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) v1alpha3.AnalysisResult {
 	if mock.EvaluateFunc == nil {
 		panic("IAnalysisEvaluatorMock.EvaluateFunc: method is nil but IAnalysisEvaluator.Evaluate was just called")
 	}

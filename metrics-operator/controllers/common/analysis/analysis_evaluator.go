@@ -8,23 +8,15 @@ type AnalysisEvaluator struct {
 	ObjectiveEvaluator IObjectiveEvaluator
 }
 
-type AnalysisResult struct {
-	ObjectiveResults []ObjectiveResult
-	TotalScore       float64
-	MaximumScore     float64
-	Pass             bool
-	Warning          bool
-}
-
 func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	return AnalysisEvaluator{
 		ObjectiveEvaluator: o,
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) (AnalysisResult, error) {
-	result := AnalysisResult{
-		ObjectiveResults: make([]ObjectiveResult, 0, len(ad.Spec.Objectives)),
+func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) (v1alpha3.AnalysisResult, error) {
+	result := v1alpha3.AnalysisResult{
+		ObjectiveResults: make([]v1alpha3.ObjectiveResult, 0, len(ad.Spec.Objectives)),
 	}
 
 	keyObjectiveFailed := false

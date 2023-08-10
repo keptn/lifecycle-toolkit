@@ -4,20 +4,20 @@ import "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/analysis_evaluator_mock.go . IAnalysisEvaluator
 type IAnalysisEvaluator interface {
-	Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) AnalysisResult
+	Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) v1alpha3.AnalysisResult
 }
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/objective_evaluator_mock.go . IObjectiveEvaluator
 type IObjectiveEvaluator interface {
-	Evaluate(values map[string]string, objective v1alpha3.Objective) ObjectiveResult
+	Evaluate(values map[string]string, objective v1alpha3.Objective) v1alpha3.ObjectiveResult
 }
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/target_evaluator_mock.go . ITargetEvaluator
 type ITargetEvaluator interface {
-	Evaluate(val float64, target v1alpha3.Target) TargetResult
+	Evaluate(val float64, target v1alpha3.Target) v1alpha3.TargetResult
 }
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/operator_evaluator_mock.go . IOperatorEvaluator
 type IOperatorEvaluator interface {
-	Evaluate(val float64, criteria v1alpha3.Operator) OperatorResult
+	Evaluate(val float64, criteria v1alpha3.Operator) v1alpha3.OperatorResult
 }

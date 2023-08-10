@@ -126,7 +126,7 @@ which allows you to trace everything done in the context of that deployment.
 You can supplement the DORA Metrics and OpenTelemetry information
 with information you explicitly define using Keptn metrics.
 The
-[Getting started with Keptn metrics](../metrics)
+[Getting started with Keptn metrics](usecase_metrics.md)
 exercise discusses how to define Keptn metrics.
 
 ## View the results

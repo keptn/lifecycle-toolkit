@@ -38,7 +38,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		if len(warnings) != 0 {
 			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 		}
-		return getResultForMatrix(result, r)
+		return getResultForMatrix(result)
 	} else {
 		result, warnings, err := evaluateQueryWithoutRange(ctx, metric, r, api)
 		if err != nil {
@@ -47,7 +47,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 		if len(warnings) != 0 {
 			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 		}
-		return getResultForVector(result, r)
+		return getResultForVector(result)
 	}
 }
 
@@ -69,7 +69,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	if len(warnings) != 0 {
 		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 	}
-	return getResultForStepMatrix(result, r)
+	return getResultForStepMatrix(result)
 }
 
 func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {
@@ -133,7 +133,7 @@ func evaluateQueryWithoutRange(ctx context.Context, metric metricsapi.KeptnMetri
 	return result, warnings, nil
 }
 
-func getResultForMatrix(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+func getResultForMatrix(result model.Value) (string, []byte, error) {
 	// check if we can cast the result to a matrix
 	resultMatrix, ok := result.(model.Matrix)
 	if !ok {
@@ -145,10 +145,8 @@ func getResultForMatrix(result model.Value, r *KeptnPrometheusProvider) (string,
 	// parameter as the interval itself, hence there can only be one value.
 	// This logic should be changed, once we work onto the aggregation functions.
 	if len(resultMatrix) == 0 {
-		r.Log.Info("No values in query result")
 		return "", nil, fmt.Errorf("no values in query result")
 	} else if len(resultMatrix) > 1 {
-		r.Log.Info("Too many values in the query result")
 		return "", nil, fmt.Errorf("too many values in the query result")
 	}
 	value := resultMatrix[0].Values[0].Value.String()
@@ -159,7 +157,7 @@ func getResultForMatrix(result model.Value, r *KeptnPrometheusProvider) (string,
 	return value, b, nil
 }
 
-func getResultForVector(result model.Value, r *KeptnPrometheusProvider) (string, []byte, error) {
+func getResultForVector(result model.Value) (string, []byte, error) {
 	// check if we can cast the result to a vector
 	resultVector, ok := result.(model.Vector)
 	if !ok {
@@ -168,10 +166,8 @@ func getResultForVector(result model.Value, r *KeptnPrometheusProvider) (string,
 	// We are only allowed to return one value, if not the query may be malformed
 	// we are using two different errors to give the user more information about the result
 	if len(resultVector) == 0 {
-		r.Log.Info("No values in query result")
 		return "", nil, fmt.Errorf("no values in query result")
 	} else if len(resultVector) > 1 {
-		r.Log.Info("Too many values in the query result")
 		return "", nil, fmt.Errorf("too many values in the query result")
 	}
 	value := resultVector[0].Value.String()
@@ -182,7 +178,7 @@ func getResultForVector(result model.Value, r *KeptnPrometheusProvider) (string,
 	return value, b, nil
 }
 
-func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]string, []byte, error) {
+func getResultForStepMatrix(result model.Value) ([]string, []byte, error) {
 	// check if we can cast the result to a matrix
 	resultMatrix, ok := result.(model.Matrix)
 	if !ok {
@@ -190,10 +186,8 @@ func getResultForStepMatrix(result model.Value, r *KeptnPrometheusProvider) ([]s
 	}
 
 	if len(resultMatrix) == 0 {
-		r.Log.Info("No values in query result")
 		return nil, nil, fmt.Errorf("no values in query result")
 	} else if len(resultMatrix) > 1 {
-		r.Log.Info("Too many values in the query result")
 		return nil, nil, fmt.Errorf("too many values in the query result")
 	}
 

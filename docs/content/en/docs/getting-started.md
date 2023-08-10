@@ -251,7 +251,7 @@ Note that this command will (and should) continue to run in your terminal window
 Open a new terminal window to continue.
 
 - Access metrics in Prometheus format on `http://localhost:2222/metrics`
-- Look for metrics starting with `keptn_`.
+- Look for metrics starting with `keptn_`
 
 ![keptn prometheus metrics](../assets/keptnprommetrics.png)
 

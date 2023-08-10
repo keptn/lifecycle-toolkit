@@ -43,7 +43,7 @@ as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
 This is the first of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](../#introducing-the-keptn-lifecycle-toolkit)
+[Introducing the Keptn Lifecycle Toolkit](_index.md)
 series.
 After completing this exercise,
 you may want to do the other exercises:

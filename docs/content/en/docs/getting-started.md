@@ -272,11 +272,11 @@ There are many other Keptn metrics.
 It is much more user friendly to provide dashboards for metrics, logs and traces.
 So let's install new Observability components to help us:
 
-- Cert manager: Jaeger requires cert-manager
-- Jaeger: Store and view DORA deployment traces
-- Prometheus: Store DORA metrics
-- OpenTelemetry collector: Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
-- Grafana (and some prebuilt dashboards): Visualise the data
+- [Cert manager](https://cert-manager.io): Jaeger requires cert-manager
+- [Jaeger](https://jaegertracing.io): Store and view DORA deployment traces
+- [Prometheus](https://prometheus.io): Store DORA metrics
+- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/): Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
+- [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
 ![add observability](../assets/install01.png)
 

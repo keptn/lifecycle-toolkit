@@ -189,7 +189,7 @@ func TestEventSender_Multiplexer_emit(t *testing.T) {
 	msg := "my special message"
 	emitter.Emit(common.PhaseAppDeployment, "", nil, "", msg, "")
 	// assert we got one event
-	// let's wait few seconds so the async emit takes place
+	// wait for the emitMocks to receive the events
 
 	select {
 	case <-recE1:

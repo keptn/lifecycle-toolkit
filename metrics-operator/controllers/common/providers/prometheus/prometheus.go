@@ -14,6 +14,10 @@ import (
 	"github.com/prometheus/common/model"
 )
 
+var errCouldNotCast = fmt.Errorf("could not cast result")
+var errNoValues = fmt.Errorf("no values in query result")
+var errTooManyValues = fmt.Errorf("too many values in query result")
+
 type KeptnPrometheusProvider struct {
 	Log        logr.Logger
 	HttpClient http.Client
@@ -137,7 +141,7 @@ func getResultForMatrix(result model.Value) (string, []byte, error) {
 	// check if we can cast the result to a matrix
 	resultMatrix, ok := result.(model.Matrix)
 	if !ok {
-		return "", nil, fmt.Errorf("could not cast result")
+		return "", nil, errCouldNotCast
 	}
 	// We are only allowed to return one value, if not the query may be malformed
 	// we are using two different errors to give the user more information about the result
@@ -145,9 +149,9 @@ func getResultForMatrix(result model.Value) (string, []byte, error) {
 	// parameter as the interval itself, hence there can only be one value.
 	// This logic should be changed, once we work onto the aggregation functions.
 	if len(resultMatrix) == 0 {
-		return "", nil, fmt.Errorf("no values in query result")
+		return "", nil, errNoValues
 	} else if len(resultMatrix) > 1 {
-		return "", nil, fmt.Errorf("too many values in the query result")
+		return "", nil, errTooManyValues
 	}
 	value := resultMatrix[0].Values[0].Value.String()
 	b, err := resultMatrix[0].Values[0].Value.MarshalJSON()
@@ -161,14 +165,14 @@ func getResultForVector(result model.Value) (string, []byte, error) {
 	// check if we can cast the result to a vector
 	resultVector, ok := result.(model.Vector)
 	if !ok {
-		return "", nil, fmt.Errorf("could not cast result")
+		return "", nil, errCouldNotCast
 	}
 	// We are only allowed to return one value, if not the query may be malformed
 	// we are using two different errors to give the user more information about the result
 	if len(resultVector) == 0 {
-		return "", nil, fmt.Errorf("no values in query result")
+		return "", nil, errNoValues
 	} else if len(resultVector) > 1 {
-		return "", nil, fmt.Errorf("too many values in the query result")
+		return "", nil, errTooManyValues
 	}
 	value := resultVector[0].Value.String()
 	b, err := resultVector[0].Value.MarshalJSON()
@@ -182,13 +186,13 @@ func getResultForStepMatrix(result model.Value) ([]string, []byte, error) {
 	// check if we can cast the result to a matrix
 	resultMatrix, ok := result.(model.Matrix)
 	if !ok {
-		return nil, nil, fmt.Errorf("could not cast result")
+		return nil, nil, errCouldNotCast
 	}
 
 	if len(resultMatrix) == 0 {
-		return nil, nil, fmt.Errorf("no values in query result")
+		return nil, nil, errNoValues
 	} else if len(resultMatrix) > 1 {
-		return nil, nil, fmt.Errorf("too many values in the query result")
+		return nil, nil, errTooManyValues
 	}
 
 	resultSlice := make([]string, len(resultMatrix[0].Values))

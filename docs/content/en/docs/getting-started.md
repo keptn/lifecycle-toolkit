@@ -217,7 +217,7 @@ kubectl -n keptndemo get keptnappversion -o wide
 Keptn applications are a collection of workloads.
 By default, Keptn will build `KeptnApp` resources based on the labels you provide.
 
-In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
+In the example above, the `KeptnApp` called `keptndemoapp` contains one `KeptnWorkload` (based on the `name` label):
 
 ## Step 5: View your application
 

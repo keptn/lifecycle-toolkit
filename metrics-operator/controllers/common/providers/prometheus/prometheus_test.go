@@ -274,6 +274,22 @@ func Test_resultsForMatrix(t *testing.T) {
 			wantErr:          true,
 			hasStep:          false,
 		},
+		{
+			name:             "unsupported matrix with step- return err",
+			result:           model.Vector{},
+			wantResultString: "",
+			wantRaw:          nil,
+			wantErr:          true,
+			hasStep:          true,
+		},
+		{
+			name:             "unsupported matrix without step- return err",
+			result:           model.Vector{},
+			wantResultString: "",
+			wantRaw:          nil,
+			wantErr:          true,
+			hasStep:          false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

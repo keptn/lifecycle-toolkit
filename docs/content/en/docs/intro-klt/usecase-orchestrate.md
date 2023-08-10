@@ -29,7 +29,7 @@ and can do the following:
 * Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
-  [Getting started with Keptn metrics](../metrics).
+  [Getting started with Keptn metrics](usecase_metrics.md).
 
 This means that you can be sure that the environment is healthy
 and has adequate resources before you begin the deployment.
@@ -121,7 +121,7 @@ You could include objectives and additional metrics in this evaluation.
 ## Define tasks to be performed pre- and post-deployment
 
 Tasks are resources that are defined in a
-[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
 file.
 In our example, the tasks are defined in the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)

@@ -48,12 +48,12 @@ This is the second of three exercises in the
 series:
 
 - In the
-  [Getting started with Keptn metrics](../metrics)
+  [Getting started with Keptn metrics](usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
   You may want to complete that exercise before doing this exercise
   although that is not required.
 - In
-  [Manage release lifecycle](../orchestrate),
+  [Manage release lifecycle](usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
   to orchestrate the flow of all the `workloads`

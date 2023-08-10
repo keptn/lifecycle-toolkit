@@ -262,7 +262,7 @@ For example:
 
 - `keptn_app_active` tracks the number of applications that Keptn manages
 - `keptn_deployment_active` tracks the currently live number of deployments occuring.
-  Expect this metrics to be `0` when everything is currently deployed.
+  Expect this metric to be `0` when everything is currently deployed.
   It will occasionally rise to `n` during deployments and then fall back to `0` when deployments are completed.
 
 There are many other Keptn metrics.

@@ -103,6 +103,88 @@ func TestGetSingleValue(t *testing.T) {
 	}
 }
 
+func TestGetResultSlice(t *testing.T) {
+	v := 5.0
+	tests := []struct {
+		name   string
+		input  DynatraceResponse
+		result []string
+	}{
+		{
+			name: "happy path",
+			input: DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{&v, &v, &v},
+							},
+						},
+					},
+				},
+			},
+			result: []string{"5.000000", "5.000000", "5.000000"},
+		},
+		{
+			name: "empty path",
+			input: DynatraceResponse{
+				Result: []DynatraceResult{},
+			},
+			result: []string{},
+		},
+		{
+			name: "no data",
+			input: DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{},
+					},
+				},
+			},
+			result: []string{},
+		},
+		{
+			name: "no values",
+			input: DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{},
+							},
+						},
+					},
+				},
+			},
+			result: []string{},
+		},
+		{
+			name: "nil values",
+			input: DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{nil, nil, nil},
+							},
+						},
+					},
+				},
+			},
+			result: []string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kdp := KeptnDynatraceProvider{}
+			r := kdp.getResultSlice(tt.input)
+			require.Equal(t, tt.result, r)
+		})
+
+	}
+}
+
 func TestNormalizeURL(t *testing.T) {
 	tests := []struct {
 		name   string

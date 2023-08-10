@@ -5,6 +5,7 @@ package fake
 
 import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
 
@@ -14,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.ITargetEvaluator
 //		mockedITargetEvaluator := &ITargetEvaluatorMock{
-//			EvaluateFunc: func(val float64, target v1alpha3.Target) v1alpha3.TargetResult {
+//			EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -25,7 +26,7 @@ import (
 //	}
 type ITargetEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(val float64, target v1alpha3.Target) v1alpha3.TargetResult
+	EvaluateFunc func(val float64, target v1alpha3.Target) types.TargetResult
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -41,7 +42,7 @@ type ITargetEvaluatorMock struct {
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *ITargetEvaluatorMock) Evaluate(val float64, target v1alpha3.Target) v1alpha3.TargetResult {
+func (mock *ITargetEvaluatorMock) Evaluate(val float64, target v1alpha3.Target) types.TargetResult {
 	if mock.EvaluateFunc == nil {
 		panic("ITargetEvaluatorMock.EvaluateFunc: method is nil but ITargetEvaluator.Evaluate was just called")
 	}

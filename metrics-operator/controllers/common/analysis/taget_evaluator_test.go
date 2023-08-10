@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
@@ -15,7 +16,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		name string
 		val  float64
 		t    v1alpha3.Target
-		want v1alpha3.TargetResult
+		want types.TargetResult
 	}{
 		{
 			name: "failure scenario",
@@ -27,8 +28,8 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 				},
 			},
-			want: v1alpha3.TargetResult{
-				FailureResult: v1alpha3.OperatorResult{
+			want: types.TargetResult{
+				FailureResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -55,8 +56,8 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 				},
 			},
-			want: v1alpha3.TargetResult{
-				FailureResult: v1alpha3.OperatorResult{
+			want: types.TargetResult{
+				FailureResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -64,7 +65,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 					Fulfilled: false,
 				},
-				WarningResult: v1alpha3.OperatorResult{
+				WarningResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue20,
@@ -91,8 +92,8 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 				},
 			},
-			want: v1alpha3.TargetResult{
-				FailureResult: v1alpha3.OperatorResult{
+			want: types.TargetResult{
+				FailureResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -100,7 +101,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 					Fulfilled: false,
 				},
-				WarningResult: v1alpha3.OperatorResult{
+				WarningResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue20,
@@ -122,8 +123,8 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 				},
 			},
-			want: v1alpha3.TargetResult{
-				FailureResult: v1alpha3.OperatorResult{
+			want: types.TargetResult{
+				FailureResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -14,7 +15,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		name            string
 		values          map[string]string
 		o               v1alpha3.Objective
-		want            v1alpha3.ObjectiveResult
+		want            types.ObjectiveResult
 		mockedEvaluator ITargetEvaluator
 	}{
 		{
@@ -27,7 +28,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				KeyObjective: true,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{},
-			want: v1alpha3.ObjectiveResult{
+			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        0.0,
 				Failed:       true,
@@ -47,19 +48,19 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight:       2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) v1alpha3.TargetResult {
-					return v1alpha3.TargetResult{
+				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+					return types.TargetResult{
 						Pass: true,
 					}
 				},
 			},
-			want: v1alpha3.ObjectiveResult{
+			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        2.0,
 				Failed:       false,
 				Error:        nil,
 				Value:        20.0,
-				Result: v1alpha3.TargetResult{
+				Result: types.TargetResult{
 					Pass: true,
 				},
 			},
@@ -77,20 +78,20 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight:       2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) v1alpha3.TargetResult {
-					return v1alpha3.TargetResult{
+				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+					return types.TargetResult{
 						Warning: true,
 						Pass:    false,
 					}
 				},
 			},
-			want: v1alpha3.ObjectiveResult{
+			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        1.0,
 				Failed:       false,
 				Error:        nil,
 				Value:        20.0,
-				Result: v1alpha3.TargetResult{
+				Result: types.TargetResult{
 					Pass:    false,
 					Warning: true,
 				},
@@ -109,20 +110,20 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight:       2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) v1alpha3.TargetResult {
-					return v1alpha3.TargetResult{
+				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+					return types.TargetResult{
 						Warning: false,
 						Pass:    false,
 					}
 				},
 			},
-			want: v1alpha3.ObjectiveResult{
+			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        0.0,
 				Failed:       true,
 				Error:        nil,
 				Value:        20.0,
-				Result: v1alpha3.TargetResult{
+				Result: types.TargetResult{
 					Pass:    false,
 					Warning: false,
 				},

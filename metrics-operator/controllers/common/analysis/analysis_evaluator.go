@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
 type AnalysisEvaluator struct {
@@ -14,9 +15,9 @@ func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) (v1alpha3.AnalysisResult, error) {
-	result := v1alpha3.AnalysisResult{
-		ObjectiveResults: make([]v1alpha3.ObjectiveResult, 0, len(ad.Spec.Objectives)),
+func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) (types.AnalysisResult, error) {
+	result := types.AnalysisResult{
+		ObjectiveResults: make([]types.ObjectiveResult, 0, len(ad.Spec.Objectives)),
 	}
 
 	keyObjectiveFailed := false

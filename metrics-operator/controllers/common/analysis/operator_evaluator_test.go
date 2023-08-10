@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
@@ -14,7 +15,7 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		name string
 		val  float64
 		o    v1alpha3.Operator
-		want v1alpha3.OperatorResult
+		want types.OperatorResult
 	}{
 		{
 			name: "less than - fulfilled",
@@ -24,7 +25,7 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 					FixedValue: *compValue,
 				},
 			},
-			want: v1alpha3.OperatorResult{
+			want: types.OperatorResult{
 				Operator: v1alpha3.Operator{
 					LessThan: &v1alpha3.OperatorValue{
 						FixedValue: *compValue,
@@ -41,7 +42,7 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 					FixedValue: *compValue,
 				},
 			},
-			want: v1alpha3.OperatorResult{
+			want: types.OperatorResult{
 				Operator: v1alpha3.Operator{
 					LessThan: &v1alpha3.OperatorValue{
 						FixedValue: *compValue,

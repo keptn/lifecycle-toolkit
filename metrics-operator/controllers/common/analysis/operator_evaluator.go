@@ -2,12 +2,13 @@ package analysis
 
 import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
 type OperatorEvaluator struct{}
 
-func (te *OperatorEvaluator) Evaluate(val float64, t v1alpha3.Operator) v1alpha3.OperatorResult {
-	result := v1alpha3.OperatorResult{
+func (te *OperatorEvaluator) Evaluate(val float64, t v1alpha3.Operator) types.OperatorResult {
+	result := types.OperatorResult{
 		Operator:  t,
 		Fulfilled: false,
 	}

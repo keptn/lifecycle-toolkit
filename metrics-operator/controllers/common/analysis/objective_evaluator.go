@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
 type ObjectiveEvaluator struct {
@@ -17,8 +18,8 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) v1alpha3.ObjectiveResult {
-	result := v1alpha3.ObjectiveResult{
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) types.ObjectiveResult {
+	result := types.ObjectiveResult{
 		KeyObjective: obj.KeyObjective,
 		Score:        0.0,
 		Failed:       false,

@@ -26,7 +26,6 @@ const ddPayload = "{\"from_date\":1677736306000,\"group_by\":[],\"message\":\"\"
 const ddEmptyPayload = "{\"from_date\":1677736306000,\"group_by\":[],\"message\":\"\",\"query\":\"system.cpu.idle{*}\",\"res_type\":\"time_series\",\"series\":[],\"status\":\"ok\",\"to_date\":1677822706000}"
 const ddEmptyPoints = "{\"from_date\":1677736306000,\"group_by\":[],\"message\":\"\",\"query\":\"system.cpu.idle{*}\",\"res_type\":\"time_series\",\"series\":[{\"aggr\":null,\"display_name\":\"system.cpu.idle\",\"end\":1677821999000,\"expression\":\"system.cpu.idle{*}\",\"interval\":300,\"length\":7,\"metric\":\"system.cpu.idle\",\"pointlist\":[],\"query_index\":0,\"scope\":\"*\",\"start\":1677781200000,\"tag_set\":[],\"unit\":[{\"family\":\"percentage\",\"name\":\"percent\",\"plural\":\"percent\",\"scale_factor\":1,\"short_name\":\"%\"},{}]}],\"status\":\"ok\",\"to_date\":1677822706000}"
 
-
 func TestEvaluateQuery_APIError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(ddErrorPayload))
@@ -362,7 +361,7 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 		t.Log(string(raw))
 		require.Nil(t, raw)
 		require.Equal(t, "", r)
-		require.True(t, strings.Contains(e.Error(), "no values in query result"))
+		require.True(t, strings.Contains(e.Error(), "No values in query result"))
 	}
 }
 
@@ -413,7 +412,7 @@ func TestEvaluateQuery_EmptyPoints(t *testing.T) {
 	t.Log(string(raw))
 	require.Equal(t, []byte(ddEmptyPoints), raw)
 	require.Equal(t, "", r)
-	require.True(t, strings.Contains(e.Error(), "no metric points in query result"))
+	require.True(t, strings.Contains(e.Error(), "No metric points in query result"))
 }
 
 func TestEvaluateQuery_WrongInterval(t *testing.T) {
@@ -764,7 +763,7 @@ func TestEvaluateQueryForStep_EmptyPayload(t *testing.T) {
 	t.Log(string(raw))
 	require.Nil(t, raw)
 	require.Equal(t, []string(nil), r)
-	require.True(t, strings.Contains(e.Error(), "no values in query result"))
+	require.True(t, strings.Contains(e.Error(), "No values in query result"))
 }
 
 func TestEvaluateQueryForStep_EmptyPoints(t *testing.T) {
@@ -814,7 +813,7 @@ func TestEvaluateQueryForStep_EmptyPoints(t *testing.T) {
 	t.Log(string(raw))
 	require.Equal(t, []byte(ddEmptyPoints), raw)
 	require.Equal(t, []string(nil), r)
-	require.True(t, strings.Contains(e.Error(), "no metric points in query result"))
+	require.True(t, strings.Contains(e.Error(), "No metric points in query result"))
 }
 
 func TestEvaluateQueryForStep_WrongInterval(t *testing.T) {

@@ -16,6 +16,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+var errCreateReq = "Error while creating request"
+var errNoValues = "No values in query result"
+var errNoMetricPoints = "No metric points in query result"
+var errParseRes = "Error while parsing response"
+var errCloseBody = "Could not close request body"
+var errDatadogProvider = "Error from DataDog provider"
+
 type KeptnDataDogProvider struct {
 	Log        logr.Logger
 	HttpClient http.Client
@@ -34,7 +41,7 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
+		d.Log.Error(err, errCreateReq)
 		return "", nil, err
 	}
 
@@ -49,13 +56,13 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 
 	res, err := d.HttpClient.Do(req)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
+		d.Log.Error(err, errCreateReq)
 		return "", nil, err
 	}
 	defer func() {
 		err := res.Body.Close()
 		if err != nil {
-			d.Log.Error(err, "Could not close request body")
+			d.Log.Error(err, errCloseBody)
 		}
 	}()
 
@@ -63,25 +70,25 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
-		d.Log.Error(err, "Error while parsing response")
+		d.Log.Error(err, errParseRes)
 		return "", b, err
 	}
 
 	if result.Error != nil {
 		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, "Error from DataDog provider")
+		d.Log.Error(err, errDatadogProvider)
 		return "", b, err
 	}
 
 	if len(result.Series) == 0 {
-		d.Log.Info("No values in query result")
-		return "", nil, fmt.Errorf("no values in query result")
+		d.Log.Info(errNoValues)
+		return "", nil, fmt.Errorf(errNoValues)
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		d.Log.Info("No metric points in query result")
-		return "", b, fmt.Errorf("no metric points in query result")
+		d.Log.Info(errNoMetricPoints)
+		return "", b, fmt.Errorf(errNoMetricPoints)
 	}
 
 	r := d.getSingleValue(points)
@@ -100,7 +107,7 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&interval=" + strconv.Itoa(int(stepInterval)) + "&query=" + url.QueryEscape(metric.Spec.Query)
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
+		d.Log.Error(err, errCreateReq)
 		return nil, nil, err
 	}
 
@@ -115,13 +122,13 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 
 	res, err := d.HttpClient.Do(req)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
+		d.Log.Error(err, errCreateReq)
 		return nil, nil, err
 	}
 	defer func() {
 		err := res.Body.Close()
 		if err != nil {
-			d.Log.Error(err, "Could not close request body")
+			d.Log.Error(err, errCloseBody)
 		}
 	}()
 
@@ -129,25 +136,25 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
-		d.Log.Error(err, "Error while parsing response")
+		d.Log.Error(err, errParseRes)
 		return nil, b, err
 	}
 
 	if result.Error != nil {
 		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, "Error from DataDog provider")
+		d.Log.Error(err, errDatadogProvider)
 		return nil, b, err
 	}
 
 	if len(result.Series) == 0 {
-		d.Log.Info("No values in query result")
-		return nil, nil, fmt.Errorf("no values in query result")
+		d.Log.Info(errNoValues)
+		return nil, nil, fmt.Errorf(errNoValues)
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		d.Log.Info("No metric points in query result")
-		return nil, b, fmt.Errorf("no metric points in query result")
+		d.Log.Info(errNoMetricPoints)
+		return nil, b, fmt.Errorf(errNoMetricPoints)
 	}
 
 	r := d.getResultSlice(points)

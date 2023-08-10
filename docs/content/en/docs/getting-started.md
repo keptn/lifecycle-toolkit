@@ -84,7 +84,7 @@ kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l componen
 kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component=scheduler --watch
 ```
 
-## Create Namespace for Demo Application
+## Step 2: Create Namespace for Demo Application
 
 Save this file as `namespace.yaml`.
 The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
@@ -104,7 +104,7 @@ Create the namespace:
 kubectl apply -f namespace.yaml
 ```
 
-## Deploy Demo Application
+## Step 3: Deploy Demo Application
 
 It is time to deploy the demo application.
 
@@ -171,7 +171,7 @@ but if you want to use different labels, you can swap them for these KLT specifi
 - `keptn.sh/workload` instead of `app.kubernetes.io/name`
 - `keptn.sh/version` instead of `app.kubernetes.io/version`
 
-## Explore Keptn
+## Step 4: Explore Keptn
 
 Keptn is now aware of your deployments and is generating DORA statistics about them.
 
@@ -219,7 +219,7 @@ By default, Keptn will build `KeptnApp` resources based on the labels you provid
 
 In the example above, the `KeptnApp` called `keptndemoapp` contains one workload (based on the `name` label):
 
-## View your application
+## Step 5: View your application
 
 Port-forward to expose your app on `http://localhost:8080`:
 
@@ -233,7 +233,7 @@ You should see the "Welcome to nginx" page.
 
 ![nginx demo app](../assets/nginx.png)
 
-## View DORA Metrics
+## Step 6: View DORA Metrics
 
 Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
@@ -267,7 +267,7 @@ For example:
 
 There are many other Keptn metrics.
 
-## Make DORA metrics more user friendly
+## Step 7: Make DORA metrics more user friendly
 
 It is much more user friendly to provide dashboards for metrics, logs and traces.
 So let's install new Observability components to help us:
@@ -280,7 +280,7 @@ So let's install new Observability components to help us:
 
 ![add observability](../assets/install01.png)
 
-## Install Cert Manager
+## Step 8: Install Cert Manager
 
 Jaeger requires Cert Manager, so install it now:
 
@@ -291,7 +291,7 @@ helm repo update
 helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/cert-manager --create-namespace --wait
 ```
 
-## Install Jaeger
+## Step 9: Install Jaeger
 
 Save this file as `jaeger.yaml` (it can be saved anywhere on your computer):
 
@@ -322,7 +322,7 @@ kubectl -n keptn-lifecycle-toolkit-system port-forward svc/jaeger-query 16686
 
 Jaeger is available on `http://localhost:16686`
 
-## Install Grafana dashboards
+## Step 10: Install Grafana dashboards
 
 Create some Keptn Grafana dashboards that will be available when Grafana is installed and started:
 
@@ -334,7 +334,7 @@ kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
 
-## Install Grafana datasources
+### Install Grafana datasources
 
 This file will configure Grafana to look at the Jaeger service and the Prometheus service on the cluster.
 
@@ -388,7 +388,7 @@ Now apply it:
 kubectl apply -f datasources.yaml
 ```
 
-## Install kube prometheus stack
+## Step 11: Install kube prometheus stack
 
 This will install:
 
@@ -417,7 +417,7 @@ helm repo update
 helm upgrade --install observability-stack prometheus-community/kube-prometheus-stack --version 48.1.1 --namespace monitoring --values=values.yaml --wait
 ```
 
-## Access Grafana
+## Step 12: Access Grafana
 
 ```shell
 kubectl -n monitoring port-forward svc/observability-stack-grafana 80
@@ -431,7 +431,7 @@ View the Keptn dashboards at: `http://localhost/dashboards`
 Remember that Jaeger and Grafana weren't installed during the first deployment
 so expect the dashboards to look a little empty.
 
-## Deploy v0.0.2 and populate Grafana
+## Step 13: Deploy v0.0.2 and populate Grafana
 
 By triggering a new deployment, Keptn will track this deployment and the Grafana dashboards will actually have data.
 
@@ -466,7 +466,7 @@ View the Keptn Applications Dashboard and you should see the DORA metrics and an
 
 ![deployment trace](../assets/deploymenttrace.png)
 
-## More control over KeptnApp
+## Step 14: More control over KeptnApp
 
 You may have noticed that the `KeptnApp` Custom Resources are created automatically by KLT.
 

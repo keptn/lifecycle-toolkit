@@ -35,5 +35,5 @@ KLT includes a lightweight cert-manager
 that is used for installation and Webhooks.
 You can configure a different cert-manager
 before you install KLT.
-See [Implement your own cert-manager](cert-manager.md)
+See [Implement your own cert-manager](../operate/cert-manager.md)
 for instructions.

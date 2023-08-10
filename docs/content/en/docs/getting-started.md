@@ -481,4 +481,4 @@ See [Define a Keptn Application](../implementing/integrate/#define-keptnapp-manu
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.
 
-Continue the Keptn learning journey by [adding deployment tasks](../tutorials/add-tasks/).
+Continue the Keptn learning journey by [adding deployment tasks](tutorials/add-tasks).

@@ -4,6 +4,7 @@ metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.12.0
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh

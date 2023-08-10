@@ -25,7 +25,7 @@ The following is an imperative walkthrough.
 ## System Overview
 
 By the end of this page, here is what will be built.
-This system will be built in stages.
+The system will be built in stages.
 
 ![system overview](../assets/install01.png)
 

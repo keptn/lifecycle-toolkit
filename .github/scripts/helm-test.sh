@@ -5,7 +5,7 @@
 # This script supports the comparison of standard values and expected templated results to helm chart
 # it is used to make sure changes to the chart are intentional and produce expected outcomes
 
-echo "running simple tests"
+echo "running Helm tests"
   tests=$(find ./.github/scripts/.tests -maxdepth 1 -mindepth 1 -type d )
 
   errors=0

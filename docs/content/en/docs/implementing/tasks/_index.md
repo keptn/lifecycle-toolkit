@@ -24,7 +24,7 @@ To implement a Keptn task:
 - Define a
   [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
   resource that defines the runner to use for the container
-- [Annotate your workloads](../integrate/#annotate-workloads)
+- [Annotate your workloads](../integrate.md/#annotate-workloads)
   to integrate your task with Kubernetes
 - Add your task to the [KeptnApp](../../yaml-crd-ref/app.md)
   resource that associates your `KeptnTaskDefinition`

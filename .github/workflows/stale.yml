@@ -20,7 +20,7 @@ jobs:
             This issue has been automatically marked as stale because it has not had recent activity. It will be
             closed if no further activity occurs. Thank you for your contributions.
           stale-pr-message: |
-            This issue has been automatically marked as stale because it has not had recent activity. It will be
+            This PR has been automatically marked as stale because it has not had recent activity. It will be
             closed if no further activity occurs. Thank you for your contributions.
 
   stale-good-first-issues:
@@ -36,7 +36,7 @@ jobs:
           include-only-assigned: true
           remove-stale-when-updated: true
           only-issue-labels: 'good first issue'
-          stale-issue-label: ''
+          stale-issue-label: 'update-requested'
 
       - uses: actions/stale@v8
         with:

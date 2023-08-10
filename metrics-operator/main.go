@@ -69,6 +69,7 @@ type envConfig struct {
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
+//nolint:gocyclo
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
@@ -138,6 +139,10 @@ func main() {
 	}
 	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
+		os.Exit(1)
+	}
+	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

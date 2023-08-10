@@ -1,0 +1,14 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  labels:
+    app.kubernetes.io/name: analysisvaluetemplate
+    app.kubernetes.io/instance: analysisvaluetemplate-sample
+    app.kubernetes.io/part-of: metrics-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: metrics-operator
+  name: analysisvaluetemplate-sample
+spec:
+  provider:
+    name: prometheus
+  query: "sum(kube_pod_container_resource_limits{resource='{{.Resource}}'}) - sum(kube_node_status_capacity{resource='{{.Resource}}'})"

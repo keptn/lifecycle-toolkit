@@ -50,5 +50,12 @@ jobs:
             echo "Helm values documentation is correct!"
           fi
 
-      - name: Check if Helm template is up to date
-        run: ./.github/scripts/helm-test.sh
+  helm-tests:
+    name: Run helm tests
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Check if Helm template is up to date
+      run: ./.github/scripts/helm-test.sh

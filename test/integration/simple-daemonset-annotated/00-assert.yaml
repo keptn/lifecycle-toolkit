@@ -1,11 +1,10 @@
 apiVersion: kuttl.dev/v1beta1
 kind: TestAssert
 timeout: 30
-commands:
-  - command: echo collectors
 collectors:
   - type: pod
     selector: app=daemonset
+  - command: kubectl logs -l app=daemonset -n $NAMESPACE
 ---
 apiVersion: v1
 kind: Pod

@@ -663,4 +663,4 @@ is allowed per `KeptnTaskDefinition`.
 * [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-* [Orchestrate deployment checks](../getting-started/orchestrate)
+* [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)

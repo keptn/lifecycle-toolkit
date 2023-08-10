@@ -247,7 +247,7 @@ func Test_prometheus(t *testing.T) {
 func Test_resultsForMatrix(t *testing.T) {
 	tests := []struct {
 		name             string
-		result           model.Value	
+		result           model.Value
 		wantResultSlice  []string
 		wantResultString string
 		wantRaw          []byte

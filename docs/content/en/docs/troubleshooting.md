@@ -29,6 +29,7 @@ The most probable reason is that a pre-deployment task in your workload is eithe
 Failing pre-deployment evaluation tasks will prevent a pod from being scheduled.
 
 Check the logs of the pre-deployment task Kubernetes Jobs for insights.
+
 For instance, if
 your application is in the `prod` namespace:
 
@@ -62,6 +63,7 @@ to get further information refer to this [issue](https://github.com/keptn/lifecy
 
 KLT will automatically generate DORA metrics and Otel traces for every deployment, but
 by default it does not know where to send them.
+
 You need an OpenTelemetry collector
 installed and configured on the cluster.
 

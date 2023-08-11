@@ -25,12 +25,12 @@ func TestGetSingleValue(t *testing.T) {
 	v := 5.0
 	tests := []struct {
 		name   string
-		input  DynatraceResponse
+		input  *DynatraceResponse
 		result float64
 	}{
 		{
 			name: "happy path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -45,14 +45,14 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "empty path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{},
 			},
 			result: 0.0,
 		},
 		{
 			name: "no data",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{},
@@ -63,7 +63,7 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "no values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -78,7 +78,7 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "nil values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -107,12 +107,12 @@ func TestGetResultSlice(t *testing.T) {
 	v := 5.0
 	tests := []struct {
 		name   string
-		input  DynatraceResponse
+		input  *DynatraceResponse
 		result []string
 	}{
 		{
 			name: "happy path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -127,14 +127,14 @@ func TestGetResultSlice(t *testing.T) {
 		},
 		{
 			name: "empty path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{},
 			},
 			result: []string{},
 		},
 		{
 			name: "no data",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{},
@@ -145,7 +145,7 @@ func TestGetResultSlice(t *testing.T) {
 		},
 		{
 			name: "no values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -160,7 +160,7 @@ func TestGetResultSlice(t *testing.T) {
 		},
 		{
 			name: "nil values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{

@@ -53,42 +53,8 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+	result, b, err := d.performRequest(ctx, provider, qURL)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return "", nil, err
-	}
-
-	token, err := getDTSecret(ctx, provider, d.K8sClient)
-	if err != nil {
-		return "", nil, err
-	}
-
-	req.Header.Set("Authorization", "Api-Token "+token)
-	res, err := d.HttpClient.Do(req)
-
-	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return "", nil, err
-	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, "Could not close request body")
-		}
-	}()
-
-	// we ignore the error here because we fail later while unmarshalling
-	b, _ := io.ReadAll(res.Body)
-	result := DynatraceResponse{}
-	err = json.Unmarshal(b, &result)
-	if err != nil {
-		d.Log.Error(err, "Error while parsing response")
-		return "", b, err
-	}
-	if !reflect.DeepEqual(result.Error, Error{}) {
-		err = fmt.Errorf(ErrAPIMsg, result.Error.Message)
-		d.Log.Error(err, "Error from Dynatrace provider")
 		return "", b, err
 	}
 	r := fmt.Sprintf("%f", d.getSingleValue(result))
@@ -106,7 +72,18 @@ func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metri
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+
+	result, b, err := d.performRequest(ctx, provider, qURL)
+	if err != nil {
+		return nil, b, err
+	}
+
+	r := d.getResultSlice(result)
+	return r, b, nil
+}
+
+func (d *KeptnDynatraceProvider) performRequest(ctx context.Context, provider metricsapi.KeptnMetricsProvider, query string) (*DynatraceResponse, []byte, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", query, nil)
 	if err != nil {
 		d.Log.Error(err, "Error while creating request")
 		return nil, nil, err
@@ -144,8 +121,7 @@ func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metri
 		d.Log.Error(err, "Error from Dynatrace provider")
 		return nil, b, err
 	}
-	r := d.getResultSlice(result)
-	return r, b, nil
+	return &result, b, nil
 }
 
 func (d *KeptnDynatraceProvider) normalizeAPIURL(url string) string {
@@ -159,7 +135,7 @@ func (d *KeptnDynatraceProvider) normalizeAPIURL(url string) string {
 	return out
 }
 
-func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float64 {
+func (d *KeptnDynatraceProvider) getSingleValue(result *DynatraceResponse) float64 {
 	var sum float64 = 0
 	var count uint64 = 0
 	for _, r := range result.Result {
@@ -179,7 +155,7 @@ func (d *KeptnDynatraceProvider) getSingleValue(result DynatraceResponse) float6
 	return sum / float64(count)
 }
 
-func (d *KeptnDynatraceProvider) getResultSlice(result DynatraceResponse) []string {
+func (d *KeptnDynatraceProvider) getResultSlice(result *DynatraceResponse) []string {
 	totalValues := 0
 	for _, r := range result.Result {
 		for _, points := range r.Data {

@@ -20,9 +20,8 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 
 func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) types.ObjectiveResult {
 	result := types.ObjectiveResult{
-		KeyObjective: obj.KeyObjective,
-		Score:        0.0,
-		Value:        0.0,
+		Score: 0.0,
+		Value: 0.0,
 	}
 
 	// get the value

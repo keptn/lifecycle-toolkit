@@ -62,4 +62,9 @@ func TestAnalysisResult(t *testing.T) {
 
 	require.True(t, a.Warning)
 	require.False(t, a.Pass)
+
+	a.MaximumScore = 0.0
+	a.TotalScore = 0.0
+
+	require.Equal(t, 100.0, a.GetAchievedPercentage())
 }

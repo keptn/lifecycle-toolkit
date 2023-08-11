@@ -25,13 +25,11 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
 				},
-				KeyObjective: true,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{},
 			want: types.ObjectiveResult{
-				KeyObjective: true,
-				Score:        0.0,
-				Error:        errors.New("required value not available"),
+				Score: 0.0,
+				Error: errors.New("required value not available"),
 			},
 		},
 		{
@@ -43,8 +41,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
 				},
-				KeyObjective: true,
-				Weight:       2,
+				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
 				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
@@ -54,10 +51,9 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.ObjectiveResult{
-				KeyObjective: true,
-				Score:        2.0,
-				Error:        nil,
-				Value:        20.0,
+				Score: 2.0,
+				Error: nil,
+				Value: 20.0,
 				Result: types.TargetResult{
 					Pass: true,
 				},
@@ -72,8 +68,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
 				},
-				KeyObjective: true,
-				Weight:       2,
+				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
 				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
@@ -84,10 +79,9 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.ObjectiveResult{
-				KeyObjective: true,
-				Score:        1.0,
-				Error:        nil,
-				Value:        20.0,
+				Score: 1.0,
+				Error: nil,
+				Value: 20.0,
 				Result: types.TargetResult{
 					Pass:    false,
 					Warning: true,
@@ -103,8 +97,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
 				},
-				KeyObjective: true,
-				Weight:       2,
+				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
 				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
@@ -115,10 +108,9 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.ObjectiveResult{
-				KeyObjective: true,
-				Score:        0.0,
-				Error:        nil,
-				Value:        20.0,
+				Score: 0.0,
+				Error: nil,
+				Value: 20.0,
 				Result: types.TargetResult{
 					Pass:    false,
 					Warning: false,

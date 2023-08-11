@@ -23,11 +23,10 @@ type OperatorResult struct {
 }
 
 type ObjectiveResult struct {
-	Result       TargetResult
-	Value        float64
-	Score        float64
-	KeyObjective bool
-	Error        error
+	Result TargetResult
+	Value  float64
+	Score  float64
+	Error  error
 }
 
 func (o *ObjectiveResult) IsFailure() bool {
@@ -56,6 +55,9 @@ func (a *AnalysisResult) CountScores(obj v1alpha3.Objective, result ObjectiveRes
 }
 
 func (a *AnalysisResult) GetAchievedPercentage() float64 {
+	if a.TotalScore == a.MaximumScore {
+		return 100.0
+	}
 	return (a.TotalScore / a.MaximumScore) * 100.0
 }
 

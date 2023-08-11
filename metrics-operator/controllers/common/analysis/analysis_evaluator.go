@@ -15,7 +15,7 @@ func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) (types.AnalysisResult, error) {
+func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) types.AnalysisResult {
 	result := types.AnalysisResult{
 		ObjectiveResults: make([]types.ObjectiveResult, 0, len(ad.Spec.Objectives)),
 	}
@@ -30,7 +30,7 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.Anal
 		result.CountScores(objective, objectiveResult)
 
 		//check if the objective was marked as 'key' and if it succeeded
-		if objectiveResult.IsFailure() && objectiveResult.KeyObjective {
+		if objectiveResult.IsFailure() && objective.KeyObjective {
 			keyObjectiveFailed = true
 		}
 	}
@@ -42,5 +42,5 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.Anal
 		result.Warning = false
 	}
 
-	return result, nil
+	return result
 }

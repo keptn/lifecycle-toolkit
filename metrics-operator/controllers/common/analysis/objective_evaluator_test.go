@@ -31,7 +31,6 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        0.0,
-				Failed:       true,
 				Error:        errors.New("required value not available"),
 			},
 		},
@@ -57,7 +56,6 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        2.0,
-				Failed:       false,
 				Error:        nil,
 				Value:        20.0,
 				Result: types.TargetResult{
@@ -88,7 +86,6 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        1.0,
-				Failed:       false,
 				Error:        nil,
 				Value:        20.0,
 				Result: types.TargetResult{
@@ -120,7 +117,6 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				KeyObjective: true,
 				Score:        0.0,
-				Failed:       true,
 				Error:        nil,
 				Value:        20.0,
 				Result: types.TargetResult{
@@ -134,6 +130,54 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			oe := NewObjectiveEvaluator(tt.mockedEvaluator)
 			require.Equal(t, tt.want, oe.Evaluate(tt.values, tt.o))
+		})
+	}
+}
+
+func TestGetValueFromMap(t *testing.T) {
+	tests := []struct {
+		name    string
+		values  map[string]string
+		in      string
+		val     float64
+		wantErr bool
+	}{
+		{
+			name: "happy path",
+			values: map[string]string{
+				"key": "7",
+			},
+			in:      "key",
+			val:     7.0,
+			wantErr: false,
+		},
+		{
+			name: "key not found",
+			values: map[string]string{
+				"key1": "7",
+			},
+			in:      "key",
+			val:     0.0,
+			wantErr: true,
+		},
+		{
+			name: "value not float",
+			values: map[string]string{
+				"key": "",
+			},
+			in:      "key",
+			val:     0.0,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := getValueFromMap(tt.values, tt.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("error = %v, wantErr %v", err, tt.wantErr)
+			}
+			require.Equal(t, tt.val, res)
 		})
 	}
 }

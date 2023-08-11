@@ -22,14 +22,13 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	result := types.ObjectiveResult{
 		KeyObjective: obj.KeyObjective,
 		Score:        0.0,
-		Failed:       false,
+		Value:        0.0,
 	}
 
 	// get the value
 	floatVal, err := getValueFromMap(values, obj.AnalysisValueTemplateRef.Name)
 	if err != nil {
 		result.Error = err
-		result.Failed = true
 		return result
 	}
 
@@ -37,18 +36,17 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	result.Result = oe.TargetEvaluator.Evaluate(floatVal, obj.Target)
 
 	// if target passed, we return the full score
-	if result.Result.Pass {
+	if result.IsPass() {
 		result.Score = float64(obj.Weight)
 		return result
 	}
 
 	// if target fullfilled warning criteria, we return the half score
-	if result.Result.Warning {
+	if result.IsWarning() {
 		result.Score = float64(obj.Weight) / 2
 		return result
 	}
 
-	result.Failed = true
 	return result
 }
 

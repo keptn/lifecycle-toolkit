@@ -25,7 +25,7 @@ func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) types.Target
 	result.FailureResult = te.OperatorEvaluator.Evaluate(val, *t.Failure)
 
 	// if failure criteria are met, we can return without checking warning criteria
-	if result.FailureResult.Fulfilled {
+	if result.IsFailure() {
 		return result
 	}
 
@@ -34,7 +34,7 @@ func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) types.Target
 		result.WarningResult = te.OperatorEvaluator.Evaluate(val, *t.Warning)
 
 		// if warning criteria are met, we can return warning
-		if result.WarningResult.Fulfilled {
+		if result.IsWarning() {
 			result.Warning = true
 			return result
 		}

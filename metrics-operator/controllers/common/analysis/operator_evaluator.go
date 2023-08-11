@@ -14,15 +14,15 @@ func (te *OperatorEvaluator) Evaluate(val float64, t v1alpha3.Operator) types.Op
 	}
 
 	if t.EqualTo != nil {
-		result.Fulfilled = (val == t.EqualTo.FixedValue.AsApproximateFloat64())
+		result.Fulfilled = (val == t.EqualTo.GetFloatValue())
 	} else if t.LessThanOrEqual != nil {
-		result.Fulfilled = (val <= t.LessThanOrEqual.FixedValue.AsApproximateFloat64())
+		result.Fulfilled = (val <= t.LessThanOrEqual.GetFloatValue())
 	} else if t.LessThan != nil {
-		result.Fulfilled = (val < t.LessThan.FixedValue.AsApproximateFloat64())
+		result.Fulfilled = (val < t.LessThan.GetFloatValue())
 	} else if t.GreaterThan != nil {
-		result.Fulfilled = (val > t.GreaterThan.FixedValue.AsApproximateFloat64())
+		result.Fulfilled = (val > t.GreaterThan.GetFloatValue())
 	} else if t.GreaterThanOrEqual != nil {
-		result.Fulfilled = (val >= t.GreaterThanOrEqual.FixedValue.AsApproximateFloat64())
+		result.Fulfilled = (val >= t.GreaterThanOrEqual.GetFloatValue())
 	}
 
 	return result

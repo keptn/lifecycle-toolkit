@@ -13,6 +13,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	fake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/record"
@@ -134,21 +135,13 @@ func TestEventSender_CloudEventNoFailure(t *testing.T) {
 	}
 }
 
-type EventEmitterTest struct {
-	events []string
-}
-
-func (e *EventEmitterTest) Emit(_ common.KeptnPhaseType, _ string, _ client.Object, _ string, message string, _ string) {
-	e.events = append(e.events, message)
-}
-
 func TestEventSender_Multiplexer_register(t *testing.T) {
 	tests := []struct {
 		input  IEvent
 		expect int
 	}{
 		{
-			input:  &EventEmitterTest{},
+			input:  &fake.MockEvent{},
 			expect: 1,
 		},
 		{
@@ -174,9 +167,20 @@ func TestEventSender_Multiplexer_new(t *testing.T) {
 
 func TestEventSender_Multiplexer_emit(t *testing.T) {
 	// when
-	// init the object with two emitter
-	em1 := &EventEmitterTest{}
-	em2 := &EventEmitterTest{}
+	// init the object with two emitters
+
+	recE1 := make(chan struct{})
+	recE2 := make(chan struct{})
+
+	em1 := &fake.MockEvent{}
+	em1.EmitFunc = func(phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
+		recE1 <- struct{}{}
+	}
+
+	em2 := &fake.MockEvent{}
+	em2.EmitFunc = func(phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
+		recE2 <- struct{}{}
+	}
 	emitter := EventMultiplexer{}
 	emitter.register(em1)
 	emitter.register(em2)
@@ -185,11 +189,24 @@ func TestEventSender_Multiplexer_emit(t *testing.T) {
 	msg := "my special message"
 	emitter.Emit(common.PhaseAppDeployment, "", nil, "", msg, "")
 	// assert we got one event
-	// let's wait few seconds so the async emit takes place
-	<-time.After(3 * time.Second)
+	// wait for the emitMocks to receive the events
+
+	select {
+	case <-recE1:
+		break
+	case <-time.After(3 * time.Second):
+		t.Error("timed out waiting for the event emitter to be called")
+	}
+	select {
+	case <-recE2:
+		break
+	case <-time.After(3 * time.Second):
+		t.Error("timed out waiting for the event emitter to be called")
+	}
+
 	require.Equal(t, 2, len(emitter.emitters))
-	require.Equal(t, 1, len(em1.events))
-	require.Equal(t, 1, len(em2.events))
-	require.Equal(t, msg, em1.events[0])
-	require.Equal(t, msg, em2.events[0])
+	require.Len(t, em1.EmitCalls(), 1)
+	require.Len(t, em2.EmitCalls(), 1)
+	require.Equal(t, msg, em2.EmitCalls()[0].Message)
+	require.Equal(t, msg, em2.EmitCalls()[0].Message)
 }

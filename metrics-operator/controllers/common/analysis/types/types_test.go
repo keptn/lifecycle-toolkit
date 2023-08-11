@@ -51,6 +51,20 @@ func TestAnalysisResult(t *testing.T) {
 	require.Equal(t, 3.0, a.TotalScore)
 	require.Equal(t, 50.0, a.GetAchievedPercentage())
 
+	// Warning nor Pass percentage met
+	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
+		Spec: v1alpha3.AnalysisDefinitionSpec{
+			TotalScore: v1alpha3.TotalScore{
+				PassPercentage:    80,
+				WarningPercentage: 60,
+			},
+		},
+	})
+
+	require.False(t, a.Warning)
+	require.False(t, a.Pass)
+
+	// Warning percentage met
 	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
 		Spec: v1alpha3.AnalysisDefinitionSpec{
 			TotalScore: v1alpha3.TotalScore{
@@ -62,6 +76,22 @@ func TestAnalysisResult(t *testing.T) {
 
 	require.True(t, a.Warning)
 	require.False(t, a.Pass)
+
+	// reset Warning value
+	a.Warning = false
+
+	// Pass percentage met
+	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
+		Spec: v1alpha3.AnalysisDefinitionSpec{
+			TotalScore: v1alpha3.TotalScore{
+				PassPercentage:    40,
+				WarningPercentage: 30,
+			},
+		},
+	})
+
+	require.False(t, a.Warning)
+	require.True(t, a.Pass)
 
 	a.MaximumScore = 0.0
 	a.TotalScore = 0.0

@@ -22,11 +22,13 @@ func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) types.Target
 	}
 
 	// check 'failure'  criteria
-	result.FailureResult = te.OperatorEvaluator.Evaluate(val, *t.Failure)
+	if t.Failure != nil {
+		result.FailureResult = te.OperatorEvaluator.Evaluate(val, *t.Failure)
 
-	// if failure criteria are met, we can return without checking warning criteria
-	if result.IsFailure() {
-		return result
+		// if failure criteria are met, we can return without checking warning criteria
+		if result.IsFailure() {
+			return result
+		}
 	}
 
 	// check 'warning' criteria

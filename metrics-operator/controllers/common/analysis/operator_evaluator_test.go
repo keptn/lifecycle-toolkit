@@ -51,6 +51,142 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 				Fulfilled: false,
 			},
 		},
+		{
+			name: "less than equal - fulfilled",
+			val:  15.0,
+			o: v1alpha3.Operator{
+				LessThanOrEqual: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					LessThanOrEqual: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "less than equal - not fulfilled",
+			val:  16.0,
+			o: v1alpha3.Operator{
+				LessThanOrEqual: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					LessThanOrEqual: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
+		{
+			name: "equal - not fulfilled",
+			val:  16.0,
+			o: v1alpha3.Operator{
+				EqualTo: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					EqualTo: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
+		{
+			name: "equal - fulfilled",
+			val:  15.0,
+			o: v1alpha3.Operator{
+				EqualTo: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					EqualTo: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "greater than - fulfilled",
+			val:  16.0,
+			o: v1alpha3.Operator{
+				GreaterThan: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					GreaterThan: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "greater than - not fulfilled",
+			val:  10.0,
+			o: v1alpha3.Operator{
+				GreaterThan: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					GreaterThan: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
+		{
+			name: "greater than equal - fulfilled",
+			val:  15.0,
+			o: v1alpha3.Operator{
+				GreaterThanOrEqual: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					GreaterThanOrEqual: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "greater than equal - not fulfilled",
+			val:  10.0,
+			o: v1alpha3.Operator{
+				GreaterThanOrEqual: &v1alpha3.OperatorValue{
+					FixedValue: *compValue,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					GreaterThanOrEqual: &v1alpha3.OperatorValue{
+						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -19,6 +19,15 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		want types.TargetResult
 	}{
 		{
+			name: "failure nor warning target set",
+			val:  10.0,
+			t:    v1alpha3.Target{},
+			want: types.TargetResult{
+				Warning: false,
+				Pass:    true,
+			},
+		},
+		{
 			name: "failure scenario",
 			val:  10.0,
 			t: v1alpha3.Target{

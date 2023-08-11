@@ -12,6 +12,6 @@ metadata:
   labels:
     app: test
 status:
-  phase: stopped
+  phase: Running
 spec:
   schedulerName: default-scheduler

@@ -23,8 +23,6 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		return apicommon.StateUnknown, r.handleUnaccessibleWorkloadInstanceList(ctx, appVersion)
 	}
 
-	r.Log.Info("found workloadInstances", "len", len(workloadInstanceList.Items), "items", workloadInstanceList.Items)
-
 	newStatus := make([]klcv1alpha3.WorkloadStatus, 0, len(appVersion.Spec.Workloads))
 	for _, w := range appVersion.Spec.Workloads {
 		r.Log.Info("Reconciling workload " + w.Name)
@@ -32,7 +30,6 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 		found := false
 		instanceName := getWorkloadInstanceName(appVersion.Spec.AppName, w.Name, w.Version)
 		for _, i := range workloadInstanceList.Items {
-			r.Log.Info("checking workloadInstance", "wi", i.Name, "namespace", i.Namespace)
 			// additional filtering of the retrieved WIs is needed, as the List() method retrieves all
 			// WIs for a specific KeptnApp. The result can contain also WIs, that are not part of the
 			// latest KeptnAppVersion, so it's needed to double check them

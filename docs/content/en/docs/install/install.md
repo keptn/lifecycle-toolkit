@@ -160,3 +160,7 @@ metadata:
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 This annotation tells the webhook to handle the namespace.
+
+After enabling KLT for your namespace(s),
+you are ready to
+[Integrate KLT with your applications](../implementing/integrate).

@@ -13,10 +13,8 @@ ignore: |
   lifecycle-operator/config/rbac/role.yaml
   metrics-operator/config/rbac/role.yaml
   klt-cert-manager/config/rbac/role.yaml
-  helm/chart/templates
-  helm/chart/rendered.yaml
-  helm/chart/values.yaml
-  helmchart.yaml
+  helm/chart
+  .github/scripts/.helm-tests
 
 rules:
   braces: enable

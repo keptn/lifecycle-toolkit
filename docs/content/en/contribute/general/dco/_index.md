@@ -73,10 +73,11 @@ The DCO check runs on each PR to verify
 that the commit has been signed off properly.
 Your builds will fail and can not be merged if the DCO check fails.
 
-This can be implemented by doing any of the following:
+Do any of the following
+to implement the DCO signoff on each commit:
 
 * [Add **-s** or **--signoff**](#sign-off-with-git-commit--s)
-  to your usual git `commit` commands
+  to your usual `git commit` commands
 * [Manually add text](#manually-add-text-to-commit-description)
   to your commit body
 * [Automate DCO](#automate-dco)

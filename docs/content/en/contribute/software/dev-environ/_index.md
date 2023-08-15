@@ -11,7 +11,7 @@ you need to install the following on your system:
 which allows software applications to run in isolated environments
 and makes it easier to deploy and manage them.
 * A Kubernetes cluster running an appropriate version of Kubernetes.
-  See [Supported Kubernetes versions](docs/install/reqs/#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](docs/install/reqs.md/#supported-kubernetes-versions)
   for details.
   If you need to set up a local Kubernetes cluster
   we recommend Kubernetes-in-Docker(kind).

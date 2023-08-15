@@ -17,11 +17,10 @@ and makes it easier to deploy and manage them.
   we recommend Kubernetes-in-Docker(kind).
 * [**kubectl**](https://kubernetes.io/docs/tasks/tools/):
   a command-line interface tool used for deploying
-  and managing applications on Kubernetes clusters. 
+  and managing applications on Kubernetes clusters.
 * [**kustomize**](https://kustomize.io/): a tool used
   for customizing Kubernetes resource configurations
   and generating manifests.
 * [**Helm**](https://helm.sh/): a package manager for Kubernetes
   that simplifies the deployment and management of applications
   on a Kubernetes cluster.
-

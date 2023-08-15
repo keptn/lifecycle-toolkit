@@ -87,9 +87,9 @@ Use the **-s** or **--signoff** flag to the `git commit` command
 to sign off on a commit.
 For example:
 
-```bash 
+```bash
 git commit -s -m "my awesome contribution"
-``` 
+```
 
 If you forget to add the sign-off,
 run the following command to amend the previous commit

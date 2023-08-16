@@ -24,6 +24,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -46,9 +47,9 @@ const traceComponentName = "keptn/lifecycle-operator/workload"
 type KeptnWorkloadReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	EventSender   controllercommon.EventSender
+	EventSender   controllercommon.IEvent
 	Log           logr.Logger
-	TracerFactory controllercommon.TracerFactory
+	TracerFactory telemetry.TracerFactory
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
@@ -104,7 +105,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			r.Log.Error(err, "could not create WorkloadInstance")
 			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.SendK8sEvent(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, apicommon.PhaseStateFailed, "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+			r.EventSender.Emit(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, apicommon.PhaseStateFailed, "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
 			return ctrl.Result{}, err
 		}
 		workload.Status.CurrentVersion = workload.Spec.Version
@@ -161,6 +162,6 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 	return &workloadInstance, err
 }
 
-func (r *KeptnWorkloadReconciler) getTracer() controllercommon.ITracer {
+func (r *KeptnWorkloadReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }

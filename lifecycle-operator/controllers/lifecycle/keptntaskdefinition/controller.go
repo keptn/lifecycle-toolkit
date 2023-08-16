@@ -36,7 +36,7 @@ type KeptnTaskDefinitionReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
 	Log         logr.Logger
-	EventSender controllercommon.EventSender
+	EventSender controllercommon.IEvent
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=get;list;watch;create;update;patch;delete

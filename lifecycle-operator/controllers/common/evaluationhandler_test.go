@@ -268,7 +268,7 @@ func TestEvaluationHandler(t *testing.T) {
 			handler := EvaluationHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(fakeRecorder),
+				EventSender: NewK8sSender(fakeRecorder),
 				Client:      fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -349,7 +349,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			handler := EvaluationHandler{
 				SpanHandler: &kltfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewEventSender(record.NewFakeRecorder(100)),
+				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,

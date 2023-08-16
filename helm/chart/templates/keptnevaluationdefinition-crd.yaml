@@ -1,0 +1,193 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnevaluationdefinitions.lifecycle.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.1
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnEvaluationDefinition
+    listKind: KeptnEvaluationDefinitionList
+    plural: keptnevaluationdefinitions
+    shortNames:
+    - ked
+    singular: keptnevaluationdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnEvaluationDefinitionSpec defines the desired state of
+              KeptnEvaluationDefinition
+            properties:
+              objectives:
+                items:
+                  properties:
+                    evaluationTarget:
+                      type: string
+                    name:
+                      type: string
+                    query:
+                      type: string
+                  required:
+                  - evaluationTarget
+                  - name
+                  - query
+                  type: object
+                type: array
+              source:
+                type: string
+            required:
+            - objectives
+            - source
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnEvaluationDefinitionSpec defines the desired state of
+              KeptnEvaluationDefinition
+            properties:
+              objectives:
+                items:
+                  properties:
+                    evaluationTarget:
+                      type: string
+                    name:
+                      type: string
+                    query:
+                      type: string
+                  required:
+                  - evaluationTarget
+                  - name
+                  - query
+                  type: object
+                type: array
+              source:
+                type: string
+            required:
+            - objectives
+            - source
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnEvaluationDefinition.
+            properties:
+              objectives:
+                description: Objectives is a list of objectives that have to be met
+                  for a KeptnEvaluation referencing this KeptnEvaluationDefinition to
+                  be successful.
+                items:
+                  properties:
+                    evaluationTarget:
+                      description: EvaluationTarget specifies the target value for the
+                        references KeptnMetric. Needs to start with either '<' or '>',
+                        followed by the target value (e.g. '<10').
+                      type: string
+                    keptnMetricRef:
+                      description: KeptnMetricRef references the KeptnMetric that should
+                        be evaluated.
+                      properties:
+                        name:
+                          description: Name is the name of the referenced KeptnMetric.
+                          type: string
+                        namespace:
+                          description: Namespace is the namespace where the referenced
+                            KeptnMetric is located.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                  required:
+                  - evaluationTarget
+                  - keptnMetricRef
+                  type: object
+                type: array
+            required:
+            - objectives
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

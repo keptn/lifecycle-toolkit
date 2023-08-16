@@ -39,34 +39,16 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 		return "", nil, err
 	}
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
-	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
-	if err != nil {
-		d.Log.Error(err, errCreateReq)
-		return "", nil, err
-	}
-
 	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return "", nil, err
 	}
 
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Dd-Api-Key", apiKeyVal)
-	req.Header.Set("Dd-Application-Key", appKeyVal)
-
-	res, err := d.HttpClient.Do(req)
+	b, err := d.executeQuery(ctx, qURL, apiKeyVal, appKeyVal)
 	if err != nil {
-		d.Log.Error(err, errCreateReq)
 		return "", nil, err
 	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, errCloseBody)
-		}
-	}()
 
-	b, _ := io.ReadAll(res.Body)
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
@@ -105,34 +87,16 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 		return nil, nil, err
 	}
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&interval=" + strconv.Itoa(int(stepInterval)) + "&query=" + url.QueryEscape(metric.Spec.Query)
-	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
-	if err != nil {
-		d.Log.Error(err, errCreateReq)
-		return nil, nil, err
-	}
-
 	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Dd-Api-Key", apiKeyVal)
-	req.Header.Set("Dd-Application-Key", appKeyVal)
-
-	res, err := d.HttpClient.Do(req)
+	b, err := d.executeQuery(ctx, qURL, apiKeyVal, appKeyVal)
 	if err != nil {
-		d.Log.Error(err, errCreateReq)
 		return nil, nil, err
 	}
-	defer func() {
-		err := res.Body.Close()
-		if err != nil {
-			d.Log.Error(err, errCloseBody)
-		}
-	}()
 
-	b, _ := io.ReadAll(res.Body)
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
@@ -159,6 +123,33 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 
 	r := d.getResultSlice(points)
 	return r, b, nil
+}
+
+func (d *KeptnDataDogProvider) executeQuery(ctx context.Context, qURL string, apiKeyVal string, appKeyVal string) ([]byte, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+	if err != nil {
+		d.Log.Error(err, errCreateReq)
+		return nil, err
+	}
+
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Dd-Api-Key", apiKeyVal)
+	req.Header.Set("Dd-Application-Key", appKeyVal)
+
+	res, err := d.HttpClient.Do(req)
+	if err != nil {
+		d.Log.Error(err, errCreateReq)
+		return nil, err
+	}
+	defer func() {
+		err := res.Body.Close()
+		if err != nil {
+			d.Log.Error(err, errCloseBody)
+		}
+	}()
+
+	b, _ := io.ReadAll(res.Body)
+	return b, nil
 }
 
 func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {

@@ -17,7 +17,6 @@ of the Keptn repository on your local machine:
 
    A copy of this repository is now available in your GitHub account.
 
-
 2. Get the string to use when cloning your fork:
 
      * Click the green "Code" button on the UI page.
@@ -45,14 +44,15 @@ of the Keptn repository on your local machine:
 
 4. Associate your clone with `upstream`.
 
-   - In a shell, go to the root folder of the project
+   * In a shell, go to the root folder of the project
      and run *git status* to confirm that you are on the `main` branch.
-   - Type the following to associate `upstream` with your clone,
+   * Type the following to associate `upstream` with your clone,
      pasting in the string for the main repo that you copied above.:
 
      ```console
      git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
      ```
+
 You are now ready to
 [create a local branch](../branch-create)
 and begin to create the software or documentation modifications.

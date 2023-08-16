@@ -70,23 +70,14 @@ you need to do the following:
    [Install and update](../../install)
    to install and enable KLT on your cluster.
 1. Follow the instructions in
-   [Integrate KLT with your applications](../../implementing/integrate)
-   to integrate KLT with your Kubernetes cluster.
-   This requires the following:
-
-   - Follow the instructions in
-     [Annotate workload](../../implementing/integrate/#basic-annotations)
-     to integrate the Lifecycle Toolkit into your Kubernetes cluster
-     by applying basic annotations
-     to your workload and pod resources.
-   - Follow the instructions in
-     [Define a Keptn application](../../implementing/integrate/#define-a-keptn-application)
-     to create a Keptn application that aggragates
-     all the `workloads` for your deployment into a single
-     [KeptnApp](../../yaml-crd-ref/app.md) resource.
-     For this exercise, we recommend that you use
-     [Keptn automatic app discovery](../../implementing/integrate/#use-keptn-automatic-app-discovery)
-     to automatically generate a Keptn Application.
+   [Basic annotations](../../implementing/integrate/#basic-annotations)
+   to integrate the Lifecycle Toolkit into your Kubernetes cluster
+   by applying basic annotations
+   to your workload and pod resources.
+   and to create appropriate
+   [KeptnApp](../../yaml-crd-ref/app.md)
+   resources that aggragate
+   all the `workloads` for a logical deployment into a single resource.
 
 ## DORA metrics
 

@@ -25,7 +25,7 @@ kubeconfig
 
 manifests/
 /scheduler/config/rendered/release.yaml
-/operator/config/rendered/release.yaml
+/lifecycle-operator/config/rendered/release.yaml
 /metrics-operator/config/rendered/release.yaml
 /klt-cert-manager/config/rendered/release.yaml
 # macOS
@@ -49,4 +49,4 @@ node_modules
 readme-generator-for-helm/
 /out.yaml
 /test.yaml
-/helmchart.yaml
+**helm_tests_output.yaml

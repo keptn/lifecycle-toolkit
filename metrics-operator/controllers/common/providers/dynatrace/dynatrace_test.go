@@ -25,12 +25,12 @@ func TestGetSingleValue(t *testing.T) {
 	v := 5.0
 	tests := []struct {
 		name   string
-		input  DynatraceResponse
+		input  *DynatraceResponse
 		result float64
 	}{
 		{
 			name: "happy path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -45,14 +45,14 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "empty path",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{},
 			},
 			result: 0.0,
 		},
 		{
 			name: "no data",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{},
@@ -63,7 +63,7 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "no values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -78,7 +78,7 @@ func TestGetSingleValue(t *testing.T) {
 		},
 		{
 			name: "nil values",
-			input: DynatraceResponse{
+			input: &DynatraceResponse{
 				Result: []DynatraceResult{
 					{
 						Data: []DynatraceData{
@@ -97,6 +97,88 @@ func TestGetSingleValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			kdp := KeptnDynatraceProvider{}
 			r := kdp.getSingleValue(tt.input)
+			require.Equal(t, tt.result, r)
+		})
+
+	}
+}
+
+func TestGetResultSlice(t *testing.T) {
+	v := 5.0
+	tests := []struct {
+		name   string
+		input  *DynatraceResponse
+		result []string
+	}{
+		{
+			name: "happy path",
+			input: &DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{&v, &v, &v},
+							},
+						},
+					},
+				},
+			},
+			result: []string{"5.000000", "5.000000", "5.000000"},
+		},
+		{
+			name: "empty path",
+			input: &DynatraceResponse{
+				Result: []DynatraceResult{},
+			},
+			result: []string{},
+		},
+		{
+			name: "no data",
+			input: &DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{},
+					},
+				},
+			},
+			result: []string{},
+		},
+		{
+			name: "no values",
+			input: &DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{},
+							},
+						},
+					},
+				},
+			},
+			result: []string{},
+		},
+		{
+			name: "nil values",
+			input: &DynatraceResponse{
+				Result: []DynatraceResult{
+					{
+						Data: []DynatraceData{
+							{
+								Values: []*float64{nil, nil, nil},
+							},
+						},
+					},
+				},
+			},
+			result: []string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kdp := KeptnDynatraceProvider{}
+			r := kdp.getResultSlice(tt.input)
 			require.Equal(t, tt.result, r)
 		})
 
@@ -406,6 +488,222 @@ func TestEvaluateQuery_HappyPathForTimerange(t *testing.T) {
 	require.Equal(t, fmt.Sprintf("%f", 50.0), r)
 }
 
+func TestEvaluateQueryForStep_CorrectHTTP(t *testing.T) {
+	const query = "my-query"
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+		require.Equal(t, "GET", r.Method)
+		require.Equal(t, "/api/v2/metrics/query", r.URL.Path)
+		require.True(t, strings.HasSuffix(r.RequestURI, query))
+		require.Equal(t, 1, len(r.Header["Authorization"]))
+	}))
+	defer svr.Close()
+	kdp, obj := setupTestForTimerangeWithStep()
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "myapitoken",
+				},
+				Key: "mykey",
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.True(t, errors.IsNotFound(e))
+	require.Equal(t, []byte(nil), raw)
+	require.Equal(t, []string(nil), r)
+}
+
+func TestEvaluateQueryForStep_APIError(t *testing.T) {
+	errorResponse := []byte("{\"error\":{\"code\":403,\"message\":\"Token is missing required scope. Use one of: metrics.read (Read metrics)\"}}")
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write(errorResponse)
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Equal(t, []string(nil), r)
+	t.Log(string(raw))
+	require.Equal(t, errorResponse, raw) //we still return the raw answer to help user debug
+	require.NotNil(t, e)
+	require.Contains(t, e.Error(), "Token is missing required scope.")
+}
+
+func TestEvaluateQueryForStep_WrongPayloadHandling(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte("garbage"))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Equal(t, []string(nil), r)
+	t.Log(string(raw), e)
+	require.Equal(t, []byte("garbage"), raw) //we still return the raw answer to help user debug
+	require.NotNil(t, e)
+}
+
+func TestEvaluateQueryForStep_MissingSecret(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	kdp, obj := setupTestForTimerangeWithStep()
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: svr.URL,
+		},
+	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+}
+
+func TestEvaluateQueryForStep_SecretNotFound(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	kdp, obj := setupTestForTimerangeWithStep()
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "myapitoken",
+				},
+				Key: "mykey",
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.True(t, errors.IsNotFound(e))
+}
+
+func TestEvaluateQueryForStep_RefNotExistingKey(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
+
+	missingKey := "key_not_found"
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: missingKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	_, _, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.NotNil(t, e)
+	require.True(t, strings.Contains(e.Error(), "invalid key "+missingKey))
+}
+
+func TestEvaluateQuery_HappyPathForTimerangeWithStep(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		p := r.URL.Query().Get("from")
+		require.NotNil(t, p)
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+	secretName, secretKey, secretValue := "secretName", "secretKey", "secretValue"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			secretKey: []byte(secretValue),
+		},
+	}
+	kdp, obj := setupTestForTimerangeWithStep(apiToken)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Key: secretKey,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+	r, raw, e := kdp.EvaluateQueryForStep(context.TODO(), obj, p)
+	require.Nil(t, e)
+	require.Equal(t, []byte(dtpayload), raw)
+	require.Equal(t, []string{"50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000", "50.000000"}, r)
+}
+
 func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.KeptnMetric) {
 
 	fakeClient := fake.NewClient(objs...)
@@ -444,6 +742,28 @@ func setupTestForTimerange(objs ...client.Object) (KeptnDynatraceProvider, metri
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "my-query",
 			Range: &metricsapi.RangeSpec{Interval: "5m"},
+		},
+	}
+	return kdp, obj
+}
+
+func setupTestForTimerangeWithStep(objs ...client.Object) (KeptnDynatraceProvider, metricsapi.KeptnMetric) {
+
+	fakeClient := fake.NewClient(objs...)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+	obj := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "my-query",
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5m",
+				Step:        "1m",
+				Aggregation: "max",
+			},
 		},
 	}
 	return kdp, obj

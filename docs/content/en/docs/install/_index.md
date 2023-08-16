@@ -38,17 +38,13 @@ The steps are:
    - metrics-operator
 
 Unless you are only using the customized Keptn metrics feature,
-you now need to:
-
-- Follow the instructions in
-  [Annotate workload](../implementing/integrate/#basic-annotations)
-  to integrate the Lifecycle Toolkit into your Kubernetes cluster
-  by applying basic annotations to your `Deployment` resource.
-- Follow the instructions in
-  [Define a Keptn application](../implementing/integrate/#define-a-keptn-application)
-  to create a Keptn application that aggragates
-  all the `workloads` for your deployment into a single
-  [KeptnApp](../yaml-crd-ref/app.md) resource.
+you now need to: follow the instructions in
+[Annotate workload](../implementing/integrate/#basic-annotations)
+to integrate the Lifecycle Toolkit into your Kubernetes cluster
+by applying basic annotations to your `Deployment` resource.
+and create appropriate `KeptnApp` resources,
+each of which aggregates all `workloads` of your application into a single
+[KeptnApp](../yaml-crd-ref/app.md) resource.
 
 This section also includes:
 

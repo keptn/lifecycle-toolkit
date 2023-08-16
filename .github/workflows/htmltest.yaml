@@ -38,7 +38,7 @@ jobs:
         with:
           path: |
             docs/tmp/.hugo
-          key: ${{ runner.os }}-hugo
+          key: ${{ runner.os }}-hugo-${{ hashFiles('docs/go.sum') }}
 
       - name: Check HTML
         run: make htmltest

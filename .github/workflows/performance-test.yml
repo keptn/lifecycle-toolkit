@@ -26,7 +26,7 @@ jobs:
           runtime_tag: ${{ inputs.runtime_tag }}
 
       - name: Execute Performance Tests
-        working-directory: operator
+        working-directory: lifecycle-operator
         run: |
           make performance-test
 

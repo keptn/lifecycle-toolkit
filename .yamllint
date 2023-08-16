@@ -7,16 +7,14 @@ ignore: |
   **/rendered/release.yaml
   examples/support/observability/config/prometheus
   dashboards/grafana
-  operator/config/crd/bases/*
+  lifecycle-operator/config/crd/bases/*
   metrics-operator/config/crd/bases/*
   klt-cert-manager/config/crd/bases/*
-  operator/config/rbac/role.yaml
+  lifecycle-operator/config/rbac/role.yaml
   metrics-operator/config/rbac/role.yaml
   klt-cert-manager/config/rbac/role.yaml
-  helm/chart/templates
-  helm/chart/rendered.yaml
-  helm/chart/values.yaml
-  helmchart.yaml
+  helm/chart
+  .github/scripts/.helm-tests
 
 rules:
   braces: enable

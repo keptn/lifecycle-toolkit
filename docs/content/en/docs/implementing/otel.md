@@ -119,7 +119,7 @@ Use similar commands if you define a different configuration::
 
 ```shell
 kubectl create namespace monitoring
-kubectl apply --server-side -f config/prometheus/setup
+kubectl apply -f config/prometheus/setup
 kubectl apply -f config/prometheus/
 ```
 

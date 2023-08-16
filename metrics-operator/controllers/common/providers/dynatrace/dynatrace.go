@@ -67,7 +67,7 @@ func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metri
 	}
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 	query := url.QueryEscape(metric.Spec.Query)
-	qURL := baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "/" + metric.Spec.Range.Step
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "&resolution=" + metric.Spec.Range.Step
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

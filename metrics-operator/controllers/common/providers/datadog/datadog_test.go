@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/DataDog/datadog-api-client-go/v2/api/datadogV1"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -516,6 +517,7 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(ddPayload))
 		require.Nil(t, err)
+		require.Equal(t, "60000", r.URL.Query().Get("interval"))
 	}))
 	defer svr.Close()
 
@@ -954,6 +956,28 @@ func TestGetResultSlice_HappyPath(t *testing.T) {
 
 	require.NotZero(t, resultSlice)
 	require.Equal(t, []string{"92.379974", "91.466154", "92.058656", "97.498585", "95.952632", "69.670943", "84.781845"}, resultSlice)
+}
+
+func TestGetTimeRangeForStep(t *testing.T) {
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "system.cpu.idle{*}",
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5m",
+				Step:        "1m",
+				Aggregation: "max",
+			},
+		},
+	}
+	dur, _ := time.ParseDuration("5m")
+	fromTime := time.Now().Add(-dur).Unix()
+	toTime := time.Now().Unix()
+	stepTime, _ := time.ParseDuration("1m")
+	fr, to, st, err := getTimeRangeForStep(metric)
+	require.Equal(t, fromTime, fr)
+	require.Equal(t, toTime, to)
+	require.Equal(t, stepTime.Milliseconds(), st)
+	require.Nil(t, err)
 }
 
 func setupTest(objs ...client.Object) KeptnDataDogProvider {

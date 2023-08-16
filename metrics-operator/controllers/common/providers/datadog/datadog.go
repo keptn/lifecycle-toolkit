@@ -16,12 +16,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var errCreateReq = "Error while creating request"
 var errNoValues = "No values in query result"
 var errNoMetricPoints = "No metric points in query result"
-var errParseRes = "Error while parsing response"
 var errCloseBody = "Could not close request body"
-var errDatadogProvider = "Error from DataDog provider"
 
 type KeptnDataDogProvider struct {
 	Log        logr.Logger
@@ -52,24 +49,20 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
-		d.Log.Error(err, errParseRes)
 		return "", b, err
 	}
 
 	if result.Error != nil {
 		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, errDatadogProvider)
 		return "", b, err
 	}
 
 	if len(result.Series) == 0 {
-		d.Log.Info(errNoValues)
 		return "", nil, fmt.Errorf(errNoValues)
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		d.Log.Info(errNoMetricPoints)
 		return "", b, fmt.Errorf(errNoMetricPoints)
 	}
 
@@ -100,24 +93,20 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 	result := datadogV1.MetricsQueryResponse{}
 	err = json.Unmarshal(b, &result)
 	if err != nil {
-		d.Log.Error(err, errParseRes)
 		return nil, b, err
 	}
 
 	if result.Error != nil {
 		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, errDatadogProvider)
 		return nil, b, err
 	}
 
 	if len(result.Series) == 0 {
-		d.Log.Info(errNoValues)
 		return nil, nil, fmt.Errorf(errNoValues)
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		d.Log.Info(errNoMetricPoints)
 		return nil, b, fmt.Errorf(errNoMetricPoints)
 	}
 
@@ -128,7 +117,6 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 func (d *KeptnDataDogProvider) executeQuery(ctx context.Context, qURL string, apiKeyVal string, appKeyVal string) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
 	if err != nil {
-		d.Log.Error(err, errCreateReq)
 		return nil, err
 	}
 
@@ -138,7 +126,6 @@ func (d *KeptnDataDogProvider) executeQuery(ctx context.Context, qURL string, ap
 
 	res, err := d.HttpClient.Do(req)
 	if err != nil {
-		d.Log.Error(err, errCreateReq)
 		return nil, err
 	}
 	defer func() {
@@ -171,7 +158,7 @@ func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
 func (d *KeptnDataDogProvider) getResultSlice(points [][]*float64) []string {
 	resultSlice := make([]string, 0, len(points))
 	for _, point := range points {
-		if point[1] != nil {
+		if len(point) > 1 && point[1] != nil {
 			valueAsString := fmt.Sprintf("%f", *point[1])
 			resultSlice = append(resultSlice, valueAsString)
 		}

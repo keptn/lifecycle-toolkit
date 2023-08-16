@@ -9,7 +9,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
-  KUBE_BURNER_VERSION: "v1.3"
+  KUBE_BURNER_VERSION: "v1.7.4"
 defaults:
   run:
     shell: bash
@@ -21,6 +21,13 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Cache build tools
+        id: cache-build-tools
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/kube-burner
+          key: kube-burner-${{ env.KUBE_BURNER_VERSION }}
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
@@ -35,7 +42,7 @@ jobs:
           BASE_URL: https://github.com/cloud-bulldozer/kube-burner/releases
         run: |
           curl -fL \
-            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz" \
+            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-V${KUBE_BURNER_VERSION#v}-linux-x86_64.tar.gz" \
           -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin

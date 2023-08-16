@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"reflect"
 	"strings"
 	"time"
@@ -42,13 +41,17 @@ type DynatraceData struct {
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	query := url.QueryEscape(metric.Spec.Query)
+
 	var qURL string
 	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval
+		qURL = "metricSelector=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval
 	} else {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query
+		qURL = "metricSelector=" + metric.Spec.Query
 	}
+
+	qURL = urlEncodeQuery(qURL)
+
+	qURL = baseURL + "v2/metrics/query?" + qURL
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

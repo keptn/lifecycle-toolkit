@@ -223,18 +223,29 @@ func TestNormalizeURL(t *testing.T) {
 	}
 }
 
-func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
+func TestEvaluateQuery_MetricWithoutRange(t *testing.T) {
 	const query = "my-query"
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(dtpayload))
 		require.Nil(t, err)
 		require.Equal(t, "GET", r.Method)
 		require.Equal(t, "/api/v2/metrics/query", r.URL.Path)
-		require.True(t, strings.HasSuffix(r.RequestURI, query))
+		require.Equal(t, "my-query", r.URL.Query().Get("metricSelector"))
+		require.Equal(t, "now-2h", r.URL.Query().Get("from"))
 		require.Equal(t, 1, len(r.Header["Authorization"]))
 	}))
 	defer svr.Close()
-	kdp, objects := setupTest()
+
+	apiTokenSecret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapitoken",
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			"mykey": []byte("secret-value"),
+		},
+	}
+
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
@@ -246,12 +257,83 @@ func TestEvaluateQuery_CorrectHTTP(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-	for _, obj := range objects {
-		r, raw, e := kdp.EvaluateQuery(context.TODO(), obj, p)
-		require.True(t, errors.IsNotFound(e))
-		require.Equal(t, []byte(nil), raw)
-		require.Equal(t, "", r)
+
+	keptnMetric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "my-query&from=now-2h",
+		},
 	}
+
+	fakeClient := fake.NewClient(apiTokenSecret)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+
+	r, raw, err := kdp.EvaluateQuery(context.TODO(), keptnMetric, p)
+	require.Nil(t, err)
+	require.Equal(t, []byte(dtpayload), raw)
+	require.Equal(t, "50.000000", r)
+}
+
+func TestEvaluateQuery_MetricWithRange(t *testing.T) {
+	const query = "my-query"
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+		require.Equal(t, "GET", r.Method)
+		require.Equal(t, "/api/v2/metrics/query", r.URL.Path)
+		require.Equal(t, "my-query", r.URL.Query().Get("metricSelector"))
+		require.Equal(t, "now-5m", r.URL.Query().Get("from"))
+		require.Equal(t, 1, len(r.Header["Authorization"]))
+	}))
+	defer svr.Close()
+
+	apiTokenSecret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapitoken",
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			"mykey": []byte("secret-value"),
+		},
+	}
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "myapitoken",
+				},
+				Key: "mykey",
+			},
+			TargetServer: svr.URL,
+		},
+	}
+
+	keptnMetric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "my-query",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
+		},
+	}
+
+	fakeClient := fake.NewClient(apiTokenSecret)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+
+	r, raw, err := kdp.EvaluateQuery(context.TODO(), keptnMetric, p)
+	require.Nil(t, err)
+	require.Equal(t, []byte(dtpayload), raw)
+	require.Equal(t, "50.000000", r)
 }
 
 func TestEvaluateQuery_APIError(t *testing.T) {
@@ -716,7 +798,7 @@ func setupTest(objs ...client.Object) (KeptnDynatraceProvider, []metricsapi.Kept
 	objects := []metricsapi.KeptnMetric{
 		{
 			Spec: metricsapi.KeptnMetricSpec{
-				Query: "my-query",
+				Query: "my-query&from=now-2h",
 			},
 		},
 		{

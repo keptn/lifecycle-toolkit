@@ -224,7 +224,6 @@ func TestNormalizeURL(t *testing.T) {
 }
 
 func TestEvaluateQuery_MetricWithoutRange(t *testing.T) {
-	const query = "my-query"
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(dtpayload))
 		require.Nil(t, err)
@@ -279,7 +278,6 @@ func TestEvaluateQuery_MetricWithoutRange(t *testing.T) {
 }
 
 func TestEvaluateQuery_MetricWithRange(t *testing.T) {
-	const query = "my-query"
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(dtpayload))
 		require.Nil(t, err)

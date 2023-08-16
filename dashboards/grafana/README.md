@@ -23,7 +23,7 @@ them in this folder.
 
 ## Exporting the dashboards for the Examples
 
-You can Import the default dashboards by running: 
+You can Import the default dashboards by running:
 
 ```shell
 make apply-configmaps

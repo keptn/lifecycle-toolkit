@@ -37,14 +37,8 @@ type KeptnMetricSpec struct {
 
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
-	// Value represents the resulting value
-	Value string `json:"value"`
-	// RawValue represents the resulting value in raw format
-	RawValue []byte `json:"rawValue"`
-	// LastUpdated represents the time when the status data was last updated
-	LastUpdated metav1.Time `json:"lastUpdated"`
-	// ErrMsg represents the error details when the query could not be evaluated
-	ErrMsg string `json:"errMsg,omitempty"`
+	// Results contain a slice of all results
+	Results []Result `json:"results"`
 }
 
 // ProviderRef represents the provider object
@@ -63,6 +57,21 @@ type RangeSpec struct {
 	// Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
 	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
 	Aggregation string `json:"aggregation,omitempty"`
+	// +kubebuilder:validation:Maximum:=255
+	StoredResults uint `json:"storedResults,omitempty"`
+}
+
+type Result struct{
+	// Value represents the resulting value
+	Value string `json:"value"`
+	// RawValue represents the resulting value in raw format
+	RawValue []byte `json:"rawValue"`
+	// Range represents the time range for which data has been queried
+	Range *RangeSpec `json:"range,omitempty"`
+	// LastUpdated represents the time when the status data was last updated
+	LastUpdated metav1.Time `json:"lastUpdated"`
+	// ErrMsg represents the error details when the query could not be evaluated
+	ErrMsg string `json:"errMsg,omitempty"`
 }
 
 // +kubebuilder:object:root=true

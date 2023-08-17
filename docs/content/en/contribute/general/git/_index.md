@@ -10,7 +10,9 @@ Contributions are made using standard Git practices.
 This section describes the basic steps required to contribute using Git
 and summarizes some standard practices we use with Keptn..
 
-You can submit small changes using the github editor,
+You can also modify the source using the GitHub editor.
+This is very useful when you want to fix a typo
+or make some other small change
 although be sure so include the DCO signoff.
 
 If you are doing significant work,

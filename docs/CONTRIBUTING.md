@@ -37,48 +37,6 @@ The documentation source is stored on github.com
 and you use the standard github facilities to modify it.
 Please check [Working with Git](content/en/contribute/general/git/_index.md).
 
-      You may want to record the PR number somewhere for future reference although you can always find the PR in the
-      GitHub lists of open and closed PRs.
-   * GitHub automatically populates the "Reviewers" block.
-   * If this PR is not ready for review, click the "Still in progress?
-  Convert to draft" string under the list of
-      reviewers.
-      People can still review the content but can not merge the PR until you remove the "Draft" status.
-   * The block of the PR that reports on checks will include the following item:
-
-     ```console
-     This pull request is still a work in progress
-     Draft pull requests cannot be merged.
-     ```
-
-   * When the PR is ready to be reviewed, approved, and merged, click the "Ready to review" button to remove the "Draft"
-      status.
-  Then, if you added "WIP" or "Draft" to the PR title, remove it now.
-
-1. Your PR should be reviewed within a few days.
-   Watch for any comments that may be added by reviewers and implement or
-   respond to the recommended changes as soon as possible.
-
-   * If a reviewer makes a GitHub suggestion and you agree with the change, just click "Accept this change" to create a
-      commit for that modification.
-      You can also group several suggestions into a single commit using the GitHub tools.
-   * You can make other changes using the GitHub editor or you can work in your local branch to make modifications.
-
-      * If changes have been made using the GitHub editor, you will need to do a `git pull` request to pull those
-         commits back to your local branch before you push the new changes.
-      * After modifying the local source, issue the `git add .`, `git commit`, and `git push` commands to push your
-         changes to github.
-
-1. When your PR has the appropriate approvals, it will be merged and the revised content should be published on the
-   website within a few minutes.
-
-1. When your PR has been approved and merged,
-   you can delete your local branch with the following command:
-
-   ```console
-   git branch -d <branch-name>
-   ```
-
 ### Developer Certification of Origin (DCO)
 
 Licensing is very important to open source projects.

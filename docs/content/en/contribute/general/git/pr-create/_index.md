@@ -155,7 +155,24 @@ to ensure that this PR contains what you want reviewed.
 When you are satisfied that your PR is ready for review,
 click the "Create PR" button.
 
-You now move into the
+As soon as you create the PR,
+a number of tests and checks are run.
+Be sure to check the results immediately
+and fix any problems that are found.
+Click the `Details` link on the line for each each test
+to get details about the errors found.
+The most common errors are:
+
+* Markdown errors found by `markdownlint`.
+  Most of these can be fixed
+  by running `make markdownlint-fix` on your local branch
+  then pushes the changes.
+* Cross-reference errors.
+  To quickly find the errors in the report,
+  search for the `dead` string on the `Details` page.
+
+When you have resolved all build errors
+you move into the
 [PR review process](../review).
 
 ### Commit Types

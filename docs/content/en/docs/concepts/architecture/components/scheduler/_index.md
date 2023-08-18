@@ -9,7 +9,7 @@ cascade:
 The **Keptn Scheduler** is an integral component of the Keptn Lifecycle Toolkit that orchestrates
 the deployment process.
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
-that ensures that Pods are scheduled to a node until and unless the
+scheduling cycle that ensures that Pods are scheduled to a node until and unless the
 pre-deployment checks have finished successfully.
 This helps to prevent Pods from being scheduled to nodes that are not yet ready for them,
 which can lead to errors and downtime.

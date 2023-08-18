@@ -10,7 +10,6 @@ your PR must be approved and then merged
 before it becomes part of the Keptn product.
 This page discusses what you need to do during the review phase.
 
-
 GitHub automatically assigns reviewers to your PR.
 You can also tag oher people in the description or comments.
 
@@ -38,6 +37,7 @@ The block of the PR that reports on checks will include the following item:
 This pull request is still a work in progress
 Draft pull requests cannot be merged.
 ```
+
 When the PR is ready to be reviewed, approved, and merged,
 click the "Ready to review" button to remove the "Draft" status.
 If you added "WIP" or "Draft" to the PR title, remove it now.

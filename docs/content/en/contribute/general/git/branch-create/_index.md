@@ -33,19 +33,19 @@ Now you can make your changes, build and test them locally,
 then create a PR to add these changes to the documentation set.
 
 * For documentation changes:
-  - Do the writing you want to do in your local branch
-  - Check the formatted version in your IDE
+  * Do the writing you want to do in your local branch
+  * Check the formatted version in your IDE
     or at `localhost:1314/docs-dev`
     to ensure that it is rendering correctly
     and that all links are valid..
     See [Build Documentation Locally](../../../docs/local-building)
     for more information.
-  - Run `make markdownlint-fix` to check and fix the markdown code.
+  * Run `make markdownlint-fix` to check and fix the markdown code.
 
 * For software changes:
-  - Create the new code in your local branch.
-  - Create and run unit tests for your new code.
-  - Run other appropriate test to ensure that your code works correctly.
+  * Create the new code in your local branch.
+  * Create and run unit tests for your new code.
+  * Run other appropriate test to ensure that your code works correctly.
 
 When you have completed the checking and testing of your work,
 it is time to push your changes and create a PR that can be reviewed.

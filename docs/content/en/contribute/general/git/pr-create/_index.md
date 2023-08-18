@@ -26,12 +26,12 @@ to the repository are:
 1. Switch back to the `main` branch in your repository,
    and ensure that it is up to date with `main` branch of Keptn Lifecycle Toolkit:
 
-   ```bash 
+   ```bash
    git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
    git checkout main
    git pull upstream main
    ```
- 
+
    Then update your feature branch from your local copy of `main` and push it:
 
    ```bash
@@ -84,17 +84,18 @@ and eventually merged, go to the
 You should see a message with a box to click
 that opens a PR template that you can populate.
 
-> **Note:**
+> **Note**
   The PR template can also be found at `.github/pull_request_template.md`.
 
 You need to provide the following information:
 
-* Title for the PR.  Follow the
+* Title for the PR.
+   Follow the
   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/)
   for your PR title.
-  - Title should begin with an appropriate feature type.
+  * Title should begin with an appropriate feature type.
     You can find a list of all possible feature types [here](#commit-types).
-  - First word after the feature type should be lowercase.
+  * First word after the feature type should be lowercase.
 
     An example for a pull request title is:
 
@@ -104,17 +105,17 @@ You need to provide the following information:
 
 * Full description of what the PR is about.
 
-  -  Link to relevant GitHub issue(s).
+  * Link to relevant GitHub issue(s).
      Use the phrase `Closes <issue>` for this link;
        is ensures that the issue is closed when this PR is merged.
         this PR does not completely satisfy the issue,
        e some other phrasing for the link to the issue.
-  - Describe what this PR does,
+  * Describe what this PR does,
     including related work that will be in other PRs
-  - If you changed something that is visible to the user,
+  * If you changed something that is visible to the user,
     add a screenshot.
-  - Describe tests that are included or were run to test this PR
-  - Anything else that will help reviewers understand
+  * Describe tests that are included or were run to test this PR
+  * Anything else that will help reviewers understand
     the scope and purpose of this PR.
 
 * If you have **breaking changes** in your PR,
@@ -190,4 +191,3 @@ you move into the
 * `revert`: reverts a previous commit
 * `style`: changes that do not affect the meaning of the code
 * `test`: adding missing tests or correcting existing tests
-

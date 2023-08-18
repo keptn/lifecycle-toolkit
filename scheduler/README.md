@@ -5,5 +5,5 @@ The **scheduler** is a pivotal component within the
 By ensuring that Pods are scheduled onto nodes only after successful pre-deployment checks,
 the scheduler minimizes errors and downtimes.
 
-For detailed information about the scheduler's functionality and how it works, please refer to
+For detailed information about scheduler's functionality and how it works, please refer to
 the [Keptn Lifecycle Toolkit Scheduler Documentation](https://main.lifecycle.keptn.sh/docs/concepts/architecture/components/scheduler/).

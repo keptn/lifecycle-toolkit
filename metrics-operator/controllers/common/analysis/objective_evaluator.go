@@ -1,7 +1,7 @@
 package analysis
 
 import (
-	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -52,7 +52,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.O
 func getValueFromMap(values map[string]string, key string) (float64, error) {
 	val, ok := values[key]
 	if !ok {
-		return 0.0, errors.New("required value not available")
+		return 0.0, fmt.Errorf("required value '%s' not available", key)
 	}
 
 	floatVal, err := strconv.ParseFloat(val, 64)

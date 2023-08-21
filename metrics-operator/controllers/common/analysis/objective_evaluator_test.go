@@ -1,7 +1,7 @@
 package analysis
 
 import (
-	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -29,7 +29,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			mockedEvaluator: &fake.ITargetEvaluatorMock{},
 			want: types.ObjectiveResult{
 				Score: 0.0,
-				Error: errors.New("required value not available"),
+				Error: fmt.Errorf("required value 'name' not available"),
 			},
 		},
 		{

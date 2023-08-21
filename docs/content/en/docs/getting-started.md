@@ -244,7 +244,8 @@ To see these raw metrics:
 - Port forward to the lifecycle operator metrics service:
 
 ```shell
-kubectl -n keptn-lifecycle-toolkit-system port-forward service/keptn-klt-lifecycle-operator-metrics-service 2222
+SERVICE=$(kubectl get svc -l control-plane=lifecycle-operator -A -ojson | jq -r '.items[0].metadata.name')
+kubectl -n keptn-lifecycle-toolkit-system port-forward svc/$SERVICE 2222
 ```
 
 Note that this command will (and should) continue to run in your terminal windows.

@@ -49,11 +49,10 @@ func urlEncodeQuery(query string) string {
 		keyAndValue := strings.Split(param, "=")
 		if len(keyAndValue) == 2 {
 			encodedKeyAndValue := keyAndValue[0] + "=" + url.QueryEscape(keyAndValue[1])
-			if i == 0 {
-				result += encodedKeyAndValue
-			} else {
-				result += "&" + encodedKeyAndValue
+			if i > 0 {
+				result += "&"
 			}
+			result += encodedKeyAndValue
 		}
 	}
 

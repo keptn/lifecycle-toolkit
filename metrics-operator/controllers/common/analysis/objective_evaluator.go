@@ -18,7 +18,7 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Objective) types.ObjectiveResult {
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.Objective) types.ObjectiveResult {
 	result := types.ObjectiveResult{
 		Score: 0.0,
 		Value: 0.0,
@@ -32,7 +32,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	}
 
 	result.Value = floatVal
-	result.Result = oe.TargetEvaluator.Evaluate(floatVal, obj.Target)
+	result.Result = oe.TargetEvaluator.Evaluate(floatVal, &obj.Target)
 
 	// if target passed, we return the full score
 	if result.IsPass() {

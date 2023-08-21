@@ -15,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.ITargetEvaluator
 //		mockedITargetEvaluator := &ITargetEvaluatorMock{
-//			EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+//			EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,7 +26,7 @@ import (
 //	}
 type ITargetEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(val float64, target v1alpha3.Target) types.TargetResult
+	EvaluateFunc func(val float64, target *v1alpha3.Target) types.TargetResult
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -35,20 +35,20 @@ type ITargetEvaluatorMock struct {
 			// Val is the val argument value.
 			Val float64
 			// Target is the target argument value.
-			Target v1alpha3.Target
+			Target *v1alpha3.Target
 		}
 	}
 	lockEvaluate sync.RWMutex
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *ITargetEvaluatorMock) Evaluate(val float64, target v1alpha3.Target) types.TargetResult {
+func (mock *ITargetEvaluatorMock) Evaluate(val float64, target *v1alpha3.Target) types.TargetResult {
 	if mock.EvaluateFunc == nil {
 		panic("ITargetEvaluatorMock.EvaluateFunc: method is nil but ITargetEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
 		Val    float64
-		Target v1alpha3.Target
+		Target *v1alpha3.Target
 	}{
 		Val:    val,
 		Target: target,
@@ -65,11 +65,11 @@ func (mock *ITargetEvaluatorMock) Evaluate(val float64, target v1alpha3.Target) 
 //	len(mockedITargetEvaluator.EvaluateCalls())
 func (mock *ITargetEvaluatorMock) EvaluateCalls() []struct {
 	Val    float64
-	Target v1alpha3.Target
+	Target *v1alpha3.Target
 } {
 	var calls []struct {
 		Val    float64
-		Target v1alpha3.Target
+		Target *v1alpha3.Target
 	}
 	mock.lockEvaluate.RLock()
 	calls = mock.calls.Evaluate

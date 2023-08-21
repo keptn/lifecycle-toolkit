@@ -15,7 +15,7 @@ func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.AnalysisDefinition) types.AnalysisResult {
+func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
 	result := types.AnalysisResult{
 		ObjectiveResults: make([]types.ObjectiveResult, 0, len(ad.Spec.Objectives)),
 	}
@@ -23,7 +23,7 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.Anal
 	keyObjectiveFailed := false
 	for _, objective := range ad.Spec.Objectives {
 		// evaluate a single objective and store it's result
-		objectiveResult := ae.ObjectiveEvaluator.Evaluate(values, objective)
+		objectiveResult := ae.ObjectiveEvaluator.Evaluate(values, &objective)
 		result.ObjectiveResults = append(result.ObjectiveResults, objectiveResult)
 
 		// count scores

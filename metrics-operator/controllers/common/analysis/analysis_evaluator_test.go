@@ -65,7 +65,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -115,7 +115,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -156,7 +156,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -197,7 +197,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -249,7 +249,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 					if objective.KeyObjective {
 						return types.ObjectiveResult{
 							Result: types.TargetResult{},
@@ -272,7 +272,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ae := NewAnalysisEvaluator(tt.mockedEvaluator)
-			require.Equal(t, tt.want, ae.Evaluate(tt.values, tt.a))
+			require.Equal(t, tt.want, ae.Evaluate(tt.values, &tt.a))
 		})
 	}
 }

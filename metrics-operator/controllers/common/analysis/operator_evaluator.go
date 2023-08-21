@@ -7,9 +7,9 @@ import (
 
 type OperatorEvaluator struct{}
 
-func (te *OperatorEvaluator) Evaluate(val float64, t v1alpha3.Operator) types.OperatorResult {
+func (te *OperatorEvaluator) Evaluate(val float64, t *v1alpha3.Operator) types.OperatorResult {
 	result := types.OperatorResult{
-		Operator:  t,
+		Operator:  *t,
 		Fulfilled: false,
 	}
 

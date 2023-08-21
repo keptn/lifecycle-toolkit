@@ -44,7 +44,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
 					return types.TargetResult{
 						Pass: true,
 					}
@@ -71,7 +71,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
 					return types.TargetResult{
 						Warning: true,
 						Pass:    false,
@@ -100,7 +100,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
 					return types.TargetResult{
 						Warning: false,
 						Pass:    false,
@@ -121,7 +121,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			oe := NewObjectiveEvaluator(tt.mockedEvaluator)
-			require.Equal(t, tt.want, oe.Evaluate(tt.values, tt.o))
+			require.Equal(t, tt.want, oe.Evaluate(tt.values, &tt.o))
 		})
 	}
 }

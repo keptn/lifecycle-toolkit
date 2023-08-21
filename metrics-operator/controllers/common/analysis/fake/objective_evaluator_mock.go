@@ -15,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.IObjectiveEvaluator
 //		mockedIObjectiveEvaluator := &IObjectiveEvaluatorMock{
-//			EvaluateFunc: func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+//			EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,7 +26,7 @@ import (
 //	}
 type IObjectiveEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult
+	EvaluateFunc func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -35,20 +35,20 @@ type IObjectiveEvaluatorMock struct {
 			// Values is the values argument value.
 			Values map[string]string
 			// Objective is the objective argument value.
-			Objective v1alpha3.Objective
+			Objective *v1alpha3.Objective
 		}
 	}
 	lockEvaluate sync.RWMutex
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IObjectiveEvaluatorMock) Evaluate(values map[string]string, objective v1alpha3.Objective) types.ObjectiveResult {
+func (mock *IObjectiveEvaluatorMock) Evaluate(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
 	if mock.EvaluateFunc == nil {
 		panic("IObjectiveEvaluatorMock.EvaluateFunc: method is nil but IObjectiveEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
 		Values    map[string]string
-		Objective v1alpha3.Objective
+		Objective *v1alpha3.Objective
 	}{
 		Values:    values,
 		Objective: objective,
@@ -65,11 +65,11 @@ func (mock *IObjectiveEvaluatorMock) Evaluate(values map[string]string, objectiv
 //	len(mockedIObjectiveEvaluator.EvaluateCalls())
 func (mock *IObjectiveEvaluatorMock) EvaluateCalls() []struct {
 	Values    map[string]string
-	Objective v1alpha3.Objective
+	Objective *v1alpha3.Objective
 } {
 	var calls []struct {
 		Values    map[string]string
-		Objective v1alpha3.Objective
+		Objective *v1alpha3.Objective
 	}
 	mock.lockEvaluate.RLock()
 	calls = mock.calls.Evaluate

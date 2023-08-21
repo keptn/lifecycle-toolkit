@@ -207,7 +207,7 @@ NAME                      APPNAME        VERSION   PHASE
 keptndemoapp-0.0.1-***    keptndemoapp   0.0.1     Completed
 ```
 
-Keptn can run tasks and SLO evaluations before and after deployment.
+Keptn can run tasks and SLO (Service Level Objective) evaluations before and after deployment.
 You haven't configured this yet, but you can see the full lifecycle for a `keptnappversion` by running:
 
 ```shell

@@ -110,7 +110,20 @@ func TestObjective_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
+		},
+		{
+			name: "only failure set",
+			obj: Objective{
+				Target: Target{
+					Failure: &Operator{
+						EqualTo: &OperatorValue{
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+						},
+					},
+				},
+			},
+			wantErr: nil,
 		},
 		{
 			name: "warning and failure set properly",
@@ -247,7 +260,7 @@ func TestTarget_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
 		},
 		{
 			name:    "neither failure nor warning set",
@@ -274,7 +287,7 @@ func TestTarget_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
 		},
 		{
 			name: "warning not set properly",

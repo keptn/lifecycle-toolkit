@@ -32,7 +32,7 @@ jobs:
           npm install --location=global ./
           cd ..
 
-      - name: Check Helm doc up to date
+      - name: Check if Helm doc is up to date
         run: |
           cd ./helm/chart/
           cp ./README.md ./README-old.md
@@ -49,3 +49,13 @@ jobs:
             echo ""
             echo "Helm values documentation is correct!"
           fi
+
+  helm-tests:
+    name: Run helm tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Check if Helm template is up to date
+        run: ./.github/scripts/helm-test.sh

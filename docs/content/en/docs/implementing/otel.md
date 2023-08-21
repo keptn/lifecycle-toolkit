@@ -59,11 +59,18 @@ to the Workload resource.
 Metrics are collected only for the resources
 that are annotated.
 
-To view DORA metrics, run the following command:
+To view DORA metrics, run the following two commands:
+
+- Retrieve the service name with:
 
 ```shell
-kubectl port-forward -n keptn-lifecycle-toolkit-system \
-   svc/lifecycle-operator-metrics-service 2222
+kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
+```
+
+- Then port-forward to the name of your service:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward service/<YOURNAME> 2222
 ```
 
 Then view the metrics at:

@@ -1,5 +1,5 @@
 ---
-title: Use your own cert-manager (optional)
+title: Use Keptn with cert-manager.io (optional)
 description: Replace the default KLT cert-manager
 weight: 30
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -14,86 +14,57 @@ without the overhead of other cert-managers.
 For a description of the architecture, see
 [Keptn Certificate Manager](../concepts/architecture/cert-manager.md).
 
-KLT, however, works well with standard cert-managers.
-The KLT cert-manager can also coexist with another cert-manager.
-If you are already using a different cert-manager,
-you can continue to use that cert-manager for other components
+KLT also works well with `cert-manager.io`.
+If you are already using `cert-manager.io`,
+you can continue to use it for other components
 and use the KLT cert-manager just for KLT activities
-or you can configure KLT to use that cert-manager.
+or you can disable the KLT cert-manager
+and configure KLT to use `cert-manager.io`.
 
-If you want KLT to use your cert-manager,
+If you want KLT to use `cert-manager.io`,
 you must configure it *before* you install KLT.
 The steps are:
 
-* Install the cert-manager of your choice
-  if it is not already installed.
-* Modify the `Deployment` manifest of each KLT operator component.
-* Add the `Certificate` CRD for the cert-manager you are using.
+* Install `cert-manager.io` if it is not already installed.
+* Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
+* (optional) Install Keptn without the built-in `klt-cert-manager` via Helm
 
-## Modify the KLT manifest
+## Add the CR(s) for cert-manager.io
 
-You must modify the KLT manifest for each KLT operator component
-to make it aware of the cert-manager you are using.
-These instructions implement
-[cert-manager.io](https://cert-manager.io/);
-the process is similar for other cert-managers.
-
-To configure KLT to use your cert-manager,
-change the `Deployment` manifest of each KLT operator component
-and **replace** the following `volumes` definition
-
-   ```yaml
-   - emptyDir: {}
-     name: certs-dir
-   ```
-
-   with
-
-   ```yaml
-   - name: cert
-     secret:
-       defaultMode: 420
-       secretName: webhook-server-cert
-   ```
-
-Each manifest must have the following special annotation:
-
-```yaml
-cert-manager.io/inject-ca-from=klt-serving-cert/keptn-lifecycle-toolkit-system
-```
-
-The value of the annotation must match the
-`name/namespace` of the cert-manager CRD discussed below.
-
-## Add the CRD for your cert-manager
-
-This is the CRD for `cert-manager.io`:
+These are the CRs for `cert-manager.io` to be applied to your cluster:
 
 ```yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: klt-serving-cert 
-  namespace: keptn-lifecycle-toolkit-system
+  name: klt-certs
+  namespace: <your-namespace>
 spec:
   dnsNames:
-  - lifecycle-webhook-service.keptn-lifecycle-toolkit-system.svc
-  - lifecycle-webhook-service.keptn-lifecycle-toolkit-system.svc.cluster.local
+  - lifecycle-webhook-service.<your-namespace>.svc
+  - lifecycle-webhook-service.<your-namespace>.svc.cluster.local
+  - metrics-webhook-service.<your-namespace>.svc
+  - metrics-webhook-service.<your-namespace>.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  secretName webhook-server-cert
+  secretName: klt-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: klt-selfsigned-issuer
+  namespace: <your-namespace>
+spec:
+  selfSigned: {}
 ```
 
 Note the following about these fields:
 
 * The `apiVersion` field refers to the API for the cert-manager.
-* The `metadata` section includes two fields.
-  The value of these fields must match the annotations
-  used in the KLT operator manifests.
-* The value of the `secretName` field
-  must match the value of the `secretName` field used
-  in the `volumes` definition section of the KLT operator manifests above.
+* The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
+  must be `klt-certs`.
+* Substitute the namespace placeholders with your namespace, where Keptn is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
 documentation for more details.

@@ -39,7 +39,7 @@ It is included to simplify installation for new users
 and because it is much smaller than most standard certificate managers.
 However, KLT is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
-See [Use your own cert-manager](../../operate/cert-manager.md)
+See [Use Keptn with cert-manager.io](../../operate/cert-manager.md)
 for instructions.
 
 ## Invalid certificate errors

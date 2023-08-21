@@ -244,7 +244,7 @@ To see these raw metrics:
 - Port forward to the lifecycle operator metrics service:
 
 ```shell
-SERVICE=$(kubectl get svc -l control-plane=lifecycle-operator -A -ojson | jq -r '.items[0].metadata.name')
+SERVICE=$(kubectl get svc -l control-plane=lifecycle-operator -A -ojsonpath="{.items[0].metadata.name}")
 kubectl -n keptn-lifecycle-toolkit-system port-forward svc/$SERVICE 2222
 ```
 

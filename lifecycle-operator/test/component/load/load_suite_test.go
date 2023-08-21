@@ -40,7 +40,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnapp.KeptnAppReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewEventSender(k8sManager.GetEventRecorderFor("load-app-controller")),
+		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("load-app-controller")),
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}

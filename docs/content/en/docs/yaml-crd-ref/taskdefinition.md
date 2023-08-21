@@ -8,7 +8,7 @@ A `KeptnTaskDefinition` defines tasks
 that are run by the Keptn Lifecycle Toolkit
 as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../concepts/workloads/).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -122,7 +122,7 @@ When using the `deno-runtime` runner to define a task,
 the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.com/runtime) runner,
+[Deno](https://deno.com/) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -390,7 +390,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../concepts/workloads).
+[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -663,4 +663,5 @@ is allowed per `KeptnTaskDefinition`.
 * [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-* [Orchestrate deployment checks](../getting-started/orchestrate)
+* [KeptnApp and KeptnWorkload resources](../concepts/architecture/keptn-apps/).
+* [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)

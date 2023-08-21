@@ -144,7 +144,7 @@ The Lifecycle Toolkit and its dependencies are now installed and ready to use.
 To enable the Keptn Lifecycle Controller in your cluster,
 annotate the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-resource.
+resource for each namespace in the cluster.
 For an example of this, see
 [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
 file, which looks like this:
@@ -160,3 +160,7 @@ metadata:
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 This annotation tells the webhook to handle the namespace.
+
+After enabling KLT for your namespace(s),
+you are ready to
+[Integrate KLT with your applications](../implementing/integrate).

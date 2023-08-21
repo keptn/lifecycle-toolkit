@@ -24,6 +24,9 @@ Kustomize Version: v4.5.4
 Server Version: v1.24.0
 ```
 
+KLT is not currently compatible with
+[vcluster](<https://github.com/loft-sh/vcluster>).
+
 ## Resource requirements
 
 ## cert-manager
@@ -32,5 +35,5 @@ KLT includes a lightweight cert-manager
 that is used for installation and Webhooks.
 You can configure a different cert-manager
 before you install KLT.
-See [Implement your own cert-manager](cert-manager.md)
+See [Implement your own cert-manager](../operate/cert-manager.md)
 for instructions.

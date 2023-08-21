@@ -3,6 +3,7 @@ package datadog
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,9 +17,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var errNoValues = "No values in query result"
-var errNoMetricPoints = "No metric points in query result"
-var errCloseBody = "Could not close request body"
+var errNoValues = errors.New("no values in query result")
+var errNoMetricPoints = errors.New("no metric points in query result")
 
 type KeptnDataDogProvider struct {
 	Log        logr.Logger
@@ -58,12 +58,12 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	}
 
 	if len(result.Series) == 0 {
-		return "", nil, fmt.Errorf(errNoValues)
+		return "", nil, errNoValues
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		return "", b, fmt.Errorf(errNoMetricPoints)
+		return "", b, errNoMetricPoints
 	}
 
 	r := d.getSingleValue(points)
@@ -102,12 +102,12 @@ func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric 
 	}
 
 	if len(result.Series) == 0 {
-		return nil, nil, fmt.Errorf(errNoValues)
+		return nil, nil, errNoValues
 	}
 
 	points := (result.Series)[0].Pointlist
 	if len(points) == 0 {
-		return nil, b, fmt.Errorf(errNoMetricPoints)
+		return nil, b, errNoMetricPoints
 	}
 
 	r := d.getResultSlice(points)
@@ -131,7 +131,7 @@ func (d *KeptnDataDogProvider) executeQuery(ctx context.Context, qURL string, ap
 	defer func() {
 		err := res.Body.Close()
 		if err != nil {
-			d.Log.Error(err, errCloseBody)
+			d.Log.Error(err, "could not close request body")
 		}
 	}()
 

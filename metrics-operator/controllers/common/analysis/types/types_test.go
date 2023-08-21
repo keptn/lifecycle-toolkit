@@ -3,7 +3,6 @@ package types
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/stretchr/testify/require"
 )
 
@@ -36,65 +35,19 @@ func TestObjectiveResult(t *testing.T) {
 
 func TestAnalysisResult(t *testing.T) {
 	a := AnalysisResult{
-		MaximumScore: 3,
-		TotalScore:   2,
+		MaximumScore: 6,
+		TotalScore:   3,
 	}
 
-	a.CountScores(v1alpha3.Objective{
-		Weight: 3,
-	},
-		ObjectiveResult{
-			Score: 1,
-		})
-
-	require.Equal(t, 6.0, a.MaximumScore)
-	require.Equal(t, 3.0, a.TotalScore)
 	require.Equal(t, 50.0, a.GetAchievedPercentage())
 
-	// Warning nor Pass percentage met
-	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
-		Spec: v1alpha3.AnalysisDefinitionSpec{
-			TotalScore: v1alpha3.TotalScore{
-				PassPercentage:    80,
-				WarningPercentage: 60,
-			},
-		},
-	})
+	a.MaximumScore = 1.0
+	a.TotalScore = 1.0
 
-	require.False(t, a.Warning)
-	require.False(t, a.Pass)
-
-	// Warning percentage met
-	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
-		Spec: v1alpha3.AnalysisDefinitionSpec{
-			TotalScore: v1alpha3.TotalScore{
-				PassPercentage:    80,
-				WarningPercentage: 50,
-			},
-		},
-	})
-
-	require.True(t, a.Warning)
-	require.False(t, a.Pass)
-
-	// reset Warning value
-	a.Warning = false
-
-	// Pass percentage met
-	a.HandlePercentageScore(v1alpha3.AnalysisDefinition{
-		Spec: v1alpha3.AnalysisDefinitionSpec{
-			TotalScore: v1alpha3.TotalScore{
-				PassPercentage:    40,
-				WarningPercentage: 30,
-			},
-		},
-	})
-
-	require.False(t, a.Warning)
-	require.True(t, a.Pass)
+	require.Equal(t, 100.0, a.GetAchievedPercentage())
 
 	a.MaximumScore = 0.0
 	a.TotalScore = 0.0
 
-	require.Equal(t, 100.0, a.GetAchievedPercentage())
+	require.Equal(t, 0.0, a.GetAchievedPercentage())
 }

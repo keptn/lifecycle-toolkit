@@ -25,7 +25,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	}
 
 	// get the value
-	floatVal, err := getValueFromMap(values, obj.AnalysisValueTemplateRef.Name)
+	floatVal, err := getValueFromMap(values, computeKey(obj.AnalysisValueTemplateRef))
 	if err != nil {
 		result.Error = err
 		return result
@@ -49,8 +49,8 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj v1alpha3.Ob
 	return result
 }
 
-func getValueFromMap(values map[string]string, name string) (float64, error) {
-	val, ok := values[name]
+func getValueFromMap(values map[string]string, key string) (float64, error) {
+	val, ok := values[key]
 	if !ok {
 		return 0.0, errors.New("required value not available")
 	}
@@ -61,4 +61,11 @@ func getValueFromMap(values map[string]string, name string) (float64, error) {
 	}
 
 	return floatVal, nil
+}
+
+func computeKey(obj v1alpha3.ObjectReference) string {
+	if obj.Namespace == "" {
+		return obj.Name
+	}
+	return obj.Name + "-" + obj.Namespace
 }

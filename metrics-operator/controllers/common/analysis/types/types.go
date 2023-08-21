@@ -49,24 +49,12 @@ type AnalysisResult struct {
 	Warning          bool
 }
 
-func (a *AnalysisResult) CountScores(obj v1alpha3.Objective, result ObjectiveResult) {
-	a.MaximumScore += float64(obj.Weight)
-	a.TotalScore += result.Score
-}
-
 func (a *AnalysisResult) GetAchievedPercentage() float64 {
+	if a.MaximumScore == 0.0 {
+		return 0.0
+	}
 	if a.TotalScore == a.MaximumScore {
 		return 100.0
 	}
 	return (a.TotalScore / a.MaximumScore) * 100.0
-}
-
-func (a *AnalysisResult) HandlePercentageScore(ad v1alpha3.AnalysisDefinition) {
-	achievedPercentage := a.GetAchievedPercentage()
-
-	if achievedPercentage >= float64(ad.Spec.TotalScore.PassPercentage) {
-		a.Pass = true
-	} else if achievedPercentage >= float64(ad.Spec.TotalScore.WarningPercentage) {
-		a.Warning = true
-	}
 }

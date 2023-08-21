@@ -27,7 +27,8 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.Anal
 		result.ObjectiveResults = append(result.ObjectiveResults, objectiveResult)
 
 		// count scores
-		result.CountScores(objective, objectiveResult)
+		result.MaximumScore += float64(objective.Weight)
+		result.TotalScore += objectiveResult.Score
 
 		//check if the objective was marked as 'key' and if it succeeded
 		if objectiveResult.IsFailure() && objective.KeyObjective {
@@ -35,7 +36,13 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad v1alpha3.Anal
 		}
 	}
 
-	result.HandlePercentageScore(ad)
+	achievedPercentage := result.GetAchievedPercentage()
+
+	if achievedPercentage >= float64(ad.Spec.TotalScore.PassPercentage) {
+		result.Pass = true
+	} else if achievedPercentage >= float64(ad.Spec.TotalScore.WarningPercentage) {
+		result.Warning = true
+	}
 
 	if keyObjectiveFailed {
 		result.Pass = false

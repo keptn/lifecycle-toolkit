@@ -19,10 +19,10 @@ func (te *OperatorEvaluator) Evaluate(val float64, t v1alpha3.Operator) types.Op
 		result.Fulfilled = (val <= t.LessThanOrEqual.GetFloatValue())
 	} else if t.LessThan != nil {
 		result.Fulfilled = (val < t.LessThan.GetFloatValue())
-	} else if t.GreaterThan != nil {
-		result.Fulfilled = (val > t.GreaterThan.GetFloatValue())
 	} else if t.GreaterThanOrEqual != nil {
 		result.Fulfilled = (val >= t.GreaterThanOrEqual.GetFloatValue())
+	} else if t.GreaterThan != nil {
+		result.Fulfilled = (val > t.GreaterThan.GetFloatValue())
 	}
 
 	return result

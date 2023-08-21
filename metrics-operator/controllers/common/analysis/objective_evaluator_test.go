@@ -173,3 +173,15 @@ func TestGetValueFromMap(t *testing.T) {
 		})
 	}
 }
+
+func TestComputeKey(t *testing.T) {
+	obj := v1alpha3.ObjectReference{
+		Name: "key",
+	}
+
+	require.Equal(t, "key", computeKey(obj))
+
+	obj.Namespace = "namespace"
+
+	require.Equal(t, "key-namespace", computeKey(obj))
+}

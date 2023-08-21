@@ -81,8 +81,9 @@ to the repository are:
 To create the actual PR that can be reviewed
 and eventually merged, go to the
 <https://github.com/keptn/lifecycle-toolkit> page.
-You should see a message with a box to click
-that opens a PR template that you can populate.
+You should see a yellow box that identifies your recent pushes.
+Click the `Compare & pull request` button in that box
+to open a PR template that you can populate.
 
 > **Note**
   The PR template can also be found at `.github/pull_request_template.md`.
@@ -154,27 +155,7 @@ that are being made with this commit
 to ensure that this PR contains what you want reviewed.
 
 When you are satisfied that your PR is ready for review,
-click the "Create PR" button.
-
-As soon as you create the PR,
-a number of tests and checks are run.
-Be sure to check the results immediately
-and fix any problems that are found.
-Click the `Details` link on the line for each each test
-to get details about the errors found.
-The most common errors are:
-
-* Markdown errors found by `markdownlint`.
-  Most of these can be fixed
-  by running `make markdownlint-fix` on your local branch
-  then pushes the changes.
-* Cross-reference errors.
-  To quickly find the errors in the report,
-  search for the `dead` string on the `Details` page.
-
-When you have resolved all build errors
-you move into the
-[PR review process](../review).
+click the `Create pull request` button.
 
 ### Commit Types
 
@@ -191,3 +172,26 @@ you move into the
 * `revert`: reverts a previous commit
 * `style`: changes that do not affect the meaning of the code
 * `test`: adding missing tests or correcting existing tests
+
+## Check PR build
+
+As soon as you create the PR,
+a number of tests and checks are run.
+Be sure to check the results immediately
+and fix any problems that are found.
+Click the `Details` link on the line for each each test
+to get details about the errors found.
+
+The most common errors for documentation PRs are:
+
+* Markdown errors found by `markdownlint`.
+  Most of these can be fixed
+  by running `make markdownlint-fix` on your local branch
+  then pushes the changes.
+* Cross-reference errors.
+  To quickly find the errors in the report,
+  search for the `dead` string on the `Details` page.
+
+When you have resolved all build errors
+you move into the
+[PR review process](../review).

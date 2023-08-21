@@ -25,11 +25,11 @@ We were all new to this once and are happy to help you!
 
 ## Guidelines for Contributing
 
-Please check [Contribution Guidelines](content/en/contribute/docs/contribution-guidelines/_index.md).
+Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidelines/_index.md).
 
 ## Building the Documentation Locally
 
-Please check [Building the Documentation Locally](content/en/contribute/docs/local-building/index.md).
+Please check [Building the Documentation Locally](content/en/contribute/docs/local-building/_index.md).
 
 ## Interacting with github
 

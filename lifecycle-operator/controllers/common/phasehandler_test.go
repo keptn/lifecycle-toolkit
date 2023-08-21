@@ -152,7 +152,7 @@ func TestPhaseHandler(t *testing.T) {
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
-					Status:       apicommon.StateSucceeded,
+					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
 			},

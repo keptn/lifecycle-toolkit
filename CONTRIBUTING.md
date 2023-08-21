@@ -42,17 +42,10 @@ on Slack and a mentor will surely guide you!
 
 ### Prerequisites
 
-* [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
-which allows software applications to run in isolated environments
-and makes it easier to deploy and manage them.
-* A Kubernetes `cluster >= Kubernetes 1.24` .If you don’t have one,
-we recommend Kubernetes-in-Docker(kind) to set up your local development environment.
-* [**kubectl**](https://kubernetes.io/docs/tasks/tools/): a command-line interface tool used for deploying
-and managing applications on Kubernetes clusters.
-* [**kustomize**](https://kustomize.io/): a tool used for customizing Kubernetes resource configurations
-and generating manifests.
-* [**Helm**](https://helm.sh/): a package manager for Kubernetes that
-simplifies the deployment and management of applications on a Kubernetes cluster.
+See
+[Set up the development environment](docs/content/en/contribute/software/dev-environ/_index.md)
+for information about how to set up an environment
+in which you can develop and test software for Keptn.
 
 ## Related Technologies
 

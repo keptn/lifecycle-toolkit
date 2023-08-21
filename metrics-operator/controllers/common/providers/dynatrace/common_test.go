@@ -67,3 +67,42 @@ func TestGetSecret_NoTokenData(t *testing.T) {
 	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }
+
+func Test_urlEncodeQuery(t *testing.T) {
+	type args struct {
+		query string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "encode single parameter",
+			args: args{
+				query: "metricSelector=my:metric-selector",
+			},
+			want: "metricSelector=my%3Ametric-selector",
+		},
+		{
+			name: "encode multiple parameters",
+			args: args{
+				query: "metricSelector=my:metric-selector&from=now-2h",
+			},
+			want: "metricSelector=my%3Ametric-selector&from=now-2h",
+		},
+		{
+			name: "omit wrongly formatted input",
+			args: args{
+				query: "metricSelector=my:metric-selector&from",
+			},
+			want: "metricSelector=my%3Ametric-selector",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := urlEncodeQuery(tt.args.query)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}

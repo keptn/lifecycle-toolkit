@@ -29,7 +29,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			mockedEvaluator: &fake.ITargetEvaluatorMock{},
 			want: types.ObjectiveResult{
 				Score: 0.0,
-				Error: errors.New("required value not available"),
+				Error: errors.New("required value 'name' not available"),
 			},
 		},
 		{

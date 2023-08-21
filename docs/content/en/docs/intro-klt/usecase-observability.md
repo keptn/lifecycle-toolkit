@@ -1,7 +1,7 @@
 ---
 title: Standardize observability
 description: How the KLT standardizes access to observability data for Kubernetes deployments
-weight: 45
+weight: 10
 ---
 
 The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
@@ -44,16 +44,16 @@ It is based on the
 example.
 
 This is the second of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](../#introducing-the-keptn-lifecycle-toolkit)
+[Introducing the Keptn Lifecycle Toolkit](_index.md)
 series:
 
 - In the
-  [Getting started with Keptn metrics](../metrics)
+  [Getting started with Keptn metrics](usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
   You may want to complete that exercise before doing this exercise
   although that is not required.
 - In
-  [Manage release lifecycle](../orchestrate),
+  [Manage release lifecycle](usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
   to orchestrate the flow of all the `workloads`
@@ -67,17 +67,26 @@ or on a local cluster you are creating for this exercise,
 you need to do the following:
 
 1. Follow the instructions in
-   [Install and update](../../install)
+   [Install and update](../install)
    to install and enable KLT on your cluster.
 1. Follow the instructions in
-   [Basic annotations](../../implementing/integrate/#basic-annotations)
-   to integrate the Lifecycle Toolkit into your Kubernetes cluster
-   by applying basic annotations
-   to your workload and pod resources.
-   and to create appropriate
-   [KeptnApp](../../yaml-crd-ref/app.md)
-   resources that aggragate
-   all the `workloads` for a logical deployment into a single resource.
+   [Integrate KLT with your applications](../implementing/integrate)
+   to integrate KLT with your Kubernetes cluster.
+   This requires the following:
+
+   - Follow the instructions in
+     [Annotate workload](../implementing/integrate/#basic-annotations)
+     to integrate the Lifecycle Toolkit into your Kubernetes cluster
+     by applying basic annotations
+     to your workload and pod resources.
+   - Follow the instructions in
+     [Define a Keptn application](../implementing/integrate/#define-a-keptn-application)
+     to create a Keptn application that aggragates
+     all the `workloads` for your deployment into a single
+     [KeptnApp](../yaml-crd-ref/app.md) resource.
+     For this exercise, we recommend that you use
+     [Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+     to automatically generate a Keptn Application.
 
 ## DORA metrics
 
@@ -87,7 +96,7 @@ about your deployments.
 The Keptn Lifecycle Toolkit starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
 See
-[DORA metrics](../../implementing/dora)
+[DORA metrics](../implementing/dora)
 for more details.
 
 ## Using OpenTelemetry
@@ -104,9 +113,9 @@ which allows you to trace everything done in the context of that deployment.
   [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
 - Follow the instructions in
-  [OpenTelemetry observability](../../implementing/otel.md)
+  [OpenTelemetry observability](../implementing/otel.md)
   to configure where your OpenTelemetry data is sent.
-  This requires you to define a [KeptnConfig](../../yaml-crd-ref/config.md) resource
+  This requires you to define a [KeptnConfig](../yaml-crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)
@@ -117,7 +126,7 @@ which allows you to trace everything done in the context of that deployment.
 You can supplement the DORA Metrics and OpenTelemetry information
 with information you explicitly define using Keptn metrics.
 The
-[Getting started with Keptn metrics](../metrics)
+[Getting started with Keptn metrics](usecase_metrics.md)
 exercise discusses how to define Keptn metrics.
 
 ## View the results

@@ -298,7 +298,7 @@ helm install cert-manager --namespace cert-manager --version v1.12.2 jetstack/ce
 
 Save this file as `jaeger.yaml` (it can be saved anywhere on your computer):
 
-```shell
+```yaml
 apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:

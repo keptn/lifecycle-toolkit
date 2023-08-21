@@ -476,7 +476,8 @@ View the Keptn Applications Dashboard and you should see the DORA metrics and an
 
 You may have noticed that the `KeptnApp` Custom Resources are created automatically by KLT.
 
-The lifecycle toolkit automatically groups workloads into `KeptnApp`s by looking for matching `part-of` annotations.
+The lifecycle toolkit automatically groups workloads into `KeptnApp`s by looking for matching
+`app.kubernetes.io/part-of` annotations.
 Any workloads with the same `part-of` annotation are said to be `part-of` the same `KeptnApp`.
 
 However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.

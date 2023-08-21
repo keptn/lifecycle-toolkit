@@ -110,7 +110,7 @@ It is time to deploy the demo application.
 
 Save this manifest as `app.yaml`:
 
-```shell
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:

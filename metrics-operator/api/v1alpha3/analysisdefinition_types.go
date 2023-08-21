@@ -108,3 +108,7 @@ type AnalysisDefinitionList struct {
 func init() {
 	SchemeBuilder.Register(&AnalysisDefinition{}, &AnalysisDefinitionList{})
 }
+
+func (o *OperatorValue) GetFloatValue() float64 {
+	return o.FixedValue.AsApproximateFloat64()
+}

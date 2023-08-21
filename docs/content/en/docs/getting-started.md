@@ -466,7 +466,7 @@ keptndemoapp-0.0.2-***  keptndemoapp   0.0.2     AppDeploy
 Wait until the `PHASE` of `keptndemoapp-0.0.2` is `Completed`.
 This signals that the deployment was successful and the pod is running.
 
-View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry per trace:
+View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry trace:
 
 ![keptn applications dashboard](/docs/assets/keptnapplications.png)
 

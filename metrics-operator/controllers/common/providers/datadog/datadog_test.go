@@ -363,7 +363,7 @@ func TestEvaluateQuery_EmptyPayload(t *testing.T) {
 		t.Log(string(raw))
 		require.Nil(t, raw)
 		require.Equal(t, "", r)
-		require.True(t, strings.Contains(e.Error(), "No values in query result"))
+		require.True(t, strings.Contains(e.Error(), "no values in query result"))
 	}
 }
 
@@ -414,7 +414,7 @@ func TestEvaluateQuery_EmptyPoints(t *testing.T) {
 	t.Log(string(raw))
 	require.Equal(t, []byte(ddEmptyPoints), raw)
 	require.Equal(t, "", r)
-	require.True(t, strings.Contains(e.Error(), "No metric points in query result"))
+	require.True(t, strings.Contains(e.Error(), "no metric points in query result"))
 }
 
 func TestEvaluateQuery_WrongInterval(t *testing.T) {
@@ -766,7 +766,7 @@ func TestEvaluateQueryForStep_EmptyPayload(t *testing.T) {
 	t.Log(string(raw))
 	require.Nil(t, raw)
 	require.Equal(t, []string(nil), r)
-	require.True(t, strings.Contains(e.Error(), "No values in query result"))
+	require.True(t, strings.Contains(e.Error(), "no values in query result"))
 }
 
 func TestEvaluateQueryForStep_EmptyPoints(t *testing.T) {
@@ -816,7 +816,7 @@ func TestEvaluateQueryForStep_EmptyPoints(t *testing.T) {
 	t.Log(string(raw))
 	require.Equal(t, []byte(ddEmptyPoints), raw)
 	require.Equal(t, []string(nil), r)
-	require.True(t, strings.Contains(e.Error(), "No metric points in query result"))
+	require.True(t, strings.Contains(e.Error(), "no metric points in query result"))
 }
 
 func TestEvaluateQueryForStep_WrongInterval(t *testing.T) {

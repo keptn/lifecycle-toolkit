@@ -1,7 +1,6 @@
 package analysis
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -53,7 +52,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.O
 func getValueFromMap(values map[string]string, key string) (float64, error) {
 	val, ok := values[key]
 	if !ok {
-		return 0.0, errors.New(fmt.Sprintf("required value '%s' not available", key))
+		return 0.0, fmt.Errorf("required value '%s' not available", key)
 	}
 
 	floatVal, err := strconv.ParseFloat(val, 64)

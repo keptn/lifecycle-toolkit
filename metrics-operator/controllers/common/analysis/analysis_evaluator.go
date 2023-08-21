@@ -31,7 +31,7 @@ func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad *v1alpha3.Ana
 		result.TotalScore += objectiveResult.Score
 
 		//check if the objective was marked as 'key' and if it succeeded
-		if objectiveResult.IsFailure() && objective.KeyObjective {
+		if objectiveResult.IsFail() && objective.KeyObjective {
 			keyObjectiveFailed = true
 		}
 	}

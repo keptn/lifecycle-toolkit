@@ -3,18 +3,18 @@ package types
 import "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 
 type TargetResult struct {
-	FailureResult OperatorResult
-	WarningResult OperatorResult
-	Warning       bool
-	Pass          bool
+	FailResult OperatorResult
+	WarnResult OperatorResult
+	Warning    bool
+	Pass       bool
 }
 
-func (t *TargetResult) IsFailure() bool {
-	return t.FailureResult.Fulfilled
+func (t *TargetResult) IsFail() bool {
+	return t.FailResult.Fulfilled
 }
 
-func (t *TargetResult) IsWarning() bool {
-	return t.WarningResult.Fulfilled
+func (t *TargetResult) IsWarn() bool {
+	return t.WarnResult.Fulfilled
 }
 
 type OperatorResult struct {
@@ -29,7 +29,7 @@ type ObjectiveResult struct {
 	Error  error
 }
 
-func (o *ObjectiveResult) IsFailure() bool {
+func (o *ObjectiveResult) IsFail() bool {
 	return o.Score == 0.0
 }
 
@@ -37,7 +37,7 @@ func (o *ObjectiveResult) IsPass() bool {
 	return o.Result.Pass
 }
 
-func (o *ObjectiveResult) IsWarning() bool {
+func (o *ObjectiveResult) IsWarn() bool {
 	return o.Result.Warning
 }
 

@@ -38,7 +38,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.TargetResult{
-				FailureResult: types.OperatorResult{
+				FailResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -66,7 +66,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.TargetResult{
-				FailureResult: types.OperatorResult{
+				FailResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -74,7 +74,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 					Fulfilled: false,
 				},
-				WarningResult: types.OperatorResult{
+				WarnResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue20,
@@ -102,7 +102,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.TargetResult{
-				FailureResult: types.OperatorResult{
+				FailResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,
@@ -110,7 +110,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 					},
 					Fulfilled: false,
 				},
-				WarningResult: types.OperatorResult{
+				WarnResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue20,
@@ -133,7 +133,7 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			want: types.TargetResult{
-				FailureResult: types.OperatorResult{
+				FailResult: types.OperatorResult{
 					Operator: v1alpha3.Operator{
 						LessThan: &v1alpha3.OperatorValue{
 							FixedValue: *compValue15,

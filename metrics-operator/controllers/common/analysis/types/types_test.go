@@ -8,16 +8,16 @@ import (
 
 func TestTargetResult(t *testing.T) {
 	target := TargetResult{
-		WarningResult: OperatorResult{
+		WarnResult: OperatorResult{
 			Fulfilled: true,
 		},
-		FailureResult: OperatorResult{
+		FailResult: OperatorResult{
 			Fulfilled: false,
 		},
 	}
 
-	require.True(t, target.IsWarning())
-	require.False(t, target.IsFailure())
+	require.True(t, target.IsWarn())
+	require.False(t, target.IsFail())
 }
 
 func TestObjectiveResult(t *testing.T) {
@@ -28,8 +28,8 @@ func TestObjectiveResult(t *testing.T) {
 		},
 	}
 
-	require.True(t, o.IsWarning())
-	require.False(t, o.IsFailure())
+	require.True(t, o.IsWarn())
+	require.False(t, o.IsFail())
 	require.False(t, o.IsPass())
 }
 

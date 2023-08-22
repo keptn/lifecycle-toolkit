@@ -271,7 +271,7 @@ There are many other Keptn metrics.
 
 ## Step 7: Make DORA metrics more user friendly
 
-It is much more user friendly to provide dashboards for metrics, logs and traces.
+It is much more user-friendly to provide dashboards for metrics, logs and traces.
 So let's install new Observability components to help us:
 
 - [Cert manager](https://cert-manager.io): Jaeger requires cert-manager

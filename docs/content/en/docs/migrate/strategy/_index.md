@@ -299,7 +299,7 @@ resources.
 
 KLT does not currently support the same level of
 [remediations](https://keptn.sh/docs/1.0.x/reference/files/remediation/)
-as Keptn v1 does
+as Keptn v1 does,
 but it does provide limited "Day 2" facilities:
 
 * Any query that is possible for your data provider post-deployment

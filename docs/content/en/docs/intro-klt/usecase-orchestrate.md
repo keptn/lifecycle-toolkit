@@ -127,7 +127,7 @@ In our example, the tasks are defined in the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
 file.
 As an example,
-we have a `notify` task that composes some markdown text
+we have a `notify` task that composes some Markdown text
 to be sent as Slack notifications
 The `KeptnTaskDefinition` looks like this:
 

@@ -118,6 +118,34 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 	return r, b, nil
 }
 
+func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
+		return nil, nil, err
+	}
+	// submit DQL
+	dqlHandler, err := d.postDQL(ctx, metric.Spec.Query)
+	if err != nil {
+		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
+		return nil, nil, err
+	}
+	// attend result
+	results, err := d.getDQL(ctx, *dqlHandler)
+	if err != nil {
+		d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
+		return nil, nil, err
+	}
+
+	if len(results.Records) == 0 {
+		return nil, nil, ErrInvalidResult
+	}
+	r := d.getResultSlice(results)
+	b, err := json.Marshal(results)
+	if err != nil {
+		d.log.Error(err, "Error marshaling DQL results")
+	}
+	return r, b, nil
+}
+
 func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, provider metricsapi.KeptnMetricsProvider) error {
 	// try to initialize the DT API Client if it has not been set in the options
 	if d.dtClient == nil {
@@ -145,7 +173,7 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (
 	values := url.Values{}
 	values.Add("query", query)
 
-	path := fmt.Sprintf("/platform/storage/query/v0.7/query:execute?%s", values.Encode())
+	path := fmt.Sprintf("/api/v2/metrics/query:execute?%s", values.Encode())
 
 	b, err := d.dtClient.Do(ctx, path, http.MethodPost, []byte(`{}`))
 	if err != nil {
@@ -205,4 +233,13 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 		return nil, err
 	}
 	return result, nil
+}
+
+func (d *keptnDynatraceDQLProvider) getResultSlice(result *DQLResult) []string {
+	// Initialize resultSlice with the correct length
+	resultSlice := make([]string, 0, len(result.Records)) // Use a slice with capacity, but length 0
+	for _, r := range result.Records {
+		resultSlice = append(resultSlice, fmt.Sprintf("%d", r.Value.Count))
+	}
+	return resultSlice
 }

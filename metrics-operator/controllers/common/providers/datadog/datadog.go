@@ -3,6 +3,7 @@ package datadog
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +16,9 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+var errNoValues = errors.New("no values in query result")
+var errNoMetricPoints = errors.New("no metric points in query result")
 
 type KeptnDataDogProvider struct {
 	Log        logr.Logger
@@ -32,15 +36,88 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 		return "", nil, err
 	}
 	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
-	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
-	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return "", nil, err
-	}
-
 	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return "", nil, err
+	}
+
+	b, err := d.executeQuery(ctx, qURL, apiKeyVal, appKeyVal)
+	if err != nil {
+		return "", nil, err
+	}
+
+	result := datadogV1.MetricsQueryResponse{}
+	err = json.Unmarshal(b, &result)
+	if err != nil {
+		return "", b, err
+	}
+
+	if result.Error != nil {
+		err = fmt.Errorf("%s", *result.Error)
+		return "", b, err
+	}
+
+	if len(result.Series) == 0 {
+		return "", nil, errNoValues
+	}
+
+	points := (result.Series)[0].Pointlist
+	if len(points) == 0 {
+		return "", b, errNoMetricPoints
+	}
+
+	r := d.getSingleValue(points)
+	value := strconv.FormatFloat(r, 'g', 5, 64)
+	return value, b, nil
+}
+
+func (d *KeptnDataDogProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
+	fromTime, toTime, stepInterval, err := getTimeRangeForStep(metric)
+	if err != nil {
+		return nil, nil, err
+	}
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&interval=" + strconv.Itoa(int(stepInterval)) + "&query=" + url.QueryEscape(metric.Spec.Query)
+	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	b, err := d.executeQuery(ctx, qURL, apiKeyVal, appKeyVal)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	result := datadogV1.MetricsQueryResponse{}
+	err = json.Unmarshal(b, &result)
+	if err != nil {
+		return nil, b, err
+	}
+
+	if result.Error != nil {
+		err = fmt.Errorf("%s", *result.Error)
+		return nil, b, err
+	}
+
+	if len(result.Series) == 0 {
+		return nil, nil, errNoValues
+	}
+
+	points := (result.Series)[0].Pointlist
+	if len(points) == 0 {
+		return nil, b, errNoMetricPoints
+	}
+
+	r := d.getResultSlice(points)
+	return r, b, nil
+}
+
+func (d *KeptnDataDogProvider) executeQuery(ctx context.Context, qURL string, apiKeyVal string, appKeyVal string) ([]byte, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", qURL, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	req.Header.Set("Accept", "application/json")
@@ -49,44 +126,17 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 
 	res, err := d.HttpClient.Do(req)
 	if err != nil {
-		d.Log.Error(err, "Error while creating request")
-		return "", nil, err
+		return nil, err
 	}
 	defer func() {
 		err := res.Body.Close()
 		if err != nil {
-			d.Log.Error(err, "Could not close request body")
+			d.Log.Error(err, "could not close request body")
 		}
 	}()
 
 	b, _ := io.ReadAll(res.Body)
-	result := datadogV1.MetricsQueryResponse{}
-	err = json.Unmarshal(b, &result)
-	if err != nil {
-		d.Log.Error(err, "Error while parsing response")
-		return "", b, err
-	}
-
-	if result.Error != nil {
-		err = fmt.Errorf("%s", *result.Error)
-		d.Log.Error(err, "Error from DataDog provider")
-		return "", b, err
-	}
-
-	if len(result.Series) == 0 {
-		d.Log.Info("No values in query result")
-		return "", nil, fmt.Errorf("no values in query result")
-	}
-
-	points := (result.Series)[0].Pointlist
-	if len(points) == 0 {
-		d.Log.Info("No metric points in query result")
-		return "", b, fmt.Errorf("no metric points in query result")
-	}
-
-	r := d.getSingleValue(points)
-	value := strconv.FormatFloat(r, 'g', 5, 64)
-	return value, b, nil
+	return b, nil
 }
 
 func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
@@ -105,6 +155,17 @@ func (d *KeptnDataDogProvider) getSingleValue(points [][]*float64) float64 {
 	return sum / float64(count)
 }
 
+func (d *KeptnDataDogProvider) getResultSlice(points [][]*float64) []string {
+	resultSlice := make([]string, 0, len(points))
+	for _, point := range points {
+		if len(point) > 1 && point[1] != nil {
+			valueAsString := fmt.Sprintf("%f", *point[1])
+			resultSlice = append(resultSlice, valueAsString)
+		}
+	}
+	return resultSlice
+}
+
 func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, error) {
 	var intervalInMin string
 	if metric.Spec.Range != nil {
@@ -117,4 +178,16 @@ func getTimeRange(metric metricsapi.KeptnMetric) (int64, int64, error) {
 		return 0, 0, err
 	}
 	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), nil
+}
+
+func getTimeRangeForStep(metric metricsapi.KeptnMetric) (int64, int64, int64, error) {
+	intervalDuration, err := time.ParseDuration(metric.Spec.Range.Interval)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	stepDuration, err := time.ParseDuration(metric.Spec.Range.Step)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	return time.Now().Add(-intervalDuration).Unix(), time.Now().Unix(), stepDuration.Milliseconds(), nil
 }

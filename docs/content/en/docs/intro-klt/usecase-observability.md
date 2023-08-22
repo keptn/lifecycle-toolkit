@@ -70,12 +70,12 @@ you need to do the following:
    [Install and update](../install)
    to install and enable KLT on your cluster.
 1. Follow the instructions in
-   [Basic annotations](../../implementing/integrate/#basic-annotations)
+   [Basic annotations](../implementing/integrate/#basic-annotations)
    to integrate the Lifecycle Toolkit into your Kubernetes cluster
    by applying basic annotations
    to your workload and pod resources.
    and to create appropriate
-   [KeptnApp](../../yaml-crd-ref/app.md)
+   [KeptnApp](../yaml-crd-ref/app.md)
    resources that aggregate
    all the `workloads` for a logical deployment into a single resource.
 

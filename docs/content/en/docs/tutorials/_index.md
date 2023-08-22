@@ -7,4 +7,4 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 This section contains tutorials on how to use the Keptn Lifecyle Toolkit.
 
-Begin with the [getting started guide](../getting-started.md) first, then come back here to complete these tutorials.
+Begin with the [getting started guide](../getting-started/_index.md) first, then come back here to complete these tutorials.

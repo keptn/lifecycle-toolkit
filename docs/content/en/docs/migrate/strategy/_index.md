@@ -14,7 +14,7 @@ and questions that you have.
 
 Before you begin the migration project,
 we suggest that you run through the exercises in
-[Getting started](../../getting-started.md)
+[Getting started](../../getting-started/_index.md)
 to familiarize yourself with how the Keptn Lifecycle Toolkit works.
 When you are ready to begin the migration,
 follow the instructions in

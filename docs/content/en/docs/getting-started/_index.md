@@ -27,7 +27,7 @@ The following is an imperative walkthrough.
 By the end of this page, here is what will be built.
 The system will be built in stages.
 
-![system overview](assets/install01.png)
+![system overview](../assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
@@ -488,4 +488,4 @@ See [KeptnApp Reference page](yaml-crd-ref/app) for more information.
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.
 
-Continue the Keptn learning journey by [adding deployment tasks](tutorials/add-tasks.md).
+Continue the Keptn learning journey by [adding deployment tasks](../tutorials/add-tasks.md).

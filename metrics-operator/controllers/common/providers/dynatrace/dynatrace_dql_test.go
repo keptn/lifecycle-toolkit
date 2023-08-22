@@ -110,6 +110,49 @@ func TestGetDQL_EvaluateQuery202(t *testing.T) {
 	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
 }
 
+func TestGetDQL_EvaluateQueryWithRange(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlPayload), 200, nil
+		}
+		// the second if can be left out as in this case the dql provider will return the result without needing to call query:poll
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayload), 202, nil
+		}
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQuery(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "",
+				Range: &metricsapi.RangeSpec{
+					Interval: "5m",
+				},
+			},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, raw)
+	require.Equal(t, "36.500000", result)
+
+	require.Len(t, mockClient.DoCalls(), 1)
+	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
+}
+
 //nolint:dupl
 func TestGetDQLMultipleRecords_EvaluateQuery(t *testing.T) {
 
@@ -419,6 +462,50 @@ func TestGetDQL_EvaluateQueryForStep202(t *testing.T) {
 	result, raw, err := dqlProvider.EvaluateQueryForStep(context.TODO(),
 		metricsapi.KeptnMetric{
 			Spec: metricsapi.KeptnMetricSpec{Query: ""},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, raw)
+	require.Equal(t, []string{"36.500000"}, result)
+
+	require.Len(t, mockClient.DoCalls(), 2)
+	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
+	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
+}
+
+func TestGetDQL_EvaluateQueryForStepWithRange(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlRequestHandler), 202, nil
+		}
+
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayload), 202, nil
+		}
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQueryForStep(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "",
+				Range: &metricsapi.RangeSpec{
+					Interval: "5m",
+				},
+			},
 		},
 		metricsapi.KeptnMetricsProvider{
 			Spec: metricsapi.KeptnMetricsProviderSpec{},

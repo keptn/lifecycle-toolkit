@@ -112,7 +112,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `name` _string_ | Name is the name of the referenced KeptnTaksDefinition. |
+| `name` _string_ | Name is the name of the referenced KeptnTaskDefinition. |
 
 
 #### FunctionStatus

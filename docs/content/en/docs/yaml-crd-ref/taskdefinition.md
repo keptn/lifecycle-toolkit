@@ -27,7 +27,7 @@ differentiated by the `spec` section:
   You define the runner, an application,
   and its runtime dependencies.
   This gives you the flexibility
-  to define tasks using the lanugage and facilities of your choice,
+  to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)

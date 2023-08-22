@@ -5,7 +5,7 @@ weight: 300
 ---
 
 Before using the **Keptn Lifecycle Toolkit**
-as a contributor to the Kepth Lifecycle Toolkit repository,
+as a contributor to the Keptn Lifecycle Toolkit repository,
 it is expected that you comply with the guidelines while
 making contributions towards the repository.
 

@@ -78,7 +78,7 @@ keptn.sh/version: myAwesomeWorkloadVersion
 keptn.sh/app: myAwesomeAppName
 ```
 
-Alternatively, you can use Kubernete keys for annotations or labels.
+Alternatively, you can use Kubernetes keys for annotations or labels.
 These are part of the Kubernetes
 [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/):
 
@@ -167,7 +167,7 @@ for integrating KLT with your applications
 because they store references, names, and version information
 so the 63 char limitation is quite restrictive.
 However labels can be used if you specifically need them
-and can accomodate the size restriction.
+and can accommodate the size restriction.
 
 ## Pre- and post-deployment checks
 

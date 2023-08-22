@@ -52,7 +52,7 @@ where external monitoring and alerting tools can scrape them.
 It is an important component of the metrics operator
 as it allows for the collection and exposure of custom metrics,
 which can be used to gain insight into the behavior and performance
-of applications running on a Kubenetes cluster.
+of applications running on a Kubernetes cluster.
 
 The **Metrics controller** fetches metrics from an SLI provider.
 The controller reconciles a [`KeptnMetric`](../../../../yaml-crd-ref/metric.md)

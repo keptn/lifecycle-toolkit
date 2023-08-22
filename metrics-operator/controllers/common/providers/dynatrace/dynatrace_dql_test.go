@@ -153,6 +153,47 @@ func TestGetDQL_EvaluateQueryWithRange(t *testing.T) {
 	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
 }
 
+func TestGetDQL_EvaluateQueryWithWrongRange(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlPayload), 200, nil
+		}
+		// the second if can be left out as in this case the dql provider will return the result without needing to call query:poll
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayload), 202, nil
+		}
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQuery(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{
+				Query: "",
+				Range: &metricsapi.RangeSpec{
+					Interval: "5mins",
+				},
+			},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), "time: unknown unit \"mins\" in duration \"5mins\"")
+	require.Empty(t, raw)
+	require.Empty(t, result)
+}
+
 //nolint:dupl
 func TestGetDQLMultipleRecords_EvaluateQuery(t *testing.T) {
 

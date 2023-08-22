@@ -210,8 +210,8 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, metric metricsa
 
 	payload := DQLRequest{
 		Query:                      metric.Spec.Query,
-		DefaultTimeframeStart:      time.Now().Format(time.RFC3339),
-		DefaultTimeframeEnd:        time.Now().Format(time.RFC3339),
+		DefaultTimeframeStart:      "",
+		DefaultTimeframeEnd:        "",
 		Timezone:                   "UTC",
 		Locale:                     "en_US",
 		FetchTimeoutSeconds:        60,

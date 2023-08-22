@@ -56,6 +56,16 @@ type DQLMetric struct {
 	Max   float64 `json:"max"`
 }
 
+type DQLRequest struct {
+	Query                      string `json:"query"`
+	DefaultTimeframeStart      string `json:"defaultTimeframeStart"`
+	DefaultTimeframeEnd        string `json:"defaultTimeframeEnd"`
+	Timezone                   string `json:"timezone"`
+	Locale                     string `json:"locale"`
+	FetchTimeoutSeconds        int    `json:"fetchTimeoutSeconds"`
+	RequestTimeoutMilliseconds int    `json:"requestTimeoutMilliseconds"`
+}
+
 type KeptnDynatraceDQLProviderOption func(provider *keptnDynatraceDQLProvider)
 
 func WithDTAPIClient(dtApiClient dtclient.DTAPIClient) KeptnDynatraceDQLProviderOption {
@@ -91,7 +101,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 		return "", nil, err
 	}
 	// submit DQL
-	dqlHandler, err := d.postDQL(ctx, metric.Spec.Query)
+	dqlHandler, err := d.postDQL(ctx, metric)
 	if err != nil {
 		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
 		return "", nil, err
@@ -123,7 +133,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, me
 		return nil, nil, err
 	}
 	// submit DQL
-	dqlHandler, err := d.postDQL(ctx, metric.Spec.Query)
+	dqlHandler, err := d.postDQL(ctx, metric)
 	if err != nil {
 		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
 		return nil, nil, err
@@ -165,17 +175,38 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 	return nil
 }
 
-func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, query string) (*DynatraceDQLHandler, error) {
+func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, metric metricsapi.KeptnMetric) (*DynatraceDQLHandler, error) {
 	d.log.V(10).Info("posting DQL")
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	values := url.Values{}
-	values.Add("query", query)
+	path := "/platform/storage/query/v0.7/query:execute"
 
-	path := fmt.Sprintf("/api/v2/metrics/query:execute?%s", values.Encode())
+	payload := DQLRequest{
+		Query:                      metric.Spec.Query,
+		DefaultTimeframeStart:      time.Now().Format(time.RFC3339),
+		DefaultTimeframeEnd:        time.Now().Format(time.RFC3339),
+		Timezone:                   "UTC",
+		Locale:                     "en_US",
+		FetchTimeoutSeconds:        60,
+		RequestTimeoutMilliseconds: 1000,
+	}
 
-	b, err := d.dtClient.Do(ctx, path, http.MethodPost, []byte(`{}`))
+	if metric.Spec.Range != nil {
+		intervalDuration, err := time.ParseDuration(metric.Spec.Range.Interval)
+		if err != nil {
+			return nil, err
+		}
+		payload.DefaultTimeframeStart = time.Now().Add(-intervalDuration).Format(time.RFC3339)
+		payload.DefaultTimeframeEnd = time.Now().Format(time.RFC3339)
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := d.dtClient.Do(ctx, path, http.MethodPost, payloadBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +244,7 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 	values := url.Values{}
 	values.Add("request-token", handler.RequestToken)
 
-	path := fmt.Sprintf("/platform/storage/query/v0.7/query:poll?%s", values.Encode())
+	path := fmt.Sprintf("/platform/storage/query/v1/query:poll?%s", values.Encode())
 
 	b, err := d.dtClient.Do(ctx, path, http.MethodGet, nil)
 	if err != nil {

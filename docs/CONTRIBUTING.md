@@ -238,7 +238,7 @@ There are 3 different types of publication:
 2. development documentation aka staging (build of `main` branch) - [link](https://main.lifecycle.keptn.sh)
 3. official documentation aka production (build of `page` branch) - [link](https://lifecycle.keptn.sh)
 
-Within the navigation bar, we do have version links pointing to the different publications - if it makes sense.
+Within the navigation bar, we have version links pointing to the different publications - if it makes sense.
 For example, we are not linking from development and production to pull request previews.
 
 ### Pull request preview

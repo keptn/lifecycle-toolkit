@@ -19,7 +19,8 @@ scheduler has (typically CPU and memory values).
 
 The Keptn Scheduler uses the Kubernetes
 [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/) and is based on the
-[Scheduler Plugins Repository](https://github.com/kubernetes-sigs/scheduler-plugins/tree/master)
+[Scheduler Plugins Repository](https://github.com/kubernetes-sigs/scheduler-plugins/tree/master).
+Additionally it registers itself as a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit).
 
 ## How does the Keptn Scheduler works
 

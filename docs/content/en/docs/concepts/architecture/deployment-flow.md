@@ -25,7 +25,7 @@ in which evaluations and tasks are listed in the
 [KeptnApp](../../yaml-crd-ref/app.md/)
 resource.
 
-## Kubernetes events
+## Kubernetes and Cloud Events
 
 [Kubernetes Events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 are emitted at each phase

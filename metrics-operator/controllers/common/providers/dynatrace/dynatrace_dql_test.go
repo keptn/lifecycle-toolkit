@@ -39,9 +39,9 @@ func TestGetDQL_EvaluateQuery200(t *testing.T) {
 
 	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), 200, nil
+			return []byte(dqlPayload), 200, nil
 		}
-
+		// the second if can be left out as in this case the dql provider will return the result without needing to call query:poll
 		if strings.Contains(path, "query:poll") {
 			return []byte(dqlPayload), 202, nil
 		}
@@ -67,9 +67,8 @@ func TestGetDQL_EvaluateQuery200(t *testing.T) {
 	require.NotEmpty(t, raw)
 	require.Equal(t, "36.500000", result)
 
-	require.Len(t, mockClient.DoCalls(), 2)
+	require.Len(t, mockClient.DoCalls(), 1)
 	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
-	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
 }
 
 func TestGetDQL_EvaluateQuery202(t *testing.T) {
@@ -364,7 +363,7 @@ func TestGetDQL_EvaluateQueryForStep200(t *testing.T) {
 
 	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), 200, nil
+			return []byte(dqlPayload), 200, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
@@ -392,9 +391,8 @@ func TestGetDQL_EvaluateQueryForStep200(t *testing.T) {
 	require.NotEmpty(t, raw)
 	require.Equal(t, []string{"36.500000"}, result)
 
-	require.Len(t, mockClient.DoCalls(), 2)
+	require.Len(t, mockClient.DoCalls(), 1)
 	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
-	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
 }
 
 func TestGetDQL_EvaluateQueryForStep202(t *testing.T) {

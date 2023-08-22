@@ -95,40 +95,22 @@ func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatrac
 	return provider
 }
 
-// EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
 		return "", nil, err
 	}
-	// submit DQL
+
 	b, status, err := d.postDQL(ctx, metric)
 	if err != nil {
 		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
 		return "", nil, err
 	}
-	results := &DQLResult{}
-	if status == 200 {
-		r := &DynatraceDQLResult{}
-		err = json.Unmarshal(b, &r)
-		if err != nil {
-			return "", nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
-		}
-		if r.State == dqlQuerySucceeded {
-			results = &r.Result
-		}
-	} else {
-		dqlHandler := &DynatraceDQLHandler{}
-		err = json.Unmarshal(b, &dqlHandler)
-		if err != nil {
-			return "", nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
-		}
-		results, err = d.getDQL(ctx, *dqlHandler)
-		if err != nil {
-			d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
-			return "", nil, err
-		}
+
+	results, err := d.parseDQLResults(b, status)
+	if err != nil {
+		return "", nil, err
 	}
-	// parse result
+
 	if len(results.Records) > 1 {
 		d.log.Info("More than a single result, the first one will be used")
 	}
@@ -140,6 +122,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
+
 	return r, b, nil
 }
 
@@ -147,41 +130,56 @@ func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, me
 	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
 		return nil, nil, err
 	}
-	// submit DQL
+
 	b, status, err := d.postDQL(ctx, metric)
 	if err != nil {
 		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
 		return nil, nil, err
 	}
-	results := &DQLResult{}
-	if status == 200 {
-		r := &DynatraceDQLResult{}
-		err = json.Unmarshal(b, &r)
-		if r.State == dqlQuerySucceeded {
-			results = &r.Result
-		}
-	} else {
-		dqlHandler := &DynatraceDQLHandler{}
-		err = json.Unmarshal(b, &dqlHandler)
-		if err != nil {
-			return nil, nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
-		}
-		results, err = d.getDQL(ctx, *dqlHandler)
-		if err != nil {
-			d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
-			return nil, nil, err
-		}
+
+	results, err := d.parseDQLResults(b, status)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	if len(results.Records) == 0 {
-		return nil, nil, ErrInvalidResult
-	}
 	r := d.getResultSlice(results)
 	b, err = json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
+
 	return r, b, nil
+}
+
+func (d *keptnDynatraceDQLProvider) parseDQLResults(b []byte, status int) (*DQLResult, error) {
+	results := &DQLResult{}
+	if status == 200 {
+		r := &DynatraceDQLResult{}
+		err := json.Unmarshal(b, &r)
+		if err != nil {
+			return nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
+		}
+		if r.State == dqlQuerySucceeded {
+			results = &r.Result
+		}
+	} else {
+		dqlHandler := &DynatraceDQLHandler{}
+		err := json.Unmarshal(b, &dqlHandler)
+		if err != nil {
+			return nil, fmt.Errorf("could not unmarshal response %s: %w", string(b), err)
+		}
+		results, err = d.getDQL(context.Background(), *dqlHandler)
+		if err != nil {
+			d.log.Error(err, "Error while waiting for DQL query", "query", dqlHandler)
+			return nil, err
+		}
+	}
+
+	if len(results.Records) == 0 {
+		return nil, ErrInvalidResult
+	}
+
+	return results, nil
 }
 
 func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, provider metricsapi.KeptnMetricsProvider) error {

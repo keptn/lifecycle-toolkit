@@ -46,7 +46,7 @@ $(LOCALBIN):
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION ?= v5.1.0
+KUSTOMIZE_VERSION ?= v5.1.1
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize

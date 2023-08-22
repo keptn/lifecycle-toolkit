@@ -30,9 +30,9 @@ spec:
   revision: x
   workloads:
   - name: <workload1-name>
-    version: x.y.z
+    version: <version-string>
   - name: <workload2-name>
-    version: x.y.z
+    version: <version-string>
   preDeploymentTasks:
   - <list of tasks>
   postDeploymentTasks:
@@ -148,12 +148,12 @@ metadata:
   name: podtato-head
   namespace: podtato-kubectl
 spec:
-  version: "1.3"
+  version: "latest"
   workloads:
   - name: podtato-head-left-arm
-    version: 0.1.0
+    version: "my_vers12.5"
   - name: podtato-head-left-leg
-    version: 1.2.3
+    version: "my_v24"
   postDeploymentTasks:
   - post-deployment-hello
   preDeploymentEvaluations:
@@ -173,6 +173,6 @@ spec:
 - [Working with tasks](../implementing/tasks)
 - [Architecture of KeptnWorkloads and KeptnTasks](../concepts/architecture/keptn-apps/)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../getting-started/orchestrate)
+- [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 - [Restart an Application Deployment](../implementing/restart-application-deployment/)

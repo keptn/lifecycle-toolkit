@@ -94,7 +94,8 @@ func (r PhaseHandler) handleCompletedPhase(state apicommon.KeptnState, piWrapper
 		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
 
-	piWrapper.SetState(apicommon.StateSucceeded)
+	// end the current phase do not set the overall state of the whole object to Succeeded here, as this can cause
+	// premature progression of reconcile objects that depend on the completion of another
 	spanPhaseTrace.AddEvent(phase.LongName + " has succeeded")
 	spanPhaseTrace.SetStatus(codes.Ok, "Succeeded")
 	spanPhaseTrace.End()

@@ -103,7 +103,7 @@ user experience.
 Additionally, it enables monitoring of new logs from log monitoring solutions.
 
 To get started with Keptn Lifecycle Toolkit, refer to the
-[Getting Started Exercises](https://main.lifecycle.keptn.sh/docs/getting-started/)
+[Getting Started Exercises](https://lifecycle.keptn.sh/docs/getting-started/)
 for detailed instructions and examples.
 This guide will walk you through the installation process and help you set up
 your environment for using KLT effectively.

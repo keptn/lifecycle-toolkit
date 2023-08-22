@@ -114,9 +114,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 	if len(results.Records) > 1 {
 		d.log.Info("More than a single result, the first one will be used")
 	}
-	if len(results.Records) == 0 {
-		return "", nil, ErrInvalidResult
-	}
+
 	r := fmt.Sprintf("%f", results.Records[0].Value.Avg)
 	b, err = json.Marshal(results)
 	if err != nil {

@@ -1,7 +1,6 @@
 ---
 title: Keptn Certificate Manager
 description: Learn how the cert-manager works
-icon: concepts
 layout: quickstart
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html

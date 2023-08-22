@@ -1,7 +1,6 @@
 ---
 title: Upgrade
 description: How to upgrade to the latest version of the Lifecycle Toolkit
-icon: concepts
 layout: quickstart
 weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html

@@ -56,6 +56,10 @@
     {
       "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>.*)$"
+    },
+    {
+      "matchPackageNames": ["denoland/deno"],
+      "extractVersion": "^(?<version>.*)-alpine$"
     }
   ],
   "regexManagers": [

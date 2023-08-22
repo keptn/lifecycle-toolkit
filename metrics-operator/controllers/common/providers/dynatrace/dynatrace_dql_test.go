@@ -33,19 +33,58 @@ const dqlPayloadTooManyItems = "{\"state\":\"SUCCEEDED\",\"result\":{\"records\"
 var ErrUnexpected = errors.New("unexpected path")
 
 //nolint:dupl
-func TestGetDQL_EvaluateQuery(t *testing.T) {
+func TestGetDQL_EvaluateQuery200(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 200, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayload), nil
+			return []byte(dqlPayload), 202, nil
 		}
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQuery(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{Query: ""},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, raw)
+	require.Equal(t, "36.500000", result)
+
+	require.Len(t, mockClient.DoCalls(), 2)
+	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
+	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
+}
+
+func TestGetDQL_EvaluateQuery202(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlRequestHandler), 202, nil
+		}
+
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayload), 202, nil
+		}
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -77,16 +116,16 @@ func TestGetDQLMultipleRecords_EvaluateQuery(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadTooManyItems), nil
+			return []byte(dqlPayloadTooManyItems), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -116,16 +155,16 @@ func TestGetDQLAPIError_EvaluateQuery(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadError), nil
+			return []byte(dqlPayloadError), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -156,16 +195,16 @@ func TestGetDQLTimeout_EvaluateQuery(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadNotFinished), nil
+			return []byte(dqlPayloadNotFinished), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -209,12 +248,12 @@ func TestGetDQLCannotPostQuery_EvaluateQuery(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return nil, errors.New("oops")
+			return nil, 0, errors.New("oops")
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -288,15 +327,15 @@ func TestGetDQLEmptyPayload_EvaluateQuery(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadEmpty), nil
+			return []byte(dqlPayloadEmpty), 202, nil
 		}
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -319,19 +358,58 @@ func TestGetDQLEmptyPayload_EvaluateQuery(t *testing.T) {
 	require.Equal(t, "", result)
 }
 
-func TestGetDQL_EvaluateQueryForStep(t *testing.T) {
+func TestGetDQL_EvaluateQueryForStep200(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 200, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayload), nil
+			return []byte(dqlPayload), 202, nil
 		}
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQueryForStep(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{Query: ""},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.NotEmpty(t, raw)
+	require.Equal(t, []string{"36.500000"}, result)
+
+	require.Len(t, mockClient.DoCalls(), 2)
+	require.Contains(t, mockClient.DoCalls()[0].Path, "query:execute")
+	require.Contains(t, mockClient.DoCalls()[1].Path, "query:poll")
+}
+
+func TestGetDQL_EvaluateQueryForStep202(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlRequestHandler), 202, nil
+		}
+
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayload), 202, nil
+		}
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -363,16 +441,16 @@ func TestGetDQLMultipleRecords_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadTooManyItems), nil
+			return []byte(dqlPayloadTooManyItems), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -402,16 +480,16 @@ func TestGetDQLAPIError_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadError), nil
+			return []byte(dqlPayloadError), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -442,16 +520,16 @@ func TestGetDQLTimeout_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadNotFinished), nil
+			return []byte(dqlPayloadNotFinished), 202, nil
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -495,12 +573,12 @@ func TestGetDQLCannotPostQuery_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return nil, errors.New("oops")
+			return nil, 0, errors.New("oops")
 		}
 
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(
@@ -574,15 +652,15 @@ func TestGetDQLEmptyPayload_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
 
-	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 		if strings.Contains(path, "query:execute") {
-			return []byte(dqlRequestHandler), nil
+			return []byte(dqlRequestHandler), 202, nil
 		}
 
 		if strings.Contains(path, "query:poll") {
-			return []byte(dqlPayloadEmpty), nil
+			return []byte(dqlPayloadEmpty), 202, nil
 		}
-		return nil, ErrUnexpected
+		return nil, 0, ErrUnexpected
 	}
 
 	dqlProvider := NewKeptnDynatraceDQLProvider(

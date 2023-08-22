@@ -15,7 +15,7 @@ import (
 
 //go:generate moq -pkg fake --skip-ensure -out ./fake/dt_client_mock.go . DTAPIClient
 type DTAPIClient interface {
-	Do(ctx context.Context, path, method string, payload []byte) ([]byte, error)
+	Do(ctx context.Context, path, method string, payload []byte) ([]byte, int, error)
 }
 
 type apiClient struct {
@@ -56,21 +56,21 @@ func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 }
 
 // Do sends and API request to the Dynatrace API and returns its result as a string containing the raw response payload
-func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, error) {
+func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, int, error) {
 	if err := client.auth(ctx); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	api := fmt.Sprintf("%s%s", client.config.serverURL, path)
 	req, err := http.NewRequestWithContext(ctx, method, api, bytes.NewBuffer(payload))
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.config.oAuthCredentials.accessToken))
 
 	res, err := client.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer func() {
 		err := res.Body.Close()
@@ -79,13 +79,14 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 		}
 	}()
 	if isErrorStatus(res.StatusCode) {
-		return nil, ErrRequestFailed
+		return nil, 0, ErrRequestFailed
 	}
 	b, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return b, nil
+
+	return b, res.StatusCode, nil
 }
 
 func (client *apiClient) auth(ctx context.Context) error {

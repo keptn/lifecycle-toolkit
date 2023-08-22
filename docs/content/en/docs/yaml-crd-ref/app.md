@@ -173,6 +173,6 @@ spec:
 - [Working with tasks](../implementing/tasks)
 - [Architecture of KeptnWorkloads and KeptnTasks](../concepts/architecture/keptn-apps/)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../getting-started/orchestrate)
+- [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 - [Restart an Application Deployment](../implementing/restart-application-deployment/)

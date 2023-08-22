@@ -33,7 +33,7 @@ All this information can be displayed with dashboard tools
 such as Grafana.
 
 For an introduction to using OpenTelemetry with Keptn metrics, see the
-[Standardize observability](../getting-started/observability)
+[Standardize observability](../intro-klt/usecase-observability.md)
 getting started guide.
 
 ## DORA metrics

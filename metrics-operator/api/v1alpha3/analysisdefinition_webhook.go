@@ -86,9 +86,6 @@ func (o *Objective) validate() error {
 }
 
 func (t *Target) validate() error {
-	if t.Failure == nil && t.Warning != nil {
-		return fmt.Errorf("Warning criteria cannot be set without Failure criteria")
-	}
 	if t.Failure != nil {
 		if err := t.Failure.validate(); err != nil {
 			return err

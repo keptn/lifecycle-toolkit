@@ -122,7 +122,7 @@ When using the `deno-runtime` runner to define a task,
 the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.com/runtime) runner,
+[Deno](https://deno.com/) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -664,4 +664,4 @@ is allowed per `KeptnTaskDefinition`.
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../concepts/architecture/keptn-apps/).
-* [Orchestrate deployment checks](../getting-started/orchestrate)
+* [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)

@@ -1,12 +1,15 @@
 ---
-title: Introduction to the Keptn Lifecycle Toolkit
-linktitle: Introduction to the Keptn Lifecycle Toolkit
-description: Understand the Keptn Lifecycle Toolkit
-weight: 05
-cascade:
-  github_subdir: "docs/content/en/docs"
-  path_base_for_github_subdir: "/content/en/docs-dev"
+title: Introduction to Keptn Lifecycle Toolkit
+description: An introduction to KLT and the usecases.
+weight: 20
+hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
+
+This section contains tutorials on how to use the Keptn Lifecyle Toolkit.
+
+When you understand the toolkit, begin with the [getting started guide](../getting-started.md).
+
+----
 
 The Keptn Lifecycle Toolkit (KLT) implements observability
 for deployments that are implemented with standard GitOps tools

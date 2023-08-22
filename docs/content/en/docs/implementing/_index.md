@@ -3,7 +3,7 @@ title: Implementing Keptn applications
 description: Learn how to implement your KLT application
 icon: concepts
 layout: quickstart
-weight: 30
+weight: 40
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

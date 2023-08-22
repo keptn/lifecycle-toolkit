@@ -24,6 +24,7 @@ import (
 const dqlRequestHandler = `{"requestToken": "my-token"}`
 
 const dqlPayload = "{\"state\":\"SUCCEEDED\",\"result\":{\"records\":[{\"value\":{\"count\":1,\"sum\":36.50,\"min\":36.50,\"avg\":36.50,\"max\":36.50},\"metric.key\":\"dt.containers.cpu.usage_user_milli_cores\",\"timeframe\":{\"start\":\"2023-01-31T09:11:00.000Z\",\"end\":\"2023-01-31T09:12:00.`00Z\"},\"Container\":\"frontend\",\"host.name\":\"default-pool-349eb8c6-gccf\",\"k8s.namespace.name\":\"hipstershop\",\"k8s.pod.uid\":\"632df64d-474c-4410-968d-666f639ad358\"}],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
+const dqlPayloadEmpty = "{\"state\":\"SUCCEEDED\",\"result\":{\"records\":[],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
 const dqlPayloadNotFinished = "{\"state\":\"\",\"result\":{\"records\":[{\"value\":{\"count\":1,\"sum\":36.50,\"min\":36.78336878333334,\"avg\":36.50,\"max\":36.50},\"metric.key\":\"dt.containers.cpu.usage_user_milli_cores\",\"timeframe\":{\"start\":\"2023-01-31T09:11:00.000Z\",\"end\":\"2023-01-31T09:12:00.`00Z\"},\"Container\":\"frontend\",\"host.name\":\"default-pool-349eb8c6-gccf\",\"k8s.namespace.name\":\"hipstershop\",\"k8s.pod.uid\":\"632df64d-474c-4410-968d-666f639ad358\"}],\"types\":[{\"mappings\":{\"value\":{\"type\":\"summary_stats\"},\"metric.key\":{\"type\":\"string\"},\"timeframe\":{\"type\":\"timeframe\"},\"Container\":{\"type\":\"string\"},\"host.name\":{\"type\":\"string\"},\"k8s.namespace.name\":{\"type\":\"string\"},\"k8s.pod.uid\":{\"type\":\"string\"}},\"indexRange\":[0,1]}]}}"
 const dqlPayloadError = "{\"error\":{\"code\":403,\"message\":\"Token is missing required scope\"}}"
 
@@ -283,6 +284,41 @@ func TestDQLInitClientWithSecret_EvaluateQuery(t *testing.T) {
 	require.NotNil(t, dqlProvider.dtClient)
 }
 
+func TestGetDQLEmptyPayload_EvaluateQuery(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlRequestHandler), nil
+		}
+
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayloadEmpty), nil
+		}
+		return nil, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQuery(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{Query: ""},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Equal(t, ErrInvalidResult, err)
+	require.Empty(t, raw)
+	require.Equal(t, "", result)
+}
+
 func TestGetDQL_EvaluateQueryForStep(t *testing.T) {
 
 	mockClient := &fake.DTAPIClientMock{}
@@ -532,6 +568,41 @@ func TestDQLInitClientWithSecret_EvaluateQueryForStep(t *testing.T) {
 
 	require.Nil(t, err)
 	require.NotNil(t, dqlProvider.dtClient)
+}
+
+func TestGetDQLEmptyPayload_EvaluateQueryForStep(t *testing.T) {
+
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+		if strings.Contains(path, "query:execute") {
+			return []byte(dqlRequestHandler), nil
+		}
+
+		if strings.Contains(path, "query:poll") {
+			return []byte(dqlPayloadEmpty), nil
+		}
+		return nil, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, raw, err := dqlProvider.EvaluateQueryForStep(context.TODO(),
+		metricsapi.KeptnMetric{
+			Spec: metricsapi.KeptnMetricSpec{Query: ""},
+		},
+		metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Equal(t, ErrInvalidResult, err)
+	require.Empty(t, raw)
+	require.Equal(t, []string(nil), result)
 }
 
 func TestGetResultForSlice_HappyPath(t *testing.T) {

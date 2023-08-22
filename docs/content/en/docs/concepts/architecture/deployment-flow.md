@@ -27,7 +27,7 @@ resource.
 
 ## Kubernetes and Cloud Events
 
-[Kubernetes Events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
+[Kubernetes Events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/) and [CloudEvents](https://cloudevents.io/)
 are emitted at each phase
 to provide additional Observability of the execution flow.
 

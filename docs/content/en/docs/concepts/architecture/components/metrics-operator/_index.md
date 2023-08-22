@@ -22,7 +22,7 @@ all your metrics data, regardless of its source,
 so you can use multiple instances of multiple observability platforms.
 
 Keptn metrics are integrated with the Kubernetes
-[Custom Metrics API](https://github.com/kubernetes/metrics#custom-metrics-api)
+[Custom Metrics API](https://github.com/kubernetes/metrics#custom-metrics-api),
 so they are compatible with the Kubernetes
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA), which enables the horizontal scaling of workloads

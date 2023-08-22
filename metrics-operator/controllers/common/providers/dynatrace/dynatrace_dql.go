@@ -236,7 +236,7 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 }
 
 func (d *keptnDynatraceDQLProvider) getResultSlice(result *DQLResult) []string {
-	if len(result.Records) == 0{
+	if len(result.Records) == 0 {
 		return nil
 	}
 	// Initialize resultSlice with the correct length

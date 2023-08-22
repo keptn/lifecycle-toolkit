@@ -36,6 +36,9 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
+      - name: Installing local proxy
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 

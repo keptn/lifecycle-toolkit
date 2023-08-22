@@ -23,6 +23,9 @@ jobs:
   yamllint:
     runs-on: ubuntu-22.04
     steps:
+      - name: Installing local proxy
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - uses: actions/checkout@v3
 
       - name: Lint YAML files

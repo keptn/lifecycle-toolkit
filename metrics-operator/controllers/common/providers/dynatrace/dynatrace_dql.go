@@ -236,10 +236,13 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 }
 
 func (d *keptnDynatraceDQLProvider) getResultSlice(result *DQLResult) []string {
+	if len(result.Records) == 0{
+		return nil
+	}
 	// Initialize resultSlice with the correct length
 	resultSlice := make([]string, 0, len(result.Records)) // Use a slice with capacity, but length 0
 	for _, r := range result.Records {
-		resultSlice = append(resultSlice, fmt.Sprintf("%d", r.Value.Count))
+		resultSlice = append(resultSlice, fmt.Sprintf("%f", r.Value.Max))
 	}
 	return resultSlice
 }

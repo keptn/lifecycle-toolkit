@@ -17,6 +17,7 @@ import (
 // KeptnSLIProvider is the interface that describes the operations that an SLI provider must implement
 type KeptnSLIProvider interface {
 	EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
+	EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
 }
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider

@@ -59,7 +59,7 @@
     },
     {
       "matchPackageNames": ["denoland/deno"],
-      "extractVersion": "^(?<version>.*)-alpine$"
+      "extractVersion": "^alpine-(?<version>.*)$"
     }
   ],
   "regexManagers": [

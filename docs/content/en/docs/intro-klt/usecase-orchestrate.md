@@ -4,7 +4,7 @@ description: How KLT orchestrates pre- and post-deployment evaluations and tasks
 weight: 20
 ---
 
-In this exercise, we will configure the Keptn Lifecyle Toolkit
+In this exercise, we will configure the Keptn Lifecycle Toolkit
 to run deployment checks as part of your deployment.
 Whether you are deploying your software with
 Argo, Flux, another deployment engine, or even `kubectl apply`,
@@ -13,7 +13,7 @@ the Lifecycle Toolkit can do the following:
 * Pre-deploy: Validate external dependencies,
   confirm that images are scanned, and so forth
 
-* Post-deply: Execute tests, notify stakeholders,
+* Post-deploy: Execute tests, notify stakeholders,
   promote to the next stage
 
 * Automatically validate against your SLO (Service Level Objectives)
@@ -89,7 +89,7 @@ you need to do the following:
 
 An `evaluation` is a KeptnMetric that has a defined target value.
 Evaluations are resources that are defined in a
-[KeptinEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
 yaml file.
 In our example, evaluations are defined in the
 [keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml)

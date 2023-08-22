@@ -19,7 +19,7 @@ helm upgrade --install keptn klt/klt \
 ```
 
 Use the `--set` flag or download and edit the `values.yaml` file
-to modify the configuration as discused on the
+to modify the configuration as discussed on the
 [Install the Lifecycle Toolkit](../install/) page.
 
 > **Warning**

@@ -96,7 +96,7 @@ but timeouts seem to be measured in seconds.
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
-    [Yaml synopsis for deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
+    [Yaml synopsis for deno-runtime container](#yaml-synopsis-for-deno-runtime-container).
     * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
@@ -107,7 +107,7 @@ but timeouts seem to be measured in seconds.
       for which you define the image, runner, runtime parameters, etc.
       and code the functionality to match the container you define.
       See
-      [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
+      [Yaml synopsis for container-runtime container](#yaml-synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.

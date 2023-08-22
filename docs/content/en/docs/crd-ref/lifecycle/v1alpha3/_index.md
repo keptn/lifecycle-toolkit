@@ -169,7 +169,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefiniton |
+| `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition |
 | `status` _KeptnState_ |  |
 | `name` _string_ | Name is the name of the Evaluation/Task |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the Item (Evaluation/Task) started. |

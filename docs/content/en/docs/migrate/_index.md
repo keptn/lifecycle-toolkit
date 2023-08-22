@@ -1,7 +1,7 @@
 ---
 title: Migrating to the Keptn Lifecycle Toolkit
 description: Notes to help you migrate from Keptn v1 to KLT
-weight: 20
+weight: 900
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
@@ -26,20 +26,8 @@ without implementing all KLT features.
 
 This section currently includes the following topics:
 
-* [Evolution of KLT](evolution-klt)
-  Understand the paradigm of KLT and how it evolved from Keptn v1.
-  Also see whether migrating to KLT is appropriate for your deployments
-
 * [Migration strategy](strategy) --
   Overview of the recommended migration strategy
-
-* [Set up Kubernetes cluster with a deployment engine](setup) --
-  Begin with a Kubernetes cluster with a deployment engine
-  that deploys your software.
-  This can be a new installation or an existing installation
-  that meets the requirements for KLT.
-
-* [Install and integrate KLT into your cluster](install-integrate]
 
 * [Set up metrics and observability](metrics-observe) --
   When you identify the data-sources being used
@@ -47,9 +35,9 @@ This section currently includes the following topics:
   KLT begins to accumulate information that you can view
   for your deployment.
 
-* [Migrate CI/CD functionality](cicd)
-
 * [Migrate Quality Gates to Keptn Evaluations](evaluations)
+
+* [Migrate CI/CD functionality](cicd)
 
 * [Migrate JES services to Keptn Tasks](jes)
 

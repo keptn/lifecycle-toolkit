@@ -9,6 +9,9 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-22.04
     steps:
+      - name: Installing local proxy
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Update Labels
         uses: actions/labeler@v4
         with:

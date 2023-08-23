@@ -58,19 +58,19 @@ func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 // Do sends and API request to the Dynatrace API and returns its result as a string containing the raw response payload
 func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, int, error) {
 	if err := client.auth(ctx); err != nil {
-		return nil, 0, err
+		return nil, http.StatusInternalServerError, err
 	}
 	api := fmt.Sprintf("%s%s", client.config.serverURL, path)
 	req, err := http.NewRequestWithContext(ctx, method, api, bytes.NewBuffer(payload))
 	if err != nil {
-		return nil, 0, err
+		return nil, http.StatusInternalServerError, err
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.config.oAuthCredentials.accessToken))
 
 	res, err := client.httpClient.Do(req)
 	if err != nil {
-		return nil, 0, err
+		return nil, http.StatusInternalServerError, err
 	}
 	defer func() {
 		err := res.Body.Close()
@@ -79,11 +79,11 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 		}
 	}()
 	if isErrorStatus(res.StatusCode) {
-		return nil, 0, ErrRequestFailed
+		return nil, res.StatusCode, ErrRequestFailed
 	}
 	b, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, 0, err
+		return nil, http.StatusInternalServerError, err
 	}
 
 	return b, res.StatusCode, nil

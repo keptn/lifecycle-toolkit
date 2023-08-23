@@ -21,6 +21,7 @@ const maxRetries = 5
 const retryFetchInterval = 10 * time.Second
 
 const dqlQuerySucceeded = "SUCCEEDED"
+const defaultPath = "/platform/storage/query/v1/query:"
 
 type keptnDynatraceDQLProvider struct {
 	log       logr.Logger
@@ -204,7 +205,7 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, metric metricsa
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	path := "/platform/storage/query/v0.7/query:execute"
+	path := defaultPath + "execute"
 
 	payload := DQLRequest{
 		Query:                      metric.Spec.Query,
@@ -262,7 +263,7 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 	values := url.Values{}
 	values.Add("request-token", handler.RequestToken)
 
-	path := fmt.Sprintf("/platform/storage/query/v1/query:poll?%s", values.Encode())
+	path := defaultPath + fmt.Sprintf("poll?%s", values.Encode())
 
 	b, _, err := d.dtClient.Do(ctx, path, http.MethodGet, nil)
 	if err != nil {
@@ -289,9 +290,9 @@ func (d *keptnDynatraceDQLProvider) getResultSlice(result *DQLResult) []string {
 		return nil
 	}
 	// Initialize resultSlice with the correct length
-	resultSlice := make([]string, 0, len(result.Records)) // Use a slice with capacity, but length 0
-	for _, r := range result.Records {
-		resultSlice = append(resultSlice, fmt.Sprintf("%f", r.Value.Max))
+	resultSlice := make([]string, len(result.Records))
+	for index, r := range result.Records {
+		resultSlice[index] = fmt.Sprintf("%f", r.Value.Max)
 	}
 	return resultSlice
 }

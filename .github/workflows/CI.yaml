@@ -37,7 +37,7 @@ jobs:
       NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Check out code
@@ -88,7 +88,7 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Check out code
@@ -137,7 +137,7 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Check out code
@@ -244,7 +244,7 @@ jobs:
     needs: [prepare_ci_run, build_image]
     runs-on: ubuntu-22.04
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Check out klt repo

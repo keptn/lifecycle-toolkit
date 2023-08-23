@@ -10,7 +10,7 @@ Keptn requires the Developer Certificate of Origin (DCO) process
 to be followed for each commit.
 With the DCO, you attest that the contribution adheres
 to the terms of the Apache License that covers Keptn
-and that you are granting ownership of you work to the Keptn project.
+and that you are granting ownership of your work to the Keptn project.
 
 Licensing is very important to open source projects.
 It helps ensure that the software continues to be available under the

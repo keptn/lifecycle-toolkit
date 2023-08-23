@@ -262,7 +262,7 @@ This documentation set contains all released versions of KLT and is stored in an
 
 - Who/how do these changes get reviewed/approved/merged?
 ```
-Like every normal PR - every maintainer has write permissions
+Like every normal PR - if the changes are approved by the maintainer, it will get merged.
 ```
 
 - Which branch should I consider when contributing?

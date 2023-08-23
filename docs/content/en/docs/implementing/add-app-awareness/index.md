@@ -17,7 +17,7 @@ To get this working, we need to modify our application manifest with two things:
 
 ### TL;DR
 
-You can also used the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and
+You can also use the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and
 proceed [here](#watch-application-behavior).
 
 ---

@@ -1,7 +1,6 @@
 ---
 title: Upgrade
 description: How to upgrade to the latest version of the Lifecycle Toolkit
-icon: concepts
 layout: quickstart
 weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -19,7 +18,7 @@ helm upgrade --install keptn klt/klt \
 ```
 
 Use the `--set` flag or download and edit the `values.yaml` file
-to modify the configuration as discused on the
+to modify the configuration as discussed on the
 [Install the Lifecycle Toolkit](../install/) page.
 
 > **Warning**

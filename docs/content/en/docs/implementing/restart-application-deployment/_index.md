@@ -1,7 +1,6 @@
 ---
 title: Restart an Application Deployment
 description: Learn how to restart an unsuccessful Keptn Application Deployment.
-icon: concepts
 layout: quickstart
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html

@@ -22,7 +22,7 @@ please submit an issue.
   * [ ] [Philosophy](https://youtu.be/ZuIQurh_kDk)
   * [ ] [Kubernetes Deconstructed: Understanding Kubernetes by Breaking It Down](https://www.youtube.com/watch?v=90kZRyPcRZw)
 * **CRD**
-  * [ ] [Custom Resouce Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
+  * [ ] [Custom Resource Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
   * [ ] [Kubernetes Operator simply explained in 10 mins](https://www.youtube.com/watch?v=ha3LjlD6g7g)
   * [ ] [Writing Kubernetes Controllers for CRDs](https://www.youtube.com/watch?v=7wdUa4Ulwxg)
 * **Kube-builder Tutorial**

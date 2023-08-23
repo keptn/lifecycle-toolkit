@@ -22,7 +22,7 @@ jobs:
   release-examples:
     runs-on: ubuntu-22.04
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Checkout

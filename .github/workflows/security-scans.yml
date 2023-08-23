@@ -20,7 +20,7 @@ jobs:
     name: "Prepare Security Scans"
     runs-on: ubuntu-22.04
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Determine Target Branch
@@ -105,7 +105,7 @@ jobs:
           - tool: "kubescape"
             kubescape-framework: "ARMOBest"
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Set up Go
@@ -206,7 +206,7 @@ jobs:
           - "scheduler"
           - "certificate-operator"
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Download images
@@ -236,7 +236,7 @@ jobs:
           - "klt-cert-manager"
 
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Set up Go 1.x
@@ -262,7 +262,7 @@ jobs:
     needs: [security-scans, govulncheck, trivy]
     if: failure() && github.event_name == 'schedule'
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Formulate bug issue

@@ -9,7 +9,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - uses: actions/stale@v8
@@ -29,7 +29,7 @@ jobs:
   stale-good-first-issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - uses: actions/stale@v8

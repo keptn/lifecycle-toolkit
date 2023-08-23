@@ -30,7 +30,7 @@ jobs:
       releases-created: ${{ steps.release.outputs.releases_created }}
       build-matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Checkout
@@ -125,7 +125,7 @@ jobs:
     env:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Checkout
@@ -207,7 +207,7 @@ jobs:
       - build-release
     runs-on: ubuntu-22.04
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Checkout

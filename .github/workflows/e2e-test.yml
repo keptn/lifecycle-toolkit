@@ -24,7 +24,7 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
     steps:
-      - name: Installing local proxy
+      - name: Install monitor action
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
 
       - name: Check out code

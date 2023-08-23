@@ -15,10 +15,6 @@ with pre- and post-deployment evaluations and tasks.
 It is an incubating project, under the umbrella of the
 [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
-> **Note**
-  The primary repository for Keptn v1 is
-  [https://github.com/keptn/keptn](https://github.com/keptn/keptn)
-
 ## Goals
 
 The Keptn Lifecycle Toolkit provides Cloud Native teams with
@@ -62,6 +58,22 @@ stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
 The status follows the
 [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
+
+## Installation
+
+The Keptn Lifecycle Toolkit can be installed on any Kubernetes cluster
+running Kubernetes >=1.24.
+Note that the Lifecycle Toolkit is not currently compatible with
+[vcluster](https://github.com/loft-sh/vcluster).
+
+Use the following command sequence
+to install the latest release of the Keptn Lifecycle Toolkit:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
 
 ## More information
 

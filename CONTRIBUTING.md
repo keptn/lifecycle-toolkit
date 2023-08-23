@@ -154,7 +154,7 @@ couple of days, but feel free to let us know about your PR
 * `style`: changes that do not affect the meaning of the code
 * `test`: adding missing tests or correcting existing tests
 
-## DCO
+## Developer Certification of Origin (DCO)
 
 All commits must be accompanied by a DCO sign-off.
 See

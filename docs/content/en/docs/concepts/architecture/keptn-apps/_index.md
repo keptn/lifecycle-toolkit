@@ -112,11 +112,11 @@ KLT automatically generates appropriate
 [KeptnApp](../../../yaml-crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
-annotation/label is poulated:
+annotation/label is populated:
 resource for each defined group.
 that together constitute a single deployable Keptn Application.
 
-* If either of these labels/allotations are populated,
+* If either of these labels/annotations are populated,
   KLT automatically generates a `KeptnApp` resource
   that includes all workloads that have the same annotation/label,
   thus creating a `KeptnApp` resource for each defined grouping

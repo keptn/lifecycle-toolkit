@@ -23,11 +23,11 @@ differentiated by the `spec` section:
 
 * The `custom-runtime` runner provides
   a standard Kubernetes application container
-  that is run as part of a Kubernetes job..
+  that is run as part of a Kubernetes job.
   You define the runner, an application,
   and its runtime dependencies.
   This gives you the flexibility
-  to define tasks using the lanugage and facilities of your choice,
+  to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
@@ -96,7 +96,7 @@ but timeouts seem to be measured in seconds.
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
-    [Yaml synopsis for deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
+    [Yaml synopsis for deno-runtime container](#yaml-synopsis-for-deno-runtime-container).
     * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
@@ -107,7 +107,7 @@ but timeouts seem to be measured in seconds.
       for which you define the image, runner, runtime parameters, etc.
       and code the functionality to match the container you define.
       See
-      [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
+      [Yaml synopsis for container-runtime container](#yaml-synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
@@ -407,7 +407,7 @@ the size of the volume is 50% of the memory allocated for the node.
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the pod template specs of your Workloads
-([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
@@ -565,7 +565,7 @@ This task is then referenced in
 
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
 
-This is a a trivial example that just runs `busybox`,
+This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command.
 
 ## Examples for a python-runtime runner

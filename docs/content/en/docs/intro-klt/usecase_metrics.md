@@ -131,7 +131,7 @@ metadata:
 spec:
   type: dynatrace
   targetServer: "https://hci34192.live.dynatrace.com"
-  secretKeyRef
+  secretKeyRef:
     name: dynatrace
     key: DT_TOKEN
 ...

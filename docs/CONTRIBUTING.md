@@ -229,7 +229,7 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
    git branch -d <branch-name>
    ```
 
-## DCO
+## Developer Certification of Origin (DCO)
 
 All commits must be accompanied by a DCO sign-off.
  See

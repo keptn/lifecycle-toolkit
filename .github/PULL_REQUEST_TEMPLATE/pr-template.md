@@ -21,7 +21,7 @@ Please also provide information about any automatic tests that you added.
 - [ ] Unit Test B
 - [ ] Integration Test C
 
-# Checklist:
+# Checklist
 
 - [ ] My PR fulfills the Definition of Done of the corresponding issue and not more (or parts if the issue is separated
   into multiple PRs)
@@ -41,14 +41,15 @@ Please also provide information about any automatic tests that you added.
 <!-- DOCS SECTION -->
 <!-- USE THIS FOR DOCS CONTRIBUTIONS -->
 
-# Description
+# Summary
 
 Please include a short summary of the changes and the related issue.
-Please also include relevant motivation and context. List any dependencies that are required for this change.
+Please also include relevant motivation and context.
+List any dependencies that are required for this change.
 
 Fixes # (issue)
 
-# Checklist:
+# Checks
 
 - [ ] My PR fulfills the Definition of Done of the corresponding issue and not more (or parts if the issue is separated
   into multiple PRs)

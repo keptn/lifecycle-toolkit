@@ -58,7 +58,7 @@ func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 // Do sends and API request to the Dynatrace API and returns its result as a string containing the raw response payload
 func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, int, error) {
 	if err := client.auth(ctx); err != nil {
-		return nil, http.StatusInternalServerError, err
+		return nil, http.StatusUnauthorized, err
 	}
 	api := fmt.Sprintf("%s%s", client.config.serverURL, path)
 	req, err := http.NewRequestWithContext(ctx, method, api, bytes.NewBuffer(payload))

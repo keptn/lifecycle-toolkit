@@ -91,7 +91,7 @@ func TestAPIClientAuthError(t *testing.T) {
 
 	require.ErrorIs(t, err, ErrRequestFailed)
 	require.Empty(t, resp)
-	require.Equal(t, http.StatusInternalServerError, code)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
@@ -129,7 +129,7 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	require.ErrorIs(t, err, ErrAuthenticationFailed)
 	require.Empty(t, resp)
-	require.Equal(t, http.StatusInternalServerError, code)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientRequestError(t *testing.T) {

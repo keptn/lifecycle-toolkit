@@ -97,17 +97,7 @@ func NewKeptnDynatraceDQLProvider(k8sClient client.Client, opts ...KeptnDynatrac
 }
 
 func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
-		return "", nil, err
-	}
-
-	b, status, err := d.postDQL(ctx, metric)
-	if err != nil {
-		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
-		return "", nil, err
-	}
-
-	results, err := d.parseDQLResults(b, status)
+	results, err := d.getResults(ctx, metric, provider)
 	if err != nil {
 		return "", nil, err
 	}
@@ -117,7 +107,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 	}
 
 	r := fmt.Sprintf("%f", results.Records[0].Value.Avg)
-	b, err = json.Marshal(results)
+	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
@@ -126,28 +116,36 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 }
 
 func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
-	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
-		return nil, nil, err
-	}
-
-	b, status, err := d.postDQL(ctx, metric)
-	if err != nil {
-		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
-		return nil, nil, err
-	}
-
-	results, err := d.parseDQLResults(b, status)
+	results, err := d.getResults(ctx, metric, provider)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	r := d.getResultSlice(results)
-	b, err = json.Marshal(results)
+	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
 
 	return r, b, nil
+}
+
+func (d *keptnDynatraceDQLProvider) getResults(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (*DQLResult, error) {
+	if err := d.ensureDTClientIsSetUp(ctx, provider); err != nil {
+		return nil, err
+	}
+
+	b, status, err := d.postDQL(ctx, metric)
+	if err != nil {
+		d.log.Error(err, "Error while posting the DQL query", "query", metric.Spec.Query)
+		return nil, err
+	}
+
+	results, err := d.parseDQLResults(b, status)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }
 
 func (d *keptnDynatraceDQLProvider) parseDQLResults(b []byte, status int) (*DQLResult, error) {

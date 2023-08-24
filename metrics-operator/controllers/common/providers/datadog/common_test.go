@@ -2,13 +2,13 @@ package datadog
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"

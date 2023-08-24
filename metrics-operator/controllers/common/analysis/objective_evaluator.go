@@ -18,7 +18,7 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.Objective) types.ObjectiveResult {
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]types.ProviderResult, obj *v1alpha3.Objective) types.ObjectiveResult {
 	result := types.ObjectiveResult{
 		Score: 0.0,
 		Value: 0.0,
@@ -49,13 +49,16 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.O
 	return result
 }
 
-func getValueFromMap(values map[string]string, key string) (float64, error) {
+func getValueFromMap(values map[string]types.ProviderResult, key string) (float64, error) {
 	val, ok := values[key]
 	if !ok {
 		return 0.0, fmt.Errorf("required value '%s' not available", key)
 	}
+	if val.Err != nil {
+		return 0.0, val.Err
+	}
 
-	floatVal, err := strconv.ParseFloat(val, 64)
+	floatVal, err := strconv.ParseFloat(val.Value, 64)
 	if err != nil {
 		return 0.0, err
 	}

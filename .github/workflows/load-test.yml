@@ -19,6 +19,9 @@ jobs:
     name: Run load Tests
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 

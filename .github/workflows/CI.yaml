@@ -37,6 +37,9 @@ jobs:
       NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -85,6 +88,9 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -131,6 +137,9 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -235,6 +244,9 @@ jobs:
     needs: [prepare_ci_run, build_image]
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out klt repo
         uses: actions/checkout@v3
 

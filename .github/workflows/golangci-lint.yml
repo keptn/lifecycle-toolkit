@@ -17,7 +17,7 @@ on:
       - "!docs/**"
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
-  GOLANGCI_LINT_VERSION: "v1.54.1"
+  GOLANGCI_LINT_VERSION: "v1.54.2"
   GO_VERSION: "~1.20"
 jobs:
   golangci-lint:

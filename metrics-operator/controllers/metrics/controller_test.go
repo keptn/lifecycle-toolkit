@@ -145,6 +145,52 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
+	metric6 := &metricsapi.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric6",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
+		},
+		Status: metricsapi.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
+	metric7 := &metricsapi.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric7",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5m",
+				Step:        "1m",
+				Aggregation: "max",
+			},
+		},
+		Status: metricsapi.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
 	unsupportedProvider := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -173,7 +219,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, unsupportedProvider, supportedProvider, oldSupportedProvider)
+	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, metric6, metric7, unsupportedProvider, supportedProvider, oldSupportedProvider)
 
 	r := &KeptnMetricReconciler{
 		Client: client,
@@ -312,4 +358,62 @@ func Test_cupSize(t *testing.T) {
 	require.Equal(t, len(res2), len(mySmallSlice))
 	require.Equal(t, len(res3), MB)
 
+}
+
+func Test_AggregateValues(t *testing.T) {
+	stringSlice := []string{"1", "2", "3", "4"}
+	tests := []struct {
+		name    string
+		aggFunc string
+		want    string
+	}{
+		{
+			name:    "test-max",
+			aggFunc: "max",
+			want:    "4",
+		},
+		{
+			name:    "test-min",
+			aggFunc: "min",
+			want:    "1",
+		},
+		{
+			name:    "test-median",
+			aggFunc: "median",
+			want:    "2.5",
+		},
+		{
+			name:    "test-avg",
+			aggFunc: "avg",
+			want:    "2.5",
+		},
+		{
+			name:    "test-p90",
+			aggFunc: "p90",
+			want:    "1",
+		},
+		{
+			name:    "test-p95",
+			aggFunc: "p95",
+			want:    "1",
+		},
+		{
+			name:    "test-p99",
+			aggFunc: "p99",
+			want:    "1",
+		},
+		{
+			name:    "wrong-aggFunc",
+			aggFunc: "p50",
+			want:    "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Log(tt.name)
+			res, err := aggregateValues(stringSlice, tt.aggFunc)
+			require.Equal(t, tt.want, res)
+			require.Nil(t, err)
+		})
+	}
 }

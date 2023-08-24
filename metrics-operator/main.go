@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -77,7 +76,7 @@ type envConfig struct {
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
@@ -109,7 +108,7 @@ func main() {
 
 	if SLIFilePath != "" {
 		//read file content
-		fileContent, err := ioutil.ReadFile(SLIFilePath)
+		fileContent, err := os.ReadFile(SLIFilePath)
 		if err != nil {
 			log.Fatalf("error reading file content: %s", err.Error())
 			return
@@ -121,7 +120,7 @@ func main() {
 			return
 		}
 		// write out converted result
-		fmt.Printf(content)
+		fmt.Print(content)
 		return
 	}
 

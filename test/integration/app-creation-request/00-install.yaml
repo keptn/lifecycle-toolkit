@@ -1,0 +1,18 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppCreationRequest
+metadata:
+  name: my-kacr
+spec:
+  appName: my-app
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: my-app-my-workload
+spec:
+  app: my-app
+  version: "1.0.0"
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb

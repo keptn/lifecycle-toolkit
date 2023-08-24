@@ -32,4 +32,52 @@ resources:
   kind: KeptnMetric
   path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: metrics
+  kind: KeptnMetric
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
+  webhooks:
+    validation: true
+    webhookVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: metrics
+  kind: KeptnMetricsProvider
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: metrics
+  kind: AnalysisDefinition
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
+  webhooks:
+    validation: true
+    webhookVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: metrics
+  kind: Analysis
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: metrics
+  kind: AnalysisValueTemplate
+  path: github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3
+  version: v1alpha3
 version: "3"

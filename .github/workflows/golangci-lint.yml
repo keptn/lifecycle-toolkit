@@ -17,8 +17,8 @@ on:
       - "!docs/**"
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
-  GOLANGCI_LINT_VERSION: "v1.52.1"
-  GO_VERSION: "~1.19"
+  GOLANGCI_LINT_VERSION: "v1.54.1"
+  GO_VERSION: "~1.20"
 jobs:
   golangci-lint:
     name: golangci-lint
@@ -28,7 +28,7 @@ jobs:
       matrix:
         config:
           - name: "lifecycle-operator"
-            folder: "operator/"
+            folder: "lifecycle-operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
@@ -38,10 +38,13 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-      
+
       - uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: true
+          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3

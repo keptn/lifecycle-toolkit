@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
-  name: podtato-head-1.3-2
+  name: podtato-head-1.3-d4735e3a
 status:
   currentPhase: Completed
   postDeploymentEvaluationStatus: Succeeded
@@ -14,7 +14,7 @@ status:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
-  name: podtato-head-1.3-1
+  name: podtato-head-1.3-6b86b273
 status:
   currentPhase: AppDeploy
   postDeploymentEvaluationStatus: Deprecated
@@ -119,4 +119,3 @@ status:
     - status: Succeeded
       definitionName: check-entry-service
   status: Succeeded
-

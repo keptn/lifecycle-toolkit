@@ -1,0 +1,37 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkloadInstance
+metadata:
+  name: waiter-waiter-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - definitionName: pre-deployment-hello
+      status: Succeeded
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTask
+metadata:
+  annotations:
+    python: test
+status:
+  status: Succeeded
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    python: test
+    keptn.sh/app: waiter
+    keptn.sh/version: '0.4'
+    keptn.sh/workload: waiter-waiter
+status:
+  conditions:
+    - type: Complete
+      status: 'True'
+  succeeded: 1

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lifecycle-operator-metrics-service
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    control-plane: lifecycle-operator
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.lifecycleOperatorMetricsService.type }}
+  selector:
+    control-plane: lifecycle-operator
+  {{- include "chart.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.lifecycleOperatorMetricsService.ports | toYaml | nindent 2 -}}

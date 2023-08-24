@@ -25,7 +25,7 @@ kubeconfig
 
 manifests/
 /scheduler/config/rendered/release.yaml
-/operator/config/rendered/release.yaml
+/lifecycle-operator/config/rendered/release.yaml
 /metrics-operator/config/rendered/release.yaml
 /klt-cert-manager/config/rendered/release.yaml
 # macOS
@@ -39,9 +39,14 @@ manifests/
 ## Kubebuilder
 **/kubebuilder
 /docs/tmp/
+/docs/release/
+/docs/.hugo_build.lock
+/docs/resources/_gen
+/docs/public
+node_modules
 
 # Helm readme generator project
 readme-generator-for-helm/
 /out.yaml
 /test.yaml
-/helmchart.yaml
+**helm_tests_output.yaml

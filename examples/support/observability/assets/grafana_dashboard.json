@@ -31,8 +31,8 @@
     "panels": [
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -108,8 +108,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_task_active{job=\"otel-collector\"})",
@@ -123,8 +123,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -200,8 +200,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_evaluation_active{job=\"otel-collector\"})",
@@ -215,8 +215,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -292,8 +292,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_task_count{job=\"otel-collector\"})",
@@ -307,8 +307,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -384,8 +384,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_evaluation_count{job=\"otel-collector\"})",
@@ -399,8 +399,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -449,8 +449,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -494,8 +494,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -544,8 +544,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -589,8 +589,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -666,8 +666,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_deployment_active{job=\"otel-collector\"})",
@@ -681,8 +681,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -758,8 +758,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "expr": "sum by(job) (keptn_deployment_count{job=\"otel-collector\"})",
@@ -773,8 +773,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "type": "prometheus"
+
         },
         "fieldConfig": {
           "defaults": {
@@ -823,8 +823,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "type": "prometheus"
+
             },
             "editorMode": "builder",
             "exemplar": false,

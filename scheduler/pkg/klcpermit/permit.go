@@ -36,14 +36,11 @@ func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1
 	// check the permit immediately, to fail early in case the pod cannot be queued
 	switch pl.workloadManager.Permit(ctx, p) {
 
-	case Failure:
-		klog.Infof("[Keptn Permit Plugin] failed pre-deployment checks on %s", p.GetObjectMeta().GetName())
-		return framework.NewStatus(framework.Error), 0 * time.Second
 	case Success:
 		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on %s", p.GetObjectMeta().GetName())
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
-		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName())
+		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s to succeed", p.GetObjectMeta().GetName())
 		go func() {
 			// create a new context since we are in a new goroutine
 			ctx2, cancel := context.WithCancel(context.Background())
@@ -60,9 +57,6 @@ func (pl *Permit) monitorPod(ctx context.Context, p *v1.Pod) {
 
 	for {
 		switch pl.workloadManager.Permit(ctx, p) {
-		case Failure:
-			waitingPodHandler.Reject(PluginName, "Pre Deployment Check failed")
-			return
 		case Success:
 			waitingPodHandler.Allow(PluginName)
 			return

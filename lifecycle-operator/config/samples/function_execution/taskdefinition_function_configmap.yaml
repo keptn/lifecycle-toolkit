@@ -1,0 +1,30 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnTaskDefinition
+metadata:
+  name: scheduled-deployment
+spec:
+  function:
+    configMapRef:
+      name: scheduled-deployment-cm-1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scheduled-deployment-1
+data:
+  code: |
+    let text = Deno.env.get("DATA");
+    let data;
+    if (text != "") {
+        data = JSON.parse(text);
+    }
+    let targetDate = new Date(data.targetDate)
+    let dateTime = new Date();
+    if(targetDate < dateTime) {
+        console.log("Date has passed - ok");
+        Deno.exit(0);
+    } else {
+        console.log("It's too early - failing");
+        Deno.exit(1);
+    }
+    console.log(targetDate);

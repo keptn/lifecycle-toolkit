@@ -1,0 +1,20 @@
+# permissions for end users to view keptnevaluations.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnevaluation-viewer-role
+rules:
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluations
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluations/status
+    verbs:
+      - get

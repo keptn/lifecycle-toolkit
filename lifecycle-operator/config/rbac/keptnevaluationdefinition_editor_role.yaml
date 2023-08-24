@@ -1,0 +1,24 @@
+# permissions for end users to edit keptnevaluationdefinitions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnevaluationdefinition-editor-role
+rules:
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationdefinitions
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnevaluationdefinitions/status
+    verbs:
+      - get

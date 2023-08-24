@@ -57,7 +57,7 @@ rules:
     resources: ["subjectaccessreviews"]
     verbs: ["create"]
   - apiGroups: ["storage.k8s.io"]
-    resources: ["csinodes", "storageclasses" , "csidrivers" , "csistoragecapacities"]
+    resources: ["csinodes", "storageclasses", "csidrivers", "csistoragecapacities"]
     verbs: ["get", "list", "watch"]
   # resources need to be updated with the scheduler plugins used
   - apiGroups: ["scheduling.sigs.k8s.io"]
@@ -66,9 +66,9 @@ rules:
   - apiGroups: ["lifecycle.keptn.sh"]
     resources: ["keptnworkloadinstances"]
     verbs: ["get", "list", "watch"]
-  - apiGroups: [ "" ]
-    resources: [ "configmaps" ]
-    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

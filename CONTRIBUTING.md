@@ -42,115 +42,18 @@ on Slack and a mentor will surely guide you!
 
 ### Prerequisites
 
-* [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
-which allows software applications to run in isolated environments
-and makes it easier to deploy and manage them.
-* A Kubernetes `cluster >= Kubernetes 1.24` .If you don’t have one,
-we recommend Kubernetes-in-Docker(kind) to set up your local development environment.
-* [**kubectl**](https://kubernetes.io/docs/tasks/tools/): a command-line interface tool used for deploying
-and managing applications on Kubernetes clusters.
-* [**kustomize**](https://kustomize.io/): a tool used for customizing Kubernetes resource configurations
-and generating manifests.
-* [**Helm**](https://helm.sh/): a package manager for Kubernetes that
-simplifies the deployment and management of applications on a Kubernetes cluster.
+See
+[Set up the development environment](docs/content/en/contribute/software/dev-environ/_index.md)
+for information about how to set up an environment
+in which you can develop and test software for Keptn.
 
-## [Related Technologies](docs/content/en/contribute/general/technologies/_index.md)
+## Related Technologies
 
-## Linters requirements
+Please check [Related Technologies](docs/content/en/contribute/general/technologies/_index.md).
 
-This project uses a set of linters to ensure good code quality.
-In order to make proper use of those linters inside an IDE,
-the following configuration is required.
+## Linter Requirements
 
-### Golangci-lint
-
-Further information can also be found in
-the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
-
-#### Visual Studio Code
-
-In Visual Studio Code the
-[Golang](https://marketplace.visualstudio.com/items?itemName=aldijav.golangwithdidi)
-extension is required.
-
-Adding the following lines to the `Golang` extension
-configuration file enables all linters used in this project.
-
-```json
-"go.lintTool": {
- "type": "string",
- "default": "golangci-lint",
- "description": "GolangGCI Linter",
- "scope": "resource",
- "enum": [
-  "golangci-lint",
- ]
-},
-"go.lintFlags": {
- "type": "array",
- "items": {
-  "type": "string"
- }, 
- "default": ["--fast", "--fix"],
- "description": "Flags to pass to GCI Linter",
- "scope": "resource"
-},
-```
-
-#### GoLand / IntelliJ requirements
-
-* Install either the **GoLand** or **IntelliJ**  Integrated Development Environment
-(IDE) for the Go programming language, plus the [Go Linter](https://plugins.jetbrains.com/plugin/12496-go-linter) plugin.
-
-* The plugin can be installed via `Settings` >> `Plugins` >> `Marketplace`,
-search for `Go Linter` and install it.
-Once installed, make sure that the plugin is using the `.golangci.yml`
-file from the root directory.
-
-* The configuration of `Go Linter` can be found in the `Tools` section
-of the settings.
-
-If you are on Windows, you need to install **make** for the above process to complete.
-
-> **Note**
-When using the make command on Windows, you may receive an `unrecognized command` error for a command that is installed.
-This usually indicates that `PATH` for the binary is not set correctly).
-
-### Markdownlint
-
-We are using [markdownlint](https://github.com/DavidAnson/markdownlint) to ensure consistent styling
-within our Markdown files.
-Specifically we are using [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli).
-
-We are using `GNU MAKE` to ensure the same functionality locally and within our CI builds.
-This should allow easier debugging and problem resolution.
-
-#### Markdownlint execution
-
-To verify that your markdown code conforms to the rules, run the following on your local branch:
-
-```shell
-make markdownlint
-```
-
-To use the auto-fix option, run:
-
-```shell
-make markdownlint-fix
-```
-
-#### Markdownlint Configuration
-
-We use the default configuration values for `markdownlint`.
-
-This means:
-
-* [.markdownlint.yaml](./.markdownlint.yaml) contains the rule configuration
-* [.markdownlintignore](./.markdownlintignore) list files that markdown-lint ignores,  using `.gitignore` conventions
-
-We use the default values, so tools like
-[markdownlint for VSCode](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
-can be used without additional configuration.
+Please check [Linter Requirements](docs/content/en/contribute/docs/linter-requirements/_index.md).
 
 ## Submit a Pull Request 🚀
 
@@ -174,7 +77,8 @@ git push --set-upstream origin feature/123/foo
 > Note:
 All PRs must include a commit message with a description of the changes made!
 
-Make sure you **sign off your commits**. To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
+Make sure you **sign off your commits**.
+To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
 Finally, go to GitHub and create a Pull Request.
 There should be a PR template already prepared for you.
 If not, you will find it at `.github/pull_request_template.md`.

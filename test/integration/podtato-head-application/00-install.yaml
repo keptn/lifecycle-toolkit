@@ -52,11 +52,11 @@ spec:
       terminationGracePeriodSeconds: 5
       initContainers:
         - name: init-myservice
-          image: busybox:1.36.0
+          image: busybox:1.36.1
           command: ['sh', '-c', 'sleep 30']
       containers:
         - name: server
-          image: ghcr.io/podtato-head/entry:0.2.7
+          image: ghcr.io/podtato-head/entry:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -105,7 +105,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/hat:0.2.7
+          image: ghcr.io/podtato-head/hat:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -152,7 +152,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-leg:0.2.7
+          image: ghcr.io/podtato-head/left-leg:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -199,7 +199,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-arm:0.2.7
+          image: ghcr.io/podtato-head/left-arm:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -246,7 +246,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:0.2.7
+          image: ghcr.io/podtato-head/right-leg:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -293,7 +293,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-arm:0.2.7
+          image: ghcr.io/podtato-head/right-arm:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -376,4 +376,3 @@ metadata:
   name: prometheus
 spec:
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
-

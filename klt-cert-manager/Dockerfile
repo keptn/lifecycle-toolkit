@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM --platform=$BUILDPLATFORM golang:1.20.2-alpine3.16 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.20.4-alpine3.16 AS builder
 
 ENV CGO_ENABLED=0
 
@@ -13,7 +13,7 @@ RUN go mod download
 COPY ./ ./
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.11.3
+ARG CONTROLLER_TOOLS_VERSION=v0.12.1
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 ARG GIT_HASH
@@ -36,7 +36,7 @@ FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
-    org.opencontainers.image.title="Keptn Lifecycle Certificate Manager" \
+    org.opencontainers.image.title="Keptn Lifecycle Toolkit Certificate Manager" \
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
@@ -49,7 +49,7 @@ FROM gcr.io/distroless/static-debian11:nonroot AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/klt-cert-manager" \
     org.opencontainers.image.url="https://keptn.sh" \
-    org.opencontainers.image.title="Keptn Lifecycle Certificate Manager" \
+    org.opencontainers.image.title="Keptn Lifecycle Toolkit Certificate Manager" \
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 

@@ -7,13 +7,13 @@ import (
 
 	"github.com/go-logr/logr/testr"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/fake"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
@@ -21,7 +21,7 @@ import (
 
 const (
 	testDomain         = "my-domain." + testnamespace + ".svc"
-	expectedSecretName = secretName
+	expectedSecretName = common.SecretName
 	strategyWebhook    = "webhook"
 	testBytes          = 123
 	testnamespace      = "keptn-ns"
@@ -35,7 +35,7 @@ func TestReconcileCertificate_Create(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -62,7 +62,7 @@ func TestReconcileCertificate_Update(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -89,7 +89,7 @@ func TestReconcileCertificate_ExistingSecretWithValidCertificate(t *testing.T) {
 	res, err := controller.Reconcile(context.TODO(), request)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
-	assert.Equal(t, successDuration, res.RequeueAfter)
+	assert.Equal(t, common.SuccessDuration, res.RequeueAfter)
 
 	secret := &corev1.Secret{}
 	err = clt.Get(context.TODO(), client.ObjectKey{Name: expectedSecretName, Namespace: testnamespace}, secret)
@@ -146,7 +146,8 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with mutatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.MutatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "my-mutating-webhook-config",
+				Name:   "my-mutating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.MutatingWebhook{
 				{
@@ -167,7 +168,8 @@ func TestReconcile(t *testing.T) {
 	t.Run(`reconcile successfully with validatingwebhookconfiguration`, func(t *testing.T) {
 		fakeClient := fake.NewClient(crd1, crd2, crd3, &admissionregistrationv1.ValidatingWebhookConfiguration{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "my-validating-webhook-config",
+				Name:   "my-validating-webhook-config",
+				Labels: getMatchLabel(),
 			},
 			Webhooks: []admissionregistrationv1.ValidatingWebhook{
 				{
@@ -377,7 +379,7 @@ func prepareFakeClient(withSecret bool, generateValidSecret bool) client.Client 
 
 func getMatchLabel() map[string]string {
 	return map[string]string{
-		"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit",
+		"keptn.sh/inject-cert": "true",
 	}
 }
 
@@ -410,12 +412,12 @@ func createTestSecret(_ *testing.T, certData map[string][]byte) *corev1.Secret {
 }
 
 func prepareController(t *testing.T, clt client.Client) (*KeptnWebhookCertificateReconciler, reconcile.Request) {
-	rec := &KeptnWebhookCertificateReconciler{
+	rec := NewReconciler(CertificateReconcilerConfig{
 		Client:      clt,
 		Log:         testr.New(t),
 		Namespace:   testnamespace,
-		MatchLabels: labels.Set(map[string]string{"app.kubernetes.io/part-of": "keptn-lifecycle-toolkit"}),
-	}
+		MatchLabels: map[string]string{"keptn.sh/inject-cert": "true"},
+	})
 
 	request := reconcile.Request{
 		NamespacedName: types.NamespacedName{

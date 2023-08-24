@@ -28,18 +28,18 @@ spec:
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:
-      - name: init-myservice
-        image: busybox:1.36.0
-        command: ['sh', '-c', 'sleep 30']
+        - name: init-myservice
+          image: busybox:1.36.1
+          command: ['sh', '-c', 'sleep 30']
       containers:
-      - name: server
-        image: ghcr.io/podtato-head/entry:0.2.7
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 9000
-        env:
-        - name: PODTATO_PORT
-          value: "9000"
+        - name: server
+          image: ghcr.io/podtato-head/entry:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
 ---
 apiVersion: v1
 kind: Service
@@ -52,10 +52,10 @@ spec:
   selector:
     component: podtato-head-entry
   ports:
-  - name: http
-    port: 9000
-    protocol: TCP
-    targetPort: 9000
+    - name: http
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
   type: LoadBalancer
   # change to NodePort if no LoadBalancer controller is available
   # type: NodePort
@@ -86,7 +86,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/hat:0.2.7
+          image: ghcr.io/podtato-head/hat:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -135,7 +135,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-leg:0.2.7
+          image: ghcr.io/podtato-head/left-leg:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -184,7 +184,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-arm:0.2.7
+          image: ghcr.io/podtato-head/left-arm:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -233,7 +233,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:0.2.7
+          image: ghcr.io/podtato-head/right-leg:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -282,7 +282,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-arm:0.2.7
+          image: ghcr.io/podtato-head/right-arm:0.2.8
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

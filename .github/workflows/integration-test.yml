@@ -2,16 +2,16 @@ name: Integration-Test
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
+      runtime_tag:
         description: "Tag for the functions runner image"
         type: "string"
         required: true
       helm-install:
-        description: "Decides wheter to install via helm"
+        description: "Decides whether to install via helm"
         type: "boolean"
-        default: false
+        default: true
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=kudobuilder/kuttl
   KUTTL_VERSION: "v0.15.0"
 defaults:
@@ -29,22 +29,24 @@ jobs:
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
-          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
-          helm-install:  ${{ inputs.helm-install }}
-      
+          runtime_tag: ${{ inputs.runtime_tag }}
+          helm-install: ${{ inputs.helm-install }}
+
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Download KUTTL
+        env:
+          BASE_URL: "https://github.com/kudobuilder/kuttl/releases"
         run: |
-          curl -fL https://github.com/kudobuilder/kuttl/releases/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64 -o kubectl-kuttl
+          curl -fL "${BASE_URL}/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64" -o kubectl-kuttl
           chmod +x kubectl-kuttl
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Integration Tests
         working-directory: .
         run: make integration-test
-      
+
       - name: Create reports
         if: always()
         working-directory: ./.github/scripts
@@ -54,5 +56,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests
+          name: logs-integration-tests-${{ inputs.helm-install }}
           path: .github/scripts/logs

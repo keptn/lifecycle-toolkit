@@ -1,6 +1,4 @@
-
 ---
-
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
@@ -10,9 +8,7 @@ spec:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");
-
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,6 +37,5 @@ spec:
           command: ['sh', '-c', 'echo The app is running! && sleep infinity']
       initContainers:
         - name: init-myservice
-          image: busybox:1.36.0
+          image: busybox:1.36.1
           command: ['sh', '-c', 'sleep 30']
-

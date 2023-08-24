@@ -36,8 +36,8 @@ func init() {
 
 type envConfig struct {
 	KLTNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
-	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"app.kubernetes.io/part-of"`
-	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"keptn-lifecycle-toolkit"`
+	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
+	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
 }
 
 func main() {
@@ -85,7 +85,7 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
-	if err = (&keptnwebhookcontroller.KeptnWebhookCertificateReconciler{
+	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CancelMgrFunc: nil,
@@ -94,7 +94,8 @@ func main() {
 		MatchLabels: map[string]string{
 			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
 		},
-	}).SetupWithManager(mgr); err != nil {
+	})
+	if err = certificateReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 		os.Exit(1)
 	}

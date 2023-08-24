@@ -1,5 +1,5 @@
 versions:
   - url: /docs/
     version: development
-  - url: https://lifecycle-test.keptn.sh/docs
+  - url: https://lifecycle.keptn.sh/docs
     version: latest

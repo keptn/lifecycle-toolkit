@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.20.2-alpine3.16 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.20.4-alpine3.16 AS builder
 
 ENV CGO_ENABLED=0
 
@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.11.3
+ARG CONTROLLER_TOOLS_VERSION=v0.12.1
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 # Copy the go source
@@ -45,9 +45,9 @@ ENTRYPOINT ["/manager"]
 
 FROM gcr.io/distroless/static-debian11:nonroot AS production
 
-LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
+LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/metrics-operator" \
     org.opencontainers.image.url="https://keptn.sh" \
-    org.opencontainers.image.title="Keptn Lifecycle Operator" \
+    org.opencontainers.image.title="Keptn Metrics Operator" \
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 

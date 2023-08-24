@@ -1,11 +1,11 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.42.0
+JAEGER_VERSION ?= v1.47.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
-install: install-observability install-argo
+install: install-observability
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
@@ -46,13 +46,17 @@ deploy-version-3:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k sample-app/version-3
 
-.PHONY: undeploy-podtatohead
-undeploy-podtatohead:
+.PHONY: cleanup
+cleanup:
 	kubectl delete ns "$(PODTATO_NAMESPACE)" --ignore-not-found=true
 
 	@echo "######################"
 	@echo "PodTatoHead undeployed"
 	@echo "######################"
+
+.PHONY: undeploy-podtatohead
+undeploy-podtatohead: cleanup
+
 
 .PHONY: uninstall-observability
 uninstall-observability: undeploy-podtatohead
@@ -89,8 +93,8 @@ restart-lifecycle-toolkit:
 	@echo "----------------------------------"
 	@echo "Restart Keptn Lifecycle Controller"
 	@echo "----------------------------------"
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" lifecycle-operator --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" scheduler -n keptn-lifecycle-toolkit-system
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" scheduler --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator --watch
+	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler
+	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler --watch
 

@@ -1,10 +1,10 @@
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetric
 metadata:
   name: consumed-memory
   namespace: podtato-kubectl
 spec:
-  provider: 
-    name: prometheus
+  provider:
+    name: my-provider
   query: "sum(kube_node_status_capacity{resource='memory'})"
   fetchIntervalSeconds: 10

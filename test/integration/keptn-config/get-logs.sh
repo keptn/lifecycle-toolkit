@@ -5,7 +5,7 @@ RETRY_COUNT=3
 SLEEP_TIME=5
 
 for i in $(seq 1 $RETRY_COUNT); do
-    VAR=$(kubectl logs -n "$NAMESPACE" deployments/lifecycle-operator | grep -c "initializing KeptnConfig since no config was there before")
+    VAR=$(kubectl logs -n "$NAMESPACE" -l control-plane=lifecycle-operator --tail=-1 | grep -c "reconciling Keptn Config")
     # shellcheck disable=SC1072
     if [ "$VAR" -ge 1 ]; then
       echo "Controller could access secret"
@@ -17,4 +17,6 @@ for i in $(seq 1 $RETRY_COUNT); do
     fi
 done
 echo "Retried ${RETRY_COUNT} times, but correct log message was not found. Exiting..."
+kubectl logs -n "$NAMESPACE" -l control-plane=lifecycle-operator --tail=-1 > logs.txt
+cat logs.txt
 exit 1

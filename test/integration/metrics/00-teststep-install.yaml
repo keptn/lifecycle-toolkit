@@ -1,7 +1,0 @@
-apiVersion: kuttl.dev/v1beta1
-kind: TestStep
-apply:
- - goodmetric.yaml
-commands:
- - command: kubectl apply -f badmetric.yaml
-   ignoreFailure: true #we must install ignoring the validating webhook error to proceed with the test

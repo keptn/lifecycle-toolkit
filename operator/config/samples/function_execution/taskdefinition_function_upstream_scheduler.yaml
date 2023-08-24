@@ -1,9 +1,0 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: schedule-upstream-deployment
-spec:
-  function:
-    httpRef:
-      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/schedule.ts
-

@@ -1,0 +1,8 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:
+  - script: ./retrieve-metrics.sh "podtato-head1"
+  - script: ./retrieve-metrics.sh "podtato-head2"
+  - script: ./retrieve-metrics.sh "podtato-head3"
+  - script: ./retrieve-metrics.sh "podtato-head4"
+  - script: ./retrieve-metrics.sh "podtato-head5"

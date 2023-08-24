@@ -1,0 +1,11 @@
+# Adds namespace to all resources.
+namespace: keptn-lifecycle-toolkit-system
+
+bases:
+  - ../crd
+  - ../rbac
+  - ../manager
+  - ../webhook
+
+patchesStrategicMerge:
+  - webhooknamespaces_patch.yaml

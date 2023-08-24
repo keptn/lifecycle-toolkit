@@ -1,0 +1,24 @@
+# certificate is recreated and there are operators instances available
+apiVersion: v1
+kind: Secret
+metadata:
+  name: klt-certs
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    control-plane: metrics-operator
+status:
+  readyReplicas: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: keptn-lifecycle-toolkit-system
+  labels:
+    control-plane: lifecycle-operator
+status:
+  readyReplicas: 1

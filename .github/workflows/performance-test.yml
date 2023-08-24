@@ -2,12 +2,12 @@ name: Performance Tests
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
+      runtime_tag:
         description: "Tag for the functions runner image"
         type: "string"
         required: true
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
   USE_EXISTING_CLUSTER: "true"
 defaults:
   run:
@@ -17,27 +17,27 @@ jobs:
     name: Performance Tests
     runs-on: ubuntu-22.04
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Setup cluster
-      uses: ./.github/actions/deploy-klt-on-cluster
-      with:
-        functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster
+        with:
+          runtime_tag: ${{ inputs.runtime_tag }}
 
-    - name: Execute Performance Tests
-      working-directory: operator
-      run: |
-        make performance-test
-    
-    - name: Create reports
-      if: always()
-      working-directory: ./.github/scripts
-      run: ./create-reports-toolkit.sh
+      - name: Execute Performance Tests
+        working-directory: lifecycle-operator
+        run: |
+          make performance-test
 
-    - name: Upload cluster logs
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: logs-performance-tests
-        path: .github/scripts/logs
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-toolkit.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-performance-tests
+          path: .github/scripts/logs

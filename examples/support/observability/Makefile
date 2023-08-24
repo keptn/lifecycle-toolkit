@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.42.0
+JAEGER_VERSION ?= v1.47.0
 TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -44,6 +44,15 @@ install: install-cert-manager
 	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=120s
+
+	# @echo ""
+	# @echo "------------------"
+	# @echo "Install Prometheus Mockserver"
+	# @echo "------------------"
+	# kubectl apply -n "$(TOOLKIT_NAMESPACE)" -f config/prometheus-mock/mockserver-config.yaml
+	# helm repo add mockserver "https://www.mock-server.com"
+	# helm upgrade --install -n "$(TOOLKIT_NAMESPACE)" --version 5.13.0 mockserver mockserver/mockserver --set service.type=ClusterIP --wait
+
 
 	@echo ""
 	@echo "#######################################################"
@@ -99,8 +108,8 @@ import-grafana-dashboard:
 uninstall:
 	kubectl delete -f config/jaeger.yaml -n "$(TOOLKIT_NAMESPACE)" --ignore-not-found=true
 	kubectl delete -f https://github.com/jaegertracing/jaeger-operator/releases/download/$(JAEGER_VERSION)/jaeger-operator.yaml -n observability --ignore-not-found=true
-	kubectl delete -f config/prometheus/ --ignore-not-found=true
-	kubectl delete -f config/prometheus/setup --ignore-not-found=true
+	#kubectl delete -f config/prometheus/ --ignore-not-found=true
+	#kubectl delete -f config/prometheus/setup --ignore-not-found=true
 	kubectl delete ns observability --ignore-not-found=true
 	kubectl delete ns monitoring --ignore-not-found=true
 	@echo ""

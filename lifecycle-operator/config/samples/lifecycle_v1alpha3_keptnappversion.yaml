@@ -1,0 +1,6 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: keptnappversion-sample
+spec:
+# TODO(user): Add fields here

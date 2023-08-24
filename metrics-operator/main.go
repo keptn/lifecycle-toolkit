@@ -26,11 +26,13 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	cmdConfig "github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/config"
+	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/webhook"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
@@ -54,9 +56,10 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
-	//+kubebuilder:scaffold:scheme
+	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
+	utilruntime.Must(metricsv1alpha3.AddToScheme(scheme))
+	// +kubebuilder:scaffold:scheme
 }
 
 type envConfig struct {
@@ -66,6 +69,7 @@ type envConfig struct {
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
+//nolint:gocyclo
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
@@ -133,11 +137,15 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha2.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
+		os.Exit(1)
+	}
+	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")
@@ -152,10 +160,22 @@ func main() {
 		webhookBuilder := webhook.NewWebhookBuilder().
 			SetNamespace(env.PodNamespace).
 			SetPodName(env.PodName).
-			SetConfigProvider(cmdConfig.NewKubeConfigProvider())
+			SetManagerProvider(
+				webhook.NewWebhookManagerProvider(
+					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
+			).
+			SetCertificateWatcher(
+				certificates.NewCertificateWatcher(
+					mgr.GetAPIReader(),
+					mgr.GetWebhookServer().CertDir,
+					env.PodNamespace,
+					certCommon.SecretName,
+					setupLog,
+				),
+			)
 
 		setupLog.Info("starting webhook and manager")
-		if err1 := webhookBuilder.Run(mgr); err1 != nil {
+		if err := webhookBuilder.Run(mgr, nil); err != nil {
 			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}

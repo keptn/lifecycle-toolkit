@@ -1,9 +1,9 @@
 processor:
   useRawDocstring: true
-  ignoreTypes: [ ]
+  ignoreTypes:
+    - "EmptyStatus$"
   ignoreFields:
-    - "status$"
     - "TypeMeta$"
-
+    - "EmptyStatus$"
 render:
   kubernetesVersion: 1.24

@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnTask
+metadata:
+  name: scheduled-deployment
+spec:
+  taskDefinition: schedule-upstream-deployment
+  workload: my-workload
+  version: "1.0"
+  app: my-app
+  parameters:
+    map:
+      targetDate: "2022-04-16T06:55:31.820Z"

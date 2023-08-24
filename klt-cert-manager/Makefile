@@ -6,7 +6,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.7.0" # x-release-please-version
+TAG?="v0.8.0" # x-release-please-version
 RELEASE_IMAGE:=certificate-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -118,9 +118,9 @@ ENVTEST ?= $(LOCALBIN)/setup-envtest
 ## Tool Versions
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v4.5.7
+KUSTOMIZE_VERSION?=v5.1.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION?=v0.11.3
+CONTROLLER_TOOLS_VERSION?=v0.12.1
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize

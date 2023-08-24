@@ -13,7 +13,7 @@ defaults:
     shell: bash
 
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
 
 jobs:
   prepare-security-scans:
@@ -44,13 +44,13 @@ jobs:
               -H "Authorization: token $GITHUB_TOKEN" \
               "api.github.com/repos/${{ github.repository }}/actions/workflows/CI.yaml/runs?branch=$BRANCH" | \
             jq '[.workflow_runs[] | select(
-              (.head_commit != null) and ( .conclusion == "success" ) 
+              (.head_commit != null) and ( .conclusion == "success" )
             )][0] | .id')
           echo "Run ID that will be used to download artifacts from: $RUN_ID"
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts from last successful build of main branch
-        uses: dawidd6/action-download-artifact@v2.26.0
+        uses: dawidd6/action-download-artifact@v2.27.0
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
@@ -66,7 +66,7 @@ jobs:
         with:
           name: manifests
           path: |
-            ./dist/*-manifest/
+            ./dist/*-manifest-test/
 
       - name: Upload manifests user run
         if: ${{ github.event_name  != 'schedule' }}
@@ -74,7 +74,7 @@ jobs:
         with:
           name: manifests
           path: |
-            ./dist/*-manifest-test/   
+            ./dist/*-manifest-test/
 
       - name: Upload images
         uses: actions/upload-artifact@v3
@@ -82,7 +82,7 @@ jobs:
           name: images
           path: |
             ./dist/*-image.tar/
-            
+
   security-scans:
     name: "Security Scans"
     needs: prepare-security-scans
@@ -107,6 +107,8 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: false
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -123,7 +125,7 @@ jobs:
 
       - name: KICS Scan
         if: matrix.tool == 'kics'
-        uses: Checkmarx/kics-github-action@v1.6
+        uses: Checkmarx/kics-github-action@v1.7.0
         with:
           path: scans
           config_path: .github/kics-config.yml
@@ -143,9 +145,9 @@ jobs:
           echo "::group::Kubeconform installation"
           go install github.com/yannh/kubeconform/cmd/kubeconform@${{ matrix.version }}
           echo "::endgroup::"
-          
-          cd operator/config/default
-          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
+
+          cd lifecycle-operator/config/default
+          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/lifecycle-operator-manifest.yaml
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
           cd ../../../metrics-operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
@@ -156,8 +158,16 @@ jobs:
           curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
-          cd .. && echo "---" >> operator-manifest.yaml && echo "---" >> scheduler-manifest.yaml && cat operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
-          kubeconform -schema-location default -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -summary manifest.yaml
+          cd .. && \
+            echo "---" >> lifecycle-operator-manifest.yaml && \
+            echo "---" >> scheduler-manifest.yaml && \
+            cat lifecycle-operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
+          kubeconform \
+            -schema-location default \
+            -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
+            -schema-location \
+            'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            -summary manifest.yaml
 
       - name: Kubescape Scan
         if: matrix.tool == 'kubescape'
@@ -165,11 +175,16 @@ jobs:
           FAILURE_PERCENTAGE: 10
         run: |
           echo "::group::Kubescape installation"
-          curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+          curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash
+          export PATH=$PATH:/home/runner/.kubescape/bin
           echo "::endgroup::"
           # Docs on how to configure exceptions: https://hub.armosec.io/docs/exceptions
-          kubescape scan framework ${{ matrix.kubescape-framework }} -v -t ${{ env.FAILURE_PERCENTAGE }} --exceptions ./.github/.kubescape/exceptions.json --controls-config ./.github/.kubescape/controls-inputs.json scans --enable-color
-          
+          kubescape scan framework ${{ matrix.kubescape-framework }} \
+            -v -t ${{ env.FAILURE_PERCENTAGE }} \
+            --exceptions ./.github/.kubescape/exceptions.json \
+            --controls-config ./.github/.kubescape/controls-inputs.json scans \
+            --enable-color
+
   trivy:
     name: Trivy
     runs-on: ubuntu-22.04
@@ -179,6 +194,7 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
+          - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
@@ -192,7 +208,7 @@ jobs:
           path: images
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.9.2
+        uses: aquasecurity/trivy-action@0.11.2
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -205,7 +221,7 @@ jobs:
       fail-fast: false
       matrix:
         artifact:
-          - "operator"
+          - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
@@ -214,7 +230,9 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
         with:
+          cache-dependency-path: ${{ matrix.artifact }}/go.sum
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -229,7 +247,7 @@ jobs:
   create_issue:
     name: Create GitHub Issue
     runs-on: ubuntu-22.04
-    needs: [ security-scans, govulncheck, trivy ]
+    needs: [security-scans, govulncheck, trivy]
     if: failure() && github.event_name == 'schedule'
     steps:
       - name: Formulate bug issue

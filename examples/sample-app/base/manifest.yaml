@@ -22,6 +22,8 @@ spec:
       containers:
         - name: podtato-head-frontend
           env:
+            - name: PODTATO_COMPONENT
+              value: "frontend"
             - name: PODTATO_STARTUP_DELAY
               value: "20s"
             - name: PODTATO_VERSION
@@ -36,6 +38,7 @@ metadata:
   name: podtato-head-hat
   namespace: podtato-kubectl
 spec:
+  replicas: 1
   template:
     metadata:
       labels:
@@ -58,6 +61,7 @@ metadata:
   name: podtato-head-left-leg
   namespace: podtato-kubectl
 spec:
+  replicas: 0
   template:
     metadata:
       labels:
@@ -80,6 +84,7 @@ metadata:
   name: podtato-head-right-leg
   namespace: podtato-kubectl
 spec:
+  replicas: 0
   template:
     metadata:
       labels:
@@ -102,6 +107,7 @@ metadata:
   name: podtato-head-left-arm
   namespace: podtato-kubectl
 spec:
+  replicas: 1
   template:
     metadata:
       labels:
@@ -124,6 +130,7 @@ metadata:
   name: podtato-head-right-arm
   namespace: podtato-kubectl
 spec:
+  replicas: 1
   template:
     metadata:
       labels:

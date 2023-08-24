@@ -361,57 +361,113 @@ func Test_cupSize(t *testing.T) {
 }
 
 func Test_AggregateValues(t *testing.T) {
-	stringSlice := []string{"1", "2", "3", "4"}
 	tests := []struct {
-		name    string
-		aggFunc string
-		want    string
+		name        string
+		aggFunc     string
+		stringSlice []string
+		want        string
 	}{
 		{
-			name:    "test-max",
-			aggFunc: "max",
-			want:    "4",
+			name:        "test-max",
+			aggFunc:     "max",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
 		},
 		{
-			name:    "test-min",
-			aggFunc: "min",
-			want:    "1",
+			name:        "test-min",
+			aggFunc:     "min",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "1",
 		},
 		{
-			name:    "test-median",
-			aggFunc: "median",
-			want:    "2.5",
+			name:        "test-median-for-even-length",
+			aggFunc:     "median",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "2.5",
 		},
 		{
-			name:    "test-avg",
-			aggFunc: "avg",
-			want:    "2.5",
+			name:        "test-median-for-odd-length",
+			aggFunc:     "median",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "3",
 		},
 		{
-			name:    "test-p90",
-			aggFunc: "p90",
-			want:    "1",
+			name:        "test-avg",
+			aggFunc:     "avg",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "2.5",
 		},
 		{
-			name:    "test-p95",
-			aggFunc: "p95",
-			want:    "1",
+			name:        "test-p90",
+			aggFunc:     "p90",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "1",
 		},
 		{
-			name:    "test-p99",
-			aggFunc: "p99",
-			want:    "1",
+			name:        "test-p95",
+			aggFunc:     "p95",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "1",
 		},
 		{
-			name:    "wrong-aggFunc",
-			aggFunc: "p50",
-			want:    "",
+			name:        "test-p99",
+			aggFunc:     "p99",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-max-empty-string",
+			aggFunc:     "max",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-min-empty-string",
+			aggFunc:     "min",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-median-empty-string",
+			aggFunc:     "median",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-avg-empty-string",
+			aggFunc:     "avg",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p90-empty-string",
+			aggFunc:     "p90",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p95-empty-string",
+			aggFunc:     "p95",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p99-empty-string",
+			aggFunc:     "p99",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "wrong-aggFunc",
+			aggFunc:     "p50",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Log(tt.name)
-			res, err := aggregateValues(stringSlice, tt.aggFunc)
+			res, err := aggregateValues(tt.stringSlice, tt.aggFunc)
 			require.Equal(t, tt.want, res)
 			require.Nil(t, err)
 		})

@@ -231,7 +231,7 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
    
 ## Choosing the correct branch when contributing
 
-We are using Netlify to publish our pages.
+New writing goes to the `main` branch and can be viewed on the Releases -> development dropdown menu.
 We have staging and production levels for our documentation which are as follows:
 
 1. Development documentation aka staging (build of `main` branch) - [link](https://main.lifecycle.keptn.sh)
@@ -258,22 +258,7 @@ This documentation set contains all released versions of KLT and is stored in an
 - build-environment: production
 - config folder: [production](./config/production/)
 
-## FAQs
-
-- Who/how do these changes get reviewed/approved/merged?
-```
-Like every normal PR - if the changes are approved by the maintainer, it will get merged.
-```
-
-- Which branch should I consider when contributing?
-```
-New writing goes to the main branch and can be viewed on the Releases -> development dropdown menu
-```
-
-- When we push the main branch to production, does it overwrite changes that were only pushed to page?
-```
-No, because a new version is generated - hence old page branch will be copied over a “version” folder
-```
+A new version is generated when we push the `main` branch to production - hence old `page` branch will be copied over a “version” folder and it doesn't overwrite changes that were only pushed to `page`.
 
 ### Developer Certification of Origin (DCO)
 

@@ -2,6 +2,8 @@ package converter
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -64,7 +66,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 				Name: key,
 			},
 			Spec: metricsapi.AnalysisValueTemplateSpec{
-				Query: query,
+				Query: convertQuery(query),
 				Provider: metricsapi.ObjectReference{
 					Name:      provider,
 					Namespace: namespace,
@@ -75,4 +77,22 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 		i++
 	}
 	return result
+}
+
+func convertQuery(query string) string {
+	// regex matching string starting with $, then upptercase letter
+	// followed by unlimited occurences of uppercase letters and numbers
+	// examples: $LIST, $L, $L2T, $L555
+	re := regexp.MustCompile(`\$\b[A-Z][A-Z0-9]*\b`)
+	//get all substrings matching regex
+	variables := re.FindAllStringSubmatch(query, -1)
+	if len(variables) == 0 {
+		return query
+	}
+	for _, v := range variables {
+		subst := strings.ToLower(strings.TrimPrefix(v[0], "$"))
+		subst = "{{." + subst + "}}"
+		query = strings.ReplaceAll(query, v[0], subst)
+	}
+	return query
 }

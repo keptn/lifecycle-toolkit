@@ -24,7 +24,7 @@ spec:
   provider:
     name: dynatrace
     namespace: keptn
-  query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)
+  query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
@@ -35,7 +35,7 @@ spec:
   provider:
     name: dynatrace
     namespace: keptn
-  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)
+  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
 `
 
 func TestConvertMapToAnalysisValueTemplate(t *testing.T) {
@@ -109,4 +109,55 @@ func TestConvertSLI(t *testing.T) {
 	res, err = c.Convert([]byte(sliContent), "dynatrace", "keptn")
 	require.Nil(t, err)
 	require.Equal(t, expectedOutput, res)
+}
+
+func TestConvertQuary(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		out  string
+	}{
+		{
+			name: "no substitutions",
+			in:   "hello",
+			out:  "hello",
+		},
+		{
+			name: "no substitutions - uppercase",
+			in:   "HELLO",
+			out:  "HELLO",
+		},
+		{
+			name: "no substitutions - dollar with lowercase",
+			in:   "$hello",
+			out:  "$hello",
+		},
+		{
+			name: "substitution - dollar with uppercase single",
+			in:   "$HELLO",
+			out:  "{{.hello}}",
+		},
+		{
+			name: "substitution - dollar with uppercase and number",
+			in:   "$HELLO2",
+			out:  "{{.hello2}}",
+		},
+		{
+			name: "substitution - dollar with uppercase",
+			in:   "hello:$HELLO,hi:$HI",
+			out:  "hello:{{.hello}},hi:{{.hi}}",
+		},
+		{
+			name: "substitution - real query",
+			in:   "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)",
+			out:  "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.out, convertQuery(tt.in))
+		})
+
+	}
 }

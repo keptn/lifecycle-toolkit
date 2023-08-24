@@ -34,7 +34,7 @@ func (r *AnalysisDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha3-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1alpha3,name=vanalysisdefinition.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha3-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1alpha3,name=analysisdefinition.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &AnalysisDefinition{}
 

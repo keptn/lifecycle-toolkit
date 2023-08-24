@@ -54,10 +54,11 @@ func Test_generateQuery(t *testing.T) {
 		query     string
 		selectors map[string]string
 		want      string
+		wanterror string
 	}{
 		{
 			name:  "successful, all args exist",
-			query: "this is a $GOOD query$DOT",
+			query: "this is a {{.good}} query{{.dot}}",
 			selectors: map[string]string{
 				"good": "good",
 				"dot":  ".",
@@ -66,12 +67,22 @@ func Test_generateQuery(t *testing.T) {
 		},
 		{
 			name:  "no substitution, all args missing",
-			query: "this is a $GOOD query $DOT",
+			query: "this is a {{.good}} query{{.dot}}",
 			selectors: map[string]string{
 				"bad":    "good",
 				"dotted": ".",
 			},
-			want: "this is a $GOOD query $DOT",
+			want: "this is a <no value> query<no value>",
+		},
+		{
+			name:  "no substitution, bad template",
+			query: "this is a {{.good} query{{.dot}}",
+			selectors: map[string]string{
+				"bad":    "good",
+				"dotted": ".",
+			},
+			want:      "",
+			wanterror: "could not create a template:",
 		},
 		{
 			name:      "nothing to do",
@@ -82,9 +93,12 @@ func Test_generateQuery(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := generateQuery(tt.query, tt.selectors); got != tt.want {
-				t.Errorf("generateQuery() = %v, want %v", got, tt.want)
+			got, err := generateQuery(tt.query, tt.selectors)
+			if tt.wanterror != "" {
+				require.NotNil(t, err)
+				require.Contains(t, err.Error(), tt.wanterror)
 			}
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

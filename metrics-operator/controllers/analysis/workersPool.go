@@ -1,11 +1,13 @@
 package analysis
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
-	"strings"
+	"bytes"
+	"fmt"
+	"text/template"
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"golang.org/x/net/context"
@@ -96,11 +98,19 @@ func (aw WorkersPool) stopProviders() {
 	}
 }
 
-func generateQuery(query string, selectors map[string]string) string {
-	for key, value := range selectors {
-		query = strings.Replace(query, "$"+strings.ToUpper(key), value, -1)
+func generateQuery(query string, selectors map[string]string) (string, error) {
+	tmpl, err := template.New("").Parse(query)
+	if err != nil {
+		return "", fmt.Errorf("could not create a template: %v", err)
 	}
-	return query
+
+	var resultBuf bytes.Buffer
+	err = tmpl.Execute(&resultBuf, selectors)
+	if err != nil {
+		return "", fmt.Errorf("could not template the args: %v", err)
+	}
+
+	return resultBuf.String(), nil
 }
 
 func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
@@ -143,8 +153,12 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 			continue
 		}
 
-		templatedQuery := generateQuery(template.Spec.Query, aw.Analysis.Spec.Args)
-
+		templatedQuery, err := generateQuery(template.Spec.Query, aw.Analysis.Spec.Args)
+		if err != nil {
+			aw.Log.Error(err, "Failed to substitute args in template")
+			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+			continue
+		}
 		//send job to provider solver
 		aw.providers[providerRef.Spec.Type] <- metricstypes.ProviderRequest{
 			Objective: &j,

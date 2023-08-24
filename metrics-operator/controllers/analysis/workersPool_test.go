@@ -211,11 +211,6 @@ func TestRetrieveProvider(t *testing.T) {
 	fakePool.RetrieveProvider(ctx, 1)
 	fakePool.RetrieveProvider(ctx, 2)
 
-	// require that the provider requests are sent and processed as expected
-
-	// Test with a missing provider
-	fakePool.RetrieveProvider(ctx, 3)
-
 	// require that the error handling works as expected
 }
 

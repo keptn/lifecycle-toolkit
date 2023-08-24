@@ -88,6 +88,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
 			}
+
 		})
 	}
 }

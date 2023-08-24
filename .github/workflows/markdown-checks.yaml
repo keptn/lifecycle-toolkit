@@ -29,6 +29,9 @@ jobs:
   markdown-link-check:
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - uses: actions/checkout@v3
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
@@ -41,6 +44,9 @@ jobs:
   markdown-lint:
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -68,6 +74,9 @@ jobs:
     name: Check CRD auto-generated docs
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 

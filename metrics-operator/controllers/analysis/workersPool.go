@@ -19,9 +19,9 @@ type IAnalysisPool interface {
 	CollectAnalysisResults() map[string]string
 }
 
-type NewWorkersPoolFactory func(analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger) IAnalysisPool
+type NewWorkersPoolFactory func(analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool
 
-func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger) IAnalysisPool {
+func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool {
 	numJobs := len(definition.Spec.Objectives)
 	if numJobs <= numWorkers { // do not start useless go routines
 		numWorkers = numJobs
@@ -33,6 +33,7 @@ func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.Analys
 		Objectives: assignTasks(definition.Spec.Objectives, numWorkers),
 		Client:     c,
 		Log:        log,
+		Namespace:  namespace,
 		numWorkers: numWorkers,
 		numJobs:    numJobs,
 		providers:  providerChans,
@@ -45,6 +46,7 @@ type WorkersPool struct {
 	Objectives map[int][]metricsapi.Objective
 	client.Client
 	Log        logr.Logger
+	Namespace  string
 	numWorkers int
 	numJobs    int
 	providers  map[string]chan metricstypes.ProviderRequest
@@ -111,6 +113,9 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 		aw.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
 
 		template := &metricsapi.AnalysisValueTemplate{}
+		if j.AnalysisValueTemplateRef.Namespace == "" {
+			j.AnalysisValueTemplateRef.Namespace = aw.Namespace
+		}
 		err := aw.Client.Get(ctx,
 			types.NamespacedName{
 				Name:      j.AnalysisValueTemplateRef.Name,
@@ -125,6 +130,9 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 		}
 
 		providerRef := &metricsapi.KeptnMetricsProvider{}
+		if template.Spec.Provider.Namespace == "" {
+			template.Spec.Provider.Namespace = aw.Namespace
+		}
 		err = aw.Client.Get(ctx,
 			types.NamespacedName{
 				Name:      template.Spec.Provider.Name,

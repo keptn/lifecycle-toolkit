@@ -1,0 +1,51 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  labels:
+    app.kubernetes.io/name: analysis
+    app.kubernetes.io/instance: analysis-sample
+    app.kubernetes.io/part-of: metrics-operator
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: metrics-operator
+  name: analysis-sample
+spec:
+  timeframe:
+    from: 2023-05-05T05:05:05Z
+    to: 2023-05-05T10:10:10Z
+  args:
+    cpu: cpu
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+    namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: analysis-value-template-sample
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  provider:
+    name: some-provider
+  query: "sum(kube_pod_container_resource_limits{resource='$CPU'})"
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: ed-my-proj-dev-svc1
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: response-time-p95
+      target:
+        failure:
+          lessThan:
+            fixedValue: 1
+        warning:
+          greaterThanOrEqual:
+            fixedValue: 3
+      weight: 1
+      keyObjective: false
+  totalScore:
+    passPercentage: 90
+    warningPercentage: 75

@@ -39,6 +39,7 @@ type AnalysisReconciler struct {
 	Scheme     *runtime.Scheme
 	Log        logr.Logger
 	MaxWorkers int //maybe 2 or 4 as def
+	Namespace  string
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
 }
@@ -71,6 +72,9 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef := &metricsapi.AnalysisDefinition{}
+	if analysis.Spec.AnalysisDefinition.Namespace == "" {
+		analysis.Spec.AnalysisDefinition.Namespace = a.Namespace
+	}
 	err := a.Client.Get(ctx,
 		types.NamespacedName{
 			Name:      analysis.Spec.AnalysisDefinition.Name,
@@ -88,7 +92,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	wp := a.NewWorkersPoolFactory(analysis, analysisDef, a.MaxWorkers, a.Client, a.Log)
+	wp := a.NewWorkersPoolFactory(analysis, analysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
 
 	go wp.DispatchObjectives(ctx)
 

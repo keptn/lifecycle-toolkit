@@ -102,15 +102,8 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	if SLIFilePath != "" {
-		//read file content
-		fileContent, err := os.ReadFile(SLIFilePath)
-		if err != nil {
-			log.Fatalf("error reading file content: %s", err.Error())
-			return
-		}
 		// convert
-		c := converter.NewSLIConverter()
-		content, err := c.Convert(fileContent, provider, namespace)
+		content, err := convertSLI(SLIFilePath, provider, namespace)
 		if err != nil {
 			log.Fatalf(err.Error())
 			return
@@ -224,4 +217,21 @@ func startCustomMetricsAdapter(namespace string) {
 
 	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
+}
+
+func convertSLI(SLIFilePath, provider, namespace string) (string, error) {
+	//read file content
+	fileContent, err := os.ReadFile(SLIFilePath)
+	if err != nil {
+		return "", fmt.Errorf("error reading file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLIConverter()
+	content, err := c.Convert(fileContent, provider, namespace)
+	if err != nil {
+		return "", err
+	}
+
+	return content, nil
 }

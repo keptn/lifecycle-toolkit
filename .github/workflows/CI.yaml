@@ -176,7 +176,7 @@ jobs:
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
-      - name: Generate release.yaml
+      - name: Generate test release manifest
         if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:

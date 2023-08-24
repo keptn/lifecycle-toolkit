@@ -68,6 +68,7 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.config.oAuthCredentials.accessToken))
 
+	client.Log.Info(fmt.Sprintf(" sending request payload: %s", string(payload)))
 	res, err := client.httpClient.Do(req)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err

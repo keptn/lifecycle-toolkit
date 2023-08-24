@@ -108,7 +108,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 
 	value := extractValueFromRecord(results.Records[0])
 
-	b, err = json.Marshal(results)
+	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
@@ -156,7 +156,7 @@ func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, me
 	}
 
 	r := extractValuesFromRecord(results.Records[0])
-	b, err = json.Marshal(results)
+	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}

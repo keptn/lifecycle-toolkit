@@ -139,7 +139,7 @@ func TestGetValueFromMap(t *testing.T) {
 			values: map[string]types.ProviderResult{
 				"key1": {Value: "7"},
 			},
-			in:      "key",
+			in:      "key1",
 			val:     7.0,
 			wantErr: false,
 		},
@@ -157,7 +157,7 @@ func TestGetValueFromMap(t *testing.T) {
 			values: map[string]types.ProviderResult{
 				"key": {},
 			},
-			in:      "key",
+			in:      "key1",
 			val:     0.0,
 			wantErr: true,
 		},

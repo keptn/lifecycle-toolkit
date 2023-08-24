@@ -90,7 +90,7 @@ For more info about Keptn, please see our
 - [Implementing KLT applications](https://lifecycle.keptn.sh/docs/implementing/)
   documents how to integrate KLT to work with your existing deployment engine
   and implement its variouos features.
-- *Architecture* provides detailed technical information
+- [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
   about how KLT works.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and
   [API Reference](https://lifecycle.keptn.sh/docs/crd-ref/)

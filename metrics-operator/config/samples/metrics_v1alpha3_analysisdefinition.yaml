@@ -1,11 +1,12 @@
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
-  name: analysisdefinition-sample
+  name: ed-my-proj-dev-svc1
+  namespace: keptn-lifecycle-toolkit-system
 spec:
   objectives:
     - analysisValueTemplateRef:
-        name: response_time_p95
+        name: response-time-p95
         namespace: keptn-lifecycle-toolkit-system
       target:
         failure:

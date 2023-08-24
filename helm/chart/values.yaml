@@ -146,6 +146,7 @@ metricsOperator:
     env:
       exposeKeptnMetrics: "true"
       metricsControllerLogLevel: "0"
+      analysisControllerLogLevel: "0"
     image:
       repository: ghcr.io/keptn/metrics-operator
       tag: v0.8.1

@@ -66,6 +66,8 @@ spec:
               value: "true"
             - name: METRICS_CONTROLLER_LOG_LEVEL
               value: "0"
+            - name: ANALYSIS_CONTROLLER_LOG_LEVEL
+              value: "0"
           ports:
             - containerPort: 9443
               name: webhook-server

@@ -35,7 +35,6 @@ import (
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	corev1 "k8s.io/api/core/v1"
@@ -47,6 +46,15 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
+	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
+	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 )
 
 var (
@@ -68,6 +76,7 @@ type envConfig struct {
 	PodNamespace                  string `envconfig:"POD_NAMESPACE" default:""`
 	PodName                       string `envconfig:"POD_NAME" default:""`
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
+	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
@@ -174,6 +183,23 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
+
+	analysisLogger := ctrl.Log.WithName("KeptnMetric Controller")
+	targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
+	objEval := analysis.NewObjectiveEvaluator(&targetEval)
+	analysisEval := analysis.NewAnalysisEvaluator(&objEval)
+
+	if err = (&analysiscontroller.AnalysisReconciler{
+		Client:                mgr.GetClient(),
+		Scheme:                mgr.GetScheme(),
+		Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
+		MaxWorkers:            4,
+		NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
+		IAnalysisEvaluator:    &analysisEval,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
+		os.Exit(1)
+	}
 	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
@@ -182,6 +208,7 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
 		os.Exit(1)
 	}
+
 	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

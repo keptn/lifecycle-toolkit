@@ -25,7 +25,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.O
 	}
 
 	// get the value
-	floatVal, err := getValueFromMap(values, computeKey(obj.AnalysisValueTemplateRef))
+	floatVal, err := getValueFromMap(values, ComputeKey(obj.AnalysisValueTemplateRef))
 	if err != nil {
 		result.Error = err
 		return result
@@ -63,7 +63,7 @@ func getValueFromMap(values map[string]string, key string) (float64, error) {
 	return floatVal, nil
 }
 
-func computeKey(obj v1alpha3.ObjectReference) string {
+func ComputeKey(obj v1alpha3.ObjectReference) string {
 	if obj.Namespace == "" {
 		return obj.Name
 	}

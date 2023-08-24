@@ -1,6 +1,21 @@
 package types
 
-import "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+import (
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+)
+
+type ProviderRequest struct {
+	Objective *v1alpha3.Objective
+	Query     string
+	Provider  *v1alpha3.KeptnMetricsProvider
+}
+
+type ProviderResult struct {
+	Objective v1alpha3.ObjectReference
+	Value     string
+	Raw       []byte
+	Err       string
+}
 
 type TargetResult struct {
 	FailResult OperatorResult

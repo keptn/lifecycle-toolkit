@@ -179,9 +179,9 @@ func TestComputeKey(t *testing.T) {
 		Name: "key",
 	}
 
-	require.Equal(t, "key", computeKey(obj))
+	require.Equal(t, "key", ComputeKey(obj))
 
 	obj.Namespace = "namespace"
 
-	require.Equal(t, "key-namespace", computeKey(obj))
+	require.Equal(t, "key-namespace", ComputeKey(obj))
 }

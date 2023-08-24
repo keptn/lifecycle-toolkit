@@ -325,6 +325,9 @@ spec:
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.metricsOperator.manager.env.metricsControllerLogLevel | quote
             }}
+        - name: ANALYSIS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.metricsOperator.manager.env.analysisControllerLogLevel | quote
+            }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         image: {{ .Values.metricsOperator.manager.image.repository }}:{{ .Values.metricsOperator.manager.image.tag

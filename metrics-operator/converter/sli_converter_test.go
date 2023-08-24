@@ -15,53 +15,27 @@ indicators:
   response_time_p95: "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"`
 
 const expectedOutput = `---
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
-apiversion: metrics.keptn.sh/v1alpha3
 metadata:
-  name: throughput
-  generatename: ""
-  namespace: ""
-  selflink: ""
-  uid: ""
-  resourceversion: ""
-  generation: 0
-  creationtimestamp: "0001-01-01T00:00:00Z"
-  deletiontimestamp: null
-  deletiongraceperiodseconds: null
-  labels: {}
-  annotations: {}
-  ownerreferences: []
-  finalizers: []
-  managedfields: []
-spec:
-  provider:
-    name: dynatrace
-    namespace: keptn
-  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)
----
-kind: AnalysisValueTemplate
-apiversion: metrics.keptn.sh/v1alpha3
-metadata:
+  creationTimestamp: null
   name: response_time_p95
-  generatename: ""
-  namespace: ""
-  selflink: ""
-  uid: ""
-  resourceversion: ""
-  generation: 0
-  creationtimestamp: "0001-01-01T00:00:00Z"
-  deletiontimestamp: null
-  deletiongraceperiodseconds: null
-  labels: {}
-  annotations: {}
-  ownerreferences: []
-  finalizers: []
-  managedfields: []
 spec:
   provider:
     name: dynatrace
     namespace: keptn
   query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  creationTimestamp: null
+  name: throughput
+spec:
+  provider:
+    name: dynatrace
+    namespace: keptn
+  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)
 `
 
 func TestConvertMapToAnalysisValueTemplate(t *testing.T) {

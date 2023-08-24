@@ -117,9 +117,11 @@ using the default configuration included with Keptn,
 use the following commands.
 Use similar commands if you define a different configuration::
 
+⚠️ Make sure you have cloned the `lifecycle-toolkit` repository and have `cd` into the correct directory before running the below commands.
+
 ```shell
 kubectl create namespace monitoring
-kubectl apply -f config/prometheus/setup
+kubectl apply --server-side -f config/prometheus/setup
 kubectl apply -f config/prometheus/
 ```
 

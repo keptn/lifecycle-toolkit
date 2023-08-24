@@ -17,14 +17,20 @@ limitations under the License.
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
+	"github.com/itchyny/json2yaml"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
@@ -34,8 +40,10 @@ import (
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"gopkg.in/yaml.v2"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -76,9 +84,15 @@ func main() {
 		log.Fatalf("Failed to process env var: %s", err)
 	}
 	var metricsAddr string
+	var SLIFilePath string
+	var provider string
+	var namespace string
 	var enableLeaderElection bool
 	var disableWebhook bool
 	var probeAddr string
+	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI fiel to be converted")
+	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
+	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -92,6 +106,24 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	if SLIFilePath != "" {
+		//read file content
+		fileContent, err := ioutil.ReadFile(SLIFilePath)
+		if err != nil {
+			log.Fatalf("error reading file content: %s", err.Error())
+			return
+		}
+		// convert
+		content, err := convertSLI(fileContent, provider, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Printf(content)
+		return
+	}
 
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
@@ -197,4 +229,45 @@ func startCustomMetricsAdapter(namespace string) {
 
 	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
+}
+
+func convertSLI(fileContent []byte, provider string, namespace string) (string, error) {
+	//check that provider and namespace is set
+	if provider == "" || namespace == "" {
+		return "", fmt.Errorf("sli-provider and sli-namespace needs to be set for conversion")
+	}
+
+	// unmarshall content
+	content := &converter.SLI{}
+	err := yaml.Unmarshal(fileContent, content)
+	if err != nil {
+		return "", fmt.Errorf("error unmarshalling file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLIConverter()
+	analysisValueTemplates := c.Convert(content.Indicators, provider, namespace)
+
+	result := ""
+	for _, v := range analysisValueTemplates {
+		// marshal AnalysisValueTemplate to Json
+		// we cannot marshall it directly to yaml, as we are missing yaml tags in the struct definition
+		jsonData, err := json.Marshal(v)
+		if err != nil {
+			return "", fmt.Errorf("error marshalling data: %s", err.Error())
+		}
+
+		// convert json string to yaml string
+		reader := bytes.NewReader(jsonData)
+		var output strings.Builder
+		if err := json2yaml.Convert(&output, reader); err != nil {
+			return "", fmt.Errorf("error converting data: %s", err.Error())
+		}
+
+		// store output
+		result += "---\n"
+		result += output.String()
+	}
+
+	return result, nil
 }

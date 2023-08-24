@@ -258,7 +258,9 @@ This documentation set contains all released versions of KLT and is stored in an
 * build-environment: production
 * config folder: [production](./config/production/)
 
-A new version is generated when we push the `main` branch to production - hence old `page` branch will be copied over a “version” folder and it doesn't overwrite changes that were only pushed to `page`.
+A new version is generated when we push the `main` branch to production to release a new version of the docs page.
+This means, that the content of the old version on the `page` branch will be copied over to a `docs-<version>` folder and the new version will be pushed into the `docs` folder.
+This way, no changes or older versions get overwritten.
 
 ### Developer Certification of Origin (DCO)
 

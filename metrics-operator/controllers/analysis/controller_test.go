@@ -2,7 +2,6 @@ package analysis
 
 import (
 	"context"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"reflect"
 	"sync/atomic"
 	"testing"
@@ -13,6 +12,7 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
+	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -165,7 +165,6 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 }
 
 func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
-	//TODO fill in with status update checks logic
 	analysis, analysisDef, template, provider := getTestCRDs()
 	fclient := fake2.NewClient(&analysis, &analysisDef, &template, &provider)
 	collectorCount := int32(0)
@@ -192,7 +191,7 @@ func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
 		NewWorkersPoolFactory: mockFactory,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
 			EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
-				return metricstypes.AnalysisResult{}
+				return metricstypes.AnalysisResult{Pass: true}
 			}},
 	}
 	req := controllerruntime.Request{
@@ -201,4 +200,8 @@ func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
 	got, err := a.Reconcile(context.TODO(), req)
 	require.Nil(t, err)
 	require.Equal(t, got, controllerruntime.Result{})
+	resAnalysis := metricsapi.Analysis{}
+	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
+	require.Nil(t, err)
+	require.Equal(t, "{[] 0 0 true false}", resAnalysis.Status) //TODO change when introducing status
 }

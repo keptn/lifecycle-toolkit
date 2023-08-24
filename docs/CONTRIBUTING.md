@@ -228,7 +228,7 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
    ```console
    git branch -d <branch-name>
    ```
-   
+
 ## Choosing the correct branch when contributing
 
 New writing goes to the `main` branch and can be viewed on the Releases -> development dropdown menu.
@@ -244,9 +244,9 @@ Let's take a look what happens when your changes are merged in `main` and `page`
 This page reflects the current development status of the documentation.
 It will be built regularly and can be easily accessed.
 
-- build: on each push to `main` with documentation changes
-- build-environment: main
-- config folder: [main](./config/staging/)
+* build: on each push to `main` with documentation changes
+* build-environment: main
+* config folder: [main](./config/staging/)
 
 It should allow bleeding-edge users and contributors to see the current state and help with debugging etc.
 
@@ -254,9 +254,9 @@ It should allow bleeding-edge users and contributors to see the current state an
 
 This documentation set contains all released versions of KLT and is stored in an orphaned branch called `page`.
 
-- build: on each push to `page` with documentation changes
-- build-environment: production
-- config folder: [production](./config/production/)
+* build: on each push to `page` with documentation changes
+* build-environment: production
+* config folder: [production](./config/production/)
 
 A new version is generated when we push the `main` branch to production - hence old `page` branch will be copied over a “version” folder and it doesn't overwrite changes that were only pushed to `page`.
 

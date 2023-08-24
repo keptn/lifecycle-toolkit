@@ -317,7 +317,7 @@ func Test_resultsForMatrix(t *testing.T) {
 	}
 }
 
-func TestRunAnalysis(t *testing.T) {
+func TestFetchAnalysisValue(t *testing.T) {
 
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(promPayloadWithRangeAndStep))

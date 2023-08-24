@@ -17,19 +17,15 @@ limitations under the License.
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
-	"github.com/itchyny/json2yaml"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
@@ -42,7 +38,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
-	"gopkg.in/yaml.v2"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -114,7 +109,8 @@ func main() {
 			return
 		}
 		// convert
-		content, err := convertSLI(fileContent, provider, namespace)
+		c := converter.NewSLIConverter()
+		content, err := c.Convert(fileContent, provider, namespace)
 		if err != nil {
 			log.Fatalf(err.Error())
 			return
@@ -228,45 +224,4 @@ func startCustomMetricsAdapter(namespace string) {
 
 	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
-}
-
-func convertSLI(fileContent []byte, provider string, namespace string) (string, error) {
-	//check that provider and namespace is set
-	if provider == "" || namespace == "" {
-		return "", fmt.Errorf("sli-provider and sli-namespace needs to be set for conversion")
-	}
-
-	// unmarshall content
-	content := &converter.SLI{}
-	err := yaml.Unmarshal(fileContent, content)
-	if err != nil {
-		return "", fmt.Errorf("error unmarshalling file content: %s", err.Error())
-	}
-
-	// convert
-	c := converter.NewSLIConverter()
-	analysisValueTemplates := c.Convert(content.Indicators, provider, namespace)
-
-	result := ""
-	for _, v := range analysisValueTemplates {
-		// marshal AnalysisValueTemplate to Json
-		// we cannot marshall it directly to yaml, as we are missing yaml tags in the struct definition
-		jsonData, err := json.Marshal(v)
-		if err != nil {
-			return "", fmt.Errorf("error marshalling data: %s", err.Error())
-		}
-
-		// convert json string to yaml string
-		reader := bytes.NewReader(jsonData)
-		var output strings.Builder
-		if err := json2yaml.Convert(&output, reader); err != nil {
-			return "", fmt.Errorf("error converting data: %s", err.Error())
-		}
-
-		// store output
-		result += "---\n"
-		result += output.String()
-	}
-
-	return result, nil
 }

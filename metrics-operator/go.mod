@@ -7,7 +7,6 @@ require (
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/gorilla/mux v1.8.0
-	github.com/itchyny/json2yaml v0.1.4
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230807110601-88a54f97c157
 	github.com/open-feature/go-sdk v1.7.0

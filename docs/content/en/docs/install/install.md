@@ -19,7 +19,7 @@ Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
   the [Helm Chart](#use-helm-chart).
   This is the preferred strategy because it allows you to customize your cluster.
 
-* Releases v0.10.0 and earlier can be installed using
+* All releases can be installed using
   the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
 
@@ -109,9 +109,10 @@ For more information,see
 
 ## Use manifests
 
-Versions v0.10.0 and earlier of the Lifecycle Toolkit can be installed using manifests,
+All versions of the Lifecycle Toolkit can be installed using manifests,
 although we recommend that you use Helm Charts
-because they allow you to easily customize your configuration.
+to install Version 0.7.0 and later
+because the Helm Charts allow you to customize your configuration.
 
 Versions 0.6.0 and earlier can only be installed using manifests.
 

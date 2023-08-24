@@ -61,7 +61,7 @@ to get further information refer to this [issue](https://github.com/keptn/lifecy
 
 ## I cannot see DORA metrics or OpenTelemetry traces
 
-KLT will automatically generate DORA metrics and Otel traces for every deployment, but
+KLT will automatically generate DORA metrics and OTel traces for every deployment, but
 by default it does not know where to send them.
 
 You need an OpenTelemetry collector

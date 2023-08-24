@@ -117,7 +117,7 @@ The Keptn Lifecycle Toolkit adds the concept of applications
 defined as a set of workloads that can be executed.
 A `KeptnApp` resource is added
 into the repository of the deployment engine
-(ArgoCD, Flux, etc)
+(ArgoCD, Flux, etc.)
 and is then deployed by that deployment engine.
 
 A `KeptnApp` resource is created automatically, using the

@@ -86,7 +86,7 @@ Some key points:
   using Kubernetes capabilities.
 
 * KLT provides extensive observability data
-  using OpenTelementry and Prometheus
+  using OpenTelemetry and Prometheus
   rather than storing the data in a special Keptn database.
   This data can be displayed using Grafana and Jaeger
   or the dashboard of your choice.
@@ -151,7 +151,7 @@ For example:
   a `KeptnTask` using the `container-runner`.
 * A Keptn v1 service that runs a database
   can probably be translated
-  into a Kubenetes `StateFulSet` workload; see
+  into a Kubernetes `StateFulSet` workload; see
   [Workload Resources](https://kubernetes.io/docs/concepts/workloads/controllers/)
   for more information.
 * A Keptn v1 service that runs a webserver
@@ -273,7 +273,7 @@ When migrating to KLT, you need to define a
 [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
 resource for the data provider(s) you are using.
 Note that KLT allows you to support multiple data providers
-and multiple instances of each data provider for your SLI's
+and multiple instances of each data provider for your SLIs
 whereas Keptn v1 only allows you to use one SLI per project.
 
 The queries defined for the Keptn v1 SLIs
@@ -286,7 +286,7 @@ resources.
 KLT at this time does not support the full range
 of Quality Gates evaluations that are represented by
 [SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/).
-Facilities such as weighting of SLI's and scoring of the evaluation
+Facilities such as weighting of SLIs and scoring of the evaluation
 do not currently exist.
 This functionality is under development; see
 [Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
@@ -299,7 +299,7 @@ resources.
 
 KLT does not currently support the same level of
 [remediations](https://keptn.sh/docs/1.0.x/reference/files/remediation/)
-as Keptn v1 does
+as Keptn v1 does,
 but it does provide limited "Day 2" facilities:
 
 * Any query that is possible for your data provider post-deployment
@@ -309,7 +309,7 @@ but it does provide limited "Day 2" facilities:
 * `KeptnMetricsDefinition` resources can be retrieved and used
   to implement the Kubernetes HorizontalPodAutoscaler (HPA),
   which can detect the need for additional resources
-  (more pods, memory, disk space, etc)
+  (more pods, memory, disk space, etc.)
   and automatically add those resources to your configuration
   based on the `ReplicaSet` resources you have defined.
   See

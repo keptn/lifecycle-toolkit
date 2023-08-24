@@ -112,27 +112,31 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 		Log:      logr.Discard(),
 	}
 
+	res1 := metricstypes.ProviderResult{
+		Objective: metricsapi.ObjectReference{Name: "t1"},
+		Value:     "result1",
+		Err:       nil,
+	}
+
+	res2 := metricstypes.ProviderResult{
+		Objective: metricsapi.ObjectReference{Name: "t2"},
+		Value:     "result2",
+		Err:       nil,
+	}
+
 	// Create and send mock results to the results channel
 	go func() {
 		time.Sleep(time.Second)
-		fakePool.results <- metricstypes.ProviderResult{
-			Objective: metricsapi.ObjectReference{Name: "t1"},
-			Value:     "result1",
-			Err:       nil,
-		}
-		fakePool.results <- metricstypes.ProviderResult{
-			Objective: metricsapi.ObjectReference{Name: "t2"},
-			Value:     "result2",
-			Err:       nil,
-		}
+		fakePool.results <- res1
+		fakePool.results <- res2
 	}()
 
 	// Collect the results
 	results := fakePool.CollectAnalysisResults()
 
 	// Check the collected results
-	require.Equal(t, "result1", results["t1"])
-	require.Equal(t, "result2", results["t2"])
+	require.Equal(t, res1, results["t1"])
+	require.Equal(t, res2, results["t2"])
 }
 
 func TestAssignTasks(t *testing.T) {

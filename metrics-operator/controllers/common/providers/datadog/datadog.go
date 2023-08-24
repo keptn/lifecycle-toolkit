@@ -26,7 +26,7 @@ type KeptnDataDogProvider struct {
 	K8sClient  client.Client
 }
 
-func (d *KeptnDataDogProvider) RunAnalysis(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *KeptnDataDogProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 	return d.query(ctx, query, *provider, spec.From.Unix(), spec.To.Unix())

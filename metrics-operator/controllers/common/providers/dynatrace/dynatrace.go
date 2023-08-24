@@ -38,7 +38,7 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
-func (d *KeptnDynatraceProvider) RunAnalysis(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 	escapedQ := urlEncodeQuery(query)
 	qURL := baseURL + "v2/metrics/query?metricSelector=" + escapedQ + "&from=" + spec.From.String() + "&to=" + spec.To.String()

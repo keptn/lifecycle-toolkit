@@ -360,7 +360,7 @@ func TestRunAnalysis(t *testing.T) {
 	expectedResult := "1"
 
 	// Call the function
-	result, _, err := provider.RunAnalysis(context.Background(), "your_query_string_here", analysisSpec, mockProvider)
+	result, _, err := provider.FetchAnalysisValue(context.Background(), "your_query_string_here", analysisSpec, mockProvider)
 
 	// Assertions
 	require.NoError(t, err)

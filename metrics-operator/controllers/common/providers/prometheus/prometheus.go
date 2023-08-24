@@ -23,6 +23,40 @@ type KeptnPrometheusProvider struct {
 	HttpClient http.Client
 }
 
+func (r *KeptnPrometheusProvider) RunAnalysis(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
+	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
+	if err != nil {
+		return "", nil, err
+	}
+	api := prometheus.NewAPI(client)
+	r.Log.Info(fmt.Sprintf(
+		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
+		query,
+		spec.From.Unix(), spec.To.Unix(),
+	))
+	queryRange := prometheus.Range{
+		Start: spec.From.Time,
+		End:   spec.To.Time,
+	}
+	result, warnings, err := api.QueryRange(
+		ctx,
+		query,
+		queryRange,
+		[]prometheus.Option{}...,
+	)
+
+	if err != nil {
+		return "", nil, err
+	}
+	if len(warnings) != 0 {
+		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+	}
+	return getResultForMatrix(result)
+}
+
 // EvaluateQuery fetches the SLI values from prometheus provider
 func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

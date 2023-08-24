@@ -26,6 +26,12 @@ type KeptnDataDogProvider struct {
 	K8sClient  client.Client
 }
 
+func (d *KeptnDataDogProvider) RunAnalysis(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+	return d.query(ctx, query, *provider, spec.From.Unix(), spec.To.Unix())
+}
+
 // EvaluateQuery fetches the SLI values from datadog provider
 func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
@@ -35,7 +41,11 @@ func (d *KeptnDataDogProvider) EvaluateQuery(ctx context.Context, metric metrics
 	if err != nil {
 		return "", nil, err
 	}
-	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(metric.Spec.Query)
+	return d.query(ctx, metric.Spec.Query, provider, fromTime, toTime)
+}
+
+func (d *KeptnDataDogProvider) query(ctx context.Context, query string, provider metricsapi.KeptnMetricsProvider, fromTime int64, toTime int64) (string, []byte, error) {
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(query)
 	apiKeyVal, appKeyVal, err := getDDSecret(ctx, provider, d.K8sClient)
 	if err != nil {
 		return "", nil, err

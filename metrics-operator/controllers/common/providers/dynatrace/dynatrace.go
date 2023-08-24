@@ -38,6 +38,13 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
+func (d *KeptnDynatraceProvider) RunAnalysis(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
+	escapedQ := urlEncodeQuery(query)
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + escapedQ + "&from=" + spec.From.String() + "&to=" + spec.To.String()
+	return d.runQuery(ctx, qURL, *provider)
+}
+
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
@@ -52,6 +59,10 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 	qURL = urlEncodeQuery(qURL)
 	qURL = baseURL + "v2/metrics/query?" + qURL
 
+	return d.runQuery(ctx, qURL, provider)
+}
+
+func (d *KeptnDynatraceProvider) runQuery(ctx context.Context, qURL string, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()

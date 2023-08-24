@@ -24,6 +24,7 @@ require (
 	k8s.io/metrics v0.26.7
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
+	sigs.k8s.io/yaml v1.3.0
 )
 
 require (
@@ -117,7 +118,6 @@ require (
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.37 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
 replace golang.org/x/net => golang.org/x/net v0.14.0

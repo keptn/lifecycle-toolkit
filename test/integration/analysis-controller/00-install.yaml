@@ -27,7 +27,7 @@ spec:
   provider:
     name: my-provider
     namespace: keptn-lifecycle-toolkit-system
-  query: "sum(kube_pod_container_resource_limits{resource='$CPU'})"
+  query: "sum(kube_pod_container_resource_limits{resource='{{.cpu}}'})"
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition

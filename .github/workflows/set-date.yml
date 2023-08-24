@@ -7,6 +7,9 @@ jobs:
   set_date:
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ secrets.KEPTN_BOT_PROJECT_TOKEN }}

@@ -5,9 +5,9 @@ weight: 20
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This section contains tutorials on how to use the Keptn Lifecyle Toolkit.
+This section contains tutorials on how to use the Keptn Lifecycle Toolkit.
 
-When you understand the toolkit, begin with the [getting started guide](../getting-started.md).
+When you understand the toolkit, begin with the [getting started guide](../getting-started/).
 
 ----
 
@@ -103,7 +103,7 @@ user experience.
 Additionally, it enables monitoring of new logs from log monitoring solutions.
 
 To get started with Keptn Lifecycle Toolkit, refer to the
-[Getting Started Exercises](https://main.lifecycle.keptn.sh/docs/getting-started/)
+[Getting Started Exercises](https://lifecycle.keptn.sh/docs/getting-started/)
 for detailed instructions and examples.
 This guide will walk you through the installation process and help you set up
 your environment for using KLT effectively.
@@ -148,7 +148,7 @@ the Keptn Lifecycle Toolkit:
   and the concepts that drive the Keptn Lifecycle Toolkit,
   then gives a simple demonstration of a Keptn Lifecycle Controller implementation.
 
-* [Introducing Keptn Lifecyle Toolkit](https://youtu.be/449HAFYkUlY)
+* [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
   gives an overview of what KLT does and how to implement it.
 
 * [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)

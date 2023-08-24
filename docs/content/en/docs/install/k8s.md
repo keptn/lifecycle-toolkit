@@ -1,7 +1,6 @@
 ---
 title: Kubernetes cluster
 description: Bring or install a Kubernetes cluster 
-icon: concepts
 layout: quickstart
 weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html

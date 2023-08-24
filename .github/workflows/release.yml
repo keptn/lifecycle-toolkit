@@ -30,6 +30,9 @@ jobs:
       releases-created: ${{ steps.release.outputs.releases_created }}
       build-matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -122,6 +125,9 @@ jobs:
     env:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -201,6 +207,9 @@ jobs:
       - build-release
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Checkout
         uses: actions/checkout@v3
 

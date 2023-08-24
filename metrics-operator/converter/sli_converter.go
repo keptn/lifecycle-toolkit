@@ -90,8 +90,11 @@ func convertQuery(query string) string {
 		return query
 	}
 	for _, v := range variables {
+		// remove dollar sign at the beginning + convert to lowercase
 		subst := strings.ToLower(strings.TrimPrefix(v[0], "$"))
+		// add curly brackets
 		subst = "{{." + subst + "}}"
+		// substitute in query string
 		query = strings.ReplaceAll(query, v[0], subst)
 	}
 	return query

@@ -38,7 +38,7 @@ func TestNewWorkerPool(t *testing.T) {
 		numJobs:    1,
 	}
 
-	got := NewWorkersPool(&analysis, &def, 4, nil, log)
+	got := NewWorkersPool(&analysis, &def, 4, nil, log, "default")
 	require.Equal(t, want.Objectives, got.(WorkersPool).Objectives)
 	require.Equal(t, want.Analysis, got.(WorkersPool).Analysis)
 	//make sure never to create more workers than needed
@@ -104,12 +104,12 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 		fakePool.results <- metricstypes.ProviderResult{
 			Objective: metricsapi.ObjectReference{Name: "t1"},
 			Value:     "result1",
-			Err:       "",
+			Err:       nil,
 		}
 		fakePool.results <- metricstypes.ProviderResult{
 			Objective: metricsapi.ObjectReference{Name: "t2"},
 			Value:     "result2",
-			Err:       "",
+			Err:       nil,
 		}
 	}()
 

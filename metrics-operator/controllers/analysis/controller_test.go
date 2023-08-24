@@ -76,7 +76,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				MaxWorkers:            2,
 				NewWorkersPoolFactory: NewWorkersPool,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-					EvaluateFunc: func(values map[string]string, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+					EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 						return metricstypes.AnalysisResult{}
 					}},
 			}
@@ -171,9 +171,9 @@ func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
 	collectorCount := int32(0)
 	dispatchCount := int32(0)
 
-	mockFactory := func(analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger) IAnalysisPool {
+	mockFactory := func(analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool {
 		mymock := fake.MyAnalysisPoolMock{
-			CollectAnalysisResultsFunc: func() map[string]string {
+			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
 				atomic.AddInt32(&collectorCount, 1)
 				return nil
 			},
@@ -191,7 +191,7 @@ func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
 		MaxWorkers:            2,
 		NewWorkersPoolFactory: mockFactory,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]string, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+			EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 				return metricstypes.AnalysisResult{}
 			}},
 	}

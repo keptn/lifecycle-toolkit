@@ -15,7 +15,7 @@ func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+func (ae *AnalysisEvaluator) Evaluate(values map[string]types.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
 	result := types.AnalysisResult{
 		ObjectiveResults: make([]types.ObjectiveResult, len(ad.Spec.Objectives)),
 	}

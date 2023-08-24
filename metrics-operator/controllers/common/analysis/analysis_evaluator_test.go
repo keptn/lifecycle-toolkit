@@ -12,14 +12,14 @@ import (
 func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name            string
-		values          map[string]string
+		values          map[string]types.ProviderResult
 		a               v1alpha3.AnalysisDefinition
 		want            types.AnalysisResult
 		mockedEvaluator IObjectiveEvaluator
 	}{
 		{
 			name:   "no objectives",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{},
@@ -36,7 +36,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "pass scenario",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{
@@ -65,7 +65,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -77,7 +77,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "pass scenario - multiple objectives",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{
@@ -115,7 +115,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -127,7 +127,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "warning scenario",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{
@@ -156,7 +156,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -168,7 +168,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "fail scenario",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{
@@ -197,7 +197,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -209,7 +209,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "fail scenario - key objective failed",
-			values: map[string]string{},
+			values: map[string]types.ProviderResult{},
 			a: v1alpha3.AnalysisDefinition{
 				Spec: v1alpha3.AnalysisDefinitionSpec{
 					Objectives: []v1alpha3.Objective{
@@ -249,7 +249,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					if objective.KeyObjective {
 						return types.ObjectiveResult{
 							Result: types.TargetResult{},

@@ -13,8 +13,7 @@ type ProviderRequest struct {
 type ProviderResult struct {
 	Objective v1alpha3.ObjectReference
 	Value     string
-	Raw       []byte
-	Err       string
+	Err       error
 }
 
 type TargetResult struct {

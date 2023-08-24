@@ -5,6 +5,7 @@ package fake
 
 import (
 	"context"
+	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
 
@@ -14,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.IAnalysisPool
 //		mockedIAnalysisPool := &MyAnalysisPoolMock{
-//			CollectAnalysisResultsFunc: func() map[string]string {
+//			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
 //				panic("mock out the CollectAnalysisResults method")
 //			},
 //			DispatchObjectivesFunc: func(ctx context.Context)  {
@@ -28,7 +29,7 @@ import (
 //	}
 type MyAnalysisPoolMock struct {
 	// CollectAnalysisResultsFunc mocks the CollectAnalysisResults method.
-	CollectAnalysisResultsFunc func() map[string]string
+	CollectAnalysisResultsFunc func() map[string]metricstypes.ProviderResult
 
 	// DispatchObjectivesFunc mocks the DispatchObjectives method.
 	DispatchObjectivesFunc func(ctx context.Context)
@@ -49,7 +50,7 @@ type MyAnalysisPoolMock struct {
 }
 
 // CollectAnalysisResults calls CollectAnalysisResultsFunc.
-func (mock *MyAnalysisPoolMock) CollectAnalysisResults() map[string]string {
+func (mock *MyAnalysisPoolMock) CollectAnalysisResults() map[string]metricstypes.ProviderResult {
 	if mock.CollectAnalysisResultsFunc == nil {
 		panic("MyAnalysisPoolMock.CollectAnalysisResultsFunc: method is nil but IAnalysisPool.CollectAnalysisResults was just called")
 	}

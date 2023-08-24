@@ -16,7 +16,7 @@ import (
 //go:generate moq -pkg fake -skip-ensure -out ./fake/analysispool_mock.go . IAnalysisPool:MyAnalysisPoolMock
 type IAnalysisPool interface {
 	DispatchObjectives(ctx context.Context)
-	CollectAnalysisResults() map[string]string
+	CollectAnalysisResults() map[string]metricstypes.ProviderResult
 }
 
 type NewWorkersPoolFactory func(analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool
@@ -75,18 +75,15 @@ func (aw WorkersPool) DispatchObjectives(ctx context.Context) {
 	}
 }
 
-func (aw WorkersPool) CollectAnalysisResults() map[string]string {
+func (aw WorkersPool) CollectAnalysisResults() map[string]metricstypes.ProviderResult {
 
-	results := make(map[string]string, aw.numJobs)
+	results := make(map[string]metricstypes.ProviderResult, aw.numJobs)
 	for a := 1; a <= aw.numJobs; a++ {
 		res := <-aw.results
 		aw.Log.Info("collected result")
 		// Making sure error gets propagated
-		if res.Err != "" {
-			results[analysis.ComputeKey(res.Objective)] = res.Err
-		} else {
-			results[analysis.ComputeKey(res.Objective)] = res.Value
-		}
+		results[analysis.ComputeKey(res.Objective)] = res
+
 	}
 	aw.stopProviders()
 	close(aw.results)
@@ -125,7 +122,7 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 
 		if err != nil {
 			aw.Log.Error(err, "Failed to get the correct Provider")
-			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
+			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
 			continue
 		}
 
@@ -142,7 +139,7 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 
 		if err != nil {
 			aw.Log.Error(err, "Failed to get Provider")
-			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
+			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
 			continue
 		}
 
@@ -165,15 +162,13 @@ func (aw WorkersPool) Evaluate(ctx context.Context, providerType string, obj cha
 	}
 	for o := range obj {
 		value := ""
-		raw := []byte{}
 		if err == nil {
-			value, raw, err = provider.RunAnalysis(ctx, o.Query, aw.Analysis.Spec, o.Provider)
+			value, _, err = provider.RunAnalysis(ctx, o.Query, aw.Analysis.Spec, o.Provider)
 		}
 		result := metricstypes.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,
 			Value:     value,
-			Raw:       raw,
-			Err:       err.Error(),
+			Err:       err,
 		}
 		aw.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		aw.results <- result

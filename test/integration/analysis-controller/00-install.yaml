@@ -25,7 +25,8 @@ metadata:
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
-    name: some-provider
+    name: my-provider
+    namespace: keptn-lifecycle-toolkit-system
   query: "sum(kube_pod_container_resource_limits{resource='$CPU'})"
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
@@ -49,3 +50,12 @@ spec:
   totalScore:
     passPercentage: 90
     warningPercentage: 75
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-provider
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  type: prometheus
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

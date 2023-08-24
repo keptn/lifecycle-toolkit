@@ -177,7 +177,7 @@ func (aw WorkersPool) Evaluate(ctx context.Context, providerType string, obj cha
 	for o := range obj {
 		value := ""
 		if err == nil {
-			value, _, err = provider.RunAnalysis(ctx, o.Query, aw.Analysis.Spec, o.Provider)
+			value, _, err = provider.FetchAnalysisValue(ctx, o.Query, aw.Analysis.Spec, o.Provider)
 		}
 		result := metricstypes.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,

@@ -17,10 +17,10 @@ type ProviderResult struct {
 }
 
 type TargetResult struct {
-	FailResult OperatorResult
-	WarnResult OperatorResult
-	Warning    bool
-	Pass       bool
+	FailResult OperatorResult `json:"failResult,omitempty"`
+	WarnResult OperatorResult `json:"warnResult,omitempty"`
+	Warning    bool           `json:"warning,omitempty"`
+	Pass       bool           `json:"pass,omitempty"`
 }
 
 func (t *TargetResult) IsFail() bool {
@@ -32,15 +32,15 @@ func (t *TargetResult) IsWarn() bool {
 }
 
 type OperatorResult struct {
-	Operator  v1alpha3.Operator
-	Fulfilled bool
+	Operator  v1alpha3.Operator `json:"operator,omitempty"`
+	Fulfilled bool              `json:"fulfilled,omitempty"`
 }
 
 type ObjectiveResult struct {
-	Result TargetResult
-	Value  float64
-	Score  float64
-	Error  error
+	Result TargetResult `json:"result,omitempty"`
+	Value  float64      `json:"value,omitempty"`
+	Score  float64      `json:"score,omitempty"`
+	Error  error        `json:"error,omitempty"`
 }
 
 func (o *ObjectiveResult) IsFail() bool {
@@ -56,11 +56,11 @@ func (o *ObjectiveResult) IsWarn() bool {
 }
 
 type AnalysisResult struct {
-	ObjectiveResults []ObjectiveResult
-	TotalScore       float64
-	MaximumScore     float64
-	Pass             bool
-	Warning          bool
+	ObjectiveResults []ObjectiveResult `json:"objectiveResults,omitempty"`
+	TotalScore       float64           `json:"totalScore,omitempty"`
+	MaximumScore     float64           `json:"maximumScore,omitempty"`
+	Pass             bool              `json:"pass,omitempty"`
+	Warning          bool              `json:"warning,omitempty"`
 }
 
 func (a *AnalysisResult) GetAchievedPercentage() float64 {

@@ -18,7 +18,9 @@ package analysis
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
+	"time"
+
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -26,7 +28,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -101,7 +102,11 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	//TODO if we fail/timout try to store status partially
 
 	eval := a.Evaluate(res, analysisDef)
-	analysis.Status = fmt.Sprintf("%v", eval) //TODO add struct for status
+	analysisResultJSON, err := json.Marshal(eval)
+	if err != nil {
+		a.Log.Error(err, "Could not marshal status")
+	}
+	analysis.Status = string(analysisResultJSON) //TODO add struct for status
 	if err := a.Client.Status().Update(ctx, analysis); err != nil {
 		a.Log.Error(err, "Failed to update the Metric status")
 		return ctrl.Result{}, err

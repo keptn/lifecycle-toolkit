@@ -204,5 +204,5 @@ func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
 	resAnalysis := metricsapi.Analysis{}
 	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
 	require.Nil(t, err)
-	require.Equal(t, "{[] 0 0 true false}", resAnalysis.Status) //TODO change when introducing status
+	require.Equal(t, "{\"pass\":true}", resAnalysis.Status) //TODO change when introducing status
 }

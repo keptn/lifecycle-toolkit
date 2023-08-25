@@ -168,7 +168,7 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 	}
 }
 
-// TODO add timeout and spec save of unfinished analysis
+// TODO add timeout and spec save of unfinished analysis, add abstraction
 func (aw WorkersPool) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
 	provider, err := providers.NewProvider(providerType, aw.Log, aw.Client)
 	if err != nil {

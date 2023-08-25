@@ -210,6 +210,8 @@
 
 ## @param   metricsOperator.manager.env.exposeKeptnMetrics enable metrics exporter
 ## @param   metricsOperator.manager.env.metricsControllerLogLevel sets the log level of Metrics Controller
+## @param   metricsOperator.manager.env.analysisControllerLogLevel  sets the log level of Analysis Controller
+## @param   metricsOperator.manager.env.enableKeptnAnalysis  enable/disables the analysis feature
 
 ## @extra  metricsOperator.manager.livenessProbe custom livenessprobe for manager container
 ## @skip   metricsOperator.manager.livenessProbe.httpGet.path

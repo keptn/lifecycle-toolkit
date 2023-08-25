@@ -84,6 +84,61 @@ See the
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
 
+## Executing sequential tasks
+
+All `KeptnTaskDefinition` resources at the same level
+(either pre-deployment or post-deployment) execute in parallel.
+This is by design, because Keptn is not a pipeline engine.
+Task sequences that are not part of the lifecycle workflow
+should not be handled by KLT
+but should instead be handled by the pipeline engine tools being used
+such as Jenkins, Argo Workflows, Flux, and Tekton.
+
+For task sequences that are part of the lifecycle workflow
+can be defined sequentially in a `KeptnTaskDefinition` resource,
+which can execute a virtually unlimited number of programs and actions.
+You have great flexibility in how you define your `KeptnTaskDefinition` resources,
+allowing you to define the ideal mix of tasks that execute sequentially
+and tasks (or sets of tasks) that execute in parallel.
+
+If you define a `container-runtime` runner container
+for your `KeptnTaskDefinition`,
+you can do anything allowed by the configuration you define for that container.
+
+If you use either the `deno-runtime` or `python-runtime` runner,
+you can specify the actions to take by coding the actual calls
+inline in the manifest,
+by calling scripts on a remote webserver,
+or by calling other `KeptnTaskDefinition` resources you have defined.
+
+As an example, consider the `KeptnTaskDefinition` resources
+you need for testing your `KeptnApp`:
+
+- Perhaps you need to run a set of integration tests,
+  a set of performance tests, and a set of regression tests.
+- Perhaps you need to run these on Linux, MacOS, and Windows.
+- Perhaps you need to run these for Java 11, Java 17, and Java 21.
+
+You have several options:
+
+- Define one `KeptnTaskDefinition` resource that runs
+  integration tests, then regression test, then performance tests
+  in order.
+
+  - You could use the `functionRef` syntax
+    and code the calling sequences for all tests
+    inside your `KeptnTaskDefinition` resource
+    or you could use the `httpRef` syntax
+    to call scripts from an external webserver.
+  - You could code separate `KeptnTaskDefinition` resources
+    for integration tests, regression tests, and performance tests.
+    These three test sets could then run in parallel.
+  - You could create a `KeptnTaskDefinition` resource
+    that uses the `functionRef` syntax to call the
+    `KeptnTaskDefinition` resources for each type of testing.
+    Executing that resource would execute the three types of tests
+    in sequential order.
+
 ## Context
 
 A Kubernetes context is a set of access parameters

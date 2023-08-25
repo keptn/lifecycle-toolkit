@@ -39,11 +39,11 @@ spec:
 
 Each time you want to execute a `KeptnTaskDefinition`, a new (and uniquely named) `KeptnTask` must be created.
 
-In the standard operating mode, when Keptn is managing workloads, the creation of the `KeptnTask` CR is automatically done for you.
+In the standard operating mode, when Keptn is managing workloads, the creation of the `KeptnTask` CR is automatic.
 
 Here though, we must create it ourselves.
 
-The `KeptnTask` references the `KeptnTaskDefinition` 
+The `KeptnTask` references the `KeptnTaskDefinition` in the `spec.taskDefinition` field:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3

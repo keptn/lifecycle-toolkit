@@ -147,46 +147,9 @@ couple of days, but feel free to let us know about your PR
 * `style`: changes that do not affect the meaning of the code
 * `test`: adding missing tests or correcting existing tests
 
-## Auto signoff commit messages
+## Developer Certification of Origin (DCO)
 
-We have a DCO check that runs on every PR to verify that the commit has been signed off.
-
-To sign off the commits use `-s` flag, you can can use
-
-```bash
-git commit -s -m "my awesome contribution"
-```
-
-To sign off the last commit you made, you can use
-
-```bash
-git commit --amend --signoff
-```
-
-or the command below to sign off the last 2 commits you made
-
-```bash
-git rebase HEAD~2 --signoff
-```
-
-This process is sometimes inconvenient but you can automate it
-by creating a pre-commit git hook as follows:
-
-1. Create the hook:
-
-    ``` bash
-    touch .git/hooks/prepare-commit-msg
-    ```
-
-2. Add the following to the `prepare-commit-msg` file:
-
-    ```bash
-    SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-    grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
-    ```
-
-3. Give it execution permissions by calling:
-
-    ```bash
-    chmod +x ./.git/hooks/prepare-commit-msg
-    ```
+All commits must be accompanied by a DCO sign-off.
+See
+[DCO](docs/content/en/contribute/general/dco)
+for more information.

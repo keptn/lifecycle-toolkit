@@ -48,7 +48,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 		ps.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
 
-		template := &metricsapi.AnalysisValueTemplate{}
+		templ := &metricsapi.AnalysisValueTemplate{}
 		if j.AnalysisValueTemplateRef.Namespace == "" {
 			j.AnalysisValueTemplateRef.Namespace = ps.Namespace
 		}
@@ -56,7 +56,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			types.NamespacedName{
 				Name:      j.AnalysisValueTemplateRef.Name,
 				Namespace: j.AnalysisValueTemplateRef.Namespace},
-			template,
+			templ,
 		)
 
 		if err != nil {
@@ -66,13 +66,13 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 		}
 
 		providerRef := &metricsapi.KeptnMetricsProvider{}
-		if template.Spec.Provider.Namespace == "" {
-			template.Spec.Provider.Namespace = ps.Namespace
+		if templ.Spec.Provider.Namespace == "" {
+			templ.Spec.Provider.Namespace = ps.Namespace
 		}
 		err = ps.Client.Get(ctx,
 			types.NamespacedName{
-				Name:      template.Spec.Provider.Name,
-				Namespace: template.Spec.Provider.Namespace},
+				Name:      templ.Spec.Provider.Name,
+				Namespace: templ.Spec.Provider.Namespace},
 			providerRef,
 		)
 
@@ -82,9 +82,9 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			continue
 		}
 
-		templatedQuery, err := generateQuery(template.Spec.Query, ps.Analysis.Spec.Args)
+		templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
 		if err != nil {
-			ps.Log.Error(err, "Failed to substitute args in template")
+			ps.Log.Error(err, "Failed to substitute args in templ")
 			ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
 			continue
 		}

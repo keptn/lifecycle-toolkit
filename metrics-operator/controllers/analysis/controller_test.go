@@ -23,7 +23,7 @@ import (
 
 func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
-	analysis, analysisDef, template, provider := getTestCRDs()
+	analysis, analysisDef, template, _ := getTestCRDs()
 
 	tests := []struct {
 		name    string
@@ -31,40 +31,49 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		req     controllerruntime.Request
 		want    controllerruntime.Result
 		wantErr bool
+		status  string
+		res     metricstypes.AnalysisResult
 	}{
 		{
-			name:    "analysis does not exist, reconcile",
+			name:    "analysis does not exist, reconcile no status update",
 			client:  fake2.NewClient(),
 			want:    controllerruntime.Result{},
 			wantErr: false,
+			status:  "",
+			res:     metricstypes.AnalysisResult{Pass: false},
 		}, {
-			name:    "analysisDefinition does not exist, requeue",
+			name:    "analysisDefinition does not exist, requeue no status update",
 			client:  fake2.NewClient(&analysis),
 			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: false,
+			status:  "",
+			res:     metricstypes.AnalysisResult{Pass: false},
 		}, {
-			name:    "analysisValueTemplate does not exist, reconcile",
-			client:  fake2.NewClient(&analysis, &analysisDef),
-			want:    controllerruntime.Result{},
-			wantErr: false,
-		}, {
-			name:    "metrics provider does not exist, reconcile",
+			name:    "succeded, status updated",
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-		}, {
-			name:   "provider exist, collect result, do nothing", //TODO: when scoring is there we need more
-			client: fake2.NewClient(&analysis, &analysisDef, &template, &provider),
-			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
-			},
-			want:    controllerruntime.Result{},
-			wantErr: false,
+			status:  "{\"pass\":true}",
+			res:     metricstypes.AnalysisResult{Pass: true},
 		},
 	}
 
 	req := controllerruntime.Request{
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+	collectorCount := int32(0)
+	dispatchCount := int32(0)
+	mockFactory := func(analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool {
+		mymock := fake.MyAnalysisPoolMock{
+			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
+				atomic.AddInt32(&collectorCount, 1)
+				return nil
+			},
+			DispatchObjectivesFunc: func(ctx context.Context) {
+				atomic.AddInt32(&dispatchCount, 1)
+			},
+		}
+		return &mymock
 	}
 
 	for _, tt := range tests {
@@ -74,10 +83,10 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				Scheme:                tt.client.Scheme(),
 				Log:                   testr.New(t),
 				MaxWorkers:            2,
-				NewWorkersPoolFactory: NewWorkersPool,
+				NewWorkersPoolFactory: mockFactory,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
 					EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
-						return metricstypes.AnalysisResult{}
+						return tt.res
 					}},
 			}
 			got, err := a.Reconcile(context.TODO(), req)
@@ -87,6 +96,12 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
+			}
+			if tt.status != "" {
+				resAnalysis := metricsapi.Analysis{}
+				err = tt.client.Get(context.TODO(), req.NamespacedName, &resAnalysis)
+				require.Nil(t, err)
+				require.Equal(t, tt.status, resAnalysis.Status)
 			}
 
 		})
@@ -107,6 +122,10 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 				To: metav1.Time{
 					Time: time.Now(),
 				},
+			},
+			Args: map[string]string{
+				"good": "good",
+				"dot":  ".",
 			},
 			AnalysisDefinition: metricsapi.ObjectReference{
 				Name:      "my-analysis-def",
@@ -148,7 +167,7 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 				Name:      "my-provider",
 				Namespace: "default",
 			},
-			Query: "testquery",
+			Query: "this is a {{.good}} query{{.dot}}",
 		},
 	}
 
@@ -163,46 +182,4 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 		},
 	}
 	return analysis, analysisDef, template, provider
-}
-
-func TestAnalysisReconciler_Reconcile_WithMockedWorkers(t *testing.T) {
-	analysis, analysisDef, template, provider := getTestCRDs()
-	fclient := fake2.NewClient(&analysis, &analysisDef, &template, &provider)
-	collectorCount := int32(0)
-	dispatchCount := int32(0)
-
-	mockFactory := func(analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool {
-		mymock := fake.MyAnalysisPoolMock{
-			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
-				atomic.AddInt32(&collectorCount, 1)
-				return nil
-			},
-			DispatchObjectivesFunc: func(ctx context.Context) {
-				atomic.AddInt32(&dispatchCount, 1)
-			},
-		}
-		return &mymock
-	}
-
-	a := &AnalysisReconciler{
-		Client:                fclient,
-		Scheme:                fclient.Scheme(),
-		Log:                   testr.New(t),
-		MaxWorkers:            2,
-		NewWorkersPoolFactory: mockFactory,
-		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
-				return metricstypes.AnalysisResult{Pass: true}
-			}},
-	}
-	req := controllerruntime.Request{
-		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
-	}
-	got, err := a.Reconcile(context.TODO(), req)
-	require.Nil(t, err)
-	require.Equal(t, got, controllerruntime.Result{})
-	resAnalysis := metricsapi.Analysis{}
-	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
-	require.Nil(t, err)
-	require.Equal(t, "{\"pass\":true}", resAnalysis.Status) //TODO change when introducing status
 }

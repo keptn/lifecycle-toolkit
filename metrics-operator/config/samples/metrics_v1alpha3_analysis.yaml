@@ -20,4 +20,3 @@ spec:
   analysisDefinition:
     name: ed-my-proj-dev-svc1
     namespace: keptn-lifecycle-toolkit-system
-

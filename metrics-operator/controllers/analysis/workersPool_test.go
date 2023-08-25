@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"context"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
 	"time"
 
@@ -10,6 +11,8 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
+	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/fake"
 	"github.com/stretchr/testify/require"
 )
 
@@ -182,7 +185,13 @@ func TestAssignTasks(t *testing.T) {
 	}
 }
 
-func TestEvaluateProviderNotExisting(t *testing.T) {
+func TestEvaluate(t *testing.T) {
+	fakeProvider := fake2.KeptnSLIProviderMock{
+		FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+			return "10", []byte{}, nil
+		},
+	}
+
 	fakePool := WorkersPool{
 		Analysis: &metricsapi.Analysis{
 			Spec: metricsapi.AnalysisSpec{
@@ -192,6 +201,9 @@ func TestEvaluateProviderNotExisting(t *testing.T) {
 					Namespace: "d",
 				},
 			},
+		},
+		ProviderFactory: func(providerType string, log logr.Logger, k8sClient client.Client) (providers.KeptnSLIProvider, error) {
+			return &fakeProvider, nil
 		},
 		Client:  fake.NewClient(),
 		Log:     logr.Discard(),
@@ -206,9 +218,14 @@ func TestEvaluateProviderNotExisting(t *testing.T) {
 	obj := make(chan metricstypes.ProviderRequest, 1)
 	go func() {
 		obj <- metricstypes.ProviderRequest{
-			Objective: &metricsapi.Objective{},
-			Query:     "query_fake_metric",
-			Provider:  &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: providerType}},
+			Objective: &metricsapi.Objective{
+				AnalysisValueTemplateRef: metricsapi.ObjectReference{
+					Name:      "mytemp",
+					Namespace: "default",
+				},
+			},
+			Query:    "query_fake_metric",
+			Provider: &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: providerType}},
 		}
 		close(obj)
 	}()
@@ -216,7 +233,9 @@ func TestEvaluateProviderNotExisting(t *testing.T) {
 	fakePool.Evaluate(ctx, providerType, obj)
 	close(fakePool.results)
 	for res := range fakePool.results {
-		require.Contains(t, res.Err.Error(), "unsupported protocol scheme")
+		require.Equal(t, "mytemp", res.Objective.Name)
+		require.Contains(t, "10", res.Value)
+		require.Nil(t, res.Err)
 	}
 
 }

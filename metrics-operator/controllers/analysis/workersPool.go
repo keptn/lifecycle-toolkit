@@ -31,15 +31,16 @@ func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.Analys
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
 	return WorkersPool{
-		Analysis:   analysis,
-		Objectives: assignTasks(definition.Spec.Objectives, numWorkers),
-		Client:     c,
-		Log:        log,
-		Namespace:  namespace,
-		numWorkers: numWorkers,
-		numJobs:    numJobs,
-		providers:  providerChans,
-		results:    make(chan metricstypes.ProviderResult, numJobs),
+		Analysis:        analysis,
+		Objectives:      assignTasks(definition.Spec.Objectives, numWorkers),
+		Client:          c,
+		Log:             log,
+		Namespace:       namespace,
+		numWorkers:      numWorkers,
+		numJobs:         numJobs,
+		providers:       providerChans,
+		results:         make(chan metricstypes.ProviderResult, numJobs),
+		ProviderFactory: providers.NewProvider,
 	}
 }
 
@@ -53,6 +54,7 @@ type WorkersPool struct {
 	numJobs    int
 	providers  map[string]chan metricstypes.ProviderRequest
 	results    chan metricstypes.ProviderResult
+	providers.ProviderFactory
 }
 
 func assignTasks(tasks []metricsapi.Objective, numWorkers int) map[int][]metricsapi.Objective {
@@ -168,9 +170,8 @@ func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
 	}
 }
 
-// TODO add timeout and spec save of unfinished analysis, add abstraction
 func (aw WorkersPool) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
-	provider, err := providers.NewProvider(providerType, aw.Log, aw.Client)
+	provider, err := aw.ProviderFactory(providerType, aw.Log, aw.Client)
 	if err != nil {
 		aw.Log.Error(err, "Failed to get the correct Provider")
 	}

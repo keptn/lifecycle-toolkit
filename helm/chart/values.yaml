@@ -145,6 +145,7 @@ metricsOperator:
         type: RuntimeDefault
     env:
       exposeKeptnMetrics: "true"
+      enableKeptnAnalysis: "false"
       metricsControllerLogLevel: "0"
       analysisControllerLogLevel: "0"
     image:

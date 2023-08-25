@@ -72,6 +72,7 @@ type envConfig struct {
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	EnableKeptnAnalysis           bool   `envconfig:"ENABLE_ANALYSIS" default:"false"`
 }
 
 //nolint:gocyclo,funlen
@@ -178,22 +179,25 @@ func main() {
 		os.Exit(1)
 	}
 
-	analysisLogger := ctrl.Log.WithName("KeptnMetric Controller")
-	targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
-	objEval := analysis.NewObjectiveEvaluator(&targetEval)
-	analysisEval := analysis.NewAnalysisEvaluator(&objEval)
+	if env.EnableKeptnAnalysis {
 
-	if err = (&analysiscontroller.AnalysisReconciler{
-		Client:                mgr.GetClient(),
-		Scheme:                mgr.GetScheme(),
-		Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
-		MaxWorkers:            4,
-		Namespace:             env.PodNamespace,
-		NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
-		IAnalysisEvaluator:    &analysisEval,
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
-		os.Exit(1)
+		analysisLogger := ctrl.Log.WithName("KeptnMetric Controller")
+		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
+		objEval := analysis.NewObjectiveEvaluator(&targetEval)
+		analysisEval := analysis.NewAnalysisEvaluator(&objEval)
+
+		if err = (&analysiscontroller.AnalysisReconciler{
+			Client:                mgr.GetClient(),
+			Scheme:                mgr.GetScheme(),
+			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
+			MaxWorkers:            4,
+			Namespace:             env.PodNamespace,
+			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
+			IAnalysisEvaluator:    &analysisEval,
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
+			os.Exit(1)
+		}
 	}
 	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")

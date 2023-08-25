@@ -322,6 +322,8 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: {{ .Values.metricsOperator.manager.env.exposeKeptnMetrics | quote }}
+        - name: ENABLE_ANALYSIS
+          value: {{ .Values.metricsOperator.manager.env.enableKeptnAnalysis | quote }}
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.metricsOperator.manager.env.metricsControllerLogLevel | quote
             }}

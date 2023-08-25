@@ -21,7 +21,7 @@ spec:
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
-  name: analysis-value-template-sample
+  name: response-time-p95
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
@@ -38,6 +38,7 @@ spec:
   objectives:
     - analysisValueTemplateRef:
         name: response-time-p95
+        namespace: keptn-lifecycle-toolkit-system
       target:
         failure:
           lessThan:

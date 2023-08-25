@@ -16,4 +16,4 @@ spec:
     cpu: cpu
   analysisDefinition:
     name: ed-my-proj-dev-svc1
-status: '{"objectiveResults":[{"result":{"failResult":{"operator":{}},"warnResult":{"operator":{}}},"error":{"Type":"bad_data","Msg":"invalid parameter \"step\": zero or negative query resolution step widths are not accepted. Try a positive integer","Detail":""}}],"maximumScore":1}'
+status: '{"objectiveResults":[{"result":{"failResult":{"operator":{}},"warnResult":{"operator":{}}},"error":{}}],"maximumScore":1}'

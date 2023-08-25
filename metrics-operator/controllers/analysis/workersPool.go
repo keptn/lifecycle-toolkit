@@ -101,13 +101,13 @@ func (aw WorkersPool) stopProviders() {
 func generateQuery(query string, selectors map[string]string) (string, error) {
 	tmpl, err := template.New("").Parse(query)
 	if err != nil {
-		return "", fmt.Errorf("could not create a template: %v", err)
+		return "", fmt.Errorf("could not create a template: %w", err)
 	}
 
 	var resultBuf bytes.Buffer
 	err = tmpl.Execute(&resultBuf, selectors)
 	if err != nil {
-		return "", fmt.Errorf("could not template the args: %v", err)
+		return "", fmt.Errorf("could not template the args: %w", err)
 	}
 
 	return resultBuf.String(), nil

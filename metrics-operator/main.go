@@ -81,12 +81,17 @@ func main() {
 	var SLIFilePath string
 	var provider string
 	var namespace string
+	var SLOFilePath string
+	var analysisDefinition string
 	var enableLeaderElection bool
 	var disableWebhook bool
 	var probeAddr string
-	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI fiel to be converted")
+	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI file to be converted")
 	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
 	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
+	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLI file to be converted")
+	flag.StringVar(&analysisDefinition, "definition", "", "The name of AnalysisDefinition to be created")
+	flag.StringVar(&namespace, "slo-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -104,6 +109,18 @@ func main() {
 	if SLIFilePath != "" {
 		// convert
 		content, err := convertSLI(SLIFilePath, provider, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
+	if SLOFilePath != "" {
+		// convert
+		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
 		if err != nil {
 			log.Fatalf(err.Error())
 			return
@@ -229,6 +246,23 @@ func convertSLI(SLIFilePath, provider, namespace string) (string, error) {
 	// convert
 	c := converter.NewSLIConverter()
 	content, err := c.Convert(fileContent, provider, namespace)
+	if err != nil {
+		return "", err
+	}
+
+	return content, nil
+}
+
+func convertSLO(SLOFilePath, analysisDefinition, namespace string) (string, error) {
+	//read file content
+	fileContent, err := os.ReadFile(SLOFilePath)
+	if err != nil {
+		return "", fmt.Errorf("error reading file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLOConverter()
+	content, err := c.Convert(fileContent, analysisDefinition, namespace)
 	if err != nil {
 		return "", err
 	}

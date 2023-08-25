@@ -183,74 +183,7 @@ func TestAssignTasks(t *testing.T) {
 	}
 }
 
-//func TestRetrieveProvider(t *testing.T) {
-//	analysis := metricsapi.Analysis{
-//		ObjectMeta: metav1.ObjectMeta{Name: "test"},
-//		Spec: metricsapi.AnalysisSpec{
-//			AnalysisDefinition: metricsapi.ObjectReference{
-//				Name:      "def",
-//				Namespace: "default",
-//			},
-//		},
-//	}
-//
-//	def := metricsapi.AnalysisDefinition{
-//		ObjectMeta: metav1.ObjectMeta{
-//			Name:      "def",
-//			Namespace: "default",
-//		},
-//		Spec: metricsapi.AnalysisDefinitionSpec{Objectives: []metricsapi.Objective{{
-//			AnalysisValueTemplateRef: metricsapi.ObjectReference{
-//				Name:      "template-1",
-//				Namespace: "default"},
-//		}}},
-//	}
-//	templ := metricsapi.AnalysisValueTemplate{
-//		ObjectMeta: metav1.ObjectMeta{
-//			Name:      "template-1",
-//			Namespace: "default",
-//		},
-//		Spec: metricsapi.AnalysisValueTemplateSpec{
-//			Provider: metricsapi.ObjectReference{
-//				Name:      "provider-1",
-//				Namespace: "default",
-//			},
-//			Query: "",
-//		},
-//		Status: "",
-//	}
-//	// Create a fake client
-//	client := fake.NewClient(&analysis, &def, &templ)
-//
-//	// Create a fake WorkersPool instance for testing
-//	fakePool := WorkersPool{
-//		Analysis: &analysis,
-//		Objectives: map[int][]metricsapi.Objective{
-//			1: {{AnalysisValueTemplateRef: metricsapi.ObjectReference{Name: "template-1"}}},
-//			2: {{AnalysisValueTemplateRef: metricsapi.ObjectReference{Name: "template-2"}}},
-//		},
-//		Client:  client,
-//		Log:     logr.Discard(),
-//		results: make(chan metricstypes.ProviderResult, 1),
-//	}
-//
-//	// Simulate context
-//	ctx := context.TODO()
-//
-//	// Test with an existing provider
-//	existingProvider := &metricsapi.KeptnMetricsProvider{
-//		ObjectMeta: metav1.ObjectMeta{Name: "provider-1", Namespace: "default"},
-//	}
-//	require.NoError(t, client.Create(ctx, existingProvider))
-//
-//	fakePool.RetrieveProvider(ctx, 1)
-//	for r := range fakePool.results {
-//		t.Log(r)
-//	}
-//	// require that the error handling works as expected
-//}
-
-func TestEvaluateProviderNotSupported(t *testing.T) { //TODO abstract provider
+func TestEvaluateProviderNotExisting(t *testing.T) {
 	fakePool := WorkersPool{
 		Analysis: &metricsapi.Analysis{
 			Spec: metricsapi.AnalysisSpec{
@@ -270,21 +203,21 @@ func TestEvaluateProviderNotSupported(t *testing.T) { //TODO abstract provider
 	ctx := context.TODO()
 
 	// Test with a valid provider type
-	providerType := "fakeProvider"
+	providerType := "prometheus"
 	obj := make(chan metricstypes.ProviderRequest, 1)
-	go fakePool.Evaluate(ctx, providerType, obj)
+	go func() {
+		obj <- metricstypes.ProviderRequest{
+			Objective: &metricsapi.Objective{},
+			Query:     "query_fake_metric",
+			Provider:  &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: providerType}},
+		}
+		close(obj)
+	}()
 
-	obj <- metricstypes.ProviderRequest{
-		Objective: &metricsapi.Objective{},
-		Query:     "query_fake_metric",
-		Provider:  &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: providerType}},
-	}
-	close(obj)
-
-	for res := range fakePool.results {
-		require.Equal(t, "provider fakeProvider not supported", res.Err.Error())
-	}
-
+	fakePool.Evaluate(ctx, providerType, obj)
 	close(fakePool.results)
+	for res := range fakePool.results {
+		require.Contains(t, res.Err.Error(), "unsupported protocol scheme")
+	}
 
 }

@@ -137,7 +137,7 @@ func setupTarget(o Objective) (metricsapi.Target, error) {
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
-				// TODO cover use cases with multiple criterias (create new objectives)
+				// TODO cover use cases with multiple operators (create new objectives)
 				op, err := setupOperator(o.Pass[0].Operators[0])
 				if err != nil {
 					return target, err
@@ -153,6 +153,7 @@ func setupTarget(o Objective) (metricsapi.Target, error) {
 	var err error
 	if len(o.Pass) > 0 {
 		if len(o.Pass[0].Operators) > 0 {
+			// TODO cover use cases with multiple operators (create new objectives)
 			op, err := setupOperator(o.Pass[0].Operators[0])
 			if err != nil {
 				return target, err
@@ -160,6 +161,7 @@ func setupTarget(o Objective) (metricsapi.Target, error) {
 			target.Warning = op
 		}
 		if len(o.Warning[0].Operators) > 0 {
+			// TODO cover use cases with multiple operators (create new objectives)
 			op, err := setupOperator(o.Warning[0].Operators[0])
 			if err != nil {
 				return target, err

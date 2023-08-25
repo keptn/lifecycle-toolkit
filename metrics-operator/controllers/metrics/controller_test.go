@@ -376,7 +376,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-max-for-odd-length",
 			aggFunc:     "max",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "5",
 		},
 		{
@@ -388,7 +388,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-min-for-odd-length",
 			aggFunc:     "min",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "1",
 		},
 		{
@@ -412,7 +412,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-avg-for-odd-length",
 			aggFunc:     "avg",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "3",
 		},
 		{
@@ -424,7 +424,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-p90-for-odd-length",
 			aggFunc:     "p90",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "5",
 		},
 		{
@@ -436,7 +436,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-p95-for-odd-length",
 			aggFunc:     "p95",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "5",
 		},
 		{
@@ -448,7 +448,7 @@ func Test_AggregateValues(t *testing.T) {
 		{
 			name:        "test-p99-for-odd-length",
 			aggFunc:     "p99",
-			stringSlice: []string{"1", "2", "3", "4","5"},
+			stringSlice: []string{"1", "2", "3", "4", "5"},
 			want:        "5",
 		},
 		{

@@ -69,6 +69,15 @@ func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace
 }
 
 func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string) (*metricsapi.AnalysisDefinition, error) {
+	// define resulting AnalysisDefinition with easy conversions
+	passPercentage, err := removePercentage(sloContent.TotalScore.Pass)
+	if err != nil {
+		return nil, err
+	}
+	warnPercentage, err := removePercentage(sloContent.TotalScore.Warning)
+	if err != nil {
+		return nil, err
+	}
 	definition := &metricsapi.AnalysisDefinition{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AnalysisDefinition",
@@ -79,14 +88,21 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 		},
 		Spec: metricsapi.AnalysisDefinitionSpec{
 			TotalScore: metricsapi.TotalScore{
-				PassPercentage:    removePercentage(sloContent.TotalScore.Pass),
-				WarningPercentage: removePercentage(sloContent.TotalScore.Warning),
+				PassPercentage:    passPercentage,
+				WarningPercentage: warnPercentage,
 			},
+			// create a slice of size of len(objectives), but reserve capacity for
+			// double the size, as some objectives may be twice there (conversion of criteria with logical AND)
 			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives), len(sloContent.Objectives)*2),
 		},
 	}
 
+	// convert objectives one after another
 	for i, o := range sloContent.Objectives {
+		target, err := setupTarget(o)
+		if err != nil {
+			return nil, err
+		}
 		objective := metricsapi.Objective{
 			AnalysisValueTemplateRef: metricsapi.ObjectReference{
 				Name:      o.Name,
@@ -94,48 +110,65 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 			},
 			KeyObjective: o.KeySLI,
 			Weight:       o.Weight,
-			Target:       setupTarget(o),
+			Target:       target,
 		}
 		definition.Spec.Objectives[i] = objective
 	}
 	return definition, nil
 }
 
-func removePercentage(str string) int {
+// removes % symbol from the scoring values and converts to numberic value
+func removePercentage(str string) (int, error) {
 	t := strings.ReplaceAll(str, "%", "")
-	y, _ := strconv.Atoi(t)
-	return y
+	return strconv.Atoi(t)
 }
 
-func setupTarget(o Objective) metricsapi.Target {
+// creates and sets up the target struct from objective
+func setupTarget(o Objective) (metricsapi.Target, error) {
 	target := metricsapi.Target{}
+	// clean up % criteria
 	o = cleanupObjective(o)
+	// skip objective if it has criteria combined with logical OR -> not supported
 	if shouldIgnoreObjective(o) {
-		return target
+		return target, nil
 	}
 
+	// if warning criteria are not defined, negotiate the existing and create fail criteria
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
-				op, _ := setupOperator(o.Pass[0].Operators[0])
+				// TODO cover use cases with multiple criterias (create new objectives)
+				op, err := setupOperator(o.Pass[0].Operators[0])
+				if err != nil {
+					return target, err
+				}
 				target.Failure = op
-				return target
+				return target, nil
 			}
 		}
 	}
 
+	// warn criteria -> fail criteria
+	// pass criteria -> warn criteria
+	var err error
 	if len(o.Pass) > 0 {
 		if len(o.Pass[0].Operators) > 0 {
-			op, _ := setupOperator(o.Pass[0].Operators[0])
+			op, err := setupOperator(o.Pass[0].Operators[0])
+			if err != nil {
+				return target, err
+			}
 			target.Warning = op
 		}
 		if len(o.Warning[0].Operators) > 0 {
-			op, _ := setupOperator(o.Warning[0].Operators[0])
+			op, err := setupOperator(o.Warning[0].Operators[0])
+			if err != nil {
+				return target, err
+			}
 			target.Failure = op
 		}
 	}
 
-	return target
+	return target, err
 }
 
 func cleanupObjective(o Objective) Objective {
@@ -144,6 +177,8 @@ func cleanupObjective(o Objective) Objective {
 	return o
 }
 
+// remove % operators from criterium structure
+// if criterium did have only % operators, remove it from strucutre
 func cleanupCriteria(criteria []Criteria) []Criteria {
 	newCriteria := make([]Criteria, 0, len(criteria))
 	for _, c := range criteria {
@@ -167,6 +202,7 @@ func shouldIgnoreObjective(o Objective) bool {
 	return len(o.Pass) > 1 || len(o.Warning) > 1
 }
 
+// create operator for Target
 func setupOperator(op string) (*metricsapi.Operator, error) {
 	// remove whitespaces
 	op = strings.Replace(op, " ", "", -1)
@@ -181,6 +217,7 @@ func setupOperator(op string) (*metricsapi.Operator, error) {
 	return &metricsapi.Operator{}, nil
 }
 
+// checks and negotiates the existing operator
 func createOperator(o string, value string) (*metricsapi.Operator, error) {
 	v, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {

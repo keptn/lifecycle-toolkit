@@ -29,7 +29,7 @@ The full SLO capabilities
 provided by Keptn v1 such as weighting and scoring
 are currently under development for KLT.
 You can follow and participate in the design and implementation process at
-[Github epic 1785](https://github.com/keptn/lifecycle-toolkit/pull/1785).
+[GitHub Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
 
 Notice the paradigm differences when implementing KLT evaluations:
 

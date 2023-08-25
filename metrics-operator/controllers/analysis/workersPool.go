@@ -1,17 +1,12 @@
 package analysis
 
 import (
-	"bytes"
-	"fmt"
-	"text/template"
-
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"golang.org/x/net/context"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -30,61 +25,38 @@ func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.Analys
 	}
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
-	return WorkersPool{
-		Analysis:        analysis,
-		Objectives:      assignTasks(definition.Spec.Objectives, numWorkers),
-		Client:          c,
-		Log:             log,
-		Namespace:       namespace,
-		numWorkers:      numWorkers,
-		numJobs:         numJobs,
-		providers:       providerChans,
-		results:         make(chan metricstypes.ProviderResult, numJobs),
+	assigner := TaskAssigner{tasks: definition.Spec.Objectives, numWorkers: numWorkers}
+	results := make(chan metricstypes.ProviderResult, numJobs)
+	evaluator := ObjectivesEvaluator{
 		ProviderFactory: providers.NewProvider,
+		Log:             log,
+		Client:          c,
+		Analysis:        analysis,
+		results:         results,
+	}
+	retriever := ProvidersPool{
+		Namespace:            namespace,
+		Objectives:           assigner.AssignTasks(),
+		IObjectivesEvaluator: evaluator,
+		providers:            providerChans,
+	}
+	return WorkersPool{
+		numWorkers:     numWorkers,
+		numJobs:        numJobs,
+		IProvidersPool: retriever,
 	}
 }
 
 type WorkersPool struct {
-	*metricsapi.Analysis
-	Objectives map[int][]metricsapi.Objective
-	client.Client
-	Log        logr.Logger
-	Namespace  string
+	IProvidersPool
 	numWorkers int
 	numJobs    int
-	providers  map[string]chan metricstypes.ProviderRequest
-	results    chan metricstypes.ProviderResult
-	providers.ProviderFactory
-}
-
-func assignTasks(tasks []metricsapi.Objective, numWorkers int) map[int][]metricsapi.Objective {
-	totalTasks := len(tasks)
-	tasksPerWorker := totalTasks / numWorkers
-	taskMap := make(map[int][]metricsapi.Objective, numWorkers)
-
-	start := 0
-	for i := 0; i < numWorkers && start < totalTasks; i++ {
-		end := start + tasksPerWorker
-		if i < totalTasks%numWorkers {
-			end++ // distribute the remainder tasks
-		}
-		taskMap[i+1] = tasks[start:end]
-		start = end
-	}
-
-	return taskMap
 }
 
 func (aw WorkersPool) DispatchObjectives(ctx context.Context) {
-
-	for _, provider := range providers.SupportedProviders {
-		channel := make(chan metricstypes.ProviderRequest, aw.numJobs)
-		aw.providers[provider] = channel
-		go aw.Evaluate(ctx, provider, channel)
-	}
-
+	aw.StartProviders(ctx, aw.numJobs)
 	for w := 1; w <= aw.numWorkers; w++ {
-		go aw.RetrieveProvider(ctx, w)
+		go aw.DispatchToProviders(ctx, w)
 	}
 }
 
@@ -92,109 +64,10 @@ func (aw WorkersPool) CollectAnalysisResults() map[string]metricstypes.ProviderR
 
 	results := make(map[string]metricstypes.ProviderResult, aw.numJobs)
 	for a := 1; a <= aw.numJobs; a++ {
-		res := <-aw.results
-		aw.Log.Info("collected result")
-		// Making sure error gets propagated
+		res := aw.GetResult()
 		results[analysis.ComputeKey(res.Objective)] = res
 
 	}
-	aw.stopProviders()
-	close(aw.results)
+	aw.StopProviders()
 	return results
-}
-
-func (aw WorkersPool) stopProviders() {
-	for _, ch := range aw.providers {
-		close(ch)
-	}
-}
-
-func generateQuery(query string, selectors map[string]string) (string, error) {
-	tmpl, err := template.New("").Parse(query)
-	if err != nil {
-		return "", fmt.Errorf("could not create a template: %w", err)
-	}
-
-	var resultBuf bytes.Buffer
-	err = tmpl.Execute(&resultBuf, selectors)
-	if err != nil {
-		return "", fmt.Errorf("could not template the args: %w", err)
-	}
-
-	return resultBuf.String(), nil
-}
-
-func (aw WorkersPool) RetrieveProvider(ctx context.Context, id int) {
-
-	for _, j := range aw.Objectives[id] {
-
-		aw.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
-
-		template := &metricsapi.AnalysisValueTemplate{}
-		if j.AnalysisValueTemplateRef.Namespace == "" {
-			j.AnalysisValueTemplateRef.Namespace = aw.Namespace
-		}
-		err := aw.Client.Get(ctx,
-			types.NamespacedName{
-				Name:      j.AnalysisValueTemplateRef.Name,
-				Namespace: j.AnalysisValueTemplateRef.Namespace},
-			template,
-		)
-
-		if err != nil {
-			aw.Log.Error(err, "Failed to get the correct Provider")
-			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
-
-		providerRef := &metricsapi.KeptnMetricsProvider{}
-		if template.Spec.Provider.Namespace == "" {
-			template.Spec.Provider.Namespace = aw.Namespace
-		}
-		err = aw.Client.Get(ctx,
-			types.NamespacedName{
-				Name:      template.Spec.Provider.Name,
-				Namespace: template.Spec.Provider.Namespace},
-			providerRef,
-		)
-
-		if err != nil {
-			aw.Log.Error(err, "Failed to get Provider")
-			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
-
-		templatedQuery, err := generateQuery(template.Spec.Query, aw.Analysis.Spec.Args)
-		if err != nil {
-			aw.Log.Error(err, "Failed to substitute args in template")
-			aw.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
-		//send job to provider solver
-		aw.providers[providerRef.Spec.Type] <- metricstypes.ProviderRequest{
-			Objective: &j,
-			Query:     templatedQuery,
-			Provider:  providerRef,
-		}
-	}
-}
-
-func (aw WorkersPool) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
-	provider, err := aw.ProviderFactory(providerType, aw.Log, aw.Client)
-	if err != nil {
-		aw.Log.Error(err, "Failed to get the correct Provider")
-	}
-	for o := range obj {
-		value := ""
-		if err == nil {
-			value, _, err = provider.FetchAnalysisValue(ctx, o.Query, aw.Analysis.Spec, o.Provider)
-		}
-		result := metricstypes.ProviderResult{
-			Objective: o.Objective.AnalysisValueTemplateRef,
-			Value:     value,
-			Err:       err,
-		}
-		aw.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
-		aw.results <- result
-	}
 }

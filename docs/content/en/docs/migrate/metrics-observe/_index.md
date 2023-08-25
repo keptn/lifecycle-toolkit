@@ -13,7 +13,7 @@ We hope you will contribute your experiences
 and questions that you have.
 
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
-KLT Keptn Metrics and Keptn Evaluations.
+KLT KeptnMetrics and KeptnEvaluationDefintions.
 
 By default, KLT includes additional observability features
 that are not included in Keptn v1:

@@ -58,11 +58,20 @@ type WorkersPool struct {
 }
 
 func assignTasks(tasks []metricsapi.Objective, numWorkers int) map[int][]metricsapi.Objective {
+	totalTasks := len(tasks)
+	tasksPerWorker := totalTasks / numWorkers
 	taskMap := make(map[int][]metricsapi.Objective, numWorkers)
-	for i, task := range tasks {
-		workerID := (i % numWorkers) + 1
-		taskMap[workerID] = append(taskMap[workerID], task)
+
+	start := 0
+	for i := 0; i < numWorkers && start < totalTasks; i++ {
+		end := start + tasksPerWorker
+		if i < totalTasks%numWorkers {
+			end++ // distribute the remainder tasks
+		}
+		taskMap[i+1] = tasks[start:end]
+		start = end
 	}
+
 	return taskMap
 }
 

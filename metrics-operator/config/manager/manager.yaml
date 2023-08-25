@@ -65,7 +65,7 @@ spec:
             - name: EXPOSE_KEPTN_METRICS
               value: "true"
             - name: ENABLE_ANALYSIS
-              value: "false"
+              value: "true"
             - name: METRICS_CONTROLLER_LOG_LEVEL
               value: "0"
             - name: ANALYSIS_CONTROLLER_LOG_LEVEL

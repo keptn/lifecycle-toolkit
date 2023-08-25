@@ -368,15 +368,27 @@ func Test_AggregateValues(t *testing.T) {
 		want        string
 	}{
 		{
-			name:        "test-max",
+			name:        "test-max-for-even-length",
 			aggFunc:     "max",
 			stringSlice: []string{"1", "2", "3", "4"},
 			want:        "4",
 		},
 		{
-			name:        "test-min",
+			name:        "test-max-for-odd-length",
+			aggFunc:     "max",
+			stringSlice: []string{"1", "2", "3", "4","5"},
+			want:        "5",
+		},
+		{
+			name:        "test-min-for-even-length",
 			aggFunc:     "min",
 			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "1",
+		},
+		{
+			name:        "test-min-for-odd-length",
+			aggFunc:     "min",
+			stringSlice: []string{"1", "2", "3", "4","5"},
 			want:        "1",
 		},
 		{
@@ -392,28 +404,52 @@ func Test_AggregateValues(t *testing.T) {
 			want:        "3",
 		},
 		{
-			name:        "test-avg",
+			name:        "test-avg-for-even-length",
 			aggFunc:     "avg",
 			stringSlice: []string{"1", "2", "3", "4"},
 			want:        "2.5",
 		},
 		{
-			name:        "test-p90",
+			name:        "test-avg-for-odd-length",
+			aggFunc:     "avg",
+			stringSlice: []string{"1", "2", "3", "4","5"},
+			want:        "3",
+		},
+		{
+			name:        "test-p90-for-even-length",
 			aggFunc:     "p90",
 			stringSlice: []string{"1", "2", "3", "4"},
-			want:        "1",
+			want:        "4",
 		},
 		{
-			name:        "test-p95",
+			name:        "test-p90-for-odd-length",
+			aggFunc:     "p90",
+			stringSlice: []string{"1", "2", "3", "4","5"},
+			want:        "5",
+		},
+		{
+			name:        "test-p95-for-even-length",
 			aggFunc:     "p95",
 			stringSlice: []string{"1", "2", "3", "4"},
-			want:        "1",
+			want:        "4",
 		},
 		{
-			name:        "test-p99",
+			name:        "test-p95-for-odd-length",
+			aggFunc:     "p95",
+			stringSlice: []string{"1", "2", "3", "4","5"},
+			want:        "5",
+		},
+		{
+			name:        "test-p99-for-even-length",
 			aggFunc:     "p99",
-			stringSlice: []string(nil),
-			want:        "0",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
+		},
+		{
+			name:        "test-p99-for-odd-length",
+			aggFunc:     "p99",
+			stringSlice: []string{"1", "2", "3", "4","5"},
+			want:        "5",
 		},
 		{
 			name:        "test-max-empty-string",
@@ -461,7 +497,7 @@ func Test_AggregateValues(t *testing.T) {
 			name:        "wrong-aggFunc",
 			aggFunc:     "p50",
 			stringSlice: []string{"1", "2", "3", "4"},
-			want:        "",
+			want:        "0",
 		},
 	}
 	for _, tt := range tests {

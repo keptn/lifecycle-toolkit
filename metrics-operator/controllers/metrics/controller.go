@@ -25,6 +25,7 @@ import (
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/aggregation"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -122,28 +123,30 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 func (r *KeptnMetricReconciler) getResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	if metric.Spec.Range != nil {
-		if metric.Spec.Range.Step != "" {
-			value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricProvider)
-			if err != nil {
-				r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
-				return "", cupSize(rawValue), err
-			} else {
-				aggValue, err := aggregateValues(value, metric.Spec.Range.Aggregation)
-				if err != nil {
-					return "", nil, err
-				}
-				return aggValue, cupSize(rawValue), nil
-			}
-		}
+	if metric.Spec.Range != nil && metric.Spec.Range.Step != "" {
+		return r.getStepQueryResults(ctx, metric, provider, metricProvider)
 	}
+	return r.getQueryResults(ctx, metric, provider, metricProvider)
+}
+func (r *KeptnMetricReconciler) getQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
 	if err != nil {
 		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		return "", cupSize(rawValue), err
-	} else {
-		return value, cupSize(rawValue), nil
 	}
+	return value, cupSize(rawValue), nil
+}
+func (r *KeptnMetricReconciler) getStepQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		return "", cupSize(rawValue), err
+	}
+	aggValue, err := aggregateValues(value, metric.Spec.Range.Aggregation)
+	if err != nil {
+		return "", nil, err
+	}
+	return aggValue, cupSize(rawValue), nil
 }
 
 func cupSize(value []byte) []byte {
@@ -176,24 +179,24 @@ func aggregateValues(stringSlice []string, aggFunc string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var aggValue string
+	var aggValue float64
 	switch aggFunc {
 	case "max":
-		aggValue = fmt.Sprintf("%v", calculateMax(floatSlice))
+		aggValue = aggregation.CalculateMax(floatSlice)
 	case "min":
-		aggValue = fmt.Sprintf("%v", calculateMin(floatSlice))
+		aggValue = aggregation.CalculateMin(floatSlice)
 	case "median":
-		aggValue = fmt.Sprintf("%v", calculateMedian(floatSlice))
+		aggValue = aggregation.CalculateMedian(floatSlice)
 	case "avg":
-		aggValue = fmt.Sprintf("%v", calculateAverage(floatSlice))
+		aggValue = aggregation.CalculateAverage(floatSlice)
 	case "p90":
-		aggValue = fmt.Sprintf("%v", calculatePercentile(sort.Float64Slice(floatSlice), 0.90))
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 90)
 	case "p95":
-		aggValue = fmt.Sprintf("%v", calculatePercentile(sort.Float64Slice(floatSlice), 0.95))
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 95)
 	case "p99":
-		aggValue = fmt.Sprintf("%v", calculatePercentile(sort.Float64Slice(floatSlice), 0.99))
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 99)
 	}
-	return aggValue, nil
+	return fmt.Sprintf("%v", aggValue), nil
 }
 
 func stringSliceToFloatSlice(strSlice []string) ([]float64, error) {
@@ -208,73 +211,4 @@ func stringSliceToFloatSlice(strSlice []string) ([]float64, error) {
 	}
 
 	return floatSlice, nil
-}
-
-func calculateMax(values []float64) float64 {
-	if len(values) == 0 {
-		return 0.0
-	}
-
-	max := values[0]
-	for _, value := range values {
-		if value > max {
-			max = value
-		}
-	}
-	return max
-}
-
-func calculateMin(values []float64) float64 {
-	if len(values) == 0 {
-		return 0.0
-	}
-
-	min := values[0]
-	for _, value := range values {
-		if value < min {
-			min = value
-		}
-	}
-	return min
-}
-
-func calculateMedian(values []float64) float64 {
-	if len(values) == 0 {
-		return 0.0
-	}
-
-	// Sort the values
-	sortedValues := make([]float64, len(values))
-	copy(sortedValues, values)
-	sort.Float64s(sortedValues)
-
-	// Calculate the median
-	middle := len(sortedValues) / 2
-	if len(sortedValues)%2 == 0 {
-		return (sortedValues[middle-1] + sortedValues[middle]) / 2
-	}
-	return sortedValues[middle]
-}
-
-func calculateAverage(values []float64) float64 {
-	sum := 0.0
-
-	for _, value := range values {
-		sum += value
-	}
-	if len(values) > 0 {
-		return sum / float64(len(values))
-	}
-
-	return 0.0
-}
-
-func calculatePercentile(values sort.Float64Slice, perc float64) float64 {
-	if len(values) == 0 {
-		return 0.0
-	}
-	// Calculate the index for the requested percentile
-	i := int(float64(len(values)) * perc / 100)
-
-	return values[i]
 }

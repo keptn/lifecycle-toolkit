@@ -51,10 +51,11 @@ func TestAPIClient(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.Nil(t, err)
 	require.Equal(t, "success", string(resp))
+	require.Equal(t, 200, code)
 
 	require.Equal(t, "my-token", apiClient.config.oAuthCredentials.accessToken)
 }
@@ -86,10 +87,11 @@ func TestAPIClientAuthError(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.ErrorIs(t, err, ErrRequestFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
@@ -123,10 +125,11 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.ErrorIs(t, err, ErrAuthenticationFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientRequestError(t *testing.T) {
@@ -160,11 +163,12 @@ func TestAPIClientRequestError(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	// authentication should have worked
 	require.Equal(t, "my-token", apiClient.config.oAuthCredentials.accessToken)
 
 	require.ErrorIs(t, err, ErrRequestFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusInternalServerError, code)
 }

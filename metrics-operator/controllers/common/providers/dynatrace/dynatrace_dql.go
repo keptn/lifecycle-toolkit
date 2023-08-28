@@ -47,11 +47,7 @@ type DynatraceDQLResult struct {
 }
 
 type DQLResult struct {
-	Records []DQLRecord `json:"records"`
-}
-
-type DQLRecord struct {
-	Value DQLMetric `json:"value"`
+	Records []map[string]any `json:"records"`
 }
 
 type DQLMetric struct {
@@ -64,8 +60,8 @@ type DQLMetric struct {
 
 type DQLRequest struct {
 	Query                      string `json:"query"`
-	DefaultTimeframeStart      string `json:"defaultTimeframeStart"`
-	DefaultTimeframeEnd        string `json:"defaultTimeframeEnd"`
+	DefaultTimeframeStart      string `json:"defaultTimeframeStart,omitempty"`
+	DefaultTimeframeEnd        string `json:"defaultTimeframeEnd,omitempty"`
 	Timezone                   string `json:"timezone"`
 	Locale                     string `json:"locale"`
 	FetchTimeoutSeconds        int    `json:"fetchTimeoutSeconds"`
@@ -107,17 +103,51 @@ func (d *keptnDynatraceDQLProvider) EvaluateQuery(ctx context.Context, metric me
 		return "", nil, err
 	}
 
+	if len(results.Records) == 0 {
+		return "", nil, ErrInvalidResult
+	}
+
 	if len(results.Records) > 1 {
 		d.log.Info("More than a single result, the first one will be used")
 	}
 
-	r := fmt.Sprintf("%f", results.Records[0].Value.Avg)
+	value := extractValueFromRecord(results.Records[0])
+
 	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
 	}
 
-	return r, b, nil
+	return value, b, nil
+}
+
+// extractValueFromRecord extracts the latest value of a record.
+// This is intended for timeseries queries that return a single metric
+func extractValueFromRecord(record map[string]any) string {
+	for _, item := range record {
+		if valuesArr, ok := toFloatArray(item); ok {
+			return fmt.Sprintf("%f", valuesArr[len(valuesArr)-1])
+		}
+	}
+	return ""
+}
+
+func toFloatArray(obj any) ([]float64, bool) {
+	valuesArr, ok := obj.([]any)
+	if !ok {
+		return nil, false
+	}
+	res := make([]float64, len(valuesArr))
+	for index, val := range valuesArr {
+		if floatVal, ok := val.(float64); ok {
+			res[index] = floatVal
+		} else if intVal, ok := val.(int); ok {
+			res[index] = float64(intVal)
+		} else {
+			return nil, false
+		}
+	}
+	return res, true
 }
 
 func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
@@ -126,7 +156,11 @@ func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, me
 		return nil, nil, err
 	}
 
-	r := d.getResultSlice(results)
+	if len(results.Records) == 0 {
+		return nil, nil, ErrInvalidResult
+	}
+
+	r := extractValuesFromRecord(results.Records[0])
 	b, err := json.Marshal(results)
 	if err != nil {
 		d.log.Error(err, "Error marshaling DQL results")
@@ -153,9 +187,25 @@ func (d *keptnDynatraceDQLProvider) getResults(ctx context.Context, metric metri
 	return results, nil
 }
 
+// extractValuesFromRecord extracts all values of a record.
+// This is intended for timeseries queries that return multiple values for a single metric, i.e. the individual
+// data points of a time series
+func extractValuesFromRecord(record map[string]any) []string {
+	for _, item := range record {
+		if valuesArr, ok := toFloatArray(item); ok {
+			valuesStrArr := make([]string, len(valuesArr))
+			for index, val := range valuesArr {
+				valuesStrArr[index] = fmt.Sprintf("%f", val)
+			}
+			return valuesStrArr
+		}
+	}
+	return []string{}
+}
+
 func (d *keptnDynatraceDQLProvider) parseDQLResults(b []byte, status int) (*DQLResult, error) {
 	results := &DQLResult{}
-	if status == 200 {
+	if status == http.StatusOK {
 		r := &DynatraceDQLResult{}
 		err := json.Unmarshal(b, &r)
 		if err != nil {
@@ -225,8 +275,8 @@ func (d *keptnDynatraceDQLProvider) postDQL(ctx context.Context, metric metricsa
 		if err != nil {
 			return nil, 0, err
 		}
-		payload.DefaultTimeframeStart = time.Now().Add(-intervalDuration).Format(time.RFC3339)
-		payload.DefaultTimeframeEnd = time.Now().Format(time.RFC3339)
+		payload.DefaultTimeframeStart = time.Now().UTC().Add(-intervalDuration).Format(time.RFC3339)
+		payload.DefaultTimeframeEnd = time.Now().UTC().Format(time.RFC3339)
 	}
 
 	payloadBytes, err := json.Marshal(payload)
@@ -286,16 +336,4 @@ func (d *keptnDynatraceDQLProvider) retrieveDQLResults(ctx context.Context, hand
 		return nil, err
 	}
 	return result, nil
-}
-
-func (d *keptnDynatraceDQLProvider) getResultSlice(result *DQLResult) []string {
-	if len(result.Records) == 0 {
-		return nil
-	}
-	// Initialize resultSlice with the correct length
-	resultSlice := make([]string, len(result.Records))
-	for index, r := range result.Records {
-		resultSlice[index] = fmt.Sprintf("%f", r.Value.Max)
-	}
-	return resultSlice
 }

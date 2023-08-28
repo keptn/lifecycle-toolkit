@@ -12,7 +12,7 @@ var ErrRequestFailed = errors.New("the API returned a response with a status out
 var ErrAuthenticationFailed = errors.New("could not retrieve an OAuth token from the API")
 
 const (
-	defaultAuthURL                  = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
+	defaultAuthURL                  = "https://dev.token.internal.dynatracelabs.com/sso/oauth2/token"
 	oAuthGrantType                  = "grant_type"
 	oAuthGrantTypeClientCredentials = "client_credentials"
 	oAuthScope                      = "scope"
@@ -35,7 +35,7 @@ func validateOAuthSecret(token string) error {
 	}
 	secret := split[2]
 	if secretLen := len(secret); secretLen != 64 {
-		return fmt.Errorf("length of secret is not equal to 64: %w", ErrClientSecretInvalid)
+		return fmt.Errorf("length of secret '%s' is %d, which is not equal to 64: %w", secret, secretLen, ErrClientSecretInvalid)
 	}
 	return nil
 }

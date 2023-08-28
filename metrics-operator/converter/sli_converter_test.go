@@ -56,43 +56,44 @@ func TestConvertMapToAnalysisValueTemplate(t *testing.T) {
 		"key1": "val1",
 		"key2": "val2",
 	}
-	out := []*metricsapi.AnalysisValueTemplate{
-		{
-			TypeMeta: v1.TypeMeta{
-				Kind:       "AnalysisValueTemplate",
-				APIVersion: "metrics.keptn.sh/v1alpha3",
-			},
-			ObjectMeta: v1.ObjectMeta{
-				Name: "key1",
-			},
-			Spec: metricsapi.AnalysisValueTemplateSpec{
-				Query: "val1",
-				Provider: metricsapi.ObjectReference{
-					Name:      "provider",
-					Namespace: "default",
-				},
+	out1 := &metricsapi.AnalysisValueTemplate{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AnalysisValueTemplate",
+			APIVersion: "metrics.keptn.sh/v1alpha3",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name: "key1",
+		},
+		Spec: metricsapi.AnalysisValueTemplateSpec{
+			Query: "val1",
+			Provider: metricsapi.ObjectReference{
+				Name:      "provider",
+				Namespace: "default",
 			},
 		},
-		{
-			TypeMeta: v1.TypeMeta{
-				Kind:       "AnalysisValueTemplate",
-				APIVersion: "metrics.keptn.sh/v1alpha3",
-			},
-			ObjectMeta: v1.ObjectMeta{
-				Name: "key2",
-			},
-			Spec: metricsapi.AnalysisValueTemplateSpec{
-				Query: "val2",
-				Provider: metricsapi.ObjectReference{
-					Name:      "provider",
-					Namespace: "default",
-				},
+	}
+	out2 := &metricsapi.AnalysisValueTemplate{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AnalysisValueTemplate",
+			APIVersion: "metrics.keptn.sh/v1alpha3",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name: "key2",
+		},
+		Spec: metricsapi.AnalysisValueTemplateSpec{
+			Query: "val2",
+			Provider: metricsapi.ObjectReference{
+				Name:      "provider",
+				Namespace: "default",
 			},
 		},
 	}
 	res = converter.convertMapToAnalysisValueTemplate(in, "provider", "default")
 	require.Equal(t, 2, len(res))
-	require.Equal(t, out, res)
+	// need to check the result with contains, as there is no guarantee
+	// of order of the AnalysisValueTemplates in resulting manifest
+	require.Contains(t, res, out1)
+	require.Contains(t, res, out2)
 }
 
 func TestConvertSLI(t *testing.T) {

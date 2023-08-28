@@ -8,6 +8,7 @@ metadata:
     app.kuberentes.io/managed-by: kustomize
     app.kubernetes.io/created-by: metrics-operator
   name: analysis-sample
+  namespace: $NAMESPACE
 spec:
   timeframe:
     from: $CURRENT_TIME

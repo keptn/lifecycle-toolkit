@@ -30,9 +30,20 @@ type AnalysisSpec struct {
 	AnalysisDefinition ObjectReference `json:"analysisDefinition"`
 }
 
+// AnalysisStatus stores the status of the overall analysis returns also pass or warnings
+type AnalysisStatus struct {
+	// Raw contains the raw result of the SLO computation
+	Raw string `json:"raw"`
+	// Pass returns wheter the SLO is satisfied
+	Pass bool `json:"pass"`
+	// Warning returns whether the analysis returned a warning
+	Warning bool `json:"warning,omitempty"`
+}
+
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AnalysisDefinition",type=string,JSONPath=.spec.analysisDefinition.name
+//+kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.pass`
 
 // Analysis is the Schema for the analyses API
 type Analysis struct {
@@ -41,12 +52,6 @@ type Analysis struct {
 
 	Spec   AnalysisSpec   `json:"spec,omitempty"`
 	Status AnalysisStatus `json:"status,omitempty"`
-}
-
-type AnalysisStatus struct {
-	Raw     string `json:"raw,omitempty"`
-	Pass    bool   `json:"pass,omitempty"`
-	Warning bool   `json:"warning,omitempty"`
 }
 
 //+kubebuilder:object:root=true

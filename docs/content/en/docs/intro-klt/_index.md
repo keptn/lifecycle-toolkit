@@ -12,7 +12,7 @@ When you understand the toolkit, begin with the [getting started guide](../getti
 ----
 
 The Keptn Lifecycle Toolkit (KLT) implements observability
-for deployments that are implemented with standard GitOps tools
+for deployments and seamlessly integrates with GitOps tools
 such as ArgoCD, Flux, and Gitlab
 and brings application awareness to your Kubernetes cluster.
 

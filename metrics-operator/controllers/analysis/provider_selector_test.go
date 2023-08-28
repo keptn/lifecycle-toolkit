@@ -106,7 +106,7 @@ func TestProvidersPool(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Create a mock context for testing
-			ctx := context.TODO()
+			ctx, cancel := context.WithCancel(context.TODO())
 
 			resultChan := make(chan metricstypes.ProviderResult, 1)
 
@@ -124,6 +124,7 @@ func TestProvidersPool(t *testing.T) {
 				},
 				Analysis: &analysis,
 				results:  resultChan,
+				cancel:   cancel,
 				providers: map[string]chan metricstypes.ProviderRequest{
 					"mock-provider": providerChan,
 				},
@@ -146,7 +147,7 @@ func TestProvidersPool(t *testing.T) {
 func TestProvidersPool_StartProviders(t *testing.T) {
 
 	numJobs := 4
-	ctx := context.Background()
+	ctx, cancel := context.WithCancel(context.Background())
 	resChan := make(chan metricstypes.ProviderResult)
 	// Create a mock IObjectivesEvaluator, Client, and Logger for testing
 	mockEvaluator := &fake.IObjectivesEvaluatorMock{
@@ -161,6 +162,7 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 		Objectives:           make(map[int][]metricsapi.Objective),
 		Analysis:             &metricsapi.Analysis{},
 		results:              resChan,
+		cancel:               cancel,
 		providers:            make(map[string]chan metricstypes.ProviderRequest),
 	}
 

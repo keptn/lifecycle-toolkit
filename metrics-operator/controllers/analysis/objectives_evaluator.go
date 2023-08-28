@@ -20,12 +20,15 @@ type ObjectivesEvaluator struct {
 	client.Client
 	Log     logr.Logger
 	results chan metricstypes.ProviderResult
+	cancel  context.CancelFunc
 }
 
 func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
 	provider, err := oe.ProviderFactory(providerType, oe.Log, oe.Client)
 	if err != nil {
 		oe.Log.Error(err, "Failed to get the correct Provider")
+		oe.cancel()
+		return
 	}
 	for o := range obj {
 		value := ""

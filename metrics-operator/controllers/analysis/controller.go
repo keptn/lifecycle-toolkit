@@ -70,6 +70,8 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, nil
 	}
 
+	//check status, is there any error?/is empty?
+
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef := &metricsapi.AnalysisDefinition{}
 	if analysis.Spec.AnalysisDefinition.Namespace == "" {
@@ -92,13 +94,13 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	wp := a.NewWorkersPoolFactory(analysis, analysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	ctx, wp := a.NewWorkersPoolFactory(ctx, analysis, analysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
 
-	go wp.DispatchObjectives(ctx)
-
-	res := wp.CollectAnalysisResults()
-
-	//TODO if we fail/timout try to store status partially
+	res, err := wp.DispatchAndCollect(ctx)
+	if err != nil {
+		a.Log.Error(err, "Failed to Collect all SLOs")
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+	}
 
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)

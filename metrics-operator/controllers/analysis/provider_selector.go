@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"text/template"
-
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"text/template"
 )
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/providers_pool_mock.go . IProvidersPool
@@ -31,6 +30,7 @@ type ProvidersPool struct {
 	*metricsapi.Analysis
 	results   chan metricstypes.ProviderResult
 	providers map[string]chan metricstypes.ProviderRequest
+	cancel    context.CancelFunc
 }
 
 func (ps ProvidersPool) StartProviders(ctx context.Context, numJobs int) {
@@ -45,54 +45,61 @@ func (ps ProvidersPool) StartProviders(ctx context.Context, numJobs int) {
 func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 	for _, j := range ps.Objectives[id] {
+		select {
+		case <-ctx.Done():
+			ps.Log.Info("Worker: Exiting due to context.Done()")
+			return
+		default:
+			ps.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
+			templ := &metricsapi.AnalysisValueTemplate{}
+			if j.AnalysisValueTemplateRef.Namespace == "" {
+				j.AnalysisValueTemplateRef.Namespace = ps.Namespace
+			}
+			err := ps.Client.Get(ctx,
+				types.NamespacedName{
+					Name:      j.AnalysisValueTemplateRef.Name,
+					Namespace: j.AnalysisValueTemplateRef.Namespace},
+				templ,
+			)
 
-		ps.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
+			if err != nil {
+				ps.Log.Error(err, "Failed to get the correct Provider")
+				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.cancel()
+				return
+			}
 
-		templ := &metricsapi.AnalysisValueTemplate{}
-		if j.AnalysisValueTemplateRef.Namespace == "" {
-			j.AnalysisValueTemplateRef.Namespace = ps.Namespace
-		}
-		err := ps.Client.Get(ctx,
-			types.NamespacedName{
-				Name:      j.AnalysisValueTemplateRef.Name,
-				Namespace: j.AnalysisValueTemplateRef.Namespace},
-			templ,
-		)
+			providerRef := &metricsapi.KeptnMetricsProvider{}
+			if templ.Spec.Provider.Namespace == "" {
+				templ.Spec.Provider.Namespace = ps.Namespace
+			}
+			err = ps.Client.Get(ctx,
+				types.NamespacedName{
+					Name:      templ.Spec.Provider.Name,
+					Namespace: templ.Spec.Provider.Namespace},
+				providerRef,
+			)
 
-		if err != nil {
-			ps.Log.Error(err, "Failed to get the correct Provider")
-			ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
+			if err != nil {
+				ps.Log.Error(err, "Failed to get Provider")
+				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.cancel()
+				return
+			}
 
-		providerRef := &metricsapi.KeptnMetricsProvider{}
-		if templ.Spec.Provider.Namespace == "" {
-			templ.Spec.Provider.Namespace = ps.Namespace
-		}
-		err = ps.Client.Get(ctx,
-			types.NamespacedName{
-				Name:      templ.Spec.Provider.Name,
-				Namespace: templ.Spec.Provider.Namespace},
-			providerRef,
-		)
-
-		if err != nil {
-			ps.Log.Error(err, "Failed to get Provider")
-			ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
-
-		templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
-		if err != nil {
-			ps.Log.Error(err, "Failed to substitute args in templ")
-			ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
-			continue
-		}
-		//send job to provider solver
-		ps.providers[providerRef.Spec.Type] <- metricstypes.ProviderRequest{
-			Objective: &j,
-			Query:     templatedQuery,
-			Provider:  providerRef,
+			templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
+			if err != nil {
+				ps.Log.Error(err, "Failed to substitute args in templ")
+				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.cancel()
+				return
+			}
+			//send job to provider solver
+			ps.providers[providerRef.Spec.Type] <- metricstypes.ProviderRequest{
+				Objective: &j,
+				Query:     templatedQuery,
+				Provider:  providerRef,
+			}
 		}
 	}
 }

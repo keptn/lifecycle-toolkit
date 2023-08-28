@@ -15,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.IAnalysisEvaluator
 //		mockedIAnalysisEvaluator := &IAnalysisEvaluatorMock{
-//			EvaluateFunc: func(values map[string]types.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+//			EvaluateFunc: func(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,14 +26,14 @@ import (
 //	}
 type IAnalysisEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(values map[string]types.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult
+	EvaluateFunc func(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Evaluate holds details about calls to the Evaluate method.
 		Evaluate []struct {
 			// Values is the values argument value.
-			Values map[string]types.ProviderResult
+			Values map[string]string
 			// Ad is the ad argument value.
 			Ad *v1alpha3.AnalysisDefinition
 		}
@@ -42,12 +42,12 @@ type IAnalysisEvaluatorMock struct {
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]types.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
 	if mock.EvaluateFunc == nil {
 		panic("IAnalysisEvaluatorMock.EvaluateFunc: method is nil but IAnalysisEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
-		Values map[string]types.ProviderResult
+		Values map[string]string
 		Ad     *v1alpha3.AnalysisDefinition
 	}{
 		Values: values,
@@ -64,11 +64,11 @@ func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]types.ProviderRes
 //
 //	len(mockedIAnalysisEvaluator.EvaluateCalls())
 func (mock *IAnalysisEvaluatorMock) EvaluateCalls() []struct {
-	Values map[string]types.ProviderResult
+	Values map[string]string
 	Ad     *v1alpha3.AnalysisDefinition
 } {
 	var calls []struct {
-		Values map[string]types.ProviderResult
+		Values map[string]string
 		Ad     *v1alpha3.AnalysisDefinition
 	}
 	mock.lockEvaluate.RLock()

@@ -5,7 +5,6 @@ package fake
 
 import (
 	"context"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
 
@@ -15,11 +14,8 @@ import (
 //
 //		// make and configure a mocked analysis.IAnalysisPool
 //		mockedIAnalysisPool := &MyAnalysisPoolMock{
-//			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
-//				panic("mock out the CollectAnalysisResults method")
-//			},
-//			DispatchObjectivesFunc: func(ctx context.Context)  {
-//				panic("mock out the DispatchObjectives method")
+//			DispatchAndCollectFunc: func(ctx context.Context) (map[string]string, error) {
+//				panic("mock out the DispatchAndCollect method")
 //			},
 //		}
 //
@@ -28,82 +24,48 @@ import (
 //
 //	}
 type MyAnalysisPoolMock struct {
-	// CollectAnalysisResultsFunc mocks the CollectAnalysisResults method.
-	CollectAnalysisResultsFunc func() map[string]metricstypes.ProviderResult
-
-	// DispatchObjectivesFunc mocks the DispatchObjectives method.
-	DispatchObjectivesFunc func(ctx context.Context)
+	// DispatchAndCollectFunc mocks the DispatchAndCollect method.
+	DispatchAndCollectFunc func(ctx context.Context) (map[string]string, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// CollectAnalysisResults holds details about calls to the CollectAnalysisResults method.
-		CollectAnalysisResults []struct {
-		}
-		// DispatchObjectives holds details about calls to the DispatchObjectives method.
-		DispatchObjectives []struct {
+		// DispatchAndCollect holds details about calls to the DispatchAndCollect method.
+		DispatchAndCollect []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 		}
 	}
-	lockCollectAnalysisResults sync.RWMutex
-	lockDispatchObjectives     sync.RWMutex
+	lockDispatchAndCollect sync.RWMutex
 }
 
-// CollectAnalysisResults calls CollectAnalysisResultsFunc.
-func (mock *MyAnalysisPoolMock) CollectAnalysisResults() map[string]metricstypes.ProviderResult {
-	if mock.CollectAnalysisResultsFunc == nil {
-		panic("MyAnalysisPoolMock.CollectAnalysisResultsFunc: method is nil but IAnalysisPool.CollectAnalysisResults was just called")
-	}
-	callInfo := struct {
-	}{}
-	mock.lockCollectAnalysisResults.Lock()
-	mock.calls.CollectAnalysisResults = append(mock.calls.CollectAnalysisResults, callInfo)
-	mock.lockCollectAnalysisResults.Unlock()
-	return mock.CollectAnalysisResultsFunc()
-}
-
-// CollectAnalysisResultsCalls gets all the calls that were made to CollectAnalysisResults.
-// Check the length with:
-//
-//	len(mockedIAnalysisPool.CollectAnalysisResultsCalls())
-func (mock *MyAnalysisPoolMock) CollectAnalysisResultsCalls() []struct {
-} {
-	var calls []struct {
-	}
-	mock.lockCollectAnalysisResults.RLock()
-	calls = mock.calls.CollectAnalysisResults
-	mock.lockCollectAnalysisResults.RUnlock()
-	return calls
-}
-
-// DispatchObjectives calls DispatchObjectivesFunc.
-func (mock *MyAnalysisPoolMock) DispatchObjectives(ctx context.Context) {
-	if mock.DispatchObjectivesFunc == nil {
-		panic("MyAnalysisPoolMock.DispatchObjectivesFunc: method is nil but IAnalysisPool.DispatchObjectives was just called")
+// DispatchAndCollect calls DispatchAndCollectFunc.
+func (mock *MyAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[string]string, error) {
+	if mock.DispatchAndCollectFunc == nil {
+		panic("MyAnalysisPoolMock.DispatchAndCollectFunc: method is nil but IAnalysisPool.DispatchAndCollect was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
 	}{
 		Ctx: ctx,
 	}
-	mock.lockDispatchObjectives.Lock()
-	mock.calls.DispatchObjectives = append(mock.calls.DispatchObjectives, callInfo)
-	mock.lockDispatchObjectives.Unlock()
-	mock.DispatchObjectivesFunc(ctx)
+	mock.lockDispatchAndCollect.Lock()
+	mock.calls.DispatchAndCollect = append(mock.calls.DispatchAndCollect, callInfo)
+	mock.lockDispatchAndCollect.Unlock()
+	return mock.DispatchAndCollectFunc(ctx)
 }
 
-// DispatchObjectivesCalls gets all the calls that were made to DispatchObjectives.
+// DispatchAndCollectCalls gets all the calls that were made to DispatchAndCollect.
 // Check the length with:
 //
-//	len(mockedIAnalysisPool.DispatchObjectivesCalls())
-func (mock *MyAnalysisPoolMock) DispatchObjectivesCalls() []struct {
+//	len(mockedIAnalysisPool.DispatchAndCollectCalls())
+func (mock *MyAnalysisPoolMock) DispatchAndCollectCalls() []struct {
 	Ctx context.Context
 } {
 	var calls []struct {
 		Ctx context.Context
 	}
-	mock.lockDispatchObjectives.RLock()
-	calls = mock.calls.DispatchObjectives
-	mock.lockDispatchObjectives.RUnlock()
+	mock.lockDispatchAndCollect.RLock()
+	calls = mock.calls.DispatchAndCollect
+	mock.lockDispatchAndCollect.RUnlock()
 	return calls
 }

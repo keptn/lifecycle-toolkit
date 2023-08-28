@@ -4,10 +4,9 @@
 package fake
 
 import (
-	"sync"
-
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	"sync"
 )
 
 // IOperatorEvaluatorMock is a mock implementation of analysis.IOperatorEvaluator.

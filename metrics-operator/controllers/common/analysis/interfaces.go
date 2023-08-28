@@ -7,12 +7,12 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/analysis_evaluator_mock.go . IAnalysisEvaluator
 type IAnalysisEvaluator interface {
-	Evaluate(values map[string]types.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult
+	Evaluate(values map[string]string, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult
 }
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/objective_evaluator_mock.go . IObjectiveEvaluator
 type IObjectiveEvaluator interface {
-	Evaluate(values map[string]types.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult
+	Evaluate(values map[string]string, objective *v1alpha3.Objective) types.ObjectiveResult
 }
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/target_evaluator_mock.go . ITargetEvaluator

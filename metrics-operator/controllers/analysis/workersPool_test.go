@@ -1,6 +1,7 @@
 package analysis
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -31,7 +32,7 @@ func TestNewWorkerPool(t *testing.T) {
 		numJobs:    1,
 	}
 
-	got := NewWorkersPool(&analysis, &def, 4, nil, log, "default")
+	_, got := NewWorkersPool(context.TODO(), &analysis, &def, 4, nil, log, "default")
 	//make sure never to create more workers than needed
 	require.Equal(t, want.numJobs, got.(WorkersPool).numWorkers)
 	//make sure all objectives are processed
@@ -68,9 +69,10 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	}()
 
 	// Collect the results
-	results := fakePool.CollectAnalysisResults()
+	results, err := fakePool.CollectAnalysisResults(context.TODO())
 
 	// Check the collected results
-	require.Equal(t, res1, results["t1"])
-	require.Equal(t, res2, results["t2"])
+	require.Nil(t, err)
+	require.Equal(t, res1.Value, results["t1"])
+	require.Equal(t, res2.Value, results["t2"])
 }

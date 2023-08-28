@@ -3,7 +3,6 @@ package analysis
 import (
 	"context"
 	"reflect"
-	"sync/atomic"
 	"testing"
 	"time"
 
@@ -61,19 +60,13 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 	req := controllerruntime.Request{
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
-	collectorCount := int32(0)
-	dispatchCount := int32(0)
-	mockFactory := func(analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) IAnalysisPool {
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
 		mymock := fake.MyAnalysisPoolMock{
-			CollectAnalysisResultsFunc: func() map[string]metricstypes.ProviderResult {
-				atomic.AddInt32(&collectorCount, 1)
-				return nil
-			},
-			DispatchObjectivesFunc: func(ctx context.Context) {
-				atomic.AddInt32(&dispatchCount, 1)
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]string, error) {
+				return nil, nil
 			},
 		}
-		return &mymock
+		return ctx, &mymock
 	}
 
 	for _, tt := range tests {
@@ -85,7 +78,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				MaxWorkers:            2,
 				NewWorkersPoolFactory: mockFactory,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-					EvaluateFunc: func(values map[string]metricstypes.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+					EvaluateFunc: func(values map[string]string, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 						return tt.res
 					}},
 			}

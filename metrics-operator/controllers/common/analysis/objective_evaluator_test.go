@@ -13,14 +13,14 @@ import (
 func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name            string
-		values          map[string]types.ProviderResult
+		values          map[string]string
 		o               v1alpha3.Objective
 		want            types.ObjectiveResult
 		mockedEvaluator ITargetEvaluator
 	}{
 		{
 			name:   "no value in results map",
-			values: map[string]types.ProviderResult{},
+			values: map[string]string{},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
@@ -34,8 +34,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation passed",
-			values: map[string]types.ProviderResult{
-				"name": {Value: "20"},
+			values: map[string]string{
+				"name": "20",
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -61,8 +61,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation finished with warning",
-			values: map[string]types.ProviderResult{
-				"name": {Value: "20"},
+			values: map[string]string{
+				"name": "20",
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -90,8 +90,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation failed",
-			values: map[string]types.ProviderResult{
-				"name": {Value: "20"},
+			values: map[string]string{
+				"name": "20",
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -129,15 +129,15 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 func TestGetValueFromMap(t *testing.T) {
 	tests := []struct {
 		name    string
-		values  map[string]types.ProviderResult
+		values  map[string]string
 		in      string
 		val     float64
 		wantErr bool
 	}{
 		{
 			name: "happy path",
-			values: map[string]types.ProviderResult{
-				"key1": {Value: "7"},
+			values: map[string]string{
+				"key1": "7",
 			},
 			in:      "key1",
 			val:     7.0,
@@ -145,8 +145,8 @@ func TestGetValueFromMap(t *testing.T) {
 		},
 		{
 			name: "key not found",
-			values: map[string]types.ProviderResult{
-				"key1": {Value: "7"},
+			values: map[string]string{
+				"key1": "7",
 			},
 			in:      "key",
 			val:     0.0,
@@ -154,8 +154,8 @@ func TestGetValueFromMap(t *testing.T) {
 		},
 		{
 			name: "value not float",
-			values: map[string]types.ProviderResult{
-				"key": {},
+			values: map[string]string{
+				"key": "",
 			},
 			in:      "key1",
 			val:     0.0,

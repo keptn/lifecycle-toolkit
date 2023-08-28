@@ -65,7 +65,7 @@
         "ghcr.io/keptn/certificate-operator",
         "github.com/keptn/lifecycle-toolkit/klt-cert-manager"
       ],
-      "groupName": "klt-cert-manager"
+      "groupName": "keptn/cert-manager"
     }
   ],
   "regexManagers": [

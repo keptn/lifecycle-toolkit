@@ -22,9 +22,6 @@ jobs:
           ref: "page"
           path: ${{ env.TMP_DOCS_DIR }}
 
-      - name: Debug info
-        run: ls -alR ${{ env.TMP_DOCS_DIR }}
-
       - name: Move developer docs into main live doc folder
         run: cp -R ./docs/content/en/docs/. "${{ env.TMP_DOCS_DIR }}/docs/content/en/docs"
 

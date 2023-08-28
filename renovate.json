@@ -27,7 +27,6 @@
     "ghcr.io/keptn/scheduler",
     "ghcr.io/keptn/functions-runtime",
     "ghcr.io/keptn/python-runtime",
-    "ghcr.io/keptn/certificate-operator",
     "ghcr.io/keptn/metrics-operator"
   ],
   "packageRules": [

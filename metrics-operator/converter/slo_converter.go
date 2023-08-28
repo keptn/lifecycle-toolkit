@@ -124,7 +124,8 @@ func removePercentage(str string) (int, error) {
 }
 
 // creates and sets up the target struct from objective
-// nolint:gocognit
+// TODO refactor this function in a follow-up
+// nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
 	// clean up % criteria
@@ -218,7 +219,7 @@ func setupOperator(op string) (*metricsapi.Operator, error) {
 		}
 	}
 
-	return &metricsapi.Operator{}, nil
+	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
 }
 
 // checks and negotiates the existing operator
@@ -253,5 +254,5 @@ func createOperator(op string, value string) (*metricsapi.Operator, error) {
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator")
+	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
 }

@@ -13,7 +13,7 @@ spec:
     from: 2023-05-05T05:05:05Z
     to: 2023-05-05T10:10:10Z
   args:
-    cpu: cpu
+    range: "5m"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
     namespace: keptn-lifecycle-toolkit-system
@@ -27,7 +27,7 @@ spec:
   provider:
     name: my-provider
     namespace: keptn-lifecycle-toolkit-system
-  query: "sum(kube_pod_container_resource_limits{resource='{{.cpu}}'})"
+  query: "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.range}}}}])) by (le))"
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
@@ -42,10 +42,10 @@ spec:
       target:
         failure:
           lessThan:
-            fixedValue: 1
+            fixedValue: 600
         warning:
           greaterThanOrEqual:
-            fixedValue: 3
+            fixedValue: 800
       weight: 1
       keyObjective: false
   totalScore:

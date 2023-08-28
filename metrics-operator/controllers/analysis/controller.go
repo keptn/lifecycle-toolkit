@@ -107,9 +107,9 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		a.Log.Error(err, "Could not marshal status")
 	}
-	analysis.Status = string(analysisResultJSON) //TODO add struct for status
+	analysis.Status = string(analysisResultJSON)
 	if err := a.Client.Status().Update(ctx, analysis); err != nil {
-		a.Log.Error(err, "Failed to update the Metric status")
+		a.Log.Error(err, "Failed to update the Analysis status")
 		return ctrl.Result{}, err
 	}
 

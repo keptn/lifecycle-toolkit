@@ -19,8 +19,8 @@ func NewSLOConverter() *SLOConverter {
 }
 
 type SLO struct {
-	Objectives []Objective `yaml:"objectives" json:"objectives"`
-	TotalScore Score       `yaml:"total_score" json:"total_score"`
+	Objectives []*Objective `yaml:"objectives" json:"objectives"`
+	TotalScore Score        `yaml:"total_score" json:"total_score"`
 }
 
 type Score struct {
@@ -91,7 +91,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 				PassPercentage:    passPercentage,
 				WarningPercentage: warnPercentage,
 			},
-			// create a slice of size of len(objectives), but reserve capacity for
+			// create a slice of size of 0, but reserve capacity for
 			// double the size, as some objectives may be twice there (conversion of criteria with logical AND)
 			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives), len(sloContent.Objectives)*2),
 		},
@@ -110,7 +110,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 			},
 			KeyObjective: o.KeySLI,
 			Weight:       o.Weight,
-			Target:       target,
+			Target:       *target,
 		}
 		definition.Spec.Objectives[i] = objective
 	}
@@ -124,11 +124,13 @@ func removePercentage(str string) (int, error) {
 }
 
 // creates and sets up the target struct from objective
-func setupTarget(o Objective) (metricsapi.Target, error) {
-	target := metricsapi.Target{}
+// nolint:gocognit
+func setupTarget(o *Objective) (*metricsapi.Target, error) {
+	target := &metricsapi.Target{}
 	// clean up % criteria
 	o = cleanupObjective(o)
-	// skip objective if it has criteria combined with logical OR -> not supported
+	// skip objective target conversion if it has criteria combined with logical OR -> not supported
+	// this way the SLO will become "informative"
 	if shouldIgnoreObjective(o) {
 		return target, nil
 	}
@@ -173,7 +175,7 @@ func setupTarget(o Objective) (metricsapi.Target, error) {
 	return target, err
 }
 
-func cleanupObjective(o Objective) Objective {
+func cleanupObjective(o *Objective) *Objective {
 	o.Pass = cleanupCriteria(o.Pass)
 	o.Warning = cleanupCriteria(o.Warning)
 	return o
@@ -200,7 +202,7 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 	return newCriteria
 }
 
-func shouldIgnoreObjective(o Objective) bool {
+func shouldIgnoreObjective(o *Objective) bool {
 	return len(o.Pass) > 1 || len(o.Warning) > 1
 }
 
@@ -220,30 +222,30 @@ func setupOperator(op string) (*metricsapi.Operator, error) {
 }
 
 // checks and negotiates the existing operator
-func createOperator(o string, value string) (*metricsapi.Operator, error) {
+func createOperator(op string, value string) (*metricsapi.Operator, error) {
 	v, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
 		return nil, err
 	}
-	if o == "<=" {
+	if op == "<=" {
 		return &metricsapi.Operator{
 			GreaterThan: &metricsapi.OperatorValue{
 				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
 			},
 		}, nil
-	} else if o == "<" {
+	} else if op == "<" {
 		return &metricsapi.Operator{
 			GreaterThanOrEqual: &metricsapi.OperatorValue{
 				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
 			},
 		}, nil
-	} else if o == ">=" {
+	} else if op == ">=" {
 		return &metricsapi.Operator{
 			LessThan: &metricsapi.OperatorValue{
 				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
 			},
 		}, nil
-	} else if o == ">" {
+	} else if op == ">" {
 		return &metricsapi.Operator{
 			LessThanOrEqual: &metricsapi.OperatorValue{
 				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),

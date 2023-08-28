@@ -35,7 +35,7 @@ func validateOAuthSecret(token string) error {
 	}
 	secret := split[2]
 	if secretLen := len(secret); secretLen != 64 {
-		return fmt.Errorf("length of secret '%s' is %d, which is not equal to 64: %w", secret, secretLen, ErrClientSecretInvalid)
+		return fmt.Errorf("length of secret is %d, which is not equal to 64: %w", secretLen, ErrClientSecretInvalid)
 	}
 	return nil
 }

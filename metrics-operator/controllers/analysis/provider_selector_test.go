@@ -132,6 +132,7 @@ func TestProvidersPool(t *testing.T) {
 
 			// Call DispatchToProviders with the test context and example ID
 			pool.DispatchToProviders(ctx, 1)
+
 			if tc.expectedErr == "" {
 				res := <-providerChan
 				require.Equal(t, tc.providerResult.Query, res.Query)

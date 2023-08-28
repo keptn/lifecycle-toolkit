@@ -10,8 +10,8 @@ metadata:
   name: analysis-sample
 spec:
   timeframe:
-    from: 2023-05-05T05:05:05Z
-    to: 2023-05-05T10:10:10Z
+    from: $CURRENT_TIME
+    to: $LATER
   args:
     range: "5m"
   analysisDefinition:
@@ -27,7 +27,7 @@ spec:
   provider:
     name: my-provider
     namespace: keptn-lifecycle-toolkit-system
-  query: "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.range}}}}])) by (le))"
+  query: "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.range}}])) by (le))"
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition

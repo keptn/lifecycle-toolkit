@@ -39,8 +39,14 @@ type Analysis struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AnalysisSpec `json:"spec,omitempty"`
-	Status string       `json:"status,omitempty"`
+	Spec   AnalysisSpec   `json:"spec,omitempty"`
+	Status AnalysisStatus `json:"status,omitempty"`
+}
+
+type AnalysisStatus struct {
+	Raw     string `json:"raw,omitempty"`
+	Pass    bool   `json:"pass,omitempty"`
+	Warning bool   `json:"warning,omitempty"`
 }
 
 //+kubebuilder:object:root=true

@@ -83,7 +83,14 @@ spec:
             - timeframe
             type: object
           status:
-            type: string
+            properties:
+              pass:
+                type: boolean
+              raw:
+                type: string
+              warning:
+                type: boolean
+            type: object
         type: object
     served: true
     storage: true

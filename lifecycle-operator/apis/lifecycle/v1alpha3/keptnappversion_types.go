@@ -340,8 +340,12 @@ func (a KeptnAppVersion) GenerateTask(taskDefinition KeptnTaskDefinition, checkT
 			Annotations: taskDefinition.Annotations,
 		},
 		Spec: KeptnTaskSpec{
-			AppVersion:       a.GetVersion(),
-			AppName:          a.GetParentName(),
+			Context: TaskContext{
+				AppName:    a.GetParentName(),
+				AppVersion: a.GetVersion(),
+				TaskType:   string(checkType),
+				ObjectType: "App",
+			},
 			TaskDefinition:   taskDefinition.Name,
 			Parameters:       TaskParameters{},
 			SecureParameters: SecureParameters{},

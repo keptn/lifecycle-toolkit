@@ -238,9 +238,11 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 			},
 		},
 		Spec: klcv1alpha3.KeptnTaskSpec{
-			Workload:       "my-workload",
-			AppName:        "my-app",
-			AppVersion:     "0.1.0",
+			Context: klcv1alpha3.TaskContext{
+				WorkloadName: "my-workload",
+				AppName:      "my-app",
+				AppVersion:   "0.1.0",
+			},
 			TaskDefinition: taskDefinitionName,
 			Type:           apicommon.PostDeploymentCheckType,
 		},

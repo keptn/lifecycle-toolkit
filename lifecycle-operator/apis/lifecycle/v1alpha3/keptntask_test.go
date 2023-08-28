@@ -22,8 +22,10 @@ func TestKeptnTask(t *testing.T) {
 			},
 		},
 		Spec: KeptnTaskSpec{
-			AppName:        "app",
-			AppVersion:     "appversion",
+			Context: TaskContext{
+				AppName:    "app",
+				AppVersion: "appversion",
+			},
 			Type:           common.PostDeploymentCheckType,
 			TaskDefinition: "def",
 			Timeout: metav1.Duration{
@@ -47,8 +49,10 @@ func TestKeptnTask(t *testing.T) {
 			},
 		},
 		Spec: KeptnTaskSpec{
-			AppName:        "app",
-			AppVersion:     "appversion",
+			Context: TaskContext{
+				AppName:    "app",
+				AppVersion: "appversion",
+			},
 			Type:           common.PostDeploymentCheckType,
 			TaskDefinition: "def",
 			Timeout: metav1.Duration{
@@ -98,8 +102,8 @@ func TestKeptnTask(t *testing.T) {
 		"annotation1":        "annotation2",
 	}, task.CreateKeptnAnnotations())
 
-	task.Spec.Workload = "workload"
-	task.Spec.WorkloadVersion = "workloadversion"
+	task.Spec.Context.WorkloadName = "workload"
+	task.Spec.Context.WorkloadVersion = "workloadversion"
 
 	require.Equal(t, map[string]string{
 		"keptn.sh/app":       "app",

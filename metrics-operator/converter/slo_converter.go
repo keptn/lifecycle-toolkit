@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"gopkg.in/inf.v0"
 	"k8s.io/apimachinery/pkg/api/resource"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
@@ -40,10 +41,14 @@ type Criteria struct {
 	Operators []string `yaml:"criteria,omitempty" json:"criteria,omitempty"`
 }
 
+func (o *Objective) hasSupportedCriteria() bool {
+	return len(o.Pass) > 1 || len(o.Warning) > 1
+}
+
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("--definition and --slo-namespace needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: '--definition' and '--namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content
@@ -91,14 +96,15 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 				PassPercentage:    passPercentage,
 				WarningPercentage: warnPercentage,
 			},
-			// create a slice of size of 0, but reserve capacity for
+			// create a slice of size of len(sloContent.Objectives), but reserve capacity for
 			// double the size, as some objectives may be twice there (conversion of criteria with logical AND)
 			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives), len(sloContent.Objectives)*2),
 		},
 	}
 
 	// convert objectives one after another
-	for i, o := range sloContent.Objectives {
+	indexObjectives := 0
+	for _, o := range sloContent.Objectives {
 		target, err := setupTarget(o)
 		if err != nil {
 			return nil, err
@@ -112,7 +118,8 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 			Weight:       o.Weight,
 			Target:       *target,
 		}
-		definition.Spec.Objectives[i] = objective
+		definition.Spec.Objectives[indexObjectives] = objective
+		indexObjectives++
 	}
 	return definition, nil
 }
@@ -128,11 +135,11 @@ func removePercentage(str string) (int, error) {
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
-	// clean up % criteria
+	// remove criteria, which contain % in their operators
 	o = cleanupObjective(o)
 	// skip objective target conversion if it has criteria combined with logical OR -> not supported
 	// this way the SLO will become "informative"
-	if shouldIgnoreObjective(o) {
+	if o.hasSupportedCriteria() {
 		return target, nil
 	}
 
@@ -141,7 +148,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
 				// TODO cover use cases with multiple operators (create new objectives)
-				op, err := setupOperator(o.Pass[0].Operators[0])
+				op, err := newOperator(o.Pass[0].Operators[0])
 				if err != nil {
 					return target, err
 				}
@@ -158,7 +165,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	if len(o.Pass) > 0 {
 		if len(o.Pass[0].Operators) > 0 {
 			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := setupOperator(o.Pass[0].Operators[0])
+			op, err := newOperator(o.Pass[0].Operators[0])
 			if err != nil {
 				return target, err
 			}
@@ -166,7 +173,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		}
 		if len(o.Warning[0].Operators) > 0 {
 			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := setupOperator(o.Warning[0].Operators[0])
+			op, err := newOperator(o.Warning[0].Operators[0])
 			if err != nil {
 				return target, err
 			}
@@ -204,12 +211,8 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 	return newCriteria
 }
 
-func shouldIgnoreObjective(o *Objective) bool {
-	return len(o.Pass) > 1 || len(o.Warning) > 1
-}
-
 // create operator for Target
-func setupOperator(op string) (*metricsapi.Operator, error) {
+func newOperator(op string) (*metricsapi.Operator, error) {
 	// remove whitespaces
 	op = strings.Replace(op, " ", "", -1)
 
@@ -225,32 +228,33 @@ func setupOperator(op string) (*metricsapi.Operator, error) {
 
 // checks and negotiates the existing operator
 func createOperator(op string, value string) (*metricsapi.Operator, error) {
-	v, err := strconv.ParseInt(value, 10, 64)
-	if err != nil {
-		return nil, err
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString(value)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert value '%s' to decimal", value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
 			GreaterThan: &metricsapi.OperatorValue{
-				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 			},
 		}, nil
 	} else if op == "<" {
 		return &metricsapi.Operator{
 			GreaterThanOrEqual: &metricsapi.OperatorValue{
-				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 			},
 		}, nil
 	} else if op == ">=" {
 		return &metricsapi.Operator{
 			LessThan: &metricsapi.OperatorValue{
-				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 			},
 		}, nil
 	} else if op == ">" {
 		return &metricsapi.Operator{
 			LessThanOrEqual: &metricsapi.OperatorValue{
-				FixedValue: *resource.NewQuantity(v, resource.DecimalSI),
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 			},
 		}, nil
 	}

@@ -89,7 +89,7 @@ func main() {
 	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI file to be converted")
 	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
 	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
-	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLI file to be converted")
+	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLO file to be converted")
 	flag.StringVar(&analysisDefinition, "definition", "", "The name of AnalysisDefinition to be created")
 	flag.StringVar(&namespace, "slo-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")

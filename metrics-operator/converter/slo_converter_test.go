@@ -5,6 +5,7 @@ import (
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/inf.v0"
 	"k8s.io/apimachinery/pkg/api/resource"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -101,6 +102,10 @@ func TestConvert(t *testing.T) {
 }
 
 func TestCreateOperator(t *testing.T) {
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString("1")
+	require.True(t, ok)
+
 	tests := []struct {
 		name    string
 		op      string
@@ -128,7 +133,7 @@ func TestCreateOperator(t *testing.T) {
 			value: "1",
 			out: &metricsapi.Operator{
 				GreaterThan: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -139,7 +144,7 @@ func TestCreateOperator(t *testing.T) {
 			value: "1",
 			out: &metricsapi.Operator{
 				GreaterThanOrEqual: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -150,7 +155,7 @@ func TestCreateOperator(t *testing.T) {
 			value: "1",
 			out: &metricsapi.Operator{
 				LessThan: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -161,7 +166,7 @@ func TestCreateOperator(t *testing.T) {
 			value: "1",
 			out: &metricsapi.Operator{
 				LessThanOrEqual: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -182,6 +187,10 @@ func TestCreateOperator(t *testing.T) {
 }
 
 func TestSetupOperator(t *testing.T) {
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString("1")
+	require.True(t, ok)
+
 	tests := []struct {
 		name    string
 		op      string
@@ -199,7 +208,7 @@ func TestSetupOperator(t *testing.T) {
 			op:   "<=1",
 			out: &metricsapi.Operator{
 				GreaterThan: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -209,7 +218,7 @@ func TestSetupOperator(t *testing.T) {
 			op:   "<1",
 			out: &metricsapi.Operator{
 				GreaterThanOrEqual: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -219,7 +228,7 @@ func TestSetupOperator(t *testing.T) {
 			op:   ">=1",
 			out: &metricsapi.Operator{
 				LessThan: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -229,7 +238,7 @@ func TestSetupOperator(t *testing.T) {
 			op:   ">1",
 			out: &metricsapi.Operator{
 				LessThanOrEqual: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewQuantity(1, resource.DecimalSI),
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
@@ -238,7 +247,7 @@ func TestSetupOperator(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := setupOperator(tt.op)
+			res, err := newOperator(tt.op)
 			if tt.wantErr {
 				require.NotNil(t, err)
 			} else {
@@ -302,7 +311,7 @@ func TestShouldIgnoreObjective(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, shouldIgnoreObjective(tt.o))
+			require.Equal(t, tt.want, tt.o.hasSupportedCriteria())
 		})
 
 	}
@@ -505,6 +514,14 @@ func TestCleanupObjective(t *testing.T) {
 }
 
 func TestSetupTarget(t *testing.T) {
+	dec10 := inf.NewDec(1, 0)
+	_, ok := dec10.SetString("10")
+	require.True(t, ok)
+
+	dec15 := inf.NewDec(1, 0)
+	_, ok = dec15.SetString("15")
+	require.True(t, ok)
+
 	tests := []struct {
 		name    string
 		o       *Objective
@@ -561,7 +578,7 @@ func TestSetupTarget(t *testing.T) {
 			want: &metricsapi.Target{
 				Failure: &metricsapi.Operator{
 					GreaterThanOrEqual: &metricsapi.OperatorValue{
-						FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+						FixedValue: *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
 					},
 				},
 			},
@@ -598,12 +615,12 @@ func TestSetupTarget(t *testing.T) {
 			want: &metricsapi.Target{
 				Failure: &metricsapi.Operator{
 					GreaterThan: &metricsapi.OperatorValue{
-						FixedValue: *resource.NewQuantity(15, resource.DecimalSI),
+						FixedValue: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
 					},
 				},
 				Warning: &metricsapi.Operator{
 					GreaterThanOrEqual: &metricsapi.OperatorValue{
-						FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+						FixedValue: *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
 					},
 				},
 			},
@@ -660,6 +677,14 @@ func TestSetupTarget(t *testing.T) {
 }
 
 func TestConvertSLO(t *testing.T) {
+	dec10 := inf.NewDec(1, 0)
+	_, ok := dec10.SetString("10")
+	require.True(t, ok)
+
+	dec15 := inf.NewDec(1, 0)
+	_, ok = dec15.SetString("15")
+	require.True(t, ok)
+
 	c := NewSLOConverter()
 
 	tests := []struct {
@@ -777,12 +802,12 @@ func TestConvertSLO(t *testing.T) {
 							Target: metricsapi.Target{
 								Failure: &metricsapi.Operator{
 									GreaterThan: &metricsapi.OperatorValue{
-										FixedValue: *resource.NewQuantity(15, resource.DecimalSI),
+										FixedValue: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
 									},
 								},
 								Warning: &metricsapi.Operator{
 									GreaterThanOrEqual: &metricsapi.OperatorValue{
-										FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+										FixedValue: *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
 									},
 								},
 							},
@@ -797,7 +822,7 @@ func TestConvertSLO(t *testing.T) {
 							Target: metricsapi.Target{
 								Failure: &metricsapi.Operator{
 									GreaterThanOrEqual: &metricsapi.OperatorValue{
-										FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+										FixedValue: *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
 									},
 								},
 							},

@@ -6,6 +6,7 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const SLOContent = `---
@@ -81,7 +82,7 @@ spec:
     warningPercentage: 65
 `
 
-func TestConvertSLO(t *testing.T) {
+func TestConvert(t *testing.T) {
 	c := NewSLOConverter()
 	// no provider nor namespace
 	res, err := c.Convert([]byte(SLOContent), "", "")
@@ -501,4 +502,366 @@ func TestCleanupObjective(t *testing.T) {
 			require.Equal(t, tt.out, cleanupObjective(tt.in))
 		})
 	}
+}
+
+func TestSetupTarget(t *testing.T) {
+	tests := []struct {
+		name    string
+		o       *Objective
+		want    *metricsapi.Target
+		wantErr bool
+	}{
+		{
+			name: "informative slo",
+			o: &Objective{
+				Name: "informative",
+			},
+			want:    &metricsapi.Target{},
+			wantErr: false,
+		},
+		{
+			name: "logical OR criteria -> informative slo",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<10"},
+					},
+					{
+						Operators: []string{">1"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: false,
+		},
+		{
+			name: "criteria with % -> informative slo",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<10%"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: false,
+		},
+		{
+			name: "no warn criteria - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<10"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					GreaterThanOrEqual: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "no warn criteria - error",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"10"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "with warn criteria - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<10"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=15"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewQuantity(15, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					GreaterThanOrEqual: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria - error pass",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"10"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=15"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "with warn criteria - error warn",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<10"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"15"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := setupTarget(tt.o)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.want, res)
+			}
+		})
+	}
+}
+
+func TestConvertSLO(t *testing.T) {
+	c := NewSLOConverter()
+
+	tests := []struct {
+		name      string
+		slo       *SLO
+		defName   string
+		namespace string
+		out       *metricsapi.AnalysisDefinition
+		wantErr   bool
+	}{
+		{
+			name: "removePercentage pass - error",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass: "hhh",
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out:       &metricsapi.AnalysisDefinition{},
+			wantErr:   true,
+		},
+		{
+			name: "removePercentage warn - error",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass:    "10",
+					Warning: "hhh",
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out:       &metricsapi.AnalysisDefinition{},
+			wantErr:   true,
+		},
+		{
+			name: "no objectives",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass:    "50",
+					Warning: "20",
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out: &metricsapi.AnalysisDefinition{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "AnalysisDefinition",
+					APIVersion: "metrics.keptn.sh/v1alpha3",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name: "defName",
+				},
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					TotalScore: metricsapi.TotalScore{
+						PassPercentage:    50,
+						WarningPercentage: 20,
+					},
+					Objectives: []metricsapi.Objective{},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "objectives conversion",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass:    "50",
+					Warning: "20",
+				},
+				Objectives: []*Objective{
+					{
+						Name: "criteria",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10"},
+							},
+						},
+						Warning: []Criteria{
+							{
+								Operators: []string{"<=15"},
+							},
+						},
+						KeySLI: true,
+						Weight: 10,
+					},
+					{
+						Name: "criteria2",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10"},
+							},
+						},
+						Weight: 5,
+					},
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out: &metricsapi.AnalysisDefinition{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "AnalysisDefinition",
+					APIVersion: "metrics.keptn.sh/v1alpha3",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name: "defName",
+				},
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					TotalScore: metricsapi.TotalScore{
+						PassPercentage:    50,
+						WarningPercentage: 20,
+					},
+					Objectives: []metricsapi.Objective{
+						{
+							Target: metricsapi.Target{
+								Failure: &metricsapi.Operator{
+									GreaterThan: &metricsapi.OperatorValue{
+										FixedValue: *resource.NewQuantity(15, resource.DecimalSI),
+									},
+								},
+								Warning: &metricsapi.Operator{
+									GreaterThanOrEqual: &metricsapi.OperatorValue{
+										FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+									},
+								},
+							},
+							Weight:       10,
+							KeyObjective: true,
+							AnalysisValueTemplateRef: metricsapi.ObjectReference{
+								Name:      "criteria",
+								Namespace: "default",
+							},
+						},
+						{
+							Target: metricsapi.Target{
+								Failure: &metricsapi.Operator{
+									GreaterThanOrEqual: &metricsapi.OperatorValue{
+										FixedValue: *resource.NewQuantity(10, resource.DecimalSI),
+									},
+								},
+							},
+							Weight: 5,
+							AnalysisValueTemplateRef: metricsapi.ObjectReference{
+								Name:      "criteria2",
+								Namespace: "default",
+							},
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "objectives conversion - setupTarget error",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass:    "50",
+					Warning: "20",
+				},
+				Objectives: []*Objective{
+					{
+						Name: "criteria",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10"},
+							},
+						},
+						Warning: []Criteria{
+							{
+								Operators: []string{"15"},
+							},
+						},
+						KeySLI: true,
+						Weight: 10,
+					},
+					{
+						Name: "criteria2",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10"},
+							},
+						},
+						Weight: 5,
+					},
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out:       &metricsapi.AnalysisDefinition{},
+			wantErr:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := c.convertSLO(tt.slo, tt.defName, tt.namespace)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.out, res)
+			}
+		})
+	}
+
 }

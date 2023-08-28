@@ -124,7 +124,7 @@ func removePercentage(str string) (int, error) {
 }
 
 // creates and sets up the target struct from objective
-// TODO refactor this function in a follow-up
+// TODO refactor this function in a follow-up + weight distribution
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
@@ -136,7 +136,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		return target, nil
 	}
 
-	// if warning criteria are not defined, negotiate the existing and create fail criteria
+	// if warning criteria are not defined, negotiate the pass criteria to create fail criteria
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
@@ -151,8 +151,9 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		}
 	}
 
-	// warn criteria -> fail criteria
-	// pass criteria -> warn criteria
+	// if warning criteria are defined, create new criteria with the following logic:
+	// !(warn criteria) -> fail criteria
+	// !(pass criteria) -> warn criteria
 	var err error
 	if len(o.Pass) > 0 {
 		if len(o.Pass[0].Operators) > 0 {

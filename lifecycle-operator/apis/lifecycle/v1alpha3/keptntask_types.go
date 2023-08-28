@@ -38,6 +38,7 @@ type KeptnTaskSpec struct {
 	// located in the same namespace as the KeptnTask, or in the KLT namespace.
 	TaskDefinition string `json:"taskDefinition"`
 	// Context contains contextual information about the task execution.
+	// +optional
 	Context TaskContext `json:"context"`
 	// Parameters contains parameters that will be passed to the job that executes the task.
 	Parameters TaskParameters `json:"parameters,omitempty"`
@@ -63,16 +64,22 @@ type KeptnTaskSpec struct {
 
 type TaskContext struct {
 	// WorkloadName the name of the KeptnWorkload the KeptnTask is being executed for.
+	// +optional
 	WorkloadName string `json:"workloadName"`
 	// AppName the name of the KeptnApp the KeptnTask is being executed for.
+	// +optional
 	AppName string `json:"appName"`
 	// AppVersion the version of the KeptnApp the KeptnTask is being executed for.
+	// +optional
 	AppVersion string `json:"appVersion"`
 	// WorkloadVersion the version of the KeptnWorkload the KeptnTask is being executed for.
+	// +optional
 	WorkloadVersion string `json:"workloadVersion"`
 	// TaskType indicates whether the KeptnTask is part of the pre- or postDeployment phase.
+	// +optional
 	TaskType string `json:"taskType"`
 	// ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload.
+	// +optional
 	ObjectType string `json:"objectType"`
 }
 

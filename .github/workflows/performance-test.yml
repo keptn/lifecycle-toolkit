@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       runtime_tag:
-        description: "Tag for the deno runner image"
+        description: "Tag for the runner images"
         type: "string"
         required: true
 env:

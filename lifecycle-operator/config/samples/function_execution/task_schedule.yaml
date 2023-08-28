@@ -4,8 +4,9 @@ metadata:
   name: scheduled-deployment
 spec:
   taskDefinition: schedule-upstream-deployment
-  workload: my-workload
-  version: "1.0"
+  context:
+    workloadName: my-workload
+    workloadVersion: "1.0"
   app: my-app
   parameters:
     map:

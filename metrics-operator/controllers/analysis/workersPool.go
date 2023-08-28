@@ -35,6 +35,10 @@ func NewWorkersPool(analysis *metricsapi.Analysis, definition *metricsapi.Analys
 		results:         results,
 	}
 	retriever := ProvidersPool{
+		Client:               c,
+		Log:                  log,
+		Analysis:             analysis,
+		results:              results,
 		Namespace:            namespace,
 		Objectives:           assigner.AssignTasks(),
 		IObjectivesEvaluator: evaluator,

@@ -242,6 +242,8 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 				WorkloadName: "my-workload",
 				AppName:      "my-app",
 				AppVersion:   "0.1.0",
+				ObjectType:   "Workload",
+				TaskType:     string(apicommon.PostDeploymentCheckType),
 			},
 			TaskDefinition: taskDefinitionName,
 			Type:           apicommon.PostDeploymentCheckType,

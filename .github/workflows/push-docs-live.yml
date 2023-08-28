@@ -1,0 +1,36 @@
+name: Push Developer Documentation to Live
+
+on:
+  workflow_dispatch:
+
+env:
+  TMP_DOCS_DIR: "./tmp/page"
+
+jobs:
+  push-dev-documentation-live:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Checkout - page branch
+        uses: actions/checkout@v3
+        with:
+          ref: "page"
+          path: ${{ env.TMP_DOCS_DIR }}
+
+      - name: Debug info
+        run: ls -alR ${{ env.TMP_DOCS_DIR }}
+
+      - name: Move developer docs into main live doc folder
+        run: cp -R ./docs/content/en/docs/. "${{ env.TMP_DOCS_DIR }}/docs/content/en/docs"
+
+      - name: Push content
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          cwd: ${{ env.TMP_DOCS_DIR }}
+          message: "docs: updating documentation to ${{ github.sha }}"

@@ -40,7 +40,7 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 	queryRange := prometheus.Range{
 		Start: spec.From.Time,
 		End:   spec.To.Time,
-		Step:  time.Second * 10,
+		Step:  time.Minute,
 	}
 	result, warnings, err := api.QueryRange(
 		ctx,

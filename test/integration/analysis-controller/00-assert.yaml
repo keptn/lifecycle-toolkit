@@ -16,4 +16,5 @@ spec:
     cpu: cpu
   analysisDefinition:
     name: ed-my-proj-dev-svc1
+    namespace: keptn-lifecycle-toolkit-system
 status: '{"objectiveResults":[{"result":{"failResult":{"operator":{}},"warnResult":{"operator":{}}},"error":{}}],"maximumScore":1}'

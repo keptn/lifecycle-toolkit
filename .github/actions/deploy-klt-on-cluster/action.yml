@@ -98,7 +98,7 @@ runs:
           --set lifecycleOperator.manager.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.image.repository="localhost:5000/keptn/lifecycle-operator" \
           --set metricsOperator.manager.imagePullPolicy=Never \
-          --set metricsOperator.manager.env.enableKeptnAnalysis=true \
+          --set metricsOperator.manager.env.enableKeptnAnalysis="true" \
           --set metricsOperator.manager.image.tag=${{ inputs.runtime_tag }} \
           --set metricsOperator.manager.image.repository="localhost:5000/keptn/metrics-operator" \
           --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \

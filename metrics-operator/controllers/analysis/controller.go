@@ -141,15 +141,15 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(a)
 }
 
-func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, cache map[string]metricsapi.ProviderResult) map[string]metricsapi.ProviderResult {
+func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) map[string]metricsapi.ProviderResult {
 	toDo := []metricsapi.Objective{}
-	done := make(map[string]metricsapi.ProviderResult, len(cache))
+	done := make(map[string]metricsapi.ProviderResult, len(status))
 	for _, obj := range def.Spec.Objectives {
-		if value, ok := cache[common.ComputeKey(obj.AnalysisValueTemplateRef)]; ok {
+		if value, ok := status[common.ComputeKey(obj.AnalysisValueTemplateRef)]; ok {
 			if value.Err != "" {
 				toDo = append(toDo, obj)
 			} else {
-				done[common.ComputeKey(obj.AnalysisValueTemplateRef)] = cache[common.ComputeKey(obj.AnalysisValueTemplateRef)]
+				done[common.ComputeKey(obj.AnalysisValueTemplateRef)] = status[common.ComputeKey(obj.AnalysisValueTemplateRef)]
 			}
 		}
 	}

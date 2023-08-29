@@ -112,6 +112,30 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	if SLIFilePath != "" {
+		// convert
+		content, err := convertSLI(SLIFilePath, provider, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
+	if SLOFilePath != "" {
+		// convert
+		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
 	exporter, err := otelprom.New()
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
@@ -137,32 +161,6 @@ func main() {
 
 	// Set the metric value as soon as the operator starts
 	keptnMetricActive.Add(context.Background(), 1)
-
-
-	if SLIFilePath != "" {
-		// convert
-		content, err := convertSLI(SLIFilePath, provider, namespace)
-		if err != nil {
-			log.Fatalf(err.Error())
-			return
-		}
-		// write out converted result
-		fmt.Print(content)
-		return
-	}
-
-	if SLOFilePath != "" {
-		// convert
-		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
-		if err != nil {
-			log.Fatalf(err.Error())
-			return
-		}
-		// write out converted result
-		fmt.Print(content)
-		return
-	}
-
 
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)

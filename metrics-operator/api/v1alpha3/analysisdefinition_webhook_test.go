@@ -36,6 +36,26 @@ func TestOperator_validate(t *testing.T) {
 			wantErr: fmt.Errorf("Operator: multiple operators can not be set"),
 		},
 		{
+			name: "in range - fail validation",
+			operator: Operator{
+				InRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(25, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+		{
+			name: "not in range - fail validation",
+			operator: Operator{
+				NotInRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(25, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+		{
 			name: "happy path",
 			operator: Operator{
 				LessThanOrEqual: &OperatorValue{

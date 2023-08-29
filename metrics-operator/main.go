@@ -19,7 +19,9 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -45,6 +47,11 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
+	"go.opentelemetry.io/otel/sdk/metric"
 )
 
 var (
@@ -93,6 +100,32 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	exporter, err := otelprom.New()
+	if err != nil {
+		setupLog.Error(err, "unable to start OTel")
+	}
+	provider := metric.NewMeterProvider(metric.WithReader(exporter))
+	meter := provider.Meter("keptn/metric")
+
+	keptnMetricActive, err := meter.Int64Counter("keptn_metric_active")
+	if err != nil {
+		panic(err)
+	}
+
+	keptnMeters := make(map[string]metric.Int64Counter)
+
+	err = telemetry.GetOtelInstance().InitOtelCollector("")
+	if err != nil {
+		setupLog.Error(err, "unable to initialize OTel tracer options")
+	}
+
+	spanHandler := &telemetry.SpanHandler{}
+
+	go serveMetrics()
+
+	// Set the metric value as soon as the operator starts
+	keptnMetricActive.Add(context.Background(), 1)
+
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
 
@@ -130,9 +163,11 @@ func main() {
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         metricsLogger.V(env.KeptnMetricControllerLogLevel),
+		Meters:      keptnMeters, // Use the keptnMeters map
+		SpanHandler: spanHandler, // Use the spanHandler
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
@@ -197,4 +232,15 @@ func startCustomMetricsAdapter(namespace string) {
 
 	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
+}
+
+func serveMetrics() {
+	log.Printf("serving metrics at localhost:2222/metrics")
+
+	http.Handle("/metrics", promhttp.Handler())
+	err := http.ListenAndServe(":2222", nil)
+	if err != nil {
+		fmt.Printf("error serving http: %v", err)
+		return
+	}
 }

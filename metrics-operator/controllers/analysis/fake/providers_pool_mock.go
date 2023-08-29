@@ -5,7 +5,7 @@ package fake
 
 import (
 	"context"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"sync"
 )
 
@@ -18,7 +18,7 @@ import (
 //			DispatchToProvidersFunc: func(ctx context.Context, id int)  {
 //				panic("mock out the DispatchToProviders method")
 //			},
-//			GetResultFunc: func() metricstypes.ProviderResult {
+//			GetResultFunc: func() metricsapi.ProviderResult {
 //				panic("mock out the GetResult method")
 //			},
 //			StartProvidersFunc: func(ctx context.Context, numJobs int)  {
@@ -38,7 +38,7 @@ type IProvidersPoolMock struct {
 	DispatchToProvidersFunc func(ctx context.Context, id int)
 
 	// GetResultFunc mocks the GetResult method.
-	GetResultFunc func() metricstypes.ProviderResult
+	GetResultFunc func() metricsapi.ProviderResult
 
 	// StartProvidersFunc mocks the StartProviders method.
 	StartProvidersFunc func(ctx context.Context, numJobs int)
@@ -112,7 +112,7 @@ func (mock *IProvidersPoolMock) DispatchToProvidersCalls() []struct {
 }
 
 // GetResult calls GetResultFunc.
-func (mock *IProvidersPoolMock) GetResult() metricstypes.ProviderResult {
+func (mock *IProvidersPoolMock) GetResult() metricsapi.ProviderResult {
 	if mock.GetResultFunc == nil {
 		panic("IProvidersPoolMock.GetResultFunc: method is nil but IProvidersPool.GetResult was just called")
 	}

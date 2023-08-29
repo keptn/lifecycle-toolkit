@@ -11,9 +11,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate moq -pkg fake -skip-ensure -out ./fake/analysispool_mock.go . IAnalysisPool:MyAnalysisPoolMock
+//go:generate moq -pkg fake -skip-ensure -out ./fake/analysispool_mock.go . IAnalysisPool
 type IAnalysisPool interface {
-	DispatchAndCollect(ctx context.Context) (map[string]string, error)
+	DispatchAndCollect(ctx context.Context) (map[string]metricsapi.ProviderResult, error)
 }
 
 type NewWorkersPoolFactory func(ctx context.Context, analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool)
@@ -28,7 +28,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, definiti
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
 	assigner := TaskAssigner{tasks: definition.Spec.Objectives, numWorkers: numWorkers}
-	results := make(chan metricstypes.ProviderResult, numJobs)
+	results := make(chan metricsapi.ProviderResult, numJobs)
 	evaluator := ObjectivesEvaluator{
 		ProviderFactory: providers.NewProvider,
 		Log:             log,
@@ -63,7 +63,7 @@ type WorkersPool struct {
 	cancel     context.CancelFunc
 }
 
-func (aw WorkersPool) DispatchAndCollect(ctx context.Context) (map[string]string, error) {
+func (aw WorkersPool) DispatchAndCollect(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 	aw.StartProviders(ctx, aw.numJobs)
 	for w := 1; w <= aw.numWorkers; w++ {
 		go aw.DispatchToProviders(ctx, w)
@@ -71,9 +71,9 @@ func (aw WorkersPool) DispatchAndCollect(ctx context.Context) (map[string]string
 	return aw.CollectAnalysisResults(ctx)
 }
 
-func (aw WorkersPool) CollectAnalysisResults(ctx context.Context) (map[string]string, error) {
+func (aw WorkersPool) CollectAnalysisResults(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 	var err error
-	results := make(map[string]string, aw.numJobs)
+	results := make(map[string]metricsapi.ProviderResult, aw.numJobs)
 loop:
 	for a := 1; a <= aw.numJobs; a++ {
 		select {
@@ -82,9 +82,9 @@ loop:
 			break loop
 		default:
 			res := aw.GetResult()
-			results[analysis.ComputeKey(res.Objective)] = res.Value
-			if res.Err != nil {
-				err = res.Err
+			results[analysis.ComputeKey(res.Objective)] = res
+			if res.Err != "" {
+				err = errors.New(res.Err)
 				aw.cancel()
 				break loop
 			}

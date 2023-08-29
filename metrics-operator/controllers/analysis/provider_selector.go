@@ -17,7 +17,7 @@ import (
 type IProvidersPool interface {
 	StartProviders(ctx context.Context, numJobs int)
 	DispatchToProviders(ctx context.Context, id int)
-	GetResult() metricstypes.ProviderResult
+	GetResult() metricsapi.ProviderResult
 	StopProviders()
 }
 
@@ -28,7 +28,7 @@ type ProvidersPool struct {
 	Namespace  string
 	Objectives map[int][]metricsapi.Objective
 	*metricsapi.Analysis
-	results   chan metricstypes.ProviderResult
+	results   chan metricsapi.ProviderResult
 	providers map[string]chan metricstypes.ProviderRequest
 	cancel    context.CancelFunc
 }
@@ -64,7 +64,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			if err != nil {
 				ps.Log.Error(err, "Failed to get the correct Provider")
-				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
 				ps.cancel()
 				return
 			}
@@ -82,7 +82,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			if err != nil {
 				ps.Log.Error(err, "Failed to get Provider")
-				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
 				ps.cancel()
 				return
 			}
@@ -90,7 +90,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
 			if err != nil {
 				ps.Log.Error(err, "Failed to substitute args in templ")
-				ps.results <- metricstypes.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
 				ps.cancel()
 				return
 			}
@@ -111,7 +111,7 @@ func (ps ProvidersPool) StopProviders() {
 	close(ps.results)
 }
 
-func (ps ProvidersPool) GetResult() metricstypes.ProviderResult {
+func (ps ProvidersPool) GetResult() metricsapi.ProviderResult {
 	res := <-ps.results
 	return res
 }

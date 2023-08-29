@@ -19,6 +19,7 @@ package analysis
 import (
 	"context"
 	"encoding/json"
+	"golang.org/x/exp/maps"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -93,14 +94,27 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 
+	tempAnalysisDef := analysisDef
+	var done map[string]metricsapi.ProviderResult
+	if analysis.Status.Raw != "" {
+		done = a.ExtractMissingObj(tempAnalysisDef, analysis.Status.Cache)
+	}
+
 	//create multiple workers handling the Objectives
-	ctx, wp := a.NewWorkersPoolFactory(ctx, analysis, analysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	ctx, wp := a.NewWorkersPoolFactory(ctx, analysis, tempAnalysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
 
 	res, err := wp.DispatchAndCollect(ctx)
 	if err != nil {
-		a.Log.Error(err, "Failed to Collect all SLOs")
+		a.Log.Error(err, "Failed to Collect all SLOs, caching collected values")
+		analysis.Status.Cache = res
+		if err := a.Client.Status().Update(ctx, analysis); err != nil {
+			a.Log.Error(err, "Failed to update the Analysis status")
+			return ctrl.Result{}, err
+		}
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
+
+	maps.Copy(res, done)
 
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)
@@ -125,4 +139,20 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&metricsapi.Analysis{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(a)
+}
+
+func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, cache map[string]metricsapi.ProviderResult) map[string]metricsapi.ProviderResult {
+	toDo := []metricsapi.Objective{}
+	done := make(map[string]metricsapi.ProviderResult, len(cache))
+	for _, obj := range def.Spec.Objectives {
+		if value, ok := cache[common.ComputeKey(obj.AnalysisValueTemplateRef)]; ok {
+			if value.Err != "" {
+				toDo = append(toDo, obj)
+			} else {
+				done[common.ComputeKey(obj.AnalysisValueTemplateRef)] = cache[common.ComputeKey(obj.AnalysisValueTemplateRef)]
+			}
+		}
+	}
+	def.Spec.Objectives = toDo
+	return done
 }

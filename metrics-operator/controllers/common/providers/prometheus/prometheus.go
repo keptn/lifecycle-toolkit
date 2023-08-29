@@ -23,13 +23,13 @@ type KeptnPrometheusProvider struct {
 	HttpClient http.Client
 }
 
-func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
 	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
 	if err != nil {
-		return "", nil, err
+		return "", err
 	}
 	api := prometheus.NewAPI(client)
 	r.Log.Info(fmt.Sprintf(
@@ -50,12 +50,13 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 	)
 
 	if err != nil {
-		return "", nil, err
+		return "", err
 	}
 	if len(warnings) != 0 {
 		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 	}
-	return getResultForMatrix(result)
+	res, _, err := getResultForMatrix(result)
+	return res, err
 }
 
 // EvaluateQuery fetches the SLI values from prometheus provider

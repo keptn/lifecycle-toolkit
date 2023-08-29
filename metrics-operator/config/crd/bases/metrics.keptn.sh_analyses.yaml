@@ -89,8 +89,36 @@ spec:
             description: AnalysisStatus stores the status of the overall analysis
               returns also pass or warnings
             properties:
+              cache:
+                additionalProperties:
+                  description: ProviderResult stores reference of already collected
+                    provider query associated to its objective template
+                  properties:
+                    error:
+                      description: Err stores any possible error at retrieval time
+                      type: string
+                    objectiveReference:
+                      description: Objective store reference to corresponding objective
+                        template
+                      properties:
+                        name:
+                          description: Name defines the name of the referenced object
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            object
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    value:
+                      description: Value is the value the provider returned
+                      type: string
+                  type: object
+                description: Cache
+                type: object
               pass:
-                description: Pass returns wheter the SLO is satisfied
+                description: Pass returns whether the SLO is satisfied
                 type: boolean
               raw:
                 description: Raw contains the raw result of the SLO computation
@@ -98,9 +126,6 @@ spec:
               warning:
                 description: Warning returns whether the analysis returned a warning
                 type: boolean
-            required:
-            - pass
-            - raw
             type: object
         type: object
     served: true

@@ -5,16 +5,17 @@ package fake
 
 import (
 	"context"
+	 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"sync"
 )
 
-// MyAnalysisPoolMock is a mock implementation of analysis.IAnalysisPool.
+// IAnalysisPoolMock is a mock implementation of analysis.IAnalysisPool.
 //
 //	func TestSomethingThatUsesIAnalysisPool(t *testing.T) {
 //
 //		// make and configure a mocked analysis.IAnalysisPool
-//		mockedIAnalysisPool := &MyAnalysisPoolMock{
-//			DispatchAndCollectFunc: func(ctx context.Context) (map[string]string, error) {
+//		mockedIAnalysisPool := &IAnalysisPoolMock{
+//			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 //				panic("mock out the DispatchAndCollect method")
 //			},
 //		}
@@ -23,9 +24,9 @@ import (
 //		// and then make assertions.
 //
 //	}
-type MyAnalysisPoolMock struct {
+type IAnalysisPoolMock struct {
 	// DispatchAndCollectFunc mocks the DispatchAndCollect method.
-	DispatchAndCollectFunc func(ctx context.Context) (map[string]string, error)
+	DispatchAndCollectFunc func(ctx context.Context) (map[string]v1alpha3.ProviderResult, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -39,9 +40,9 @@ type MyAnalysisPoolMock struct {
 }
 
 // DispatchAndCollect calls DispatchAndCollectFunc.
-func (mock *MyAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[string]string, error) {
+func (mock *IAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[string]v1alpha3.ProviderResult, error) {
 	if mock.DispatchAndCollectFunc == nil {
-		panic("MyAnalysisPoolMock.DispatchAndCollectFunc: method is nil but IAnalysisPool.DispatchAndCollect was just called")
+		panic("IAnalysisPoolMock.DispatchAndCollectFunc: method is nil but IAnalysisPool.DispatchAndCollect was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
@@ -58,7 +59,7 @@ func (mock *MyAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[str
 // Check the length with:
 //
 //	len(mockedIAnalysisPool.DispatchAndCollectCalls())
-func (mock *MyAnalysisPoolMock) DispatchAndCollectCalls() []struct {
+func (mock *IAnalysisPoolMock) DispatchAndCollectCalls() []struct {
 	Ctx context.Context
 } {
 	var calls []struct {

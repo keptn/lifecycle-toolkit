@@ -22,7 +22,7 @@ func TestEvaluate(t *testing.T) {
 		providerType    string
 		mockProvider    providers.KeptnSLIProvider
 		providerRequest metricstypes.ProviderRequest
-		expectedResult  metricstypes.ProviderResult
+		expectedResult  metricsapi.ProviderResult
 		expectedError   error
 	}{
 		{
@@ -43,7 +43,7 @@ func TestEvaluate(t *testing.T) {
 				Query:    "query_fake_metric",
 				Provider: &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: "prometheus"}},
 			},
-			expectedResult: metricstypes.ProviderResult{
+			expectedResult: metricsapi.ProviderResult{
 				Objective: metricsapi.ObjectReference{
 					Name:      "mytemp",
 					Namespace: "default",
@@ -71,7 +71,7 @@ func TestEvaluate(t *testing.T) {
 				Query:    "query_fake_metric",
 				Provider: &metricsapi.KeptnMetricsProvider{Spec: metricsapi.KeptnMetricsProviderSpec{Type: "prometheus"}},
 			},
-			expectedResult: metricstypes.ProviderResult{
+			expectedResult: metricsapi.ProviderResult{
 				Objective: metricsapi.ObjectReference{
 					Name:      "mytemp",
 					Namespace: "default",
@@ -102,7 +102,7 @@ func TestEvaluate(t *testing.T) {
 						},
 					},
 				},
-				results: make(chan metricstypes.ProviderResult, 1),
+				results: make(chan metricsapi.ProviderResult, 1),
 			}
 
 			ctx := context.TODO()

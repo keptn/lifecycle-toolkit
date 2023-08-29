@@ -30,14 +30,26 @@ type AnalysisSpec struct {
 	AnalysisDefinition ObjectReference `json:"analysisDefinition"`
 }
 
+// ProviderResult stores reference of already collected provider query associated to its objective template
+type ProviderResult struct {
+	// Objective store reference to corresponding objective template
+	Objective ObjectReference `json:"objectiveReference,omitempty"`
+	// Value is the value the provider returned
+	Value string `json:"value,omitempty"`
+	// Err stores any possible error at retrieval time
+	Err string `json:"error,omitempty"`
+}
+
 // AnalysisStatus stores the status of the overall analysis returns also pass or warnings
 type AnalysisStatus struct {
 	// Raw contains the raw result of the SLO computation
-	Raw string `json:"raw"`
-	// Pass returns wheter the SLO is satisfied
-	Pass bool `json:"pass"`
+	Raw string `json:"raw,omitempty"`
+	// Pass returns whether the SLO is satisfied
+	Pass bool `json:"pass,omitempty"`
 	// Warning returns whether the analysis returned a warning
 	Warning bool `json:"warning,omitempty"`
+	//Cache
+	Cache map[string]ProviderResult `json:"cache,omitempty"`
 }
 
 //+kubebuilder:object:root=true

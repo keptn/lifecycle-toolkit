@@ -108,7 +108,7 @@ func TestProvidersPool(t *testing.T) {
 			// Create a mock context for testing
 			ctx, cancel := context.WithCancel(context.TODO())
 
-			resultChan := make(chan metricstypes.ProviderResult, 1)
+			resultChan := make(chan metricsapi.ProviderResult, 1)
 
 			// Create a mock IObjectivesEvaluator and Logger for testing
 			mockEvaluator := &fake.IObjectivesEvaluatorMock{}
@@ -138,7 +138,7 @@ func TestProvidersPool(t *testing.T) {
 				require.Equal(t, tc.providerResult.Query, res.Query)
 			} else {
 				res := <-resultChan
-				require.Contains(t, res.Err.Error(), tc.expectedErr)
+				require.Contains(t, res.Err, tc.expectedErr)
 			}
 			pool.StopProviders()
 		})
@@ -149,7 +149,7 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 
 	numJobs := 4
 	ctx, cancel := context.WithCancel(context.Background())
-	resChan := make(chan metricstypes.ProviderResult)
+	resChan := make(chan metricsapi.ProviderResult)
 	// Create a mock IObjectivesEvaluator, Client, and Logger for testing
 	mockEvaluator := &fake.IObjectivesEvaluatorMock{
 		EvaluateFunc: func(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {

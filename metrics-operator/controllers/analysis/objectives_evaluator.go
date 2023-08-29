@@ -19,7 +19,7 @@ type ObjectivesEvaluator struct {
 	providers.ProviderFactory
 	client.Client
 	Log     logr.Logger
-	results chan metricstypes.ProviderResult
+	results chan metricsapi.ProviderResult
 	cancel  context.CancelFunc
 }
 
@@ -33,12 +33,12 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 	for o := range obj {
 		value := ""
 		if err == nil {
-			value, _, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
+			value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
 		}
-		result := metricstypes.ProviderResult{
+		result := metricsapi.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,
 			Value:     value,
-			Err:       err,
+			Err:       err.Error(),
 		}
 		oe.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		oe.results <- result

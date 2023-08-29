@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-logr/logr/testr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -41,7 +40,7 @@ func TestNewWorkerPool(t *testing.T) {
 
 func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	// Create a fake WorkersPool instance for testing
-	resChan := make(chan metricstypes.ProviderResult, 2)
+	resChan := make(chan metricsapi.ProviderResult, 2)
 	fakePool := WorkersPool{
 		IProvidersPool: ProvidersPool{
 			results: resChan,
@@ -49,13 +48,13 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 		numJobs: 2,
 	}
 
-	res1 := metricstypes.ProviderResult{
+	res1 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t1"},
 		Value:     "result1",
 		Err:       nil,
 	}
 
-	res2 := metricstypes.ProviderResult{
+	res2 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t2"},
 		Value:     "result2",
 		Err:       nil,

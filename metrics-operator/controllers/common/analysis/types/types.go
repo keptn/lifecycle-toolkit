@@ -10,12 +10,6 @@ type ProviderRequest struct {
 	Provider  *v1alpha3.KeptnMetricsProvider
 }
 
-type ProviderResult struct {
-	Objective v1alpha3.ObjectReference
-	Value     string
-	Err       error
-}
-
 type TargetResult struct {
 	FailResult OperatorResult `json:"failResult,omitempty"`
 	WarnResult OperatorResult `json:"warnResult,omitempty"`

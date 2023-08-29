@@ -61,8 +61,8 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
 	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
-		mymock := fake.MyAnalysisPoolMock{
-			DispatchAndCollectFunc: func(ctx context.Context) (map[string]string, error) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 				return nil, nil
 			},
 		}
@@ -78,7 +78,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				MaxWorkers:            2,
 				NewWorkersPoolFactory: mockFactory,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-					EvaluateFunc: func(values map[string]string, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+					EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 						return tt.res
 					}},
 			}

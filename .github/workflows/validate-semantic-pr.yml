@@ -36,12 +36,13 @@ jobs:
             test
             deps
           scopes: |
+            main
             helm-chart
             scheduler
             lifecycle-operator
             cert-manager
             metrics-operator
-            functions-runtime
+            deno-runtime
             python-runtime
             dashboards
             examples

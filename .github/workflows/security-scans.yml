@@ -200,6 +200,7 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
+          - "deno-runtime"
           - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"

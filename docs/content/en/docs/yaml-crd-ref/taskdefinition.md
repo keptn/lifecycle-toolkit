@@ -150,7 +150,7 @@ spec:
 * **spec**
   * **deno** -- Specify that the task uses the `deno-runtime`
     and is expressed as a [Deno](https://deno.land/) script.
-    Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
+    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
     for more information about this runner.
 
     The task can be defined as one of the following:
@@ -580,7 +580,7 @@ This example prints data stored in the parameters map:
 
 You can refer to code stored online.
 For example, we have a few examples available in the
-[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/python-runtime/samples)
+[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
 tree.
 
 Consider the following:

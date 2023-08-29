@@ -92,7 +92,7 @@ jobs:
                         return [];
                 }
             });
-            return releaseMatrix;
+            return { config: releaseMatrix };
 
   build-release:
     if: needs.release-please.outputs.releases-created == 'true'

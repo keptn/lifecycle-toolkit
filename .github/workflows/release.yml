@@ -46,6 +46,24 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
+      - name: Debug info
+        env:
+          CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
+          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
+        run: |
+          echo "FULL RELEASE OUTPUT: ${{ steps.release.outputs }}"
+          echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
+          echo "KLT_TAG: ${KLT_TAG}"
+          echo "ARTIFACT_TAG_NAME: ${ARTIFACT_TAG_NAME}"
+          echo "PATHS_RELEASED: ${PATHS_RELEASED}"
+          echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
+          echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
+          echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
+          echo "DENO_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimesdeno-runtime--tag_name }}"
+          echo "PYTHON_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimespython-runtime--tag_name }}"
+
       - name: Create release matrix
         id: build-matrix
         uses: actions/github-script@v6
@@ -80,10 +98,15 @@ jobs:
                         ];
                     case "metrics-operator":
                     case "klt-cert-manager":
+                        return [{
+                            name: item,
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        }];
                     case "runtimes/deno-runtime":
                     case "runtimes/python-runtime":
                         return [{
-                            name: item,
+                            name: item.replace("runtimes/", ""),
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
                         }];

@@ -49,7 +49,7 @@ func (o *Objective) hasSupportedCriteria() bool {
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("missing arguments: '--definition' and '--namespace' needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: 'definition' and 'namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content
@@ -125,7 +125,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 	return definition, nil
 }
 
-// removes % symbol from the scoring values and converts to numberic value
+// removes % symbol from the scoring values and converts to numeric value
 func removePercentage(str string) (int, error) {
 	t := strings.ReplaceAll(str, "%", "")
 	f, err := strconv.ParseFloat(t, 64)
@@ -148,7 +148,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		return target, nil
 	}
 
-	// if warning criteria are not defined, negotiate the pass criteria to create fail criteria
+	// if warning criteria are not defined, negate the pass criteria to create fail criteria
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
@@ -231,7 +231,7 @@ func newOperator(op string) (*metricsapi.Operator, error) {
 	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
 }
 
-// checks and negotiates the existing operator
+// checks and negates the existing operator
 func createOperator(op string, value string) (*metricsapi.Operator, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)

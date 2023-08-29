@@ -402,7 +402,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `lowBound` _Quantity_ | LowBound defines the lower bound of the range |
-| `highBound` _Quantity_ | LowBound defines the higher bound of the range |
+| `highBound` _Quantity_ | HighBound defines the higher bound of the range |
 
 
 #### Target

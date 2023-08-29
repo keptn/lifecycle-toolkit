@@ -73,7 +73,7 @@ type OperatorValue struct {
 type RangeValue struct {
 	// LowBound defines the lower bound of the range
 	LowBound resource.Quantity `json:"lowBound"`
-	// LowBound defines the higher bound of the range
+	// HighBound defines the higher bound of the range
 	HighBound resource.Quantity `json:"highBound"`
 }
 

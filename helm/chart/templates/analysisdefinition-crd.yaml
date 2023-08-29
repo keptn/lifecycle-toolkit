@@ -142,7 +142,7 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: LowBound defines the higher bound of
+                                  description: HighBound defines the higher bound of
                                     the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
@@ -166,7 +166,7 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: LowBound defines the higher bound of
+                                  description: HighBound defines the higher bound of
                                     the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
@@ -260,7 +260,7 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: LowBound defines the higher bound of
+                                  description: HighBound defines the higher bound of
                                     the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
@@ -284,7 +284,7 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: LowBound defines the higher bound of
+                                  description: HighBound defines the higher bound of
                                     the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true

@@ -117,11 +117,30 @@ func (o *Operator) validate() error {
 	if o.EqualTo != nil {
 		counter++
 	}
+	if o.InRange != nil {
+		counter++
+	}
+	if o.NotInRange != nil {
+		counter++
+	}
 	if counter > 1 {
 		return fmt.Errorf("Operator: multiple operators can not be set")
 	}
 	if counter == 0 {
 		return fmt.Errorf("Operator: no operator set")
+	}
+	if o.InRange != nil {
+		return o.InRange.validate()
+	}
+	if o.NotInRange != nil {
+		return o.NotInRange.validate()
+	}
+	return nil
+}
+
+func (r *RangeValue) validate() error {
+	if r.LowBound.AsApproximateFloat64() >= r.HighBound.AsApproximateFloat64() {
+		return fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound")
 	}
 	return nil
 }

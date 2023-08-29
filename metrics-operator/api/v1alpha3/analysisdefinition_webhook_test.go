@@ -28,6 +28,10 @@ func TestOperator_validate(t *testing.T) {
 				LessThan: &OperatorValue{
 					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
+				InRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
 			},
 			wantErr: fmt.Errorf("Operator: multiple operators can not be set"),
 		},
@@ -45,6 +49,45 @@ func TestOperator_validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.wantErr, tt.operator.validate())
+		})
+	}
+}
+
+func TestRangeValue_validate(t *testing.T) {
+	tests := []struct {
+		name    string
+		r       RangeValue
+		wantErr error
+	}{
+		{
+			name: "happy path",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+			},
+			wantErr: nil,
+		},
+		{
+			name: "equal bounds",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(5, resource.DecimalSI),
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+		{
+			name: "lower greater that higher bound",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(15, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(5, resource.DecimalSI),
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.wantErr, tt.r.validate())
 		})
 	}
 }

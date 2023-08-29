@@ -342,6 +342,8 @@ _Appears in:_
 | `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator |
 | `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator |
 | `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator |
+| `inRange` _[RangeValue](#rangevalue)_ | InRange represents operator checking the value is inclusively in the defined range |
+| `notInRange` _[RangeValue](#rangevalue)_ | NotInRange represents operator checking the value is exclusively out of the defined range |
 
 
 #### OperatorValue
@@ -386,6 +388,21 @@ _Appears in:_
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
 | `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+
+
+#### RangeValue
+
+
+
+RangeValue represents a range which the value should fit
+
+_Appears in:_
+- [Operator](#operator)
+
+| Field | Description |
+| --- | --- |
+| `lowBound` _Quantity_ | LowBound defines the lower bound of the range |
+| `highBound` _Quantity_ | LowBound defines the higher bound of the range |
 
 
 #### Target

@@ -69,6 +69,14 @@ type OperatorValue struct {
 	FixedValue resource.Quantity `json:"fixedValue" yaml:"fixedValue"`
 }
 
+// RangeValue represents a range which the value should fit
+type RangeValue struct {
+	// LowBound defines the lower bound of the range
+	LowBound resource.Quantity `json:"lowBound"`
+	// LowBound defines the higher bound of the range
+	HighBound resource.Quantity `json:"highBound"`
+}
+
 // Operator specifies the supported operators for value comparisons
 type Operator struct {
 	// LessThanOrEqual represents '<=' operator
@@ -81,6 +89,10 @@ type Operator struct {
 	GreaterThanOrEqual *OperatorValue `json:"greaterThanOrEqual,omitempty" yaml:"greaterThanOrEqual,omitempty"`
 	// EqualTo represents '==' operator
 	EqualTo *OperatorValue `json:"equalTo,omitempty" yaml:"equalTo,omitempty"`
+	// InRange represents operator checking the value is inclusively in the defined range
+	InRange *RangeValue `json:"inRange,omitempty" yaml:"inRange,omitempty"`
+	// NotInRange represents operator checking the value is exclusively out of the defined range
+	NotInRange *RangeValue `json:"notInRange,omitempty" yaml:"notInRange,omitempty"`
 }
 
 //+kubebuilder:object:root=true

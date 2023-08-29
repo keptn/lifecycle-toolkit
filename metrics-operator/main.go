@@ -181,7 +181,7 @@ func main() {
 
 	if env.EnableKeptnAnalysis {
 
-		analysisLogger := ctrl.Log.WithName("KeptnMetric Controller")
+		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
 		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
 		objEval := analysis.NewObjectiveEvaluator(&targetEval)
 		analysisEval := analysis.NewAnalysisEvaluator(&objEval)

@@ -72,6 +72,6 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 
 	// Check the collected results
 	require.Nil(t, err)
-	require.Equal(t, res1.Value, results["t1"])
-	require.Equal(t, res2.Value, results["t2"])
+	require.Equal(t, res1, results["t1"])
+	require.Equal(t, res2, results["t2"])
 }

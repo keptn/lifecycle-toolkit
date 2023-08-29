@@ -35,7 +35,8 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 		var strErr string
 		if err == nil {
 			value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
-		} else {
+		}
+		if err != nil {
 			strErr = err.Error()
 		}
 		result := metricsapi.ProviderResult{

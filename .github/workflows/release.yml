@@ -51,9 +51,11 @@ jobs:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
           PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
-          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
+          PATHS_RELEASE_JSON: ${{ fromJson(steps.release.outputs.paths_released) }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
           FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
         run: |
+          echo "PATHS_RELEASE_JSON: ${PATHS_RELEASE_JSON}"
           echo "FULL RELEASE OUTPUT: ${FULL_RELEASE_OUTPUT}"
           echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
           echo "KLT_TAG: ${KLT_TAG}"
@@ -62,8 +64,8 @@ jobs:
           echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
           echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
           echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
-          echo "DENO_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimesdeno-runtime--tag_name }}"
-          echo "PYTHON_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimespython-runtime--tag_name }}"
+          echo "DENO_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimes/deno-runtime--tag_name }}"
+          echo "PYTHON_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimes/python-runtime--tag_name }}"
 
       - name: Create release matrix
         id: build-matrix

@@ -1,0 +1,7 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+assert:
+  - assert.yaml
+commands:
+  - script: |
+      sed -i 's/from: .*$/from: $CURRENT_TIME/g; s/to: .*$/to: $LATER/g' 01-install.yaml

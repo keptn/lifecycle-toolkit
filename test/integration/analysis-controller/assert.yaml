@@ -1,0 +1,12 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  labels:
+    app.kubernetes.io/name: analysis
+    app.kubernetes.io/instance: analysis-sample
+    app.kubernetes.io/part-of: metrics-operator
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: metrics-operator
+  name: analysis-sample
+status:
+  pass: "true"

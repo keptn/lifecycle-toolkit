@@ -2,5 +2,3 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 commands:
   - script: ./install.sh
-  - script: ./assert.sh
-

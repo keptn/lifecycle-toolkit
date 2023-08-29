@@ -117,7 +117,8 @@ using the default configuration included with Keptn,
 use the following commands.
 Use similar commands if you define a different configuration::
 
-⚠️ Make sure you have cloned the `lifecycle-toolkit` repository and have `cd` into the correct directory before running the below commands.
+> **Note**
+Make sure you have cloned the `lifecycle-toolkit` repository and have `cd`ed into the correct directory (`examples/support/observability`) before running the below commands.
 
 ```shell
 kubectl create namespace monitoring

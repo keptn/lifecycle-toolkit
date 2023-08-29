@@ -94,7 +94,13 @@ spec:
               description: AnalysisStatus stores the status of the overall analysis
                 returns also pass or warnings
               properties:
-                cache:
+                pass:
+                  description: Pass returns whether the SLO is satisfied
+                  type: boolean
+                raw:
+                  description: Raw contains the raw result of the SLO computation
+                  type: string
+                storedValues:
                   additionalProperties:
                     description: ProviderResult stores reference of already collected
                       provider query associated to its objective template
@@ -122,12 +128,6 @@ spec:
                     type: object
                   description: Cache
                   type: object
-                pass:
-                  description: Pass returns whether the SLO is satisfied
-                  type: boolean
-                raw:
-                  description: Raw contains the raw result of the SLO computation
-                  type: string
                 warning:
                   description: Warning returns whether the analysis returned a warning
                   type: boolean

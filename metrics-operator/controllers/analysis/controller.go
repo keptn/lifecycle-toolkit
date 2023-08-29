@@ -97,7 +97,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	tempAnalysisDef := analysisDef
 	var done map[string]metricsapi.ProviderResult
 	if analysis.Status.Raw != "" {
-		done = a.ExtractMissingObj(tempAnalysisDef, analysis.Status.Cache)
+		done = a.ExtractMissingObj(tempAnalysisDef, analysis.Status.StoredValues)
 	}
 
 	//create multiple workers handling the Objectives
@@ -106,7 +106,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	res, err := wp.DispatchAndCollect(ctx)
 	if err != nil {
 		a.Log.Error(err, "Failed to Collect all SLOs, caching collected values")
-		analysis.Status.Cache = res
+		analysis.Status.StoredValues = res
 		if err := a.Client.Status().Update(ctx, analysis); err != nil {
 			a.Log.Error(err, "Failed to update the Analysis status")
 			return ctrl.Result{}, err

@@ -49,7 +49,7 @@ type AnalysisStatus struct {
 	// Warning returns whether the analysis returned a warning
 	Warning bool `json:"warning,omitempty"`
 	//Cache
-	Cache map[string]ProviderResult `json:"cache,omitempty"`
+	StoredValues map[string]ProviderResult `json:"storedValues,omitempty"`
 }
 
 //+kubebuilder:object:root=true

@@ -100,6 +100,7 @@ func (t *Target) validate() error {
 	return nil
 }
 
+//nolint:gocyclo
 func (o *Operator) validate() error {
 	counter := 0
 	if o.LessThan != nil {

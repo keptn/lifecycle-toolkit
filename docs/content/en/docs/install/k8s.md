@@ -1,7 +1,6 @@
 ---
 title: Kubernetes cluster
 description: Bring or install a Kubernetes cluster 
-icon: concepts
 layout: quickstart
 weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -72,7 +71,8 @@ Your cluster should include the following:
   [Prometheus](https://prometheus.io/),
   [Dynatrace](https://www.dynatrace.com/),
   or [Datadog](https://www.datadoghq.com/).
-  This is used for the metrics used for the observability features.
+  This is used for the metrics used for the observability features
+  as well as the pre- and post-deployment evaluations.
 
 * Deployment tools of your choice,
   such as

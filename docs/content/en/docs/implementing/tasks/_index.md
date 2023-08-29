@@ -58,7 +58,7 @@ defines the runner to use for the container:
   that you define to includes a runtime, an application
   and its runtime dependencies.
   This gives you the greatest flexibility
-  to define tasks using the lanugage and facilities of your choice
+  to define tasks using the language and facilities of your choice
 
 KLT also includes two "pre-defined" runners:
 
@@ -212,8 +212,7 @@ spec:
 
 ### Pass secrets to a function
 
-Kubernetes
-[secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
+[Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
 can be passed to the function
 using the `secureParameters` field.
 

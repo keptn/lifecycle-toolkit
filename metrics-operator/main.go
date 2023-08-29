@@ -36,6 +36,7 @@ import (
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	corev1 "k8s.io/api/core/v1"
@@ -76,16 +77,27 @@ type envConfig struct {
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func main() {
 	var env envConfig
 	if err := envconfig.Process("", &env); err != nil {
 		log.Fatalf("Failed to process env var: %s", err)
 	}
 	var metricsAddr string
+	var SLIFilePath string
+	var provider string
+	var namespace string
+	var SLOFilePath string
+	var analysisDefinition string
 	var enableLeaderElection bool
 	var disableWebhook bool
 	var probeAddr string
+	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI file to be converted")
+	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
+	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
+	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLO file to be converted")
+	flag.StringVar(&analysisDefinition, "definition", "", "The name of AnalysisDefinition to be created")
+	flag.StringVar(&namespace, "slo-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -125,6 +137,32 @@ func main() {
 
 	// Set the metric value as soon as the operator starts
 	keptnMetricActive.Add(context.Background(), 1)
+
+
+	if SLIFilePath != "" {
+		// convert
+		content, err := convertSLI(SLIFilePath, provider, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
+	if SLOFilePath != "" {
+		// convert
+		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
 
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
@@ -243,4 +281,37 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
+
+func convertSLI(SLIFilePath, provider, namespace string) (string, error) {
+	//read file content
+	fileContent, err := os.ReadFile(SLIFilePath)
+	if err != nil {
+		return "", fmt.Errorf("error reading file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLIConverter()
+	content, err := c.Convert(fileContent, provider, namespace)
+	if err != nil {
+		return "", err
+	}
+
+	return content, nil
+}
+
+func convertSLO(SLOFilePath, analysisDefinition, namespace string) (string, error) {
+	//read file content
+	fileContent, err := os.ReadFile(SLOFilePath)
+	if err != nil {
+		return "", fmt.Errorf("error reading file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLOConverter()
+	content, err := c.Convert(fileContent, analysisDefinition, namespace)
+	if err != nil {
+		return "", err
+	}
+
+	return content, nil
 }

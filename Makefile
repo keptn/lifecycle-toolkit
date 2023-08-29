@@ -2,8 +2,6 @@
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.1.1
-# renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.12.2
 CHART_APPVERSION ?= v0.8.1 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
@@ -29,8 +27,6 @@ integration-test:	# to run a single test by name use --test eg. --test=expose-ke
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
 
-
-
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
@@ -52,8 +48,6 @@ install-prometheus:
 	kubectl wait --for=condition=available deployment/prometheus-adapter -n monitoring --timeout=120s
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
-
-
 
 .PHONY: cleanup-manifests
 cleanup-manifests:

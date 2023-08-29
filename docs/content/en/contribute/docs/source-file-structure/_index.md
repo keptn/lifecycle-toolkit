@@ -18,7 +18,6 @@ As an example, the metadata section for the *Concepts* section of the documentat
 ```yaml
 title: Concepts
 description: Learn about underlying concepts of the keptn lifecycle toolkit.
-icon: concepts
 layout: quickstart
 weight: 50
 ```

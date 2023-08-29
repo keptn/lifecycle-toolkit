@@ -1,14 +1,13 @@
 ---
 title: Integrate KLT with your applications
 description: How to integrate the Keptn Lifecycle Toolkit into your Kubernetes cluster
-icon: concepts
 layout: quickstart
 weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 The Keptn Lifecycle Toolkit works
-on top of the default scheduler for the cluster
+on top of the default scheduler for the cluster,
 so it can trace all activities of all deployment workloads on the cluster,
 no matter what tool is used for the deployment.
 This same mechanism allows KLT to inject pre- and post-deployment checks
@@ -78,7 +77,7 @@ keptn.sh/version: myAwesomeWorkloadVersion
 keptn.sh/app: myAwesomeAppName
 ```
 
-Alternatively, you can use Kubernete keys for annotations or labels.
+Alternatively, you can use Kubernetes keys for annotations or labels.
 These are part of the Kubernetes
 [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/):
 
@@ -166,8 +165,8 @@ In general, annotations are more appropriate than labels
 for integrating KLT with your applications
 because they store references, names, and version information
 so the 63 char limitation is quite restrictive.
-However labels can be used if you specifically need them
-and can accomodate the size restriction.
+However, labels can be used if you specifically need them
+and can accommodate the size restriction.
 
 ## Pre- and post-deployment checks
 
@@ -201,7 +200,7 @@ do the following:
   [Working with Keptn tasks](../tasks)
   for more information.
 * Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
-  ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+  [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
   [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
   and
   [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
@@ -242,7 +241,7 @@ The deployment is kept in a pending state
 until the infrastructure is capable of accepting deployments again.
 
 If everything is fine, the deployment continues and afterward,
-a slack notification is sent with the result of the deployment
+a Slack notification is sent with the result of the deployment
 
 ## Use Keptn automatic app discovery
 

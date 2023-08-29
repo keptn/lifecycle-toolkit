@@ -37,6 +37,9 @@ jobs:
       NON_FORKED_AND_NON_ROBOT_RUN: ${{ steps.get_run_type.outputs.NON_FORKED_AND_NON_ROBOT_RUN }}
 
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -85,6 +88,9 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -124,13 +130,16 @@ jobs:
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+          - name: "deno-runtime"
+            folder: "runtimes/deno-runtime/"
           - name: "python-runtime"
-            folder: "python-runtime/"
+            folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -177,14 +186,14 @@ jobs:
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
           CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml for tests
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest-test
@@ -235,6 +244,9 @@ jobs:
     needs: [prepare_ci_run, build_image]
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Check out klt repo
         uses: actions/checkout@v3
 

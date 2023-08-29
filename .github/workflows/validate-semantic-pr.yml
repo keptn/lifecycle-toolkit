@@ -12,6 +12,9 @@ jobs:
   validate:
     runs-on: ubuntu-22.04
     steps:
+      - name: Install monitor action
+        uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       - name: Validate Pull Request
         uses: amannn/action-semantic-pull-request@v5.2.0
         env:
@@ -33,12 +36,13 @@ jobs:
             test
             deps
           scopes: |
+            main
             helm-chart
             scheduler
             lifecycle-operator
             cert-manager
             metrics-operator
-            functions-runtime
+            deno-runtime
             python-runtime
             dashboards
             examples

@@ -32,13 +32,16 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 	}
 	for o := range obj {
 		value := ""
+		var strErr string
 		if err == nil {
 			value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
+		} else {
+			strErr = err.Error()
 		}
 		result := metricsapi.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,
 			Value:     value,
-			Err:       err.Error(),
+			Err:       strErr,
 		}
 		oe.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		oe.results <- result

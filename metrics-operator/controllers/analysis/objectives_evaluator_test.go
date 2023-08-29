@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -23,7 +24,7 @@ func TestEvaluate(t *testing.T) {
 		mockProvider    providers.KeptnSLIProvider
 		providerRequest metricstypes.ProviderRequest
 		expectedResult  metricsapi.ProviderResult
-		expectedError   error
+		expectedError   string
 	}{
 		{
 			name:         "SuccessfulEvaluation",
@@ -51,7 +52,7 @@ func TestEvaluate(t *testing.T) {
 				Value: "10",
 				Err:   "",
 			},
-			expectedError: nil,
+			expectedError: "",
 		},
 		{
 			name:         "FailedEvaluation",
@@ -79,7 +80,7 @@ func TestEvaluate(t *testing.T) {
 				Value: "",
 				Err:   "something bad",
 			},
-			expectedError: fmt.Errorf("something bad"),
+			expectedError: "something bad",
 		},
 	}
 
@@ -108,6 +109,7 @@ func TestEvaluate(t *testing.T) {
 			ctx := context.TODO()
 			objChan := make(chan metricstypes.ProviderRequest, 1)
 			go func() {
+				time.Sleep(time.Second * 5)
 				objChan <- tc.providerRequest
 				close(objChan)
 			}()

@@ -52,8 +52,9 @@ jobs:
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
           PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
           ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
+          FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
         run: |
-          echo "FULL RELEASE OUTPUT: ${{ toJSON(steps.release.outputs) }}"
+          echo "FULL RELEASE OUTPUT: ${FULL_RELEASE_OUTPUT}"
           echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
           echo "KLT_TAG: ${KLT_TAG}"
           echo "ARTIFACT_TAG_NAME: ${ARTIFACT_TAG_NAME}"

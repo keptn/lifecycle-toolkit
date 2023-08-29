@@ -64,8 +64,6 @@ jobs:
           echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
           echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
           echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
-          echo "DENO_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimes/deno-runtime--tag_name }}"
-          echo "PYTHON_RUNTIME_TAG_NAME: ${{ steps.release.outputs.runtimes/python-runtime--tag_name }}"
 
       - name: Create release matrix
         id: build-matrix

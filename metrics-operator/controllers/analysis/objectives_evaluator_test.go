@@ -29,8 +29,8 @@ func TestEvaluate(t *testing.T) {
 			name:         "SuccessfulEvaluation",
 			providerType: "mockProvider",
 			mockProvider: &fake2.KeptnSLIProviderMock{
-				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-					return "10", []byte{}, nil
+				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+					return "10", nil
 				},
 			},
 			providerRequest: metricstypes.ProviderRequest{
@@ -49,7 +49,7 @@ func TestEvaluate(t *testing.T) {
 					Namespace: "default",
 				},
 				Value: "10",
-				Err:   nil,
+				Err:   "",
 			},
 			expectedError: nil,
 		},
@@ -57,8 +57,8 @@ func TestEvaluate(t *testing.T) {
 			name:         "FailedEvaluation",
 			providerType: "mockProvider",
 			mockProvider: &fake2.KeptnSLIProviderMock{
-				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-					return "", []byte{}, fmt.Errorf("something bad")
+				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+					return "", fmt.Errorf("something bad")
 				},
 			},
 			providerRequest: metricstypes.ProviderRequest{
@@ -77,7 +77,7 @@ func TestEvaluate(t *testing.T) {
 					Namespace: "default",
 				},
 				Value: "",
-				Err:   fmt.Errorf("something bad"),
+				Err:   "something bad",
 			},
 			expectedError: fmt.Errorf("something bad"),
 		},

@@ -30,7 +30,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		req     controllerruntime.Request
 		want    controllerruntime.Result
 		wantErr bool
-		status  string
+		status  *metricsapi.AnalysisStatus
 		res     metricstypes.AnalysisResult
 	}{
 		{
@@ -38,21 +38,21 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			client:  fake2.NewClient(),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-			status:  "",
-			res:     metricstypes.AnalysisResult{Pass: false},
+			status:  nil,
+			res:     metricstypes.AnalysisResult{},
 		}, {
 			name:    "analysisDefinition does not exist, requeue no status update",
 			client:  fake2.NewClient(&analysis),
 			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: false,
-			status:  "",
+			status:  &metricsapi.AnalysisStatus{},
 			res:     metricstypes.AnalysisResult{Pass: false},
 		}, {
-			name:    "succeded, status updated",
+			name:    "succeeded, status updated",
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-			status:  "{\"pass\":true}",
+			status:  &metricsapi.AnalysisStatus{Raw: "{\"pass\":true}", Pass: true},
 			res:     metricstypes.AnalysisResult{Pass: true},
 		},
 	}
@@ -90,13 +90,12 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
 			}
-			if tt.status != "" {
+			if tt.status != nil {
 				resAnalysis := metricsapi.Analysis{}
 				err = tt.client.Get(context.TODO(), req.NamespacedName, &resAnalysis)
 				require.Nil(t, err)
-				require.Equal(t, tt.status, resAnalysis.Status)
+				require.Equal(t, *tt.status, resAnalysis.Status)
 			}
-
 		})
 	}
 }

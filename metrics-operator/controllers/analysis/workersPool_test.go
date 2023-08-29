@@ -51,13 +51,13 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	res1 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t1"},
 		Value:     "result1",
-		Err:       nil,
+		Err:       "",
 	}
 
 	res2 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t2"},
 		Value:     "result2",
-		Err:       nil,
+		Err:       "",
 	}
 
 	// Create and send mock results to the results channel

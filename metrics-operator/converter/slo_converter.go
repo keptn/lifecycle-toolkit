@@ -196,7 +196,7 @@ func cleanupObjective(o *Objective) *Objective {
 }
 
 // remove % operators from criterium structure
-// if criterium did have only % operators, remove it from strucutre
+// if criteria did have only % operators, remove it from strucutre
 func cleanupCriteria(criteria []Criteria) []Criteria {
 	newCriteria := make([]Criteria, 0, len(criteria))
 	for _, c := range criteria {

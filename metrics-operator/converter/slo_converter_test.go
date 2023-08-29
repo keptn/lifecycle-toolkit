@@ -337,6 +337,18 @@ func TestRemovePercentage(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "percentage with float - round down",
+			val:     "1.333333%",
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name:    "percentage with float - round up",
+			val:     "1.833333%",
+			want:    2,
+			wantErr: false,
+		},
+		{
 			name:    "only percentage",
 			val:     "%",
 			want:    0,

@@ -2,6 +2,7 @@ package converter
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 
@@ -127,7 +128,11 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 // removes % symbol from the scoring values and converts to numberic value
 func removePercentage(str string) (int, error) {
 	t := strings.ReplaceAll(str, "%", "")
-	return strconv.Atoi(t)
+	f, err := strconv.ParseFloat(t, 64)
+	if err != nil {
+		return 0, err
+	}
+	return int(math.Round(f)), nil
 }
 
 // creates and sets up the target struct from objective

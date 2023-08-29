@@ -10,8 +10,8 @@ metadata:
   name: analysis-sample
 spec:
   timeframe:
-    from: $CURRENT_TIME
-    to: $LATER
+    from: 2023-08-29T06:48:07Z
+    to: 2023-08-29T06:48:27Z
   args:
     range: "5m"
   analysisDefinition:

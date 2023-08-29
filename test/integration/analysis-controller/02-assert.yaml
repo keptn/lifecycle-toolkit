@@ -9,4 +9,4 @@ metadata:
     app.kubernetes.io/created-by: metrics-operator
   name: analysis-sample
 status:
-  pass: "true"
+  pass: "fail"

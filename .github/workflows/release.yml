@@ -51,7 +51,6 @@ jobs:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
           PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
-          PATHS_RELEASE_JSON: ${{ fromJson(steps.release.outputs.paths_released) }}
           ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
           FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
         run: |

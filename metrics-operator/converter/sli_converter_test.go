@@ -117,7 +117,7 @@ func TestConvertSLI(t *testing.T) {
 	require.Contains(t, res, expectedOutput2)
 }
 
-func TestConvertQuary(t *testing.T) {
+func TestConvertQuery(t *testing.T) {
 	tests := []struct {
 		name string
 		in   string

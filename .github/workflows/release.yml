@@ -190,11 +190,11 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
         run: |
-          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}	
-          cosign verify \	
-            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \	
-            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \	
-            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}	
+          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.14.3

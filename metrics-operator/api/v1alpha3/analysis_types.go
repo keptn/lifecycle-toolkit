@@ -24,7 +24,7 @@ import (
 type AnalysisSpec struct {
 	//Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate
 	Timeframe `json:"timeframe"`
-	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. The placeholder must be the capitalized version of the key; i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})".
+	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
 	Args map[string]string `json:"args,omitempty"`
 	// AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates
 	AnalysisDefinition ObjectReference `json:"analysisDefinition"`

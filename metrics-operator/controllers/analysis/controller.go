@@ -18,13 +18,13 @@ package analysis
 
 import (
 	"context"
-	"encoding/json"
-	"golang.org/x/exp/maps"
 	"time"
 
+	"encoding/json"
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -107,11 +107,8 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		a.Log.Error(err, "Failed to Collect all SLOs, caching collected values")
 		analysis.Status.StoredValues = res
-		if err := a.Client.Status().Update(ctx, analysis); err != nil {
-			a.Log.Error(err, "Failed to update the Analysis status")
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+		err = a.updateStatus(ctx, analysis)
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 	}
 
 	maps.Copy(res, done)
@@ -126,12 +123,17 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
+	err = a.updateStatus(ctx, analysis)
+
+	return ctrl.Result{}, err
+}
+
+func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {
 	if err := a.Client.Status().Update(ctx, analysis); err != nil {
 		a.Log.Error(err, "Failed to update the Analysis status")
-		return ctrl.Result{}, err
+		return err
 	}
-
-	return ctrl.Result{}, nil
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Managea.

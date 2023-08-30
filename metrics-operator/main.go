@@ -49,6 +49,7 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 var (
@@ -199,25 +200,10 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
-		os.Exit(1)
-	}
-	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
-		os.Exit(1)
-	}
-
 	// +kubebuilder:scaffold:builder
 
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up health check")
-		os.Exit(1)
-	}
-	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up ready check")
-		os.Exit(1)
-	}
+	setupValidationWebhooks(err, mgr)
+	setupProbes(mgr)
 
 	if !disableWebhook {
 		webhookBuilder := webhook.NewWebhookBuilder().
@@ -251,6 +237,29 @@ func main() {
 			setupLog.Error(err, "problem running manager")
 			os.Exit(1)
 		}
+	}
+}
+
+func setupValidationWebhooks(err error, mgr manager.Manager) {
+	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
+		os.Exit(1)
+	}
+	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
+		os.Exit(1)
+	}
+}
+
+func setupProbes(mgr manager.Manager) {
+
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up health check")
+		os.Exit(1)
+	}
+	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up ready check")
+		os.Exit(1)
 	}
 }
 

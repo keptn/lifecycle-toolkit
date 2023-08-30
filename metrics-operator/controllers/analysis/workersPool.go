@@ -23,8 +23,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, definiti
 	if numJobs <= numWorkers { // do not start useless go routines
 		numWorkers = numJobs
 	}
-	ctx, cancel := context.WithCancel(context.Background())
-
+	_, cancel := context.WithCancel(ctx)
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
 	assigner := TaskAssigner{tasks: definition.Spec.Objectives, numWorkers: numWorkers}

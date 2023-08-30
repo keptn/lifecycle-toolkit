@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/mowies/lifecycle-controller/compare/python-runtime-v1.2.0...python-runtime-v1.3.0) (2023-08-30)
+
+
+### Features
+
+* more debugging ([af147cd](https://github.com/mowies/lifecycle-controller/commit/af147cd891c7bdc241d83e1fd5db5196fe61d377))
+
 ## [1.2.0](https://github.com/mowies/lifecycle-controller/compare/python-runtime-v1.1.0...python-runtime-v1.2.0) (2023-08-30)
 
 

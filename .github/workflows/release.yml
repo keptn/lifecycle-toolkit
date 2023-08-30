@@ -150,6 +150,10 @@ jobs:
           # Remove artifact prefix from tag so that we get clean image tags
           temp="${IMAGE_TAG##klt-}"
           temp="${temp##cert-manager-}"
+          temp="${temp##python-runtime-}"
+          temp="${temp##deno-runtime-}"
+          temp="${temp##scheduler-}"
+          temp="${temp##lifecycle-operator-}"
           echo "IMAGE_TAG=${temp##metrics-operator-}" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker Image

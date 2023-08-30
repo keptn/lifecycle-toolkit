@@ -70,7 +70,7 @@ jobs:
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
-          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
         with:
           script: |
             const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');

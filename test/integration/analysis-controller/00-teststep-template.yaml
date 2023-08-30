@@ -19,7 +19,6 @@ commands:
       mv out.yaml "install.yaml"
   - command: kubectl apply -f install.yaml
   #  rewrites the env var not to push useless date changes when running locally
-  - script: |  
+  - script: |
       sed -i '0,/^  namespace:/s/namespace: .*/namespace: $NAMESPACE/' install.yaml
       sed -i 's/from: .*$/from: $CURRENT_TIME/g; s/to: .*$/to: $LATER/g' install.yaml
-

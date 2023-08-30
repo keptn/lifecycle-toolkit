@@ -8,4 +8,5 @@ spec:
       namespace: keptn-lifecycle-toolkit-system
 status:
   pass: true
+  # yamllint disable-line rule:line-length
   raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}}},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}}},"pass":true},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'

@@ -122,7 +122,8 @@ func main() {
 	keptnLifecycleActive, err := meter.Int64Counter("keptn_lifecycle_active")
 
 	if err != nil {
-		panic(err)
+		setupLog.Error(err, "unable to create metric keptn_lifecycle_active")
+		os.Exit(1)
 	}
 
 	keptnMeters := controllercommon.SetUpKeptnTaskMeters(meter)

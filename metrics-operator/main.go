@@ -145,7 +145,8 @@ func main() {
 
 	keptnMetricActive, err := meter.Int64Counter("keptn_metric_active")
 	if err != nil {
-		panic(err)
+		setupLog.Error(err, "unable to create metric keptn_metric_active")
+		os.Exit(1)
 	}
 
 	keptnMeters := make(map[string]metric.Int64Counter)

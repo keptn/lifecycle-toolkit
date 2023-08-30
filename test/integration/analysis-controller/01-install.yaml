@@ -1,19 +1,13 @@
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
-  labels:
-    app.kubernetes.io/name: analysis
-    app.kubernetes.io/instance: analysis-sample
-    app.kubernetes.io/part-of: metrics-operator
-    app.kuberentes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: metrics-operator
   name: analysis-sample
 spec:
   timeframe:
-    from: 2023-08-29T06:48:07Z
-    to: 2023-08-29T06:48:27Z
+    from: 2023-08-30T09:00:13Z
+    to: 2023-08-30T09:00:33Z
   args:
-    range: "5m"
+    "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
     namespace: keptn-lifecycle-toolkit-system
@@ -21,13 +15,13 @@ spec:
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
-  name: response-time-p95
+  name: ready
   namespace: keptn-lifecycle-toolkit-system
 spec:
   provider:
     name: my-provider
     namespace: keptn-lifecycle-toolkit-system
-  query: "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.range}}])) by (le))"
+  query: 'sum(kube_pod_container_status_ready{namespace="{{.ns}}"})'
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
@@ -37,15 +31,15 @@ metadata:
 spec:
   objectives:
     - analysisValueTemplateRef:
-        name: response-time-p95
+        name: ready
         namespace: keptn-lifecycle-toolkit-system
       target:
         failure:
           lessThan:
-            fixedValue: 600
+            fixedValue: 2
         warning:
-          greaterThanOrEqual:
-            fixedValue: 800
+          lessThan:
+            fixedValue: 3
       weight: 1
       keyObjective: false
   totalScore:

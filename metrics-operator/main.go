@@ -280,6 +280,7 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
+}
 
 func convertSLI(SLIFilePath, provider, namespace string) (string, error) {
 	//read file content

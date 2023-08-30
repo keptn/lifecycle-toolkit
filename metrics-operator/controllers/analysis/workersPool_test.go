@@ -75,3 +75,22 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	require.Equal(t, res1, results["t1"])
 	require.Equal(t, res2, results["t2"])
 }
+
+func TestWorkersPool_CollectAnalysisResultsNoJob(t *testing.T) {
+	// Create a fake WorkersPool instance for testing
+	resChan := make(chan metricsapi.ProviderResult, 1)
+	fakePool := WorkersPool{
+		IProvidersPool: ProvidersPool{
+			results: resChan,
+		},
+		numJobs: 0,
+	}
+	// Collect that func returns
+	results, err := fakePool.CollectAnalysisResults(context.TODO())
+	_, open := <-resChan
+	// Check the collected results
+	require.Nil(t, err)
+	require.Equal(t, results, map[string]metricsapi.ProviderResult{})
+	require.False(t, open)
+
+}

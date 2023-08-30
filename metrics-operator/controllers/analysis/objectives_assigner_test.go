@@ -41,6 +41,16 @@ func TestAssignTasks(t *testing.T) {
 				1: {{}, {}},
 				2: {{}},
 			},
+		}, {
+			name:       "No Tasks",
+			tasks:      []metricsapi.Objective{},
+			numWorkers: 2,
+			expected:   map[int][]metricsapi.Objective{},
+		}, {
+			name:       "No Workers",
+			tasks:      []metricsapi.Objective{},
+			numWorkers: 0,
+			expected:   map[int][]metricsapi.Objective{},
 		},
 	}
 

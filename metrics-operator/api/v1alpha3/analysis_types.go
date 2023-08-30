@@ -55,7 +55,8 @@ type AnalysisStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AnalysisDefinition",type=string,JSONPath=.spec.analysisDefinition.name
-//+kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.pass`
+//+kubebuilder:printcolumn:name="Warning",type=string,JSONPath=`.status.warning`
+//+kubebuilder:printcolumn:name="Pass",type=string,JSONPath=`.status.pass`
 
 // Analysis is the Schema for the analyses API
 type Analysis struct {

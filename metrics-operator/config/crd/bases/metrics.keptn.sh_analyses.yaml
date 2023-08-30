@@ -18,8 +18,11 @@ spec:
     - jsonPath: .spec.analysisDefinition.name
       name: AnalysisDefinition
       type: string
+    - jsonPath: .status.warning
+      name: Warning
+      type: string
     - jsonPath: .status.pass
-      name: Value
+      name: Pass
       type: string
     name: v1alpha3
     schema:

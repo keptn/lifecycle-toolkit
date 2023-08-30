@@ -8,7 +8,7 @@ The source files for the KLT documentation
 are stored in the same github repository as the source code.
 This page explains how the documentation source files are organized.
 
-> **Note:** The structure of the documentation
+> **Note** The structure of the documentation
   and the source code for the documentation is evolving.
   You may find small discrepencies between
   what is documented here and what is currently implemented.
@@ -75,7 +75,7 @@ In the order they appear, the subdirectories are:
 * **docs** (Documentation contributions):
   Information that is specific to documentation contributions.
 
-We also have _CONTRIBUTING.md_ files located in the
+We also have *CONTRIBUTING.md* files located in the
 home directory of the *lifecycle-toolkit* repository
 (general and software development information)
 and in the *lifecycle-toolkit/docs* directory

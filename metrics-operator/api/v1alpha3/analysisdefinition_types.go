@@ -89,9 +89,9 @@ type Operator struct {
 	GreaterThanOrEqual *OperatorValue `json:"greaterThanOrEqual,omitempty" yaml:"greaterThanOrEqual,omitempty"`
 	// EqualTo represents '==' operator
 	EqualTo *OperatorValue `json:"equalTo,omitempty" yaml:"equalTo,omitempty"`
-	// InRange represents operator checking the value is inclusively in the defined range
+	// InRange represents operator checking the value is inclusively in the defined range, e.g. 2 <= x <= 5
 	InRange *RangeValue `json:"inRange,omitempty" yaml:"inRange,omitempty"`
-	// NotInRange represents operator checking the value is exclusively out of the defined range
+	// NotInRange represents operator checking the value is exclusively out of the defined range, e.g. x < 2 AND x > 5
 	NotInRange *RangeValue `json:"notInRange,omitempty" yaml:"notInRange,omitempty"`
 }
 

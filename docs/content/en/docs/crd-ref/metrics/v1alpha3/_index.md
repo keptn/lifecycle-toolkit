@@ -342,8 +342,8 @@ _Appears in:_
 | `greaterThan` _[OperatorValue](#operatorvalue)_ | GreaterThan represents '>' operator |
 | `greaterThanOrEqual` _[OperatorValue](#operatorvalue)_ | GreaterThanOrEqual represents '>=' operator |
 | `equalTo` _[OperatorValue](#operatorvalue)_ | EqualTo represents '==' operator |
-| `inRange` _[RangeValue](#rangevalue)_ | InRange represents operator checking the value is inclusively in the defined range |
-| `notInRange` _[RangeValue](#rangevalue)_ | NotInRange represents operator checking the value is exclusively out of the defined range |
+| `inRange` _[RangeValue](#rangevalue)_ | InRange represents operator checking the value is inclusively in the defined range, e.g. 2 <= x <= 5 |
+| `notInRange` _[RangeValue](#rangevalue)_ | NotInRange represents operator checking the value is exclusively out of the defined range, e.g. x < 2 AND x > 5 |
 
 
 #### OperatorValue

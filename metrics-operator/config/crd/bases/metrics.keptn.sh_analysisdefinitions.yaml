@@ -108,7 +108,8 @@ spec:
                               type: object
                             inRange:
                               description: InRange represents operator checking the
-                                value is inclusively in the defined range
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
                               properties:
                                 highBound:
                                   anyOf:
@@ -158,7 +159,8 @@ spec:
                               type: object
                             notInRange:
                               description: NotInRange represents operator checking
-                                the value is exclusively out of the defined range
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
                               properties:
                                 highBound:
                                   anyOf:
@@ -226,7 +228,8 @@ spec:
                               type: object
                             inRange:
                               description: InRange represents operator checking the
-                                value is inclusively in the defined range
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
                               properties:
                                 highBound:
                                   anyOf:
@@ -276,7 +279,8 @@ spec:
                               type: object
                             notInRange:
                               description: NotInRange represents operator checking
-                                the value is exclusively out of the defined range
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
                               properties:
                                 highBound:
                                   anyOf:

@@ -31,9 +31,6 @@ jobs:
       releases-created: ${{ steps.release.outputs.releases_created }}
       build-matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -81,10 +78,11 @@ jobs:
             console.log("items to publish", itemsToPublish);
 
             console.log("setting up build matrix...");
-            const releaseMatrix = itemsToPublish.map(item => {
+            const releaseMatrix = [];
+            itemsToPublish.forEach(item => {
                 switch (item) {
                     case "lifecycle-operator":
-                        return [
+                        releaseMatrix.push(...[
                             {
                                 name: item,
                                 folder: item,
@@ -95,26 +93,30 @@ jobs:
                                 folder: "scheduler/",
                                 tagName: process.env.ARTIFACT_TAG_NAME
                             }
-                        ];
+                        ]);
+                        break;
                     case "metrics-operator":
                     case "klt-cert-manager":
-                        return [{
+                        releaseMatrix.push({
                             name: item,
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
-                        }];
+                        });
+                        break;
                     case "runtimes/deno-runtime":
                     case "runtimes/python-runtime":
-                        return [{
+                        releaseMatrix.push({
                             name: item.replace("runtimes/", ""),
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
-                        }];
+                        });
+                        break;
                     case ".":
                     default:
-                        return [];
+                        break;
                 }
             });
+            console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));
             return { config: releaseMatrix };
 
   build-release:
@@ -131,9 +133,6 @@ jobs:
     env:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -161,6 +160,10 @@ jobs:
           # Remove artifact prefix from tag so that we get clean image tags
           temp="${IMAGE_TAG##klt-}"
           temp="${temp##cert-manager-}"
+          temp="${temp##python-runtime-}"
+          temp="${temp##deno-runtime-}"
+          temp="${temp##scheduler-}"
+          temp="${temp##lifecycle-operator-}"
           echo "IMAGE_TAG=${temp##metrics-operator-}" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker Image

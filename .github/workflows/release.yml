@@ -81,10 +81,11 @@ jobs:
             console.log("items to publish", itemsToPublish);
 
             console.log("setting up build matrix...");
-            const releaseMatrix = itemsToPublish.map(item => {
+            const releaseMatrix = [];
+            itemsToPublish.forEach(item => {
                 switch (item) {
                     case "lifecycle-operator":
-                        return [
+                        releaseMatrix.push(...[
                             {
                                 name: item,
                                 folder: item,
@@ -95,24 +96,27 @@ jobs:
                                 folder: "scheduler/",
                                 tagName: process.env.ARTIFACT_TAG_NAME
                             }
-                        ];
+                        ]);
+                        break;
                     case "metrics-operator":
                     case "klt-cert-manager":
-                        return [{
+                        releaseMatrix.push({
                             name: item,
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
-                        }];
+                        });
+                        break;
                     case "runtimes/deno-runtime":
                     case "runtimes/python-runtime":
-                        return [{
+                        releaseMatrix.push({
                             name: item.replace("runtimes/", ""),
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
-                        }];
+                        });
+                        break;
                     case ".":
                     default:
-                        return [];
+                        break;
                 }
             });
             console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));

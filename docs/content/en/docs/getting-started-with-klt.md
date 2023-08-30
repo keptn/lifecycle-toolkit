@@ -1,7 +1,7 @@
 ---
-title: Getting Started with KLT
-linktitle: Getting Started with KLT
-description: Getting Started with KLT
+title: Getting started with KLT
+linktitle: Getting started with KLT
+description: Getting started with KLT
 weight: 10
 cascade:
   github_subdir: "docs/content/en/docs"

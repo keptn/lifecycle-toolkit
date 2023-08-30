@@ -202,7 +202,7 @@ func main() {
 	}
 	// +kubebuilder:scaffold:builder
 
-	setupValidationWebhooks(err, mgr)
+	setupValidationWebhooks(mgr)
 	setupProbes(mgr)
 
 	if !disableWebhook {
@@ -240,12 +240,12 @@ func main() {
 	}
 }
 
-func setupValidationWebhooks(err error, mgr manager.Manager) {
-	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+func setupValidationWebhooks(mgr manager.Manager) {
+	if err := (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err := (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
 		os.Exit(1)
 	}

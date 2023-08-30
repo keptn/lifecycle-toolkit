@@ -18,9 +18,9 @@ package analysis
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
-	"encoding/json"
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"

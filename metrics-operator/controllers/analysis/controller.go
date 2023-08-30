@@ -101,9 +101,9 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	ctx, wp := a.NewWorkersPoolFactory(ctx, analysis, tempAnalysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, tempAnalysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
 
-	res, err := wp.DispatchAndCollect(ctx)
+	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
 		a.Log.Error(err, "Failed to Collect all SLOs, caching collected values")
 		analysis.Status.StoredValues = res

@@ -2,10 +2,11 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
   name: analysis-sample
+  namespace: kuttl-test-refined-marmot
 spec:
   timeframe:
-    from: 2023-08-30T09:00:13Z
-    to: 2023-08-30T09:00:33Z
+    from: 2023-08-30T12:36:50Z
+    to: 2023-08-30T12:37:10Z
   args:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:

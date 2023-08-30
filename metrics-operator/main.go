@@ -190,7 +190,7 @@ func main() {
 			Client:                mgr.GetClient(),
 			Scheme:                mgr.GetScheme(),
 			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
-			MaxWorkers:            4,
+			MaxWorkers:            2,
 			Namespace:             env.PodNamespace,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,

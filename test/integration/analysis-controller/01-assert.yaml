@@ -3,9 +3,9 @@ kind: Analysis
 metadata:
   name: analysis-sample
 spec:
-    analysisDefinition:
-      name: ed-my-proj-dev-svc1
-      namespace: keptn-lifecycle-toolkit-system
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+    namespace: keptn-lifecycle-toolkit-system
 status:
   pass: true
   # yamllint disable-line rule:line-length

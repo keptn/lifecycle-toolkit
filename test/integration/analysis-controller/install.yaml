@@ -5,8 +5,8 @@ metadata:
   namespace: $NAMESPACE
 spec:
   timeframe:
-    from: 2023-08-30T12:49:01Z
-    to: 2023-08-30T12:49:21Z
+    from: $CURRENT_TIME
+    to: $LATER
   args:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:

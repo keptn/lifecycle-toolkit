@@ -1,5 +1,6 @@
 FROM python:3.11-alpine AS production
 
+
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
     org.opencontainers.image.title="Keptn Python Runtime" \

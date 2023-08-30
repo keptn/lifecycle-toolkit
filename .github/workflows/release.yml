@@ -115,7 +115,7 @@ jobs:
                         return [];
                 }
             });
-            console.log("release matrix: " + { config: releaseMatrix });
+            console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));
             return { config: releaseMatrix };
 
   build-release:

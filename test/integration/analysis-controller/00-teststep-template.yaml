@@ -16,4 +16,4 @@ commands:
       mv out.yaml "install.yaml"
   - command: kubectl apply -f install.yaml
   - script: |
-      sed -i 's/namespace:$(NAMESPACE)/namespace: $NAMESPACE/g' install.yaml
+      sed -i '0,/^  namespace:/s/namespace: .*/namespace: $NAMESPACE/' install.yaml

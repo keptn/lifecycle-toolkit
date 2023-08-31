@@ -11,7 +11,7 @@ type TaskAssigner struct {
 	tasks      []metricsapi.Objective
 }
 
-func (ta TaskAssigner) AssignTasks() map[int][]metricsapi.Objective {
+func (ta TaskAssigner) assignTasks() map[int][]metricsapi.Objective {
 	totalTasks := len(ta.tasks)
 	taskMap := make(map[int][]metricsapi.Objective, ta.numWorkers)
 	if ta.numWorkers > 0 {

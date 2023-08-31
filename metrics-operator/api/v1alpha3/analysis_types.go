@@ -36,7 +36,7 @@ type ProviderResult struct {
 	Objective ObjectReference `json:"objectiveReference,omitempty"`
 	// Value is the value the provider returned
 	Value string `json:"value,omitempty"`
-	// Err stores any possible error at retrieval time
+	// ErrMsg stores any possible error at retrieval time
 	ErrMsg string `json:"errMsg,omitempty"`
 }
 

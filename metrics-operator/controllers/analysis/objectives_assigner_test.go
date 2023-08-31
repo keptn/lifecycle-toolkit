@@ -60,7 +60,7 @@ func TestAssignTasks(t *testing.T) {
 				numWorkers: test.numWorkers,
 				tasks:      test.tasks,
 			}
-			result := assigner.AssignTasks()
+			result := assigner.assignTasks()
 			require.Equal(t, test.expected, result)
 		})
 	}

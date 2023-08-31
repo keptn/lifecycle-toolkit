@@ -117,7 +117,7 @@ func TestProvidersPool(t *testing.T) {
 			pool := ProvidersPool{
 				IObjectivesEvaluator: mockEvaluator,
 				Client:               tc.mockClient,
-				Log:                  mockLogger,
+				log:                  mockLogger,
 				Namespace:            "default",
 				Objectives: map[int][]metricsapi.Objective{
 					1: analysisDef.Spec.Objectives,

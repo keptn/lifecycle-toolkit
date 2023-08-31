@@ -247,7 +247,7 @@ spec:
                       provider query associated to its objective template
                     properties:
                       errMsg:
-                        description: Err stores any possible error at retrieval time
+                        description: ErrMsg stores any possible error at retrieval time
                         type: string
                       objectiveReference:
                         description: Objective store reference to corresponding objective

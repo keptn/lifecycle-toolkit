@@ -93,7 +93,7 @@ func TestEvaluate(t *testing.T) {
 			objectivesEvaluator := ObjectivesEvaluator{
 				// Initialize ObjectivesEvaluator fields here
 				Client:          fake.NewClient(),
-				Log:             logr.Discard(),
+				log:             logr.Discard(),
 				ProviderFactory: mockProviderFactory,
 				Analysis: &metricsapi.Analysis{
 					Spec: metricsapi.AnalysisSpec{

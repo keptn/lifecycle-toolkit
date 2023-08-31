@@ -18,24 +18,23 @@ type ObjectivesEvaluator struct {
 	*metricsapi.Analysis
 	providers.ProviderFactory
 	client.Client
-	Log     logr.Logger
+	log     logr.Logger
 	results chan metricsapi.ProviderResult
 	cancel  context.CancelFunc
 }
 
 func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
-	provider, err := oe.ProviderFactory(providerType, oe.Log, oe.Client)
+	provider, err := oe.ProviderFactory(providerType, oe.log, oe.Client)
 	if err != nil {
-		oe.Log.Error(err, "Failed to get the correct Provider")
+		oe.log.Error(err, "Failed to get the correct Provider")
 		oe.cancel()
 		return
 	}
 	for o := range obj {
 		value := ""
 		var strErr string
-		if err == nil {
-			value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
-		}
+		value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
+
 		if err != nil {
 			strErr = err.Error()
 		}
@@ -44,7 +43,7 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 			Value:     value,
 			ErrMsg:    strErr,
 		}
-		oe.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
+		oe.log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		oe.results <- result
 	}
 }

@@ -30,7 +30,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectiv
 	results := make(chan metricsapi.ProviderResult, numJobs)
 	evaluator := ObjectivesEvaluator{
 		ProviderFactory: providers.NewProvider,
-		Log:             log,
+		log:             log,
 		Client:          c,
 		Analysis:        analysis,
 		results:         results,
@@ -38,11 +38,11 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectiv
 	}
 	retriever := ProvidersPool{
 		Client:               c,
-		Log:                  log,
+		log:                  log,
 		Analysis:             analysis,
 		results:              results,
 		Namespace:            namespace,
-		Objectives:           assigner.AssignTasks(),
+		Objectives:           assigner.assignTasks(),
 		IObjectivesEvaluator: evaluator,
 		providers:            providerChans,
 		cancel:               cancel,

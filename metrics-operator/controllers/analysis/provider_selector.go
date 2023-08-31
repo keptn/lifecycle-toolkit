@@ -25,7 +25,7 @@ type IProvidersPool interface {
 type ProvidersPool struct {
 	IObjectivesEvaluator
 	client.Client
-	Log        logr.Logger
+	log        logr.Logger
 	Namespace  string
 	Objectives map[int][]metricsapi.Objective
 	*metricsapi.Analysis
@@ -48,10 +48,10 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 	for _, j := range ps.Objectives[id] {
 		select {
 		case <-ctx.Done():
-			ps.Log.Info("Worker: Exiting due to context.Done()")
+			ps.log.Info("Worker: Exiting due to context.Done()")
 			return
 		default:
-			ps.Log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
+			ps.log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
 			templ := &metricsapi.AnalysisValueTemplate{}
 			if j.AnalysisValueTemplateRef.Namespace == "" {
 				j.AnalysisValueTemplateRef.Namespace = ps.Namespace
@@ -64,7 +64,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			)
 
 			if err != nil {
-				ps.Log.Error(err, "Failed to get the correct Provider")
+				ps.log.Error(err, "Failed to get the correct Provider")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return
@@ -82,7 +82,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			)
 
 			if err != nil {
-				ps.Log.Error(err, "Failed to get Provider")
+				ps.log.Error(err, "Failed to get Provider")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return
@@ -90,7 +90,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
 			if err != nil {
-				ps.Log.Error(err, "Failed to substitute args in templ")
+				ps.log.Error(err, "Failed to substitute args in templ")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return

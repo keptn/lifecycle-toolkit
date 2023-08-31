@@ -176,7 +176,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// warn criteria -> warn criteria
 	// TODO : this piece of code is prepared for future, when isSuperInterval is implemented
 	// for now, it's dead code
-	if isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators) {
+	if false /*isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)*/ {
 		op1, err := newOperator(o.Warning[0].Operators, false)
 		if err != nil {
 			return target, err

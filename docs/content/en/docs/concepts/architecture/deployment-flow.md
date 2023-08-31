@@ -147,7 +147,10 @@ AppPostDeployTasks
 
 ### Post-deployment evaluation phase
 
-TODO: Add intro statement about this phase.
+The post-deployment evaluation can be used
+to analyze the cluster/application status after the new workload is deployed.
+The result of this phase does not revert or influence the deployment
+but can be used by other external tools, for instance, to react to a failure.
 
 ```shell
 AppPostDeployEvaluations

@@ -135,7 +135,9 @@ AppDeploy
 
 ### Post-deployment phase
 
-TODO: Add intro statement about this phase.
+The post-deployment phase is typically used
+to run tests on the freshly deployed application,
+such as gathering  performance data.
 
 ```shell
 AppPostDeployTasks

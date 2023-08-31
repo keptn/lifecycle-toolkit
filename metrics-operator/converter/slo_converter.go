@@ -46,8 +46,8 @@ type Criteria struct {
 }
 
 type Operator struct {
-	Value    *inf.Dec
-	Operator string
+	Value     *inf.Dec
+	Operation string
 }
 
 func (o *Objective) hasNotSupportedCriteria() bool {
@@ -174,6 +174,8 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// if pass is superinterval of warn, the following logic is used:
 	// !(pass criteria) -> fail criteria
 	// warn criteria -> warn criteria
+	// TODO : this piece of code is prepared for future, when isSuperInterval is implemented
+	// for now, it's dead code
 	if isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators) {
 		op1, err := newOperator(o.Warning[0].Operators, false)
 		if err != nil {
@@ -191,7 +193,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
 	// !(warn criteria) -> fail criteria
 	// !(pass criteria) -> warn criteria
-	// TODO change if statement when isSuporInterval is implemented
+	// TODO change if statement when isSuperInterval is implemented
 	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || true /*isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators) */ {
 		op1, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {
@@ -210,14 +212,6 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 
 // TODO implement
 func isSuperInterval(op1 []string, op2 []string) bool {
-	// superOp1, superOpVal1, err := decodeOperatorAndValue(op1[0])
-	// if err != nil {
-	// 	return false, err
-	// }
-	// subOp1, subOpVal1, err := decodeOperatorAndValue(op2[0])
-	// if err != nil {
-	// 	return false, err
-	// }
 	return false
 }
 
@@ -383,12 +377,12 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 	}
 
 	// inRange interval
-	if (smallerOperator.Operator == ">" || smallerOperator.Operator == ">=") && (biggerOperator.Operator == "<" || biggerOperator.Operator == "<=") {
+	if (smallerOperator.Operation == ">" || smallerOperator.Operation == ">=") && (biggerOperator.Operation == "<" || biggerOperator.Operation == "<=") {
 		return &metricsapi.Operator{
 			InRange: r,
 		}, nil
 		// outOfRange interval
-	} else if (smallerOperator.Operator == "<" || smallerOperator.Operator == "<=") && (biggerOperator.Operator == ">" || biggerOperator.Operator == ">=") {
+	} else if (smallerOperator.Operation == "<" || smallerOperator.Operation == "<=") && (biggerOperator.Operation == ">" || biggerOperator.Operation == ">=") {
 		return &metricsapi.Operator{
 			NotInRange: r,
 		}, nil
@@ -411,13 +405,13 @@ func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) 
 	}
 
 	operator1 := &Operator{
-		Value:    dec1,
-		Operator: op1,
+		Value:     dec1,
+		Operation: op1,
 	}
 
 	operator2 := &Operator{
-		Value:    dec2,
-		Operator: op2,
+		Value:     dec2,
+		Operation: op2,
 	}
 
 	if dec1.Cmp(dec2) == -1 {

@@ -1312,6 +1312,8 @@ func TestSetupTarget(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		//TODO : this test cases are prepared for future, when isSuperInterval is implemented to cover the
+		// code pieces marked with TODO
 		// {
 		// 	name: "with warn criteria double pass criteria single - pass is superset - conversion",
 		// 	o: &Objective{
@@ -1827,12 +1829,12 @@ func TestDecideIntervalBounds(t *testing.T) {
 			op2:  "<",
 			val2: "15",
 			smallerOp: &Operator{
-				Value:    dec10,
-				Operator: ">",
+				Value:     dec10,
+				Operation: ">",
 			},
 			biggerOp: &Operator{
-				Value:    dec15,
-				Operator: "<",
+				Value:     dec15,
+				Operation: "<",
 			},
 			wantErr: false,
 		},
@@ -1843,12 +1845,12 @@ func TestDecideIntervalBounds(t *testing.T) {
 			op2:  "<",
 			val2: "10",
 			smallerOp: &Operator{
-				Value:    dec10,
-				Operator: "<",
+				Value:     dec10,
+				Operation: "<",
 			},
 			biggerOp: &Operator{
-				Value:    dec15,
-				Operator: ">",
+				Value:     dec15,
+				Operation: ">",
 			},
 			wantErr: false,
 		},
@@ -1859,12 +1861,12 @@ func TestDecideIntervalBounds(t *testing.T) {
 			op2:  "<",
 			val2: "15",
 			smallerOp: &Operator{
-				Value:    dec15,
-				Operator: "<",
+				Value:     dec15,
+				Operation: "<",
 			},
 			biggerOp: &Operator{
-				Value:    dec15,
-				Operator: ">",
+				Value:     dec15,
+				Operation: ">",
 			},
 			wantErr: false,
 		},

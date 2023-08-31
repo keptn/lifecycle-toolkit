@@ -13,7 +13,7 @@ that are relevant only to documentation
 ## Guidelines for contributing
 
 * Keep your language clean and crisp.
-  We do not have a *Style Guide* for Keptn but the
+  We do not have an official *Style Guide* for Keptn but the
   [Google developer documentation style guide](https://developers.google.com/style)
   is a good general reference.
 
@@ -44,7 +44,7 @@ that are relevant only to documentation
 
   For usability considerations, we make the following exceptions:
 
-  * The main README.md file for the lifecycle-controller repository
+  * The main `README.md` file for the lifecycle-controller repository
     includes this basic information as well as a link
     to the full installation documentation which has more details.
   * The Getting Started Guide also includes this information

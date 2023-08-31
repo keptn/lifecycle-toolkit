@@ -13,8 +13,8 @@ This page discusses what you need to do during the review phase.
 GitHub automatically assigns reviewers to your PR.
 You can also tag oher people in the description or comments.
 
-Your PR will usually be reviewed by the Keptn Lifecycle Toolkit team
-within a couple of days, but feel free to let us know about your PR
+Your PR will usually be reviewed within a couple of days,
+but feel free to let us know about your PR
 [via Slack](https://cloud-native.slack.com/channels/keptn-lifecycle-toolkit-dev).
 
 You may want to record the PR number somewhere for future reference
@@ -57,7 +57,7 @@ to ensure that all tests are still passing.
 
 * You can also work in your local branch to make modifications.
   However, if the PR has been modified on github,
-  be sure to pull the changes back to your local branch
+  be sure to `pull` the changes back to your local branch
   before working in your local branch.
 
 When your PR has the appropriate approvals,

@@ -8,7 +8,7 @@ Keptn source for software and documentation is stored in the
 [Keptn lifecycle-toolkit repository](https://github.com/keptn/lifecycle-toolkit).
 Contributions are made using standard Git practices.
 This section describes the basic steps required to contribute using Git
-and summarizes some standard practices we use with Keptn..
+and summarizes some standard practices we use with Keptn.
 
 You can also modify the source using the GitHub editor.
 This is very useful when you want to fix a typo

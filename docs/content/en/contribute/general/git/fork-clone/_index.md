@@ -27,6 +27,7 @@ of the Keptn repository on your local machine:
 3. Run the **git clone** command from the shell of a local directory
     to clone the forked repository to a directory on your local machine,
     pasting in the URl you saved in the previous step.
+
     For example, if you are using HTTPS:
 
     ```console

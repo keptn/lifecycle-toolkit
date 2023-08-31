@@ -24,7 +24,8 @@ to the repository are:
    and does not include any files that you do not want to push.
 
 1. Switch back to the `main` branch in your repository,
-   and ensure that it is up to date with `main` branch of Keptn Lifecycle Toolkit:
+   and ensure that it is up to date
+   with the `main` branch of the Keptn Lifecycle Toolkit:
 
    ```bash
    git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
@@ -55,9 +56,11 @@ to the repository are:
 
    Use vi commands to add a description of the PR
    (should be 80 characters or less) to the commit.
-   The title text should be prefixed with `docs:`
+   The title text should be prefixed with an appropriate
+   [commit type](#commit-types)
    to conform to our semantic commit scheme.
    This title is displayed as the title of the PR in listings.
+
    You can add multiple lines explaining the PR here but, in general,
    it is better to only supply the PR title here;
    you can add more information and edit the PR title
@@ -94,9 +97,9 @@ You need to provide the following information:
    Follow the
   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/)
   for your PR title.
-  * Title should begin with an appropriate feature type.
-    You can find a list of all possible feature types [here](#commit-types).
-  * First word after the feature type should be lowercase.
+  * Title should begin with an appropriate
+    [commit type](#commit-types).feature type.
+  * The first word after the feature type should be lowercase.
 
     An example for a pull request title is:
 
@@ -112,10 +115,10 @@ You need to provide the following information:
         this PR does not completely satisfy the issue,
        e some other phrasing for the link to the issue.
   * Describe what this PR does,
-    including related work that will be in other PRs
+    including related work that will be in other PRs.
   * If you changed something that is visible to the user,
     add a screenshot.
-  * Describe tests that are included or were run to test this PR
+  * Describe tests that are included or were run to test this PR.
   * Anything else that will help reviewers understand
     the scope and purpose of this PR.
 
@@ -179,7 +182,7 @@ As soon as you create the PR,
 a number of tests and checks are run.
 Be sure to check the results immediately
 and fix any problems that are found.
-Click the `Details` link on the line for each each test
+Click the `Details` link on the line for each each failed test
 to get details about the errors found.
 
 The most common errors for documentation PRs are:

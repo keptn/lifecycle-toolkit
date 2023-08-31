@@ -46,7 +46,7 @@ checks
 | ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------ |
 | `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                                |                                      |
 | `certificateOperator.manager.image.repository`         | specify repo for manager image                                            | `ghcr.io/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container                                          | `v0.8.1`                             |
+| `certificateOperator.manager.image.tag`                | select tag for manager container                                          | `v1.1.0`                             |
 | `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                            | `Always`                             |
 | `certificateOperator.manager.env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`               |
 | `certificateOperator.manager.env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                               |

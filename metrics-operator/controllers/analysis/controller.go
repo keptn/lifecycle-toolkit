@@ -141,7 +141,7 @@ func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metrics
 	return nil
 }
 
-// SetupWithManager sets up the controller with the Managea.
+// SetupWithManager sets up the controller with the Manager.
 func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&metricsapi.Analysis{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).

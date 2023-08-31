@@ -7671,7 +7671,7 @@ spec:
         - name: FUNCTION_RUNNER_IMAGE
           value: "ghcr.io/keptn/functions-runtime:v0.8.1"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v0.8.1"
+          value: "ghcr.io/keptn/python-runtime:v1.0.0"
         - name: OTEL_COLLECTOR_URL
           value: "otel-collector:4317"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL

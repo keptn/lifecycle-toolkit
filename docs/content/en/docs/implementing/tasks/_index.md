@@ -7,28 +7,34 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 A
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md/)
-resource defines tasks that the Keptn Lifecycle Toolkit runs
+resource defines one or more "executables"
+(functions, programs, scripts, etc)
+that the Keptn Lifecycle Toolkit runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
-A Keptn task executes as a runner in an application
+A
+[KeptnTask](../../crd-ref/lifecycle/v1alpha3/#keptntask)
+executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
-A `KeptnTaskDefinition` includes a function
-that defines the action taken by that task.
+A `KeptnTaskDefinition` includes calls to executables to be run.
 
-To implement a Keptn task:
+To implement a `KeptnTask`:
 
 - Define a
   [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
   resource that defines the runner to use for the container
+  and the executables to be run
+pre- and post-deployment
 - Apply [basic-annotations](../integrate/#basic-annotations)
   to your workloads to integrate your task with Kubernetes
-- Add your task to the [KeptnApp](../../yaml-crd-ref/app.md)
-  resource that associates your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should run in it;
+- Annotate the appropriate
+  [KeptnApp](../../yaml-crd-ref/app.md)
+  resource to associate your `KeptnTaskDefinition`
+  with the pre- and post-deployment tasks that should run it;
   see
   [Pre- and post-deployment tasks and checks](../integrate/#pre--and-post-deployment-checks)
   for more information.
@@ -36,6 +42,10 @@ To implement a Keptn task:
 This page provides information to help you create your tasks:
 
 - Code your task in an appropriate [runner](#runners-and-containers)
+- How to control the
+  [execution order](#executing-sequential-tasks)
+  of functions, programs, and scripts
+  since all `KeptnTask` resources at the same level run in parallel
 - Understand how to use [Context](#context)
   that contains a Kubernetes cluster, a user, a namespace,
   the application name, workload name, and version.
@@ -52,6 +62,9 @@ The runner you use determines the language you can use
 to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runner to use for the container:
+
+KLT provides a general Kubernetes that you can configure
+to do almost anything you want:
 
 - The `container-runtime` runner provides
   a pure custom Kubernetes application container
@@ -86,11 +99,12 @@ reference page for the synopsis and examples for each runner.
 
 ## Executing sequential tasks
 
-All `KeptnTaskDefinition` resources at the same level
+All `KeptnTask` resources that are defined by
+`KeptnTaskDefinition` resources at the same level
 (either pre-deployment or post-deployment) execute in parallel.
 This is by design, because Keptn is not a pipeline engine.
-Task sequences that are not part of the lifecycle workflow
-should not be handled by KLT
+**Task sequences that are not part of the lifecycle workflow
+should not be handled by KLT**
 but should instead be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
 

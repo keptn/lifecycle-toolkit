@@ -59,7 +59,7 @@ but the created pods are blocked and in pending state
 until all the required pre-deployment tasks/evaluations
 defined on either the `KeptnApp` or `KeptnWorkload` level pass.
 Only then are the pods bound to a node and deployed.
-If any evaluation or task fails,
+If any pre-deployment evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event
 and terminates the deployment.
 If all evaluations and tasks in a phase are successful,

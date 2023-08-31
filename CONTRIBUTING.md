@@ -55,97 +55,13 @@ Please check [Related Technologies](docs/content/en/contribute/general/technolog
 
 Please check [Linter Requirements](docs/content/en/contribute/docs/linter-requirements/_index.md).
 
-## Submit a Pull Request 🚀
+## Working with git
 
-At this point, you should switch back to the `main` branch in your repository,
-and make sure it is up to date with `main` branch of Keptn Lifecycle Toolkit:
-
-```bash
-git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
-git checkout main
-git pull upstream main
-```
-
-Then update your feature branch from your local copy of `main` and push it:
-
-```bash
-git checkout feature/123/foo
-git rebase main
-git push --set-upstream origin feature/123/foo
-```
-
-> Note:
-All PRs must include a commit message with a description of the changes made!
-
-Make sure you **sign off your commits**.
-To do this automatically check [this](https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md#auto-signoff-commit-messages).
-Finally, go to GitHub and create a Pull Request.
-There should be a PR template already prepared for you.
-If not, you will find it at `.github/pull_request_template.md`.
-Please describe what this PR is about and add a link to relevant GitHub issues.
-If you changed something that is visible to the user, please add a screenshot.
-Please follow the
-[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/) for your PR title.
-
-If you only have one commit in your PR, please follow the guidelines for the message
-of that single commit, otherwise the PR title is enough.
-You can find a list of all possible feature types [here](#commit-types).
-
-An example for a pull request title would be:
-
-```bash
-feat(api): New endpoint for feature X (#1234)
-```
-
-If you have **breaking changes** in your PR, it is important to note them in the PR
-description but also in the merge commit for that PR.
-
-When pressing "squash and merge", you have the option to fill out the commit message.
-Please use that feature to add the breaking changes according to the
-[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
-Also, please remove the PR number at the end and just add the issue number.
-
-An example for a PR with breaking changes and the according merge commit:
-
-```bash
-feat(bridge): New button that breaks other things (#345)
-
-BREAKING CHANGE: The new button added with #345 introduces new functionality that is not compatible with the previous type of sent events.
-```
-
-If your breaking change can be explained in a single line you can also use this form:
-
-```bash
-feat(bridge)!: New button that breaks other things (#345)
-```
-
-Following those guidelines helps us create automated releases where the commit
-and PR messages are directly used in the changelog.
-
-In addition, please always ask yourself the following questions:
-
-**Based on the linked issue,**
-**what changes within the PR would you expect as a reviewer?**
+See [Working with Git](docs/content/en/contribute/general/git)
 
 Your PR will usually be reviewed by the Keptn Lifecycle Toolkit team within a
 couple of days, but feel free to let us know about your PR
 [via Slack](https://cloud-native.slack.com/channels/keptn-lifecycle-toolkit-dev).
-
-### Commit Types
-
-**Type** can be:
-
-* `feat`: a new feature
-* `fix`: a bug fix
-* `build`: changes that affect the build system or external dependencies
-* `chore`: other changes that don't modify source or test files
-* `ci`: changes to our CI configuration files and scripts
-* `docs`: documentation only changes
-* `perf`: a code change that improves performance
-* `refactor`: a code change that neither fixes a bug nor adds a feature
-* `revert`: reverts a previous commit
-* `style`: changes that do not affect the meaning of the code
-* `test`: adding missing tests or correcting existing tests
 
 ## Developer Certification of Origin (DCO)
 

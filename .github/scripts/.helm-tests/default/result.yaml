@@ -7769,7 +7769,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/functions-runtime:v0.8.1"
+          value: "ghcr.io/keptn/deno-runtime:v1.0.1"
         - name: PYTHON_RUNNER_IMAGE
           value: "ghcr.io/keptn/python-runtime:v1.0.0"
         - name: OTEL_COLLECTOR_URL

@@ -91,7 +91,7 @@ checks
 | `lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller     | `0`                                   |
 | `lifecycleOperator.manager.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller              | `0`                                   |
 | `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector               | `otel-collector:4317`                 |
-| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v0.8.1`   |
+| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v1.0.1`   |
 | `lifecycleOperator.manager.env.pythonRunnerImage`                             | specify image for python task runtime                       | `ghcr.io/keptn/python-runtime:v1.0.0` |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                          | `ghcr.io/keptn/lifecycle-operator`    |
 | `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                                | `v0.8.1`                              |

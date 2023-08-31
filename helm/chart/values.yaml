@@ -67,7 +67,7 @@ lifecycleOperator:
       seccompProfile:
         type: RuntimeDefault
     env:
-      functionRunnerImage: ghcr.io/keptn/deno-runtime:v0.8.1
+      functionRunnerImage: ghcr.io/keptn/deno-runtime:v1.0.1
       keptnAppControllerLogLevel: "0"
       keptnAppCreationRequestControllerLogLevel: "0"
       keptnAppVersionControllerLogLevel: "0"

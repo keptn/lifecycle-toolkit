@@ -96,9 +96,15 @@ jobs:
                         ]);
                         break;
                     case "metrics-operator":
-                    case "klt-cert-manager":
                         releaseMatrix.push({
                             name: item,
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        });
+                        break;
+                    case "klt-cert-manager":
+                        releaseMatrix.push({
+                            name: "certificate-operator",
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
                         });

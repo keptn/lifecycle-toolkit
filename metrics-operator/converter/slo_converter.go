@@ -13,12 +13,6 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-const InvalidOperatorErrMsg = "invalid operator: '%s'"
-const UnableConvertValueErrMsg = "unable to convert value '%s' to decimal"
-
-const MaxInt = int(^uint(0) >> 1)
-const MinInt = -MaxInt - 1
-
 type SLOConverter struct {
 }
 
@@ -46,16 +40,6 @@ type Objective struct {
 
 type Criteria struct {
 	Operators []string `yaml:"criteria,omitempty" json:"criteria,omitempty"`
-}
-
-type Operator struct {
-	Value     *inf.Dec
-	Operation string
-}
-
-type Interval struct {
-	Start *inf.Dec
-	End   *inf.Dec
 }
 
 func (o *Objective) hasNotSupportedCriteria() bool {
@@ -241,6 +225,7 @@ func isSuperInterval(op1 []string, op2 []string) (bool, error) {
 
 // creates interval from set of operators
 func createInterval(op []string) (*Interval, error) {
+	// if it's unbounded interval, we have only one operator
 	if len(op) == 1 {
 		operator, value, err := decodeOperatorAndValue(op[0])
 		if err != nil {
@@ -251,12 +236,14 @@ func createInterval(op []string) (*Interval, error) {
 		if !ok {
 			return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
 		}
+		// interval of (val, Inf)
 		if operator == ">" || operator == ">=" {
 			decMax := inf.NewDec(int64(MaxInt), 0)
 			return &Interval{
 				Start: dec,
 				End:   decMax,
 			}, nil
+			// interval of (-Inf, val)
 		} else if operator == "<" || operator == "<=" {
 			decMin := inf.NewDec(int64(MinInt), 0)
 			return &Interval{
@@ -266,6 +253,7 @@ func createInterval(op []string) (*Interval, error) {
 		}
 	}
 
+	//bounded interval
 	operator1, value1, err := decodeOperatorAndValue(op[0])
 	if err != nil {
 		return nil, err
@@ -274,10 +262,12 @@ func createInterval(op []string) (*Interval, error) {
 	if err != nil {
 		return nil, err
 	}
+	// determine lower and higher bouds
 	smallerOperator, biggerOperator, err := decideIntervalBounds(operator1, value1, operator2, value2)
 	if err != nil {
 		return nil, err
 	}
+	//check if the interval makes logical sense for conversions, e.g. 5 < x < 10; unsupported: x < 5 && x > 10
 	if (smallerOperator.Operation == ">" || smallerOperator.Operation == ">=") && (biggerOperator.Operation == "<" || biggerOperator.Operation == "<=") {
 		return &Interval{
 			Start: smallerOperator.Value,
@@ -285,7 +275,7 @@ func createInterval(op []string) (*Interval, error) {
 		}, nil
 	}
 
-	return nil, fmt.Errorf("unsupported interval combination '%s'", op)
+	return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
 }
 
 func cleanupObjective(o *Objective) *Objective {
@@ -357,7 +347,7 @@ func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
 		}
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("empty operators: '%v'", op)
+	return &metricsapi.Operator{}, fmt.Errorf(EmptyOperatorsErrMsg, op)
 }
 
 // checks and negates the existing single operator
@@ -461,7 +451,7 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 		}, nil
 	}
 
-	return nil, fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
+	return nil, fmt.Errorf(UnconvertableOperatorsCombinationErrMsg, op1, op2)
 }
 
 // decides which of the values is smaller and binds operator to them

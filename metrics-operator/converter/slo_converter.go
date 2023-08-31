@@ -42,7 +42,7 @@ type Criteria struct {
 	Operators []string `yaml:"criteria,omitempty" json:"criteria,omitempty"`
 }
 
-func (o *Objective) hasSupportedCriteria() bool {
+func (o *Objective) hasNotSupportedCriteria() bool {
 	return len(o.Pass) > 1 || len(o.Warning) > 1
 }
 
@@ -99,13 +99,16 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 			},
 			// create a slice of size of len(sloContent.Objectives), but reserve capacity for
 			// double the size, as some objectives may be twice there (conversion of criteria with logical AND)
-			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives), len(sloContent.Objectives)*2),
+			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives)),
 		},
 	}
 
 	// convert objectives one after another
 	indexObjectives := 0
 	for _, o := range sloContent.Objectives {
+		// remove criteria, which contain % in their operators
+		o = cleanupObjective(o)
+		// set up target
 		target, err := setupTarget(o)
 		if err != nil {
 			return nil, err
@@ -136,15 +139,13 @@ func removePercentage(str string) (int, error) {
 }
 
 // creates and sets up the target struct from objective
-// TODO refactor this function in a follow-up + weight distribution
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
-	// remove criteria, which contain % in their operators
-	o = cleanupObjective(o)
 	// skip objective target conversion if it has criteria combined with logical OR -> not supported
 	// this way the SLO will become "informative"
-	if o.hasSupportedCriteria() {
+	// it will become informative as well when the pass criteria are not defined
+	if o.hasNotSupportedCriteria() || len(o.Pass) == 0 {
 		return target, nil
 	}
 
@@ -152,8 +153,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
-				// TODO cover use cases with multiple operators (create new objectives)
-				op, err := newOperator(o.Pass[0].Operators[0])
+				op, err := newOperator(o.Pass[0].Operators, true)
 				if err != nil {
 					return target, err
 				}
@@ -163,30 +163,53 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		}
 	}
 
-	// if warning criteria are defined, create new criteria with the following logic:
-	// !(warn criteria) -> fail criteria
-	// !(pass criteria) -> warn criteria
-	var err error
-	if len(o.Pass) > 0 {
-		if len(o.Pass[0].Operators) > 0 {
-			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := newOperator(o.Pass[0].Operators[0])
-			if err != nil {
-				return target, err
-			}
-			target.Warning = op
+	// if pass is superinterval of warn, the following logic is used:
+	// !(pass criteria) -> fail criteria
+	// warn criteria -> warn criteria
+	if isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators) {
+		op1, err := newOperator(o.Warning[0].Operators, false)
+		if err != nil {
+			return target, err
 		}
-		if len(o.Warning[0].Operators) > 0 {
-			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := newOperator(o.Warning[0].Operators[0])
-			if err != nil {
-				return target, err
-			}
-			target.Failure = op
+		op2, err := newOperator(o.Pass[0].Operators, true)
+		if err != nil {
+			return target, err
 		}
+		target.Failure = op2
+		target.Warning = op1
+		return target, nil
 	}
 
-	return target, err
+	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
+	// !(warn criteria) -> fail criteria
+	// !(pass criteria) -> warn criteria
+	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || true /*isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators) */ {
+		op1, err := newOperator(o.Pass[0].Operators, true)
+		if err != nil {
+			return target, err
+		}
+		op2, err := newOperator(o.Warning[0].Operators, true)
+		if err != nil {
+			return target, err
+		}
+		target.Failure = op2
+		target.Warning = op1
+		return target, nil
+	}
+	return target, nil
+}
+
+// TODO implement
+func isSuperInterval(op1 []string, op2 []string) bool {
+	// superOp1, superOpVal1, err := decodeOperatorAndValue(op1[0])
+	// if err != nil {
+	// 	return false, err
+	// }
+	// subOp1, subOpVal1, err := decodeOperatorAndValue(op2[0])
+	// if err != nil {
+	// 	return false, err
+	// }
+	return false
 }
 
 func cleanupObjective(o *Objective) *Objective {
@@ -204,7 +227,8 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 		for _, op := range c.Operators {
 			// keep only criteria with real values, not percentage
 			if !strings.Contains(op, "%") {
-				operators = append(operators, op)
+				// remove unneeded whitespaces from criteria string
+				operators = append(operators, strings.Replace(op, " ", "", -1))
 			}
 		}
 		// if criterium does have operator, store it
@@ -216,23 +240,51 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 	return newCriteria
 }
 
-// create operator for Target
-func newOperator(op string) (*metricsapi.Operator, error) {
-	// remove whitespaces
-	op = strings.Replace(op, " ", "", -1)
-
+// check if operator is valid and split it to operator and value
+func decodeOperatorAndValue(op string) (string, string, error) {
 	operators := []string{"<=", "<", ">=", ">"}
 	for _, operator := range operators {
 		if strings.HasPrefix(op, operator) {
-			return createOperator(operator, strings.TrimPrefix(op, operator))
+			return operator, strings.TrimPrefix(op, operator), nil
 		}
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+	return "", "", fmt.Errorf("invalid operator: '%s'", op)
 }
 
-// checks and negates the existing operator
-func createOperator(op string, value string) (*metricsapi.Operator, error) {
+// create operator for Target
+func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
+	if len(op) == 1 {
+		operator, value, err := decodeOperatorAndValue(op[0])
+		if err != nil {
+			return nil, err
+		}
+		if negate {
+			return negateSingleOperator(operator, value)
+		} else {
+			return createSingleOperator(operator, value)
+		}
+	} else if len(op) >= 2 {
+		operator1, value1, err := decodeOperatorAndValue(op[0])
+		if err != nil {
+			return nil, err
+		}
+		operator2, value2, err := decodeOperatorAndValue(op[1])
+		if err != nil {
+			return nil, err
+		}
+		if negate {
+			return negateDoubleOperator(operator1, value1, operator2, value2)
+		} else {
+			return createDoubleOperator(operator1, value1, operator2, value2)
+		}
+	}
+
+	return &metricsapi.Operator{}, fmt.Errorf("empty operators: '%v'", op)
+}
+
+// checks and negates the existing single operator
+func negateSingleOperator(op string, value string) (*metricsapi.Operator, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
@@ -265,4 +317,104 @@ func createOperator(op string, value string) (*metricsapi.Operator, error) {
 	}
 
 	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+}
+
+// checks and creates single operator
+func createSingleOperator(op string, value string) (*metricsapi.Operator, error) {
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString(value)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert value '%s' to decimal", value)
+	}
+	if op == "<=" {
+		return &metricsapi.Operator{
+			LessThanOrEqual: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == "<" {
+		return &metricsapi.Operator{
+			LessThan: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == ">=" {
+		return &metricsapi.Operator{
+			GreaterThanOrEqual: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == ">" {
+		return &metricsapi.Operator{
+			GreaterThan: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	}
+
+	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+}
+
+// checks and creates double operator
+func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
+	smallerVal, biggerVal, smallerValOperator, biggerValOperator, err := decideIntervalBounds(op1, value1, op2, value2)
+	if err != nil {
+		return nil, err
+	}
+
+	if (smallerValOperator == ">" || smallerValOperator == ">=") && (biggerValOperator == "<" || biggerValOperator == "<=") {
+		return &metricsapi.Operator{
+			InRange: &metricsapi.RangeValue{
+				LowBound:  *resource.NewDecimalQuantity(*smallerVal, resource.DecimalSI),
+				HighBound: *resource.NewDecimalQuantity(*biggerVal, resource.DecimalSI),
+			},
+		}, nil
+	} else if (smallerValOperator == "<" || smallerValOperator == "<=") && (biggerValOperator == ">" || biggerValOperator == ">=") {
+		return &metricsapi.Operator{
+			NotInRange: &metricsapi.RangeValue{
+				LowBound:  *resource.NewDecimalQuantity(*smallerVal, resource.DecimalSI),
+				HighBound: *resource.NewDecimalQuantity(*biggerVal, resource.DecimalSI),
+			},
+		}, nil
+	}
+
+	return nil, fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
+}
+
+// TODO test
+func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) (*inf.Dec, *inf.Dec, string, string, error) {
+	dec1 := inf.NewDec(1, 0)
+	_, ok := dec1.SetString(value1)
+	if !ok {
+		return nil, nil, "", "", fmt.Errorf("unable to convert value '%s' to decimal", value1)
+	}
+	dec2 := inf.NewDec(1, 0)
+	_, ok = dec2.SetString(value2)
+	if !ok {
+		return nil, nil, "", "", fmt.Errorf("unable to convert value '%s' to decimal", value2)
+	}
+
+	if dec1.Cmp(dec2) == -1 {
+		return dec1, dec2, op1, op2, nil
+	}
+
+	return dec2, dec1, op2, op1, nil
+}
+
+// checks and negates double operator
+func negateDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
+	operator, err := createDoubleOperator(op1, value1, op2, value2)
+	if err != nil {
+		return operator, err
+	}
+
+	if operator.NotInRange != nil {
+		return &metricsapi.Operator{
+			InRange: operator.NotInRange,
+		}, nil
+	}
+
+	return &metricsapi.Operator{
+		NotInRange: operator.InRange,
+	}, nil
 }

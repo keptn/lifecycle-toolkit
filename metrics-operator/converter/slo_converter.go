@@ -13,6 +13,9 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+const InvalidOperatorErrMsg = "invalid operator: '%s'"
+const UnableConvertValueErrMsg = "unable to convert value '%s' to decimal"
+
 type SLOConverter struct {
 }
 
@@ -249,11 +252,12 @@ func decodeOperatorAndValue(op string) (string, string, error) {
 		}
 	}
 
-	return "", "", fmt.Errorf("invalid operator: '%s'", op)
+	return "", "", fmt.Errorf(InvalidOperatorErrMsg, op)
 }
 
 // create operator for Target
 func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
+	// convert single operator
 	if len(op) == 1 {
 		operator, value, err := decodeOperatorAndValue(op[0])
 		if err != nil {
@@ -264,7 +268,7 @@ func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
 		} else {
 			return createSingleOperator(operator, value)
 		}
-	} else if len(op) >= 2 {
+	} else if len(op) >= 2 { // convert operators representing range
 		operator1, value1, err := decodeOperatorAndValue(op[0])
 		if err != nil {
 			return nil, err
@@ -288,7 +292,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert value '%s' to decimal", value)
+		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -316,7 +320,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+	return &metricsapi.Operator{}, fmt.Errorf(InvalidOperatorErrMsg, op)
 }
 
 // checks and creates single operator
@@ -324,7 +328,7 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert value '%s' to decimal", value)
+		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -352,7 +356,7 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+	return &metricsapi.Operator{}, fmt.Errorf(InvalidOperatorErrMsg, op)
 }
 
 // checks and creates double operator
@@ -362,6 +366,7 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 		return nil, err
 	}
 
+	// inRange interval
 	if (smallerValOperator == ">" || smallerValOperator == ">=") && (biggerValOperator == "<" || biggerValOperator == "<=") {
 		return &metricsapi.Operator{
 			InRange: &metricsapi.RangeValue{
@@ -369,6 +374,7 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 				HighBound: *resource.NewDecimalQuantity(*biggerVal, resource.DecimalSI),
 			},
 		}, nil
+		// outOfRange interval
 	} else if (smallerValOperator == "<" || smallerValOperator == "<=") && (biggerValOperator == ">" || biggerValOperator == ">=") {
 		return &metricsapi.Operator{
 			NotInRange: &metricsapi.RangeValue{
@@ -386,12 +392,12 @@ func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) 
 	dec1 := inf.NewDec(1, 0)
 	_, ok := dec1.SetString(value1)
 	if !ok {
-		return nil, nil, "", "", fmt.Errorf("unable to convert value '%s' to decimal", value1)
+		return nil, nil, "", "", fmt.Errorf(UnableConvertValueErrMsg, value1)
 	}
 	dec2 := inf.NewDec(1, 0)
 	_, ok = dec2.SetString(value2)
 	if !ok {
-		return nil, nil, "", "", fmt.Errorf("unable to convert value '%s' to decimal", value2)
+		return nil, nil, "", "", fmt.Errorf(UnableConvertValueErrMsg, value2)
 	}
 
 	if dec1.Cmp(dec2) == -1 {
@@ -403,11 +409,13 @@ func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) 
 
 // checks and negates double operator
 func negateDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
+	// create range operator
 	operator, err := createDoubleOperator(op1, value1, op2, value2)
 	if err != nil {
 		return operator, err
 	}
 
+	// negate it
 	if operator.NotInRange != nil {
 		return &metricsapi.Operator{
 			InRange: operator.NotInRange,

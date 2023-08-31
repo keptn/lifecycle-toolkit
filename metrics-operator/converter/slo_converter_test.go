@@ -1,5 +1,6 @@
 package converter
 
+//nolint:dupl
 import (
 	"testing"
 
@@ -793,6 +794,18 @@ func TestNewOperator(t *testing.T) {
 		{
 			name:   "double operator",
 			op:     []string{">1", "<5"},
+			negate: false,
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "double operator - third one ignored",
+			op:     []string{">1", "<5", ">8"},
 			negate: false,
 			out: &metricsapi.Operator{
 				InRange: &metricsapi.RangeValue{

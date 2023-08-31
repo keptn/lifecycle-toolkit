@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v1.0.0...cert-manager-v1.1.0) (2023-08-31)
+
+
+### Features
+
+* monorepo setup for lifecycle-operator, scheduler and runtimes ([#1857](https://github.com/keptn/lifecycle-toolkit/issues/1857)) ([84e243a](https://github.com/keptn/lifecycle-toolkit/commit/84e243a213ffba86eddd51ccc4bf4dbd61140069))
+
+
+### Other
+
+* release cert-manager 1.1.0 ([#1972](https://github.com/keptn/lifecycle-toolkit/issues/1972)) ([bb133cf](https://github.com/keptn/lifecycle-toolkit/commit/bb133cfd2ac3207e8a4006eb7a9390dc58737465))
+* release cert-manager 1.1.0 ([#1993](https://github.com/keptn/lifecycle-toolkit/issues/1993)) ([a8c22f7](https://github.com/keptn/lifecycle-toolkit/commit/a8c22f779eafd68ea12c97c808ad2041fc89acbf))
+
 ## 1.0.0 (2023-08-28)
 
 

@@ -11,6 +11,7 @@ import (
 
 func TestOperatorEvaluator_Evaluate(t *testing.T) {
 	compValue := resource.NewQuantity(15, resource.DecimalSI)
+	compValue2 := resource.NewQuantity(25, resource.DecimalSI)
 	tests := []struct {
 		name string
 		val  float64
@@ -182,6 +183,82 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 				Operator: v1alpha3.Operator{
 					GreaterThanOrEqual: &v1alpha3.OperatorValue{
 						FixedValue: *compValue,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
+		{
+			name: "in range - fulfilled",
+			val:  20.0,
+			o: v1alpha3.Operator{
+				InRange: &v1alpha3.RangeValue{
+					LowBound:  *compValue,
+					HighBound: *compValue2,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					InRange: &v1alpha3.RangeValue{
+						LowBound:  *compValue,
+						HighBound: *compValue2,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "in range - not fulfilled",
+			val:  30.0,
+			o: v1alpha3.Operator{
+				InRange: &v1alpha3.RangeValue{
+					LowBound:  *compValue,
+					HighBound: *compValue2,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					InRange: &v1alpha3.RangeValue{
+						LowBound:  *compValue,
+						HighBound: *compValue2,
+					},
+				},
+				Fulfilled: false,
+			},
+		},
+		{
+			name: "not in range - fulfilled",
+			val:  30.0,
+			o: v1alpha3.Operator{
+				NotInRange: &v1alpha3.RangeValue{
+					LowBound:  *compValue,
+					HighBound: *compValue2,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					NotInRange: &v1alpha3.RangeValue{
+						LowBound:  *compValue,
+						HighBound: *compValue2,
+					},
+				},
+				Fulfilled: true,
+			},
+		},
+		{
+			name: "not in range - not fulfilled",
+			val:  20.0,
+			o: v1alpha3.Operator{
+				NotInRange: &v1alpha3.RangeValue{
+					LowBound:  *compValue,
+					HighBound: *compValue2,
+				},
+			},
+			want: types.OperatorResult{
+				Operator: v1alpha3.Operator{
+					NotInRange: &v1alpha3.RangeValue{
+						LowBound:  *compValue,
+						HighBound: *compValue2,
 					},
 				},
 				Fulfilled: false,

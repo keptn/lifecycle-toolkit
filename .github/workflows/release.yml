@@ -31,9 +31,6 @@ jobs:
       releases-created: ${{ steps.release.outputs.releases_created }}
       build-matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -46,13 +43,31 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
+      - name: Debug info
+        env:
+          CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
+          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
+          FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
+        run: |
+          echo "PATHS_RELEASE_JSON: ${PATHS_RELEASE_JSON}"
+          echo "FULL RELEASE OUTPUT: ${FULL_RELEASE_OUTPUT}"
+          echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
+          echo "KLT_TAG: ${KLT_TAG}"
+          echo "ARTIFACT_TAG_NAME: ${ARTIFACT_TAG_NAME}"
+          echo "PATHS_RELEASED: ${PATHS_RELEASED}"
+          echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
+          echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
+          echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
+
       - name: Create release matrix
         id: build-matrix
         uses: actions/github-script@v6
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
-          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', steps.release.outputs.paths_released[0])] }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
         with:
           script: |
             const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');
@@ -63,10 +78,11 @@ jobs:
             console.log("items to publish", itemsToPublish);
 
             console.log("setting up build matrix...");
-            const releaseMatrix = itemsToPublish.map(item => {
+            const releaseMatrix = [];
+            itemsToPublish.forEach(item => {
                 switch (item) {
                     case "lifecycle-operator":
-                        return [
+                        releaseMatrix.push(...[
                             {
                                 name: item,
                                 folder: item,
@@ -77,21 +93,36 @@ jobs:
                                 folder: "scheduler/",
                                 tagName: process.env.ARTIFACT_TAG_NAME
                             }
-                        ];
+                        ]);
+                        break;
                     case "metrics-operator":
-                    case "klt-cert-manager":
-                    case "runtimes/deno-runtime":
-                    case "runtimes/python-runtime":
-                        return [{
+                        releaseMatrix.push({
                             name: item,
                             folder: item,
                             tagName: process.env.ARTIFACT_TAG_NAME
-                        }];
+                        });
+                        break;
+                    case "klt-cert-manager":
+                        releaseMatrix.push({
+                            name: "certificate-operator",
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        });
+                        break;
+                    case "runtimes/deno-runtime":
+                    case "runtimes/python-runtime":
+                        releaseMatrix.push({
+                            name: item.replace("runtimes/", ""),
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        });
+                        break;
                     case ".":
                     default:
-                        return [];
+                        break;
                 }
             });
+            console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));
             return { config: releaseMatrix };
 
   build-release:
@@ -108,9 +139,6 @@ jobs:
     env:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -138,6 +166,10 @@ jobs:
           # Remove artifact prefix from tag so that we get clean image tags
           temp="${IMAGE_TAG##klt-}"
           temp="${temp##cert-manager-}"
+          temp="${temp##python-runtime-}"
+          temp="${temp##deno-runtime-}"
+          temp="${temp##scheduler-}"
+          temp="${temp##lifecycle-operator-}"
           echo "IMAGE_TAG=${temp##metrics-operator-}" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker Image

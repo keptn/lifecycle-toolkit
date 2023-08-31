@@ -23,6 +23,10 @@ func (te *OperatorEvaluator) Evaluate(val float64, t *v1alpha3.Operator) types.O
 		result.Fulfilled = (val >= t.GreaterThanOrEqual.GetFloatValue())
 	} else if t.GreaterThan != nil {
 		result.Fulfilled = (val > t.GreaterThan.GetFloatValue())
+	} else if t.InRange != nil {
+		result.Fulfilled = (val >= t.InRange.LowBound.AsApproximateFloat64() && val <= t.InRange.HighBound.AsApproximateFloat64())
+	} else if t.NotInRange != nil {
+		result.Fulfilled = (val < t.NotInRange.LowBound.AsApproximateFloat64() || val > t.NotInRange.HighBound.AsApproximateFloat64())
 	}
 
 	return result

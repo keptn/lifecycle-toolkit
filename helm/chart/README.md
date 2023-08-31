@@ -46,7 +46,7 @@ checks
 | ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------ |
 | `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                                |                                      |
 | `certificateOperator.manager.image.repository`         | specify repo for manager image                                            | `ghcr.io/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container                                          | `v0.8.1`                             |
+| `certificateOperator.manager.image.tag`                | select tag for manager container                                          | `v1.1.0`                             |
 | `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                            | `Always`                             |
 | `certificateOperator.manager.env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`               |
 | `certificateOperator.manager.env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                               |
@@ -91,8 +91,8 @@ checks
 | `lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller     | `0`                                   |
 | `lifecycleOperator.manager.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller              | `0`                                   |
 | `lifecycleOperator.manager.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector               | `otel-collector:4317`                 |
-| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v0.8.1`   |
-| `lifecycleOperator.manager.env.pythonRunnerImage`                             | specify image for python task runtime                       | `ghcr.io/keptn/python-runtime:v0.8.1` |
+| `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v1.0.1`   |
+| `lifecycleOperator.manager.env.pythonRunnerImage`                             | specify image for python task runtime                       | `ghcr.io/keptn/python-runtime:v1.0.0` |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                          | `ghcr.io/keptn/lifecycle-operator`    |
 | `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                                | `v0.8.1`                              |
 | `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                       | `Always`                              |

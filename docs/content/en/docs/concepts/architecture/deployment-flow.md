@@ -77,7 +77,8 @@ kubectl get events -n <namespace> .
 
 ### Pre-deployment phase
 
-TODO: Add intro statement about this phase.
+Pre-deployment tasks can perform any kind of action needed
+to prepare for the deployment, including unit tests, load tests or other similar tests.
 
 ```shell
 AppPreDeployTasks

@@ -211,9 +211,9 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 }
 
 // TODO implement
-func isSuperInterval(op1 []string, op2 []string) bool {
-	return false
-}
+// func isSuperInterval(op1 []string, op2 []string) bool {
+// 	return false
+// }
 
 func cleanupObjective(o *Objective) *Objective {
 	o.Pass = cleanupCriteria(o.Pass)

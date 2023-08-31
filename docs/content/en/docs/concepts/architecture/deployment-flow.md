@@ -90,7 +90,7 @@ AppPreDeployTasks
 
 Pre-deployment evaluation can be used to assert the status of the cluster
 or of services the workload depends on,
-to assure it is deployed only if the specified prerequisites are met. 
+to assure it is deployed only if the specified prerequisites are met.
 
 ```shell
 AppPreDeployEvaluations

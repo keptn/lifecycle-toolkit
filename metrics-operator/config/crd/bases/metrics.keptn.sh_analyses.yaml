@@ -102,7 +102,7 @@ spec:
                   description: ProviderResult stores reference of already collected
                     provider query associated to its objective template
                   properties:
-                    error:
+                    errMsg:
                       description: Err stores any possible error at retrieval time
                       type: string
                     objectiveReference:
@@ -123,7 +123,8 @@ spec:
                       description: Value is the value the provider returned
                       type: string
                   type: object
-                description: Cache
+                description: StoredValues contains all analysis values that have already
+                  been retrieved successfully
                 type: object
               warning:
                 description: Warning returns whether the analysis returned a warning

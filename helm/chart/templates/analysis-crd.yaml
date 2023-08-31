@@ -68,8 +68,7 @@ spec:
                     type: string
                   description: Args corresponds to a map of key/value pairs that can
                     be used to substitute placeholders in the AnalysisValueTemplate
-                    query. The placeholder must be the capitalized version of the key;
-                    i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})".
+                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
                   type: object
                 timeframe:
                   description: Timeframe specifies the range for the corresponding query
@@ -108,7 +107,7 @@ spec:
                     description: ProviderResult stores reference of already collected
                       provider query associated to its objective template
                     properties:
-                      error:
+                      errMsg:
                         description: Err stores any possible error at retrieval time
                         type: string
                       objectiveReference:
@@ -129,7 +128,8 @@ spec:
                         description: Value is the value the provider returned
                         type: string
                     type: object
-                  description: Cache
+                  description: StoredValues contains all analysis values that have already
+                    been retrieved successfully
                   type: object
                 warning:
                   description: Warning returns whether the analysis returned a warning

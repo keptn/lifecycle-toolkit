@@ -139,7 +139,7 @@ _Appears in:_
 | `raw` _string_ | Raw contains the raw result of the SLO computation |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning |
-| `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | Cache |
+| `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully |
 
 
 #### AnalysisValueTemplate
@@ -405,7 +405,7 @@ _Appears in:_
 | --- | --- |
 | `objectiveReference` _[ObjectReference](#objectreference)_ | Objective store reference to corresponding objective template |
 | `value` _string_ | Value is the value the provider returned |
-| `error` _string_ | Err stores any possible error at retrieval time |
+| `errMsg` _string_ | Err stores any possible error at retrieval time |
 
 
 #### RangeSpec

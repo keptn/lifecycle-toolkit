@@ -49,7 +49,7 @@ kubectl apply -f deployment.yaml
 ```
 
 KLT does not care how a deployment manifest is applied to the cluster.
-Both kubectl and Flux/Argo send the manifest to the Kubernetes API
+Both `kubectl` and Flux/Argo send the manifest to the Kubernetes API
 so KLT does not differentiate the actual deployment options.
 This also means that one Keptn Application
 can include services that are deployed with different methods.
@@ -57,7 +57,7 @@ can include services that are deployed with different methods.
 The deployment is created
 but the created pods are blocked and in pending state
 until all the required pre-deployment tasks/evaluations
-defined on either the KeptnApp or KeptnWorkload level pass.
+defined on either the `KeptnApp` or `KeptnWorkload` level pass.
 Only then are the pods bound to a node and deployed.
 If any evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event

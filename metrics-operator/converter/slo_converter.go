@@ -45,6 +45,11 @@ type Criteria struct {
 	Operators []string `yaml:"criteria,omitempty" json:"criteria,omitempty"`
 }
 
+type Operator struct {
+	Value    *inf.Dec
+	Operator string
+}
+
 func (o *Objective) hasNotSupportedCriteria() bool {
 	return len(o.Pass) > 1 || len(o.Warning) > 1
 }
@@ -365,50 +370,60 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 
 // checks and creates double operator
 func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
-	smallerVal, biggerVal, smallerValOperator, biggerValOperator, err := decideIntervalBounds(op1, value1, op2, value2)
+	smallerOperator, biggerOperator, err := decideIntervalBounds(op1, value1, op2, value2)
 	if err != nil {
 		return nil, err
 	}
 
+	// create range
+	r := &metricsapi.RangeValue{
+		LowBound:  *resource.NewDecimalQuantity(*smallerOperator.Value, resource.DecimalSI),
+		HighBound: *resource.NewDecimalQuantity(*biggerOperator.Value, resource.DecimalSI),
+	}
+
 	// inRange interval
-	if (smallerValOperator == ">" || smallerValOperator == ">=") && (biggerValOperator == "<" || biggerValOperator == "<=") {
+	if (smallerOperator.Operator == ">" || smallerOperator.Operator == ">=") && (biggerOperator.Operator == "<" || biggerOperator.Operator == "<=") {
 		return &metricsapi.Operator{
-			InRange: &metricsapi.RangeValue{
-				LowBound:  *resource.NewDecimalQuantity(*smallerVal, resource.DecimalSI),
-				HighBound: *resource.NewDecimalQuantity(*biggerVal, resource.DecimalSI),
-			},
+			InRange: r,
 		}, nil
 		// outOfRange interval
-	} else if (smallerValOperator == "<" || smallerValOperator == "<=") && (biggerValOperator == ">" || biggerValOperator == ">=") {
+	} else if (smallerOperator.Operator == "<" || smallerOperator.Operator == "<=") && (biggerOperator.Operator == ">" || biggerOperator.Operator == ">=") {
 		return &metricsapi.Operator{
-			NotInRange: &metricsapi.RangeValue{
-				LowBound:  *resource.NewDecimalQuantity(*smallerVal, resource.DecimalSI),
-				HighBound: *resource.NewDecimalQuantity(*biggerVal, resource.DecimalSI),
-			},
+			NotInRange: r,
 		}, nil
 	}
 
 	return nil, fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
 }
 
-// TODO test
-func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) (*inf.Dec, *inf.Dec, string, string, error) {
+// decides which of the values is smaller and binds operator to them
+func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) (*Operator, *Operator, error) {
 	dec1 := inf.NewDec(1, 0)
 	_, ok := dec1.SetString(value1)
 	if !ok {
-		return nil, nil, "", "", fmt.Errorf(UnableConvertValueErrMsg, value1)
+		return nil, nil, fmt.Errorf(UnableConvertValueErrMsg, value1)
 	}
 	dec2 := inf.NewDec(1, 0)
 	_, ok = dec2.SetString(value2)
 	if !ok {
-		return nil, nil, "", "", fmt.Errorf(UnableConvertValueErrMsg, value2)
+		return nil, nil, fmt.Errorf(UnableConvertValueErrMsg, value2)
+	}
+
+	operator1 := &Operator{
+		Value:    dec1,
+		Operator: op1,
+	}
+
+	operator2 := &Operator{
+		Value:    dec2,
+		Operator: op2,
 	}
 
 	if dec1.Cmp(dec2) == -1 {
-		return dec1, dec2, op1, op2, nil
+		return operator1, operator2, nil
 	}
 
-	return dec2, dec1, op2, op1, nil
+	return operator2, operator1, nil
 }
 
 // checks and negates double operator

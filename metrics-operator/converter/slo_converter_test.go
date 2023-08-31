@@ -1795,16 +1795,14 @@ func TestDecideIntervalBounds(t *testing.T) {
 	require.True(t, ok)
 
 	tests := []struct {
-		name         string
-		op1          string
-		val1         string
-		op2          string
-		val2         string
-		smallerVal   *inf.Dec
-		biggerVal    *inf.Dec
-		smallerValOp string
-		biggerValOp  string
-		wantErr      bool
+		name      string
+		op1       string
+		val1      string
+		op2       string
+		val2      string
+		smallerOp *Operator
+		biggerOp  *Operator
+		wantErr   bool
 	}{
 		{
 			name:    "error converting first value",
@@ -1823,53 +1821,63 @@ func TestDecideIntervalBounds(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:         "fist value smaller",
-			op1:          ">",
-			val1:         "10",
-			op2:          "<",
-			val2:         "15",
-			smallerVal:   dec10,
-			smallerValOp: ">",
-			biggerVal:    dec15,
-			biggerValOp:  "<",
-			wantErr:      false,
+			name: "fist value smaller",
+			op1:  ">",
+			val1: "10",
+			op2:  "<",
+			val2: "15",
+			smallerOp: &Operator{
+				Value:    dec10,
+				Operator: ">",
+			},
+			biggerOp: &Operator{
+				Value:    dec15,
+				Operator: "<",
+			},
+			wantErr: false,
 		},
 		{
-			name:         "second value smaller",
-			op1:          ">",
-			val1:         "15",
-			op2:          "<",
-			val2:         "10",
-			smallerVal:   dec10,
-			smallerValOp: "<",
-			biggerVal:    dec15,
-			biggerValOp:  ">",
-			wantErr:      false,
+			name: "second value smaller",
+			op1:  ">",
+			val1: "15",
+			op2:  "<",
+			val2: "10",
+			smallerOp: &Operator{
+				Value:    dec10,
+				Operator: "<",
+			},
+			biggerOp: &Operator{
+				Value:    dec15,
+				Operator: ">",
+			},
+			wantErr: false,
 		},
 		{
-			name:         "equal values",
-			op1:          ">",
-			val1:         "15",
-			op2:          "<",
-			val2:         "15",
-			smallerVal:   dec15,
-			smallerValOp: "<",
-			biggerVal:    dec15,
-			biggerValOp:  ">",
-			wantErr:      false,
+			name: "equal values",
+			op1:  ">",
+			val1: "15",
+			op2:  "<",
+			val2: "15",
+			smallerOp: &Operator{
+				Value:    dec15,
+				Operator: "<",
+			},
+			biggerOp: &Operator{
+				Value:    dec15,
+				Operator: ">",
+			},
+			wantErr: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			smallerVal, biggerVal, smallerValOperator, biggerValOperator, err := decideIntervalBounds(tt.op1, tt.val1, tt.op2, tt.val2)
+			smallerOperator, biggerOperator, err := decideIntervalBounds(tt.op1, tt.val1, tt.op2, tt.val2)
 			if tt.wantErr {
 				require.NotNil(t, err)
 			} else {
-				require.Equal(t, tt.smallerVal, smallerVal)
-				require.Equal(t, tt.biggerVal, biggerVal)
-				require.Equal(t, tt.smallerValOp, smallerValOperator)
-				require.Equal(t, tt.biggerValOp, biggerValOperator)
+				require.Equal(t, tt.smallerOp, smallerOperator)
+				require.Equal(t, tt.biggerOp, biggerOperator)
 			}
 		})
 

@@ -16,6 +16,9 @@ import (
 const InvalidOperatorErrMsg = "invalid operator: '%s'"
 const UnableConvertValueErrMsg = "unable to convert value '%s' to decimal"
 
+const MaxInt = int(^uint(0) >> 1)
+const MinInt = -MaxInt - 1
+
 type SLOConverter struct {
 }
 
@@ -48,6 +51,11 @@ type Criteria struct {
 type Operator struct {
 	Value     *inf.Dec
 	Operation string
+}
+
+type Interval struct {
+	Start *inf.Dec
+	End   *inf.Dec
 }
 
 func (o *Objective) hasNotSupportedCriteria() bool {
@@ -171,12 +179,35 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		}
 	}
 
+	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
+	// !(warn criteria) -> fail criteria
+	// !(pass criteria) -> warn criteria
+	isWarningSuperInterval, err := isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators)
+	if err != nil {
+		return target, err
+	}
+	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || isWarningSuperInterval {
+		op1, err := newOperator(o.Pass[0].Operators, true)
+		if err != nil {
+			return target, err
+		}
+		op2, err := newOperator(o.Warning[0].Operators, true)
+		if err != nil {
+			return target, err
+		}
+		target.Failure = op2
+		target.Warning = op1
+		return target, nil
+	}
+
 	// if pass is superinterval of warn, the following logic is used:
 	// !(pass criteria) -> fail criteria
 	// warn criteria -> warn criteria
-	// TODO : this piece of code is prepared for future, when isSuperInterval is implemented
-	// for now, it's dead code
-	if false /*isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)*/ {
+	isPassSuperInterval, err := isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)
+	if err != nil {
+		return target, err
+	}
+	if isPassSuperInterval {
 		op1, err := newOperator(o.Warning[0].Operators, false)
 		if err != nil {
 			return target, err
@@ -190,30 +221,72 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		return target, nil
 	}
 
-	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
-	// !(warn criteria) -> fail criteria
-	// !(pass criteria) -> warn criteria
-	// TODO change if statement when isSuperInterval is implemented
-	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || true /*isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators) */ {
-		op1, err := newOperator(o.Pass[0].Operators, true)
-		if err != nil {
-			return target, err
-		}
-		op2, err := newOperator(o.Warning[0].Operators, true)
-		if err != nil {
-			return target, err
-		}
-		target.Failure = op2
-		target.Warning = op1
-		return target, nil
-	}
 	return target, nil
 }
 
-// TODO implement
-// func isSuperInterval(op1 []string, op2 []string) bool {
-// 	return false
-// }
+// checks if interval is valid and if the first set of operators defines interval
+// which is superset of the interval defined by second set of operators
+func isSuperInterval(op1 []string, op2 []string) (bool, error) {
+	superInterval, err := createInterval(op1)
+	if err != nil {
+		return false, err
+	}
+	subInterval, err := createInterval(op2)
+	if err != nil {
+		return false, err
+	}
+
+	return superInterval.Start.Cmp(subInterval.Start) < 1 && superInterval.End.Cmp(subInterval.End) >= 0, nil
+}
+
+// creates interval from set of operators
+func createInterval(op []string) (*Interval, error) {
+	if len(op) == 1 {
+		operator, value, err := decodeOperatorAndValue(op[0])
+		if err != nil {
+			return nil, err
+		}
+		dec := inf.NewDec(1, 0)
+		_, ok := dec.SetString(value)
+		if !ok {
+			return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
+		}
+		if operator == ">" || operator == ">=" {
+			decMax := inf.NewDec(int64(MaxInt), 0)
+			return &Interval{
+				Start: dec,
+				End:   decMax,
+			}, nil
+		} else if operator == "<" || operator == "<=" {
+			decMin := inf.NewDec(int64(MinInt), 0)
+			return &Interval{
+				Start: decMin,
+				End:   dec,
+			}, nil
+		}
+	}
+
+	operator1, value1, err := decodeOperatorAndValue(op[0])
+	if err != nil {
+		return nil, err
+	}
+	operator2, value2, err := decodeOperatorAndValue(op[1])
+	if err != nil {
+		return nil, err
+	}
+	smallerOperator, biggerOperator, err := decideIntervalBounds(operator1, value1, operator2, value2)
+	if err != nil {
+		return nil, err
+	}
+	if (smallerOperator.Operation == ">" || smallerOperator.Operation == ">=") && (biggerOperator.Operation == "<" || biggerOperator.Operation == "<=") {
+		return &Interval{
+			Start: smallerOperator.Value,
+			End:   biggerOperator.Value,
+		}, nil
+	}
+
+	return nil, fmt.Errorf("unsupported interval combination '%s'", op)
+}
 
 func cleanupObjective(o *Objective) *Objective {
 	o.Pass = cleanupCriteria(o.Pass)

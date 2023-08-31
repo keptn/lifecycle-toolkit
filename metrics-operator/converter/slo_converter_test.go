@@ -41,6 +41,16 @@ objectives:
       - criteria:
           - "<=1000"
     weight: 2
+  - sli: "response_time_p70"
+    key_sli: false
+    warning:
+      - criteria:
+          - ">600"
+          - "<800"
+    pass:
+      - criteria:
+          - "<=1000"
+    weight: 2
   - sli: "response_time_p95"
     key_sli: false
     pass:
@@ -99,6 +109,18 @@ spec:
           fixedValue: 1k
       warning:
         notInRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 2
+  - analysisValueTemplateRef:
+      name: response_time_p70
+      namespace: default
+    target:
+      failure:
+        greaterThan:
+          fixedValue: 1k
+      warning:
+        inRange:
           highBound: "800"
           lowBound: "600"
     weight: 2
@@ -1312,87 +1334,85 @@ func TestSetupTarget(t *testing.T) {
 			},
 			wantErr: false,
 		},
-		//TODO : this test cases are prepared for future, when isSuperInterval is implemented to cover the
-		// code pieces marked with TODO
-		// {
-		// 	name: "with warn criteria double pass criteria single - pass is superset - conversion",
-		// 	o: &Objective{
-		// 		Name: "criteria",
-		// 		Warning: []Criteria{
-		// 			{
-		// 				Operators: []string{">10", "<15"},
-		// 			},
-		// 		},
-		// 		Pass: []Criteria{
-		// 			{
-		// 				Operators: []string{"<=20"},
-		// 			},
-		// 		},
-		// 	},
-		// 	want: &metricsapi.Target{
-		// 		Failure: &metricsapi.Operator{
-		// 			GreaterThan: &metricsapi.OperatorValue{
-		// 				FixedValue: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
-		// 			},
-		// 		},
-		// 		Warning: &metricsapi.Operator{
-		// 			InRange: &metricsapi.RangeValue{
-		// 				LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
-		// 				HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
-		// 			},
-		// 		},
-		// 	},
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name: "with warn criteria double pass criteria souble - pass is superset - conversion",
-		// 	o: &Objective{
-		// 		Name: "criteria",
-		// 		Warning: []Criteria{
-		// 			{
-		// 				Operators: []string{">10", "<15"},
-		// 			},
-		// 		},
-		// 		Pass: []Criteria{
-		// 			{
-		// 				Operators: []string{"<=20", ">5"},
-		// 			},
-		// 		},
-		// 	},
-		// 	want: &metricsapi.Target{
-		// 		Failure: &metricsapi.Operator{
-		//             NotInRange: &metricsapi.RangeValue{
-		// 				LowBound:  *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
-		// 				HighBound: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
-		// 			},
-		// 		},
-		// 		Warning: &metricsapi.Operator{
-		// 			InRange: &metricsapi.RangeValue{
-		// 				LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
-		// 				HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
-		// 			},
-		// 		},
-		// 	},
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name: "with warn criteria double pass criteria double - no intersection - conversion",
-		// 	o: &Objective{
-		// 		Name: "criteria",
-		// 		Pass: []Criteria{
-		// 			{
-		// 				Operators: []string{">15", "<20"},
-		// 			},
-		// 		},
-		// 		Warning: []Criteria{
-		// 			{
-		// 				Operators: []string{"<=10", ">5"},
-		// 			},
-		// 		},
-		// 	},
-		// 	want:    &metricsapi.Target{},
-		// 	wantErr: false,
-		// },
+		{
+			name: "with warn criteria double pass criteria single - pass is superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Warning: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Pass: []Criteria{
+					{
+						Operators: []string{"<=20"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria double - pass is superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Warning: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Pass: []Criteria{
+					{
+						Operators: []string{"<=20", ">5"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria double - no intersection - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">15", "<20"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=10", ">5"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: false,
+		},
 		{
 			name: "with warn criteria - error pass",
 			o: &Objective{

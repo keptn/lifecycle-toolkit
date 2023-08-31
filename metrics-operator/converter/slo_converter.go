@@ -191,6 +191,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
 	// !(warn criteria) -> fail criteria
 	// !(pass criteria) -> warn criteria
+	// TODO change if statement when isSuporInterval is implemented
 	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || true /*isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators) */ {
 		op1, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {

@@ -152,12 +152,12 @@ func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinitio
 	var toDo []metricsapi.Objective
 	done := make(map[string]metricsapi.ProviderResult, len(status))
 	for _, obj := range def.Spec.Objectives {
-                 key := common.ComputeKey(obj.AnalysisValueTemplateRef)
+		key := common.ComputeKey(obj.AnalysisValueTemplateRef)
 		if value, ok := status[key]; ok {
 			if value.ErrMsg != "" {
 				toDo = append(toDo, obj)
 			} else {
-				done[common.ComputeKey(obj.AnalysisValueTemplateRef)] = status[common.ComputeKey(obj.AnalysisValueTemplateRef)]
+				done[key] = status[key]
 			}
 		}
 	}

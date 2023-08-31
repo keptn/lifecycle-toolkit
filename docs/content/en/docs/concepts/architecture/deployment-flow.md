@@ -61,7 +61,8 @@ defined on either the `KeptnApp` or `KeptnWorkload` level pass.
 Only then are the pods bound to a node and deployed.
 If any pre-deployment evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event
-and terminates the deployment.
+and the deployment remains pending indefinitely,
+until further changes or external intervention
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.

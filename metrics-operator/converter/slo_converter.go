@@ -288,6 +288,8 @@ func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
 }
 
 // checks and negates the existing single operator
+//
+//nolint:dupl
 func negateSingleOperator(op string, value string) (*metricsapi.Operator, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
@@ -324,6 +326,8 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 }
 
 // checks and creates single operator
+//
+//nolint:dupl
 func createSingleOperator(op string, value string) (*metricsapi.Operator, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)

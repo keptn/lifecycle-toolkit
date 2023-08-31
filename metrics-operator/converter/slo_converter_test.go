@@ -1,6 +1,6 @@
+//nolint:dupl
 package converter
 
-//nolint:dupl
 import (
 	"testing"
 

@@ -42,7 +42,7 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 		result := metricsapi.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,
 			Value:     value,
-			Err:       strErr,
+			ErrMsg:    strErr,
 		}
 		oe.Log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		oe.results <- result

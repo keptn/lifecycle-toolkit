@@ -16,17 +16,17 @@ type IAnalysisPool interface {
 	DispatchAndCollect(ctx context.Context) (map[string]metricsapi.ProviderResult, error)
 }
 
-type NewWorkersPoolFactory func(ctx context.Context, analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool)
+type NewWorkersPoolFactory func(ctx context.Context, analysis *metricsapi.Analysis, objectives []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool)
 
-func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
-	numJobs := len(definition.Spec.Objectives)
+func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectives []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+	numJobs := len(objectives)
 	if numJobs <= numWorkers { // do not start useless go routines
 		numWorkers = numJobs
 	}
 	_, cancel := context.WithCancel(ctx)
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
-	assigner := TaskAssigner{tasks: definition.Spec.Objectives, numWorkers: numWorkers}
+	assigner := TaskAssigner{tasks: objectives, numWorkers: numWorkers}
 	results := make(chan metricsapi.ProviderResult, numJobs)
 	evaluator := ObjectivesEvaluator{
 		ProviderFactory: providers.NewProvider,
@@ -82,8 +82,8 @@ loop:
 		default:
 			res := aw.GetResult()
 			results[analysis.ComputeKey(res.Objective)] = res
-			if res.Err != "" {
-				err = errors.New(res.Err)
+			if res.ErrMsg != "" {
+				err = errors.New(res.ErrMsg)
 				aw.cancel()
 				break loop
 			}

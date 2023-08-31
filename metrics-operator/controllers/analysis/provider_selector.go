@@ -65,7 +65,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			if err != nil {
 				ps.Log.Error(err, "Failed to get the correct Provider")
-				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return
 			}
@@ -83,7 +83,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			if err != nil {
 				ps.Log.Error(err, "Failed to get Provider")
-				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return
 			}
@@ -91,7 +91,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
 			if err != nil {
 				ps.Log.Error(err, "Failed to substitute args in templ")
-				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, Err: err.Error()}
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
 				ps.cancel()
 				return
 			}

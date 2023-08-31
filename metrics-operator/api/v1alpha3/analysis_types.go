@@ -37,7 +37,7 @@ type ProviderResult struct {
 	// Value is the value the provider returned
 	Value string `json:"value,omitempty"`
 	// Err stores any possible error at retrieval time
-	Err string `json:"error,omitempty"`
+	ErrMsg string `json:"errMsg,omitempty"`
 }
 
 // AnalysisStatus stores the status of the overall analysis returns also pass or warnings

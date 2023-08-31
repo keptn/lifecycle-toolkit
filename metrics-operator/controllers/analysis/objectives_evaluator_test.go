@@ -49,8 +49,8 @@ func TestEvaluate(t *testing.T) {
 					Name:      "mytemp",
 					Namespace: "default",
 				},
-				Value: "10",
-				Err:   "",
+				Value:  "10",
+				ErrMsg: "",
 			},
 			expectedError: "",
 		},
@@ -77,8 +77,8 @@ func TestEvaluate(t *testing.T) {
 					Name:      "mytemp",
 					Namespace: "default",
 				},
-				Value: "",
-				Err:   "something bad",
+				Value:  "",
+				ErrMsg: "something bad",
 			},
 			expectedError: "something bad",
 		},
@@ -118,7 +118,7 @@ func TestEvaluate(t *testing.T) {
 			result := <-objectivesEvaluator.results
 
 			require.Equal(t, tc.expectedResult, result)
-			require.Equal(t, tc.expectedError, result.Err)
+			require.Equal(t, tc.expectedError, result.ErrMsg)
 		})
 	}
 }

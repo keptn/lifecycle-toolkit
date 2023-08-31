@@ -71,8 +71,6 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, nil
 	}
 
-	//check status, is there any error?/is empty?
-
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef := &metricsapi.AnalysisDefinition{}
 	if analysis.Spec.AnalysisDefinition.Namespace == "" {
@@ -94,14 +92,17 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 
-	tempAnalysisDef := analysisDef
 	var done map[string]metricsapi.ProviderResult
+	todo := analysisDef.Spec.Objectives
 	if analysis.Status.Raw != "" {
-		done = a.ExtractMissingObj(tempAnalysisDef, analysis.Status.StoredValues)
+		todo, done = a.ExtractMissingObj(analysisDef, analysis.Status.StoredValues)
+		if len(todo) == 0 {
+			return ctrl.Result{}, nil
+		}
 	}
 
 	//create multiple workers handling the Objectives
-	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, tempAnalysisDef, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, a.Namespace)
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
@@ -143,18 +144,17 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(a)
 }
 
-func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) map[string]metricsapi.ProviderResult {
-	toDo := []metricsapi.Objective{}
+func (a AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {
+	var toDo []metricsapi.Objective
 	done := make(map[string]metricsapi.ProviderResult, len(status))
 	for _, obj := range def.Spec.Objectives {
 		if value, ok := status[common.ComputeKey(obj.AnalysisValueTemplateRef)]; ok {
-			if value.Err != "" {
+			if value.ErrMsg != "" {
 				toDo = append(toDo, obj)
 			} else {
 				done[common.ComputeKey(obj.AnalysisValueTemplateRef)] = status[common.ComputeKey(obj.AnalysisValueTemplateRef)]
 			}
 		}
 	}
-	def.Spec.Objectives = toDo
-	return done
+	return toDo, done
 }

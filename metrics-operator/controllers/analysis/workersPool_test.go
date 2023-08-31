@@ -15,14 +15,10 @@ func TestNewWorkerPool(t *testing.T) {
 	analysis := metricsapi.Analysis{
 		Spec: metricsapi.AnalysisSpec{Args: map[string]string{"hi": "there"}},
 	}
-	def := metricsapi.AnalysisDefinition{
-		Spec: metricsapi.AnalysisDefinitionSpec{
-			Objectives: []metricsapi.Objective{{
-				Weight:       10,
-				KeyObjective: true,
-			},
-			},
-		},
+	objs := []metricsapi.Objective{{
+		Weight:       10,
+		KeyObjective: true,
+	},
 	}
 
 	log := testr.New(t)
@@ -31,7 +27,7 @@ func TestNewWorkerPool(t *testing.T) {
 		numJobs:    1,
 	}
 
-	_, got := NewWorkersPool(context.TODO(), &analysis, &def, 4, nil, log, "default")
+	_, got := NewWorkersPool(context.TODO(), &analysis, objs, 4, nil, log, "default")
 	//make sure never to create more workers than needed
 	require.Equal(t, want.numJobs, got.(WorkersPool).numWorkers)
 	//make sure all objectives are processed
@@ -51,13 +47,13 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	res1 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t1"},
 		Value:     "result1",
-		Err:       "",
+		ErrMsg:    "",
 	}
 
 	res2 := metricsapi.ProviderResult{
 		Objective: metricsapi.ObjectReference{Name: "t2"},
 		Value:     "result2",
-		Err:       "",
+		ErrMsg:    "",
 	}
 
 	// Create and send mock results to the results channel

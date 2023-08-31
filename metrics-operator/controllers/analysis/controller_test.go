@@ -60,7 +60,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 	req := controllerruntime.Request{
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
-	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, definition *metricsapi.AnalysisDefinition, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
 		mymock := fake.IAnalysisPoolMock{
 			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 				return map[string]metricsapi.ProviderResult{}, nil

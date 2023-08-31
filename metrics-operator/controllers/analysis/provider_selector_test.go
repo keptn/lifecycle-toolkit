@@ -138,7 +138,7 @@ func TestProvidersPool(t *testing.T) {
 				require.Equal(t, tc.providerResult.Query, res.Query)
 			} else {
 				res := <-resultChan
-				require.Contains(t, res.Err, tc.expectedErr)
+				require.Contains(t, res.ErrMsg, tc.expectedErr)
 			}
 			pool.StopProviders()
 		})

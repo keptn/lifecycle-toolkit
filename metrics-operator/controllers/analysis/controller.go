@@ -106,7 +106,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
-		a.Log.Error(err, "Failed to Collect all SLOs, caching collected values")
+		a.Log.Error(err, "Failed to collect all values required for the Analysis, caching collected values")
 		analysis.Status.StoredValues = res
 		err = a.updateStatus(ctx, analysis)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, err

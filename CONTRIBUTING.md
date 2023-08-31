@@ -42,17 +42,10 @@ on Slack and a mentor will surely guide you!
 
 ### Prerequisites
 
-* [**Docker**](https://docs.docker.com/get-docker/): a tool for containerization,
-which allows software applications to run in isolated environments
-and makes it easier to deploy and manage them.
-* A Kubernetes `cluster >= Kubernetes 1.24` .If you don’t have one,
-we recommend Kubernetes-in-Docker(kind) to set up your local development environment.
-* [**kubectl**](https://kubernetes.io/docs/tasks/tools/): a command-line interface tool used for deploying
-and managing applications on Kubernetes clusters.
-* [**kustomize**](https://kustomize.io/): a tool used for customizing Kubernetes resource configurations
-and generating manifests.
-* [**Helm**](https://helm.sh/): a package manager for Kubernetes that
-simplifies the deployment and management of applications on a Kubernetes cluster.
+See
+[Set up the development environment](docs/content/en/contribute/software/dev-environ/_index.md)
+for information about how to set up an environment
+in which you can develop and test software for Keptn.
 
 ## Related Technologies
 
@@ -70,46 +63,9 @@ Your PR will usually be reviewed by the Keptn Lifecycle Toolkit team within a
 couple of days, but feel free to let us know about your PR
 [via Slack](https://cloud-native.slack.com/channels/keptn-lifecycle-toolkit-dev).
 
-## Auto signoff commit messages
+## Developer Certification of Origin (DCO)
 
-We have a DCO check that runs on every PR to verify that the commit has been signed off.
-
-To sign off the commits use `-s` flag, you can can use
-
-```bash
-git commit -s -m "my awesome contribution"
-```
-
-To sign off the last commit you made, you can use
-
-```bash
-git commit --amend --signoff
-```
-
-or the command below to sign off the last 2 commits you made
-
-```bash
-git rebase HEAD~2 --signoff
-```
-
-This process is sometimes inconvenient but you can automate it
-by creating a pre-commit git hook as follows:
-
-1. Create the hook:
-
-    ``` bash
-    touch .git/hooks/prepare-commit-msg
-    ```
-
-2. Add the following to the `prepare-commit-msg` file:
-
-    ```bash
-    SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-    grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
-    ```
-
-3. Give it execution permissions by calling:
-
-    ```bash
-    chmod +x ./.git/hooks/prepare-commit-msg
-    ```
+All commits must be accompanied by a DCO sign-off.
+See
+[DCO](docs/content/en/contribute/general/dco)
+for more information.

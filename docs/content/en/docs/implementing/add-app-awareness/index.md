@@ -17,7 +17,7 @@ To get this working, we need to modify our application manifest with two things:
 
 ### TL;DR
 
-You can also used the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and
+You can also use the prepared manifest and apply it directly using: `kubectl apply -k sample-app/version-2/` and
 proceed [here](#watch-application-behavior).
 
 ---
@@ -58,7 +58,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: ghcr.io/podtato-head/right-leg:0.2.7
+          image: ghcr.io/podtato-head/right-leg:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -78,14 +78,14 @@ metadata:
   name: podtato-head
   namespace: podtato-kubectl
 spec:
-  version: "0.1.0"
+  version: "latest"
   workloads:
     - name: left-arm
-      version: "0.1.1"
+      version: "myvers12.5"
     - name: left-leg
-      version: "0.1.1"
+      version: "my_v24"
     - name: entry
-      version: "0.1.1"
+      version: "latest"
     - name: right-arm
       version: "0.1.1"
     - name: left-arm

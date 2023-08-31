@@ -33,7 +33,7 @@ All this information can be displayed with dashboard tools
 such as Grafana.
 
 For an introduction to using OpenTelemetry with Keptn metrics, see the
-[Standardize observability](../getting-started/observability)
+[Standardize observability](../intro-klt/usecase-observability.md)
 getting started guide.
 
 ## DORA metrics
@@ -125,7 +125,7 @@ kubectl apply -f config/prometheus/
 
 ### Integrate OpenTelemetry into the Keptn Lifecycle Toolkit
 
-To integrate OpenTelementry into the Keptn Lifecycle Toolkit:
+To integrate OpenTelemetry into the Keptn Lifecycle Toolkit:
 
 - Apply
   [basic annotations](../implementing/integrate/#basic-annotations)
@@ -138,7 +138,7 @@ To integrate OpenTelementry into the Keptn Lifecycle Toolkit:
 
 The
 [otel-collector.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/support/observability/config/otel-collector.yaml)
-is the OpenTelementry manifest file for the PodtatoHead example,
+is the OpenTelemetry manifest file for the PodtatoHead example,
 located in the `config` directory.
 To deploy and configure the OpenTelemetry collector
 using this manifest, the command is:

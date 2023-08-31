@@ -1,7 +1,6 @@
 ---
 title: Keptn Certificate Manager
 description: Learn how the cert-manager works
-icon: concepts
 layout: quickstart
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -39,7 +38,7 @@ It is included to simplify installation for new users
 and because it is much smaller than most standard certificate managers.
 However, KLT is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
-See [Use Keptn with cert-manager.io](../../install/cert-manager.md)
+See [Use Keptn with cert-manager.io](../../operate/cert-manager.md)
 for instructions.
 
 ## Invalid certificate errors

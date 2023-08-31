@@ -12,8 +12,9 @@ spec:
           lessThan:
             fixedValue: 600
         warning:
-          greaterThanOrEqual:
-            fixedValue: 800
+          inRange:
+            lowBound: 300
+            highBound: 500
       weight: 1
       keyObjective: false
   totalScore:

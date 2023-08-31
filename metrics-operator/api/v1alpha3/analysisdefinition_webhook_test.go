@@ -28,8 +28,32 @@ func TestOperator_validate(t *testing.T) {
 				LessThan: &OperatorValue{
 					FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
 				},
+				InRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
 			},
 			wantErr: fmt.Errorf("Operator: multiple operators can not be set"),
+		},
+		{
+			name: "in range - fail validation",
+			operator: Operator{
+				InRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(25, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+		{
+			name: "not in range - fail validation",
+			operator: Operator{
+				NotInRange: &RangeValue{
+					LowBound:  *resource.NewQuantity(25, resource.DecimalSI),
+					HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+				},
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
 		},
 		{
 			name: "happy path",
@@ -45,6 +69,45 @@ func TestOperator_validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.wantErr, tt.operator.validate())
+		})
+	}
+}
+
+func TestRangeValue_validate(t *testing.T) {
+	tests := []struct {
+		name    string
+		r       RangeValue
+		wantErr error
+	}{
+		{
+			name: "happy path",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(15, resource.DecimalSI),
+			},
+			wantErr: nil,
+		},
+		{
+			name: "equal bounds",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(5, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(5, resource.DecimalSI),
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+		{
+			name: "lower greater that higher bound",
+			r: RangeValue{
+				LowBound:  *resource.NewQuantity(15, resource.DecimalSI),
+				HighBound: *resource.NewQuantity(5, resource.DecimalSI),
+			},
+			wantErr: fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.wantErr, tt.r.validate())
 		})
 	}
 }
@@ -110,7 +173,20 @@ func TestObjective_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
+		},
+		{
+			name: "only failure set",
+			obj: Objective{
+				Target: Target{
+					Failure: &Operator{
+						EqualTo: &OperatorValue{
+							FixedValue: *resource.NewQuantity(5, resource.DecimalSI),
+						},
+					},
+				},
+			},
+			wantErr: nil,
 		},
 		{
 			name: "warning and failure set properly",
@@ -247,7 +323,7 @@ func TestTarget_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
 		},
 		{
 			name:    "neither failure nor warning set",
@@ -274,7 +350,7 @@ func TestTarget_validate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warning criteria cannot be set without Failure criteria"),
+			wantErr: nil,
 		},
 		{
 			name: "warning not set properly",

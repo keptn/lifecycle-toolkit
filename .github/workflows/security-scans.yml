@@ -194,6 +194,7 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
+          - "deno-runtime"
           - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
@@ -225,7 +226,6 @@ jobs:
           - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
-
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v4

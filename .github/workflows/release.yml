@@ -16,6 +16,7 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.12.1"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
+  PUBLISHABLE_ITEMS: '[".", "lifecycle-operator", "metrics-operator", "klt-cert-manager", "runtimes/deno-runtime", "runtimes/python-runtime"]'
 
 jobs:
   release-please:
@@ -42,71 +43,81 @@ jobs:
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
 
-      - name: Release Info
+      - name: Debug info
+        env:
+          CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
+          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
+          FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
         run: |
-          echo "Release KLT:                  ${{ steps.release.outputs.release_created }}"
-          echo "Release KLT Cert Manager:     ${{ steps.release.outputs.klt-cert-manager--release_created }}"
-          echo "Release KLT Metrics Operator: ${{ steps.release.outputs.metrics-operator--release_created }}"
-          echo "Anything to release:          ${{ steps.release.outputs.releases_created }}"
-          echo "Paths to be released:         ${{ steps.release.outputs.paths_released }}"
+          echo "PATHS_RELEASE_JSON: ${PATHS_RELEASE_JSON}"
+          echo "FULL RELEASE OUTPUT: ${FULL_RELEASE_OUTPUT}"
+          echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
+          echo "KLT_TAG: ${KLT_TAG}"
+          echo "ARTIFACT_TAG_NAME: ${ARTIFACT_TAG_NAME}"
+          echo "PATHS_RELEASED: ${PATHS_RELEASED}"
+          echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
+          echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
+          echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
 
-      - name: Create build matrix
+      - name: Create release matrix
         id: build-matrix
         uses: actions/github-script@v6
         env:
-          RELEASE_KLT: ${{ steps.release.outputs.release_created }}
-          RELEASE_CERT_MANAGER: ${{ steps.release.outputs.klt-cert-manager--release_created }}
-          RELEASE_METRICS_OPERATOR: ${{ steps.release.outputs.metrics-operator--release_created }}
+          CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
-          CERT_MANAGER_TAG: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
-          METRICS_OPERATOR_TAG: ${{ steps.release.outputs.metrics-operator--tag_name }}
+          ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
         with:
           script: |
-            const { RELEASE_KLT, RELEASE_CERT_MANAGER, RELEASE_METRICS_OPERATOR, KLT_TAG, CERT_MANAGER_TAG, METRICS_OPERATOR_TAG } = process.env
+            const changedItems = JSON.parse(process.env.CHANGED_ITEMS || '[]');
+            console.log("changed items", changedItems);
+            const eligibleItems = JSON.parse(process.env.PUBLISHABLE_ITEMS || '[]');
+            console.log("eligible items", eligibleItems);
+            const itemsToPublish = changedItems.filter(i => eligibleItems.includes(i));
+            console.log("items to publish", itemsToPublish);
 
-            var result = []
-            if (RELEASE_KLT === "true") {
-              result.push(...[
-                {
-                    name: "lifecycle-operator",
-                    folder: "lifecycle-operator/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "scheduler",
-                    folder: "scheduler/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "functions-runtime",
-                    folder: "functions-runtime/",
-                    tagName: KLT_TAG
-                },
-                {
-                    name: "python-runtime",
-                    folder: "python-runtime/",
-                    tagName: KLT_TAG
+            console.log("setting up build matrix...");
+            const releaseMatrix = [];
+            itemsToPublish.forEach(item => {
+                switch (item) {
+                    case "lifecycle-operator":
+                        releaseMatrix.push(...[
+                            {
+                                name: item,
+                                folder: item,
+                                tagName: process.env.ARTIFACT_TAG_NAME
+                            },
+                            {
+                                name: "scheduler",
+                                folder: "scheduler/",
+                                tagName: process.env.ARTIFACT_TAG_NAME
+                            }
+                        ]);
+                        break;
+                    case "metrics-operator":
+                    case "klt-cert-manager":
+                        releaseMatrix.push({
+                            name: item,
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        });
+                        break;
+                    case "runtimes/deno-runtime":
+                    case "runtimes/python-runtime":
+                        releaseMatrix.push({
+                            name: item.replace("runtimes/", ""),
+                            folder: item,
+                            tagName: process.env.ARTIFACT_TAG_NAME
+                        });
+                        break;
+                    case ".":
+                    default:
+                        break;
                 }
-              ])
-            }
-
-            if (RELEASE_CERT_MANAGER === "true") {
-              result.push({
-                  name: "certificate-operator",
-                  folder: "klt-cert-manager/",
-                  tagName: CERT_MANAGER_TAG
-              })
-            }
-
-            if (RELEASE_METRICS_OPERATOR === "true") {
-              result.push({
-                  name: "metrics-operator",
-                  folder: "metrics-operator/",
-                  tagName: METRICS_OPERATOR_TAG
-              })
-            }
-
-            return { config: result }
+            });
+            console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));
+            return { config: releaseMatrix };
 
   build-release:
     if: needs.release-please.outputs.releases-created == 'true'
@@ -149,6 +160,10 @@ jobs:
           # Remove artifact prefix from tag so that we get clean image tags
           temp="${IMAGE_TAG##klt-}"
           temp="${temp##cert-manager-}"
+          temp="${temp##python-runtime-}"
+          temp="${temp##deno-runtime-}"
+          temp="${temp##scheduler-}"
+          temp="${temp##lifecycle-operator-}"
           echo "IMAGE_TAG=${temp##metrics-operator-}" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker Image
@@ -193,149 +208,6 @@ jobs:
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
-
-  release-manifests:
-    if: needs.release-please.outputs.releases-created == 'true'
-    needs:
-      - release-please
-      - build-release
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache build tools lifecycle-operator
-        if: needs.release-please.outputs.klt-release-created == 'true'
-        id: cache-build-tools-lifecycle-operator
-        uses: actions/cache@v3
-        with:
-          path: ./lifecycle-operator/bin
-          key: build-tools-${{ github.ref_name }}
-
-      - name: Cache build tools metrics-operator
-        if: needs.release-please.outputs.metrics-operator-release-created == 'true'
-        id: cache-build-tools-metrics-operator
-        uses: actions/cache@v3
-        with:
-          path: ./metrics-operator/bin
-          key: build-tools-${{ github.ref_name }}
-
-      - name: Cache build tools scheduler
-        if: needs.release-please.outputs.klt-release-created == 'true'
-        id: cache-build-tools-scheduler
-        uses: actions/cache@v3
-        with:
-          path: ./scheduler/bin
-          key: build-tools-${{ github.ref_name }}
-
-      - name: Cache build tools cert-manager
-        if: needs.release-please.outputs.cert-manager-release-created == 'true'
-        id: cache-build-tools-klt-cert-manager
-        uses: actions/cache@v3
-        with:
-          path: ./klt-cert-manager/bin
-          key: build-tools-${{ github.ref_name }}
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
-
-      - name: Create KLT manifest
-        if: needs.release-please.outputs.klt-release-created == 'true'
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-          CHART_APPVERSION: ${{ needs.release-please.outputs.klt-tag-name }}
-        run: |
-          cd scheduler
-          make release-manifests
-          cd ../lifecycle-operator
-          make controller-gen release-manifests
-          cd ../klt-cert-manager
-          make controller-gen release-manifests
-          cd ../metrics-operator
-          make controller-gen release-manifests
-          cd ..
-          echo "---" >> lifecycle-operator/config/rendered/release.yaml
-          echo "---" >> scheduler/config/rendered/release.yaml
-          echo "---" >> klt-cert-manager/config/rendered/release.yaml
-          cat >> namespace.yaml << EOF
-          ---
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: keptn-lifecycle-toolkit-system
-          ---
-          EOF
-          cat namespace.yaml \
-            lifecycle-operator/config/rendered/release.yaml \
-            scheduler/config/rendered/release.yaml \
-            klt-cert-manager/config/rendered/release.yaml \
-            metrics-operator/config/rendered/release.yaml > klt-manifest.yaml
-
-      - name: Create Cert-Manager manifest
-        if: needs.release-please.outputs.cert-manager-release-created == 'true'
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-          CHART_APPVERSION: ${{ needs.release-please.outputs.cert-manager-tag-name }}
-        run: |
-          cd klt-cert-manager
-          make controller-gen release-manifests
-          cd ..
-          echo "---" >> klt-cert-manager/config/rendered/release.yaml
-          cat >> namespace.yaml << EOF
-          ---
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: keptn-lifecycle-toolkit-system
-          ---
-          EOF
-          cat namespace.yaml \
-            klt-cert-manager/config/rendered/release.yaml > cert-manager-manifest.yaml
-
-      - name: Create Metrics Operator manifest
-        if: needs.release-please.outputs.metrics-operator-release-created == 'true'
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-          CHART_APPVERSION: ${{ needs.release-please.outputs.metrics-operator-tag-name }}
-        run: |
-          cd metrics-operator
-          make controller-gen release-manifests
-          cd ..
-          echo "---" >> metrics-operator/config/rendered/release.yaml
-          cat >> namespace.yaml << EOF
-          ---
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: keptn-lifecycle-toolkit-system
-          ---
-          EOF
-          cat namespace.yaml \
-            metrics-operator/config/rendered/release.yaml > metrics-operator-manifest.yaml
-
-      - name: Attach KLT release assets
-        if: needs.release-please.outputs.klt-release-created == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
-          files: klt-manifest.yaml
-
-      - name: Attach Cert-Manager release assets
-        if: needs.release-please.outputs.cert-manager-release-created == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.release-please.outputs.cert-manager-tag-name }}
-          files: cert-manager-manifest.yaml
-
-      - name: Attach Metrics Operator release assets
-        if: needs.release-please.outputs.metrics-operator-release-created == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.release-please.outputs.metrics-operator-tag-name }}
-          files: metrics-operator-manifest.yaml
 
   update-docs:
     name: Update Documentation

@@ -7683,7 +7683,7 @@ spec:
           value: "true"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/certificate-operator:v0.8.1
+        image: ghcr.io/keptn/certificate-operator:v1.1.0
         imagePullPolicy: Always
         name: manager
         resources:

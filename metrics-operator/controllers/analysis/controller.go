@@ -114,6 +114,12 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	maps.Copy(res, done)
 
+	err = a.evaluateObjectives(ctx, res, analysisDef, analysis)
+
+	return ctrl.Result{}, err
+}
+
+func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) error {
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)
 	if err != nil {
@@ -124,9 +130,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
-	err = a.updateStatus(ctx, analysis)
-
-	return ctrl.Result{}, err
+	return a.updateStatus(ctx, analysis)
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {
@@ -144,7 +148,7 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(a)
 }
 
-func (a AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {
+func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {
 	var toDo []metricsapi.Objective
 	done := make(map[string]metricsapi.ProviderResult, len(status))
 	for _, obj := range def.Spec.Objectives {

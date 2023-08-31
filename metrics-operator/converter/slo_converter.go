@@ -224,6 +224,8 @@ func isSuperInterval(op1 []string, op2 []string) (bool, error) {
 }
 
 // creates interval from set of operators
+//
+//nolint:gocyclo
 func createInterval(op []string) (*Interval, error) {
 	// if it's unbounded interval, we have only one operator
 	if len(op) == 1 {

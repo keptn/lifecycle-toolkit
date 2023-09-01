@@ -11,14 +11,9 @@ commands:
       time_20_seconds_later=$(date -u -d "@$new_timestamp" +"%Y-%m-%dT%H:%M:%SZ")
       export CURRENT_TIME="$current_time"
       export LATER="$time_20_seconds_later"
-      sed -i '0,/^  namespace:/s/namespace: .*/namespace: $NAMESPACE/' install.yaml
-      sed -i 's/from: .*$/from: $CURRENT_TIME/g; s/to: .*$/to: $LATER/g' install.yaml
       echo "templating time" $CURRENT_TIME $LATER
       envsubst <"install.yaml" >out.yaml
-      rm "install.yaml"
-      mv out.yaml "install.yaml"
-  - command: kubectl apply -f install.yaml
+  - command: kubectl apply -f out.yaml
   #  rewrites the env var not to push useless date changes when running locally
   - script: |
-      sed -i '0,/^  namespace:/s/namespace: .*/namespace: $NAMESPACE/' install.yaml
-      sed -i 's/from: .*$/from: $CURRENT_TIME/g; s/to: .*$/to: $LATER/g' install.yaml
+      rm out.yaml

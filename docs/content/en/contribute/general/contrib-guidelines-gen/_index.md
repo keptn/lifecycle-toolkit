@@ -1,13 +1,17 @@
 ---
 title: Contribution Guidelines
-description: Guidelines for contributing towards Keptn Lifecycle Toolkit
-weight: 300
+description: Guidelines for contributing to Keptn Lifecycle Toolkit
+weight: 50
 ---
 
 Before using the **Keptn Lifecycle Toolkit**
 as a contributor to the Keptn Lifecycle Toolkit repository,
 it is expected that you comply with the guidelines while
 making contributions towards the repository.
+
+These guidelines are appropriate for both software and documentation.
+For additional guidelines that are relevant only to documentation, see
+[Contribution guidelines for documentation](../../docs/contrib-guidelines-docs).
 
 ## Guidelines for contributing
 
@@ -16,7 +20,6 @@ making contributions towards the repository.
   Keptn, like most open source projects,
   severely restricts who can push changes directly to the `main` branch
   to protect the integrity of the repository.
-* Keep your language clean and crisp.
 * Smaller PR's are easier to review and so generally get processed more quickly;
   when possible, chunk your work into smallish PR's.
   However, we recognize that documentation work sometimes requires larger PRs,
@@ -30,7 +33,7 @@ making contributions towards the repository.
   This helps reviewers understand each commit
   and provides a good history after the PR is merged.
 * If your PR is not reviewed in a timely fashion,
-  feel free to post a gentle reminder to the `#keptn-docs` Slack channel.
+  feel free to post a gentle reminder to the `#keptn-help-contributing` Slack channel.
 * Resolve review comments and suggestions promptly.
 
 If you see a problem and are unable to fix it yourself

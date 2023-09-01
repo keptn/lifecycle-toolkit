@@ -13,14 +13,14 @@ import (
 func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name            string
-		values          map[string]string
+		values          map[string]v1alpha3.ProviderResult
 		o               v1alpha3.Objective
 		want            types.ObjectiveResult
 		mockedEvaluator ITargetEvaluator
 	}{
 		{
 			name:   "no value in results map",
-			values: map[string]string{},
+			values: map[string]v1alpha3.ProviderResult{},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
 					Name: "name",
@@ -34,8 +34,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation passed",
-			values: map[string]string{
-				"name": "20",
+			values: map[string]v1alpha3.ProviderResult{
+				"name": {Value: "20"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -61,8 +61,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation finished with warning",
-			values: map[string]string{
-				"name": "20",
+			values: map[string]v1alpha3.ProviderResult{
+				"name": {Value: "20"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -90,8 +90,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation failed",
-			values: map[string]string{
-				"name": "20",
+			values: map[string]v1alpha3.ProviderResult{
+				"name": {Value: "20"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -129,24 +129,24 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 func TestGetValueFromMap(t *testing.T) {
 	tests := []struct {
 		name    string
-		values  map[string]string
+		values  map[string]v1alpha3.ProviderResult
 		in      string
 		val     float64
 		wantErr bool
 	}{
 		{
 			name: "happy path",
-			values: map[string]string{
-				"key": "7",
+			values: map[string]v1alpha3.ProviderResult{
+				"key1": {Value: "7"},
 			},
-			in:      "key",
+			in:      "key1",
 			val:     7.0,
 			wantErr: false,
 		},
 		{
 			name: "key not found",
-			values: map[string]string{
-				"key1": "7",
+			values: map[string]v1alpha3.ProviderResult{
+				"key1": {Value: "7"},
 			},
 			in:      "key",
 			val:     0.0,
@@ -154,10 +154,10 @@ func TestGetValueFromMap(t *testing.T) {
 		},
 		{
 			name: "value not float",
-			values: map[string]string{
-				"key": "",
+			values: map[string]v1alpha3.ProviderResult{
+				"key": {},
 			},
-			in:      "key",
+			in:      "key1",
 			val:     0.0,
 			wantErr: true,
 		},
@@ -179,9 +179,9 @@ func TestComputeKey(t *testing.T) {
 		Name: "key",
 	}
 
-	require.Equal(t, "key", computeKey(obj))
+	require.Equal(t, "key", ComputeKey(obj))
 
 	obj.Namespace = "namespace"
 
-	require.Equal(t, "key-namespace", computeKey(obj))
+	require.Equal(t, "key-namespace", ComputeKey(obj))
 }

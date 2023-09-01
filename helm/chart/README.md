@@ -150,6 +150,8 @@ checks
 | `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `v0.8.1`                         |
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
 | `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
+| `metricsOperator.manager.env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller         | `0`                              |
+| `metricsOperator.manager.env.enableKeptnAnalysis`                           | enables/disables the analysis feature             | `false`                          |
 | `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
 | `metricsOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
 | `metricsOperator.manager.resources`                                         | specify limits and requests for manager container |                                  |

@@ -919,6 +919,54 @@ func TestEvaluateQueryForStep_WrongStep(t *testing.T) {
 	require.Empty(t, r)
 }
 
+func TestFetchAnalysisValue_HappyPath(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(ddPayload))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	secretName := "datadogSecret"
+	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
+	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
+	apiToken := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte(apiKeyValue),
+			appKey: []byte(appKeyValue),
+		},
+	}
+	kdd := setupTest(apiToken)
+
+	b := true
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: secretName,
+				},
+				Optional: &b,
+			},
+			TargetServer: svr.URL,
+		},
+	}
+
+	spec := metricsapi.AnalysisSpec{
+		Timeframe: metricsapi.Timeframe{
+			From: metav1.Time{Time: time.Now()},
+			To:   metav1.Time{Time: time.Now()},
+		},
+	}
+
+	r, e := kdd.FetchAnalysisValue(context.TODO(), "system.cpu.idle{*}", spec, &p)
+	require.Nil(t, e)
+	require.Equal(t, fmt.Sprintf("%.3f", 89.116), r)
+
+}
+
 func TestGetSingleValue_EmptyPoints(t *testing.T) {
 	kdd := setupTest()
 	var points [][]*float64

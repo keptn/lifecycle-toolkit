@@ -41,7 +41,7 @@ _Appears in:_
 | `kind` _string_ | `Analysis`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[AnalysisSpec](#analysisspec)_ |  |
-| `status` _string_ |  |
+| `status` _[AnalysisStatus](#analysisstatus)_ |  |
 
 
 #### AnalysisDefinition
@@ -121,8 +121,25 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate |
-| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. The placeholder must be the capitalized version of the key; i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})". |
+| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". |
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates |
+
+
+#### AnalysisStatus
+
+
+
+AnalysisStatus stores the status of the overall analysis returns also pass or warnings
+
+_Appears in:_
+- [Analysis](#analysis)
+
+| Field | Description |
+| --- | --- |
+| `raw` _string_ | Raw contains the raw result of the SLO computation |
+| `pass` _boolean_ | Pass returns whether the SLO is satisfied |
+| `warning` _boolean_ | Warning returns whether the analysis returned a warning |
+| `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully |
 
 
 #### AnalysisValueTemplate
@@ -302,6 +319,7 @@ _Appears in:_
 - [AnalysisSpec](#analysisspec)
 - [AnalysisValueTemplateSpec](#analysisvaluetemplatespec)
 - [Objective](#objective)
+- [ProviderResult](#providerresult)
 
 | Field | Description |
 | --- | --- |
@@ -372,6 +390,22 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name of the provider |
+
+
+#### ProviderResult
+
+
+
+ProviderResult stores reference of already collected provider query associated to its objective template
+
+_Appears in:_
+- [AnalysisStatus](#analysisstatus)
+
+| Field | Description |
+| --- | --- |
+| `objectiveReference` _[ObjectReference](#objectreference)_ | Objective store reference to corresponding objective template |
+| `value` _string_ | Value is the value the provider returned |
+| `errMsg` _string_ | ErrMsg stores any possible error at retrieval time |
 
 
 #### RangeSpec

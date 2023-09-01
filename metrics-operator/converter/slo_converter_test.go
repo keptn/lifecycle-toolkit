@@ -674,6 +674,13 @@ func TestNewOperator(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name:    "empty operator",
+			op:      []string{},
+			negate:  true,
+			out:     nil,
+			wantErr: true,
+		},
+		{
 			name:    "unsupported operator",
 			op:      []string{""},
 			negate:  true,
@@ -1132,6 +1139,19 @@ func TestSetupTarget(t *testing.T) {
 			},
 			want:    &metricsapi.Target{},
 			wantErr: false,
+		},
+		{
+			name: "bogus operator",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"<<<<10"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
 		},
 		{
 			name: "logical OR criteria -> informative slo",

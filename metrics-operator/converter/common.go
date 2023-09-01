@@ -2,6 +2,7 @@ package converter
 
 import (
 	"fmt"
+	"math"
 
 	"gopkg.in/inf.v0"
 )
@@ -32,7 +33,7 @@ func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
 	return fmt.Errorf(UnconvertableOperatorsCombinationErrMsg, op1, op2)
 }
 
-const MaxInt = int(^uint(0) >> 1)
+const MaxInt = math.MaxInt
 const MinInt = -MaxInt - 1
 
 type Operator struct {
@@ -43,4 +44,12 @@ type Operator struct {
 type Interval struct {
 	Start *inf.Dec
 	End   *inf.Dec
+}
+
+func isGreaterOrEqual(op string) bool {
+	return op == ">" || op == ">="
+}
+
+func isLessOrEqual(op string) bool {
+	return op == "<" || op == "<="
 }

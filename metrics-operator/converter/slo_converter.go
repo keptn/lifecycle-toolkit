@@ -253,7 +253,7 @@ func createBoundedInterval(op []string) (*Interval, error) {
 		return nil, err
 	}
 	//check if the interval makes logical sense for conversions, e.g. 5 < x < 10; unsupported: x < 5 && x > 10
-	if (smallerOperator.Operation == ">" || smallerOperator.Operation == ">=") && (biggerOperator.Operation == "<" || biggerOperator.Operation == "<=") {
+	if isGreaterOrEqual(smallerOperator.Operation) && isLessOrEqual(biggerOperator.Operation) {
 		return &Interval{
 			Start: smallerOperator.Value,
 			End:   biggerOperator.Value,
@@ -275,20 +275,18 @@ func createUnboundedInterval(op string) (*Interval, error) {
 		return nil, NewUnconvertableValueErr(value)
 	}
 	// interval of (val, Inf)
-	if operator == ">" || operator == ">=" {
+	if isGreaterOrEqual(operator) {
 		return &Interval{
 			Start: dec,
 			End:   inf.NewDec(int64(MaxInt), 0),
 		}, nil
 		// interval of (-Inf, val)
-	} else if operator == "<" || operator == "<=" {
-		return &Interval{
-			Start: inf.NewDec(int64(MinInt), 0),
-			End:   dec,
-		}, nil
 	}
 
-	return nil, NewInvalidOperatorErr(op)
+	return &Interval{
+		Start: inf.NewDec(int64(MinInt), 0),
+		End:   dec,
+	}, nil
 }
 
 func cleanupObjective(o *Objective) *Objective {
@@ -453,12 +451,12 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 	}
 
 	// inRange interval
-	if (smallerOperator.Operation == ">" || smallerOperator.Operation == ">=") && (biggerOperator.Operation == "<" || biggerOperator.Operation == "<=") {
+	if isGreaterOrEqual(smallerOperator.Operation) && isLessOrEqual(biggerOperator.Operation) {
 		return &metricsapi.Operator{
 			InRange: r,
 		}, nil
 		// outOfRange interval
-	} else if (smallerOperator.Operation == "<" || smallerOperator.Operation == "<=") && (biggerOperator.Operation == ">" || biggerOperator.Operation == ">=") {
+	} else if isLessOrEqual(smallerOperator.Operation) && isGreaterOrEqual(biggerOperator.Operation) {
 		return &metricsapi.Operator{
 			NotInRange: r,
 		}, nil

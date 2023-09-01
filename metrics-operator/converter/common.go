@@ -7,30 +7,24 @@ import (
 	"gopkg.in/inf.v0"
 )
 
-const InvalidOperatorErrMsg = "invalid operator: '%s'"
-const UnableConvertValueErrMsg = "unable to convert value '%s' to decimal"
-const UnsupportedIntervalCombinationErrMsg = "unsupported interval combination '%v'"
-const EmptyOperatorsErrMsg = "empty operators: '%v'"
-const UnconvertableOperatorsCombinationErrMsg = "unconvertable combination of operators: '%s', '%s'"
-
 func NewInvalidOperatorErr(msg string) error {
-	return fmt.Errorf(InvalidOperatorErrMsg, msg)
+	return fmt.Errorf("invalid operator: '%s'", msg)
 }
 
 func NewUnconvertableValueErr(msg string) error {
-	return fmt.Errorf(UnableConvertValueErrMsg, msg)
+	return fmt.Errorf("unable to convert value '%s' to decimal", msg)
 }
 
 func NewUnsupportedIntervalCombinationErr(op []string) error {
-	return fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+	return fmt.Errorf("unsupported interval combination '%v'", op)
 }
 
 func NewEmptyOperatorErr(op []string) error {
-	return fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+	return fmt.Errorf("empty operators: '%v'", op)
 }
 
 func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
-	return fmt.Errorf(UnconvertableOperatorsCombinationErrMsg, op1, op2)
+	return fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
 }
 
 const MaxInt = math.MaxInt

@@ -25,7 +25,7 @@ We were all new to this once and are happy to help you!
 
 ## Guidelines for Contributing
 
-Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidelines/_index.md).
+Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidelines-docs/_index.md).
 
 ## Building the Documentation Locally
 

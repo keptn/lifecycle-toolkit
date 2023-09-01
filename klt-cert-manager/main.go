@@ -77,7 +77,7 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
-	meter := provider.Meter("klt-cert-manager")
+	meter := provider.Meter("keptn/klt-cert-manager")
 
 	// Initialize your metric
 	myMetric, err := meter.Int64Counter("keptn_klt-cert-manager_active")

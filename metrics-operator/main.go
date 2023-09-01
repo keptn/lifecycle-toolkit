@@ -143,20 +143,12 @@ func main() {
 	metricProvider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := metricProvider.Meter("keptn/metric")
 
+	// Initialize your metric
 	keptnMetricActive, err := meter.Int64Counter("keptn_metric_active")
 	if err != nil {
 		setupLog.Error(err, "unable to create metric keptn_metric_active")
 		os.Exit(1)
 	}
-
-	keptnMeters := make(map[string]metric.Int64Counter)
-
-	err = telemetry.GetOtelInstance().InitOtelCollector("")
-	if err != nil {
-		setupLog.Error(err, "unable to initialize OTel tracer options")
-	}
-
-	spanHandler := &telemetry.SpanHandler{}
 
 	go serveMetrics()
 

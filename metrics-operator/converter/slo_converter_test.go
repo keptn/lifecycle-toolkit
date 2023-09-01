@@ -172,8 +172,6 @@ func TestConvert(t *testing.T) {
 
 func TestNegateSingleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
 
 	tests := []struct {
 		name    string
@@ -257,8 +255,6 @@ func TestNegateSingleOperator(t *testing.T) {
 
 func TestCreateSingleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
 
 	tests := []struct {
 		name    string
@@ -342,12 +338,7 @@ func TestCreateSingleOperator(t *testing.T) {
 
 func TestCreateDoubleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
-
-	dec5 := inf.NewDec(1, 0)
-	_, ok = dec5.SetString("5")
-	require.True(t, ok)
+	dec5 := inf.NewDec(5, 0)
 
 	tests := []struct {
 		name    string
@@ -510,12 +501,7 @@ func TestCreateDoubleOperator(t *testing.T) {
 
 func TestNegateDoubleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
-
-	dec5 := inf.NewDec(1, 0)
-	_, ok = dec5.SetString("5")
-	require.True(t, ok)
+	dec5 := inf.NewDec(5, 0)
 
 	tests := []struct {
 		name    string
@@ -678,12 +664,7 @@ func TestNegateDoubleOperator(t *testing.T) {
 
 func TestNewOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
-
-	dec5 := inf.NewDec(1, 0)
-	_, ok = dec5.SetString("5")
-	require.True(t, ok)
+	dec5 := inf.NewDec(5, 0)
 
 	tests := []struct {
 		name    string
@@ -1133,21 +1114,10 @@ func TestCleanupObjective(t *testing.T) {
 }
 
 func TestSetupTarget(t *testing.T) {
-	dec5 := inf.NewDec(1, 0)
-	_, ok := dec5.SetString("5")
-	require.True(t, ok)
-
-	dec10 := inf.NewDec(1, 0)
-	_, ok = dec10.SetString("10")
-	require.True(t, ok)
-
-	dec15 := inf.NewDec(1, 0)
-	_, ok = dec15.SetString("15")
-	require.True(t, ok)
-
-	dec20 := inf.NewDec(1, 0)
-	_, ok = dec20.SetString("20")
-	require.True(t, ok)
+	dec5 := inf.NewDec(5, 0)
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+	dec20 := inf.NewDec(20, 0)
 
 	tests := []struct {
 		name    string
@@ -1464,13 +1434,8 @@ func TestSetupTarget(t *testing.T) {
 }
 
 func TestConvertSLO(t *testing.T) {
-	dec10 := inf.NewDec(1, 0)
-	_, ok := dec10.SetString("10")
-	require.True(t, ok)
-
-	dec15 := inf.NewDec(1, 0)
-	_, ok = dec15.SetString("15")
-	require.True(t, ok)
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
 
 	c := NewSLOConverter()
 
@@ -1808,13 +1773,8 @@ func TestDecodeOperatorAndValue(t *testing.T) {
 }
 
 func TestDecideIntervalBounds(t *testing.T) {
-	dec10 := inf.NewDec(1, 0)
-	_, ok := dec10.SetString("10")
-	require.True(t, ok)
-
-	dec15 := inf.NewDec(1, 0)
-	_, ok = dec15.SetString("15")
-	require.True(t, ok)
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
 
 	tests := []struct {
 		name      string
@@ -1900,6 +1860,269 @@ func TestDecideIntervalBounds(t *testing.T) {
 			} else {
 				require.Equal(t, tt.smallerOp, smallerOperator)
 				require.Equal(t, tt.biggerOp, biggerOperator)
+			}
+		})
+
+	}
+}
+
+func TestCreateUnboundedInterval(t *testing.T) {
+	dec10 := inf.NewDec(10, 0)
+	max := inf.NewDec(int64(MaxInt), 0)
+	min := inf.NewDec(int64(MinInt), 0)
+
+	tests := []struct {
+		name    string
+		op      string
+		i       *Interval
+		wantErr bool
+	}{
+		{
+			name:    "unable to decode operator",
+			op:      "--",
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode dec number",
+			op:      "<--",
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator",
+			op:      "=5",
+			wantErr: true,
+		},
+		{
+			name:    "inf interval greater",
+			op:      ">10",
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   max,
+			},
+		},
+		{
+			name:    "inf interval greater equal",
+			op:      ">=10",
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   max,
+			},
+		},
+		{
+			name:    "inf interval less",
+			op:      "<10",
+			wantErr: false,
+			i: &Interval{
+				Start: min,
+				End:   dec10,
+			},
+		},
+		{
+			name:    "inf interval less equal",
+			op:      "<10",
+			wantErr: false,
+			i: &Interval{
+				Start: min,
+				End:   dec10,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := createUnboundedInterval(tt.op)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.i, i)
+			}
+		})
+
+	}
+}
+
+func TestCreateBoundedInterval(t *testing.T) {
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+
+	tests := []struct {
+		name    string
+		op      []string
+		i       *Interval
+		wantErr bool
+	}{
+		{
+			name:    "empty array",
+			op:      []string{},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode operator1",
+			op:      []string{"--", "<5"},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode operator2",
+			op:      []string{"<5", "-"},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode inteval bounds",
+			op:      []string{"<-", ">5"},
+			wantErr: true,
+		},
+		{
+			name:    "unsupported interval",
+			op:      []string{"<5", ">10"},
+			wantErr: true,
+		},
+		{
+			name:    "happy path",
+			op:      []string{">10", "<15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">=10", "<=15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">10", "<=15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">=10", "<15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := createBoundedInterval(tt.op)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.i, i)
+			}
+		})
+
+	}
+}
+
+func TestCreateInterval(t *testing.T) {
+	// unbounded interval
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+	min := inf.NewDec(int64(MinInt), 0)
+
+	i, err := createInterval([]string{"<10"})
+	require.Nil(t, err)
+	require.Equal(t, &Interval{
+		Start: min,
+		End:   dec10,
+	}, i)
+
+	// bounded interval
+	i, err = createInterval([]string{">10", "<15"})
+	require.Nil(t, err)
+	require.Equal(t, &Interval{
+		Start: dec10,
+		End:   dec15,
+	}, i)
+}
+
+func TestIsSuperInterval(t *testing.T) {
+	tests := []struct {
+		name    string
+		op1     []string
+		op2     []string
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "error creating super interval",
+			op1:     []string{"--"},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "error creating sub interval",
+			op1:     []string{"<5"},
+			op2:     []string{"--"},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "intervals do not intercept",
+			op1:     []string{"<5"},
+			op2:     []string{">10"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "intervals intercept partially",
+			op1:     []string{"<10"},
+			op2:     []string{">5"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "subinterval is superinterval",
+			op1:     []string{">5", "<7"},
+			op2:     []string{"<10"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "equal intervals",
+			op1:     []string{"<10"},
+			op2:     []string{"<10"},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "superinterval unbounded",
+			op1:     []string{"<10"},
+			op2:     []string{">5", "<7"},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "superinterval bounded",
+			op1:     []string{">5", "<10"},
+			op2:     []string{">5", "<7"},
+			want:    true,
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := isSuperInterval(tt.op1, tt.op2)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.want, res)
 			}
 		})
 

@@ -224,38 +224,21 @@ func isSuperInterval(op1 []string, op2 []string) (bool, error) {
 }
 
 // creates interval from set of operators
-//
-//nolint:gocyclo
 func createInterval(op []string) (*Interval, error) {
 	// if it's unbounded interval, we have only one operator
 	if len(op) == 1 {
-		operator, value, err := decodeOperatorAndValue(op[0])
-		if err != nil {
-			return nil, err
-		}
-		dec := inf.NewDec(1, 0)
-		_, ok := dec.SetString(value)
-		if !ok {
-			return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
-		}
-		// interval of (val, Inf)
-		if operator == ">" || operator == ">=" {
-			decMax := inf.NewDec(int64(MaxInt), 0)
-			return &Interval{
-				Start: dec,
-				End:   decMax,
-			}, nil
-			// interval of (-Inf, val)
-		} else if operator == "<" || operator == "<=" {
-			decMin := inf.NewDec(int64(MinInt), 0)
-			return &Interval{
-				Start: decMin,
-				End:   dec,
-			}, nil
-		}
+		return createUnboundedInterval(op[0])
 	}
 
 	//bounded interval
+	return createBoundedInterval(op)
+}
+
+func createBoundedInterval(op []string) (*Interval, error) {
+	if len(op) < 2 {
+		return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+	}
+	//fetch operators and values
 	operator1, value1, err := decodeOperatorAndValue(op[0])
 	if err != nil {
 		return nil, err
@@ -274,6 +257,34 @@ func createInterval(op []string) (*Interval, error) {
 		return &Interval{
 			Start: smallerOperator.Value,
 			End:   biggerOperator.Value,
+		}, nil
+	}
+
+	return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+}
+
+func createUnboundedInterval(op string) (*Interval, error) {
+	//fetch operator and value
+	operator, value, err := decodeOperatorAndValue(op)
+	if err != nil {
+		return nil, err
+	}
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString(value)
+	if !ok {
+		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
+	}
+	// interval of (val, Inf)
+	if operator == ">" || operator == ">=" {
+		return &Interval{
+			Start: dec,
+			End:   inf.NewDec(int64(MaxInt), 0),
+		}, nil
+		// interval of (-Inf, val)
+	} else if operator == "<" || operator == "<=" {
+		return &Interval{
+			Start: inf.NewDec(int64(MinInt), 0),
+			End:   dec,
 		}, nil
 	}
 

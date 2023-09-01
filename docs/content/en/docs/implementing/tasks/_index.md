@@ -114,7 +114,10 @@ you can put them all in one `KeptnTaskDefinition` resource,
 which can execute a virtually unlimited number
 of programs, scripts, and functions,
 as long as they all need the same runner, such as Python.
-Another option is to encode all your steps in the language of your choice and build a container that Keptn will execute.
+
+Another option is to encode all your steps in the language of your choice
+and build a container that Keptn executes.
+This is often the best solution if you need to execute complex sequences.
 
 If you use either the `deno-runtime` or `python-runtime` runner,
 you can specify the actions to take by coding the actual calls

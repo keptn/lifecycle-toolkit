@@ -68,7 +68,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			return ctrl.Result{}, nil
 		}
 		a.Log.Error(err, "Failed to get the Analysis")
-		return ctrl.Result{}, nil
+		return ctrl.Result{}, err
 	}
 
 	//find AnalysisDefinition to have the collection of Objectives

@@ -2,7 +2,6 @@ package analysis
 
 import (
 	"context"
-	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"reflect"
 	"testing"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/go-logr/logr/testr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
+	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"

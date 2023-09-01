@@ -137,7 +137,7 @@ checks
 ### Keptn Metrics Operator controller
 
 | Name                                                                        | Description                                       | Value                            |
-| --------------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
+| --------------------------------------------------------------------------- |---------------------------------------------------| -------------------------------- |
 | `metricsOperator.manager.containerSecurityContext`                          | Sets security context privileges                  |                                  |
 | `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
@@ -151,7 +151,7 @@ checks
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
 | `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
 | `metricsOperator.manager.env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller         | `0`                              |
-| `metricsOperator.manager.env.enableKeptnAnalysis`                           | enable/disables the analysis feature              | `false`                          |
+| `metricsOperator.manager.env.enableKeptnAnalysis`                           | enables/disables the analysis feature             | `false`                          |
 | `metricsOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
 | `metricsOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
 | `metricsOperator.manager.resources`                                         | specify limits and requests for manager container |                                  |

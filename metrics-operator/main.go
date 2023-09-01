@@ -49,7 +49,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -192,11 +191,9 @@ func main() {
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         metricsLogger.V(env.KeptnMetricControllerLogLevel),
-		Meters:      keptnMeters, // Use the keptnMeters map
-		SpanHandler: spanHandler, // Use the spanHandler
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)

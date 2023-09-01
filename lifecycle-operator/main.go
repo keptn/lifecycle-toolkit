@@ -126,7 +126,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	keptnMeters := controllercommon.SetUpKeptnTaskMeters(meter)
+	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()

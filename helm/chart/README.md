@@ -137,7 +137,7 @@ checks
 ### Keptn Metrics Operator controller
 
 | Name                                                                        | Description                                       | Value                            |
-| --------------------------------------------------------------------------- |---------------------------------------------------| -------------------------------- |
+| --------------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
 | `metricsOperator.manager.containerSecurityContext`                          | Sets security context privileges                  |                                  |
 | `metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `metricsOperator.manager.containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |

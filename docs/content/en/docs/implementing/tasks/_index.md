@@ -131,7 +131,7 @@ a set of performance tests, and a set of regression tests.
 - You can create one `KeptnTaskDefinition` that calls all the tasks,
   in order, either by putting the actual calls
   in the `KeptnTaskDefinition` resource (`inline` syntax)
-  or by calling scripts from a remote webserver (`httpRef` syntax).
+  or by calling scripts from a remote webserver (`httpRef` syntax), or by providing a container to run.
 
 - You can create separate `KeptnTaskDefinition` resources
   for integration tests, performance tests, and regression tests.

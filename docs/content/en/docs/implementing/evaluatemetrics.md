@@ -46,18 +46,18 @@ Note the following:
   in a centralized namespace
   such as `keptn-lifecycle-toolkit-system`.
 
-To configure a data provider into your KLT cluster:
+To configure a data provider into your Keptn cluster:
 
 1. Create a secret if your data provider uses one.
    See
    [Create secret text](../implementing/tasks/#create-secret-text).
 1. Install and configure each instance of each data provider
-   into your KLT cluster,
+   into your Keptn cluster,
    following the instructions provided by the data source provider.
    See
-   [Prepare your cluster for KLT](../install/k8s.md/#prepare-your-cluster-for-klt)
+   [Prepare your cluster for Keptn](../install/k8s.md/#prepare-your-cluster-for-keptn)
 for links.
-   KLT supports using multiple instances of multiple data providers.
+   Keptn supports using multiple instances of multiple data providers.
 1. Define a
    [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
    resource for each data source.

@@ -1,11 +1,13 @@
 # Add Application Awareness
 
-In the previous step, we installed the demo application without any application awareness.
-This means that the Lifecycle
-Toolkit assumed that every workload is a single-service application at the moment and created the Application resources
-for you.
+In the previous step, we installed the demo application
+without any application awareness.
+This means that Keptn assumed
+that every workload is a single-service application at the moment
+and created the Application resources for you.
 
-To get the overall state of an application, we need a grouping of workloads, called KeptnApp in the Lifecycle Toolkit.
+To get the overall state of an application,
+we need a grouping of workloads, called KeptnApp.
 To get this working, we need to modify our application manifest with two things:
 
 * Add an "app.kubernetes.io/part-of" or "keptn.sh/app" label to the deployment

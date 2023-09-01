@@ -19,6 +19,7 @@ package analysis
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -85,7 +86,11 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	if err != nil {
 		if errors.IsNotFound(err) {
-			a.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+			a.Log.Info(
+				fmt.Sprintf("AnalysisDefinition '%s' isn namespace '%s' not found, requeue",
+					analysis.Spec.AnalysisDefinition.Name,
+					analysis.Spec.AnalysisDefinition.Name),
+			)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
 		a.Log.Error(err, "Failed to retrieve the AnalysisDefinition")

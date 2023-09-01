@@ -1,11 +1,11 @@
 ---
-title: Getting started with KLT
-description: Get started with the Keptn Lifecycle Toolkit
+title: Getting started with Keptn
+description: Get started with Keptn
 weight: 10
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Keptn Lifecycle Toolkit works whether or not you use a GitOps strategy.
+Keptn works whether or not you use a GitOps strategy.
 The following is an imperative walkthrough.
 
 ## Prerequisites
@@ -18,8 +18,8 @@ The following is an imperative walkthrough.
 
 ## Objectives
 
-- Install Keptn Lifecycle Toolkit on your cluster
-- Annotate a namespace and deployment to enable Keptn Lifecycle Toolkit
+- Install Keptn on your cluster
+- Annotate a namespace and deployment to enable Keptn
 - Install Grafana and Observability tooling to view DORA metrics and OpenTelemetry traces
 
 ## System Overview
@@ -45,9 +45,9 @@ Keptn will monitor the deployment and generate:
 Notice though that the metrics and traces have nowhere to go.
 That will be fixed in a subsequent step.
 
-## Step 1: Install Keptn Lifecycle Toolkit
+## Step 1: Install Keptn
 
-Install the Keptn Lifecycle Toolkit using Helm:
+Install Keptn using Helm:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -74,7 +74,7 @@ spec:
   keptnAppCreationRequestTimeoutSeconds: 30
 ```
 
-Apply the file and restart KLT to pick up the new config:
+Apply the file and restart Keptn to pick up the new config:
 
 ```shell
 kubectl apply -f collectorconfig.yaml
@@ -87,7 +87,7 @@ kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component
 ## Step 2: Create Namespace for Demo Application
 
 Save this file as `namespace.yaml`.
-The annotation means that Keptn Lifecycle Toolkit is active for workloads in this namespace.
+The annotation means that Keptn is active for workloads in this namespace.
 
 ```yaml
 apiVersion: v1
@@ -165,7 +165,7 @@ Keptn looks for these 3 labels:
 - `app.kubernetes.io/version`
 
 These are [Kubernetes recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/#labels)
-but if you want to use different labels, you can swap them for these KLT specific labels:
+but if you want to use different labels, you can swap them for these Keptn specific labels:
 
 - `keptn.sh/app` instead of `app.kubernetes.io/part-of`
 - `keptn.sh/workload` instead of `app.kubernetes.io/name`
@@ -474,7 +474,7 @@ View the Keptn Applications Dashboard and you should see the DORA metrics and an
 
 ## Step 14: More control over KeptnApp
 
-You may have noticed that the `KeptnApp` Custom Resources are created automatically by KLT.
+You may have noticed that the `KeptnApp` Custom Resources are created automatically by Keptn.
 
 The lifecycle toolkit automatically groups workloads into `KeptnApp`s by looking for matching
 `app.kubernetes.io/part-of` annotations.

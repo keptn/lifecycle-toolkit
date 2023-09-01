@@ -6,7 +6,7 @@ weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-The Keptn Lifecycle Toolkit is meant to be installed
+Keptn is meant to be installed
 into an existing Kubernetes cluster
 that runs your deployment software.
 See [Requirements](reqs.md) for information about supported releases
@@ -20,7 +20,7 @@ You can also create a local cluster using packages such as
 [k3s](https://k3s.io/),
 and [Minikube](https://minikube.sigs.k8s.io/docs/)
 to set up a local, lightweight Kubernetes cluster
-where you can install the Keptn Lifecycle Toolkit
+where you can install Keptn
 for personal study, demonstrations, and testing.
 For more information, see the Kubernetes
 [Install Tools](https://kubernetes.io/docs/tasks/tools/)
@@ -28,7 +28,7 @@ documentation.
 
 The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video  demonstrates how to create a KinD cluster.
-on which you can install the Lifecycle Toolkit.
+on which you can install Keptn.
 The basic steps are:
 
 1. Download, install, and run [Docker](https://docs.docker.com/get-docker/)
@@ -52,11 +52,11 @@ The basic steps are:
    kubectl version --short
    ```
 
-## Prepare your cluster for KLT
+## Prepare your cluster for Keptn
 
-The Keptn Lifecycle Toolkit installs into an existing Kubernetes cluster.
+Keptn installs into an existing Kubernetes cluster.
 When setting up a local Kubernetes cluster
-to study or demonstrate the Lifecycle Toolkit,
+to study or demonstrate Keptn,
 you need to provide these components.
 
 Your cluster should include the following:
@@ -78,7 +78,7 @@ Your cluster should include the following:
   such as
   [Argo CD](https://argo-cd.readthedocs.io/en/stable/) or
   [Flux](https://fluxcd.io/).
-  Alternatively, KLT also works with just `kubctl apply` for deployment.
+  Alternatively, Keptn also works with just `kubctl apply` for deployment.
 
 * If you want to use the standardized observability feature,
   you must have an OpenTelemetry collector
@@ -92,11 +92,11 @@ Your cluster should include the following:
   For more information, see
   [Requirements for Open Telemetry](../implementing/otel.md/#requirements-for-opentelemetry).
 
-Also note that the Keptn Lifecycle Toolkit includes
+Also note that Keptn includes
 a light-weight cert-manager that, by default, is installed
-as part of the KLT software.
+as part of the Keptn software.
 If you are using another cert-manager in the cluster,
-you can configure KLT to instead use your cert-manager.
+you can configure Keptn to instead use your cert-manager.
 See [Use Keptn with cert-manager.io](../operate/cert-manager.md)
 for detailed instructions.
 
@@ -110,9 +110,9 @@ documentation for some basic information.
 You can also search and find lots of "Best Practices for Namespaces"
 documents published on the web.
 
-Some considerations for KLT:
+Some considerations for Keptn:
   
-* KLT primarily operates on Kubernetes
+* Keptn primarily operates on Kubernetes
   [Workload](https://kubernetes.io/docs/concepts/workloads/)
   resources and
   [KeptnApp](../yaml-crd-ref/app.md)
@@ -142,6 +142,6 @@ Some considerations for KLT:
 
 So, possible namespace designs run the gamut:
 
-* Run all your KLT work in a single namespace
-* Create a separate namespace for each logical grouping of your KLT work
+* Run all your Keptn work in a single namespace
+* Create a separate namespace for each logical grouping of your Keptn work
 * Create a separate namespace for each workload

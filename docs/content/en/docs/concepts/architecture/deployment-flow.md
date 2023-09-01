@@ -5,7 +5,7 @@ description: Understand the execution flow of a deployment
 weight: 35
 ---
 
-The Keptn Lifecycle Toolkit (KLT) deploys a
+Keptn deploys a
 [Kubernetes Workload](https://kubernetes.io/docs/concepts/workloads/)
 by passing through a well-defined execution flow.
 
@@ -34,7 +34,7 @@ and [CloudEvents](https://cloudevents.io/)
 are emitted at each phase
 to provide additional Observability of the execution flow.
 
-The Keptn Lifecycle Toolkit implements a
+Keptn implements a
 [Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
 that blocks the binding of the pods to a node
 until all the pre-conditions are fulfilled.
@@ -48,9 +48,9 @@ or can be started by the following command:
 kubectl apply -f deployment.yaml
 ```
 
-KLT does not care how a deployment manifest is applied to the cluster.
+Keptn does not care how a deployment manifest is applied to the cluster.
 Both `kubectl` and Flux/Argo send the manifest to the Kubernetes API
-so KLT does not differentiate the actual deployment options.
+so Keptn does not differentiate the actual deployment options.
 This also means that one Keptn Application
 can include services that are deployed with different methods.
 
@@ -171,7 +171,7 @@ such as those that describe what happens when something fails.
 
 Whenever something in the system happens (we create a new resource, etc.)
 a Kubernetes event is generated.
-The following events are defined as part of the Keptn Lifecycle Toolkit
+The following events are defined as part of Keptn
 but they are not part of the deployment flow.
 These include:
 

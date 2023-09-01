@@ -1,14 +1,14 @@
 ---
-title: Lifecycle Toolkit Components
+title: Keptn Components
 linktitle: Components
-description: Basic understanding of Keptn Lifecycle Toolkit Components
+description: Basic understanding of Keptn Components
 weight: 20
 cascade:
 ---
 
-### Keptn Lifecycle Toolkit Components
+### Keptn Components
 
-The Keptn Lifecycle Toolkit consists of two main components:
+Keptn consists of two main components:
 
 * Keptn Lifecycle Operator, which splits into two separate operators
 in Release 0.7.0 and later:

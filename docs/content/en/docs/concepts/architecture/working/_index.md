@@ -1,9 +1,9 @@
 ---
-title: Lifecycle Toolkit Working
-linktitle: How it works
-description: Understand How Keptn Lifecycle Toolkit Works
+title: How Keptn works
+linktitle: How Keptn works
+description: Understand How Keptn Works
 weight: 30
 cascade:
 ---
 
-### How Keptn Lifecycle Toolkit Works?
+### How Keptn Works?

@@ -95,7 +95,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	var done map[string]metricsapi.ProviderResult
 	todo := analysisDef.Spec.Objectives
 	if analysis.Status.StoredValues != nil {
-		todo, done = a.ExtractMissingObj(analysisDef, analysis.Status.StoredValues)
+		todo, done = extractMissingObjectives(analysisDef.Spec.Objectives, analysis.Status.StoredValues)
 		if len(todo) == 0 {
 			return ctrl.Result{}, nil
 		}
@@ -148,18 +148,20 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(a)
 }
 
-func (a *AnalysisReconciler) ExtractMissingObj(def *metricsapi.AnalysisDefinition, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {
-	var toDo []metricsapi.Objective
+func extractMissingObjectives(objectives []metricsapi.Objective, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {
+	var todo []metricsapi.Objective
 	done := make(map[string]metricsapi.ProviderResult, len(status))
-	for _, obj := range def.Spec.Objectives {
+	for _, obj := range objectives {
 		key := common.ComputeKey(obj.AnalysisValueTemplateRef)
 		if value, ok := status[key]; ok {
 			if value.ErrMsg != "" {
-				toDo = append(toDo, obj)
+				todo = append(todo, obj)
 			} else {
 				done[key] = status[key]
 			}
+		} else {
+			todo = append(todo, obj)
 		}
 	}
-	return toDo, done
+	return todo, done
 }

@@ -3,6 +3,7 @@ package analysis
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"text/template"
 
@@ -18,7 +19,7 @@ import (
 type IProvidersPool interface {
 	StartProviders(ctx context.Context, numJobs int)
 	DispatchToProviders(ctx context.Context, id int)
-	GetResult() metricsapi.ProviderResult
+	GetResult(ctx context.Context) (*metricsapi.ProviderResult, error)
 	StopProviders()
 }
 
@@ -112,9 +113,13 @@ func (ps ProvidersPool) StopProviders() {
 	close(ps.results)
 }
 
-func (ps ProvidersPool) GetResult() metricsapi.ProviderResult {
-	res := <-ps.results
-	return res
+func (ps ProvidersPool) GetResult(ctx context.Context) (*metricsapi.ProviderResult, error) {
+	select {
+	case <-ctx.Done():
+		return nil, errors.New("context has been cancelled")
+	case res := <-ps.results:
+		return &res, nil
+	}
 }
 
 func generateQuery(query string, selectors map[string]string) (string, error) {

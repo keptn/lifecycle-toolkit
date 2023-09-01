@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"context"
+	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"reflect"
 	"testing"
 	"time"
@@ -174,4 +175,62 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 		},
 	}
 	return analysis, analysisDef, template, provider
+}
+
+func Test_extractMissingObjectives(t *testing.T) {
+
+	missing := metricsapi.ObjectReference{
+		Name:      "missing",
+		Namespace: "test",
+	}
+
+	done := metricsapi.ObjectReference{
+		Name:      "done",
+		Namespace: "test",
+	}
+
+	needToRetry := metricsapi.ObjectReference{
+		Name:      "need-to-retry",
+		Namespace: "test",
+	}
+
+	ad := &metricsapi.AnalysisDefinition{Spec: metricsapi.AnalysisDefinitionSpec{Objectives: []metricsapi.Objective{
+		{
+			AnalysisValueTemplateRef: missing,
+			Target:                   metricsapi.Target{},
+			Weight:                   1,
+			KeyObjective:             false,
+		},
+		{
+			AnalysisValueTemplateRef: done,
+			Target:                   metricsapi.Target{},
+			Weight:                   1,
+			KeyObjective:             false,
+		},
+		{
+			AnalysisValueTemplateRef: needToRetry,
+			Target:                   metricsapi.Target{},
+			Weight:                   1,
+			KeyObjective:             false,
+		},
+	}}}
+
+	existingValues := map[string]metricsapi.ProviderResult{
+		common.ComputeKey(ad.Spec.Objectives[1].AnalysisValueTemplateRef): {
+			Value: "1.0",
+		},
+		common.ComputeKey(ad.Spec.Objectives[2].AnalysisValueTemplateRef): {
+			ErrMsg: "error",
+		},
+	}
+	todo, existing := extractMissingObjectives(ad.Spec.Objectives, existingValues)
+
+	require.Len(t, todo, 2)
+	require.Equal(t, missing, todo[0].AnalysisValueTemplateRef)
+	require.Equal(t, needToRetry, todo[1].AnalysisValueTemplateRef)
+	require.Len(t, existing, 1)
+	require.Equal(t, "1.0", existing[common.ComputeKey(done)].Value)
+
+	// verify that the analysisDefinition has not been changed
+	require.Len(t, ad.Spec.Objectives, 3)
 }

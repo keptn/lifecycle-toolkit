@@ -80,8 +80,13 @@ loop:
 			err = errors.New("Collection terminated")
 			break loop
 		default:
-			res := aw.GetResult()
-			results[analysis.ComputeKey(res.Objective)] = res
+			res, err2 := aw.GetResult(ctx)
+			if err2 != nil {
+				err = err2
+				aw.cancel()
+				break loop
+			}
+			results[analysis.ComputeKey(res.Objective)] = *res
 			if res.ErrMsg != "" {
 				err = errors.New(res.ErrMsg)
 				aw.cancel()

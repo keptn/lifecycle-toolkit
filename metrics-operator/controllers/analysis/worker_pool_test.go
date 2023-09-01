@@ -72,6 +72,28 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	require.Equal(t, res2, results["t2"])
 }
 
+func TestWorkersPool_CollectAnalysisResultsTimeout(t *testing.T) {
+	// Create a fake WorkersPool instance for testing
+	resChan := make(chan metricsapi.ProviderResult, 2)
+	fakePool := WorkersPool{
+		IProvidersPool: ProvidersPool{
+			results: resChan,
+		},
+		numJobs: 2,
+	}
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 1*time.Second)
+
+	fakePool.cancel = cancel
+
+	// Collect the results
+	results, err := fakePool.CollectAnalysisResults(ctx)
+
+	// Check the collected results
+	require.NotNil(t, err)
+	require.Empty(t, results)
+}
+
 func TestWorkersPool_CollectAnalysisResultsNoJob(t *testing.T) {
 	// Create a fake WorkersPool instance for testing
 	resChan := make(chan metricsapi.ProviderResult, 1)

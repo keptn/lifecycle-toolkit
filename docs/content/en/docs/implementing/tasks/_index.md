@@ -108,32 +108,67 @@ should not be handled by KLT**
 but should instead be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
 
-For task sequences that are part of the lifecycle workflow
-can be defined sequentially in a `KeptnTaskDefinition` resource,
-which can execute a virtually unlimited number of programs and actions.
-You have great flexibility in how you define your `KeptnTaskDefinition` resources,
-allowing you to define the ideal mix of tasks that execute sequentially
-and tasks (or sets of tasks) that execute in parallel.
-
-If you define a `container-runtime` runner container
-for your `KeptnTaskDefinition`,
-you can do anything allowed by the configuration you define for that container.
+If your lifecycle workflow includes
+a sequence of executables that need to be run in order,
+you can put them all in one `KeptnTaskDefinition` resource,
+which can execute a virtually unlimited number
+of programs, scripts, and functions,
+as long as they all need the same runner, such as Python.
 
 If you use either the `deno-runtime` or `python-runtime` runner,
 you can specify the actions to take by coding the actual calls
 inline in the manifest,
-by calling scripts on a remote webserver,
+by calling scripts from a remote webserver,
 or by calling other `KeptnTaskDefinition` resources you have defined.
+This provides great flexibility in
+how you define your `KeptnTaskDefinition` resources,
+allowing you to define the ideal mix of executables that run sequentially
+and executables (or sets of executables) that run in parallel.
 
-As an example, consider the `KeptnTaskDefinition` resources
-you need for testing your `KeptnApp`:
+As an example, let's say you need to run a set of integration tests,
+a set of performance tests, and a set of regression tests.
 
-- Perhaps you need to run a set of integration tests,
-  a set of performance tests, and a set of regression tests.
-- Perhaps you need to run these on Linux, MacOS, and Windows.
-- Perhaps you need to run these for Java 11, Java 17, and Java 21.
+* You can create one `KeptnTaskDefinition` that calls all the tasks,
+  in order, either by putting the actual calls
+  in the `KeptnTaskDefinition` resource (`inline` syntax)
+  or by calling scripts from a remote webserver (`httpRef` syntax).
 
-You have several options:
+* You can create separate `KeptnTaskDefinition` resources
+  for integration tests, performance tests, and regression tests.
+
+  - If you annotate the `KeptnApp` resource to call
+    each of these `KeptnTask` resources,
+    the three sets of tests run in parallel.
+
+  - You can create a "parent" `KeptnTaskDefinition` resource
+    that uses the `functionref` syntax
+    to call the `KeptnTaskDefinition` resources
+    for integration tests, performance tests, and regression tests.
+    If you annotate the `KeptnApp` resource
+    to run this parent `KeptnTask` resource,
+    all tests run sequentially.
+
+    This approach also allows you to run the test sequence if, for example,
+    the integration tests require the `deno-runtime` runner
+    but the performance and regression tests
+    require the `python-runtime` runner.
+    The parent `KeptnTaskDefinition` can run `KeptnTask` resources
+    that use different runners,
+    although the "parent" definition runtime is used
+    for the container that runs all the tests.
+    In other words, the parent `KeptnTaskDefinition` resources
+    is not a merge of other `KeptnTaskDefinition` resources
+    but rather the code/container of the parent runner.
+
+* If you need to test your deployment for different platforms
+  (such as Linux, MacOS, and Windows)
+  or for different software versions
+  (such as Java 11, Java 17, and Java 21),
+  parallel testing can improve performance.
+  In this case, you can construct different `KeptnTaskDefinition` resources
+  for each platform,
+  perhaps defining different input parameters
+  (such as different secrets or environment variables).
 
 - Define one `KeptnTaskDefinition` resource that runs
   integration tests, then regression test, then performance tests
@@ -152,6 +187,10 @@ You have several options:
     `KeptnTaskDefinition` resources for each type of testing.
     Executing that resource would execute the three types of tests
     in sequential order.
+
+If you define a `container-runtime` runner container
+for your `KeptnTaskDefinition`,
+you can do anything allowed by the configuration you define for that container.
 
 ## Context
 

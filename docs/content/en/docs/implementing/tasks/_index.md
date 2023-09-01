@@ -128,12 +128,12 @@ and executables (or sets of executables) that run in parallel.
 As an example, let's say you need to run a set of integration tests,
 a set of performance tests, and a set of regression tests.
 
-* You can create one `KeptnTaskDefinition` that calls all the tasks,
+- You can create one `KeptnTaskDefinition` that calls all the tasks,
   in order, either by putting the actual calls
   in the `KeptnTaskDefinition` resource (`inline` syntax)
   or by calling scripts from a remote webserver (`httpRef` syntax).
 
-* You can create separate `KeptnTaskDefinition` resources
+- You can create separate `KeptnTaskDefinition` resources
   for integration tests, performance tests, and regression tests.
 
   - If you annotate the `KeptnApp` resource to call
@@ -160,7 +160,7 @@ a set of performance tests, and a set of regression tests.
     is not a merge of other `KeptnTaskDefinition` resources
     but rather the code/container of the parent runner.
 
-* If you need to test your deployment for different platforms
+- If you need to test your deployment for different platforms
   (such as Linux, MacOS, and Windows)
   or for different software versions
   (such as Java 11, Java 17, and Java 21),

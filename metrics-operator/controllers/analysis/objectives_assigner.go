@@ -14,17 +14,19 @@ type TaskAssigner struct {
 func (ta TaskAssigner) assignTasks() map[int][]metricsapi.Objective {
 	totalTasks := len(ta.tasks)
 	taskMap := make(map[int][]metricsapi.Objective, ta.numWorkers)
-	if ta.numWorkers > 0 {
-		tasksPerWorker := totalTasks / ta.numWorkers
-		start := 0
-		for i := 0; i < ta.numWorkers && start < totalTasks; i++ {
-			end := start + tasksPerWorker
-			if i < totalTasks%ta.numWorkers {
-				end++ // distribute the remainder tasks
-			}
-			taskMap[i+1] = ta.tasks[start:end]
-			start = end
-		}
+	if ta.numWorkers == 0 {
+		return taskMap
 	}
+	tasksPerWorker := totalTasks / ta.numWorkers
+	start := 0
+	for i := 0; i < ta.numWorkers && start < totalTasks; i++ {
+		end := start + tasksPerWorker
+		if i < totalTasks%ta.numWorkers {
+			end++ // distribute the remainder tasks
+		}
+		taskMap[i+1] = ta.tasks[start:end]
+		start = end
+	}
+
 	return taskMap
 }

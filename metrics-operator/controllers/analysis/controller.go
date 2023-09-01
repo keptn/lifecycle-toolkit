@@ -124,8 +124,9 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 	analysisResultJSON, err := json.Marshal(eval)
 	if err != nil {
 		a.Log.Error(err, "Could not marshal status")
+	} else {
+		analysis.Status.Raw = string(analysisResultJSON)
 	}
-	analysis.Status.Raw = string(analysisResultJSON)
 	if eval.Warning {
 		analysis.Status.Warning = true
 	}

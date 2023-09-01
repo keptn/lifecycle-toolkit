@@ -236,7 +236,7 @@ func createInterval(op []string) (*Interval, error) {
 
 func createBoundedInterval(op []string) (*Interval, error) {
 	if len(op) < 2 {
-		return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+		return nil, NewUnsupportedIntervalCombinationErr(op)
 	}
 	//fetch operators and values
 	operator1, value1, err := decodeOperatorAndValue(op[0])
@@ -260,7 +260,7 @@ func createBoundedInterval(op []string) (*Interval, error) {
 		}, nil
 	}
 
-	return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+	return nil, NewUnsupportedIntervalCombinationErr(op)
 }
 
 func createUnboundedInterval(op string) (*Interval, error) {
@@ -272,7 +272,7 @@ func createUnboundedInterval(op string) (*Interval, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
+		return nil, NewUnconvertableValueErr(value)
 	}
 	// interval of (val, Inf)
 	if operator == ">" || operator == ">=" {
@@ -288,7 +288,7 @@ func createUnboundedInterval(op string) (*Interval, error) {
 		}, nil
 	}
 
-	return nil, fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+	return nil, NewInvalidOperatorErr(op)
 }
 
 func cleanupObjective(o *Objective) *Objective {
@@ -328,7 +328,7 @@ func decodeOperatorAndValue(op string) (string, string, error) {
 		}
 	}
 
-	return "", "", fmt.Errorf(InvalidOperatorErrMsg, op)
+	return "", "", NewInvalidOperatorErr(op)
 }
 
 // create operator for Target
@@ -360,7 +360,7 @@ func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
 		}
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf(EmptyOperatorsErrMsg, op)
+	return &metricsapi.Operator{}, NewEmptyOperatorErr(op)
 }
 
 // checks and negates the existing single operator
@@ -370,7 +370,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
+		return nil, NewUnconvertableValueErr(value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -398,7 +398,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf(InvalidOperatorErrMsg, op)
+	return &metricsapi.Operator{}, NewInvalidOperatorErr(op)
 }
 
 // checks and creates single operator
@@ -408,7 +408,7 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf(UnableConvertValueErrMsg, value)
+		return nil, NewUnconvertableValueErr(value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -436,7 +436,7 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf(InvalidOperatorErrMsg, op)
+	return &metricsapi.Operator{}, NewInvalidOperatorErr(op)
 }
 
 // checks and creates double operator
@@ -464,7 +464,7 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 		}, nil
 	}
 
-	return nil, fmt.Errorf(UnconvertableOperatorsCombinationErrMsg, op1, op2)
+	return nil, NewUnconvertableOperatorCombinationErr(op1, op2)
 }
 
 // decides which of the values is smaller and binds operator to them
@@ -472,12 +472,12 @@ func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) 
 	dec1 := inf.NewDec(1, 0)
 	_, ok := dec1.SetString(value1)
 	if !ok {
-		return nil, nil, fmt.Errorf(UnableConvertValueErrMsg, value1)
+		return nil, nil, NewUnconvertableValueErr(value1)
 	}
 	dec2 := inf.NewDec(1, 0)
 	_, ok = dec2.SetString(value2)
 	if !ok {
-		return nil, nil, fmt.Errorf(UnableConvertValueErrMsg, value2)
+		return nil, nil, NewUnconvertableValueErr(value2)
 	}
 
 	operator1 := &Operator{

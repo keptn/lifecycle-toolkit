@@ -1,12 +1,36 @@
 package converter
 
-import "gopkg.in/inf.v0"
+import (
+	"fmt"
+
+	"gopkg.in/inf.v0"
+)
 
 const InvalidOperatorErrMsg = "invalid operator: '%s'"
 const UnableConvertValueErrMsg = "unable to convert value '%s' to decimal"
-const UnsupportedIntervalCombinationErrMsg = "unsupported interval combination '%s'"
+const UnsupportedIntervalCombinationErrMsg = "unsupported interval combination '%v'"
 const EmptyOperatorsErrMsg = "empty operators: '%v'"
 const UnconvertableOperatorsCombinationErrMsg = "unconvertable combination of operators: '%s', '%s'"
+
+func NewInvalidOperatorErr(msg string) error {
+	return fmt.Errorf(InvalidOperatorErrMsg, msg)
+}
+
+func NewUnconvertableValueErr(msg string) error {
+	return fmt.Errorf(UnableConvertValueErrMsg, msg)
+}
+
+func NewUnsupportedIntervalCombinationErr(op []string) error {
+	return fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+}
+
+func NewEmptyOperatorErr(op []string) error {
+	return fmt.Errorf(UnsupportedIntervalCombinationErrMsg, op)
+}
+
+func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
+	return fmt.Errorf(UnconvertableOperatorsCombinationErrMsg, op1, op2)
+}
 
 const MaxInt = int(^uint(0) >> 1)
 const MinInt = -MaxInt - 1

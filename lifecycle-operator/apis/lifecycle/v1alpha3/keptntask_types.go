@@ -35,7 +35,7 @@ type KeptnTaskSpec struct {
 	// TaskDefinition refers to the name of the KeptnTaskDefinition
 	// which includes the specification for the task to be performed.
 	// The KeptnTaskDefinition can be
-	// located in the same namespace as the KeptnTask, or in the KLT namespace.
+	// located in the same namespace as the KeptnTask, or in the Keptn namespace.
 	TaskDefinition string `json:"taskDefinition"`
 	// Context contains contextual information about the task execution.
 	// +optional

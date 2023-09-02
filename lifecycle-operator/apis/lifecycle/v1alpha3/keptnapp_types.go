@@ -41,21 +41,21 @@ type KeptnAppSpec struct {
 	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
 	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
-	// located in the same namespace as the KeptnApp, or in the KLT namespace.
+	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
 	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
 	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
-	// located in the same namespace as the KeptnApp, or in the KLT namespace.
+	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
 	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
 	// PreDeploymentEvaluations is a list of all evaluations to be performed
 	// during the pre-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
-	// located in the same namespace as the KeptnApp, or in the KLT namespace.
+	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
 	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
 	// PostDeploymentEvaluations is a list of all evaluations to be performed
 	// during the post-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
-	// located in the same namespace as the KeptnApp, or in the KLT namespace.
+	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
 	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 }
 

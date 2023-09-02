@@ -24,7 +24,7 @@ To integrate Keptn with your applications:
 * You must first
 [install](../../install/install.md)
 and
-[enable](../../install/install.md//#enable-klt-for-your-cluster)
+[enable](../../install/install.md//#enable-keptn-for-your-cluster)
 Keptn.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.

@@ -113,7 +113,7 @@ If used, these fields must be populated manually:
 Kubernetes defines
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 but does not define applications.
-The Keptn Lifecycle Toolkit adds the concept of applications
+Keptn adds the concept of applications
 defined as a set of workloads that can be executed.
 A `KeptnApp` resource is added
 into the repository of the deployment engine
@@ -126,7 +126,7 @@ feature to generate a `KeptnApp` resource
 based on the
 [basic annotations](../implementing/integrate/#basic-annotations)
 that are applied to any of the workload resources.
-This allows you to use the KLT observability features for existing resources
+This allows you to use the Keptn observability features for existing resources
 without manually populating any Keptn related resources.
 
 The release lifecycle management feature

@@ -25,7 +25,7 @@ to the repository are:
 
 1. Switch back to the `main` branch in your repository,
    and ensure that it is up to date
-   with the `main` branch of the Keptn Lifecycle Toolkit:
+   with the `main` Keptn branch:
 
    ```bash
    git remote add upstream https://github.com/keptn/lifecycle-toolkit.git

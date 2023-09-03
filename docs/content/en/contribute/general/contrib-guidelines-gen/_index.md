@@ -1,11 +1,11 @@
 ---
 title: Contribution Guidelines
-description: Guidelines for contributing to Keptn Lifecycle Toolkit
-weight: 50
+description: Guidelines for contributing towards Keptn
+weight: 300
 ---
 
-Before using the **Keptn Lifecycle Toolkit**
-as a contributor to the Keptn Lifecycle Toolkit repository,
+Before using Keptn
+as a contributor to the Keptn `lifecycle-controller` repository,
 it is expected that you comply with the guidelines while
 making contributions towards the repository.
 

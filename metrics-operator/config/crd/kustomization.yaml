@@ -2,18 +2,16 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-  - bases/metrics.keptn.sh_keptnmetricsproviders.yaml
-  - bases/metrics.keptn.sh_keptnmetrics.yaml
-  - bases/metrics.keptn.sh_analyses.yaml
-  - bases/metrics.keptn.sh_analysisdefinitions.yaml
-  - bases/metrics.keptn.sh_analysisvaluetemplates.yaml
+- bases/metrics.keptn.sh_keptnmetricsproviders.yaml
+- bases/metrics.keptn.sh_keptnmetrics.yaml
+- bases/metrics.keptn.sh_analyses.yaml
+- bases/metrics.keptn.sh_analysisdefinitions.yaml
+- bases/metrics.keptn.sh_analysisvaluetemplates.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
-patchesStrategicMerge:
   # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
   # patches here are for enabling the conversion webhook for each CRD
   # - patches/webhook_in_keptnmetricsproviders.yaml
-  - patches/webhook_in_keptnmetrics.yaml
   # - patches/webhook_in_analyses.yaml
   # - patches/webhook_in_analysisdefinitions.yaml
   # - patches/webhook_in_analysisvaluetemplates.yaml
@@ -30,9 +28,15 @@ patchesStrategicMerge:
 
 # the following config is for teaching kustomize how to do kustomization for CRDs.
 configurations:
-  - kustomizeconfig.yaml
+- kustomizeconfig.yaml
 
-commonLabels:
-  crdGroup: metrics.keptn.sh
-  app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-  keptn.sh/inject-cert: "true"
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+patches:
+- path: patches/webhook_in_keptnmetrics.yaml

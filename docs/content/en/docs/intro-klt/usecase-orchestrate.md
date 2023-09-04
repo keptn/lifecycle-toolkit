@@ -50,10 +50,10 @@ example.
 
 The steps to implement pre- and post-deployment orchestration are:
 
-- [Using this exercise](#using-this-exercise)
-- [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-pre--and-post-deployment)
-- [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-pre--and-post-deployment)
-- [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
+* [Using this exercise](#using-this-exercise)
+* [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-pre--and-post-deployment)
+* [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-pre--and-post-deployment)
+* [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
 This is the third of three exercises in the
 [Introducing the Keptn Lifecycle Toolkit](_index.md)

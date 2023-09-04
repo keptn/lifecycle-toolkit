@@ -13,7 +13,12 @@ The converter will convert a single `slo.yaml` file into single `AnalysisDefinti
 To run the converter, execute the following command:
 
 ```shell
-docker-run <METRICS_OPERATOR_IMAGE> manager --convert-slo=<PATH_TO_SLO> --slo-namespace=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE> --definition=<DEFINITION_NAME>
+METRICS_OPERATOR_IMAGE=<METRICS_OPERATOR_IMAGE>
+PATH_TO_SLO=<PATH_TO_SLO>
+ANALYSIS_VALUE_TEMPLATE_NAMESPACE=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE>
+DEFINITION_NAME=<DEFINITION_NAME>
+
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --slo-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --definition=$DEFINITION_NAME
 ```
 
 Please be aware, you need to substitute the placeholders with the following information:
@@ -56,10 +61,13 @@ objectives:
 ```
 
 Secondly, conversion of multiple criteria elements won't be supported at all.
-These criteria are combined with logical OR operator (see documentation [here](https://github.com/keptn/spec/blob/master/service_level_objective.md#objectives)).
-Only a single criteria element rules will be supported.
-These criteria will be converted into informative objectives.
-An example of unsupported SLOs for conversion here:
+Rules containing multiple criteria elements combined with logical OR (see documentation
+[here](https://github.com/keptn/spec/blob/master/service_level_objective.md#objectives))
+can not be converted and will be turned into informative items.
+Informative in this context means that there are no objectives that have to be met and
+therefore the item will not affect the overall score.
+However, their values are still retrieved to provide additional insights for the execution of an Analysis.
+An example of an unsupported SLOs for conversion is the following:
 
 ```yaml
 objectives:
@@ -107,6 +115,23 @@ objectives:
     - ">200"
 ```
 
+will be converted to
+
+```yaml
+spec:
+  objectives:
+  - analysisValueTemplateRef:
+      name: response_time_p95
+      namespace: default
+    target:
+      failure:
+        lessThanOrEqual:
+          fixedValue: "200"
+      warning:
+        lessThanOrEqual:
+          fixedValue: "400"
+```
+
 The buckets for rules with single criteria element but with one or more criteria combined with logical AND
 operator (see documentation [here](https://github.com/keptn/spec/blob/master/service_level_objective.md#objectives)):
 
@@ -120,6 +145,21 @@ objectives:
   - criteria:
     - ">400"
     - "<600"
+```
+
+will be converted to
+
+```yaml
+spec:
+  objectives:
+  - analysisValueTemplateRef:
+      name: response_time_p95
+      namespace: default
+    target:
+      failure:
+        notInRange:
+          highBound: "600"
+          lowBound: "400"
 ```
 
 1. `pass` criteria set, `warn` criteria set, warn criteria interval is superset of pass criteria interval
@@ -138,6 +178,25 @@ objectives:
     - "<800" 
 ```
 
+will be converted to
+
+```yaml
+spec:
+  objectives:
+  - analysisValueTemplateRef:
+      name: response_time_p95
+      namespace: default
+    target:
+      failure:
+        notInRange:
+          highBound: "200"
+          lowBound: "800"
+      warning:
+        notInRange:
+          highBound: "400"
+          lowBound: "600"
+```
+
 1. `pass` criteria set, `warn` criteria set, pass criteria interval is superset of warn criteria interval
 
 ```yaml
@@ -154,9 +213,28 @@ objectives:
     - "<600" 
 ```
 
+will be converted to
+
+```yaml
+spec:
+  objectives:
+  - analysisValueTemplateRef:
+      name: response_time_p95
+      namespace: default
+    target:
+      failure:
+        notInRange:
+          highBound: "200"
+          lowBound: "800"
+      warning:
+        inRange:
+          highBound: "400"
+          lowBound: "600"
+```
+
 ## Example
 
-The following content of `slo.yaml` file
+The following content of a full example of `slo.yaml` file
 
 ```yaml
 spec_version: "0.1.1"
@@ -227,6 +305,12 @@ total_score:
   warning: "65%"
 ```
 
+with the following command
+
+```shell
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=./slo.yaml --slo-namespace=default --definition=defName
+```
+
 will be converted to:
 
 ```yaml
@@ -234,7 +318,7 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
   creationTimestamp: null
-  name: defname
+  name: defName
 spec:
   objectives:
   - analysisValueTemplateRef:

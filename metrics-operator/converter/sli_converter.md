@@ -13,7 +13,12 @@ The converter will convert a single `sli.yaml` file into multiple `AnalysisValue
 To run the converter, execute the following command:
 
 ```shell
-docker-run <METRICS_OPERATOR_IMAGE> manager --convert-sli=<PATH_TO_SLI> --sli-provider=<PROVIDER_NAME> --sli-namespace=<PROVIDER_NAMESPACE>
+METRICS_OPERATOR_IMAGE=<METRICS_OPERATOR_IMAGE>
+PATH_TO_SLI=<PATH_TO_SLI>
+PROVIDER_NAME=<PROVIDER_NAME>
+PROVIDER_NAMESPACE=<PROVIDER_NAMESPACE>
+
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --sli-provider=$PROVIDER_NAME --sli-namespace=$PROVIDER_NAMESPACE
 ```
 
 Please be aware, you need to substitute the placeholders with the following information:
@@ -24,7 +29,7 @@ Please be aware, you need to substitute the placeholders with the following info
 
 > **Note**
 
-All the SLIs present in `sli.yaml` file will use the same provider defined by referenced
+All the SLIs present in `sli.yaml` file will use the same provider defined by the referenced
 `KeptnMetricsProvider`.
 
 ## Example
@@ -36,6 +41,12 @@ spec_version: "1.0"
 indicators:
   throughput: "builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
   response_time_p95: "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
+```
+
+with the following command
+
+```shell
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=./sli.yaml --sli-provider=dynatrace --sli-namespace=keptn
 ```
 
 will be converted to:

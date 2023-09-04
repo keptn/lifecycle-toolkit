@@ -156,7 +156,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@v3.1.1
+        uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
 
       - name: Clean up image tag
         id: clean-image-tag

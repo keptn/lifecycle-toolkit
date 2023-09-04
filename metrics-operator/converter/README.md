@@ -1,0 +1,168 @@
+# SLI converter
+
+## Description
+
+SLI converter is a tool to convert `sli.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new `AnalysisValueTemplate` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/). The converter is part of `metrics-operator` image.
+
+## Usage
+
+The converter will convert a single `sli.yaml` file into multiple `AnalysisValueTemplate` resources.
+
+To run the converter, execute the following command:
+
+```shell
+docker-run <METRICS_OPERATOR_IMAGE> manager --convert-sli=<PATH_TO_SLI> --sli-provider=<PROVIDER_NAME> --sli-namespace=<PROVIDER_NAMESPACE>
+```
+
+Please be aware, you need to substitute the placeholders with the following information:
+
+* **PATH_TO_SLI** - path to your `sli.yaml` file
+* **PROVIDER_NAME** - name of `KeptnMetricsProvider` which will be used to fetch SLIs 
+* **PROVIDER_NAMESPACE** - namespace of `KeptnMetricsProvider` which will be used to fetch SLIs 
+
+**Note**
+
+All the SLIs present in `sli.yaml` file will use the same provider defined by referenced `KeptnMetricsProvider`.
+
+# SLO converter
+
+## Description
+
+SLO converter is a tool to convert `slo.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new `AnalysisDefinition` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/). The converter is part of `metrics-operator` image.
+
+## Usage
+
+The converter will convert a single `slo.yaml` file into single `AnalysisDefintion` resource.
+
+To run the converter, execute the following command:
+
+```shell
+docker-run <METRICS_OPERATOR_IMAGE> manager --convert-slo=<PATH_TO_SLO> --slo-namespace=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE> --definition=<DEFINITION_NAME>
+```
+
+Please be aware, you need to substitute the placeholders with the following information:
+
+* **PATH_TO_SLO** - path to your `slo.yaml` file
+* **ANALYSIS_VALUE_TEMPLATE_NAMESPACE** - namespace of `AnalysisValueTemplate` which will be referenced in objectives 
+* **DEFINITION_NAME** - name of created `AnalysisDefinition`
+
+**Note**
+
+All the SLOs present in `slo.yaml` file will reference `AnalysisValueTemplate` resources from the namespace defined by `ANALYSIS_VALUE_TEMPLATE_NAMESPACE` argument.
+
+## Conversion details
+
+We have multiple use-cases which are and which are not supported. There is a need to convert the use-cases that make logical sense and are common, but in some cases, where it is problematic and these cases will not be supported.
+
+**Note:** Please be aware, that comparison criteria containing `%` symbol ware not supported and will be ignored.
+
+### Unsupported use-cases
+
+Criteria with 3 and more inputs won't be supported, only the first 2 non-percentage inputs (those not containing % as we do not support comparison rules) will be taken and converted. In the example below, only `<600` and `>400` rules will be converted. Rule `>800` will be ignored.
+
+```yaml
+objectives:
+- sli: response_time_p95
+  displayName: "Response Time P95"
+  pass:
+  - criteria
+    - "<600"
+    - ">400"
+    - ">800"
+  weight: 2
+  key_sli: true
+```
+
+Secondly, support of conversion of multiple criteria elements won't be supported at all -> these criteria are combined with logical OR operator (see documentation [here](https://github.com/keptn/spec/blob/master/service_level_objective.md#objectives)). Only a single criteria element rules will be supported. These criteria will be converted into informative objectives. An example of unsupported SLOs for conversion here:
+
+```yaml
+objectives:
+- sli: response_time_p95
+  displayName: "Response Time P95"
+  pass:
+  - criteria:
+    - "<=+10%"
+  - criteria
+    - "<600"
+  weight: 2
+  key_sli: true
+```
+
+Thirdly, support of a case where `pass` criteria are set, `warn` criteria are set, but pass criteria interval and warn criteria interval do not intercept
+
+```yaml
+ objectives:
+ - sli: response_time_p95
+   displayName: "Response Time P95"
+   pass:
+   - criteria:
+     - ">200"
+     - "<400"
+   warn:
+   - criteria:
+     - ">600"
+     - "<800" 
+```
+
+### Supported use-cases
+
+The basic objective with a single rule for pass or warning criteria
+
+ ```yaml
+ objectives:
+ - sli: response_time_p95
+   displayName: "Response Time P95"
+   pass:
+   - criteria:
+     - ">400"
+   warn:
+   - criteria:
+     - ">200"
+ ```
+
+The buckets for rules with single criteria element but with one or more criteria combined with AND operator (see documentation [here](https://github.com/keptn/spec/blob/master/service_level_objective.md#objectives)):
+
+1.  `pass` criteria set, `warn` criteria not set
+   
+```yaml
+ objectives:
+ - sli: response_time_p95
+   displayName: "Response Time P95"
+   pass:
+   - criteria:
+     - ">400"
+     - "<600"
+```
+
+1. `pass` criteria set, `warn` criteria set, warn criteria interval is superset of pass criteria interval
+
+```yaml
+ objectives:
+ - sli: response_time_p95
+   displayName: "Response Time P95"
+   pass:
+   - criteria:
+     - ">400"
+     - "<600"
+   warn:
+   - criteria:
+     - ">200"
+     - "<800" 
+```
+ 
+1. `pass` criteria set, `warn` criteria set, pass criteria interval is superset of warn criteria interval -> supported
+
+```yaml
+ objectives:
+ - sli: response_time_p95
+   displayName: "Response Time P95"
+   pass:
+   - criteria:
+     - ">200"
+     - "<800"
+   warn:
+   - criteria:
+     - ">400"
+     - "<600" 
+```
+ 

@@ -1,0 +1,66 @@
+# SLI Converter
+
+## Description
+
+SLI converter is a tool to convert `sli.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new
+`AnalysisValueTemplate` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/).
+The converter is part of `metrics-operator` image.
+
+## Usage
+
+The converter will convert a single `sli.yaml` file into multiple `AnalysisValueTemplate` resources.
+
+To run the converter, execute the following command:
+
+```shell
+docker-run <METRICS_OPERATOR_IMAGE> manager --convert-sli=<PATH_TO_SLI> --sli-provider=<PROVIDER_NAME> --sli-namespace=<PROVIDER_NAMESPACE>
+```
+
+Please be aware, you need to substitute the placeholders with the following information:
+
+* **PATH_TO_SLI** - path to your `sli.yaml` file
+* **PROVIDER_NAME** - name of `KeptnMetricsProvider` which will be used to fetch SLIs
+* **PROVIDER_NAMESPACE** - namespace of `KeptnMetricsProvider` which will be used to fetch SLIs
+
+> **Note**
+
+All the SLIs present in `sli.yaml` file will use the same provider defined by referenced
+`KeptnMetricsProvider`.
+
+## Example
+
+The following content of `sli.yaml` file
+
+```yaml
+spec_version: "1.0"
+indicators:
+  throughput: "builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
+  response_time_p95: "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
+```
+
+will be converted to:
+
+```yaml
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  creationTimestamp: null
+  name: response_time_p95
+spec:
+  provider:
+    name: dynatrace
+    namespace: keptn
+  query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  creationTimestamp: null
+  name: throughput
+spec:
+  provider:
+    name: dynatrace
+    namespace: keptn
+  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
+```

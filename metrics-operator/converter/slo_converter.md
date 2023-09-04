@@ -1,81 +1,12 @@
-# Converter
+# SLO Converter
 
-## SLI
-
-### Description
-
-SLI converter is a tool to convert `sli.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new
-`AnalysisValueTemplate` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/).
-The converter is part of `metrics-operator` image.
-
-### Usage
-
-The converter will convert a single `sli.yaml` file into multiple `AnalysisValueTemplate` resources.
-
-To run the converter, execute the following command:
-
-```shell
-docker-run <METRICS_OPERATOR_IMAGE> manager --convert-sli=<PATH_TO_SLI> --sli-provider=<PROVIDER_NAME> --sli-namespace=<PROVIDER_NAMESPACE>
-```
-
-Please be aware, you need to substitute the placeholders with the following information:
-
-* **PATH_TO_SLI** - path to your `sli.yaml` file
-* **PROVIDER_NAME** - name of `KeptnMetricsProvider` which will be used to fetch SLIs
-* **PROVIDER_NAMESPACE** - namespace of `KeptnMetricsProvider` which will be used to fetch SLIs
-
-> **Note**
-
-All the SLIs present in `sli.yaml` file will use the same provider defined by referenced
-`KeptnMetricsProvider`.
-
-### Example
-
-The following content of `sli.yaml` file
-
-```yaml
-spec_version: "1.0"
-indicators:
-  throughput: "builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
-  response_time_p95: "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"
-```
-
-will be converted to:
-
-```yaml
----
-apiVersion: metrics.keptn.sh/v1alpha3
-kind: AnalysisValueTemplate
-metadata:
-  creationTimestamp: null
-  name: response_time_p95
-spec:
-  provider:
-    name: dynatrace
-    namespace: keptn
-  query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
----
-apiVersion: metrics.keptn.sh/v1alpha3
-kind: AnalysisValueTemplate
-metadata:
-  creationTimestamp: null
-  name: throughput
-spec:
-  provider:
-    name: dynatrace
-    namespace: keptn
-  query: builtin:service.requestCount.total:merge(0):count?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
-```
-
-## SLO
-
-### Description
+## Description
 
 SLO converter is a tool to convert `slo.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new
 `AnalysisDefinition` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/).
 The converter is part of `metrics-operator` image.
 
-### Usage
+## Usage
 
 The converter will convert a single `slo.yaml` file into single `AnalysisDefintion` resource.
 
@@ -96,7 +27,7 @@ Please be aware, you need to substitute the placeholders with the following info
 All the SLOs present in `slo.yaml` file will reference `AnalysisValueTemplate` resources from the namespace defined
 by `ANALYSIS_VALUE_TEMPLATE_NAMESPACE` argument.
 
-### Conversion details
+## Conversion details
 
 We have multiple use-cases which are and which are not supported.
 There is a need to convert the use-cases that make
@@ -104,7 +35,7 @@ logical sense and are common, but in some cases, where it is problematic and the
 
 > **Note** Please be aware, that comparison criteria containing `%` symbol ware not supported and will be ignored.
 
-#### Unsupported use-cases
+### Unsupported use-cases
 
 Criteria with 3 and more inputs won't be supported, only the first 2 non-percentage inputs (those not containing `%`
 as we do not support comparison rules) will be taken and converted.
@@ -160,7 +91,7 @@ objectives:
     - "<800" 
 ```
 
-#### Supported use-cases
+### Supported use-cases
 
 The basic objective with a single rule for pass or warning criteria
 
@@ -223,7 +154,7 @@ objectives:
     - "<600" 
 ```
 
-### Example
+## Example
 
 The following content of `slo.yaml` file
 

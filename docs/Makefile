@@ -46,3 +46,34 @@ markdownlint:
 
 markdownlint-fix:
 	$(MDL_CMD) --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
+
+# Define the directories
+OPERATOR_DIR := operator
+CONFIG_DIR := $(OPERATOR_DIR)/config
+HELM_TEMPLATES_DIR := helm/chart/templates
+METRICS_OPERATOR_DIR := metrics-operator
+
+.PHONY: resources
+
+# New target to automate the steps for both operators
+resources: generate-manifests copy-manifests update-crd-docs
+
+generate-manifests:
+	@echo "Generating manifests..."
+	cd $(OPERATOR_DIR) && make generate && make manifests
+	cd $(METRICS_OPERATOR_DIR) && make generate && make manifests
+
+copy-manifests:
+	@echo "Copying manifests to Helm..."
+	cp $(CONFIG_DIR)/crd/bases/*.yaml $(HELM_TEMPLATES_DIR)/
+	cp $(METRICS_OPERATOR_DIR)/config/crd/bases/*.yaml $(HELM_TEMPLATES_DIR)/
+	@for file in $(HELM_TEMPLATES_DIR)/*.yaml; do \
+		tmpfile="$${file}.tmp"; \
+		awk '/metadata:/{print;print "  labels:\n    app.kubernetes.io/part-of: keptn-lifecycle-toolkit\n    crdGroup: metrics.keptn.sh\n    keptn.sh/inject-cert: \"true\"";next}1' $$file > $$tmpfile; \
+		awk '/metadata:/{print;print "  annotations:\n    cert-manager.io/inject-ca-from: \"{{ .Release.Namespace }}/klt-certs\"";next}1' $$tmpfile > $$file; \
+		rm $$tmpfile; \
+	done
+
+update-crd-docs:
+	@echo "Updating CRD docs..."
+	cd .github/scripts/generate-crd-docs/ && ./generate-crd-docs.sh

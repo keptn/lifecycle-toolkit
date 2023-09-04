@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "autoprefixer": "^10.4.13",
+        "autoprefixer": "^10.4.15",
         "postcss-cli": "^10.1.0"
     }
 }

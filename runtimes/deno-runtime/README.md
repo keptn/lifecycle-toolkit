@@ -8,7 +8,7 @@ docker build -t keptnsandbox/klc-runtime:${VERSION} .
 
 ## Usage
 
-The Keptn deno runtime uses [Deno](https://deno.land/)
+The Keptn deno runtime uses [Deno](https://deno.com/)
 to execute Javascript/Typescript code.
 The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.

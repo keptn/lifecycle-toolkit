@@ -18,7 +18,7 @@ in Release 0.7.0 and later:
 
 ```mermaid
 graph TD;
-    KLTComponents-->Operators;
+    KLTComponentKeptn-->Operators;
     KLTComponents-->Scheduler
    Operators-->Lifecycle-Operator
    Operators-->Metrics-Operator

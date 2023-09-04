@@ -18,11 +18,11 @@ in Release 0.7.0 and later:
 
 ```mermaid
 graph TD;
-    KLTComponentKeptn-->Operators;
-    KLTComponents-->Scheduler
+    KeptnComponentKeptn-->Operators;
+    KeptnComponents-->Scheduler
    Operators-->Lifecycle-Operator
    Operators-->Metrics-Operator
-style KLTComponents fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style KeptnComponents fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
 style Operators fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 style Scheduler fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 style Lifecycle-Operator fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8

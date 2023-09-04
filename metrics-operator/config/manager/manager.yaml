@@ -64,7 +64,11 @@ spec:
                   fieldPath: metadata.name
             - name: EXPOSE_KEPTN_METRICS
               value: "true"
+            - name: ENABLE_ANALYSIS
+              value: "true"
             - name: METRICS_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: ANALYSIS_CONTROLLER_LOG_LEVEL
               value: "0"
           ports:
             - containerPort: 9443

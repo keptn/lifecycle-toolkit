@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       runtime_tag:
-        description: "Tag for the functions runner image"
+        description: "Tag for the runner images"
         type: "string"
         required: true
 env:
@@ -17,9 +17,6 @@ jobs:
     name: Performance Tests
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Check out code
         uses: actions/checkout@v3
 

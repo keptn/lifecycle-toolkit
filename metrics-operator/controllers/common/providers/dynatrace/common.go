@@ -33,11 +33,11 @@ func getDTSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, 
 		return "", err
 	}
 
-	token := dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
+	token := string(dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key])
 	if len(token) == 0 {
 		return "", fmt.Errorf("secret contains invalid key %s", provider.Spec.SecretKeyRef.Key)
 	}
-	return string(token), nil
+	return strings.Trim(token, "\n"), nil
 }
 
 func urlEncodeQuery(query string) string {

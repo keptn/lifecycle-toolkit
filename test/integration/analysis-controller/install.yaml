@@ -1,0 +1,14 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: analysis-sample
+  namespace: $NAMESPACE
+spec:
+  timeframe:
+    from: $CURRENT_TIME
+    to: $LATER
+  args:
+    "ns": "keptn-lifecycle-toolkit-system"
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+    namespace: keptn-lifecycle-toolkit-system

@@ -361,7 +361,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -384,7 +384,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -407,7 +407,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -430,7 +430,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -638,7 +638,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -669,7 +669,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -700,7 +700,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -731,7 +731,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)

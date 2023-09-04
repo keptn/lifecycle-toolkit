@@ -3,32 +3,34 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.20
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.15.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.16.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.2.4
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230807110601-88a54f97c157
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230904065758-8dbec2d6116f
 	github.com/open-feature/go-sdk v1.7.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/prometheus/common v0.44.0
 	github.com/stretchr/testify v1.8.4
-	k8s.io/api v0.26.7
-	k8s.io/apiextensions-apiserver v0.26.7
-	k8s.io/apimachinery v0.26.7
-	k8s.io/apiserver v0.26.7
-	k8s.io/client-go v0.26.7
-	k8s.io/component-base v0.26.7
+	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
+	golang.org/x/net v0.12.0
+	gopkg.in/inf.v0 v0.9.1
+	k8s.io/api v0.26.8
+	k8s.io/apiextensions-apiserver v0.26.8
+	k8s.io/apimachinery v0.26.8
+	k8s.io/apiserver v0.26.8
+	k8s.io/client-go v0.26.8
+	k8s.io/component-base v0.26.8
 	k8s.io/klog/v2 v2.100.1
-	k8s.io/metrics v0.26.7
+	k8s.io/metrics v0.26.8
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/custom-metrics-apiserver v1.25.1-0.20230116101851-63817c8ac8f2
 	sigs.k8s.io/yaml v1.3.0
 )
 
 require (
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 // indirect
@@ -95,9 +97,7 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb // indirect
-	golang.org/x/net v0.10.0 // indirect
-	golang.org/x/oauth2 v0.8.0 // indirect
+	golang.org/x/oauth2 v0.10.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/term v0.11.0 // indirect
@@ -107,12 +107,11 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20221202195650-67e5cbc046fd // indirect
 	google.golang.org/grpc v1.52.3 // indirect
-	google.golang.org/protobuf v1.30.0 // indirect
-	gopkg.in/inf.v0 v0.9.1 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/kms v0.26.7 // indirect
+	k8s.io/kms v0.26.8 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
 	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.37 // indirect

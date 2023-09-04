@@ -12,15 +12,19 @@
       "prerelease": false,
       "monorepo-tags": "klt",
       "draft": false,
-      "exclude-paths": ["klt-cert-manager", "metrics-operator"],
+      "exclude-paths": [
+        "klt-cert-manager",
+        "lifecycle-operator",
+        "metrics-operator",
+        "scheduler",
+        "runtimes/deno-runtime",
+        "runtimes/python-runtime"
+      ],
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
         "helm/chart/Chart.yaml",
         "Makefile",
-        "operator/Makefile",
-        "scheduler/Makefile",
-        "docs/content/en/docs/snippets/tasks/install.md",
         "helm/chart/values.yaml",
         "helm/chart/README.md"
       ]
@@ -30,6 +34,30 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "monorepo-tags": "cert-manager",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
+      ]
+    },
+    "lifecycle-operator": {
+      "package-name": "lifecycle-operator",
+      "component": "lifecycle-operator",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "lifecycle-operator",
+      "prerelease": false,
+      "draft": false,
+      "extra-files": [
+        "Makefile"
+      ]
+    },
+    "scheduler": {
+      "package-name": "scheduler",
+      "component": "scheduler",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "scheduler",
       "prerelease": false,
       "draft": false,
       "extra-files": [
@@ -46,8 +74,35 @@
       "extra-files": [
         "Makefile"
       ]
+    },
+    "runtimes/python-runtime": {
+      "package-name": "python-runtime",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "python-runtime",
+      "prerelease": false,
+      "draft": false
+    },
+    "runtimes/deno-runtime": {
+      "package-name": "deno-runtime",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "go",
+      "monorepo-tags": "deno-runtime",
+      "prerelease": false,
+      "draft": false
     }
   },
+  "plugins": [
+    {
+      "type": "linked-versions",
+      "groupName": "lifecycle-operator-and-scheduler",
+      "components": [
+        "lifecycle-operator",
+        "scheduler"
+      ],
+      "merge": true
+    }
+  ],
   "changelog-sections": [
     {
       "type": "feat",

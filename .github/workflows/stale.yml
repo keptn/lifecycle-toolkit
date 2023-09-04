@@ -9,9 +9,6 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - uses: actions/stale@v8
         with:
           days-before-stale: 60
@@ -29,9 +26,6 @@ jobs:
   stale-good-first-issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - uses: actions/stale@v8
         with:
           days-before-stale: 21

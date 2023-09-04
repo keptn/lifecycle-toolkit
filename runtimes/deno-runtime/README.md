@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller - Function Runtime
+# Keptn Lifecycle Controller - Deno Runtime
 
 ## Build
 
@@ -8,7 +8,7 @@ docker build -t keptnsandbox/klc-runtime:${VERSION} .
 
 ## Usage
 
-The Keptn function runtime uses [Deno](https://deno.land/)
+The Keptn deno runtime uses [Deno](https://deno.com/)
 to execute Javascript/Typescript code.
 The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.
@@ -29,14 +29,14 @@ console.log(secret);
 Replace `${VERSION}` with the KLT version of your choice.
 
 ```sh
-docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/functions-runtime:${VERSION}
+docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/deno-runtime:${VERSION}
 ```
 
 ### Docker with function on webserver (function in this repo)
 
 ```shell
 docker run \
-  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/hello-world.ts \
+  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/hello-world.ts \
   -it \
   keptnsandbox/klc-runtime:${VERSION}
 ```
@@ -45,7 +45,7 @@ docker run \
 
 ```shell
 docker run \
-  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/scheduler.ts \
+  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/scheduler.ts \
   -e DATA='{ "targetDate":"2025-04-16T06:55:31.820Z" }' \
   -it \
   keptnsandbox/klc-runtime:${VERSION}
@@ -55,7 +55,7 @@ docker run \
 
 ```shell
 docker run \
-  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/slack.ts \
+  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/slack.ts \
   -e SECURE_DATA='{ "slack_hook":"hook/parts","text":"this is my test message" }' \
   -it \
   keptnsandbox/klc-runtime:${VERSION}
@@ -65,10 +65,10 @@ docker run \
 
 ```shell
 docker run \
-  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/prometheus.ts \
+  -e SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/prometheus.ts \
   -e DATA='{ "url":"http://localhost:9090", "metrics": "up{service=\"kubernetes\"}", "expected_value": "1" }' \
   -it \
-  ghcr.io/keptn/functions-runtime:${VERSION}
+  ghcr.io/keptn/deno-runtime:${VERSION}
 ```
 
 <!-- markdownlint-disable-next-line MD033 MD013 -->

@@ -20,9 +20,6 @@ jobs:
     name: "Prepare Security Scans"
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Determine Target Branch
         id: determine_branch
         run: |
@@ -105,9 +102,6 @@ jobs:
           - tool: "kubescape"
             kubescape-framework: "ARMOBest"
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Set up Go
         if: matrix.tool == 'kubeconform'
         uses: actions/setup-go@v4
@@ -200,15 +194,13 @@ jobs:
       matrix:
         image:
           - "functions-runtime"
+          - "deno-runtime"
           - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
           - "certificate-operator"
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Download images
         id: download_images
         uses: actions/download-artifact@v3
@@ -234,11 +226,7 @@ jobs:
           - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
-
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
         with:
@@ -262,9 +250,6 @@ jobs:
     needs: [security-scans, govulncheck, trivy]
     if: failure() && github.event_name == 'schedule'
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Formulate bug issue
         id: formulate_bug_issue
         run: |

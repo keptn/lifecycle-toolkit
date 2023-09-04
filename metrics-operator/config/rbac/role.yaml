@@ -21,6 +21,48 @@ rules:
 - apiGroups:
   - metrics.keptn.sh
   resources:
+  - analyses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analyses/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analyses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisdefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisvaluetemplates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
   - keptnmetrics
   verbs:
   - get

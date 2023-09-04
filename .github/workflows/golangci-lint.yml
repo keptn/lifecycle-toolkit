@@ -36,9 +36,6 @@ jobs:
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -46,8 +43,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-          cache: true
-          cache-dependency-path: '${{ matrix.config.folder }}go.sum'
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3

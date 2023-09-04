@@ -1446,7 +1446,7 @@ spec:
                       execute the same logic, but each with different parameters.
                     properties:
                       name:
-                        description: Name is the name of the referenced KeptnTaksDefinition.
+                        description: Name is the name of the referenced KeptnTaskDefinition.
                         type: string
                     type: object
                   httpRef:
@@ -1520,7 +1520,7 @@ spec:
                       execute the same logic, but each with different parameters.
                     properties:
                       name:
-                        description: Name is the name of the referenced KeptnTaksDefinition.
+                        description: Name is the name of the referenced KeptnTaskDefinition.
                         type: string
                     type: object
                   httpRef:
@@ -1594,7 +1594,7 @@ spec:
                       execute the same logic, but each with different parameters.
                     properties:
                       name:
-                        description: Name is the name of the referenced KeptnTaksDefinition.
+                        description: Name is the name of the referenced KeptnTaskDefinition.
                         type: string
                     type: object
                   httpRef:

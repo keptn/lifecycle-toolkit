@@ -122,7 +122,7 @@ When using the `deno-runtime` runner to define a task,
 the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.land/manual) runner,
+[Deno](https://deno.com/manual) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -149,7 +149,7 @@ spec:
 
 * **spec**
   * **deno** -- Specify that the task uses the `deno-runtime`
-    and is expressed as a [Deno](https://deno.land/) script.
+    and is expressed as a [Deno](https://deno.com/) script.
     Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
     for more information about this runner.
 

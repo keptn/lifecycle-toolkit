@@ -95,7 +95,7 @@ for deployment scenarios, including pre-deployment validation, image scanning,
 and post-deployment tasks like test execution and stakeholder notification.
 It automatically validates against Service Level Objectives (SLOs) and provides
 end-to-end deployment traceability.
-The toolkit extends deployments with application-aware tasks and evaluations,
+Keptn extends deployments with application-aware tasks and evaluations,
 allowing checks before or after deployment initiation.
 It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
 environment and confirming software health against SLOs like performance and

@@ -1,6 +1,6 @@
 ---
-title: Migrate CI/CD functionality to KLT
-description: Translate Keptn v1 CI/CD funtionality to KLT resources
+title: Migrate CI/CD functionality to Keptn
+description: Translate Keptn v1 CI/CD funtionality to Keptn resources
 weight: 60
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---

@@ -5,8 +5,7 @@ weight: 89
 ---
 
 A `KeptnTaskDefinition` defines tasks
-that are run by the Keptn Lifecycle Toolkit
-as part of the pre- and post-deployment phases of a
+that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
@@ -122,7 +121,7 @@ When using the `deno-runtime` runner to define a task,
 the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.land/manual) runner,
+[Deno](https://deno.com/manual) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -149,8 +148,8 @@ spec:
 
 * **spec**
   * **deno** -- Specify that the task uses the `deno-runtime`
-    and is expressed as a [Deno](https://deno.land/) script.
-    Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
+    and is expressed as a [Deno](https://deno.com/) script.
+    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
     for more information about this runner.
 
     The task can be defined as one of the following:
@@ -205,7 +204,7 @@ spec:
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -280,7 +279,7 @@ The `python-runtime` runner provides a way
 to easily define a task using Python 3.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide a Python script
-and KLT sets up the container and runs the script as part of the task.
+and Keptn sets up the container and runs the script as part of the task.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -355,7 +354,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -580,7 +579,7 @@ This example prints data stored in the parameters map:
 
 You can refer to code stored online.
 For example, we have a few examples available in the
-[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/python-runtime/samples)
+[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
 tree.
 
 Consider the following:
@@ -664,4 +663,4 @@ is allowed per `KeptnTaskDefinition`.
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../concepts/architecture/keptn-apps/).
-* [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)
+* [Orchestrate deployment checks](../intro/usecase-orchestrate.md)

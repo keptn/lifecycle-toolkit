@@ -18,14 +18,14 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.Objective) types.ObjectiveResult {
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult, obj *v1alpha3.Objective) types.ObjectiveResult {
 	result := types.ObjectiveResult{
 		Score: 0.0,
 		Value: 0.0,
 	}
 
 	// get the value
-	floatVal, err := getValueFromMap(values, computeKey(obj.AnalysisValueTemplateRef))
+	floatVal, err := getValueFromMap(values, ComputeKey(obj.AnalysisValueTemplateRef))
 	if err != nil {
 		result.Error = err
 		return result
@@ -49,13 +49,12 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]string, obj *v1alpha3.O
 	return result
 }
 
-func getValueFromMap(values map[string]string, key string) (float64, error) {
+func getValueFromMap(values map[string]v1alpha3.ProviderResult, key string) (float64, error) {
 	val, ok := values[key]
 	if !ok {
 		return 0.0, fmt.Errorf("required value '%s' not available", key)
 	}
-
-	floatVal, err := strconv.ParseFloat(val, 64)
+	floatVal, err := strconv.ParseFloat(val.Value, 64)
 	if err != nil {
 		return 0.0, err
 	}
@@ -63,7 +62,7 @@ func getValueFromMap(values map[string]string, key string) (float64, error) {
 	return floatVal, nil
 }
 
-func computeKey(obj v1alpha3.ObjectReference) string {
+func ComputeKey(obj v1alpha3.ObjectReference) string {
 	if obj.Namespace == "" {
 		return obj.Name
 	}

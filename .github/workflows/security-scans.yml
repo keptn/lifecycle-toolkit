@@ -20,9 +20,6 @@ jobs:
     name: "Prepare Security Scans"
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Determine Target Branch
         id: determine_branch
         run: |
@@ -105,9 +102,6 @@ jobs:
           - tool: "kubescape"
             kubescape-framework: "ARMOBest"
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Set up Go
         if: matrix.tool == 'kubeconform'
         uses: actions/setup-go@v4
@@ -199,16 +193,13 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - "functions-runtime"
+          - "deno-runtime"
           - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
           - "certificate-operator"
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Download images
         id: download_images
         uses: actions/download-artifact@v3
@@ -217,7 +208,7 @@ jobs:
           path: images
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.11.2
+        uses: aquasecurity/trivy-action@fbd16365eb88e12433951383f5e99bd901fc618f # 0.12.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -234,11 +225,7 @@ jobs:
           - "metrics-operator"
           - "scheduler"
           - "klt-cert-manager"
-
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
         with:
@@ -262,9 +249,6 @@ jobs:
     needs: [security-scans, govulncheck, trivy]
     if: failure() && github.event_name == 'schedule'
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Formulate bug issue
         id: formulate_bug_issue
         run: |

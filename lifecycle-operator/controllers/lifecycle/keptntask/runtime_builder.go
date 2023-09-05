@@ -152,7 +152,7 @@ func (fb *RuntimeBuilder) getParams(ctx context.Context) (*RuntimeExecutionParam
 		}
 	}
 
-	params.Context = setupTaskContext(fb.options.task)
+	params.Context = fb.options.task.Spec.Context
 
 	if len(fb.options.task.Spec.Parameters.Inline) > 0 {
 		err = mergo.Merge(&params.Parameters, fb.options.task.Spec.Parameters.Inline)

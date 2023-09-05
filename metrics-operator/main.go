@@ -34,6 +34,8 @@ import (
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
+	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
@@ -47,6 +49,7 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 var (
@@ -68,7 +71,9 @@ type envConfig struct {
 	PodNamespace                  string `envconfig:"POD_NAMESPACE" default:""`
 	PodName                       string `envconfig:"POD_NAME" default:""`
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
+	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	EnableKeptnAnalysis           bool   `envconfig:"ENABLE_ANALYSIS" default:"false"`
 }
 
 //nolint:gocyclo,funlen
@@ -81,12 +86,17 @@ func main() {
 	var SLIFilePath string
 	var provider string
 	var namespace string
+	var SLOFilePath string
+	var analysisDefinition string
 	var enableLeaderElection bool
 	var disableWebhook bool
 	var probeAddr string
-	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI fiel to be converted")
+	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI file to be converted")
 	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
 	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
+	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLO file to be converted")
+	flag.StringVar(&analysisDefinition, "definition", "", "The name of AnalysisDefinition to be created")
+	flag.StringVar(&namespace, "slo-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -104,6 +114,18 @@ func main() {
 	if SLIFilePath != "" {
 		// convert
 		content, err := convertSLI(SLIFilePath, provider, namespace)
+		if err != nil {
+			log.Fatalf(err.Error())
+			return
+		}
+		// write out converted result
+		fmt.Print(content)
+		return
+	}
+
+	if SLOFilePath != "" {
+		// convert
+		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
 		if err != nil {
 			log.Fatalf(err.Error())
 			return
@@ -157,24 +179,31 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err = (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
-		os.Exit(1)
-	}
-	if err = (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
-		os.Exit(1)
+
+	if env.EnableKeptnAnalysis {
+
+		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
+		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
+		objEval := analysis.NewObjectiveEvaluator(&targetEval)
+		analysisEval := analysis.NewAnalysisEvaluator(&objEval)
+
+		if err = (&analysiscontroller.AnalysisReconciler{
+			Client:                mgr.GetClient(),
+			Scheme:                mgr.GetScheme(),
+			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
+			MaxWorkers:            2,
+			Namespace:             env.PodNamespace,
+			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
+			IAnalysisEvaluator:    &analysisEval,
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
+			os.Exit(1)
+		}
 	}
 	// +kubebuilder:scaffold:builder
 
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up health check")
-		os.Exit(1)
-	}
-	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up ready check")
-		os.Exit(1)
-	}
+	setupValidationWebhooks(mgr)
+	setupProbes(mgr)
 
 	if !disableWebhook {
 		webhookBuilder := webhook.NewWebhookBuilder().
@@ -211,6 +240,29 @@ func main() {
 	}
 }
 
+func setupValidationWebhooks(mgr manager.Manager) {
+	if err := (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
+		os.Exit(1)
+	}
+	if err := (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
+		os.Exit(1)
+	}
+}
+
+func setupProbes(mgr manager.Manager) {
+
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up health check")
+		os.Exit(1)
+	}
+	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up ready check")
+		os.Exit(1)
+	}
+}
+
 func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
@@ -229,6 +281,23 @@ func convertSLI(SLIFilePath, provider, namespace string) (string, error) {
 	// convert
 	c := converter.NewSLIConverter()
 	content, err := c.Convert(fileContent, provider, namespace)
+	if err != nil {
+		return "", err
+	}
+
+	return content, nil
+}
+
+func convertSLO(SLOFilePath, analysisDefinition, namespace string) (string, error) {
+	//read file content
+	fileContent, err := os.ReadFile(SLOFilePath)
+	if err != nil {
+		return "", fmt.Errorf("error reading file content: %s", err.Error())
+	}
+
+	// convert
+	c := converter.NewSLOConverter()
+	content, err := c.Convert(fileContent, analysisDefinition, namespace)
 	if err != nil {
 		return "", err
 	}

@@ -1,6 +1,6 @@
 # Sample Application
 
-This example should demonstrate the capabilities of the lifecycle toolkit as illustrated here:
+This example demonstrates Keptn's capabilities as illustrated here:
 
 ![img.png](assets/big-picture.png)
 

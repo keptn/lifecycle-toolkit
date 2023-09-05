@@ -69,7 +69,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
-	// check if Lifecycle Controller is enabled for this namespace
+	// check if Lifecycle Operator is enabled for this namespace
 	namespace := &corev1.Namespace{}
 	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
 		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
@@ -77,15 +77,15 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
-		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
-		return admission.Allowed("namespace is not enabled for lifecycle controller")
+		logger.Info("namespace is not enabled for lifecycle operator", "namespace", req.Namespace)
+		return admission.Allowed("namespace is not enabled for lifecycle operator")
 	}
 
 	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
 	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	if ownerRef.Kind == "" {
-		msg := "owner of pod is not supported by lifecycle controller"
+		msg := "owner of pod is not supported by lifecycle operator"
 		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
 		return admission.Allowed(msg)
 	}

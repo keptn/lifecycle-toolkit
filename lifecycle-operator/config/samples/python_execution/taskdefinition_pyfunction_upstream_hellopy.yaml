@@ -5,4 +5,4 @@ metadata:
 spec:
   python:
     httpRef:
-      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/python-runtime/samples/hellopy.py
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/python-runtime/samples/hellopy.py

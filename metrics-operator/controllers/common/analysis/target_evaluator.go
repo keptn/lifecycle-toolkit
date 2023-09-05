@@ -15,7 +15,7 @@ func NewTargetEvaluator(o IOperatorEvaluator) TargetEvaluator {
 	}
 }
 
-func (te *TargetEvaluator) Evaluate(val float64, t v1alpha3.Target) types.TargetResult {
+func (te *TargetEvaluator) Evaluate(val float64, t *v1alpha3.Target) types.TargetResult {
 	result := types.TargetResult{
 		Warning: false,
 		Pass:    false,

@@ -6,8 +6,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 This section provides comprehensive reference information about the
-manifest files that must be populated
-for the Keptn Lifecycle Toolkit
+manifest files that must be populated for Keptn
 [Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/).
 
 Each CRD is an object of an API library.

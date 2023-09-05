@@ -1,14 +1,14 @@
 ---
 title: Upgrade
-description: How to upgrade to the latest version of the Lifecycle Toolkit
+description: How to upgrade to the latest version of Keptn
 layout: quickstart
 weight: 45
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-If you installed the previous version of the Lifecycle Toolkit using `helm`,
+If you installed the previous version of Keptn using `helm`,
 you can upgrade to the latest version
-by running the same command sequence used to install KLT:
+by running the same command sequence used to install Keptn:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -19,16 +19,16 @@ helm upgrade --install keptn klt/klt \
 
 Use the `--set` flag or download and edit the `values.yaml` file
 to modify the configuration as discussed on the
-[Install the Lifecycle Toolkit](../install/) page.
+[Install Keptn](../install/) page.
 
 > **Warning**
-If you installed your Lifecycle Toolkit instance from the Manifest,
+If you installed your Keptn instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.
 
 ## Migrate from v0.6.0 to v0.7.0
 
-Keptn Lifecycle Toolkit Version v0.7.0
+Keptn Version v0.7.0
 introduces the `metrics-operator`,
 which is now separate from the `lifecycle-operator`.
 Some functionality and behavior has been moved, changed, or renamed.

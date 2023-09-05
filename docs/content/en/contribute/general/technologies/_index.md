@@ -1,13 +1,13 @@
 ---
 title: Technologies to get familiar
-description: Technologies to get familiar before working with Keptn lifecycle toolkit
+description: Technologies to get familiar before working with Keptn
 weight: 100
 ---
 
 ### Related Technologies
 
 You should understand some related technologies
-to effectively use and contribute to the Keptn lifecycle-toolkit.
+to effectively use and contribute to Keptn.
 This section provides links to some materials that can help your learning.
 The information has been gathered from the community and is subject to alteration.
 If you have suggestions about additional content that should be included in this list,

@@ -283,14 +283,6 @@ spec:
           spec:
             description: Spec describes the desired state of the KeptnTask.
             properties:
-              app:
-                description: AppName defines the KeptnApp for which the KeptnTask
-                  is executed.
-                type: string
-              appVersion:
-                description: AppVersion defines the version of the KeptnApp for which
-                  the KeptnTask is executed.
-                type: string
               checkType:
                 description: Type indicates whether the KeptnTask is part of the pre-
                   or postDeployment phase.
@@ -323,13 +315,6 @@ spec:
                     description: WorkloadVersion the version of the KeptnWorkload
                       the KeptnTask is being executed for.
                     type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
                 type: object
               parameters:
                 description: Parameters contains parameters that will be passed to
@@ -378,21 +363,8 @@ spec:
                   within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
-              workload:
-                description: Workload defines the KeptnWorkload for which the KeptnTask
-                  is executed.
-                type: string
-              workloadVersion:
-                description: WorkloadVersion defines the version of the KeptnWorkload
-                  for which the KeptnTask is executed.
-                type: string
             required:
-            - app
-            - appVersion
-            - context
             - taskDefinition
-            - workload
-            - workloadVersion
             type: object
           status:
             description: Status describes the current state of the KeptnTask.

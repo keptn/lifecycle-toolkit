@@ -34,7 +34,7 @@ func (r *AnalysisDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha3-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1alpha3,name=vanalysisdefinition.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1alpha3-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1alpha3,name=analysisdefinition.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &AnalysisDefinition{}
 
@@ -100,6 +100,7 @@ func (t *Target) validate() error {
 	return nil
 }
 
+//nolint:gocyclo
 func (o *Operator) validate() error {
 	counter := 0
 	if o.LessThan != nil {
@@ -117,11 +118,30 @@ func (o *Operator) validate() error {
 	if o.EqualTo != nil {
 		counter++
 	}
+	if o.InRange != nil {
+		counter++
+	}
+	if o.NotInRange != nil {
+		counter++
+	}
 	if counter > 1 {
 		return fmt.Errorf("Operator: multiple operators can not be set")
 	}
 	if counter == 0 {
 		return fmt.Errorf("Operator: no operator set")
+	}
+	if o.InRange != nil {
+		return o.InRange.validate()
+	}
+	if o.NotInRange != nil {
+		return o.NotInRange.validate()
+	}
+	return nil
+}
+
+func (r *RangeValue) validate() error {
+	if r.LowBound.AsApproximateFloat64() >= r.HighBound.AsApproximateFloat64() {
+		return fmt.Errorf("RangeValue: lower bound of the range needs to be smaller than higher bound")
 	}
 	return nil
 }

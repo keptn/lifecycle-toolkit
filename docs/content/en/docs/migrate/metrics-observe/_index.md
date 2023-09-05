@@ -1,5 +1,5 @@
 ---
-title: Migrate Quality Gates to KLT metrics and evaluations
+title: Migrate Quality Gates to Keptn metrics and evaluations
 description: How to translate Quality Gates into Keptn Metrics and evaluations
 weight: 40
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -13,25 +13,25 @@ We hope you will contribute your experiences
 and questions that you have.
 
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
-KLT KeptnMetrics and KeptnEvaluationDefintions.
+Keptn KeptnMetrics and KeptnEvaluationDefintions.
 
-By default, KLT includes additional observability features
+By default, Keptn includes additional observability features
 that are not included in Keptn v1:
 
 * [DORA metrics](../../implementing/dora)
 * [OpenTelemetry observability](../../implementing/otel.md)
 
-Keptn v1 Quality Gates can be migrated into KLT metrics
-and KLT evaluations.
+Keptn v1 Quality Gates can be migrated into Keptn metrics
+and Keptn evaluations.
 
 > **Note**
 The full SLO capabilities
 provided by Keptn v1 such as weighting and scoring
-are currently under development for KLT.
+are currently under development for Keptn.
 You can follow and participate in the design and implementation process at
-[Github epic 1785](https://github.com/keptn/lifecycle-toolkit/pull/1785).
+[GitHub Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
 
-Notice the paradigm differences when implementing KLT evaluations:
+Notice the paradigm differences when implementing Keptn evaluations:
 
 * Data providers are installed and configured into your Kubernetes cluster
   using Helm charts and standard practices.
@@ -40,13 +40,13 @@ Notice the paradigm differences when implementing KLT evaluations:
   for each instance of each data provider.
   This resource specifies the URL and namespace for the data provider
   and gives it a unique `name` that can be referenced by other resources.
-  This is the only KLT specific configuration that is required.
+  This is the only Keptn specific configuration that is required.
 * Each query that is specified in your Keptn v1
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/) file
   should be converted into its own
   [KeptnMetric](../../yaml-crd-ref/metric.md) resource
   if you are using it for an evaluation.
-  Note that KLT supports using multiple instances of multiple data providers.
+  Note that Keptn supports using multiple instances of multiple data providers.
 * Simple Keptn v1 comparisons that are defined in
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files can be converted to

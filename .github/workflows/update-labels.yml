@@ -9,9 +9,6 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Update Labels
         uses: actions/labeler@v4
         with:

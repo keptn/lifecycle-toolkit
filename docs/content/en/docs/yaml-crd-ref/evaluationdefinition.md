@@ -8,7 +8,7 @@ weight: 20
 A `KeptnEvaluationDefinition` assigns target values
 to [KeptnMetric](metric.md) queries.
 These are used as part of evaluation tasks
-that can be run by the Keptn Lifecycle Toolkit
+that Keptn runs
 as part of pre- and post-analysis phases of a workload or application.
 
 ## Yaml Synopsis
@@ -61,7 +61,7 @@ spec:
 A `KeptnEvaluationDefinition` references one or more
 [KeptnMetric](metric.md) resources.
 When multiple `KeptnMetric`s are used,
-the Keptn Lifecycle Toolkit considers the evaluation successful
+Keptn considers the evaluation successful
 if **all** metrics meet their `evaluationTarget`.
 
 The `KeptnMetric` resource and associated

@@ -1,24 +1,27 @@
-# Keptn Lifecycle Toolkit
+# Keptn
 
 ![build](https://img.shields.io/github/actions/workflow/status/keptn/lifecycle-toolkit/CI.yaml?branch=main)
 ![Codecov](https://img.shields.io/codecov/c/github/keptn/lifecycle-toolkit?token=KPGfrBb2sA)
-![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=operator%2Fgo.mod)
+![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=lifecycle-operator/go.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 
 This is the primary repository for
-the Keptn Lifecycle Toolkit (KLT) software and documentation.
-KLT provides a “cloud-native” approach
+the Keptn software and documentation.
+Keptn provides a “cloud-native” approach
 for managing the application release lifecycle
 metrics, observability, health checks,
 with pre- and post-deployment evaluations and tasks.
 It is an incubating project, under the umbrella of the
 [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
+> **Note** Keptn was developed under the code name of
+  "Keptn Lifecycle Toolkit" or "KLT" for short.
+  The source code contains many vestiges of these names.
+
 ## Goals
 
-The Keptn Lifecycle Toolkit provides Cloud Native teams with
-the following capabilities:
+Keptn provides Cloud Native teams with the following capabilities:
 
 - Pre-requisite evaluation before deploying workloads and applications
 - Finding out when an application (not just a workload) is ready and working
@@ -28,10 +31,10 @@ the following capabilities:
 
 ![Operator Maturity Model with third level circled in](./assets/operator-maturity.jpg)
 
-The Keptn Lifecycle Toolkit can be seen as a general purpose and declarative
+Keptn can be seen as a general purpose and declarative
 [Level 3 operator](https://operatorframework.io/operator-capabilities/)
 for your Application.
-For this reason, the Keptn Lifecycle Toolkit is agnostic to deployment tools
+For this reason, Keptn is agnostic to deployment tools
 that are used and works with any GitOps solution.
 
 ## Status
@@ -61,13 +64,13 @@ The status follows the
 
 ## Installation
 
-The Keptn Lifecycle Toolkit can be installed on any Kubernetes cluster
+Keptn can be installed on any Kubernetes cluster
 running Kubernetes >=1.24.
-Note that the Lifecycle Toolkit is not currently compatible with
+Note that Keptn is not currently compatible with
 [vcluster](https://github.com/loft-sh/vcluster).
 
 Use the following command sequence
-to install the latest release of the Keptn Lifecycle Toolkit:
+to install the latest release of Keptn:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -80,32 +83,34 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-
 For more info about Keptn, please see our
 [documentation](https://lifecycle.keptn.sh/docs/), specifically:
 
-- [Introduction to Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs/intro-klt/)
-  gives an overview of the KLT facilities.
+- [Introduction to Keptn](https://lifecycle.keptn.sh/docs/intro/)
+  gives an overview of the Keptn facilities.
 - [Getting started](https://lifecycle.keptn.sh/docs/getting-started/)
-  includes some short exercises to introduce you to KLT.
+  includes some short exercises to introduce you to Keptn.
 - [Installation and upgrade](https://lifecycle.keptn.sh/docs/install/)
   provides information about preparing your Kubernetes cluster
-  then installing and enabling KLT.
-- [Implementing KLT applications](https://lifecycle.keptn.sh/docs/implementing/)
-  documents how to integrate KLT to work with your existing deployment engine
+  then installing and enabling Keptn.
+- [Implementing Keptn applications](https://lifecycle.keptn.sh/docs/implementing/)
+  documents how to integrate Keptn to work with your existing deployment engine
   and implement its variouos features.
 - [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
-  about how KLT works.
+  about how Keptn works.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and
   [API Reference](https://lifecycle.keptn.sh/docs/crd-ref/)
   provide detailed reference material for the custom resources
-  used to configure KLT.
+  used to configure Keptn.
 - [Contributing to Keptn](https://lifecycle.keptn.sh/contribute/)
   provides information about how to contribute to the Keptn project.
 
 You can also find a number of video presentations and demos
-about the Keptn Lifecycle Toolkit on the
+about Keptn on the
 [YouTube Keptn channel](https://www.youtube.com/@keptn).
+Videos that refer to the "Keptn Lifecycle Controller"
+are relevant for the Keptn project.
 
 ## Architecture
 
-The Keptn Lifecycle Toolkit is composed of the following components:
+Keptn is composed of the following components:
 
 - Keptn Lifecycle Operator
 - Keptn Scheduler
@@ -132,11 +137,11 @@ After the Post-Deployment checks,
 SLOs can be validated using an interface
 for retrieving SLI data from a provider
 e.g, [Prometheus](https://prometheus.io/).
-Finally, the Keptn Lifecycle Toolkit exposes Metrics and Traces
+Finally, Keptn exposes Metrics and Traces
 of the entire Deployment cycle with
 [OpenTelemetry](https://opentelemetry.io/).
 
-![KLT Architecture](./assets/architecture.png)
+![Keptn Architecture](./assets/architecture.png)
 
 ### Webhook
 

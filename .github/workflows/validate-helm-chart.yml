@@ -16,9 +16,6 @@ jobs:
     name: Check helm documentation values
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Check out code
         uses: actions/checkout@v3
 
@@ -57,9 +54,6 @@ jobs:
     name: Run helm tests
     runs-on: ubuntu-22.04
     steps:
-      - name: Install monitor action
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
       - name: Check out code
         uses: actions/checkout@v3
 

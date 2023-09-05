@@ -27,7 +27,7 @@ in Keptn relative to Keptn v1
 and then discuss how elements of your Keptn v1 can be implemented
 for Keptn.
 
-## The Keptn paradigm
+## The Keptn cloud native paradigm
 
 Keptn uses a different paradigm
 than Keptn v1 and so migration requires technical adjustments.

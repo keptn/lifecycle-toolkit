@@ -83,7 +83,7 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-
 For more info about Keptn, please see our
 [documentation](https://lifecycle.keptn.sh/docs/), specifically:
 
-- [Introduction to Keptn](https://lifecycle.keptn.sh/docs/intro/)
+- [Introduction to Keptn](https://lifecycle.keptn.sh/docs/intro-klt/)
   gives an overview of the Keptn facilities.
 - [Getting started](https://lifecycle.keptn.sh/docs/getting-started/)
   includes some short exercises to introduce you to Keptn.

@@ -6,6 +6,6 @@ metadata:
 spec:
   function:
     httpRef:
-      url: https://raw.githubusercontent.com/keptn/lifecycle-controller/main/runtimes/deno-runtime/samples/ts/slack.ts
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/slack.ts
     secureParameters:
       secret: slack-secret

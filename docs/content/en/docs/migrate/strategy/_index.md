@@ -42,7 +42,7 @@ Some key points:
   that are part of the environment where the application deployment lives
   rather than using its own Git repo and its
   [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
-  file as Keptn V1 does.
+  file as Keptn v1 does.
   * See the
     [CRD Reference](../../yaml-crd-ref)
     section for pages that describe the Keptn manifests

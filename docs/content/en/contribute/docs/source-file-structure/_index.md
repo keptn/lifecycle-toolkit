@@ -23,7 +23,7 @@ the *docs/content/en/docs* directory in the repository.
 The subdirectories correspond to the contents listed in the right frame.
 In the order they appear in the rendered docs, the subdirectories are:
 
-* **intro-klt** (Introduction to the Keptn Lifecycle Toolkit):
+* **intro** (Introduction to the Keptn Lifecycle Toolkit):
   A brief overview of Keptn, its features and use cases, and its history
 * **getting-started** (Getting started):
   A hands-on exercise that demonstrates the capabilities of Keptn
@@ -52,7 +52,7 @@ In the order they appear in the rendered docs, the subdirectories are:
   This is a subset of the CRDs documented in the *API Reference* section
 * **migrate** (Migrating to the Keptn Lifecycle Toolkit):
   Information to help users who are migrating to Keptn
-  from Keptn V1
+  from Keptn v1
 
 ## Contributing guide
 

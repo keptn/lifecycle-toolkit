@@ -16,7 +16,7 @@ or another standard dashboard application that you configure
 or can be retrieved using standard Kubernetes commands.
 
 For an introduction to Keptn metrics, see
-[Getting started with Keptn metrics](../intro-klt/usecase_metrics.md).
+[Getting started with Keptn metrics](../intro/usecase_metrics.md).
 
 ## Keptn metric basics
 

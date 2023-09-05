@@ -20,7 +20,7 @@ import (
 type KeptnSLIProvider interface {
 	EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
 	EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
-	FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error)
+	FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
 }
 
 type ProviderFactory func(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error)

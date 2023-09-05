@@ -1,7 +1,7 @@
 ---
 title: Keptn Lifecycle Scheduler
 linktitle: Scheduler
-description: Basic understanding of the Keptn Lifecycle Scheduler
+description: Basic understanding of the Keptn Scheduler
 weight: 80
 cascade:
 ---

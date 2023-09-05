@@ -4,8 +4,16 @@ metadata:
   name: slack-deployment-notification
 spec:
   taskDefinition: slack-notification-inline
-  workload: my-workload
-  version: "1.0"
-  app: my-app
+  appVersion: "1.0"
+  workload: "w"
+  workloadVersion: "2.0"
+  app: "app"
+  context:
+    workloadName: my-workload
+    workloadVersion: "1.0"
+    taskType: "pre"
+    appName: "my-app"
+    objectType: "App"
+    appVersion: "1.0"
   secureParameters:
     secret: slack-notification

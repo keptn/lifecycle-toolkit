@@ -75,24 +75,6 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 	return job, nil
 }
 
-func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
-	taskContext := klcv1alpha3.TaskContext{}
-
-	if task.Spec.Workload != "" {
-		taskContext.WorkloadName = task.Spec.Workload
-		taskContext.WorkloadVersion = task.Spec.WorkloadVersion
-		taskContext.ObjectType = "Workload"
-
-	} else {
-		taskContext.ObjectType = "Application"
-		taskContext.AppVersion = task.Spec.AppVersion
-	}
-	taskContext.TaskType = string(task.Spec.Type)
-	taskContext.AppName = task.Spec.AppName
-
-	return taskContext
-}
-
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{

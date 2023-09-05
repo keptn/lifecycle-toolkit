@@ -676,10 +676,6 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `workload` _string_ | Workload defines the KeptnWorkload for which the KeptnTask is executed. |
-| `workloadVersion` _string_ | WorkloadVersion defines the version of the KeptnWorkload for which the KeptnTask is executed. |
-| `app` _string_ | AppName defines the KeptnApp for which the KeptnTask is executed. |
-| `appVersion` _string_ | AppVersion defines the version of the KeptnApp for which the KeptnTask is executed. |
 | `taskDefinition` _string_ | TaskDefinition refers to the name of the KeptnTaskDefinition which includes the specification for the task to be performed. The KeptnTaskDefinition can be located in the same namespace as the KeptnTask, or in the KLT namespace. |
 | `context` _[TaskContext](#taskcontext)_ | Context contains contextual information about the task execution. |
 | `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task. |

@@ -1,7 +1,7 @@
 # Scheduler
 
 The **scheduler** is a pivotal component within
-[Keptn](https://main.lifecycle.keptn.sh/) that plays a crucial role in orchestrating the deployment process.
+[Keptn](https://lifecycle.keptn.sh/) that plays a crucial role in orchestrating the deployment process.
 By ensuring that Pods are scheduled onto nodes only after successful pre-deployment checks,
 the scheduler minimizes errors and downtimes.
 

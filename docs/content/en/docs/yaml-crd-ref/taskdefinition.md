@@ -5,8 +5,7 @@ weight: 89
 ---
 
 A `KeptnTaskDefinition` defines tasks
-that are run by the Keptn Lifecycle Toolkit
-as part of the pre- and post-deployment phases of a
+that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
@@ -205,7 +204,7 @@ spec:
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -280,7 +279,7 @@ The `python-runtime` runner provides a way
 to easily define a task using Python 3.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide a Python script
-and KLT sets up the container and runs the script as part of the task.
+and Keptn sets up the container and runs the script as part of the task.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -355,7 +354,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -664,4 +663,4 @@ is allowed per `KeptnTaskDefinition`.
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../concepts/architecture/keptn-apps/).
-* [Orchestrate deployment checks](../intro-klt/usecase-orchestrate.md)
+* [Orchestrate deployment checks](../intro/usecase-orchestrate.md)

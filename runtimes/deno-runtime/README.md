@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller - Deno Runtime
+# Keptn - Deno Runtime
 
 ## Build
 
@@ -10,9 +10,9 @@ docker build -t keptnsandbox/klc-runtime:${VERSION} .
 
 The Keptn deno runtime uses [Deno](https://deno.com/)
 to execute Javascript/Typescript code.
-The Keptn Lifecycle Toolkit uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
+Keptn uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.
-The Keptn Lifecycle Toolkit passes parameters of `KeptnTask`s and
+Keptn passes parameters of `KeptnTask`s and
 [Context](https://lifecycle.keptn.sh/docs/concepts/tasks/#context) information
 to the runtime via the special environmental variable `DATA`.
 It also supports mounting Kubernetes secrets making them accessible via the `SECURE_DATA` env var.
@@ -26,7 +26,7 @@ console.log(secret);
 ```
 
 `KeptnTask`s can be tested locally with the runtime using the following command.
-Replace `${VERSION}` with the KLT version of your choice.
+Replace `${VERSION}` with the Keptn version of your choice.
 
 ```sh
 docker run -v $(pwd)/test.ts:/test.ts -e SCRIPT=/test.ts -e DATA='{ "url":"http://localhost:9090" }' -e SECURE_DATA='{ "token": "myToken"}' -it ghcr.io/keptn/deno-runtime:${VERSION}

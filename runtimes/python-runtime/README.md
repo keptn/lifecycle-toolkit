@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller - Python Runtime
+# Keptn Python Runtime
 
 ## Build
 
@@ -11,13 +11,13 @@ docker build -t lifecycle-toolkit/runtimes/python-runtime:${VERSION} .
 The Keptn `python-runtime` runner uses python3
 and enables the following packages: requests, json, git, yaml
 
-The Keptn Lifecycle Toolkit uses this runner to execute tasks defined as
+Keptn uses this runner to execute tasks defined as
 [KeptnTaskDefinition](https://lifecycle.keptn.sh/docs/yaml-crd-ref/taskdefinition/)
 resources.
 for pre- and post-checks.
 
 `KeptnTask`s can be tested locally with the runtime using the following commands.
-Replace `${VERSION}` with the KLT version of your choice.
+Replace `${VERSION}` with the Keptn version of your choice.
 `SCRIPT` should refer to either a python file mounted locally in the container or to a url containing the file.
 
 ### mounting a python file

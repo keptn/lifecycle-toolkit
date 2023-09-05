@@ -1,14 +1,14 @@
 ---
 title: Manage release lifecycle
-description: How KLT orchestrates pre- and post-deployment evaluations and tasks
+description: How Keptn orchestrates pre- and post-deployment evaluations and tasks
 weight: 20
 ---
 
-In this exercise, we will configure the Keptn Lifecycle Toolkit
+In this exercise, we will configure Keptn
 to run deployment checks as part of your deployment.
 Whether you are deploying your software with
 Argo, Flux, another deployment engine, or even `kubectl apply`,
-the Lifecycle Toolkit can do the following:
+Keptn can do the following:
 
 * Pre-deploy: Validate external dependencies,
   confirm that images are scanned, and so forth
@@ -18,11 +18,11 @@ the Lifecycle Toolkit can do the following:
 
 * Automatically validate against your SLO (Service Level Objectives)
 
-KLT sits on top of the Kubernetes scheduler
+Keptn sits on top of the Kubernetes scheduler
 and can do the following:
 
 * Trace the deployment from start to end
-* KLT is application aware,
+* Keptn is application aware,
   so can extend the deployment with tasks and evaluations that
   are run either before or after your whole application starts the deployment
   or at the individual workload level.
@@ -56,7 +56,7 @@ The steps to implement pre- and post-deployment orchestration are:
 * [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
 This is the third of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](_index.md)
+[Introducing Keptn](_index.md)
 series.
 You may want to complete the other exercises before doing this exercise
 although that is not required:
@@ -68,7 +68,7 @@ although that is not required:
   you learn how to standardize access
   to the observability data for your cluster.
 
-If you are installing the Keptn Lifecycle Toolkit on an existing cluster
+If you are installing Keptn on an existing cluster
 or in a local cluster you are creating for this exercise
 and did not previously set up your cluster for the
 [Standardize observability](usecase-observability.md) exercise,
@@ -76,10 +76,10 @@ you need to do the following:
 
 1. Follow the instructions in
    [Install and update](../install/_index.md)
-   to install and enable KLT on your cluster.
+   to install and enable Keptn on your cluster.
 1. Follow the instructions in
    [Annotate workload](../implementing/integrate/#basic-annotations)
-   to integrate the Lifecycle Toolkit into your Kubernetes cluster
+   to integrate Keptn into your Kubernetes cluster
    by applying basic annotations to your `Deployment` resource.
    This also creates appropriate
    [KeptnApp](../yaml-crd-ref/app.md) resources
@@ -146,7 +146,7 @@ spec:
       secret: slack-notification
 ```
 
-For more information about sending Slack notifications with KLT, see
+For more information about sending Slack notifications with Keptn, see
 [Implement Slack notifications](../implementing/slack.md).
 The code to be executed is expressed as a
 [Deno](https://deno.com)
@@ -157,7 +157,7 @@ For this example, the code to be executed is embedded in this file
 although, in practice,
 this script would probably be located on a remote webserver.
 
-Note that, beginning with KLT 0.8.0,
+Note that, beginning with Keptn 0.8.0,
 you can also use Python 3 to define your task,
 or you can define a standard Kubernetes container
 that uses the image, runner, and runtime dependencies that you choose.

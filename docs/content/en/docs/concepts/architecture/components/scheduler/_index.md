@@ -1,12 +1,12 @@
 ---
 title: Keptn Lifecycle Scheduler
 linktitle: Scheduler
-description: Basic understanding of Keptn's Lifecycle Scheduler
+description: Basic understanding of the Keptn Scheduler
 weight: 80
 cascade:
 ---
 
-The **Keptn Scheduler** is an integral component of the Keptn Lifecycle Toolkit that orchestrates
+The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the

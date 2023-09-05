@@ -68,14 +68,14 @@ for the `KeptnApp` resource itself:
   [Basic annotations](../../../implementing/integrate/#basic-annotations)
   are used to automatically generate `KeptnApp` resources
   that contain the identifications required
-  to run the KLT observability features.
+  to run the Keptn observability features.
 * You must manually add the annotations described in
   [Pre- and post-deployment checks](../../../implementing/integrate/#pre--and-post-deployment-checks)
   to the basic `KeptnApp` manifest to define
   the evaluations and tasks you want to run pre- and post-deployment.
 
 The `KeptnApp` resources that are generated automatically
-contain the identifications required to run the KLT observability features.
+contain the identifications required to run the Keptn observability features.
 The `spec.workloads.name` and a `spec.workloads.version` fields
 that define evaluations and tasks to be run
 pre- and post-deployment are not generated automatically
@@ -94,7 +94,7 @@ resource.
 
 The [Basic annotations](../../../implementing/integrate/#basic-annotations)
 page gives instructions for applying the annotations or labels
-that identify the pods that KLT should manage.
+that identify the pods that Keptn should manage.
 
 Three `keptn.sh` and three `app.kubernetes.io` keys are recognized.
 They are equivalent; you can use either of them
@@ -108,7 +108,7 @@ In other words:
 * If neither is the case, it looks for the `app.kubernetes.io/` equivalent,
   again first in the annotations, then in the labels.
 
-KLT automatically generates appropriate
+Keptn automatically generates appropriate
 [KeptnApp](../../../yaml-crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
@@ -117,7 +117,7 @@ resource for each defined group.
 that together constitute a single deployable Keptn Application.
 
 * If either of these labels/annotations are populated,
-  KLT automatically generates a `KeptnApp` resource
+  Keptn automatically generates a `KeptnApp` resource
   that includes all workloads that have the same annotation/label,
   thus creating a `KeptnApp` resource for each defined grouping
 

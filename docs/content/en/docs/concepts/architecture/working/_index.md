@@ -6,4 +6,4 @@ weight: 30
 cascade:
 ---
 
-### How Keptn Works?
+### How does Keptn Work?

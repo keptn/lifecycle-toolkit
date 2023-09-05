@@ -6,4 +6,4 @@ By ensuring that Pods are scheduled onto nodes only after successful pre-deploym
 the scheduler minimizes errors and downtimes.
 
 For detailed information about scheduler's functionality and how it works, please refer to
-the [Keptn Scheduler Architecture](https://main.lifecycle.keptn.sh/docs/concepts/architecture/components/scheduler/) section.
+the [Keptn Scheduler Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/components/scheduler/) section.

@@ -28,7 +28,7 @@ with a renewal threshold of 12 hours.
 * If the certificate expires,
 the [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md)
 renews it.
-* The Keptn operator waits for a valid certificate to be ready.
+* The Keptn `lifecycle-operator` waits for a valid certificate to be ready.
 * When the certificate is ready,
   it is mounted on an empty dir volume in the operator.
 

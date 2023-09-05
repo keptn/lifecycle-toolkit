@@ -18,7 +18,7 @@ in Release 0.7.0 and later:
 
 ```mermaid
 graph TD;
-    KeptnComponentKeptn-->Operators;
+    KeptnComponents-->Operators;
     KeptnComponents-->Scheduler
    Operators-->Lifecycle-Operator
    Operators-->Metrics-Operator

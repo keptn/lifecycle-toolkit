@@ -108,17 +108,17 @@ for detailed instructions and examples.
 This guide will walk you through the installation process and help you set up
 your environment for using Keptn effectively.
 
-## Keptn and Keptn V1
+## Differences between Keptn and Keptn v1
 
-Keptn is a Keptn subproject
-whose design reflects lessons we learned while developing Keptn V1.
+Keptn is a subproject
+whose design reflects lessons we learned while developing Keptn v1.
 Keptn recognizes that tools such as Argo and Flux
 are very good at deploying applications.
 However, these deployment tools do not provide
 pre-deployment and post-deployment evaluations and actions;
 this is what Keptn adds.
 
-Keptn V1 is a long-term support release
+Keptn v1 is a long-term support release
 that can deploy applications on platforms other than Kubernetes,
 can accommodate complex scoring algorithms for SLO evaluations,
 and can implement remediations (self-healing) for problems discovered
@@ -133,20 +133,19 @@ and their level of stability.
 
 In a December 2022 Keptn Community meeting,
 we discussed the differences and similarities
-between Keptn V1 and Keptn
+between Keptn v1 and Keptn
 to help you decide which best fits your needs.
 View the recording:
-[Compare Keptn V1 and the Keptn Lifecycle Toolkit](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=170s)
+[Compare Keptn v1 and the Keptn Lifecycle Toolkit](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=170s)
 
 ## Overviews of Keptn
 
 A number of presentations are available to help you understand Keptn.
-Note that many of these refer to the "Keptn Lifecycle Controller",
-which was the development code name for Keptn.
+Note that many of these refer to the "Keptn Lifecycle Controller"
+or "Keptn Lifecycle Toolkit", which was the development code name for Keptn.
 
 * [Orchestrating and Observing GitOps Deployments with Keptn](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=11s)
-  discusses the evolution of Keptn
-  and the concepts that it,
+  discusses the evolution of Keptn and the concepts that drive it,
   then gives a simple demonstration of a Keptn implementation.
 
 * [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
@@ -163,9 +162,9 @@ which was the development code name for Keptn.
   blog discusses Keptn as part of the "Is It Observable?" series.
   This links to:
 
-  * [What is Keptn Lifecycle Toolkit?](https://www.youtube.com/watch?v=Uvg4uG8AbFg)
-    is a video that steps through the process of integrating Keptn
-    with your existing cloud native cluster.
+* [What is Keptn Lifecycle Toolkit?](https://www.youtube.com/watch?v=Uvg4uG8AbFg)
+  is a video that steps through the process of integrating Keptn
+  with your existing cloud native cluster.
 
 * [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
   demonstrates how to install Keptn and create your first KeptnTask in less than ten minutes.

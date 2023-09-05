@@ -1,9 +1,8 @@
 # SLI Converter
 
-## Description
-
-SLI converter is a tool to convert `sli.yaml` files used in [KeptnV1](https://v1.keptn.sh/) into the new
-`AnalysisValueTemplate` resources used in the new kubernetes-native [Keptn](https://lifecycle.keptn.sh/).
+SLI converter is a tool to convert the old `sli.yaml`
+[file format](https://github.com/keptn/spec/blob/master/service_level_indicator.md) into the new
+`AnalysisValueTemplate` [custom resource definition](../../docs/content/en/docs/crd-ref/metrics/v1alpha3/_index.md).
 The converter is part of `metrics-operator` image.
 
 ## Usage
@@ -13,7 +12,7 @@ The converter will convert a single `sli.yaml` file into multiple `AnalysisValue
 To run the converter, execute the following command:
 
 ```shell
-METRICS_OPERATOR_IMAGE=<METRICS_OPERATOR_IMAGE>
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/lifecycle-operator:latest
 PATH_TO_SLI=<PATH_TO_SLI>
 PROVIDER_NAME=<PROVIDER_NAME>
 PROVIDER_NAMESPACE=<PROVIDER_NAMESPACE>

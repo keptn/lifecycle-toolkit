@@ -1,6 +1,6 @@
 # Sample Application
 
-This example demonstrates the Keptn capabilities as illustrated here:
+This example demonstrates Keptn's capabilities as illustrated here:
 
 ![img.png](assets/big-picture.png)
 

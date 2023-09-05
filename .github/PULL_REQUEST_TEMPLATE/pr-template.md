@@ -27,9 +27,9 @@ Please also provide information about any automatic tests that you added.
   into multiple PRs)
 - [ ] I used descriptive commit messages to help reviewers understand my thought process
 - [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO) (
-  see [Contribution Guide](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/en/contribute/docs/contrib-guidelines-docs/_index.md#submit-a-pull-request-))
+  see [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/#submit-a-pull-request-))
 - [ ] My PR title is formatted according to the semantic PR conventions described in
-  the [Contribution Guide](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/en/contribute/docs/contrib-guidelines-docs/_index.md#submit-a-pull-request-)
+  the [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/#submit-a-pull-request-)
 - [ ] My code follows the style guidelines of this project (golangci-lint passes, YAMLLint passes)
 - [ ] I regenerated the auto-generated docs for Helm and the CRD documentation (if applicable)
 - [ ] I have performed a self-review of my code
@@ -54,10 +54,10 @@ Fixes # (issue)
 - [ ] My PR fulfills the Definition of Done of the corresponding issue and not more (or parts if the issue is separated
   into multiple PRs)
 - [ ] I used descriptive commit messages to help reviewers understand my thought process
-- [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO) (
-  see [Contribution Guide](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/en/contribute/docs/contrib-guidelines-docs/_index.md#developer-certification-of-origin-dco))
-- [ ] My PR title is formatted according to the semantic PR conventions described in
-  the [Contribution Guide](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/content/en/contribute/docs/contrib-guidelines-docs/_index.md#submit-a-pull-request-)
+- [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO)(
+  see [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/#developer-certification-of-origin-dco))
+   My PR title is formatted according to the semantic PR conventions described in
+  the [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/#submit-a-pull-request-)
 - [ ] My content follows the style guidelines of this project (YAMLLint, markdown-lint)
 - [ ] I regenerated the auto-generated docs for Helm and the CRD documentation (if applicable)
 - [ ] I have performed a self-review of my content including grammar and typo errors and also checked the rendered page

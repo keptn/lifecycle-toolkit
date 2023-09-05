@@ -43,7 +43,21 @@ type Criteria struct {
 }
 
 func (o *Objective) hasNotSupportedCriteria() bool {
-	return len(o.Pass) > 1 || len(o.Warning) > 1
+	// no pass criteria -> informative
+	if len(o.Pass) == 0 {
+		return true
+	}
+	// support only warning criteria with a single criteria element
+	if len(o.Warning) > 1 {
+		return true
+	}
+	// warning criteria == 1, pass can be only 1
+	if len(o.Warning) == 1 {
+		return len(o.Pass) > 1
+	}
+
+	// warn criteria == 0, pass can be anything
+	return false
 }
 
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
@@ -142,10 +156,19 @@ func removePercentage(str string) (int, error) {
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
-	// skip objective target conversion if it has criteria combined with logical OR -> not supported
-	// this way the SLO will become "informative"
-	// it will become informative as well when the pass criteria are not defined
-	if o.hasNotSupportedCriteria() || len(o.Pass) == 0 {
+	// skip unsupported combination of criteria and informative objectives
+	if o.hasNotSupportedCriteria() {
+		return target, nil
+	}
+
+	// multiple criteria combined with logical OR operator
+	if len(o.Pass) > 1 {
+		ops := []string{o.Pass[0].Operators[0], o.Pass[1].Operators[0]}
+		op, err := newOperator(ops, true)
+		if err != nil {
+			return target, err
+		}
+		target.Failure = op
 		return target, nil
 	}
 

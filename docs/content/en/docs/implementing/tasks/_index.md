@@ -9,7 +9,7 @@ A
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md/)
 resource defines one or more "executables"
 (functions, programs, scripts, etc)
-that the Keptn Lifecycle Toolkit runs
+that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
@@ -63,7 +63,7 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runner to use for the container:
 
-KLT provides a general Kubernetes that you can configure
+Keptn provides a general Kubernetes that you can configure
 to do almost anything you want:
 
 - The `container-runtime` runner provides
@@ -73,7 +73,7 @@ to do almost anything you want:
   This gives you the greatest flexibility
   to define tasks using the language and facilities of your choice
 
-KLT also includes two "pre-defined" runners:
+Keptn also includes two "pre-defined" runners:
 
 - Use the `deno-runtime` runner to define tasks using Deno scripts,
   which use JavaScript/Typescript syntax with a few limitations.
@@ -104,7 +104,7 @@ All `KeptnTask` resources that are defined by
 (either pre-deployment or post-deployment) execute in parallel.
 This is by design, because Keptn is not a pipeline engine.
 **Task sequences that are not part of the lifecycle workflow
-should not be handled by KLT**
+should not be handled by Keptn**
 but should instead be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
 
@@ -256,7 +256,7 @@ spec:
 
 Note the following about using parameters with functions:
 
-- The Lifecycle Toolkit passes the values
+- Keptn passes the values
   defined inside the `map` field as a JSON object.
 - Multi-level maps are not currently supported.
 - The JSON object can be read through the environment variable `DATA`

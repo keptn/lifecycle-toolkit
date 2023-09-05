@@ -1,4 +1,4 @@
-# Deploying an application using the Keptn Lifecycle Controller and ArgoCD
+# Deploying an application using Keptn and ArgoCD
 
 In this example, we will show you how to install our sample application *podtatohead*
 using Keptn and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).

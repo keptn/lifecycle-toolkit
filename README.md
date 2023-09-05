@@ -15,8 +15,8 @@ with pre- and post-deployment evaluations and tasks.
 It is an incubating project, under the umbrella of the
 [Keptn Application Lifecycle working group](https://github.com/keptn/wg-app-lifecycle).
 
-> **Note:** Keptn was developed under the code name of
-  "Keptn Lifecycle Controller" or "KLT" for short.
+> **Note** Keptn was developed under the code name of
+  "Keptn Lifecycle Toolkit" or "KLT" for short.
   The source code contains many vestiges of these names.
 
 ## Goals

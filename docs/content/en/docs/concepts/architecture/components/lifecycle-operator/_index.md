@@ -10,7 +10,7 @@ cascade:
 **Keptn's Lifecycle Operator** is
 a Kubernetes [operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 that automates the deployment and management
-of the Keptn Lifecycle Controller components in a Kubernetes cluster.
+of the Keptn components in a Kubernetes cluster.
 The Keptn Lifecycle Operator contains several controllers for **Keptn CRDs**
 and a **Mutating Webhook**.
 

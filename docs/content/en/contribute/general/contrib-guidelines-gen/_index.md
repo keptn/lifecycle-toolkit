@@ -5,7 +5,7 @@ weight: 300
 ---
 
 Before using Keptn
-as a contributor to the Keptn `lifecycle-controller` repository,
+as a contributor to the Keptn `lifecycle-toolkit` repository,
 it is expected that you comply with the guidelines while
 making contributions towards the repository.
 

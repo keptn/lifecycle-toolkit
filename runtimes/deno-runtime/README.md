@@ -1,4 +1,4 @@
-# Keptn Lifecycle Controller - Deno Runtime
+# Keptn - Deno Runtime
 
 ## Build
 

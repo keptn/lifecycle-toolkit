@@ -139,7 +139,7 @@ Keptn and its dependencies are now installed and ready to use.
 
 ## Enable Keptn for your cluster
 
-To enable the Keptn Lifecycle Controller in your cluster,
+To enable the Keptn in your cluster,
 annotate the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 resource for each namespace in the cluster.

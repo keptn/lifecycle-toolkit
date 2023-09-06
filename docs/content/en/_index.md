@@ -34,7 +34,6 @@ cascade:
     <img alt="keptn" src="/images/home/hero/keptn-logo-white.svg">
 </picture>
 </div>
-  <!--<h1 class="display-1 mt-0 mt-md-5 pb-4">Lifecycle Toolkit</h1>-->
   <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
 <div>
  <a class="btn btn-lg btn-primary mr-3 mb-4" href="{{< relref "/docs" >}}">

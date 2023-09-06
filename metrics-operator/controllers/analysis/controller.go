@@ -155,23 +155,25 @@ func writemetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis, de
 	})
 	prometheus.MustRegister(m)
 	m.Set(eval.GetAchievedPercentage())
+	// expose also the individual objectives
 	for _, o := range def.Spec.Objectives {
 		name := o.AnalysisValueTemplateRef.Name
 		ns := o.AnalysisValueTemplateRef.Namespace
-		g := prometheus.NewGauge(prometheus.GaugeOpts{
-			Name: fmt.Sprintf("keptn.analysis.objective.%s.%s", name, ns),
+		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
+		labels := prometheus.Labels{
+			"name":               name,
+			"namespace":          ns,
+			"analysis_name":      analysis.Name,
+			"analysis_namespace": analysis.Namespace,
+			"key_objective":      fmt.Sprintf("%v", o.KeyObjective),
+			"weight":             fmt.Sprintf("%v", o.Weight),
+		}
+		g := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+			Name: "keptn.analysis.objective",
 			Help: "Result of the Analysis Objective",
-			ConstLabels: map[string]string{
-				"name":               def.Name,
-				"namespace":          def.Namespace,
-				"analysis_name":      analysis.Name,
-				"analysis_namespace": analysis.Namespace,
-				"key_objective":      fmt.Sprintf("%v", o.KeyObjective),
-				"weight":             fmt.Sprintf("%v", o.Weight),
-			},
-		})
+		}, labelNames)
 		// TODO: link Results to Definitions
-		g.Set(0)
+		g.With(labels).Set(0)
 		prometheus.MustRegister(g)
 	}
 

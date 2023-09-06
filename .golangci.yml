@@ -32,5 +32,3 @@ linters-settings:
   funlen:
     lines: 120
     statements: 120
-  goanalysis_metalinter:
-    disable: ["go.opentelemetry.io/otel/exporters/prometheus"]

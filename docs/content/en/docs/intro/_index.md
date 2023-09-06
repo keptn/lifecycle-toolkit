@@ -61,8 +61,8 @@ deployment durations and failures across multiple deployment strategies.
   [DORA metrics](../implementing/dora/)
   and exposes them as OpenTelemetry metrics out of the box.
 
-* Reports traces from OpenTelemetry
-  and custom Keptn metrics from configured data providers.
+* Reports traces and custom Keptn metrics from configured data providers
+   using OpenTelemetry.
 
 * Enables monitoring of new logs from log monitoring solutions.
 

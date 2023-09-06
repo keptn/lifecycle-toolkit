@@ -22,9 +22,6 @@
     "**/test/**",
     "**/tests/**"
   ],
-  "ignoreDeps": [
-    "ghcr.io/keptn/metrics-operator"
-  ],
   "packageRules": [
     {
       "excludePackagePatterns": [

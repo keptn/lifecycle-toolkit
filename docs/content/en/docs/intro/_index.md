@@ -121,4 +121,6 @@ and the
 [Getting Started Exercises](https://lifecycle.keptn.sh/docs/getting-started/).
 
 For information about the history of the Keptn project,
-see the blog.
+see the
+[Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46).
+blog.

@@ -24,7 +24,7 @@ func NewSLIConverter() *SLIConverter {
 func (c *SLIConverter) Convert(fileContent []byte, provider string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if provider == "" || namespace == "" {
-		return "", fmt.Errorf("--sli-provider and --sli-namespace needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: 'keptn-provider-name' and 'keptn-provider-namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content

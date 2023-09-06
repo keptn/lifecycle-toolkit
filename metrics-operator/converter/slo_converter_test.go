@@ -1,3 +1,4 @@
+//nolint:dupl
 package converter
 
 import (
@@ -19,6 +20,45 @@ comparison:
   number_of_comparison_results: 1
 filter:
 objectives:
+  - sli: "response_time_p90"
+    key_sli: false
+    pass:
+      - criteria:
+        - ">600"
+        - "<800"
+    warning:
+      - criteria:
+        - "<=1000"
+        - ">500"
+    weight: 2
+  - sli: "response_time_p91"
+    key_sli: false
+    pass:
+      - criteria:
+        - "<600"
+      - criteria:
+        - ">800"
+    weight: 5
+  - sli: "response_time_p80"
+    key_sli: false
+    pass:
+      - criteria:
+          - ">600"
+          - "<800"
+    warning:
+      - criteria:
+          - "<=1000"
+    weight: 2
+  - sli: "response_time_p70"
+    key_sli: false
+    warning:
+      - criteria:
+          - ">600"
+          - "<800"
+    pass:
+      - criteria:
+          - "<=1000"
+    weight: 2
   - sli: "response_time_p95"
     key_sli: false
     pass:
@@ -34,10 +74,10 @@ objectives:
     pass:
       - criteria:
           - "<=+100%"
-          - ">=80"
+          - ">=100"
       - criteria:
           - "<=+100%"
-          - ">=80"
+          - "<=80"
   - sli: "throughput"
     pass:
       - criteria:
@@ -56,6 +96,52 @@ metadata:
 spec:
   objectives:
   - analysisValueTemplateRef:
+      name: response_time_p90
+      namespace: default
+    target:
+      failure:
+        notInRange:
+          highBound: 1k
+          lowBound: "500"
+      warning:
+        notInRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 2
+  - analysisValueTemplateRef:
+      name: response_time_p91
+      namespace: default
+    target:
+      failure:
+        inRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 5
+  - analysisValueTemplateRef:
+      name: response_time_p80
+      namespace: default
+    target:
+      failure:
+        greaterThan:
+          fixedValue: 1k
+      warning:
+        notInRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 2
+  - analysisValueTemplateRef:
+      name: response_time_p70
+      namespace: default
+    target:
+      failure:
+        greaterThan:
+          fixedValue: 1k
+      warning:
+        inRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 2
+  - analysisValueTemplateRef:
       name: response_time_p95
       namespace: default
     target:
@@ -69,7 +155,11 @@ spec:
   - analysisValueTemplateRef:
       name: cpu
       namespace: default
-    target: {}
+    target:
+      failure:
+        inRange:
+          highBound: "100"
+          lowBound: "80"
   - analysisValueTemplateRef:
       name: throughput
       namespace: default
@@ -101,10 +191,8 @@ func TestConvert(t *testing.T) {
 	require.Equal(t, expectedOutput, res)
 }
 
-func TestCreateOperator(t *testing.T) {
+func TestNegateSingleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
 
 	tests := []struct {
 		name    string
@@ -175,7 +263,7 @@ func TestCreateOperator(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := createOperator(tt.op, tt.value)
+			res, err := negateSingleOperator(tt.op, tt.value)
 			if tt.wantErr {
 				require.NotNil(t, err)
 			} else {
@@ -186,46 +274,45 @@ func TestCreateOperator(t *testing.T) {
 	}
 }
 
-func TestSetupOperator(t *testing.T) {
+func TestCreateSingleOperator(t *testing.T) {
 	dec := inf.NewDec(1, 0)
-	_, ok := dec.SetString("1")
-	require.True(t, ok)
 
 	tests := []struct {
 		name    string
 		op      string
+		value   string
 		out     *metricsapi.Operator
 		wantErr bool
 	}{
 		{
-			name:    "unsupported operator",
+			name:    "invalid int value",
 			op:      "",
+			value:   "val",
 			out:     nil,
 			wantErr: true,
 		},
 		{
-			name: "lessEqual operator",
-			op:   "<=1",
+			name:    "unsupported operator",
+			op:      "",
+			value:   "1",
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:  "lessEqual operator",
+			op:    "<=",
+			value: "1",
 			out: &metricsapi.Operator{
-				GreaterThan: &metricsapi.OperatorValue{
+				LessThanOrEqual: &metricsapi.OperatorValue{
 					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
 			wantErr: false,
 		},
 		{
-			name: "less operator",
-			op:   "<1",
-			out: &metricsapi.Operator{
-				GreaterThanOrEqual: &metricsapi.OperatorValue{
-					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
-				},
-			},
-			wantErr: false,
-		},
-		{
-			name: "greaterEqual operator",
-			op:   ">=1",
+			name:  "less operator",
+			op:    "<",
+			value: "1",
 			out: &metricsapi.Operator{
 				LessThan: &metricsapi.OperatorValue{
 					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
@@ -234,10 +321,22 @@ func TestSetupOperator(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "greater operator",
-			op:   ">1",
+			name:  "greaterEqual operator",
+			op:    ">=",
+			value: "1",
 			out: &metricsapi.Operator{
-				LessThanOrEqual: &metricsapi.OperatorValue{
+				GreaterThanOrEqual: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:  "greater operator",
+			op:    ">",
+			value: "1",
+			out: &metricsapi.Operator{
+				GreaterThan: &metricsapi.OperatorValue{
 					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
 				},
 			},
@@ -247,7 +346,7 @@ func TestSetupOperator(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := newOperator(tt.op)
+			res, err := createSingleOperator(tt.op, tt.value)
 			if tt.wantErr {
 				require.NotNil(t, err)
 			} else {
@@ -258,7 +357,511 @@ func TestSetupOperator(t *testing.T) {
 	}
 }
 
-func TestShouldIgnoreObjective(t *testing.T) {
+func TestCreateDoubleOperator(t *testing.T) {
+	dec := inf.NewDec(1, 0)
+	dec5 := inf.NewDec(5, 0)
+
+	tests := []struct {
+		name    string
+		op1     string
+		value1  string
+		op2     string
+		value2  string
+		out     *metricsapi.Operator
+		wantErr bool
+	}{
+		{
+			name:    "invalid int value",
+			op1:     "",
+			value1:  "val",
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator",
+			op1:     "",
+			value1:  "1",
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:   "inRange operator",
+			op1:    "<=",
+			value1: "5",
+			op2:    ">=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    "<",
+			value1: "5",
+			op2:    ">",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    "<=",
+			value1: "5",
+			op2:    ">",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    "<",
+			value1: "5",
+			op2:    ">=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "notinRange operator",
+			op1:    ">=",
+			value1: "5",
+			op2:    "<=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "notinRange operator",
+			op1:    ">",
+			value1: "5",
+			op2:    "<",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "notinRange operator",
+			op1:    ">=",
+			value1: "5",
+			op2:    "<",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "notinRange operator",
+			op1:    ">",
+			value1: "5",
+			op2:    "<=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "unsupported combination",
+			op1:     ">",
+			value1:  "5",
+			op2:     ">",
+			value2:  "1",
+			out:     &metricsapi.Operator{},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := createDoubleOperator(tt.op1, tt.value1, tt.op2, tt.value2)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.out, res)
+			}
+		})
+
+	}
+}
+
+func TestNegateDoubleOperator(t *testing.T) {
+	dec := inf.NewDec(1, 0)
+	dec5 := inf.NewDec(5, 0)
+
+	tests := []struct {
+		name    string
+		op1     string
+		value1  string
+		op2     string
+		value2  string
+		out     *metricsapi.Operator
+		wantErr bool
+	}{
+		{
+			name:    "invalid int value",
+			op1:     "",
+			value1:  "val",
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator",
+			op1:     "",
+			value1:  "1",
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:   "Not inRange operator",
+			op1:    "<=",
+			value1: "5",
+			op2:    ">=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "Not inRange operator",
+			op1:    "<",
+			value1: "5",
+			op2:    ">",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "Not inRange operator",
+			op1:    "<=",
+			value1: "5",
+			op2:    ">",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "Not inRange operator",
+			op1:    "<",
+			value1: "5",
+			op2:    ">=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    ">=",
+			value1: "5",
+			op2:    "<=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    ">",
+			value1: "5",
+			op2:    "<",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    ">=",
+			value1: "5",
+			op2:    "<",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "inRange operator",
+			op1:    ">",
+			value1: "5",
+			op2:    "<=",
+			value2: "1",
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "unsupported combination",
+			op1:     ">",
+			value1:  "5",
+			op2:     ">",
+			value2:  "1",
+			out:     &metricsapi.Operator{},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := negateDoubleOperator(tt.op1, tt.value1, tt.op2, tt.value2)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.out, res)
+			}
+		})
+
+	}
+}
+
+func TestNewOperator(t *testing.T) {
+	dec := inf.NewDec(1, 0)
+	dec5 := inf.NewDec(5, 0)
+
+	tests := []struct {
+		name    string
+		op      []string
+		negate  bool
+		out     *metricsapi.Operator
+		wantErr bool
+	}{
+		{
+			name:    "empty operator",
+			op:      []string{},
+			negate:  true,
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator",
+			op:      []string{""},
+			negate:  true,
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator double - first",
+			op:      []string{"", ">5"},
+			negate:  true,
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator double - second",
+			op:      []string{"<5", "5"},
+			negate:  true,
+			out:     nil,
+			wantErr: true,
+		},
+		{
+			name:   "lessEqual operator - negate",
+			op:     []string{"<=1"},
+			negate: true,
+			out: &metricsapi.Operator{
+				GreaterThan: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "less operator - negate",
+			op:     []string{"<1"},
+			negate: true,
+			out: &metricsapi.Operator{
+				GreaterThanOrEqual: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "greaterEqual operator - negate",
+			op:     []string{">=1"},
+			negate: true,
+			out: &metricsapi.Operator{
+				LessThan: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "greater operator - negate",
+			op:     []string{">1"},
+			negate: true,
+			out: &metricsapi.Operator{
+				LessThanOrEqual: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "lessEqual operator",
+			op:     []string{"<=1"},
+			negate: false,
+			out: &metricsapi.Operator{
+				LessThanOrEqual: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "less operator",
+			op:     []string{"<1"},
+			negate: false,
+			out: &metricsapi.Operator{
+				LessThan: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "greaterEqual operator",
+			op:     []string{">=1"},
+			negate: false,
+			out: &metricsapi.Operator{
+				GreaterThanOrEqual: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "greater operator",
+			op:     []string{">1"},
+			negate: false,
+			out: &metricsapi.Operator{
+				GreaterThan: &metricsapi.OperatorValue{
+					FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "double operator - negate",
+			op:     []string{">1", "<5"},
+			negate: true,
+			out: &metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "double operator",
+			op:     []string{">1", "<5"},
+			negate: false,
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "double operator - third one ignored",
+			op:     []string{">1", "<5", ">8"},
+			negate: false,
+			out: &metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
+					LowBound:  *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+					HighBound: *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+				},
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := newOperator(tt.op, tt.negate)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.out, res)
+			}
+		})
+
+	}
+}
+
+func TestHasNotSupportedCriteria(t *testing.T) {
 	tests := []struct {
 		name string
 		o    *Objective
@@ -270,10 +873,34 @@ func TestShouldIgnoreObjective(t *testing.T) {
 				Pass:    []Criteria{},
 				Warning: []Criteria{},
 			},
+			want: true,
+		},
+		{
+			name: "pass == 1, warn == 0",
+			o: &Objective{
+				Pass: []Criteria{
+					{
+						Operators: []string{},
+					},
+				},
+				Warning: []Criteria{},
+			},
 			want: false,
 		},
 		{
-			name: "valid criteria",
+			name: "pass == 0, warn == 1",
+			o: &Objective{
+				Pass: []Criteria{},
+				Warning: []Criteria{
+					{
+						Operators: []string{},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "pass == 1; warn == 1",
 			o: &Objective{
 				Pass: []Criteria{
 					{
@@ -289,7 +916,7 @@ func TestShouldIgnoreObjective(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "OR criteria",
+			name: "pass == 2; warn == 1",
 			o: &Objective{
 				Pass: []Criteria{
 					{
@@ -307,11 +934,26 @@ func TestShouldIgnoreObjective(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name: "pass == 2; warn == 0",
+			o: &Objective{
+				Pass: []Criteria{
+					{
+						Operators: []string{},
+					},
+					{
+						Operators: []string{},
+					},
+				},
+				Warning: []Criteria{},
+			},
+			want: false,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.want, tt.o.hasSupportedCriteria())
+			require.Equal(t, tt.want, tt.o.hasNotSupportedCriteria())
 		})
 
 	}
@@ -384,6 +1026,19 @@ func TestCleanupCriteria(t *testing.T) {
 			in: []Criteria{
 				{
 					Operators: []string{"<100"},
+				},
+			},
+			out: []Criteria{
+				{
+					Operators: []string{"<100"},
+				},
+			},
+		},
+		{
+			name: "criteria with whitespaces",
+			in: []Criteria{
+				{
+					Operators: []string{"   <  1   0  0   "},
 				},
 			},
 			out: []Criteria{
@@ -526,13 +1181,10 @@ func TestCleanupObjective(t *testing.T) {
 }
 
 func TestSetupTarget(t *testing.T) {
-	dec10 := inf.NewDec(1, 0)
-	_, ok := dec10.SetString("10")
-	require.True(t, ok)
-
-	dec15 := inf.NewDec(1, 0)
-	_, ok = dec15.SetString("15")
-	require.True(t, ok)
+	dec5 := inf.NewDec(5, 0)
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+	dec20 := inf.NewDec(20, 0)
 
 	tests := []struct {
 		name    string
@@ -549,28 +1201,75 @@ func TestSetupTarget(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "logical OR criteria -> informative slo",
+			name: "bogus operator",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
+					{
+						Operators: []string{"<<<<10"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "logical OR criteria -> with pass only",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">15"},
+					},
 					{
 						Operators: []string{"<10"},
 					},
-					{
-						Operators: []string{">1"},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
 					},
 				},
 			},
-			want:    &metricsapi.Target{},
 			wantErr: false,
 		},
 		{
-			name: "criteria with % -> informative slo",
+			name: "logical OR criteria -> with pass only - error",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
 					{
-						Operators: []string{"<10%"},
+						Operators: []string{">====15"},
+					},
+					{
+						Operators: []string{"<10"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "logical OR criteria with pass and warn -> informative",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">15"},
+					},
+					{
+						Operators: []string{"<10"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{">15"},
+					},
+					{
+						Operators: []string{"<10"},
 					},
 				},
 			},
@@ -578,7 +1277,7 @@ func TestSetupTarget(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "no warn criteria - conversion",
+			name: "no warn criteria single - conversion",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
@@ -597,7 +1296,7 @@ func TestSetupTarget(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "no warn criteria - error",
+			name: "no warn criteria single - error",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
@@ -610,7 +1309,40 @@ func TestSetupTarget(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "with warn criteria - conversion",
+			name: "no warn criteria double - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "no warn criteria double - error",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{"10", "<15"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "with warn criteria single pass criteria single - conversion",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
@@ -636,6 +1368,146 @@ func TestSetupTarget(t *testing.T) {
 					},
 				},
 			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria double - warn in superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=20", ">5"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria single pass criteria double - warn is superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=20"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria single - pass is superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Warning: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Pass: []Criteria{
+					{
+						Operators: []string{"<=20"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
+						FixedValue: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria double - pass is superset - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Warning: []Criteria{
+					{
+						Operators: []string{">10", "<15"},
+					},
+				},
+				Pass: []Criteria{
+					{
+						Operators: []string{"<=20", ">5"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec5, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec20, resource.DecimalSI),
+					},
+				},
+				Warning: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "with warn criteria double pass criteria double - no intersection - conversion",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">15", "<20"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{"<=10", ">5"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
 			wantErr: false,
 		},
 		{
@@ -689,13 +1561,8 @@ func TestSetupTarget(t *testing.T) {
 }
 
 func TestConvertSLO(t *testing.T) {
-	dec10 := inf.NewDec(1, 0)
-	_, ok := dec10.SetString("10")
-	require.True(t, ok)
-
-	dec15 := inf.NewDec(1, 0)
-	_, ok = dec15.SetString("15")
-	require.True(t, ok)
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
 
 	c := NewSLOConverter()
 
@@ -850,6 +1717,78 @@ func TestConvertSLO(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "objectives with percentage only - informative",
+			slo: &SLO{
+				TotalScore: Score{
+					Pass:    "50",
+					Warning: "20",
+				},
+				Objectives: []*Objective{
+					{
+						Name: "criteria",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10%"},
+							},
+						},
+						Warning: []Criteria{
+							{
+								Operators: []string{"<=15%"},
+							},
+						},
+						KeySLI: true,
+						Weight: 10,
+					},
+					{
+						Name: "criteria2",
+						Pass: []Criteria{
+							{
+								Operators: []string{"<10%"},
+							},
+						},
+						Weight: 5,
+					},
+				},
+			},
+			defName:   "defName",
+			namespace: "default",
+			out: &metricsapi.AnalysisDefinition{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "AnalysisDefinition",
+					APIVersion: "metrics.keptn.sh/v1alpha3",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name: "defName",
+				},
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					TotalScore: metricsapi.TotalScore{
+						PassPercentage:    50,
+						WarningPercentage: 20,
+					},
+					Objectives: []metricsapi.Objective{
+						{
+							Target:       metricsapi.Target{},
+							Weight:       10,
+							KeyObjective: true,
+							AnalysisValueTemplateRef: metricsapi.ObjectReference{
+								Name:      "criteria",
+								Namespace: "default",
+							},
+						},
+						{
+							Target: metricsapi.Target{},
+							Weight: 5,
+							AnalysisValueTemplateRef: metricsapi.ObjectReference{
+								Name:      "criteria2",
+								Namespace: "default",
+							},
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
 			name: "objectives conversion - setupTarget error",
 			slo: &SLO{
 				TotalScore: Score{
@@ -901,4 +1840,418 @@ func TestConvertSLO(t *testing.T) {
 		})
 	}
 
+}
+
+func TestDecodeOperatorAndValue(t *testing.T) {
+	tests := []struct {
+		name    string
+		o       string
+		opOut   string
+		opVal   string
+		wantErr bool
+	}{
+		{
+			name:    "unsupported operator",
+			o:       "--",
+			wantErr: true,
+		},
+		{
+			name:    "happy path - less",
+			o:       "<5",
+			opOut:   "<",
+			opVal:   "5",
+			wantErr: false,
+		},
+		{
+			name:    "happy path - lessEqual",
+			o:       "<=5",
+			opOut:   "<=",
+			opVal:   "5",
+			wantErr: false,
+		},
+		{
+			name:    "happy path - greater",
+			o:       ">5",
+			opOut:   ">",
+			opVal:   "5",
+			wantErr: false,
+		},
+		{
+			name:    "happy path - greaterEqual",
+			o:       ">=5",
+			opOut:   ">=",
+			opVal:   "5",
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opOut, opVal, err := decodeOperatorAndValue(tt.o)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.opOut, opOut)
+				require.Equal(t, tt.opVal, opVal)
+			}
+		})
+
+	}
+}
+
+func TestDecideIntervalBounds(t *testing.T) {
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+
+	tests := []struct {
+		name      string
+		op1       string
+		val1      string
+		op2       string
+		val2      string
+		smallerOp *Operator
+		biggerOp  *Operator
+		wantErr   bool
+	}{
+		{
+			name:    "error converting first value",
+			op1:     "<",
+			val1:    "-",
+			op2:     "<",
+			val2:    "5",
+			wantErr: true,
+		},
+		{
+			name:    "error converting second value",
+			op1:     "<",
+			val1:    "5",
+			op2:     "<",
+			val2:    "-",
+			wantErr: true,
+		},
+		{
+			name: "fist value smaller",
+			op1:  ">",
+			val1: "10",
+			op2:  "<",
+			val2: "15",
+			smallerOp: &Operator{
+				Value:     dec10,
+				Operation: ">",
+			},
+			biggerOp: &Operator{
+				Value:     dec15,
+				Operation: "<",
+			},
+			wantErr: false,
+		},
+		{
+			name: "second value smaller",
+			op1:  ">",
+			val1: "15",
+			op2:  "<",
+			val2: "10",
+			smallerOp: &Operator{
+				Value:     dec10,
+				Operation: "<",
+			},
+			biggerOp: &Operator{
+				Value:     dec15,
+				Operation: ">",
+			},
+			wantErr: false,
+		},
+		{
+			name: "equal values",
+			op1:  ">",
+			val1: "15",
+			op2:  "<",
+			val2: "15",
+			smallerOp: &Operator{
+				Value:     dec15,
+				Operation: "<",
+			},
+			biggerOp: &Operator{
+				Value:     dec15,
+				Operation: ">",
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			smallerOperator, biggerOperator, err := decideIntervalBounds(tt.op1, tt.val1, tt.op2, tt.val2)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.smallerOp, smallerOperator)
+				require.Equal(t, tt.biggerOp, biggerOperator)
+			}
+		})
+
+	}
+}
+
+func TestCreateUnboundedInterval(t *testing.T) {
+	dec10 := inf.NewDec(10, 0)
+	max := inf.NewDec(int64(MaxInt), 0)
+	min := inf.NewDec(int64(MinInt), 0)
+
+	tests := []struct {
+		name    string
+		op      string
+		i       *Interval
+		wantErr bool
+	}{
+		{
+			name:    "unable to decode operator",
+			op:      "--",
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode dec number",
+			op:      "<--",
+			wantErr: true,
+		},
+		{
+			name:    "unsupported operator",
+			op:      "=5",
+			wantErr: true,
+		},
+		{
+			name:    "inf interval greater",
+			op:      ">10",
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   max,
+			},
+		},
+		{
+			name:    "inf interval greater equal",
+			op:      ">=10",
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   max,
+			},
+		},
+		{
+			name:    "inf interval less",
+			op:      "<10",
+			wantErr: false,
+			i: &Interval{
+				Start: min,
+				End:   dec10,
+			},
+		},
+		{
+			name:    "inf interval less equal",
+			op:      "<10",
+			wantErr: false,
+			i: &Interval{
+				Start: min,
+				End:   dec10,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := createUnboundedInterval(tt.op)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.i, i)
+			}
+		})
+
+	}
+}
+
+func TestCreateBoundedInterval(t *testing.T) {
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+
+	tests := []struct {
+		name    string
+		op      []string
+		i       *Interval
+		wantErr bool
+	}{
+		{
+			name:    "empty array",
+			op:      []string{},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode operator1",
+			op:      []string{"--", "<5"},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode operator2",
+			op:      []string{"<5", "-"},
+			wantErr: true,
+		},
+		{
+			name:    "unable to decode inteval bounds",
+			op:      []string{"<-", ">5"},
+			wantErr: true,
+		},
+		{
+			name:    "unsupported interval",
+			op:      []string{"<5", ">10"},
+			wantErr: true,
+		},
+		{
+			name:    "happy path",
+			op:      []string{">10", "<15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">=10", "<=15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">10", "<=15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+		{
+			name:    "happy path",
+			op:      []string{">=10", "<15"},
+			wantErr: false,
+			i: &Interval{
+				Start: dec10,
+				End:   dec15,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := createBoundedInterval(tt.op)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.i, i)
+			}
+		})
+
+	}
+}
+
+func TestCreateInterval(t *testing.T) {
+	// unbounded interval
+	dec10 := inf.NewDec(10, 0)
+	dec15 := inf.NewDec(15, 0)
+	min := inf.NewDec(int64(MinInt), 0)
+
+	i, err := createInterval([]string{"<10"})
+	require.Nil(t, err)
+	require.Equal(t, &Interval{
+		Start: min,
+		End:   dec10,
+	}, i)
+
+	// bounded interval
+	i, err = createInterval([]string{">10", "<15"})
+	require.Nil(t, err)
+	require.Equal(t, &Interval{
+		Start: dec10,
+		End:   dec15,
+	}, i)
+}
+
+func TestIsSuperInterval(t *testing.T) {
+	tests := []struct {
+		name    string
+		op1     []string
+		op2     []string
+		want    bool
+		wantErr bool
+	}{
+		{
+			name:    "error creating super interval",
+			op1:     []string{"--"},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "error creating sub interval",
+			op1:     []string{"<5"},
+			op2:     []string{"--"},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name:    "intervals do not intercept",
+			op1:     []string{"<5"},
+			op2:     []string{">10"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "intervals intercept partially",
+			op1:     []string{"<10"},
+			op2:     []string{">5"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "subinterval is superinterval",
+			op1:     []string{">5", "<7"},
+			op2:     []string{"<10"},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name:    "equal intervals",
+			op1:     []string{"<10"},
+			op2:     []string{"<10"},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "superinterval unbounded",
+			op1:     []string{"<10"},
+			op2:     []string{">5", "<7"},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name:    "superinterval bounded",
+			op1:     []string{">5", "<10"},
+			op2:     []string{">5", "<7"},
+			want:    true,
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := isSuperInterval(tt.op1, tt.op2)
+			if tt.wantErr {
+				require.NotNil(t, err)
+			} else {
+				require.Equal(t, tt.want, res)
+			}
+		})
+
+	}
 }

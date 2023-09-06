@@ -4,7 +4,7 @@ description: Structure source files with Metadata
 weight: 400
 ---
 
-The source files for the KLT documentation
+The source files for the Keptn documentation
 are stored in the same github repository as the source code.
 This page explains how the documentation source files are organized.
 
@@ -23,26 +23,26 @@ the *docs/content/en/docs* directory in the repository.
 The subdirectories correspond to the contents listed in the right frame.
 In the order they appear in the rendered docs, the subdirectories are:
 
-* **intro-klt** (Introduction to the Keptn Lifecycle Toolkit):
-  A brief overview of KLT, its features and use cases, and its history
+* **intro** (Introduction to the Keptn Lifecycle Toolkit):
+  A brief overview of Keptn, its features and use cases, and its history
 * **getting-started** (Getting started):
-  A hands-on exercise that demonstrates the capabilities of KLT
+  A hands-on exercise that demonstrates the capabilities of Keptn
 * **tutorials** (Tutorials):
-  Additional hands-on exercises to introduce new users to KLT
+  Additional hands-on exercises to introduce new users to Keptn
 * **install** (Installation and Upgrade):
-  Requirements and instructions for installing and enabling KLT
-* **operate** (Operate KLT):
-  Guides about running and managing the KLT cluster
+  Requirements and instructions for installing and enabling Keptn
+* **operate** (Operate Keptn):
+  Guides about running and managing the Keptn cluster
 * **implementing** (Implementing Keptn applications):
   This is currently a catch-all section
   for guides and how-to material about implementing Keptn features.
   It needs to be restructured and subdivided
 * **troubleshooting.md** (Troubleshooting Guide):
-  How to diagnose and solve common problems with KLT
+  How to diagnose and solve common problems with Keptn
 * **architecture** (Architecture):
-  Information about how KLT actually works
+  Information about how Keptn actually works
 * **crd-ref** (API Reference):
-  Comprehensive information about all the APIs that define the KLT CRDs.
+  Comprehensive information about all the APIs that define the Keptn CRDs.
   This section is auto-generated from source code
   and should never be modified in the *docs* directory.
   The source for the authored text can be modified
@@ -51,8 +51,8 @@ In the order they appear in the rendered docs, the subdirectories are:
   Reference pages for the CRs that users must populate.
   This is a subset of the CRDs documented in the *API Reference* section
 * **migrate** (Migrating to the Keptn Lifecycle Toolkit):
-  Information to help users who are migrating to KLT
-  from Keptn V1
+  Information to help users who are migrating to Keptn
+  from Keptn v1
 
 ## Contributing guide
 
@@ -131,7 +131,7 @@ The system for assigning weights for the docs landing page
 allows for maximum flexibility as we create new sections:
 
 * General introductory material uses weight values under 100.
-* Guide material about using specific KLT features
+* Guide material about using specific Keptn features
   use weight value of 2**.
 * Reference material uses weight values of 5**.
 * Other documents use weight values of 7**.

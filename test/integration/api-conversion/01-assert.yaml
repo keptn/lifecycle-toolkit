@@ -72,3 +72,19 @@ spec:
   provider:
     name: prometheus
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTask
+metadata:
+  name: slack-deployment-notification
+spec:
+  taskDefinition: slack-notification-inline
+  context:
+    workloadName: my-workload
+    workloadVersion: "1.0"
+    taskType: "pre"
+    appName: "my-app"
+    objectType: "App"
+    appVersion: "1.0"
+  secureParameters:
+    secret: slack-notification

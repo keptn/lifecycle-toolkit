@@ -6,58 +6,100 @@ metadata:
   labels:
   {{- include "chart.labels" . | nindent 4 }}
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - providers
-  verbs:
-  - get
-  - list
-  - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisdefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - providers
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -71,9 +113,9 @@ roleRef:
   kind: Role
   name: 'metrics-operator-role'
 subjects:
-- kind: ServiceAccount
-  name: 'metrics-operator'
-  namespace: '{{ .Release.Namespace }}'
+  - kind: ServiceAccount
+    name: 'metrics-operator'
+    namespace: '{{ .Release.Namespace }}'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -87,6 +129,6 @@ roleRef:
   kind: ClusterRole
   name: 'metrics-operator-role'
 subjects:
-- kind: ServiceAccount
-  name: 'metrics-operator'
-  namespace: '{{ .Release.Namespace }}'
+  - kind: ServiceAccount
+    name: 'metrics-operator'
+    namespace: '{{ .Release.Namespace }}'

@@ -1,0 +1,19 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  #  substitutes current time and namespace, making sure they are changed to env var first
+  # to prevent bad files in case of a test interrupt
+  - script: |
+      current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      initial_timestamp=$(date -u -d "$current_time" +%s)
+      seconds_to_add=20
+      new_timestamp=$((initial_timestamp + seconds_to_add))
+      time_20_seconds_later=$(date -u -d "@$new_timestamp" +"%Y-%m-%dT%H:%M:%SZ")
+      export CURRENT_TIME="$current_time"
+      export LATER="$time_20_seconds_later"
+      echo "templating time" $CURRENT_TIME $LATER
+      envsubst <"install.yaml" >out.yaml
+  - command: kubectl apply -f out.yaml
+  #  rewrites the env var not to push useless date changes when running locally
+  - script: |
+      rm out.yaml

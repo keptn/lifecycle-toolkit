@@ -4,7 +4,7 @@ description: Enhance your deployment with custom Keptn metrics
 weight: 30
 ---
 
-The Custom Keptn metrics component of the Keptn Lifecycle Toolkit
+The Custom Keptn metrics component
 allows you to define any type of metric
 from multiple instances
 of any type of data source in your Kubernetes cluster.
@@ -19,7 +19,7 @@ or may be data that comes directly
 from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to all this data.
 Minimal configuration is required
-because the Keptn Lifecycle Toolkit hooks directly into Kubernetes primitives.
+because Keptn hooks directly into Kubernetes primitives.
 
 The
 [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
@@ -43,7 +43,7 @@ as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
 This is the first of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](_index.md)
+[Introducing Keptn](_index.md)
 series.
 After completing this exercise,
 you may want to do the other exercises:
@@ -60,7 +60,7 @@ you may want to do the other exercises:
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install the Keptn Lifecycle Toolkit](../install/install.md)
+1. [Install Keptn](../install/install.md)
 1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
@@ -213,7 +213,7 @@ simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{r
 ## Run the metrics
 
 As soon as you define your `KeptnMetricsProvider` and `KeptnMetric` resources,
-the Lifecycle Toolkit begins collecting the metrics you defined.
+Keptn begins collecting the metrics you defined.
 You do not need to do anything else.
 
 ## Observing the metrics

@@ -42,14 +42,28 @@ type Criteria struct {
 	Operators []string `yaml:"criteria,omitempty" json:"criteria,omitempty"`
 }
 
-func (o *Objective) hasSupportedCriteria() bool {
-	return len(o.Pass) > 1 || len(o.Warning) > 1
+func (o *Objective) hasNotSupportedCriteria() bool {
+	// no pass criteria -> informative
+	if len(o.Pass) == 0 {
+		return true
+	}
+	// support only warning criteria with a single criteria element
+	if len(o.Warning) > 1 {
+		return true
+	}
+	// warning criteria == 1, pass can be only 1
+	if len(o.Warning) == 1 {
+		return len(o.Pass) > 1
+	}
+
+	// warn criteria == 0, pass can be anything
+	return false
 }
 
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("missing arguments: 'definition' and 'namespace' needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content
@@ -99,13 +113,16 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 			},
 			// create a slice of size of len(sloContent.Objectives), but reserve capacity for
 			// double the size, as some objectives may be twice there (conversion of criteria with logical AND)
-			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives), len(sloContent.Objectives)*2),
+			Objectives: make([]metricsapi.Objective, len(sloContent.Objectives)),
 		},
 	}
 
 	// convert objectives one after another
 	indexObjectives := 0
 	for _, o := range sloContent.Objectives {
+		// remove criteria, which contain % in their operators
+		o = cleanupObjective(o)
+		// set up target
 		target, err := setupTarget(o)
 		if err != nil {
 			return nil, err
@@ -136,15 +153,22 @@ func removePercentage(str string) (int, error) {
 }
 
 // creates and sets up the target struct from objective
-// TODO refactor this function in a follow-up + weight distribution
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
-	// remove criteria, which contain % in their operators
-	o = cleanupObjective(o)
-	// skip objective target conversion if it has criteria combined with logical OR -> not supported
-	// this way the SLO will become "informative"
-	if o.hasSupportedCriteria() {
+	// skip unsupported combination of criteria and informative objectives
+	if o.hasNotSupportedCriteria() {
+		return target, nil
+	}
+
+	// multiple criteria combined with logical OR operator
+	if len(o.Pass) > 1 {
+		ops := []string{o.Pass[0].Operators[0], o.Pass[1].Operators[0]}
+		op, err := newOperator(ops, true)
+		if err != nil {
+			return nil, err
+		}
+		target.Failure = op
 		return target, nil
 	}
 
@@ -152,10 +176,9 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	if len(o.Warning) == 0 {
 		if len(o.Pass) > 0 {
 			if len(o.Pass[0].Operators) > 0 {
-				// TODO cover use cases with multiple operators (create new objectives)
-				op, err := newOperator(o.Pass[0].Operators[0])
+				op, err := newOperator(o.Pass[0].Operators, true)
 				if err != nil {
-					return target, err
+					return nil, err
 				}
 				target.Failure = op
 				return target, nil
@@ -163,30 +186,130 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		}
 	}
 
-	// if warning criteria are defined, create new criteria with the following logic:
+	// if warning is superinterval of pass OR we have a single rule criteria, the following logic is used:
 	// !(warn criteria) -> fail criteria
 	// !(pass criteria) -> warn criteria
-	var err error
-	if len(o.Pass) > 0 {
-		if len(o.Pass[0].Operators) > 0 {
-			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := newOperator(o.Pass[0].Operators[0])
-			if err != nil {
-				return target, err
-			}
-			target.Warning = op
+	isWarningSuperInterval, err := isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators)
+	if err != nil {
+		return nil, err
+	}
+	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || isWarningSuperInterval {
+		op1, err := newOperator(o.Pass[0].Operators, true)
+		if err != nil {
+			return nil, err
 		}
-		if len(o.Warning[0].Operators) > 0 {
-			// TODO cover use cases with multiple operators (create new objectives)
-			op, err := newOperator(o.Warning[0].Operators[0])
-			if err != nil {
-				return target, err
-			}
-			target.Failure = op
+		op2, err := newOperator(o.Warning[0].Operators, true)
+		if err != nil {
+			return nil, err
 		}
+		target.Failure = op2
+		target.Warning = op1
+		return target, nil
 	}
 
-	return target, err
+	// if pass is superinterval of warn, the following logic is used:
+	// !(pass criteria) -> fail criteria
+	// warn criteria -> warn criteria
+	isPassSuperInterval, err := isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)
+	if err != nil {
+		return nil, err
+	}
+	if isPassSuperInterval {
+		op1, err := newOperator(o.Warning[0].Operators, false)
+		if err != nil {
+			return nil, err
+		}
+		op2, err := newOperator(o.Pass[0].Operators, true)
+		if err != nil {
+			return nil, err
+		}
+		target.Failure = op2
+		target.Warning = op1
+		return target, nil
+	}
+
+	return target, nil
+}
+
+// checks if interval is valid and if the first set of operators defines interval
+// which is superset of the interval defined by second set of operators
+func isSuperInterval(op1 []string, op2 []string) (bool, error) {
+	superInterval, err := createInterval(op1)
+	if err != nil {
+		return false, err
+	}
+	subInterval, err := createInterval(op2)
+	if err != nil {
+		return false, err
+	}
+
+	return superInterval.Start.Cmp(subInterval.Start) < 1 && superInterval.End.Cmp(subInterval.End) >= 0, nil
+}
+
+// creates interval from set of operators
+func createInterval(op []string) (*Interval, error) {
+	// if it's unbounded interval, we have only one operator
+	if len(op) == 1 {
+		return createUnboundedInterval(op[0])
+	}
+
+	//bounded interval
+	return createBoundedInterval(op)
+}
+
+func createBoundedInterval(op []string) (*Interval, error) {
+	if len(op) < 2 {
+		return nil, NewUnsupportedIntervalCombinationErr(op)
+	}
+	//fetch operators and values
+	operator1, value1, err := decodeOperatorAndValue(op[0])
+	if err != nil {
+		return nil, err
+	}
+	operator2, value2, err := decodeOperatorAndValue(op[1])
+	if err != nil {
+		return nil, err
+	}
+	// determine lower and higher bouds
+	smallerOperator, biggerOperator, err := decideIntervalBounds(operator1, value1, operator2, value2)
+	if err != nil {
+		return nil, err
+	}
+	//check if the interval makes logical sense for conversions, e.g. 5 < x < 10; unsupported: x < 5 && x > 10
+	if isGreaterOrEqual(smallerOperator.Operation) && isLessOrEqual(biggerOperator.Operation) {
+		return &Interval{
+			Start: smallerOperator.Value,
+			End:   biggerOperator.Value,
+		}, nil
+	}
+
+	return nil, NewUnsupportedIntervalCombinationErr(op)
+}
+
+func createUnboundedInterval(op string) (*Interval, error) {
+	//fetch operator and value
+	operator, value, err := decodeOperatorAndValue(op)
+	if err != nil {
+		return nil, err
+	}
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString(value)
+	if !ok {
+		return nil, NewUnconvertableValueErr(value)
+	}
+	// interval of (val, Inf)
+	if isGreaterOrEqual(operator) {
+		return &Interval{
+			Start: dec,
+			End:   inf.NewDec(int64(MaxInt), 0),
+		}, nil
+		// interval of (-Inf, val)
+	}
+
+	return &Interval{
+		Start: inf.NewDec(int64(MinInt), 0),
+		End:   dec,
+	}, nil
 }
 
 func cleanupObjective(o *Objective) *Objective {
@@ -204,7 +327,8 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 		for _, op := range c.Operators {
 			// keep only criteria with real values, not percentage
 			if !strings.Contains(op, "%") {
-				operators = append(operators, op)
+				// remove unneeded whitespaces from criteria string
+				operators = append(operators, strings.Replace(op, " ", "", -1))
 			}
 		}
 		// if criterium does have operator, store it
@@ -216,27 +340,58 @@ func cleanupCriteria(criteria []Criteria) []Criteria {
 	return newCriteria
 }
 
-// create operator for Target
-func newOperator(op string) (*metricsapi.Operator, error) {
-	// remove whitespaces
-	op = strings.Replace(op, " ", "", -1)
-
+// check if operator is valid and split it to operator and value
+func decodeOperatorAndValue(op string) (string, string, error) {
 	operators := []string{"<=", "<", ">=", ">"}
 	for _, operator := range operators {
 		if strings.HasPrefix(op, operator) {
-			return createOperator(operator, strings.TrimPrefix(op, operator))
+			return operator, strings.TrimPrefix(op, operator), nil
 		}
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+	return "", "", NewInvalidOperatorErr(op)
 }
 
-// checks and negates the existing operator
-func createOperator(op string, value string) (*metricsapi.Operator, error) {
+// create operator for Target
+func newOperator(op []string, negate bool) (*metricsapi.Operator, error) {
+	// convert single operator
+	if len(op) == 1 {
+		operator, value, err := decodeOperatorAndValue(op[0])
+		if err != nil {
+			return nil, err
+		}
+		if negate {
+			return negateSingleOperator(operator, value)
+		} else {
+			return createSingleOperator(operator, value)
+		}
+	} else if len(op) >= 2 { // convert operators representing range
+		operator1, value1, err := decodeOperatorAndValue(op[0])
+		if err != nil {
+			return nil, err
+		}
+		operator2, value2, err := decodeOperatorAndValue(op[1])
+		if err != nil {
+			return nil, err
+		}
+		if negate {
+			return negateDoubleOperator(operator1, value1, operator2, value2)
+		} else {
+			return createDoubleOperator(operator1, value1, operator2, value2)
+		}
+	}
+
+	return &metricsapi.Operator{}, NewEmptyOperatorErr(op)
+}
+
+// checks and negates the existing single operator
+//
+//nolint:dupl
+func negateSingleOperator(op string, value string) (*metricsapi.Operator, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert value '%s' to decimal", value)
+		return nil, NewUnconvertableValueErr(value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -264,5 +419,121 @@ func createOperator(op string, value string) (*metricsapi.Operator, error) {
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, fmt.Errorf("invalid operator: '%s'", op)
+	return nil, NewInvalidOperatorErr(op)
+}
+
+// checks and creates single operator
+//
+//nolint:dupl
+func createSingleOperator(op string, value string) (*metricsapi.Operator, error) {
+	dec := inf.NewDec(1, 0)
+	_, ok := dec.SetString(value)
+	if !ok {
+		return nil, NewUnconvertableValueErr(value)
+	}
+	if op == "<=" {
+		return &metricsapi.Operator{
+			LessThanOrEqual: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == "<" {
+		return &metricsapi.Operator{
+			LessThan: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == ">=" {
+		return &metricsapi.Operator{
+			GreaterThanOrEqual: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	} else if op == ">" {
+		return &metricsapi.Operator{
+			GreaterThan: &metricsapi.OperatorValue{
+				FixedValue: *resource.NewDecimalQuantity(*dec, resource.DecimalSI),
+			},
+		}, nil
+	}
+
+	return &metricsapi.Operator{}, NewInvalidOperatorErr(op)
+}
+
+// checks and creates double operator
+func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
+	smallerOperator, biggerOperator, err := decideIntervalBounds(op1, value1, op2, value2)
+	if err != nil {
+		return nil, err
+	}
+
+	// create range
+	r := &metricsapi.RangeValue{
+		LowBound:  *resource.NewDecimalQuantity(*smallerOperator.Value, resource.DecimalSI),
+		HighBound: *resource.NewDecimalQuantity(*biggerOperator.Value, resource.DecimalSI),
+	}
+
+	// inRange interval
+	if isGreaterOrEqual(smallerOperator.Operation) && isLessOrEqual(biggerOperator.Operation) {
+		return &metricsapi.Operator{
+			InRange: r,
+		}, nil
+		// outOfRange interval
+	} else if isLessOrEqual(smallerOperator.Operation) && isGreaterOrEqual(biggerOperator.Operation) {
+		return &metricsapi.Operator{
+			NotInRange: r,
+		}, nil
+	}
+
+	return nil, NewUnconvertableOperatorCombinationErr(op1, op2)
+}
+
+// decides which of the values is smaller and binds operator to them
+func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) (*Operator, *Operator, error) {
+	dec1 := inf.NewDec(1, 0)
+	_, ok := dec1.SetString(value1)
+	if !ok {
+		return nil, nil, NewUnconvertableValueErr(value1)
+	}
+	dec2 := inf.NewDec(1, 0)
+	_, ok = dec2.SetString(value2)
+	if !ok {
+		return nil, nil, NewUnconvertableValueErr(value2)
+	}
+
+	operator1 := &Operator{
+		Value:     dec1,
+		Operation: op1,
+	}
+
+	operator2 := &Operator{
+		Value:     dec2,
+		Operation: op2,
+	}
+
+	if dec1.Cmp(dec2) == -1 {
+		return operator1, operator2, nil
+	}
+
+	return operator2, operator1, nil
+}
+
+// checks and negates double operator
+func negateDoubleOperator(op1 string, value1 string, op2 string, value2 string) (*metricsapi.Operator, error) {
+	// create range operator
+	operator, err := createDoubleOperator(op1, value1, op2, value2)
+	if err != nil {
+		return operator, err
+	}
+
+	// negate it
+	if operator.NotInRange != nil {
+		return &metricsapi.Operator{
+			InRange: operator.NotInRange,
+		}, nil
+	}
+
+	return &metricsapi.Operator{
+		NotInRange: operator.InRange,
+	}, nil
 }

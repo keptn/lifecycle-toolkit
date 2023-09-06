@@ -297,11 +297,13 @@ func Test_setAnnotations(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: klcv1alpha3.KeptnTaskSpec{
-					AppName:         "app",
-					AppVersion:      "1.0.0",
-					Workload:        "workload",
-					WorkloadVersion: "2.0.0",
-					TaskDefinition:  "def",
+					TaskDefinition: "def",
+					Context: klcv1alpha3.TaskContext{
+						WorkloadName:    "workload",
+						AppName:         "app",
+						AppVersion:      "1.0.0",
+						WorkloadVersion: "2.0.0",
+					},
 				},
 			},
 			want: map[string]string{

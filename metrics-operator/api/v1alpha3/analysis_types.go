@@ -24,23 +24,47 @@ import (
 type AnalysisSpec struct {
 	//Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate
 	Timeframe `json:"timeframe"`
-	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. The placeholder must be the capitalized version of the key; i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.Foo}})".
+	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
 	Args map[string]string `json:"args,omitempty"`
 	// AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates
 	AnalysisDefinition ObjectReference `json:"analysisDefinition"`
 }
 
+// ProviderResult stores reference of already collected provider query associated to its objective template
+type ProviderResult struct {
+	// Objective store reference to corresponding objective template
+	Objective ObjectReference `json:"objectiveReference,omitempty"`
+	// Value is the value the provider returned
+	Value string `json:"value,omitempty"`
+	// ErrMsg stores any possible error at retrieval time
+	ErrMsg string `json:"errMsg,omitempty"`
+}
+
+// AnalysisStatus stores the status of the overall analysis returns also pass or warnings
+type AnalysisStatus struct {
+	// Raw contains the raw result of the SLO computation
+	Raw string `json:"raw,omitempty"`
+	// Pass returns whether the SLO is satisfied
+	Pass bool `json:"pass,omitempty"`
+	// Warning returns whether the analysis returned a warning
+	Warning bool `json:"warning,omitempty"`
+	// StoredValues contains all analysis values that have already been retrieved successfully
+	StoredValues map[string]ProviderResult `json:"storedValues,omitempty"`
+}
+
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AnalysisDefinition",type=string,JSONPath=.spec.analysisDefinition.name
+//+kubebuilder:printcolumn:name="Warning",type=string,JSONPath=`.status.warning`
+//+kubebuilder:printcolumn:name="Pass",type=string,JSONPath=`.status.pass`
 
 // Analysis is the Schema for the analyses API
 type Analysis struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AnalysisSpec `json:"spec,omitempty"`
-	Status string       `json:"status,omitempty"`
+	Spec   AnalysisSpec   `json:"spec,omitempty"`
+	Status AnalysisStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

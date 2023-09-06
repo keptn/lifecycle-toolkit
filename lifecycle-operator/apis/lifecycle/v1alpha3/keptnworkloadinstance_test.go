@@ -201,9 +201,13 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 		},
 	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnTaskSpec{
-		AppName:          workload.GetAppName(),
-		WorkloadVersion:  workload.GetVersion(),
-		Workload:         workload.GetParentName(),
+		Context: TaskContext{
+			AppName:         workload.GetAppName(),
+			WorkloadVersion: workload.GetVersion(),
+			WorkloadName:    workload.GetParentName(),
+			TaskType:        string(common.PostDeploymentCheckType),
+			ObjectType:      "Workload",
+		},
 		TaskDefinition:   "task-def",
 		Parameters:       TaskParameters{},
 		SecureParameters: SecureParameters{},

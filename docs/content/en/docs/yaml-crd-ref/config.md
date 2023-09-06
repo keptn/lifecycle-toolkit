@@ -4,7 +4,7 @@ description: Define configuration values
 weight: 20
 ---
 
-`KeptnConfig` defines configuration values for the Keptn Lifecycle Toolkit.
+`KeptnConfig` defines Keptn configuration values.
 
 ## Yaml Synopsis
 

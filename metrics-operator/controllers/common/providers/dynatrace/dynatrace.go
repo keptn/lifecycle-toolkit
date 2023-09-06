@@ -38,11 +38,12 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
-func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 	escapedQ := urlEncodeQuery(query)
 	qURL := baseURL + "v2/metrics/query?metricSelector=" + escapedQ + "&from=" + spec.From.String() + "&to=" + spec.To.String()
-	return d.runQuery(ctx, qURL, *provider)
+	res, _, err := d.runQuery(ctx, qURL, *provider)
+	return res, err
 }
 
 // EvaluateQuery fetches the SLI values from dynatrace provider

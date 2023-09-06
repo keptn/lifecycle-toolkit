@@ -92,17 +92,6 @@
       "draft": false
     }
   },
-  "plugins": [
-    {
-      "type": "linked-versions",
-      "groupName": "lifecycle-operator-and-scheduler",
-      "components": [
-        "lifecycle-operator",
-        "scheduler"
-      ],
-      "merge": true
-    }
-  ],
   "changelog-sections": [
     {
       "type": "feat",

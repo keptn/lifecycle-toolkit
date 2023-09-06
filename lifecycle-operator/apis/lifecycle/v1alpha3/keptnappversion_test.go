@@ -197,8 +197,12 @@ func TestKeptnAppVersion(t *testing.T) {
 		},
 	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnTaskSpec{
-		AppVersion:       app.GetVersion(),
-		AppName:          app.GetParentName(),
+		Context: TaskContext{
+			AppName:    app.GetParentName(),
+			AppVersion: app.GetVersion(),
+			TaskType:   string(common.PostDeploymentCheckType),
+			ObjectType: "App",
+		},
 		TaskDefinition:   "task-def",
 		Parameters:       TaskParameters{},
 		SecureParameters: SecureParameters{},

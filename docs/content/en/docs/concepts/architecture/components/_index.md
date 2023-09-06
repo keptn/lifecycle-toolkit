@@ -1,14 +1,14 @@
 ---
-title: Lifecycle Toolkit Components
+title: Keptn Components
 linktitle: Components
-description: Basic understanding of Keptn Lifecycle Toolkit Components
+description: Basic understanding of Keptn Components
 weight: 20
 cascade:
 ---
 
-### Keptn Lifecycle Toolkit Components
+### Keptn Components
 
-The Keptn Lifecycle Toolkit consists of two main components:
+Keptn consists of two main components:
 
 * Keptn Lifecycle Operator, which splits into two separate operators
 in Release 0.7.0 and later:
@@ -18,11 +18,11 @@ in Release 0.7.0 and later:
 
 ```mermaid
 graph TD;
-    KLTComponents-->Operators;
-    KLTComponents-->Scheduler
+    KeptnComponents-->Operators;
+    KeptnComponents-->Scheduler
    Operators-->Lifecycle-Operator
    Operators-->Metrics-Operator
-style KLTComponents fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style KeptnComponents fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
 style Operators fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 style Scheduler fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 style Lifecycle-Operator fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8

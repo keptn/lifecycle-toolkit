@@ -1,10 +1,10 @@
 ---
 title: Standardize observability
-description: How the KLT standardizes access to observability data for Kubernetes deployments
+description: How Keptn standardizes access to observability data for Kubernetes deployments
 weight: 10
 ---
 
-The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
+Keptn makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace
 of everything Kubernetes does in the context of a Deployment.
 It provides this information
@@ -21,12 +21,11 @@ This means that:
 
 - You can readily see why a deployment takes so long
   or why it fails, even when using multiple deployment strategies.
-- KLT can capture DORA metrics and expose them as OpenTelemetry metrics
+- Keptn can capture DORA metrics and expose them as OpenTelemetry metrics
 
 The observability data is an amalgamation of the following:
 
-- DORA metrics are collected out of the box
-  when the Lifecycle Toolkit is enabled
+- DORA metrics are collected out of the box when Keptn is enabled
 - OpenTelemetry runs traces that show
   everything that happens in the Kubernetes cluster
 - Custom Keptn metrics that you can use to monitor
@@ -44,7 +43,7 @@ It is based on the
 example.
 
 This is the second of three exercises in the
-[Introducing the Keptn Lifecycle Toolkit](_index.md)
+[Introducing Keptn](_index.md)
 series:
 
 - In the
@@ -62,16 +61,16 @@ series:
 This exercise shows how to standardize access
 to the observability data for your cluster.
 
-If you are installing the Keptn Lifecycle Toolkit on an existing cluster
+If you are installing Keptn on an existing cluster
 or on a local cluster you are creating for this exercise,
 you need to do the following:
 
 1. Follow the instructions in
    [Install and update](../install)
-   to install and enable KLT on your cluster.
+   to install and enable Keptn on your cluster.
 1. Follow the instructions in
    [Basic annotations](../implementing/integrate/#basic-annotations)
-   to integrate the Lifecycle Toolkit into your Kubernetes cluster
+   to integrate Keptn into your Kubernetes cluster
    by applying basic annotations
    to your workload and pod resources.
    and to create appropriate
@@ -84,7 +83,7 @@ you need to do the following:
 DORA metrics are an industry-standard set of measurements
 about your deployments.
 
-The Keptn Lifecycle Toolkit starts collecting these metrics
+Keptn starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
 See
 [DORA metrics](../implementing/dora)
@@ -92,7 +91,7 @@ for more details.
 
 ## Using OpenTelemetry
 
-The Keptn Lifecycle Toolkit extends the Kubernetes
+Keptn extends the Kubernetes
 primitives to create OpenTelemetry data
 that connects all your deployment and observability tools
 without worrying about where it is stored and where it is managed.

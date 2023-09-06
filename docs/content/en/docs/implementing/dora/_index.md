@@ -5,7 +5,7 @@ weight: 65
 ---
 
 DORA metrics are an industry-standard set of measurements
-that are included in the Keptn Lifecycle Toolkit.
+that are included in Keptn;
 see the following for a description:
 
 - [What are DORA Metrics and Why Do They Matter?](https://codeclimate.com/blog/dora-metrics)
@@ -19,7 +19,7 @@ DORA metrics provide information such as:
 - Deployment time between versions
 - Average time between versions.
 
-The Keptn Lifecycle Toolkit starts collecting these metrics
+Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](../integrate/#basic-annotations)
 to the

@@ -21,17 +21,6 @@ To set up a local Docsy build:
    * [Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
    * [Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
 
-1. Build the Keptn Docsy repo:
-
-   ```shell
-   make build
-   ```
-
-   > **Note**
-   To utilize the `Makefile`, you must have GNU **make**
-   available on your local machine.
-   Versions are available for all the usual Operating Systems.
-
 1. Execute the following command from the `docs` folder of your clone:
 
    ```shell
@@ -39,6 +28,11 @@ To set up a local Docsy build:
    ```
 
    It will continue running in its own shell.
+
+   > **Note**
+   To utilize the `Makefile`, you must have GNU **make**
+   available on your local machine.
+   Versions are available for all the usual Operating Systems.
 
 1. Start contributing!
 Note that Hugo updates the rendered documentation each time you write the file.

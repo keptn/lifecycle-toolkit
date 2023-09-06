@@ -81,7 +81,7 @@ lifecycleOperator:
       pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.0
     image:
       repository: ghcr.io/keptn/lifecycle-operator
-      tag: v0.8.1
+      tag: v0.8.2
     imagePullPolicy: Always
     livenessProbe:
       httpGet:
@@ -145,10 +145,12 @@ metricsOperator:
         type: RuntimeDefault
     env:
       exposeKeptnMetrics: "true"
+      enableKeptnAnalysis: "false"
       metricsControllerLogLevel: "0"
+      analysisControllerLogLevel: "0"
     image:
       repository: ghcr.io/keptn/metrics-operator
-      tag: v0.8.1
+      tag: v0.8.2
     livenessProbe:
       httpGet:
         path: /healthz
@@ -211,7 +213,7 @@ scheduler:
       otelCollectorUrl: otel-collector:4317
     image:
       repository: ghcr.io/keptn/scheduler
-      tag: v0.8.1
+      tag: v0.8.2
     imagePullPolicy: Always
     livenessProbe:
       httpGet:

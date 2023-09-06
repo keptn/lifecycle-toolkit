@@ -20,6 +20,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
 	"log"
 	"os"
 	"os/signal"
@@ -182,6 +183,21 @@ func main() {
 
 	if env.EnableKeptnAnalysis {
 
+		// OTel Setup
+		labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
+		a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+			Name: "keptn.analysis.result",
+			Help: "Result of Analysis",
+		}, labelNamesAnalysis)
+		prometheus.MustRegister(a)
+
+		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
+		o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+			Name: "keptn.objective.result",
+			Help: "Result of the Analysis Objective",
+		}, labelNames)
+		prometheus.MustRegister(o)
+
 		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
 		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
 		objEval := analysis.NewObjectiveEvaluator(&targetEval)
@@ -195,6 +211,10 @@ func main() {
 			Namespace:             env.PodNamespace,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,
+			Metrics: analysiscontroller.Metrics{
+				AnalysisResult:  a,
+				ObjectiveResult: o,
+			},
 		}).SetupWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 			os.Exit(1)

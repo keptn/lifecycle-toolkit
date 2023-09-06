@@ -37,6 +37,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+type Metrics struct {
+	AnalysisResult  *prometheus.GaugeVec
+	ObjectiveResult *prometheus.GaugeVec
+}
+
 // AnalysisReconciler reconciles an Analysis object
 type AnalysisReconciler struct {
 	client.Client
@@ -46,6 +51,7 @@ type AnalysisReconciler struct {
 	Namespace  string
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
+	Metrics
 }
 
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=analyses,verbs=get;list;watch;create;update;patch;delete
@@ -138,29 +144,21 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
-	writemetric(eval, analysis, analysisDef)
+	go a.reportResultsAsPromMetric(eval, analysis)
 	return a.updateStatus(ctx, analysis)
 }
 
-func writemetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis, def *metricsapi.AnalysisDefinition) {
-	m := prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "keptn.analysis.result",
-		Help: "Result of Analysis",
-		ConstLabels: map[string]string{
-			"name":      analysis.Name,
-			"namespace": analysis.Namespace,
-			"from":      analysis.Spec.Timeframe.From.GoString(),
-			"to":        analysis.Spec.Timeframe.To.GoString(),
-		},
-	})
-	prometheus.MustRegister(m)
-	m.Set(eval.GetAchievedPercentage())
+func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis) {
+	labelsAnalysis := prometheus.Labels{
+		"name":      analysis.Name,
+		"namespace": analysis.Namespace,
+	}
+	a.Metrics.AnalysisResult.With(labelsAnalysis).Set(eval.GetAchievedPercentage())
 	// expose also the individual objectives
 	for _, o := range eval.ObjectiveResults {
 		name := o.Objective.AnalysisValueTemplateRef.Name
 		ns := o.Objective.AnalysisValueTemplateRef.Namespace
-		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
-		labels := prometheus.Labels{
+		labelsObjective := prometheus.Labels{
 			"name":               name,
 			"namespace":          ns,
 			"analysis_name":      analysis.Name,
@@ -168,14 +166,8 @@ func writemetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis, de
 			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
 			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
 		}
-		g := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "keptn.analysis.objective",
-			Help: "Result of the Analysis Objective",
-		}, labelNames)
-		g.With(labels).Set(o.Value)
-		prometheus.MustRegister(g)
+		a.Metrics.ObjectiveResult.With(labelsObjective).Set(o.Value)
 	}
-
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {

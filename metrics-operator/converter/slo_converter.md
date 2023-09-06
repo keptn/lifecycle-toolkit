@@ -29,14 +29,16 @@ The converter will convert a single `slo.yaml` file into single `AnalysisDefinti
 
 To run the converter, execute the following command:
 
+<!---x-release-please-start-version-->
 ```shell
-METRICS_OPERATOR_IMAGE=ghcr.io/keptn/lifecycle-operator:latest
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
 PATH_TO_SLO=<PATH_TO_SLO>
 ANALYSIS_VALUE_TEMPLATE_NAMESPACE=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE>
 ANALYSIS_DEFINITION_NAME=<ANALYSIS_DEFINITION_NAME>
 
 docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --analysis-definition-name=$ANALYSIS_DEFINITION_NAME
 ```
+<!---x-release-please-end-->
 
 Please be aware, you need to substitute the placeholders with the following information:
 

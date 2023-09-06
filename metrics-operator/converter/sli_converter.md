@@ -11,14 +11,16 @@ The converter will convert a single `sli.yaml` file into multiple `AnalysisValue
 
 To run the converter, execute the following command:
 
+<!---x-release-please-start-version-->
 ```shell
-METRICS_OPERATOR_IMAGE=ghcr.io/keptn/lifecycle-operator:latest
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
 PATH_TO_SLI=<PATH_TO_SLI>
 KEPTN_PROVIDER_NAME=<KEPTN_PROVIDER_NAME>
 KEPTN_PROVIDER_NAMESPACE=<KEPTN_PROVIDER_NAMESPACE>
 
 docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --keptn-provider-name=$KEPTN_PROVIDER_NAME --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE
 ```
+<!---x-release-please-end-->
 
 Please be aware, you need to substitute the placeholders with the following information:
 

@@ -13,7 +13,7 @@ as well as the concept of application health checks
 | `scheduler.scheduler.containerSecurityContext`                                   | Sets security context                                          |                           |
 | `scheduler.scheduler.env.otelCollectorUrl`                                       | sets url for open telemetry collector                          | `otel-collector:4317`     |
 | `scheduler.scheduler.image.repository`                                           | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `v0.8.1`                  |
+| `scheduler.scheduler.image.tag`                                                  | set image tag for scheduler                                    | `v0.8.2`                  |
 | `scheduler.scheduler.imagePullPolicy`                                            | set image pull policy for scheduler                            | `Always`                  |
 | `scheduler.scheduler.livenessProbe`                                              | customizable liveness probe for the scheduler                  |                           |
 | `scheduler.scheduler.readinessProbe`                                             | customizable readiness probe for the scheduler                 |                           |
@@ -94,7 +94,7 @@ as well as the concept of application health checks
 | `lifecycleOperator.manager.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v1.0.1`   |
 | `lifecycleOperator.manager.env.pythonRunnerImage`                             | specify image for python task runtime                       | `ghcr.io/keptn/python-runtime:v1.0.0` |
 | `lifecycleOperator.manager.image.repository`                                  | specify registry for manager image                          | `ghcr.io/keptn/lifecycle-operator`    |
-| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                                | `v0.8.1`                              |
+| `lifecycleOperator.manager.image.tag`                                         | select tag for manager image                                | `v0.8.2`                              |
 | `lifecycleOperator.manager.imagePullPolicy`                                   | specify pull policy for manager image                       | `Always`                              |
 | `lifecycleOperator.manager.livenessProbe`                                     | custom livenessprobe for manager container                  |                                       |
 | `lifecycleOperator.manager.readinessProbe`                                    | custom readinessprobe for manager container                 |                                       |
@@ -147,7 +147,7 @@ as well as the concept of application health checks
 | `metricsOperator.manager.containerSecurityContext.runAsUser`                |                                                   | `65532`                          |
 | `metricsOperator.manager.containerSecurityContext.seccompProfile.type`      |                                                   | `RuntimeDefault`                 |
 | `metricsOperator.manager.image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
-| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `v0.8.1`                         |
+| `metricsOperator.manager.image.tag`                                         | select tag for manager image                      | `v0.8.2`                         |
 | `metricsOperator.manager.env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
 | `metricsOperator.manager.env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
 | `metricsOperator.manager.env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller         | `0`                              |

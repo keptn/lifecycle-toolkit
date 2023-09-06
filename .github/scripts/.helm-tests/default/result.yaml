@@ -7854,7 +7854,7 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/lifecycle-operator:v0.8.1
+        image: ghcr.io/keptn/lifecycle-operator:v0.8.2
         imagePullPolicy: Always
         name: manager
         ports:
@@ -7969,7 +7969,7 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/metrics-operator:v0.8.1
+        image: ghcr.io/keptn/metrics-operator:v0.8.2
         name: manager
         ports:
         - containerPort: 9443
@@ -8063,7 +8063,7 @@ spec:
           value: "otel-collector:4317"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/scheduler:v0.8.1
+        image: ghcr.io/keptn/scheduler:v0.8.2
         imagePullPolicy: Always
         name: scheduler
         resources:

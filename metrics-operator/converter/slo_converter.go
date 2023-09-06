@@ -43,13 +43,27 @@ type Criteria struct {
 }
 
 func (o *Objective) hasNotSupportedCriteria() bool {
-	return len(o.Pass) > 1 || len(o.Warning) > 1
+	// no pass criteria -> informative
+	if len(o.Pass) == 0 {
+		return true
+	}
+	// support only warning criteria with a single criteria element
+	if len(o.Warning) > 1 {
+		return true
+	}
+	// warning criteria == 1, pass can be only 1
+	if len(o.Warning) == 1 {
+		return len(o.Pass) > 1
+	}
+
+	// warn criteria == 0, pass can be anything
+	return false
 }
 
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("missing arguments: 'definition' and 'namespace' needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content
@@ -142,10 +156,19 @@ func removePercentage(str string) (int, error) {
 // nolint:gocognit,gocyclo
 func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	target := &metricsapi.Target{}
-	// skip objective target conversion if it has criteria combined with logical OR -> not supported
-	// this way the SLO will become "informative"
-	// it will become informative as well when the pass criteria are not defined
-	if o.hasNotSupportedCriteria() || len(o.Pass) == 0 {
+	// skip unsupported combination of criteria and informative objectives
+	if o.hasNotSupportedCriteria() {
+		return target, nil
+	}
+
+	// multiple criteria combined with logical OR operator
+	if len(o.Pass) > 1 {
+		ops := []string{o.Pass[0].Operators[0], o.Pass[1].Operators[0]}
+		op, err := newOperator(ops, true)
+		if err != nil {
+			return nil, err
+		}
+		target.Failure = op
 		return target, nil
 	}
 
@@ -155,7 +178,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 			if len(o.Pass[0].Operators) > 0 {
 				op, err := newOperator(o.Pass[0].Operators, true)
 				if err != nil {
-					return target, err
+					return nil, err
 				}
 				target.Failure = op
 				return target, nil
@@ -168,16 +191,16 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// !(pass criteria) -> warn criteria
 	isWarningSuperInterval, err := isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators)
 	if err != nil {
-		return target, err
+		return nil, err
 	}
 	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || isWarningSuperInterval {
 		op1, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		op2, err := newOperator(o.Warning[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		target.Failure = op2
 		target.Warning = op1
@@ -189,16 +212,16 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// warn criteria -> warn criteria
 	isPassSuperInterval, err := isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)
 	if err != nil {
-		return target, err
+		return nil, err
 	}
 	if isPassSuperInterval {
 		op1, err := newOperator(o.Warning[0].Operators, false)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		op2, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		target.Failure = op2
 		target.Warning = op1
@@ -396,7 +419,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, NewInvalidOperatorErr(op)
+	return nil, NewInvalidOperatorErr(op)
 }
 
 // checks and creates single operator

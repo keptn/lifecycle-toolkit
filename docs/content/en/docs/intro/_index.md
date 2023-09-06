@@ -4,10 +4,10 @@ description: An introduction to Keptn and the usecases.
 weight: 10
 ---
 
-Keptn implements observability
-for deployments and seamlessly integrates with deployment tools
+Keptn implements observability for deployments.
+It seamlessly integrates with deployment tools
 such as ArgoCD, Flux, and Gitlab
-and brings application awareness to your Kubernetes cluster.
+to bring application awareness to your Kubernetes cluster.
 
 These standard deployment tools
 do an excellent job at deploying applications
@@ -86,18 +86,19 @@ to make deployments more robust.
 These tools run checks and tasks before or after deployment initiation.
 
 * Pre-deployment tasks such as checking for dependent services,
-  image scanning, and setting the cluster to be ready for the deployment
+  image scanning, and setting the cluster to be ready for the deployment.
 
-* Pre-deployment evaluations such as checking the layout of the cluster
+* Pre-deployment evaluations such as checking whether the cluster
+  has enough resources for the deployment.
 
 * Post-deployment tasks such as triggering tests,
   triggering a deployment to another cluster,
-  or sending notifications that the deployment succeeded or failed
+  or sending notifications that the deployment succeeded or failed.
 
 * Post-deployment evaluations to evaluate the deployment,
   evaluate test results,
   or confirm software health against SLOs
-  like performance and user experience
+  like performance and user experience.
 
 All `KeptnTask` resources that are defined by `KeptnTaskDefinition` resources
 at the same level (either pre-deployment or post-deployment) run in parallel.

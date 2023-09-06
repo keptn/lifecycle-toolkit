@@ -166,7 +166,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 		ops := []string{o.Pass[0].Operators[0], o.Pass[1].Operators[0]}
 		op, err := newOperator(ops, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		target.Failure = op
 		return target, nil
@@ -178,7 +178,7 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 			if len(o.Pass[0].Operators) > 0 {
 				op, err := newOperator(o.Pass[0].Operators, true)
 				if err != nil {
-					return target, err
+					return nil, err
 				}
 				target.Failure = op
 				return target, nil
@@ -191,16 +191,16 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// !(pass criteria) -> warn criteria
 	isWarningSuperInterval, err := isSuperInterval(o.Warning[0].Operators, o.Pass[0].Operators)
 	if err != nil {
-		return target, err
+		return nil, err
 	}
 	if (len(o.Pass[0].Operators) == 1 && len(o.Warning[0].Operators) == 1) || isWarningSuperInterval {
 		op1, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		op2, err := newOperator(o.Warning[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		target.Failure = op2
 		target.Warning = op1
@@ -212,16 +212,16 @@ func setupTarget(o *Objective) (*metricsapi.Target, error) {
 	// warn criteria -> warn criteria
 	isPassSuperInterval, err := isSuperInterval(o.Pass[0].Operators, o.Warning[0].Operators)
 	if err != nil {
-		return target, err
+		return nil, err
 	}
 	if isPassSuperInterval {
 		op1, err := newOperator(o.Warning[0].Operators, false)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		op2, err := newOperator(o.Pass[0].Operators, true)
 		if err != nil {
-			return target, err
+			return nil, err
 		}
 		target.Failure = op2
 		target.Warning = op1
@@ -419,7 +419,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 		}, nil
 	}
 
-	return &metricsapi.Operator{}, NewInvalidOperatorErr(op)
+	return nil, NewInvalidOperatorErr(op)
 }
 
 // checks and creates single operator

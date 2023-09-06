@@ -92,11 +92,11 @@ func main() {
 	var disableWebhook bool
 	var probeAddr string
 	flag.StringVar(&SLIFilePath, "convert-sli", "", "The path the the SLI file to be converted")
-	flag.StringVar(&provider, "sli-provider", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
-	flag.StringVar(&namespace, "sli-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
+	flag.StringVar(&provider, "sli-provider-name", "", "The name of KeptnMetricsProvider referenced in KeptnValueTemplates")
+	flag.StringVar(&namespace, "sli-provider-namespace", "", "The namespace of the referenced KeptnMetricsProvider")
 	flag.StringVar(&SLOFilePath, "convert-slo", "", "The path the the SLO file to be converted")
-	flag.StringVar(&analysisDefinition, "definition", "", "The name of AnalysisDefinition to be created")
-	flag.StringVar(&namespace, "slo-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
+	flag.StringVar(&analysisDefinition, "analysis-definition-name", "", "The name of AnalysisDefinition to be created")
+	flag.StringVar(&namespace, "analysis-value-template-namespace", "", "The namespace of the referenced AnalysisValueTemplate")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")

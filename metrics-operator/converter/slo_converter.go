@@ -63,7 +63,7 @@ func (o *Objective) hasNotSupportedCriteria() bool {
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
 	//check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("missing arguments: 'definition' and 'namespace' needs to be set for conversion")
+		return "", fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
 	}
 
 	// unmarshall content

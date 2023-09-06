@@ -156,24 +156,23 @@ func writemetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis, de
 	prometheus.MustRegister(m)
 	m.Set(eval.GetAchievedPercentage())
 	// expose also the individual objectives
-	for _, o := range def.Spec.Objectives {
-		name := o.AnalysisValueTemplateRef.Name
-		ns := o.AnalysisValueTemplateRef.Namespace
+	for _, o := range eval.ObjectiveResults {
+		name := o.Objective.AnalysisValueTemplateRef.Name
+		ns := o.Objective.AnalysisValueTemplateRef.Namespace
 		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
 		labels := prometheus.Labels{
 			"name":               name,
 			"namespace":          ns,
 			"analysis_name":      analysis.Name,
 			"analysis_namespace": analysis.Namespace,
-			"key_objective":      fmt.Sprintf("%v", o.KeyObjective),
-			"weight":             fmt.Sprintf("%v", o.Weight),
+			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
+			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
 		}
 		g := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Name: "keptn.analysis.objective",
 			Help: "Result of the Analysis Objective",
 		}, labelNames)
-		// TODO: link Results to Definitions
-		g.With(labels).Set(0)
+		g.With(labels).Set(o.Value)
 		prometheus.MustRegister(g)
 	}
 

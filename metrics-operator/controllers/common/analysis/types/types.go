@@ -31,10 +31,11 @@ type OperatorResult struct {
 }
 
 type ObjectiveResult struct {
-	Result TargetResult `json:"result,omitempty"`
-	Value  float64      `json:"value,omitempty"`
-	Score  float64      `json:"score,omitempty"`
-	Error  error        `json:"error,omitempty"`
+	Result    TargetResult        `json:"result,omitempty"`
+	Objective *v1alpha3.Objective `json:"objective,omitempty"`
+	Value     float64             `json:"value,omitempty"`
+	Score     float64             `json:"score,omitempty"`
+	Error     error               `json:"error,omitempty"`
 }
 
 func (o *ObjectiveResult) IsFail() bool {

@@ -10,10 +10,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -23,10 +23,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -36,10 +36,10 @@ metadata:
   name: lifecycle-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -49,10 +49,10 @@ metadata:
   name: metrics-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/lifecycle-manager-config.yaml
@@ -62,10 +62,10 @@ metadata:
   name: lifecycle-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   controller_manager_config.yaml: |
@@ -88,10 +88,10 @@ metadata:
   name: metrics-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   controller_manager_config.yaml: |
@@ -114,10 +114,10 @@ metadata:
   name: scheduler-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   scheduler-config.yaml: |
@@ -144,10 +144,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -292,10 +292,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -652,10 +652,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -735,10 +735,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -1006,10 +1006,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -1075,10 +1075,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -1898,10 +1898,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: options.keptn.sh
@@ -1974,10 +1974,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -2365,10 +2365,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -2564,10 +2564,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -2749,10 +2749,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -3054,10 +3054,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -3201,10 +3201,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -3613,10 +3613,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -5274,10 +5274,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -5572,10 +5572,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -6359,10 +6359,10 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6411,10 +6411,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6602,10 +6602,10 @@ metadata:
   name: lifecycle-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6976,10 +6976,10 @@ metadata:
   name: metrics-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
   - apiGroups:
@@ -7084,10 +7084,10 @@ metadata:
   name: metrics-operator-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7106,10 +7106,10 @@ metadata:
   name: release-name-klt-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7129,10 +7129,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7150,10 +7150,10 @@ metadata:
   name: hpa-controller-keptn-metrics
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7171,10 +7171,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7192,10 +7192,10 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7213,10 +7213,10 @@ metadata:
   name: metrics-operator-hpa-controller
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7234,10 +7234,10 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7255,10 +7255,10 @@ metadata:
   name: system-auth-delegator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7276,10 +7276,10 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7311,10 +7311,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7356,10 +7356,10 @@ metadata:
   name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7401,10 +7401,10 @@ metadata:
   name: metrics-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7449,10 +7449,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7473,10 +7473,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7494,10 +7494,10 @@ metadata:
   name: extension-apiserver-authentication-reader
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7515,10 +7515,10 @@ metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7536,10 +7536,10 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7557,10 +7557,10 @@ metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7578,10 +7578,10 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7600,10 +7600,10 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: lifecycle-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7624,10 +7624,10 @@ metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7648,10 +7648,10 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: metrics-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7679,10 +7679,10 @@ metadata:
   name: metrics-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7706,10 +7706,10 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7791,10 +7791,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7920,10 +7920,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -8035,10 +8035,10 @@ metadata:
   namespace: "helmtests"
   labels:
     component: scheduler
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -8113,10 +8113,10 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: custom.metrics.k8s.io
@@ -8135,10 +8135,10 @@ metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: custom.metrics.k8s.io
@@ -8160,10 +8160,10 @@ metadata:
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:
@@ -8216,10 +8216,10 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:
@@ -8252,10 +8252,10 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:

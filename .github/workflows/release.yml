@@ -82,19 +82,7 @@ jobs:
             itemsToPublish.forEach(item => {
                 switch (item) {
                     case "lifecycle-operator":
-                        releaseMatrix.push(...[
-                            {
-                                name: item,
-                                folder: item,
-                                tagName: process.env.ARTIFACT_TAG_NAME
-                            },
-                            {
-                                name: "scheduler",
-                                folder: "scheduler/",
-                                tagName: process.env.ARTIFACT_TAG_NAME
-                            }
-                        ]);
-                        break;
+                    case "scheduler":
                     case "metrics-operator":
                         releaseMatrix.push({
                             name: item,

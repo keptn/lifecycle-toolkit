@@ -1,8 +1,7 @@
 ---
 title: Getting started with Keptn
 description: Get started with Keptn
-weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 20
 ---
 
 Keptn works whether or not you use a GitOps strategy.

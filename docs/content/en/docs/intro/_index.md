@@ -1,173 +1,124 @@
 ---
 title: Introduction to Keptn
 description: An introduction to Keptn and the usecases.
-weight: 20
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 10
 ---
 
-This section contains tutorials on how to use Keptn.
-
-When you understand the toolkit, begin with the [getting started guide](../getting-started/).
-
-----
-
 Keptn implements observability
-for deployments and seamlessly integrates with GitOps tools
+for deployments and seamlessly integrates with deployment tools
 such as ArgoCD, Flux, and Gitlab
 and brings application awareness to your Kubernetes cluster.
 
-These standard GitOps deployment tools
+These standard deployment tools
 do an excellent job at deploying applications
 but do not handle all issues
 that are required to ensure that your deployment is usable.
-Keptn "wraps" a standard Kubernetes GitOps deployment
+Keptn "wraps" a standard Kubernetes deployment
 with the capability to automatically handle issues
 before and after the actual deployment.
 
-Pre-deployment issues that Keptn can handle:
-
-* Send appropriate notifications that this deployment is about to happen
-* Check that downstream services meet their SLOs
-* Verify that your infrastructure is ready
-* Ensure that your infrastructure
-  has the resources necessary for a successful deployment
-
-Post-deployment issues that Keptn can handle:
-
-* Integrate with tooling beyond the standard Kubernetes probes
-* Automatically test the deployment
-* Ensure that the deployment is meeting its SLOs
-* Identify any downstream issues that may be caused by this deployment
-* Send appropriate notifications
-  about whether the deployment was successful or unsuccessful
-
-Keptn can evaluate both workload (single service) tests
-and SLO evaluations before and after the actual deployment.
-Multiple workloads can also be logically grouped and evaluated
-as a single cohesive unit called a `KeptnApp`.
-In other words, a `KeptnApp` is a collection of multiple workloads.
-
-Keptn is tool- and vendor neutral and does not depend on particular GitOps tooling.
-Keptn emits signals at every stage
-(Kubernetes events, OpenTelemetry metrics and traces)
-to ensure that your deployments are observable.
-It supports the following steps:
-
-* Pre-Deployment Tasks: e.g. checking for dependant services,
-  setting the cluster to be ready for the deployment, etc.
-* Pre-Deployment Evaluations: e.g. evaluate metrics
-  before your application gets deployed (e.g. layout of the cluster)
-* Post-Deployment Tasks: e.g. trigger a test,
-  trigger a deployment to another cluster, etc.
-* Post-Deployment Evaluations: e.g. evaluate the deployment,
-  evaluate the test results, etc.
-
-All of these things can be executed for a workload or for a [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/).
-
-## Main features of : Metrics, Observability and Release lifecycle
-
-* **Custom Metrics:** The Custom Keptn Metrics feature in
-Keptn allows you to define metrics from
-multiple data sources in your Kubernetes cluster.
-It supports deployment tools like Argo, Flux, KEDA, HPA, or
-Keptn for automated decision-making based on observability data.
-Your observability data may come from multiple observability solutions
-– Prometheus, Dynatrace, Datadog and others – or may be data that comes
-directly from your cloud provider such as AWS, Google, or Azure.
-The Keptn Metrics Server unifies and standardizes access to data from
-various sources, simplifying configuration and integration into a single
-set of metrics.
-
-* **Observability:** Keptn ensures observability
-for Kubernetes deployments by creating a comprehensive trace of all Kubernetes
-activities within a deployment.
-It introduces the concept of applications, which connect logically related
-workloads using different deployment strategies.
-With Keptn, you can easily understand deployment durations and failures across
-multiple strategies.
-It captures DORA metrics and exposes them as OpenTelemetry metrics.
-The observability data includes out-of-the-box DORA metrics, traces from
-OpenTelemetry, and custom Keptn metrics from configured data providers.
-Visualizing this information is possible using dashboard tools like Grafana.
-
-* **Release Lifecycle:** Keptn offers versatile functionalities
-for deployment scenarios, including pre-deployment validation, image scanning,
-and post-deployment tasks like test execution and stakeholder notification.
-It automatically validates against Service Level Objectives (SLOs) and provides
-end-to-end deployment traceability.
-Keptn extends deployments with application-aware tasks and evaluations,
-allowing checks before or after deployment initiation.
-It validates Keptn metrics using the Keptn Metrics Server, ensuring a healthy
-environment and confirming software health against SLOs like performance and
-user experience.
-Additionally, it enables monitoring of new logs from log monitoring solutions.
-
-To get started with Keptn, refer to the
-[Getting Started Exercises](https://lifecycle.keptn.sh/docs/getting-started/)
-for detailed instructions and examples.
-This guide will walk you through the installation process and help you set up
-your environment for using Keptn effectively.
-
-## Differences between Keptn and Keptn v1
-
-Keptn is a subproject
-whose design reflects lessons we learned while developing Keptn v1.
-Keptn recognizes that tools such as Argo and Flux
-are very good at deploying applications.
-However, these deployment tools do not provide
-pre-deployment and post-deployment evaluations and actions;
-this is what Keptn adds.
-
-Keptn v1 is a long-term support release
-that can deploy applications on platforms other than Kubernetes,
-can accommodate complex scoring algorithms for SLO evaluations,
-and can implement remediations (self-healing) for problems discovered
-on the production site.
-
 Keptn includes multiple features
 that can be implemented independently or together.
-Different features are at different levels of stability.
-See the [Keptn README file](https://github.com/keptn/lifecycle-toolkit/blob/main/README.md)
-for a list of the features that have been implemented to date
-and their level of stability.
+It targets three main use cases:
+Custom metrics, Observability, and Release lifecycle management.
 
-In a December 2022 Keptn Community meeting,
-we discussed the differences and similarities
-between Keptn v1 and Keptn
-to help you decide which best fits your needs.
-View the recording:
-[Compare Keptn v1 and the Keptn Lifecycle Toolkit](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=170s)
+## Custom metrics
 
-## Overviews of Keptn
+The Custom Keptn metrics feature extends the functionality of
+[Kubernetes metrics](https://kubernetes.io/docs/concepts/cluster-administration/system-metrics/):
 
-A number of presentations are available to help you understand Keptn.
-Note that many of these refer to the "Keptn Lifecycle Controller"
-or "Keptn Lifecycle Toolkit", which was the development code name for Keptn.
+* Allows you to define metrics
+  from multiple data sources in your Kubernetes cluster.
 
-* [Orchestrating and Observing GitOps Deployments with Keptn](https://www.youtube.com/watch?v=-cKyUKFjtwE&t=11s)
-  discusses the evolution of Keptn and the concepts that drive it,
-  then gives a simple demonstration of a Keptn implementation.
+* Supports deployment tools like Argo, Flux, KEDA, HPA, or
+  Keptn for automated decision-making based on observability data.
 
-* [Introducing Keptn Lifecycle Toolkit](https://youtu.be/449HAFYkUlY)
-  gives an overview of what Keptn does and how to implement it.
+* Handles observability data from multiple instances
+  of multiple observability solutions
+  – Prometheus, Dynatrace, Datadog and others –
+  as well as data that comes directly from your cloud provider
+  such as AWS, Google, or Azure.
 
-* [Keptn Lifecycle Toolkit Demo Tutorial on k3s, with ArgoCD for GitOps, OTel, Prometheus and Grafana](https://www.youtube.com/watch?v=6J_RzpmXoCc)
-  is a short video demonstration of how Keptn works.
-  You can download the exercise and run it for yourself;
-  notes below the video give a link to the github repo.
-  The README file in that repo gives instructions for installing the software
-  either automatically or manually.
+The Keptn metrics server unifies and standardizes
+access to data from various sources,
+simplifying configuration and integration into a single set of metrics.
 
-* [What is the Keptn Lifecycle Toolkit?](https://isitobservable.io/observability/kubernetes/what-is-the-keptn-lifecycle-toolkit)
-  blog discusses Keptn as part of the "Is It Observable?" series.
-  This links to:
+## Observability
 
-* [What is Keptn Lifecycle Toolkit?](https://www.youtube.com/watch?v=Uvg4uG8AbFg)
-  is a video that steps through the process of integrating Keptn
-  with your existing cloud native cluster.
+Keptn ensures observability for Kubernetes deployments
+by creating a comprehensive trace
+of all Kubernetes activities within a deployment.
+Keptn observability makes it easy to understand
+deployment durations and failures across multiple deployment strategies.
 
-* [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
-  demonstrates how to install Keptn and create your first KeptnTask in less than ten minutes.
-  
-* You can explore the [GitHub repository](https://github.com/isItObservable/keptn-lifecycle-Toolkit)
-  for more information.
+* Provides observability data for standard Kubernetes workload resources
+  as well as
+  [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/)
+  resources (which connect logically related workloads)
+  using different deployment strategies.
+
+* Captures
+  [DORA metrics](../implementing/dora/)
+  and exposes them as OpenTelemetry metrics out of the box.
+
+* Reports traces from OpenTelemetry
+  and custom Keptn metrics from configured data providers.
+
+* Enables monitoring of new logs from log monitoring solutions.
+
+* Information can be displayed on standard dashboard tools
+  like Grafana.
+
+Keptn is tool- and vendor neutral
+and does not depend on particular tooling.
+Keptn emits signals at every stage
+([Kubernetes events](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/),
+[CloudEvents](https://cloudevents.io/), and
+OpenTelemetry metrics and traces)
+to ensure that your deployments are observable.
+
+## Release lifecycle management
+
+The Release lifecycle management tools run in conjunction
+with the standard Kubernetes deployment tools
+to make deployments more robust.
+
+These tools run checks and tasks before or after deployment initiation.
+
+* Pre-deployment tasks such as checking for dependent services,
+  image scanning, and setting the cluster to be ready for the deployment
+
+* Pre-deployment evaluations such as checking the layout of the cluster
+
+* Post-deployment tasks such as triggering tests,
+  triggering a deployment to another cluster,
+  or sending notifications that the deployment succeeded or failed
+
+* Post-deployment evaluations to evaluate the deployment,
+  evaluate test results,
+  or confirm software health against SLOs
+  like performance and user experience
+
+All `KeptnTask` resources that are defined by `KeptnTaskDefinition` resources
+at the same level (either pre-deployment or post-deployment) run in parallel.
+Task sequences that are not part of the lifecycle workflow
+should be handled by the pipeline engine tools rather than Keptn.
+A `KeptnTask` resource can be defined to run multiple executables
+(functions, programs, and scripts)
+that are part of the lifecycle workflow.
+The executables within a `KeptnTask` resource
+run in sequential order.
+
+Keptn tasks and evaluations can be run
+for either a Kubernetes workload (single service) resource
+or a
+[KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/) resource,
+which is a single, cohesive unit that groups multiple workloads.
+
+To familiarize yourself with how Keptn works, refer to the
+[Getting started with Keptn](../getting-started/)
+and the
+[Getting Started Exercises](https://lifecycle.keptn.sh/docs/getting-started/).
+
+For information about the history of the Keptn project,
+see the blog.

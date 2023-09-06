@@ -55,9 +55,9 @@ Fixes # (issue)
   into multiple PRs)
 - [ ] I used descriptive commit messages to help reviewers understand my thought process
 - [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO)(
-  see [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/))
+  see [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines))
 - [ ] My PR title is formatted according to the semantic PR conventions described in
-  the [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines/)
+  the [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines)
 - [ ] My content follows the style guidelines of this project (YAMLLint, markdown-lint)
 - [ ] I regenerated the auto-generated docs for Helm and the CRD documentation (if applicable)
 - [ ] I have performed a self-review of my content including grammar and typo errors and also checked the rendered page

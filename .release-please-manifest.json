@@ -5,5 +5,5 @@
   "runtimes/deno-runtime": "1.0.1",
   "lifecycle-operator": "0.8.2",
   "scheduler": "0.8.2",
-  "metrics-operator": "0.8.1"
+  "metrics-operator": "0.8.2"
 }

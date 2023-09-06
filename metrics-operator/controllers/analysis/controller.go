@@ -20,11 +20,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
 	"time"
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -136,7 +138,43 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
+	writemetric(eval, analysis, analysisDef)
 	return a.updateStatus(ctx, analysis)
+}
+
+func writemetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis, def *metricsapi.AnalysisDefinition) {
+	m := prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "keptn.analysis.result",
+		Help: "Result of Analysis",
+		ConstLabels: map[string]string{
+			"name":      analysis.Name,
+			"namespace": analysis.Namespace,
+			"from":      analysis.Spec.Timeframe.From.GoString(),
+			"to":        analysis.Spec.Timeframe.To.GoString(),
+		},
+	})
+	prometheus.MustRegister(m)
+	m.Set(eval.GetAchievedPercentage())
+	for _, o := range def.Spec.Objectives {
+		name := o.AnalysisValueTemplateRef.Name
+		ns := o.AnalysisValueTemplateRef.Namespace
+		g := prometheus.NewGauge(prometheus.GaugeOpts{
+			Name: fmt.Sprintf("keptn.analysis.objective.%s.%s", name, ns),
+			Help: "Result of the Analysis Objective",
+			ConstLabels: map[string]string{
+				"name":               def.Name,
+				"namespace":          def.Namespace,
+				"analysis_name":      analysis.Name,
+				"analysis_namespace": analysis.Namespace,
+				"key_objective":      fmt.Sprintf("%v", o.KeyObjective),
+				"weight":             fmt.Sprintf("%v", o.Weight),
+			},
+		})
+		// TODO: link Results to Definitions
+		g.Set(0)
+		prometheus.MustRegister(g)
+	}
+
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {

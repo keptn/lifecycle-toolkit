@@ -33,16 +33,16 @@ To run the converter, execute the following command:
 METRICS_OPERATOR_IMAGE=ghcr.io/keptn/lifecycle-operator:latest
 PATH_TO_SLO=<PATH_TO_SLO>
 ANALYSIS_VALUE_TEMPLATE_NAMESPACE=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE>
-DEFINITION_NAME=<DEFINITION_NAME>
+ANALYSIS_DEFINITION_NAME=<ANALYSIS_DEFINITION_NAME>
 
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --slo-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --definition=$DEFINITION_NAME
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --analysis-definition-name=$ANALYSIS_DEFINITION_NAME
 ```
 
 Please be aware, you need to substitute the placeholders with the following information:
 
 - **PATH_TO_SLO** - path to your `slo.yaml` file
 - **ANALYSIS_VALUE_TEMPLATE_NAMESPACE** - namespace of `AnalysisValueTemplate` which will be referenced in objectives
-- **DEFINITION_NAME** - name of created `AnalysisDefinition`
+- **ANALYSIS_DEFINITION_NAME** - name of created `AnalysisDefinition`
 
 > **Note**
 

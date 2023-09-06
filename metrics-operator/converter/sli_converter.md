@@ -14,17 +14,17 @@ To run the converter, execute the following command:
 ```shell
 METRICS_OPERATOR_IMAGE=ghcr.io/keptn/lifecycle-operator:latest
 PATH_TO_SLI=<PATH_TO_SLI>
-PROVIDER_NAME=<PROVIDER_NAME>
-PROVIDER_NAMESPACE=<PROVIDER_NAMESPACE>
+KEPTN_PROVIDER_NAME=<KEPTN_PROVIDER_NAME>
+KEPTN_PROVIDER_NAMESPACE=<KEPTN_PROVIDER_NAMESPACE>
 
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --sli-provider=$PROVIDER_NAME --sli-namespace=$PROVIDER_NAMESPACE
+docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --keptn-provider-name=$KEPTN_PROVIDER_NAME --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE
 ```
 
 Please be aware, you need to substitute the placeholders with the following information:
 
 * **PATH_TO_SLI** - path to your `sli.yaml` file
-* **PROVIDER_NAME** - name of `KeptnMetricsProvider` which will be used to fetch SLIs
-* **PROVIDER_NAMESPACE** - namespace of `KeptnMetricsProvider` which will be used to fetch SLIs
+* **KEPTN_PROVIDER_NAME** - name of `KeptnMetricsProvider` which will be used to fetch SLIs
+* **KEPTN_PROVIDER_NAMESPACE** - namespace of `KeptnMetricsProvider` which will be used to fetch SLIs
 
 > **Note**
 

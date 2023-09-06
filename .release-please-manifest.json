@@ -3,7 +3,7 @@
   "klt-cert-manager": "1.1.0",
   "runtimes/python-runtime": "1.0.0",
   "runtimes/deno-runtime": "1.0.1",
-  "lifecycle-operator": "0.8.1",
+  "lifecycle-operator": "0.8.2",
   "scheduler": "0.8.2",
   "metrics-operator": "0.8.1"
 }

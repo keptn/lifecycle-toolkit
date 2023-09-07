@@ -194,7 +194,7 @@ func main() {
 			setupLog.Error(err, "unable to create metric keptn_analysis_result")
 		}
 
-		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
+		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight", "from", "to"}
 		o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Name: "keptn_objective_result",
 			Help: "Result of the Analysis Objective",

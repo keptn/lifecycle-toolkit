@@ -149,11 +149,13 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 }
 
 func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis) {
+	f := analysis.Spec.From.String()
+	t := analysis.Spec.To.String()
 	labelsAnalysis := prometheus.Labels{
 		"name":      analysis.Name,
 		"namespace": analysis.Namespace,
-		"from":      analysis.Spec.From.GoString(),
-		"to":        analysis.Spec.To.GoString(),
+		"from":      f,
+		"to":        t,
 	}
 	if m, err := a.Metrics.AnalysisResult.GetMetricWith(labelsAnalysis); err == nil {
 		m.Set(eval.GetAchievedPercentage())
@@ -171,6 +173,8 @@ func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisRes
 			"analysis_namespace": analysis.Namespace,
 			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
 			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
+			"from":               f,
+			"to":                 t,
 		}
 		if m, err := a.Metrics.ObjectiveResult.GetMetricWith(labelsObjective); err == nil {
 			m.Set(o.Value)

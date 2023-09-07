@@ -184,6 +184,27 @@ func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisRes
 	}
 }
 
+func SetupMetric() (m Metrics, err error) {
+	labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
+	a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "keptn_analysis_result",
+		Help: "Result of Analysis",
+	}, labelNamesAnalysis)
+	err = prometheus.Register(a)
+
+	labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight", "from", "to"}
+	o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "keptn_objective_result",
+		Help: "Result of the Analysis Objective",
+	}, labelNames)
+	err = prometheus.Register(o)
+
+	return Metrics{
+		AnalysisResult:  a,
+		ObjectiveResult: o,
+	}, err
+}
+
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {
 	if err := a.Client.Status().Update(ctx, analysis); err != nil {
 		a.Log.Error(err, "Failed to update the Analysis status")

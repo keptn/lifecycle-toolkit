@@ -1,8 +1,11 @@
 package analysis
 
 import (
+	"bytes"
 	"context"
-	"github.com/prometheus/client_golang/prometheus"
+	"fmt"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
 	"reflect"
 	"testing"
 	"time"
@@ -25,6 +28,8 @@ import (
 func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()
+	metrics, err := SetupMetric()
+	require.Nil(t, err)
 
 	tests := []struct {
 		name    string
@@ -71,27 +76,6 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		return ctx, &mymock
 	}
 
-	labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
-	a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "keptn_analysis_result",
-		Help: "Result of Analysis",
-	}, labelNamesAnalysis)
-	err := prometheus.Register(a)
-	require.Nil(t, err)
-
-	labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
-	o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "keptn_objective_result",
-		Help: "Result of the Analysis Objective",
-	}, labelNames)
-	err = prometheus.Register(o)
-	require.Nil(t, err)
-
-	metrics := Metrics{
-		AnalysisResult:  a,
-		ObjectiveResult: o,
-	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &AnalysisReconciler{
@@ -122,6 +106,71 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAnalysisReconciler_ExposeMetrics(t *testing.T) {
+	serveMetrics := func() {
+		fmt.Printf("serving metrics at localhost:2222/metrics")
+
+		http.Handle("/metrics", promhttp.Handler())
+		err := http.ListenAndServe(":2222", nil)
+		if err != nil {
+			fmt.Printf("error serving http: %v", err)
+			return
+		}
+	}
+	go serveMetrics()
+
+	analysis, analysisDef, template, _ := getTestCRDs()
+	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
+	res := metricstypes.AnalysisResult{
+		Pass: true,
+		ObjectiveResults: []metricstypes.ObjectiveResult{
+			{
+				Objective: &analysisDef.Spec.Objectives[0],
+			},
+		},
+	}
+	metrics, err := SetupMetric()
+	require.Nil(t, err)
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	a := &AnalysisReconciler{
+		Client:                fakeclient,
+		Scheme:                fakeclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		Metrics:               metrics,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return res
+			}},
+	}
+	_, err = a.Reconcile(context.TODO(), req)
+	require.Nil(t, err)
+	cli := &http.Client{}
+	r, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:2222/metrics", nil)
+	resp, err := cli.Do(r)
+	require.Nil(t, err)
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(resp.Body)
+	require.Nil(t, err)
+	newStr := buf.String()
+	// check for metrics
+	require.Contains(t, newStr, "keptn_analysis_result")
+	require.Contains(t, newStr, "keptn_objective_result")
 }
 
 func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsapi.AnalysisValueTemplate, metricsapi.KeptnMetricsProvider) {

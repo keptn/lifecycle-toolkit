@@ -20,7 +20,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus"
 	"log"
 	"os"
 	"os/signal"
@@ -184,22 +183,7 @@ func main() {
 	if env.EnableKeptnAnalysis {
 
 		// OTel Setup
-		labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
-		a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "keptn_analysis_result",
-			Help: "Result of Analysis",
-		}, labelNamesAnalysis)
-		err = prometheus.Register(a)
-		if err != nil {
-			setupLog.Error(err, "unable to create metric keptn_analysis_result")
-		}
-
-		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight", "from", "to"}
-		o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "keptn_objective_result",
-			Help: "Result of the Analysis Objective",
-		}, labelNames)
-		err = prometheus.Register(o)
+		metrics, err := analysiscontroller.SetupMetric()
 		if err != nil {
 			setupLog.Error(err, "unable to create metric keptn_objective_result")
 		}
@@ -217,10 +201,7 @@ func main() {
 			Namespace:             env.PodNamespace,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,
-			Metrics: analysiscontroller.Metrics{
-				AnalysisResult:  a,
-				ObjectiveResult: o,
-			},
+			Metrics:               metrics,
 		}).SetupWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 			os.Exit(1)

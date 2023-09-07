@@ -34,8 +34,7 @@ Please also provide information about any automatic tests that you added.
 - [ ] I regenerated the auto-generated docs for Helm and the CRD documentation (if applicable)
 - [ ] I have performed a self-review of my code
 - [ ] I have made corresponding changes to the documentation (if needed)
-- [ ] My changes result in all-green PR checks (first-time contributors need to ask a maintainer to approve their test
-  runs)
+- [ ] My changes result in all-green PR checks (first-time contributors need to ask a maintainer to approve their test runs)
 - [ ] New and existing unit and integration tests pass locally with my changes
 
 <!-- DOCS SECTION -->
@@ -62,5 +61,4 @@ Fixes # (issue)
 - [ ] I regenerated the auto-generated docs for Helm and the CRD documentation (if applicable)
 - [ ] I have performed a self-review of my content including grammar and typo errors and also checked the rendered page
   from the Netlify deploy preview
-- [ ] My changes result in all-green PR checks (first-time contributors need to ask a maintainer to approve their test
-  runs)
+- [ ] My changes result in all-green PR checks (first-time contributors need to ask a maintainer to approve their test runs)

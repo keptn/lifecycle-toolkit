@@ -9,7 +9,7 @@ cascade:
 ## Keptn Workloads
 
 A
-[KeptnWorkload](../../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
@@ -32,7 +32,7 @@ as soon as the workload manifest is applied.
 
 ## Keptn Applications
 
-A [KeptnApp](../../../yaml-crd-ref/app.md)
+A [KeptnApp](../../yaml-crd-ref/app.md)
 resource combines multiple Kubernetes
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 into a single entity
@@ -65,12 +65,12 @@ plus specific tasks and evaluations that you define
 for the `KeptnApp` resource itself:
 
 * The annotations described in
-  [Basic annotations](../../../implementing/integrate/#basic-annotations)
+  [Basic annotations](../../implementing/integrate/#basic-annotations)
   are used to automatically generate `KeptnApp` resources
   that contain the identifications required
   to run the Keptn observability features.
 * You must manually add the annotations described in
-  [Pre- and post-deployment checks](../../../implementing/integrate/#pre--and-post-deployment-checks)
+  [Pre- and post-deployment checks](../../implementing/integrate/#pre--and-post-deployment-checks)
   to the basic `KeptnApp` manifest to define
   the evaluations and tasks you want to run pre- and post-deployment.
 
@@ -87,12 +87,12 @@ The timeout is provided because it may take some time
 to apply all `KeptnWorkload` resources to the cluster.
 This interval can be modified for the cluster by changing the value
 of the `keptnAppCreationRequestTimeoutSeconds` field in the
-[KeptnConfig](../../../yaml-crd-ref/config.md)
+[KeptnConfig](../../yaml-crd-ref/config.md)
 resource.
 
 ## How basic annotations are implemented
 
-The [Basic annotations](../../../implementing/integrate/#basic-annotations)
+The [Basic annotations](../../implementing/integrate/#basic-annotations)
 page gives instructions for applying the annotations or labels
 that identify the pods that Keptn should manage.
 
@@ -109,7 +109,7 @@ In other words:
   again first in the annotations, then in the labels.
 
 Keptn automatically generates appropriate
-[KeptnApp](../../../yaml-crd-ref/app.md)
+[KeptnApp](../../yaml-crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is populated:

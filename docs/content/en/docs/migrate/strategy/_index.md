@@ -93,7 +93,7 @@ Some key points:
 
 For in-depth information about Keptn components
 and how they work, see the
-[Architecture](../../concepts/architecture)
+[Architecture](../../architecture)
 section.
 
 ## Disposition of Keptn v1 components in Keptn

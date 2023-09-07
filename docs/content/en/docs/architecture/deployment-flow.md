@@ -22,7 +22,7 @@ Within each phase, all tasks and evaluations for each phase
 are executed in parallel.
 They are not affected by the order
 in which evaluations and tasks are listed in the
-[KeptnApp](../../yaml-crd-ref/app.md/)
+[KeptnApp](../yaml-crd-ref/app.md/)
 resource
 or in the order of the pre/post-tasks and pre/post-evaluations
 that are listed in the Workflow manifests.

@@ -67,10 +67,6 @@ It is important to use the related terminology correctly:
   or just a resource but not a CRD or RD.
   Most of the time, we recommend just using the term "resource".
 
-* Do not turn resource names into plurals by adding an "s".
-  If you need a plural form, use the word "resources".
-  For example, "`KeptnMetric resources" or "KeptnApp resources".
-
 * The first occurence of a CRD name in a section should be a link to the
   [CRD YAML Reference](../../../docs/yaml-crd-ref)
   page if there is one.

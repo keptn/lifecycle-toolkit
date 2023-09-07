@@ -60,7 +60,7 @@ It is important to use the related terminology correctly:
   of a resource that is part of the Kubernetes core
 
 * A "Custom Resource Definition (CRD)" is the definition
-  (or syntax) of a resource that Keptn (or some other product) 
+  (or syntax) of a resource that Keptn (or some other product)
   adds to Kubernetes
 
 * An instance of a CRD or RD that a user creates is a custom resource

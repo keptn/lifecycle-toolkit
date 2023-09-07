@@ -13,15 +13,19 @@ but should adhere to recommendations in:
 * [CNCF Style Guide](https://github.com/cncf/foundation/blob/main/style-guide.md).
 
 * The [Kubernetes documentation](https://kubernetes.io/docs/home/)
-  is a good reference for Kubernetes terms.  In particular:
+  is a good reference for Kubernetes terms.
+   In particular:
 
-  - [Concepts](https://kubernetes.io/docs/concepts/)
-  - [Reference](https://kubernetes.io/docs/reference/)
+  * [Concepts](https://kubernetes.io/docs/concepts/)
+  * [Reference](https://kubernetes.io/docs/reference/)
 
 * The [Google developer documentation style guide](https://developers.google.com/style)
-  is a comprehensive reference for technical writers.  In particular:
+  is a comprehensive reference for technical writers.
+   In particular:
 
-  - [Word list](https://developers.google.com/style/word-list)
+  * [Word list](https://developers.google.com/style/word-list)
+    includes good information about words and phrases
+    that are commonly used in technical documentation.
 
 ## Keptn project
 
@@ -29,12 +33,12 @@ This is the proper name of the project that was developed
 under the code name of "Keptn Lifecycle Toolkit (KLT)".
 The earlier project is called "Keptn v1".
 
-* Keptn is capitalized when used in prose as the name of the product,
+* Keptn is capitalized when used in prose as the name of the project,
   although the logo uses a lowercase "k".
   Use `keptn` if it is part of a command name, pathname,
   an argument to a command or function, etc.
 
-* As a product name that may be trademarked,
+* As a project name that may be trademarked,
   you should not use an apostrophe-s to make it a possessive ("Keptn's")
   or hyphentate it (as in "Keptn-specific").
 

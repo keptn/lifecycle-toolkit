@@ -11,7 +11,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 The Keptn Cert Manager automatically configures TLS certificates to
 [secure communication with the Kubernetes API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
 You can instead
-[configure Keptn to use cert-manager.io](../../operate/cert-manager.md)
+[configure Keptn to use cert-manager.io](../operate/cert-manager.md)
 for this purpose.
 
 Keptn includes a Mutating Webhook
@@ -38,7 +38,7 @@ It is included to simplify installation for new users
 and because it is much smaller than most standard certificate managers.
 However, Keptn is compatible with most certificate managers
 and can be configured to use another certificate manager if you prefer.
-See [Use Keptn with cert-manager.io](../../operate/cert-manager.md)
+See [Use Keptn with cert-manager.io](../operate/cert-manager.md)
 for instructions.
 
 ## Invalid certificate errors

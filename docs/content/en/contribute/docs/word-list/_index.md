@@ -72,10 +72,10 @@ It is important to use the related terminology correctly:
   For example, "`KeptnMetric resources" or "KeptnApp resources".
 
 * The first occurence of a CRD name in a section should be a link to the
-  [CRD YAML Reference](../../../../../docs/yaml-crd-ref)
+  [CRD YAML Reference](../../../docs/yaml-crd-ref)
   page if there is one.
   Otherwise, it should be a link to the appropriate spot in the
-  [API Reference](../../../../../docs/crd-ref)
+  [API Reference](../../../docs/crd-ref)
   section.
 
 * Occurrences of a resource name that are not links to a reference page

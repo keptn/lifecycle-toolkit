@@ -4,8 +4,8 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-`KeptnApp` defines a list of workloads
-that together constitute a logical application.
+A `KeptnApp` resource lists all the workloads
+that constitute a logical application.
 It contains information about:
 
 - All workloads and checks
@@ -30,9 +30,9 @@ spec:
   revision: x
   workloads:
   - name: <workload1-name>
-    version: x.y.z
+    version: <version-string>
   - name: <workload2-name>
-    version: x.y.z
+    version: <version-string>
   preDeploymentTasks:
   - <list of tasks>
   postDeploymentTasks:
@@ -44,6 +44,9 @@ spec:
 ```
 
 ## Fields
+
+The first set of fields are created automatically
+when the app discovery feature generates the `KeptnApp` resource:
 
 - **apiVersion** -- API version being used.
 - **kind** -- Resource type.
@@ -78,20 +81,28 @@ spec:
       Changing this number causes a new execution
       of checks for this workload only,
       not the entire application.
-  - **preDeploymentTasks** -- list each task
+
+The remaining fields are required only when implementing
+the release lifecycle management feature.
+If used, these fields must be populated manually:
+
+- **preDeploymentTasks** -- list each task
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
     for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  - **postDeploymentTasks** -- list each task
+- **postDeploymentTasks** -- list each task
     to be run as part of the post-deployment stage.
     Task names must match the value of the `metadata.name` field
-    for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  - **preDeploymentEvaluations** -- list each evaluation to be run
+    for the associated
+    [KeptnTaskDefinition](taskdefinition.md)
+    resource.
+- **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
-    for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
+    for the associated
+    [KeptnEvaluationDefinition](evaluationdefinition.md)
     resource.
-  - **postDeploymentEvaluations** -- list each evaluation to be run
+- **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
     for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
@@ -102,24 +113,33 @@ spec:
 Kubernetes defines
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 but does not define applications.
-The Keptn Lifecycle Toolkit adds the concept of applications
+Keptn adds the concept of applications
 defined as a set of workloads that can be executed.
 A `KeptnApp` resource is added
 into the repository of the deployment engine
-(ArgoCD, Flux, etc)
+(ArgoCD, Flux, etc.)
 and is then deployed by that deployment engine.
 
-You can create a `KeptnApp` resource as a standard YAML manifest
-or you can use the
+A `KeptnApp` resource is created automatically, using the
 [automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
-feature to automatically generate a `KeptnApp` resource
-based on Keptn or [recommended Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
-This allows you to use the KLT observability features for existing resources
+feature to generate a `KeptnApp` resource
+based on the
+[basic annotations](../implementing/integrate/#basic-annotations)
+that are applied to any of the workload resources.
+This allows you to use the Keptn observability features for existing resources
 without manually populating any Keptn related resources.
 
-## Examples
+The release lifecycle management feature
+allows you to define pre- and post-deployment
+evaluations and tasks to be run for the `KeptnApp` as a whole.
+These must be added to the `KeptnApp` manifest manually.
+Note that all evaluations or tasks for a specific stage
+(such as `preDeploymentTasks`)
+are executed in parallel.
+If you have a series of tasks that should be executed sequentially,
+you can code them all into a single `KeptnTaskDefinition`.
 
-### Example
+## Example
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -128,12 +148,12 @@ metadata:
   name: podtato-head
   namespace: podtato-kubectl
 spec:
-  version: "1.3"
+  version: "latest"
   workloads:
   - name: podtato-head-left-arm
-    version: 0.1.0
+    version: "my_vers12.5"
   - name: podtato-head-left-leg
-    version: 1.2.3
+    version: "my_v24"
   postDeploymentTasks:
   - post-deployment-hello
   preDeploymentEvaluations:
@@ -149,8 +169,10 @@ spec:
 ## See also
 
 - [KeptnTaskDefinition](taskdefinition.md)
+- [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Working with tasks](../implementing/tasks)
+- [Architecture of KeptnWorkloads and KeptnTasks](../concepts/architecture/keptn-apps/)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../getting-started/orchestrate)
+- [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 - [Restart an Application Deployment](../implementing/restart-application-deployment/)

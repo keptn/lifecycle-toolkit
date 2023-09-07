@@ -60,15 +60,16 @@ It is important to use the related terminology correctly:
   of a resource that is part of the Kubernetes core
 
 * A "Custom Resource Definition (CRD)" is the definition
-  (or syntax) for defining that Custom resource.
+  (or syntax) of a resource that Keptn (or some other product) 
+  adds to Kubernetes
 
 * An instance of a CRD or RD that a user creates is a custom resource
-  or just a resource.
-  Most of the time, we recommend just using the term resource.
+  or just a resource but not a CRD or RD.
+  Most of the time, we recommend just using the term "resource".
 
 * Do not turn resource names into plurals by adding an "s".
   If you need a plural form, use the word "resources".
-  For example, "`KeptnMetric resources".
+  For example, "`KeptnMetric resources" or "KeptnApp resources".
 
 * The first occurence of a CRD name in a section should be a link to the
   [CRD YAML Reference](../../../../../docs/yaml-crd-ref)

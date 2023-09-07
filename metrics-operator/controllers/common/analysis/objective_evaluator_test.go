@@ -30,6 +30,11 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				Score: 0.0,
 				Error: fmt.Errorf("required value 'name' not available"),
+				Objective: &v1alpha3.Objective{
+					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+						Name: "name",
+					},
+				},
 			},
 		},
 		{
@@ -56,6 +61,12 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Value: 20.0,
 				Result: types.TargetResult{
 					Pass: true,
+				},
+				Objective: &v1alpha3.Objective{
+					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+						Name: "name",
+					},
+					Weight: 2,
 				},
 			},
 		},
@@ -86,6 +97,12 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 					Pass:    false,
 					Warning: true,
 				},
+				Objective: &v1alpha3.Objective{
+					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+						Name: "name",
+					},
+					Weight: 2,
+				},
 			},
 		},
 		{
@@ -114,6 +131,12 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Result: types.TargetResult{
 					Pass:    false,
 					Warning: false,
+				},
+				Objective: &v1alpha3.Objective{
+					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+						Name: "name",
+					},
+					Weight: 2,
 				},
 			},
 		},

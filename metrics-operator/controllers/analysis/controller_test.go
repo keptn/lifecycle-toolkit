@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"context"
+	"github.com/prometheus/client_golang/prometheus"
 	"reflect"
 	"testing"
 	"time"
@@ -70,6 +71,27 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		return ctx, &mymock
 	}
 
+	labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
+	a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "keptn_analysis_result",
+		Help: "Result of Analysis",
+	}, labelNamesAnalysis)
+	err := prometheus.Register(a)
+	require.Nil(t, err)
+
+	labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
+	o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "keptn_objective_result",
+		Help: "Result of the Analysis Objective",
+	}, labelNames)
+	err = prometheus.Register(o)
+	require.Nil(t, err)
+
+	metrics := Metrics{
+		AnalysisResult:  a,
+		ObjectiveResult: o,
+	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &AnalysisReconciler{
@@ -78,6 +100,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				Log:                   testr.New(t),
 				MaxWorkers:            2,
 				NewWorkersPoolFactory: mockFactory,
+				Metrics:               metrics,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
 					EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 						return tt.res

@@ -186,17 +186,23 @@ func main() {
 		// OTel Setup
 		labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
 		a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "keptn.analysis.result",
+			Name: "keptn_analysis_result",
 			Help: "Result of Analysis",
 		}, labelNamesAnalysis)
-		prometheus.MustRegister(a)
+		err = prometheus.Register(a)
+		if err != nil {
+			setupLog.Error(err, "unable to create metric keptn_analysis_result")
+		}
 
 		labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight"}
 		o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "keptn.objective.result",
+			Name: "keptn_objective_result",
 			Help: "Result of the Analysis Objective",
 		}, labelNames)
-		prometheus.MustRegister(o)
+		err = prometheus.Register(o)
+		if err != nil {
+			setupLog.Error(err, "unable to create metric keptn_objective_result")
+		}
 
 		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
 		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})

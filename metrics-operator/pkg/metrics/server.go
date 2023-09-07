@@ -187,7 +187,10 @@ func (m *serverManager) recordMetrics() {
 						Name: normName,
 						Help: metric.Name,
 					})
-					prometheus.MustRegister(m.metrics.gauges[normName])
+					err := prometheus.Register(m.metrics.gauges[normName])
+					if err != nil {
+						fmt.Printf("failed to register metric %s\n", m.metrics.gauges[normName])
+					}
 				}
 				val, _ := strconv.ParseFloat(metric.Status.Value, 64)
 				m.metrics.gauges[normName].Set(val)

@@ -152,8 +152,14 @@ func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisRes
 	labelsAnalysis := prometheus.Labels{
 		"name":      analysis.Name,
 		"namespace": analysis.Namespace,
+		"from":      analysis.Spec.From.GoString(),
+		"to":        analysis.Spec.To.GoString(),
 	}
-	a.Metrics.AnalysisResult.With(labelsAnalysis).Set(eval.GetAchievedPercentage())
+	if m, err := a.Metrics.AnalysisResult.GetMetricWith(labelsAnalysis); err == nil {
+		m.Set(eval.GetAchievedPercentage())
+	} else {
+		a.Log.Error(err, "unable to set value for analysis result metric")
+	}
 	// expose also the individual objectives
 	for _, o := range eval.ObjectiveResults {
 		name := o.Objective.AnalysisValueTemplateRef.Name
@@ -166,7 +172,11 @@ func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisRes
 			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
 			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
 		}
-		a.Metrics.ObjectiveResult.With(labelsObjective).Set(o.Value)
+		if m, err := a.Metrics.ObjectiveResult.GetMetricWith(labelsObjective); err == nil {
+			m.Set(o.Value)
+		} else {
+			a.Log.Error(err, "unable to set value for objective result metric")
+		}
 	}
 }
 

@@ -26,7 +26,8 @@
         "helm/chart/Chart.yaml",
         "Makefile",
         "helm/chart/values.yaml",
-        "helm/chart/README.md"
+        "helm/chart/README.md",
+        "docs/content/en/docs/getting-started/_index.md"
       ]
     },
     "klt-cert-manager": {

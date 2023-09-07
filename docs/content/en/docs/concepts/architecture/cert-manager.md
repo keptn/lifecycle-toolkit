@@ -11,7 +11,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 The Keptn Cert Manager automatically configures TLS certificates to
 [secure communication with the Kubernetes API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
 You can instead
-[configure Keptn to use cert-manager.io](../../../operate/cert-manager/)
+[configure Keptn to use cert-manager.io](../../operate/cert-manager.md)
 for this purpose.
 
 Keptn includes a Mutating Webhook

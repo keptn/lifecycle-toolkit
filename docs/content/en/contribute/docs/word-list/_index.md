@@ -25,7 +25,7 @@ but should adhere to recommendations in:
 
   * [Word list](https://developers.google.com/style/word-list)
     includes good information about words and phrases
-    that are commonly used in technical documentation.
+    that are commonly used in technical documentation
 
 ## Keptn project
 

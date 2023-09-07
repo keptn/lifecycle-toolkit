@@ -1,9 +1,10 @@
 # SLO Converter
 
-## Table of Contents
+<details>
+<summary>Table of Contents</summary>
+<!-- toc -->
 
 - [SLO Converter](#slo-converter)
-  - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Usage](#usage)
   - [Conversion details](#conversion-details)
@@ -15,6 +16,9 @@
       - [Criteria combined with logical OR operator](#criteria-combined-with-logical-or-operator)
       - [Criteria with intervals with intersection](#criteria-with-intervals-with-intersection)
   - [Example](#example)
+
+<!-- tocstop -->
+</details>
 
 ## Description
 
@@ -36,7 +40,7 @@ PATH_TO_SLO=<PATH_TO_SLO>
 ANALYSIS_VALUE_TEMPLATE_NAMESPACE=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE>
 ANALYSIS_DEFINITION_NAME=<ANALYSIS_DEFINITION_NAME>
 
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --analysis-definition-name=$ANALYSIS_DEFINITION_NAME
+docker run $METRICS_OPERATOR_IMAGE manager --convert-slo=$PATH_TO_SLO --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE --analysis-definition-name=$ANALYSIS_DEFINITION_NAME
 ```
 <!---x-release-please-end-->
 
@@ -358,7 +362,7 @@ total_score:
 with the following command
 
 ```shell
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-slo=./slo.yaml --slo-namespace=default --definition=defName
+docker run $METRICS_OPERATOR_IMAGE manager --convert-slo=./slo.yaml --slo-namespace=default --definition=defName
 ```
 
 will be converted to:

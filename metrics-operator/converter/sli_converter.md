@@ -18,7 +18,7 @@ PATH_TO_SLI=<PATH_TO_SLI>
 KEPTN_PROVIDER_NAME=<KEPTN_PROVIDER_NAME>
 KEPTN_PROVIDER_NAMESPACE=<KEPTN_PROVIDER_NAMESPACE>
 
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --keptn-provider-name=$KEPTN_PROVIDER_NAME --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE
+docker run $METRICS_OPERATOR_IMAGE manager --convert-sli=$PATH_TO_SLI --keptn-provider-name=$KEPTN_PROVIDER_NAME --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE
 ```
 <!---x-release-please-end-->
 
@@ -47,7 +47,7 @@ indicators:
 with the following command
 
 ```shell
-docker-run $METRICS_OPERATOR_IMAGE manager --convert-sli=./sli.yaml --sli-provider=dynatrace --sli-namespace=keptn
+docker run $METRICS_OPERATOR_IMAGE manager --convert-sli=./sli.yaml --sli-provider=dynatrace --sli-namespace=keptn
 ```
 
 will be converted to:

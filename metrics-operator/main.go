@@ -173,10 +173,10 @@ func main() {
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
-		Client:             mgr.GetClient(),
-		Scheme:             mgr.GetScheme(),
-		Log:                metricsLogger.V(env.KeptnMetricControllerLogLevel),
-		NewProviderFactory: providers.NewProvider,
+		Client:     mgr.GetClient(),
+		Scheme:     mgr.GetScheme(),
+		Log:        metricsLogger.V(env.KeptnMetricControllerLogLevel),
+		NewFactory: providers.NewProvider,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)

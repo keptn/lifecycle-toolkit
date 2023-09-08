@@ -184,7 +184,9 @@ func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisRes
 	}
 }
 
+//nolint:ineffassign,staticcheck
 func SetupMetric() (m Metrics, err error) {
+
 	labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
 	a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "keptn_analysis_result",

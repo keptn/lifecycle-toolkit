@@ -20,13 +20,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus"
 	"time"
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -144,7 +144,7 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
-	go a.reportResultsAsPromMetric(eval, analysis)
+	a.reportResultsAsPromMetric(eval, analysis)
 	return a.updateStatus(ctx, analysis)
 }
 

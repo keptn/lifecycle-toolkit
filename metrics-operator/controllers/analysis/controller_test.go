@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -18,6 +18,8 @@ import (
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	prometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -25,11 +27,88 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+func TestAnalysisReconciler_ExposeMetrics(t *testing.T) {
+	serveMetrics := func() {
+		fmt.Printf("serving metrics at localhost:2222/metrics")
+		http.Handle("/metrics", promhttp.Handler())
+		err := http.ListenAndServe(":2222", nil)
+		if err != nil {
+			fmt.Printf("error serving http: %v", err)
+			return
+		}
+	}
+	go serveMetrics()
+
+	analysis, analysisDef, template, _ := getTestCRDs()
+	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
+	res := metricstypes.AnalysisResult{
+		Pass: true,
+		ObjectiveResults: []metricstypes.ObjectiveResult{
+			{
+				Objective: &analysisDef.Spec.Objectives[0],
+			},
+		},
+	}
+	metrics, err := SetupMetric()
+	if err != nil {
+		//ignore if it is an already registered error
+		require.Contains(t, err.Error(), prometheus.AlreadyRegisteredError{}.Error())
+	}
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	a := &AnalysisReconciler{
+		Client:                fakeclient,
+		Scheme:                fakeclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		Metrics:               metrics,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return res
+			}},
+	}
+	_, err = a.Reconcile(context.TODO(), req)
+	require.Nil(t, err)
+
+	// check for metrics
+	require.Eventually(t, func() bool {
+		payload := getHTTPMetric(t)
+		return strings.Contains(payload, "keptn_analysis_result")
+	}, 60*time.Second, 1*time.Second)
+	require.Eventually(t, func() bool {
+		payload := getHTTPMetric(t)
+		return strings.Contains(payload, "keptn_objective_result")
+	}, 60*time.Second, 1*time.Second)
+
+}
+
+func getHTTPMetric(t *testing.T) string {
+	cli := &http.Client{}
+	r, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:2222/metrics", nil)
+	resp, err := cli.Do(r)
+	require.Nil(t, err)
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(resp.Body)
+	require.Nil(t, err)
+	return buf.String()
+}
+
 func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()
-	metrics, err := SetupMetric()
-	require.Nil(t, err)
+	metrics, _ := SetupMetric()
 
 	tests := []struct {
 		name    string
@@ -106,71 +185,6 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestAnalysisReconciler_ExposeMetrics(t *testing.T) {
-	serveMetrics := func() {
-		fmt.Printf("serving metrics at localhost:2222/metrics")
-
-		http.Handle("/metrics", promhttp.Handler())
-		err := http.ListenAndServe(":2222", nil)
-		if err != nil {
-			fmt.Printf("error serving http: %v", err)
-			return
-		}
-	}
-	go serveMetrics()
-
-	analysis, analysisDef, template, _ := getTestCRDs()
-	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
-	res := metricstypes.AnalysisResult{
-		Pass: true,
-		ObjectiveResults: []metricstypes.ObjectiveResult{
-			{
-				Objective: &analysisDef.Spec.Objectives[0],
-			},
-		},
-	}
-	metrics, err := SetupMetric()
-	require.Nil(t, err)
-
-	req := controllerruntime.Request{
-		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
-	}
-	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
-		mymock := fake.IAnalysisPoolMock{
-			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
-				return map[string]metricsapi.ProviderResult{}, nil
-			},
-		}
-		return ctx, &mymock
-	}
-
-	a := &AnalysisReconciler{
-		Client:                fakeclient,
-		Scheme:                fakeclient.Scheme(),
-		Log:                   testr.New(t),
-		MaxWorkers:            2,
-		NewWorkersPoolFactory: mockFactory,
-		Metrics:               metrics,
-		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
-				return res
-			}},
-	}
-	_, err = a.Reconcile(context.TODO(), req)
-	require.Nil(t, err)
-	cli := &http.Client{}
-	r, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:2222/metrics", nil)
-	resp, err := cli.Do(r)
-	require.Nil(t, err)
-	buf := new(bytes.Buffer)
-	_, err = buf.ReadFrom(resp.Body)
-	require.Nil(t, err)
-	newStr := buf.String()
-	// check for metrics
-	require.Contains(t, newStr, "keptn_analysis_result")
-	require.Contains(t, newStr, "keptn_objective_result")
 }
 
 func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsapi.AnalysisValueTemplate, metricsapi.KeptnMetricsProvider) {

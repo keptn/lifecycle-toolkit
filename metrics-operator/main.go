@@ -185,7 +185,8 @@ func main() {
 		// OTel Setup
 		metrics, err := analysiscontroller.SetupMetric()
 		if err != nil {
-			setupLog.Error(err, "unable to create metric keptn_objective_result")
+			setupLog.Error(err, "unable to create metric keptn_analysis_result/keptn_objective_result")
+			os.Exit(1)
 		}
 
 		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")

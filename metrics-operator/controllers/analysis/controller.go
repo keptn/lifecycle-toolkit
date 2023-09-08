@@ -144,7 +144,7 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
-	a.reportResultsAsPromMetric(eval, analysis)
+	go a.reportResultsAsPromMetric(eval, analysis)
 	return a.updateStatus(ctx, analysis)
 }
 

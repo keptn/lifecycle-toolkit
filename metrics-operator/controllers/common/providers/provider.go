@@ -23,7 +23,7 @@ type KeptnSLIProvider interface {
 	FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
 }
 
-type ProviderFactory func(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error)
+type NewProviderFactory func(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error)
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
 func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {

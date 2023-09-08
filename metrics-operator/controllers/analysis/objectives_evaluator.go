@@ -16,7 +16,7 @@ type IObjectivesEvaluator interface {
 
 type ObjectivesEvaluator struct {
 	*metricsapi.Analysis
-	providers.ProviderFactory
+	providers.NewProviderFactory
 	client.Client
 	log     logr.Logger
 	results chan metricsapi.ProviderResult
@@ -24,7 +24,7 @@ type ObjectivesEvaluator struct {
 }
 
 func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
-	provider, err := oe.ProviderFactory(providerType, oe.log, oe.Client)
+	provider, err := oe.NewProviderFactory(providerType, oe.log, oe.Client)
 	if err != nil {
 		oe.log.Error(err, "Failed to get the correct Provider")
 		oe.cancel()

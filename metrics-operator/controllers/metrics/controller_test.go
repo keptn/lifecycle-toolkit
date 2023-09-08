@@ -10,6 +10,7 @@ import (
 	"github.com/go-logr/logr/testr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,9 +34,10 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 
 	client := fake.NewClient(&provider)
 	r := &KeptnMetricReconciler{
-		Client: client,
-		Scheme: client.Scheme(),
-		Log:    testr.New(t),
+		Client:             client,
+		Scheme:             client.Scheme(),
+		Log:                testr.New(t),
+		NewProviderFactory: providers.NewProvider,
 	}
 
 	// fetch existing provider based on source
@@ -222,9 +224,10 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, metric6, metric7, unsupportedProvider, supportedProvider, oldSupportedProvider)
 
 	r := &KeptnMetricReconciler{
-		Client: client,
-		Scheme: client.Scheme(),
-		Log:    testr.New(t),
+		Client:             client,
+		Scheme:             client.Scheme(),
+		Log:                testr.New(t),
+		NewProviderFactory: providers.NewProvider,
 	}
 
 	tests := []struct {

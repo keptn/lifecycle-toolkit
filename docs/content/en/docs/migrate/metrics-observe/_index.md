@@ -1,16 +1,9 @@
 ---
-title: Migrate Quality Gates to Keptn metrics and evaluations
+title: Migrate Quality Gates
 description: How to translate Quality Gates into Keptn Metrics and evaluations
 weight: 40
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
-
-> **Note**
-This section is under development.
-Information that is published here has been reviewed for technical accuracy
-but the format and content is still evolving.
-We hope you will contribute your experiences
-and questions that you have.
 
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
 Keptn KeptnMetrics and KeptnEvaluationDefintions.
@@ -53,8 +46,8 @@ Notice the paradigm differences when implementing Keptn evaluations:
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
   resources.
 * Keptn v1 calculations that use weighting and scoring
-  cannot currently be converted to `KeptnEvaluationDefinition` resources
-  but are under development.
+  cannot currently be implemented for Keptn
+  but this functionality is under development.
 
 For more information about working with Keptn metrics, see the
 [Keptn Metrics](../../implementing/evaluatemetrics.md)

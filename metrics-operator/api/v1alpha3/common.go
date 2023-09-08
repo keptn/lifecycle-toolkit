@@ -18,3 +18,15 @@ func (o *ObjectReference) GetNamespace(defaultNamespace string) string {
 
 	return defaultNamespace
 }
+
+type AnalysisState string
+
+const (
+	StatePending     AnalysisState = "Pending"
+	StateProgressing AnalysisState = "Progressing"
+	StateCompleted   AnalysisState = "Completed"
+)
+
+func (s AnalysisState) IsPending() bool {
+	return s == StatePending
+}

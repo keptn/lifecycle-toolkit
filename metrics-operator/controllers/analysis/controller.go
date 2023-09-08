@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"golang.org/x/exp/maps"
@@ -72,35 +73,21 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//find AnalysisDefinition to have the collection of Objectives
-	analysisDefNamespace := analysis.Spec.AnalysisDefinition.GetNamespace(analysis.Namespace)
-	analysisDef := &metricsapi.AnalysisDefinition{}
-	err := a.Client.Get(ctx,
-		types.NamespacedName{
-			Name:      analysis.Spec.AnalysisDefinition.Name,
-			Namespace: analysisDefNamespace},
-		analysisDef,
-	)
-
+	analysisDef, err := a.retrieveAnalysisDefinition(ctx, analysis)
 	if err != nil {
-		if errors.IsNotFound(err) {
-			a.Log.Info(
-				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeue",
-					analysis.Spec.AnalysisDefinition.Name,
-					analysisDefNamespace),
-			)
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-		}
-		a.Log.Error(err, "Failed to retrieve the AnalysisDefinition")
-		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+		// do not return error, as here we should always try to fetch the definition again
+		// in the next reconcile loop
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	}
+
+	if analysis.Status.State.IsPending() {
+		analysis.Status.State = v1alpha3.StateProgressing
 	}
 
 	var done map[string]metricsapi.ProviderResult
 	todo := analysisDef.Spec.Objectives
 	if analysis.Status.StoredValues != nil {
 		todo, done = extractMissingObjectives(analysisDef.Spec.Objectives, analysis.Status.StoredValues)
-		if len(todo) == 0 {
-			return ctrl.Result{}, nil
-		}
 	}
 
 	//create multiple workers handling the Objectives
@@ -110,8 +97,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		a.Log.Error(err, "Failed to collect all values required for the Analysis, caching collected values")
 		analysis.Status.StoredValues = res
-		err = a.updateStatus(ctx, analysis)
-		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, a.updateStatus(ctx, analysis)
 	}
 
 	maps.Copy(res, done)
@@ -135,10 +121,9 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 	} else {
 		analysis.Status.Raw = string(analysisResultJSON)
 	}
-	if eval.Warning {
-		analysis.Status.Warning = true
-	}
+	analysis.Status.Warning = eval.Warning
 	analysis.Status.Pass = eval.Pass
+	analysis.Status.State = metricsapi.StateCompleted
 	return a.updateStatus(ctx, analysis)
 }
 
@@ -155,6 +140,38 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&metricsapi.Analysis{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(a)
+}
+
+func (a *AnalysisReconciler) retrieveAnalysisDefinition(ctx context.Context, analysis *metricsapi.Analysis) (*metricsapi.AnalysisDefinition, error) {
+	analysisDef := &metricsapi.AnalysisDefinition{}
+	err := a.Client.Get(ctx,
+		types.NamespacedName{
+			Name:      analysis.Spec.AnalysisDefinition.Name,
+			Namespace: a.determineAnalysisDefNamespace(analysis)},
+		analysisDef,
+	)
+
+	if err != nil {
+		if errors.IsNotFound(err) {
+			a.Log.Info(
+				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeueing",
+					analysis.Spec.AnalysisDefinition.Name,
+					analysis.Spec.AnalysisDefinition.Name),
+			)
+			return nil, err
+		}
+		a.Log.Error(err, "Failed to retrieve the AnalysisDefinition")
+		return nil, err
+	}
+
+	return analysisDef, nil
+}
+
+func (a *AnalysisReconciler) determineAnalysisDefNamespace(analysis *metricsapi.Analysis) string {
+	if analysis.Spec.AnalysisDefinition.Namespace != "" {
+		return analysis.Spec.AnalysisDefinition.Namespace
+	}
+	return a.Namespace
 }
 
 func extractMissingObjectives(objectives []metricsapi.Objective, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {

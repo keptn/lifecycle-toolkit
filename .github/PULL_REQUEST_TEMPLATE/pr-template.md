@@ -26,7 +26,7 @@ Please also provide information about any automatic tests that you added.
 - [ ] My PR fulfills the Definition of Done of the corresponding issue and not more (or parts if the issue is separated
   into multiple PRs)
 - [ ] I used descriptive commit messages to help reviewers understand my thought process
-- [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO) 
+- [ ] I signed off all my commits according to the Developer Certificate of Origin (DCO)
   see [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines)
 - [ ] My PR title is formatted according to the semantic PR conventions described in
   the [Contribution Guide](https://lifecycle.keptn.sh/contribute/docs/contribution-guidelines)

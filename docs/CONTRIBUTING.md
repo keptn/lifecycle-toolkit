@@ -239,7 +239,7 @@ We have staging and production levels for our documentation which are as follows
 
 Let's take a look what happens when your changes are merged in `main` and `page` branch respectively.
 
-### Development documentation (Staging)
+## Development documentation (Staging)
 
 This page reflects the current development status of the documentation.
 It will be built regularly and can be easily accessed.

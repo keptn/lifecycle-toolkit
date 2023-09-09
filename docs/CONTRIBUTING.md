@@ -241,7 +241,9 @@ Let's take a look what happens when your changes are merged in `main` and `page`
 
 ## Development documentation (Staging)
 
-This page reflects the current development status of the documentation.
+This page contains the documentation being staged for the next Keptn release.
+It contains information about new and changed features and functionality
+as well as general documentation improvements.
 It is built regularly and can be easily accessed from the `Releases` tab on the documentation site.
 
 * build: on each push to `main` with documentation changes

@@ -245,6 +245,7 @@ This page reflects the current development status of the documentation.
 It will be built regularly and can be easily accessed.
 
 * build: on each push to `main` with documentation changes
+   from a user's local branch, from the github editor, or from codespaces
 * build-environment: main
 * config folder: [main](./config/staging/)
 

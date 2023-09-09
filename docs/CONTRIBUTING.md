@@ -251,7 +251,7 @@ It is built regularly and can be easily accessed from the `Releases` tab on the 
 
 It should allow bleeding-edge users and contributors to see the current state and help with debugging etc.
 
-### Official documentation (Production)
+## Latest -- Official documentation (Production)
 
 This documentation set contains all released versions of KLT and is stored in an orphaned branch called `page`.
 

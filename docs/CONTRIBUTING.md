@@ -255,7 +255,15 @@ It should allow bleeding-edge users and contributors to see the current state an
 
 ## Latest -- Official documentation (Production)
 
-This documentation set contains all released versions of KLT and is stored in an orphaned branch called `page`.
+This documentation set contains documentation for the current KLT release
+and is stored in an orphaned branch called `page`.
+When a new KLT version is released,
+the content of the `development` branch is rolled to this branch.
+Note also that doc modifications made through the
+"Edit this page" facility are merged directly into this branch.
+
+This uses the `latest` label so that links to a doc page
+remain valid across software and documentation updates. 
 
 * build: on each push to `page` with documentation changes
 * build-environment: production

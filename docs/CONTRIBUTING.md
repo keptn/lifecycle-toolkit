@@ -251,7 +251,13 @@ It is built regularly and can be easily accessed from the `Releases` tab on the 
 * build-environment: main
 * config folder: [main](./config/staging/)
 
-It should allow bleeding-edge users and contributors to see the current state and help with debugging etc.
+This is the staged version of the documentation for the next Keptn release.
+PRs generated from a user's local branch, from the github editor, or from codespaces
+are merged into this branch.
+
+This branch is promoted to `latest` when a new Keptn version is released.
+On rare occasions, a PR that contains critical improvements to the documentation
+may be silently promoted to `latest` without a software release.
 
 ## Latest -- Official documentation (Production)
 

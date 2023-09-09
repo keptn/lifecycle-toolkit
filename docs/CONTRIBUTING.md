@@ -242,7 +242,7 @@ Let's take a look what happens when your changes are merged in `main` and `page`
 ## Development documentation (Staging)
 
 This page reflects the current development status of the documentation.
-It will be built regularly and can be easily accessed.
+It is built regularly and can be easily accessed from the `Releases` tab on the documentation site.
 
 * build: on each push to `main` with documentation changes
    from a user's local branch, from the github editor, or from codespaces

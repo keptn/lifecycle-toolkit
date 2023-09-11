@@ -32,7 +32,7 @@ before the workload or application is deployed.
 The example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
 file defines the
-[KeptnMetric](../yaml-crd-ref/metric) resource
+[KeptnMetric](../yaml-crd-ref/metric.md) resource
 that is named  `available-cpus`:
 
 ```yaml
@@ -58,7 +58,7 @@ To integrate your `KeptnEvaluation` resource, you must:
   to include each evaluation and task you want to run
   pre- and post-deployment for the specific workloads.
 * Manually edit all
-  [KeptnApp](../../yaml-crd-ref/app.md) resources
+  [KeptnApp](../yaml-crd-ref/app.md) resources
   to specify the evaluations to be run
   pre- and post-deployment for the `KeptnApp` itself.
 

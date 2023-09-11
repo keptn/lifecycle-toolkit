@@ -32,7 +32,7 @@ type KeptnSLIProviderMock struct {
 	EvaluateQueryFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
 
 	// EvaluateQueryForStep mocks the EvaluateQueryForStep method.
-	EvaluateQueryForStepFunc func (ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
+	EvaluateQueryForStepFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
 
 	// FetchAnalysisValueFunc mocks the FetchAnalysisValue method.
 	FetchAnalysisValueFunc func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
@@ -69,9 +69,9 @@ type KeptnSLIProviderMock struct {
 			Provider *metricsapi.KeptnMetricsProvider
 		}
 	}
-	lockEvaluateQuery      		sync.RWMutex
-	lockEvaluateQueryForStep 	sync.RWMutex
-	lockFetchAnalysisValue 		sync.RWMutex
+	lockEvaluateQuery        sync.RWMutex
+	lockEvaluateQueryForStep sync.RWMutex
+	lockFetchAnalysisValue   sync.RWMutex
 }
 
 // EvaluateQuery calls EvaluateQueryFunc.

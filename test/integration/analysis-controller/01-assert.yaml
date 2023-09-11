@@ -9,4 +9,4 @@ spec:
 status:
   pass: true
   # yamllint disable-line rule:line-length
-  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}}},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}}},"pass":true},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
+  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}},"fulfilled":false},"warning":false,"pass":true},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true,"warning":false}'

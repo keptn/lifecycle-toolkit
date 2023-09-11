@@ -82,6 +82,10 @@ vet: ## Run go vet against code.
 e2e-test: manifests envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out
 
+.PHONY: run-unit-tests
+run-unit-tests:
+	go test $(shell go list ./... | grep -v /test/)
+
 .PHONY: test
 test: manifests fmt vet envtest## Run tests.
 	go test ./pkg/... -coverprofile cover-pkg.out

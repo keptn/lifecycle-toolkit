@@ -96,6 +96,10 @@ test: manifests fmt vet generate envtest ## Run tests.
 	cat cover-cmd.out cover-main.out cover-pkg.out cover-apis.out >> cover.out
 	rm cover-cmd.out cover-pkg.out cover-main.out cover-apis.out
 
+.PHONY: run-unit-tests
+run-unit-tests:
+	go test $(shell go list ./... | grep -v /test/) -coverprofile cover.out
+
 .PHONY: component-test
 component-test: manifests generate envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/app/... -v -timeout 30m -coverprofile cover-app.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp/..."

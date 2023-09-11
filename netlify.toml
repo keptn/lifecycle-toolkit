@@ -1,8 +1,8 @@
-[[redirects]]
 # https://docs.netlify.com/routing/redirects/redirect-options/#custom-404-page-handling
-from = "/*"
-to = "/404/"
-status = 404
+[[redirects]]
+  from = "/*"
+  to = "/404/"
+  status = 404
 
 [build]
 base = "docs/"

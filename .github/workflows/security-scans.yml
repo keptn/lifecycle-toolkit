@@ -111,7 +111,7 @@ jobs:
           cache: false
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'true'
@@ -234,7 +234,7 @@ jobs:
           check-latest: true
 
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest

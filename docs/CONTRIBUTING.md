@@ -234,8 +234,18 @@ Add "WIP" (Work in Progress) or "Draft" to the title if the PR is not yet ready 
 New writing goes to the `main` branch and can be viewed on the Releases -> development dropdown menu.
 We have staging and production levels for our documentation which are as follows:
 
-1. Development documentation aka staging (build of `main` branch) - [link](https://main.lifecycle.keptn.sh)
-2. Official documentation aka production (build of `page` branch) - [link](https://lifecycle.keptn.sh)
+* **latest:** official documentation of the current Keptn release
+   - [link](https://lifecycle.keptn.sh).
+      This is the build of the `page` branch.
+   
+* **development:** documentation being staged for the next Keptn release
+   - [link](https://main.lifecycle.keptn.sh).
+   This is the latest build of the `main` branch.
+* **previous versions:** documentation for earlier releases.
+   These are listed at
+   [link](https://github.com/keptn/lifecycle-toolkit/tree/page/docs/content/en).
+* **contribute:** current version of the "Contribute" guide
+   that is available from a tab on the documentation site.
 
 Let's take a look what happens when your changes are merged in `main` and `page` branch respectively.
 

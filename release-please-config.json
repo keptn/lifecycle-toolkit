@@ -73,7 +73,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "converter/sli_converter.md",
+        "converter/slo_converter.md"
       ]
     },
     "runtimes/python-runtime": {

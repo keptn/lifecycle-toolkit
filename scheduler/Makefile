@@ -83,7 +83,7 @@ e2e-test: manifests envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out
 
 .PHONY: unit-test
-test: manifests fmt vet envtest## Run tests.
+unit-test: manifests fmt vet envtest## Run tests.
 	go test ./pkg/... -coverprofile cover-pkg.out
 	go test ./cmd/scheduler -coverprofile cover-main.out
 	sed -i '/mode: set/d' cover-pkg.out

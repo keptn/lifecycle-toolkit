@@ -28,3 +28,9 @@ HUGO_ENV = "production"
 # important information regarding naming
 # https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
 command = "HUGOxPARAMSxGITHUB_BRANCH=$BRANCH HUGOxPARAMSxCURRENTVERSION=$BRANCH hugo -b $URL"
+
+[[redirects]]
+# https://docs.netlify.com/routing/redirects/redirect-options/#custom-404-page-handling
+from = "/*"
+to = "/404/"
+status = 404

@@ -28,7 +28,7 @@ spec:
 The `evaluationTarget` is set to be `>4`,
 so this evaluation ensures that more than 4 CPUs are available
 before the workload or application is deployed.
- 
+
 The example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
 file defines the

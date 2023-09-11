@@ -5,7 +5,7 @@ package fake
 
 import (
 	"context"
-	 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"sync"
 )
 

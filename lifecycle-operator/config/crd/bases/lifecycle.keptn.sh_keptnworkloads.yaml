@@ -208,7 +208,7 @@ spec:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
                   namespace.
                 items:
                   type: string
@@ -217,7 +217,7 @@ spec:
                 description: PostDeploymentTasks is a list of all tasks to be performed
                   during the post-deployment phase of the KeptnWorkload. The items
                   of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnWorkload, or in the KLT namespace.
+                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -225,7 +225,7 @@ spec:
                 description: PreDeploymentEvaluations is a list of all evaluations
                   to be performed during the pre-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
                   namespace.
                 items:
                   type: string
@@ -234,7 +234,7 @@ spec:
                 description: PreDeploymentTasks is a list of all tasks to be performed
                   during the pre-deployment phase of the KeptnWorkload. The items
                   of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnApp, or in the KLT namespace.
+                  in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array

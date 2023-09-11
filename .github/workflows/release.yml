@@ -32,7 +32,7 @@ jobs:
       build-matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run release please
         uses: google-github-actions/release-please-action@v3
@@ -128,7 +128,7 @@ jobs:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -210,7 +210,7 @@ jobs:
     if: needs.release-please.outputs.klt-release-created == 'true'
     with:
       tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
-    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.4
+    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.5
     secrets: inherit
 
   update-examples:

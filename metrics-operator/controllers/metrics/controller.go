@@ -18,10 +18,14 @@ package metrics
 
 import (
 	"context"
+	"fmt"
+	"sort"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/aggregation"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -94,9 +98,9 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		r.Log.Error(err2, "Failed to get the correct Metric Provider")
 		return ctrl.Result{Requeue: false}, err2
 	}
-
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
-	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
+
+	value, rawValue, err := r.getResults(ctx, metric, provider, metricProvider)
 	if err != nil {
 		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		metric.Status.ErrMsg = err.Error()
@@ -116,6 +120,33 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	return reconcile, err
+}
+
+func (r *KeptnMetricReconciler) getResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	if metric.Spec.Range != nil && metric.Spec.Range.Step != "" {
+		return r.getStepQueryResults(ctx, metric, provider, metricProvider)
+	}
+	return r.getQueryResults(ctx, metric, provider, metricProvider)
+}
+func (r *KeptnMetricReconciler) getQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		return "", cupSize(rawValue), err
+	}
+	return value, cupSize(rawValue), nil
+}
+func (r *KeptnMetricReconciler) getStepQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		return "", cupSize(rawValue), err
+	}
+	aggValue, err := aggregateValues(value, metric.Spec.Range.Aggregation)
+	if err != nil {
+		return "", nil, err
+	}
+	return aggValue, cupSize(rawValue), nil
 }
 
 func cupSize(value []byte) []byte {
@@ -141,4 +172,43 @@ func (r *KeptnMetricReconciler) fetchProvider(ctx context.Context, namespacedMet
 		return nil, err
 	}
 	return provider, nil
+}
+
+func aggregateValues(stringSlice []string, aggFunc string) (string, error) {
+	floatSlice, err := stringSliceToFloatSlice(stringSlice)
+	if err != nil {
+		return "", err
+	}
+	var aggValue float64
+	switch aggFunc {
+	case "max":
+		aggValue = aggregation.CalculateMax(floatSlice)
+	case "min":
+		aggValue = aggregation.CalculateMin(floatSlice)
+	case "median":
+		aggValue = aggregation.CalculateMedian(floatSlice)
+	case "avg":
+		aggValue = aggregation.CalculateAverage(floatSlice)
+	case "p90":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 90)
+	case "p95":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 95)
+	case "p99":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 99)
+	}
+	return fmt.Sprintf("%v", aggValue), nil
+}
+
+func stringSliceToFloatSlice(strSlice []string) ([]float64, error) {
+	floatSlice := make([]float64, len(strSlice))
+
+	for i, str := range strSlice {
+		floatValue, err := strconv.ParseFloat(str, 64)
+		if err != nil {
+			return nil, err
+		}
+		floatSlice[i] = floatValue
+	}
+
+	return floatSlice, nil
 }

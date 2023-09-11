@@ -19,6 +19,7 @@ import (
 //go:generate moq -pkg fake -skip-ensure -out ./fake/provider_mock.go . KeptnSLIProvider
 type KeptnSLIProvider interface {
 	EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
+	EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
 	FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
 }
 

@@ -31,6 +31,9 @@ type KeptnSLIProviderMock struct {
 	// EvaluateQueryFunc mocks the EvaluateQuery method.
 	EvaluateQueryFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
 
+	// EvaluateQueryForStep mocks the EvaluateQueryForStep method.
+	EvaluateQueryForStepFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
+
 	// FetchAnalysisValueFunc mocks the FetchAnalysisValue method.
 	FetchAnalysisValueFunc func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
 
@@ -38,6 +41,15 @@ type KeptnSLIProviderMock struct {
 	calls struct {
 		// EvaluateQuery holds details about calls to the EvaluateQuery method.
 		EvaluateQuery []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Metric is the metric argument value.
+			Metric metricsapi.KeptnMetric
+			// Provider is the provider argument value.
+			Provider metricsapi.KeptnMetricsProvider
+		}
+		// EvaluateQuery holds details about calls to the EvaluateQuery method.
+		EvaluateQueryForStep []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// Metric is the metric argument value.
@@ -57,8 +69,9 @@ type KeptnSLIProviderMock struct {
 			Provider *metricsapi.KeptnMetricsProvider
 		}
 	}
-	lockEvaluateQuery      sync.RWMutex
-	lockFetchAnalysisValue sync.RWMutex
+	lockEvaluateQuery        sync.RWMutex
+	lockEvaluateQueryForStep sync.RWMutex
+	lockFetchAnalysisValue   sync.RWMutex
 }
 
 // EvaluateQuery calls EvaluateQueryFunc.
@@ -98,6 +111,46 @@ func (mock *KeptnSLIProviderMock) EvaluateQueryCalls() []struct {
 	mock.lockEvaluateQuery.RLock()
 	calls = mock.calls.EvaluateQuery
 	mock.lockEvaluateQuery.RUnlock()
+	return calls
+}
+
+// EvaluateQueryForStep calls EvaluateQueryForStepFunc.
+func (mock *KeptnSLIProviderMock) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+	if mock.EvaluateQueryFunc == nil {
+		panic("KeptnSLIProviderMock.EvaluateQueryForStepFunc: method is nil but KeptnSLIProvider.EvaluateQueryForStep was just called")
+	}
+	callInfo := struct {
+		Ctx      context.Context
+		Metric   metricsapi.KeptnMetric
+		Provider metricsapi.KeptnMetricsProvider
+	}{
+		Ctx:      ctx,
+		Metric:   metric,
+		Provider: provider,
+	}
+	mock.lockEvaluateQueryForStep.Lock()
+	mock.calls.EvaluateQueryForStep = append(mock.calls.EvaluateQueryForStep, callInfo)
+	mock.lockEvaluateQueryForStep.Unlock()
+	return mock.EvaluateQueryForStepFunc(ctx, metric, provider)
+}
+
+// EvaluateQueryForStepCalls gets all the calls that were made to EvaluateQueryForStep.
+// Check the length with:
+//
+//	len(mockedKeptnSLIProvider.EvaluateQueryForStepCalls())
+func (mock *KeptnSLIProviderMock) EvaluateQueryForStepCalls() []struct {
+	Ctx      context.Context
+	Metric   metricsapi.KeptnMetric
+	Provider metricsapi.KeptnMetricsProvider
+} {
+	var calls []struct {
+		Ctx      context.Context
+		Metric   metricsapi.KeptnMetric
+		Provider metricsapi.KeptnMetricsProvider
+	}
+	mock.lockEvaluateQueryForStep.RLock()
+	calls = mock.calls.EvaluateQueryForStep
+	mock.lockEvaluateQueryForStep.RUnlock()
 	return calls
 }
 

@@ -68,12 +68,15 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 		// Check if Evaluation is already created
 		if evaluationStatus.Name != "" {
 			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.Name, Namespace: piWrapper.GetNamespace()}, evaluation)
-			if err != nil && errors.IsNotFound(err) {
-				evaluationStatus.Name = ""
-			} else if err != nil {
-				return nil, summary, err
+			if err != nil {
+				if errors.IsNotFound(err) {
+					evaluationStatus.Name = ""
+				} else {
+					return nil, summary, err
+				}
+			} else {
+				evaluationExists = true
 			}
-			evaluationExists = true
 		}
 
 		// Create new Evaluation if it does not exist

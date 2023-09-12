@@ -145,6 +145,52 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
+	metric6 := &metricsapi.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric6",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
+		},
+		Status: metricsapi.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
+	metric7 := &metricsapi.KeptnMetric{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "mymetric7",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricSpec{
+			Provider: metricsapi.ProviderRef{
+				Name: "prometheus",
+			},
+			Query:                "",
+			FetchIntervalSeconds: 10,
+			Range: &metricsapi.RangeSpec{
+				Interval:    "5m",
+				Step:        "1m",
+				Aggregation: "max",
+			},
+		},
+		Status: metricsapi.KeptnMetricStatus{
+			Value:       "12",
+			RawValue:    nil,
+			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+		},
+	}
+
 	unsupportedProvider := &metricsapi.KeptnMetricsProvider{
 		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -173,7 +219,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, unsupportedProvider, supportedProvider, oldSupportedProvider)
+	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, metric6, metric7, unsupportedProvider, supportedProvider, oldSupportedProvider)
 
 	r := &KeptnMetricReconciler{
 		Client: client,
@@ -312,4 +358,154 @@ func Test_cupSize(t *testing.T) {
 	require.Equal(t, len(res2), len(mySmallSlice))
 	require.Equal(t, len(res3), MB)
 
+}
+
+func Test_AggregateValues(t *testing.T) {
+	tests := []struct {
+		name        string
+		aggFunc     string
+		stringSlice []string
+		want        string
+	}{
+		{
+			name:        "test-max-for-even-length",
+			aggFunc:     "max",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
+		},
+		{
+			name:        "test-max-for-odd-length",
+			aggFunc:     "max",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "5",
+		},
+		{
+			name:        "test-min-for-even-length",
+			aggFunc:     "min",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "1",
+		},
+		{
+			name:        "test-min-for-odd-length",
+			aggFunc:     "min",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "1",
+		},
+		{
+			name:        "test-median-for-even-length",
+			aggFunc:     "median",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "2.5",
+		},
+		{
+			name:        "test-median-for-odd-length",
+			aggFunc:     "median",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "3",
+		},
+		{
+			name:        "test-avg-for-even-length",
+			aggFunc:     "avg",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "2.5",
+		},
+		{
+			name:        "test-avg-for-odd-length",
+			aggFunc:     "avg",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "3",
+		},
+		{
+			name:        "test-p90-for-even-length",
+			aggFunc:     "p90",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
+		},
+		{
+			name:        "test-p90-for-odd-length",
+			aggFunc:     "p90",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "5",
+		},
+		{
+			name:        "test-p95-for-even-length",
+			aggFunc:     "p95",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
+		},
+		{
+			name:        "test-p95-for-odd-length",
+			aggFunc:     "p95",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "5",
+		},
+		{
+			name:        "test-p99-for-even-length",
+			aggFunc:     "p99",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "4",
+		},
+		{
+			name:        "test-p99-for-odd-length",
+			aggFunc:     "p99",
+			stringSlice: []string{"1", "2", "3", "4", "5"},
+			want:        "5",
+		},
+		{
+			name:        "test-max-empty-string",
+			aggFunc:     "max",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-min-empty-string",
+			aggFunc:     "min",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-median-empty-string",
+			aggFunc:     "median",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-avg-empty-string",
+			aggFunc:     "avg",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p90-empty-string",
+			aggFunc:     "p90",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p95-empty-string",
+			aggFunc:     "p95",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "test-p99-empty-string",
+			aggFunc:     "p99",
+			stringSlice: []string(nil),
+			want:        "0",
+		},
+		{
+			name:        "wrong-aggFunc",
+			aggFunc:     "p50",
+			stringSlice: []string{"1", "2", "3", "4"},
+			want:        "0",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Log(tt.name)
+			res, err := aggregateValues(tt.stringSlice, tt.aggFunc)
+			require.Equal(t, tt.want, res)
+			require.Nil(t, err)
+		})
+	}
 }

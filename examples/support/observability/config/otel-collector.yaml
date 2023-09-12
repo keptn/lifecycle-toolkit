@@ -103,7 +103,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.60.0
+          image: otel/opentelemetry-collector:0.84.0
           name: otel-collector
           resources:
             limits:

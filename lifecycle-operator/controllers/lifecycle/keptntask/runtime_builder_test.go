@@ -226,6 +226,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
+					AppVersion:   "0.1.0",
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},
@@ -258,6 +259,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
+					AppVersion:   "0.1.0",
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},
@@ -285,6 +287,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Context: klcv1alpha3.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
+					AppVersion:   "0.1.0",
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},

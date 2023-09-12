@@ -113,11 +113,11 @@ If used, these fields must be populated manually:
 Kubernetes defines
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 but does not define applications.
-The Keptn Lifecycle Toolkit adds the concept of applications
+Keptn adds the concept of applications
 defined as a set of workloads that can be executed.
 A `KeptnApp` resource is added
 into the repository of the deployment engine
-(ArgoCD, Flux, etc)
+(ArgoCD, Flux, etc.)
 and is then deployed by that deployment engine.
 
 A `KeptnApp` resource is created automatically, using the
@@ -126,7 +126,7 @@ feature to generate a `KeptnApp` resource
 based on the
 [basic annotations](../implementing/integrate/#basic-annotations)
 that are applied to any of the workload resources.
-This allows you to use the KLT observability features for existing resources
+This allows you to use the Keptn observability features for existing resources
 without manually populating any Keptn related resources.
 
 The release lifecycle management feature
@@ -171,8 +171,8 @@ spec:
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Working with tasks](../implementing/tasks)
-- [Architecture of KeptnWorkloads and KeptnTasks](../concepts/architecture/keptn-apps/)
+- [Architecture of KeptnWorkloads and KeptnTasks](../architecture/keptn-apps/)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../getting-started/orchestrate)
+- [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
 - [Restart an Application Deployment](../implementing/restart-application-deployment/)

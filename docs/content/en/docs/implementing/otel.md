@@ -5,7 +5,7 @@ weight: 140
 ---
 
 
-The Keptn Lifecycle Toolkit (KLT) makes any Kubernetes deployment observable.
+Keptn makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace
 of what Kubernetes does in the context of a Deployment.
 To do this,
@@ -18,12 +18,12 @@ This means that:
 
 - You can readily see why a deployment takes so long
   or why it fails, even when using multiple deployment strategies.
-- KLT can capture DORA metrics and expose them as OpenTelemetry metrics
+- Keptn can capture DORA metrics and expose them as OpenTelemetry metrics
 
 The observability data is an amalgamation of the following:
 
 - DORA metrics are collected out of the box
-  when the Lifecycle Toolkit is enabled
+  when Keptn is enabled
 - OpenTelemetry runs traces that show
   everything that happens in the Kubernetes cluster
 - Custom Keptn metrics that you can use to monitor
@@ -33,7 +33,7 @@ All this information can be displayed with dashboard tools
 such as Grafana.
 
 For an introduction to using OpenTelemetry with Keptn metrics, see the
-[Standardize observability](../getting-started/observability)
+[Standardize observability](../intro/usecase-observability.md)
 getting started guide.
 
 ## DORA metrics
@@ -52,7 +52,7 @@ DORA metrics provide information such as:
 - Deployment time between versions
 - Average time between versions.
 
-The Keptn Lifecycle Toolkit starts collecting these metrics
+Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](integrate/#basic-annotations)
 to the Workload resource.
@@ -86,7 +86,7 @@ or whatever dashboard application you choose.
 
 ### Requirements for OpenTelemetry
 
-To access OpenTelemetry metrics with the Keptn Lifecycle Toolkit,
+To access OpenTelemetry metrics with Keptn,
 you must have the following on your cluster:
 
 - An OpenTelemetry collector.
@@ -113,7 +113,7 @@ you need:
   [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator#getting-started).
 
 To install Prometheus into the `monitoring` namespace,
-using the default configuration included with KLT,
+using the default configuration included with Keptn,
 use the following commands.
 Use similar commands if you define a different configuration::
 
@@ -123,14 +123,14 @@ kubectl apply --server-side -f config/prometheus/setup
 kubectl apply -f config/prometheus/
 ```
 
-### Integrate OpenTelemetry into the Keptn Lifecycle Toolkit
+### Integrate OpenTelemetry into Keptn
 
-To integrate OpenTelementry into the Keptn Lifecycle Toolkit:
+To integrate OpenTelemetry into Keptn:
 
 - Apply
   [basic annotations](../implementing/integrate/#basic-annotations)
   for your `Deployment` resource
-  to integrate the Lifecycle Toolkit into your Kubernetes cluster.
+  to integrate Keptn into your Kubernetes cluster.
 - To expose OpenTelemetry metrics,
   define a [KeptnConfig](../yaml-crd-ref/config.md) resource
   that has the `spec.OTelCollectorUrl` field populated
@@ -138,7 +138,7 @@ To integrate OpenTelementry into the Keptn Lifecycle Toolkit:
 
 The
 [otel-collector.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/support/observability/config/otel-collector.yaml)
-is the OpenTelementry manifest file for the PodtatoHead example,
+is the OpenTelemetry manifest file for the PodtatoHead example,
 located in the `config` directory.
 To deploy and configure the OpenTelemetry collector
 using this manifest, the command is:
@@ -177,14 +177,14 @@ kubectl rollout restart deployment \
     -n keptn-lifecycle-toolkit-system keptn-scheduler lifecycle-operator
 ```
 
-KLT begins to collect OpenTelemetry metrics
+Keptn begins to collect OpenTelemetry metrics
 as soon as the `Deployment` resource
-has the basic annotations to integrate KLT in the cluster.
+has the basic annotations to integrate Keptn in the cluster.
 
 ## Access Keptn metrics as OpenTelemetry metrics
 
 Keptn metrics can be exposed as OpenTelemetry (OTel) metrics
-via port `9999` of the KLT metrics-operator.
+via port `9999` of the Keptn metrics-operator.
 
 To access the metrics, use the following command:
 

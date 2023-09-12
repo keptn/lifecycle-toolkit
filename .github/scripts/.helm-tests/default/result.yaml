@@ -10,10 +10,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -23,10 +23,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -36,10 +36,10 @@ metadata:
   name: lifecycle-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/deployment.yaml
@@ -49,10 +49,10 @@ metadata:
   name: metrics-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: klt/templates/lifecycle-manager-config.yaml
@@ -62,10 +62,10 @@ metadata:
   name: lifecycle-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   controller_manager_config.yaml: |
@@ -88,10 +88,10 @@ metadata:
   name: metrics-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   controller_manager_config.yaml: |
@@ -114,10 +114,10 @@ metadata:
   name: scheduler-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
   scheduler-config.yaml: |
@@ -144,10 +144,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -158,79 +158,127 @@ spec:
     singular: analysis
   scope: Namespaced
   versions:
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: Analysis is the Schema for the analyses API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+    - additionalPrinterColumns:
+        - jsonPath: .spec.analysisDefinition.name
+          name: AnalysisDefinition
+          type: string
+        - jsonPath: .status.warning
+          name: Warning
+          type: string
+        - jsonPath: .status.pass
+          name: Pass
+          type: string
+      name: v1alpha3
+      schema:
+        openAPIV3Schema:
+          description: Analysis is the Schema for the analyses API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: AnalysisSpec defines the desired state of Analysis
-            properties:
-              analysisDefinition:
-                description: AnalysisDefinition refers to the AnalysisDefinition, a
-                  CRD that stores the AnalysisValuesTemplates
-                properties:
-                  name:
-                    description: Name of the AnalysisDefinition
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: AnalysisSpec defines the desired state of Analysis
+              properties:
+                analysisDefinition:
+                  description: AnalysisDefinition refers to the AnalysisDefinition,
+                    a CRD that stores the AnalysisValuesTemplates
+                  properties:
+                    name:
+                      description: Name defines the name of the referenced object
+                      type: string
+                    namespace:
+                      description: Namespace defines the namespace of the referenced
+                        object
+                      type: string
+                  required:
+                    - name
+                  type: object
+                args:
+                  additionalProperties:
                     type: string
-                required:
-                - name
-                type: object
-              args:
-                additionalProperties:
+                  description: Args corresponds to a map of key/value pairs that can
+                    be used to substitute placeholders in the AnalysisValueTemplate
+                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
+                  type: object
+                timeframe:
+                  description: Timeframe specifies the range for the corresponding query
+                    in the AnalysisValueTemplate
+                  properties:
+                    from:
+                      description: From is the time of start for the query, this field
+                        follows RFC3339 time format
+                      format: date-time
+                      type: string
+                    to:
+                      description: To is the time of end for the query, this field follows
+                        RFC3339 time format
+                      format: date-time
+                      type: string
+                  required:
+                    - from
+                    - to
+                  type: object
+              required:
+                - analysisDefinition
+                - timeframe
+              type: object
+            status:
+              description: AnalysisStatus stores the status of the overall analysis
+                returns also pass or warnings
+              properties:
+                pass:
+                  description: Pass returns whether the SLO is satisfied
+                  type: boolean
+                raw:
+                  description: Raw contains the raw result of the SLO computation
                   type: string
-                description: Args corresponds to a map of key/value pairs that can be
-                  used to substitute placeholders in the AnalysisValueTemplate query.
-                  The placeholder must be the capitalized version of the key; i.e. for
-                  args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
-                type: object
-              timeframe:
-                description: Timeframe specifies the range for the corresponding query
-                  in the AnalysisValueTemplate
-                properties:
-                  from:
-                    description: From is the time of start for the query, this field
-                      follows RFC3339 time format
-                    format: date-time
-                    type: string
-                  to:
-                    description: To is the time of end for the query, this field follows
-                      RFC3339 time format
-                    format: date-time
-                    type: string
-                required:
-                - from
-                - to
-                type: object
-            required:
-            - analysisDefinition
-            - timeframe
-            type: object
-          status:
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
+                storedValues:
+                  additionalProperties:
+                    description: ProviderResult stores reference of already collected
+                      provider query associated to its objective template
+                    properties:
+                      errMsg:
+                        description: ErrMsg stores any possible error at retrieval time
+                        type: string
+                      objectiveReference:
+                        description: Objective store reference to corresponding objective
+                          template
+                        properties:
+                          name:
+                            description: Name defines the name of the referenced object
+                            type: string
+                          namespace:
+                            description: Namespace defines the namespace of the referenced
+                              object
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      value:
+                        description: Value is the value the provider returned
+                        type: string
+                    type: object
+                  description: StoredValues contains all analysis values that have already
+                    been retrieved successfully
+                  type: object
+                warning:
+                  description: Warning returns whether the analysis returned a warning
+                  type: boolean
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
 ---
 # Source: klt/templates/analysisdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -244,10 +292,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -373,6 +421,56 @@ spec:
                               required:
                               - fixedValue
                               type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                            notInRange:
+                              description: NotInRange represents operator checking
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
                           type: object
                         warning:
                           description: Warning defines limits where the result does
@@ -443,6 +541,56 @@ spec:
                               required:
                               - fixedValue
                               type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                            notInRange:
+                              description: NotInRange represents operator checking
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
                           type: object
                       type: object
                     weight:
@@ -504,10 +652,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -587,10 +735,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -858,10 +1006,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -927,10 +1075,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -1750,10 +1898,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: options.keptn.sh
@@ -1826,10 +1974,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -2217,10 +2365,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -2416,10 +2564,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -2601,10 +2749,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -2906,10 +3054,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: metrics.keptn.sh
@@ -3053,10 +3201,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -3067,421 +3215,391 @@ spec:
     singular: keptntask
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+    - additionalPrinterColumns:
+        - jsonPath: .spec.app
+          name: AppName
+          type: string
+        - jsonPath: .spec.appVersion
+          name: AppVersion
+          type: string
+        - jsonPath: .spec.workload
+          name: WorkloadName
+          type: string
+        - jsonPath: .spec.workloadVersion
+          name: WorkloadVersion
+          type: string
+        - jsonPath: .status.jobName
+          name: Job Name
+          type: string
+        - jsonPath: .status.status
+          name: Status
+          type: string
+      name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: KeptnTask is the Schema for the keptntasks API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskSpec defines the desired state of KeptnTask
-            properties:
-              app:
-                type: string
-              appVersion:
-                type: string
-              checkType:
-                type: string
-              context:
-                properties:
-                  appName:
-                    type: string
-                  appVersion:
-                    type: string
-                  objectType:
-                    type: string
-                  taskType:
-                    type: string
-                  workloadName:
-                    type: string
-                  workloadVersion:
-                    type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
-                type: object
-              parameters:
-                properties:
-                  map:
-                    additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnTaskSpec defines the desired state of KeptnTask
+              properties:
+                app:
+                  type: string
+                appVersion:
+                  type: string
+                checkType:
+                  type: string
+                context:
+                  properties:
+                    appName:
                       type: string
-                    type: object
-                type: object
-              secureParameters:
-                properties:
-                  secret:
-                    type: string
-                type: object
-              taskDefinition:
-                type: string
-              workload:
-                type: string
-              workloadVersion:
-                type: string
-            required:
-            - app
-            - appVersion
-            - context
-            - taskDefinition
-            - workload
-            - workloadVersion
-            type: object
-          status:
-            description: KeptnTaskStatus defines the observed state of KeptnTask
-            properties:
-              endTime:
-                format: date-time
-                type: string
-              jobName:
-                type: string
-              message:
-                type: string
-              startTime:
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+                    appVersion:
+                      type: string
+                    objectType:
+                      type: string
+                    taskType:
+                      type: string
+                    workloadName:
+                      type: string
+                    workloadVersion:
+                      type: string
+                  required:
+                    - appName
+                    - appVersion
+                    - objectType
+                    - taskType
+                    - workloadName
+                    - workloadVersion
+                  type: object
+                parameters:
+                  properties:
+                    map:
+                      additionalProperties:
+                        type: string
+                      type: object
+                  type: object
+                secureParameters:
+                  properties:
+                    secret:
+                      type: string
+                  type: object
+                taskDefinition:
+                  type: string
+                workload:
+                  type: string
+                workloadVersion:
+                  type: string
+              required:
+                - app
+                - appVersion
+                - context
+                - taskDefinition
+                - workload
+                - workloadVersion
+              type: object
+            status:
+              description: KeptnTaskStatus defines the observed state of KeptnTask
+              properties:
+                endTime:
+                  format: date-time
+                  type: string
+                jobName:
+                  type: string
+                message:
+                  type: string
+                startTime:
+                  format: date-time
+                  type: string
+                status:
+                  default: Pending
+                  type: string
+              type: object
+          type: object
+      served: true
+      storage: false
+      subresources:
+        status: {}
+    - additionalPrinterColumns:
+        - jsonPath: .spec.app
+          name: AppName
+          type: string
+        - jsonPath: .spec.appVersion
+          name: AppVersion
+          type: string
+        - jsonPath: .spec.workload
+          name: WorkloadName
+          type: string
+        - jsonPath: .spec.workloadVersion
+          name: WorkloadVersion
+          type: string
+        - jsonPath: .status.jobName
+          name: Job Name
+          type: string
+        - jsonPath: .status.status
+          name: Status
+          type: string
+      name: v1alpha2
+      schema:
+        openAPIV3Schema:
+          description: KeptnTask is the Schema for the keptntasks API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskSpec defines the desired state of KeptnTask
-            properties:
-              app:
-                type: string
-              appVersion:
-                type: string
-              checkType:
-                type: string
-              context:
-                properties:
-                  appName:
-                    type: string
-                  appVersion:
-                    type: string
-                  objectType:
-                    type: string
-                  taskType:
-                    type: string
-                  workloadName:
-                    type: string
-                  workloadVersion:
-                    type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
-                type: object
-              parameters:
-                properties:
-                  map:
-                    additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: KeptnTaskSpec defines the desired state of KeptnTask
+              properties:
+                app:
+                  type: string
+                appVersion:
+                  type: string
+                checkType:
+                  type: string
+                context:
+                  properties:
+                    appName:
                       type: string
-                    type: object
-                type: object
-              secureParameters:
-                properties:
-                  secret:
-                    type: string
-                type: object
-              taskDefinition:
-                type: string
-              workload:
-                type: string
-              workloadVersion:
-                type: string
-            required:
-            - app
-            - appVersion
-            - context
-            - taskDefinition
-            - workload
-            - workloadVersion
-            type: object
-          status:
-            description: KeptnTaskStatus defines the observed state of KeptnTask
-            properties:
-              endTime:
-                format: date-time
-                type: string
-              jobName:
-                type: string
-              message:
-                type: string
-              startTime:
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
+                    appVersion:
+                      type: string
+                    objectType:
+                      type: string
+                    taskType:
+                      type: string
+                    workloadName:
+                      type: string
+                    workloadVersion:
+                      type: string
+                  required:
+                    - appName
+                    - appVersion
+                    - objectType
+                    - taskType
+                    - workloadName
+                    - workloadVersion
+                  type: object
+                parameters:
+                  properties:
+                    map:
+                      additionalProperties:
+                        type: string
+                      type: object
+                  type: object
+                secureParameters:
+                  properties:
+                    secret:
+                      type: string
+                  type: object
+                taskDefinition:
+                  type: string
+                workload:
+                  type: string
+                workloadVersion:
+                  type: string
+              required:
+                - app
+                - appVersion
+                - context
+                - taskDefinition
+                - workload
+                - workloadVersion
+              type: object
+            status:
+              description: KeptnTaskStatus defines the observed state of KeptnTask
+              properties:
+                endTime:
+                  format: date-time
+                  type: string
+                jobName:
+                  type: string
+                message:
+                  type: string
+                startTime:
+                  format: date-time
+                  type: string
+                status:
+                  default: Pending
+                  type: string
+              type: object
+          type: object
+      served: true
+      storage: false
+      subresources:
+        status: {}
+    - additionalPrinterColumns:
+        - jsonPath: .spec.app
+          name: AppName
+          type: string
+        - jsonPath: .spec.appVersion
+          name: AppVersion
+          type: string
+        - jsonPath: .spec.workload
+          name: WorkloadName
+          type: string
+        - jsonPath: .spec.workloadVersion
+          name: WorkloadVersion
+          type: string
+        - jsonPath: .status.jobName
+          name: Job Name
+          type: string
+        - jsonPath: .status.status
+          name: Status
+          type: string
+      name: v1alpha3
+      schema:
+        openAPIV3Schema:
+          description: KeptnTask is the Schema for the keptntasks API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnTask.
-            properties:
-              app:
-                description: AppName defines the KeptnApp for which the KeptnTask is
-                  executed.
-                type: string
-              appVersion:
-                description: AppVersion defines the version of the KeptnApp for which
-                  the KeptnTask is executed.
-                type: string
-              checkType:
-                description: Type indicates whether the KeptnTask is part of the pre-
-                  or postDeployment phase.
-                type: string
-              context:
-                description: Context contains contextual information about the task
-                  execution.
-                properties:
-                  appName:
-                    description: AppName the name of the KeptnApp the KeptnTask is being
-                      executed for.
-                    type: string
-                  appVersion:
-                    description: AppVersion the version of the KeptnApp the KeptnTask
-                      is being executed for.
-                    type: string
-                  objectType:
-                    description: ObjectType indicates whether the KeptnTask is being
-                      executed for a KeptnApp or KeptnWorkload.
-                    type: string
-                  taskType:
-                    description: TaskType indicates whether the KeptnTask is part of
-                      the pre- or postDeployment phase.
-                    type: string
-                  workloadName:
-                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
-                      is being executed for.
-                    type: string
-                  workloadVersion:
-                    description: WorkloadVersion the version of the KeptnWorkload the
-                      KeptnTask is being executed for.
-                    type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
-                type: object
-              parameters:
-                description: Parameters contains parameters that will be passed to the
-                  job that executes the task.
-                properties:
-                  map:
-                    additionalProperties:
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec describes the desired state of the KeptnTask.
+              properties:
+                checkType:
+                  description: Type indicates whether the KeptnTask is part of the pre-
+                    or postDeployment phase.
+                  type: string
+                context:
+                  description: Context contains contextual information about the task
+                    execution.
+                  properties:
+                    appName:
+                      description: AppName the name of the KeptnApp the KeptnTask is
+                        being executed for.
                       type: string
-                    description: Inline contains the parameters that will be made available
-                      to the job executing the KeptnTask via the 'DATA' environment
-                      variable. The 'DATA'  environment variable's content will be a
-                      json encoded string containing all properties of the map provided.
-                    type: object
-                type: object
-              retries:
-                default: 10
-                description: Retries indicates how many times the KeptnTask can be attempted
-                  in the case of an error before considering the KeptnTask to be failed.
-                format: int32
-                type: integer
-              secureParameters:
-                description: SecureParameters contains secure parameters that will be
-                  passed to the job that executes the task. These will be stored and
-                  accessed as secrets in the cluster.
-                properties:
-                  secret:
-                    description: Secret contains the parameters that will be made available
-                      to the job executing the KeptnTask via the 'SECRET_DATA' environment
-                      variable. The 'SECRET_DATA'  environment variable's content will
-                      the same as value of the 'SECRET_DATA' key of the referenced secret.
-                    type: string
-                type: object
-              taskDefinition:
-                description: TaskDefinition refers to the name of the KeptnTaskDefinition
-                  which includes the specification for the task to be performed. The
-                  KeptnTaskDefinition can be located in the same namespace as the KeptnTask,
-                  or in the KLT namespace.
-                type: string
-              timeout:
-                default: 5m
-                description: Timeout specifies the maximum time to wait for the task
-                  to be completed successfully. If the task does not complete successfully
-                  within this time frame, it will be considered to be failed.
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
-              workload:
-                description: Workload defines the KeptnWorkload for which the KeptnTask
-                  is executed.
-                type: string
-              workloadVersion:
-                description: WorkloadVersion defines the version of the KeptnWorkload
-                  for which the KeptnTask is executed.
-                type: string
-            required:
-            - app
-            - appVersion
-            - context
-            - taskDefinition
-            - workload
-            - workloadVersion
-            type: object
-          status:
-            description: Status describes the current state of the KeptnTask.
-            properties:
-              endTime:
-                description: EndTime represents the time at which the KeptnTask finished.
-                format: date-time
-                type: string
-              jobName:
-                description: JobName is the name of the Job executing the Task.
-                type: string
-              message:
-                description: Message contains information about unexpected errors encountered
-                  during the execution of the KeptnTask.
-                type: string
-              reason:
-                description: Reason contains more information about the reason for the
-                  last transition of the Job executing the KeptnTask.
-                type: string
-              startTime:
-                description: StartTime represents the time at which the KeptnTask started.
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                description: Status represents the overall state of the KeptnTask.
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
+                    appVersion:
+                      description: AppVersion the version of the KeptnApp the KeptnTask
+                        is being executed for.
+                      type: string
+                    objectType:
+                      description: ObjectType indicates whether the KeptnTask is being
+                        executed for a KeptnApp or KeptnWorkload.
+                      type: string
+                    taskType:
+                      description: TaskType indicates whether the KeptnTask is part
+                        of the pre- or postDeployment phase.
+                      type: string
+                    workloadName:
+                      description: WorkloadName the name of the KeptnWorkload the KeptnTask
+                        is being executed for.
+                      type: string
+                    workloadVersion:
+                      description: WorkloadVersion the version of the KeptnWorkload
+                        the KeptnTask is being executed for.
+                      type: string
+                  type: object
+                parameters:
+                  description: Parameters contains parameters that will be passed to
+                    the job that executes the task.
+                  properties:
+                    map:
+                      additionalProperties:
+                        type: string
+                      description: Inline contains the parameters that will be made
+                        available to the job executing the KeptnTask via the 'DATA'
+                        environment variable. The 'DATA'  environment variable's content
+                        will be a json encoded string containing all properties of the
+                        map provided.
+                      type: object
+                  type: object
+                retries:
+                  default: 10
+                  description: Retries indicates how many times the KeptnTask can be
+                    attempted in the case of an error before considering the KeptnTask
+                    to be failed.
+                  format: int32
+                  type: integer
+                secureParameters:
+                  description: SecureParameters contains secure parameters that will
+                    be passed to the job that executes the task. These will be stored
+                    and accessed as secrets in the cluster.
+                  properties:
+                    secret:
+                      description: Secret contains the parameters that will be made
+                        available to the job executing the KeptnTask via the 'SECRET_DATA'
+                        environment variable. The 'SECRET_DATA'  environment variable's
+                        content will the same as value of the 'SECRET_DATA' key of the
+                        referenced secret.
+                      type: string
+                  type: object
+                taskDefinition:
+                  description: TaskDefinition refers to the name of the KeptnTaskDefinition
+                    which includes the specification for the task to be performed. The
+                    KeptnTaskDefinition can be located in the same namespace as the
+                    KeptnTask, or in the KLT namespace.
+                  type: string
+                timeout:
+                  default: 5m
+                  description: Timeout specifies the maximum time to wait for the task
+                    to be completed successfully. If the task does not complete successfully
+                    within this time frame, it will be considered to be failed.
+                  pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                  type: string
+              required:
+                - taskDefinition
+              type: object
+            status:
+              description: Status describes the current state of the KeptnTask.
+              properties:
+                endTime:
+                  description: EndTime represents the time at which the KeptnTask finished.
+                  format: date-time
+                  type: string
+                jobName:
+                  description: JobName is the name of the Job executing the Task.
+                  type: string
+                message:
+                  description: Message contains information about unexpected errors
+                    encountered during the execution of the KeptnTask.
+                  type: string
+                reason:
+                  description: Reason contains more information about the reason for
+                    the last transition of the Job executing the KeptnTask.
+                  type: string
+                startTime:
+                  description: StartTime represents the time at which the KeptnTask
+                    started.
+                  format: date-time
+                  type: string
+                status:
+                  default: Pending
+                  description: Status represents the overall state of the KeptnTask.
+                  type: string
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
 ---
 # Source: klt/templates/keptntaskdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -3495,10 +3613,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -5156,10 +5274,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: lifecycle.keptn.sh
@@ -5454,10 +5572,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   conversion:
@@ -6241,10 +6359,10 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6293,10 +6411,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6484,10 +6602,10 @@ metadata:
   name: lifecycle-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6858,64 +6976,106 @@ metadata:
   name: metrics-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetrics/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - keptnmetricsproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - metrics.keptn.sh
-  resources:
-  - providers
-  verbs:
-  - get
-  - list
-  - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analyses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisdefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetrics/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - keptnmetricsproviders
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - providers
+    verbs:
+      - get
+      - list
+      - watch
 ---
 # Source: klt/templates/metrics-operator-server-resources-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -6924,10 +7084,10 @@ metadata:
   name: metrics-operator-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6946,10 +7106,10 @@ metadata:
   name: release-name-klt-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6969,10 +7129,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -6990,10 +7150,10 @@ metadata:
   name: hpa-controller-keptn-metrics
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7011,10 +7171,10 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7032,10 +7192,10 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7053,10 +7213,10 @@ metadata:
   name: metrics-operator-hpa-controller
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7074,19 +7234,19 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: 'metrics-operator-role'
 subjects:
-- kind: ServiceAccount
-  name: 'metrics-operator'
-  namespace: 'helmtests'
+  - kind: ServiceAccount
+    name: 'metrics-operator'
+    namespace: 'helmtests'
 ---
 # Source: klt/templates/system-auth-delegator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -7095,10 +7255,10 @@ metadata:
   name: system-auth-delegator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7116,10 +7276,10 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7151,10 +7311,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7196,10 +7356,10 @@ metadata:
   name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7241,10 +7401,10 @@ metadata:
   name: metrics-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7289,10 +7449,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7313,10 +7473,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7334,10 +7494,10 @@ metadata:
   name: extension-apiserver-authentication-reader
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7355,10 +7515,10 @@ metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7376,10 +7536,10 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7397,10 +7557,10 @@ metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7418,19 +7578,19 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: 'metrics-operator-role'
 subjects:
-- kind: ServiceAccount
-  name: 'metrics-operator'
-  namespace: 'helmtests'
+  - kind: ServiceAccount
+    name: 'metrics-operator'
+    namespace: 'helmtests'
 ---
 # Source: klt/templates/lifecycle-operator-metrics-service.yaml
 apiVersion: v1
@@ -7440,10 +7600,10 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: lifecycle-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7464,10 +7624,10 @@ metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7488,10 +7648,10 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: metrics-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7519,10 +7679,10 @@ metadata:
   name: metrics-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -7546,10 +7706,10 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7583,7 +7743,7 @@ spec:
           value: "true"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/certificate-operator:v0.8.1
+        image: ghcr.io/keptn/certificate-operator:v1.1.0
         imagePullPolicy: Always
         name: manager
         resources:
@@ -7631,10 +7791,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7669,9 +7829,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/functions-runtime:v0.8.1"
+          value: "ghcr.io/keptn/deno-runtime:v1.0.1"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v0.8.1"
+          value: "ghcr.io/keptn/python-runtime:v1.0.0"
         - name: OTEL_COLLECTOR_URL
           value: "otel-collector:4317"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
@@ -7694,7 +7854,7 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/lifecycle-operator:v0.8.1
+        image: ghcr.io/keptn/lifecycle-operator:v0.8.2
         imagePullPolicy: Always
         name: manager
         ports:
@@ -7760,10 +7920,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7801,11 +7961,15 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
+        - name: ENABLE_ANALYSIS
+          value: "false"
         - name: METRICS_CONTROLLER_LOG_LEVEL
+          value: "0"
+        - name: ANALYSIS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/metrics-operator:v0.8.1
+        image: ghcr.io/keptn/metrics-operator:v0.8.2
         name: manager
         ports:
         - containerPort: 9443
@@ -7871,10 +8035,10 @@ metadata:
   namespace: "helmtests"
   labels:
     component: scheduler
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -7899,7 +8063,7 @@ spec:
           value: "otel-collector:4317"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/scheduler:v0.8.1
+        image: ghcr.io/keptn/scheduler:v0.8.2
         imagePullPolicy: Always
         name: scheduler
         resources:
@@ -7949,10 +8113,10 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: custom.metrics.k8s.io
@@ -7971,10 +8135,10 @@ metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: custom.metrics.k8s.io
@@ -7996,10 +8160,10 @@ metadata:
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:
@@ -8052,10 +8216,10 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:
@@ -8088,10 +8252,10 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.5
+    helm.sh/chart: klt-0.2.6
     app.kubernetes.io/name: klt
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.1"
+    app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
 - admissionReviewVersions:

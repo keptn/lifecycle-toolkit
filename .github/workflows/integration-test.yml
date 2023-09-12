@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       runtime_tag:
-        description: "Tag for the functions runner image"
+        description: "Tag for the deno and python runner images"
         type: "string"
         required: true
       helm-install:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster

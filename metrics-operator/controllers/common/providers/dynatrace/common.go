@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
+	"strings"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
@@ -31,9 +33,28 @@ func getDTSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, 
 		return "", err
 	}
 
-	token := dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key]
+	token := string(dtCredsSecret.Data[provider.Spec.SecretKeyRef.Key])
 	if len(token) == 0 {
 		return "", fmt.Errorf("secret contains invalid key %s", provider.Spec.SecretKeyRef.Key)
 	}
-	return string(token), nil
+	return strings.Trim(token, "\n"), nil
+}
+
+func urlEncodeQuery(query string) string {
+	params := strings.Split(query, "&")
+
+	result := ""
+
+	for i, param := range params {
+		keyAndValue := strings.Split(param, "=")
+		if len(keyAndValue) == 2 {
+			encodedKeyAndValue := keyAndValue[0] + "=" + url.QueryEscape(keyAndValue[1])
+			if i > 0 {
+				result += "&"
+			}
+			result += encodedKeyAndValue
+		}
+	}
+
+	return result
 }

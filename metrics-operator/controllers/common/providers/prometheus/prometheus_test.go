@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/prometheus/common/model"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -313,4 +315,54 @@ func Test_resultsForMatrix(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFetchAnalysisValue(t *testing.T) {
+
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(promPayloadWithRangeAndStep))
+		require.Nil(t, err)
+	}))
+	defer svr.Close()
+
+	// Create a mock KeptnMetricsProvider
+	mockProvider := &metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "myapitoken",
+				},
+				Key: "mykey",
+			},
+			TargetServer: svr.URL,
+		},
+	}
+
+	// Create your KeptnPrometheusProvider instance
+	provider := KeptnPrometheusProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+	}
+
+	// Prepare the analysis spec
+	now := time.Now()
+	analysisSpec := metricsapi.AnalysisSpec{
+		Timeframe: metricsapi.Timeframe{
+			From: metav1.Time{
+				Time: now.Add(-time.Hour),
+			},
+			To: metav1.Time{
+				Time: now,
+			}},
+	}
+
+	// Prepare the expected result
+	expectedResult := "1"
+
+	// Call the function
+	result, err := provider.FetchAnalysisValue(context.Background(), "your_query_string_here", analysisSpec, mockProvider)
+
+	// Assertions
+	require.NoError(t, err)
+	require.Equal(t, expectedResult, result)
 }

@@ -5,8 +5,7 @@ weight: 89
 ---
 
 A `KeptnTaskDefinition` defines tasks
-that are run by the Keptn Lifecycle Toolkit
-as part of the pre- and post-deployment phases of a
+that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
@@ -23,11 +22,11 @@ differentiated by the `spec` section:
 
 * The `custom-runtime` runner provides
   a standard Kubernetes application container
-  that is run as part of a Kubernetes job..
+  that is run as part of a Kubernetes job.
   You define the runner, an application,
   and its runtime dependencies.
   This gives you the flexibility
-  to define tasks using the lanugage and facilities of your choice,
+  to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
   [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
@@ -96,7 +95,7 @@ but timeouts seem to be measured in seconds.
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
-    [Yaml synopsis for deno-runtime contailer](#yaml-synopsis-for-deno-runtime-container).
+    [Yaml synopsis for deno-runtime container](#yaml-synopsis-for-deno-runtime-container).
     * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
@@ -107,7 +106,7 @@ but timeouts seem to be measured in seconds.
       for which you define the image, runner, runtime parameters, etc.
       and code the functionality to match the container you define.
       See
-      [Yaml synopsis for container-runtime contaier](#yaml-synopsis-for-container-runtime).
+      [Yaml synopsis for container-runtime container](#yaml-synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
@@ -122,7 +121,7 @@ When using the `deno-runtime` runner to define a task,
 the task is coded in Deno-script
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.com/runtime) runner,
+[Deno](https://deno.com/manual) runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -149,8 +148,8 @@ spec:
 
 * **spec**
   * **deno** -- Specify that the task uses the `deno-runtime`
-    and is expressed as a [Deno](https://deno.land/) script.
-    Refer to [function runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/functions-runtime)
+    and is expressed as a [Deno](https://deno.com/) script.
+    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
     for more information about this runner.
 
     The task can be defined as one of the following:
@@ -205,7 +204,7 @@ spec:
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -280,7 +279,7 @@ The `python-runtime` runner provides a way
 to easily define a task using Python 3.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide a Python script
-and KLT sets up the container and runs the script as part of the task.
+and Keptn sets up the container and runs the script as part of the task.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -355,7 +354,7 @@ The `python-runtime` runner is used to define tasks using  Python 3 code.
       resource that contains the function to be executed.
 
   * **parameters** - An optional field to supply input parameters to a function.
-    The Lifecycle Toolkit passes the values defined inside the `map` field
+    Keptn passes the values defined inside the `map` field
     as a JSON object.
     For example:
 
@@ -407,7 +406,7 @@ the size of the volume is 50% of the memory allocated for the node.
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the pod template specs of your Workloads
-([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
@@ -565,7 +564,7 @@ This task is then referenced in
 
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
 
-This is a a trivial example that just runs `busybox`,
+This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command.
 
 ## Examples for a python-runtime runner
@@ -580,7 +579,7 @@ This example prints data stored in the parameters map:
 
 You can refer to code stored online.
 For example, we have a few examples available in the
-[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/python-runtime/samples)
+[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
 tree.
 
 Consider the following:
@@ -663,5 +662,5 @@ is allowed per `KeptnTaskDefinition`.
 * [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-* [KeptnApp and KeptnWorkload resources](../concepts/architecture/keptn-apps/).
-* [Orchestrate deployment checks](../getting-started/orchestrate)
+* [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps/).
+* [Orchestrate deployment checks](../intro/usecase-orchestrate.md)

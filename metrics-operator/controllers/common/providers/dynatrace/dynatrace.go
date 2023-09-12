@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"reflect"
 	"strings"
 	"time"
@@ -39,17 +38,32 @@ type DynatraceData struct {
 	Values     []*float64 `json:"values"`
 }
 
+func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
+	escapedQ := urlEncodeQuery(query)
+	qURL := baseURL + "v2/metrics/query?metricSelector=" + escapedQ + "&from=" + spec.From.String() + "&to=" + spec.To.String()
+	res, _, err := d.runQuery(ctx, qURL, *provider)
+	return res, err
+}
+
 // EvaluateQuery fetches the SLI values from dynatrace provider
 func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	query := url.QueryEscape(metric.Spec.Query)
+
 	var qURL string
 	if metric.Spec.Range != nil {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval
+		qURL = "metricSelector=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval
 	} else {
-		qURL = baseURL + "v2/metrics/query?metricSelector=" + query
+		qURL = "metricSelector=" + metric.Spec.Query
 	}
 
+	qURL = urlEncodeQuery(qURL)
+	qURL = baseURL + "v2/metrics/query?" + qURL
+
+	return d.runQuery(ctx, qURL, provider)
+}
+
+func (d *KeptnDynatraceProvider) runQuery(ctx context.Context, qURL string, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
@@ -66,8 +80,10 @@ func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metri
 		return nil, nil, fmt.Errorf("spec.range is not defined!")
 	}
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	query := url.QueryEscape(metric.Spec.Query)
-	qURL := baseURL + "v2/metrics/query?metricSelector=" + query + "&from=now-" + metric.Spec.Range.Interval + "&resolution=" + metric.Spec.Range.Step
+	qURL := "metricSelector=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval + "&resolution=" + metric.Spec.Range.Step
+
+	qURL = urlEncodeQuery(qURL)
+	qURL = baseURL + "v2/metrics/query?" + qURL
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
@@ -161,7 +177,7 @@ func (d *KeptnDynatraceProvider) getResultSlice(result *DynatraceResponse) []str
 		for _, points := range r.Data {
 			for _, v := range points.Values {
 				if v != nil {
-					totalValues = totalValues + 1
+					totalValues++
 				}
 			}
 		}

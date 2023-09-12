@@ -17,7 +17,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.12.1"
+  CONTROLLER_TOOLS_VERSION: "v0.13.0"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract branch name
         id: extract_branch
@@ -86,7 +86,7 @@ jobs:
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
@@ -124,15 +124,15 @@ jobs:
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+          - name: "deno-runtime"
+            folder: "runtimes/deno-runtime/"
           - name: "python-runtime"
-            folder: "python-runtime/"
+            folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache build tools
         id: cache-build-tools
@@ -177,14 +177,14 @@ jobs:
         run: make controller-gen
 
       - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
           CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: make release-manifests
 
       - name: Upload release.yaml for tests
-        if: matrix.config.name != 'functions-runtime' && matrix.config.name != 'python-runtime'
+        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-manifest-test
@@ -236,10 +236,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out klt repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check out helm-charts repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: 'keptn/lifecycle-toolkit-charts'
           path: ./helm-charts-repository

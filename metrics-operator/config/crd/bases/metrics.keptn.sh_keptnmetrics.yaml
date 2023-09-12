@@ -255,8 +255,21 @@ spec:
           status:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
             properties:
+              errMsg:
+                description: ErrMsg represents the error details when the query could
+                  not be evaluated
+                type: string
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
               results:
-                description: Results contain a slice of all results
+                description: IntervalResults contain a slice of all the interval results
                 items:
                   properties:
                     errMsg:
@@ -309,8 +322,14 @@ spec:
                   - value
                   type: object
                 type: array
+              value:
+                description: Value represents the resulting value
+                type: string
             required:
+            - lastUpdated
+            - rawValue
             - results
+            - value
             type: object
         type: object
     served: true

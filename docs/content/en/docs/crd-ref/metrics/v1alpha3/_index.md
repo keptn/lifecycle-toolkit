@@ -191,6 +191,23 @@ _Appears in:_
 | `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax. More info on go templating - https://pkg.go.dev/text/template |
 
 
+#### IntervalResult
+
+
+
+
+
+_Appears in:_
+- [KeptnMetricStatus](#keptnmetricstatus)
+
+| Field | Description |
+| --- | --- |
+| `value` _string_ | Value represents the resulting value |
+| `range` _[RangeSpec](#rangespec)_ | RawValue represents the resulting value in raw format |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
+
+
 #### KeptnMetric
 
 
@@ -253,7 +270,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `results` _[Result](#result) array_ | Results contain a slice of all results |
+| `value` _string_ | Value represents the resulting value |
+| `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
+| `results` _[IntervalResult](#intervalresult) array_ | IntervalResults contain a slice of all the interval results |
 
 
 #### KeptnMetricsProvider
@@ -412,8 +433,8 @@ _Appears in:_
 RangeSpec defines the time range for which data is to be queried
 
 _Appears in:_
+- [IntervalResult](#intervalresult)
 - [KeptnMetricSpec](#keptnmetricspec)
-- [Result](#result)
 
 | Field | Description |
 | --- | --- |
@@ -436,23 +457,6 @@ _Appears in:_
 | --- | --- |
 | `lowBound` _Quantity_ | LowBound defines the lower bound of the range |
 | `highBound` _Quantity_ | HighBound defines the higher bound of the range |
-
-
-#### Result
-
-
-
-
-
-_Appears in:_
-- [KeptnMetricStatus](#keptnmetricstatus)
-
-| Field | Description |
-| --- | --- |
-| `value` _string_ | Value represents the resulting value |
-| `range` _[RangeSpec](#rangespec)_ | RawValue represents the resulting value in raw format |
-| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
-| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
 #### Target

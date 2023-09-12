@@ -37,8 +37,16 @@ type KeptnMetricSpec struct {
 
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
-	// Results contain a slice of all results
-	Results []Result `json:"results"`
+	// Value represents the resulting value
+	Value string `json:"value"`
+	// RawValue represents the resulting value in raw format
+	RawValue []byte `json:"rawValue"`
+	// LastUpdated represents the time when the status data was last updated
+	LastUpdated metav1.Time `json:"lastUpdated"`
+	// ErrMsg represents the error details when the query could not be evaluated
+	ErrMsg string `json:"errMsg,omitempty"`
+	// IntervalResults contain a slice of all the interval results
+	IntervalResults []IntervalResult `json:"results"`
 }
 
 // ProviderRef represents the provider object
@@ -62,7 +70,7 @@ type RangeSpec struct {
 	StoredResults uint `json:"storedResults,omitempty"`
 }
 
-type Result struct {
+type IntervalResult struct {
 	// Value represents the resulting value
 	Value string `json:"value"`
 	// RawValue represents the resulting value in raw format

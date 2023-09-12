@@ -253,10 +253,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `value` _string_ | Value represents the resulting value |
-| `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
-| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
-| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
+| `results` _[Result](#result) array_ | Results contain a slice of all results |
 
 
 #### KeptnMetricsProvider
@@ -416,12 +413,14 @@ RangeSpec defines the time range for which data is to be queried
 
 _Appears in:_
 - [KeptnMetricSpec](#keptnmetricspec)
+- [Result](#result)
 
 | Field | Description |
 | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
 | `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+| `storedResults` _integer_ | StoredResults indicates the upper limit of how many past results should be stored in the status of a KeptnMetric |
 
 
 #### RangeValue
@@ -437,6 +436,23 @@ _Appears in:_
 | --- | --- |
 | `lowBound` _Quantity_ | LowBound defines the lower bound of the range |
 | `highBound` _Quantity_ | HighBound defines the higher bound of the range |
+
+
+#### Result
+
+
+
+
+
+_Appears in:_
+- [KeptnMetricStatus](#keptnmetricstatus)
+
+| Field | Description |
+| --- | --- |
+| `value` _string_ | Value represents the resulting value |
+| `range` _[RangeSpec](#rangespec)_ | RawValue represents the resulting value in raw format |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
 #### Target

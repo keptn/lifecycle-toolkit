@@ -57,16 +57,15 @@ type RangeSpec struct {
 	// Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
 	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
 	Aggregation string `json:"aggregation,omitempty"`
+	// StoredResults indicates the upper limit of how many past results should be stored in the status of a KeptnMetric
 	// +kubebuilder:validation:Maximum:=255
 	StoredResults uint `json:"storedResults,omitempty"`
 }
 
-type Result struct{
+type Result struct {
 	// Value represents the resulting value
 	Value string `json:"value"`
 	// RawValue represents the resulting value in raw format
-	RawValue []byte `json:"rawValue"`
-	// Range represents the time range for which data has been queried
 	Range *RangeSpec `json:"range,omitempty"`
 	// LastUpdated represents the time when the status data was last updated
 	LastUpdated metav1.Time `json:"lastUpdated"`

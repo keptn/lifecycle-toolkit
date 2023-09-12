@@ -242,6 +242,8 @@ spec:
                       the data query
                     type: string
                   storedResults:
+                    description: StoredResults indicates the upper limit of how many
+                      past results should be stored in the status of a KeptnMetric
                     maximum: 255
                     type: integer
                 type: object
@@ -267,8 +269,8 @@ spec:
                       format: date-time
                       type: string
                     range:
-                      description: Range represents the time range for which data
-                        has been queried
+                      description: RawValue represents the resulting value in raw
+                        format
                       properties:
                         aggregation:
                           description: 'Aggregation defines the type of aggregation
@@ -293,20 +295,17 @@ spec:
                             for the data query
                           type: string
                         storedResults:
+                          description: StoredResults indicates the upper limit of
+                            how many past results should be stored in the status of
+                            a KeptnMetric
                           maximum: 255
                           type: integer
                       type: object
-                    rawValue:
-                      description: RawValue represents the resulting value in raw
-                        format
-                      format: byte
-                      type: string
                     value:
                       description: Value represents the resulting value
                       type: string
                   required:
                   - lastUpdated
-                  - rawValue
                   - value
                   type: object
                 type: array

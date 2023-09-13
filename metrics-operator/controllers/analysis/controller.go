@@ -87,9 +87,9 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		if errors.IsNotFound(err) {
 			a.Log.Info(
-				fmt.Sprintf("AnalysisDefinition '%s' isn namespace '%s' not found, requeue",
+				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeue",
 					analysis.Spec.AnalysisDefinition.Name,
-					analysis.Spec.AnalysisDefinition.Name),
+					analysis.Spec.AnalysisDefinition.Namespace),
 			)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}

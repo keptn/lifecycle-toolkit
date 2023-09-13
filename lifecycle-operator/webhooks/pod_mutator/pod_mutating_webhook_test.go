@@ -1021,8 +1021,7 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	decoder, err := admission.NewDecoder(runtime.NewScheme())
-	require.Nil(t, err)
+	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,

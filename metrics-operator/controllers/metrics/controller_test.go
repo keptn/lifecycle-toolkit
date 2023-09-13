@@ -7,14 +7,18 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
+	providersfake "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/fake"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	controllerruntime "sigs.k8s.io/controller-runtime"
+	k8sclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
@@ -33,9 +37,10 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 
 	client := fake.NewClient(&provider)
 	r := &KeptnMetricReconciler{
-		Client: client,
-		Scheme: client.Scheme(),
-		Log:    testr.New(t),
+		Client:          client,
+		Scheme:          client.Scheme(),
+		Log:             testr.New(t),
+		ProviderFactory: providers.NewProvider,
 	}
 
 	// fetch existing provider based on source
@@ -65,26 +70,19 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			Query:                "",
 			FetchIntervalSeconds: 1,
 		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
-		},
 	}
+
 	metric2 := &metricsapi.KeptnMetric{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "mymetric2",
 			Namespace: "default",
 		},
 		Spec: metricsapi.KeptnMetricSpec{
-			Provider:             metricsapi.ProviderRef{},
+			Provider: metricsapi.ProviderRef{
+				Name: "myprov",
+			},
 			Query:                "",
-			FetchIntervalSeconds: 1,
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+			FetchIntervalSeconds: 10,
 		},
 	}
 
@@ -95,15 +93,10 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 		Spec: metricsapi.KeptnMetricSpec{
 			Provider: metricsapi.ProviderRef{
-				Name: "myprov",
+				Name: "provider-name",
 			},
 			Query:                "",
 			FetchIntervalSeconds: 10,
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
 		},
 	}
 
@@ -116,83 +109,19 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			Provider: metricsapi.ProviderRef{
 				Name: "provider-name",
 			},
-			Query:                "",
-			FetchIntervalSeconds: 10,
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
-		},
-	}
-
-	metric5 := &metricsapi.KeptnMetric{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "mymetric5",
-			Namespace: "default",
-		},
-		Spec: metricsapi.KeptnMetricSpec{
-			Provider: metricsapi.ProviderRef{
-				Name: "prometheus",
-			},
-			Query:                "",
-			FetchIntervalSeconds: 10,
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
-		},
-	}
-
-	metric6 := &metricsapi.KeptnMetric{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "mymetric6",
-			Namespace: "default",
-		},
-		Spec: metricsapi.KeptnMetricSpec{
-			Provider: metricsapi.ProviderRef{
-				Name: "prometheus",
-			},
-			Query:                "",
-			FetchIntervalSeconds: 10,
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
-			},
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
-		},
-	}
-
-	metric7 := &metricsapi.KeptnMetric{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "mymetric7",
-			Namespace: "default",
-		},
-		Spec: metricsapi.KeptnMetricSpec{
-			Provider: metricsapi.ProviderRef{
-				Name: "prometheus",
-			},
-			Query:                "",
-			FetchIntervalSeconds: 10,
-			Range: &metricsapi.RangeSpec{
-				Interval:    "5m",
-				Step:        "1m",
 				Aggregation: "max",
+				Step:        "step",
 			},
-		},
-		Status: metricsapi.KeptnMetricStatus{
-			Value:       "12",
-			RawValue:    nil,
-			LastUpdated: metav1.Time{Time: time.Now().Add(-1 * time.Minute)},
+			Query:                "",
+			FetchIntervalSeconds: 10,
 		},
 	}
 
 	unsupportedProvider := &metricsapi.KeptnMetricsProvider{
-		ObjectMeta: metav1.ObjectMeta{Name: "myprov", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myprov",
+			Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			Type: "unsupported-type",
 		},
@@ -209,31 +138,15 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		},
 	}
 
-	oldSupportedProvider := &metricsapi.KeptnMetricsProvider{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "prometheus",
-			Namespace: "default",
-		},
-		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "http://keptn.sh",
-		},
-	}
-
-	client := fake.NewClient(metric, metric2, metric3, metric4, metric5, metric6, metric7, unsupportedProvider, supportedProvider, oldSupportedProvider)
-
-	r := &KeptnMetricReconciler{
-		Client: client,
-		Scheme: client.Scheme(),
-		Log:    testr.New(t),
-	}
-
 	tests := []struct {
-		name       string
-		ctx        context.Context
-		req        controllerruntime.Request
-		want       controllerruntime.Result
-		wantMetric *metricsapi.KeptnMetric
-		wantErr    error
+		name            string
+		client          k8sclient.Client
+		ctx             context.Context
+		req             controllerruntime.Request
+		want            controllerruntime.Result
+		wantMetric      *metricsapi.KeptnMetric
+		providerFactory providers.ProviderFactory
+		wantErr         error
 	}{
 		{
 			name: "metric not found, ignoring",
@@ -241,8 +154,10 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "myunexistingmetric"},
 			},
-			want:       controllerruntime.Result{},
-			wantMetric: nil,
+			want:            controllerruntime.Result{},
+			providerFactory: nil,
+			client:          fake.NewClient(),
+			wantMetric:      nil,
 		},
 
 		{
@@ -251,37 +166,111 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric"},
 			},
-			want:       controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantMetric: nil,
+			want:            controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			providerFactory: nil,
+			client:          fake.NewClient(metric),
+			wantMetric:      nil,
 		},
 
 		{
 			name: "metric exists, needs to fetch, provider not found ignoring",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric"},
 			},
-			want:       controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantMetric: nil,
+			providerFactory: nil,
+			client:          fake.NewClient(metric),
+			want:            controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantMetric:      nil,
 		},
 
 		{
 			name: "metric exists, needs to fetch, provider unsupported",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
 			},
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				return nil, fmt.Errorf("provider unsupported-type not supported")
+			},
+			client:     fake.NewClient(metric2, unsupportedProvider),
 			want:       controllerruntime.Result{Requeue: false, RequeueAfter: 0},
 			wantErr:    fmt.Errorf("provider unsupported-type not supported"),
 			wantMetric: nil,
 		},
-
 		{
-			name: "metric exists, needs to fetch, prometheus supported, bad query",
+			name: "metric exists, needs to fetch, prometheus supported, bad query - EvaluateQuery",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
+			},
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				mymock := &providersfake.KeptnSLIProviderMock{
+					EvaluateQueryFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+						return "", nil, fmt.Errorf("client_error: client error: 404")
+					},
+				}
+				return mymock, nil
+			},
+			client:  fake.NewClient(metric3, supportedProvider),
+			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			wantErr: fmt.Errorf("client_error: client error: 404"),
+			wantMetric: &metricsapi.KeptnMetric{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "mymetric3",
+					Namespace: "default",
+				},
+				Status: metricsapi.KeptnMetricStatus{
+					ErrMsg:   "client_error: client error: 404",
+					Value:    "",
+					RawValue: []byte(nil),
+				},
+			},
+		},
+		{
+			name: "happy path - EvaluateQuery",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
+			},
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				mymock := &providersfake.KeptnSLIProviderMock{
+					EvaluateQueryFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+						return "result", []byte("result"), nil
+					},
+				}
+				return mymock, nil
+			},
+			client:  fake.NewClient(metric3, supportedProvider),
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: nil,
+			wantMetric: &metricsapi.KeptnMetric{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "mymetric3",
+					Namespace: "default",
+				},
+				Status: metricsapi.KeptnMetricStatus{
+					ErrMsg:   "",
+					Value:    "result",
+					RawValue: []byte("result"),
+				},
+			},
+		},
+		{
+			name: "metric exists, needs to fetch, prometheus supported, bad query - EvaluateQueryForStep",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
 			},
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				mymock := &providersfake.KeptnSLIProviderMock{
+					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+						return []string{}, nil, fmt.Errorf("client_error: client error: 404")
+					},
+				}
+				return mymock, nil
+			},
+			client:  fake.NewClient(metric4, supportedProvider),
 			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
 			wantErr: fmt.Errorf("client_error: client error: 404"),
 			wantMetric: &metricsapi.KeptnMetric{
@@ -296,31 +285,44 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				},
 			},
 		},
-
 		{
-			name: "metric exists, needs to fetch, using old provider API, bad query",
+			name: "happy path - EvaluateQueryForStep",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
-				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
 			},
-			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
-			wantErr: fmt.Errorf("client_error: client error: 404"),
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				mymock := &providersfake.KeptnSLIProviderMock{
+					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+						return []string{"11"}, []byte("11"), nil
+					},
+				}
+				return mymock, nil
+			},
+			client:  fake.NewClient(metric4, supportedProvider),
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: nil,
 			wantMetric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "mymetric5",
+					Name:      "mymetric4",
 					Namespace: "default",
 				},
 				Status: metricsapi.KeptnMetricStatus{
-					ErrMsg:   "client_error: client error: 404",
-					Value:    "",
-					RawValue: []byte(nil),
+					ErrMsg:   "",
+					Value:    "11",
+					RawValue: []byte("11"),
 				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Log(tt.name)
+			r := &KeptnMetricReconciler{
+				Client:          tt.client,
+				Scheme:          tt.client.Scheme(),
+				Log:             testr.New(t),
+				ProviderFactory: tt.providerFactory,
+			}
 			got, err := r.Reconcile(tt.ctx, tt.req)
 			if tt.wantErr != nil {
 				require.NotNil(t, err)
@@ -335,7 +337,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 
 			if tt.wantMetric != nil {
 				metric := &metricsapi.KeptnMetric{}
-				err := client.Get(context.TODO(), types.NamespacedName{Namespace: tt.wantMetric.Namespace, Name: tt.wantMetric.Name}, metric)
+				err := tt.client.Get(context.TODO(), types.NamespacedName{Namespace: tt.wantMetric.Namespace, Name: tt.wantMetric.Name}, metric)
 				require.Nil(t, err)
 				require.Equal(t, tt.wantMetric.Status.ErrMsg, metric.Status.ErrMsg)
 				require.Equal(t, tt.wantMetric.Status.Value, metric.Status.Value)

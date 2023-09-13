@@ -33,8 +33,8 @@ data:
       "panels": [
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -80,8 +80,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Succeeded\"})",
@@ -95,8 +95,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -149,8 +149,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
@@ -165,8 +165,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -215,7 +215,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "count(keptn_deployment_count{keptn_deployment_workload_name=\"$Workload\", keptn_deployment_workload_status=\"Failed\"})",
@@ -229,7 +230,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -279,8 +281,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max by(keptn_deployment_workload_version) (keptn_deployment_deploymentduration{keptn_deployment_workload_name=\"$Workload\"})",
@@ -296,8 +298,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -345,8 +347,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
@@ -360,8 +362,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -411,8 +413,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "avg by(keptn_deployment_workload_previousversion, keptn_deployment_workload_version) (keptn_deployment_deploymentinterval{keptn_deployment_workload_name=\"$Workload\"})",
@@ -493,8 +495,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus"
-            
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -570,8 +572,8 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus"
-                
+                "type": "prometheus",
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max(keptn_deployment_active{keptn_deployment_workload_name=\"$Workload\"})",
@@ -599,8 +601,8 @@ data:
               "value": ""
             },
             "datasource": {
-              "type": "prometheus"
-              
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "definition": "label_values(keptn_deployment_workload_name)",
             "hide": 0,

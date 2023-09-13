@@ -18,6 +18,9 @@ import (
 //			EvaluateQueryFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 //				panic("mock out the EvaluateQuery method")
 //			},
+//			EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+//				panic("mock out the EvaluateQueryForStep method")
+//			},
 //			FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 //				panic("mock out the FetchAnalysisValue method")
 //			},
@@ -31,7 +34,7 @@ type KeptnSLIProviderMock struct {
 	// EvaluateQueryFunc mocks the EvaluateQuery method.
 	EvaluateQueryFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error)
 
-	// EvaluateQueryForStep mocks the EvaluateQueryForStep method.
+	// EvaluateQueryForStepFunc mocks the EvaluateQueryForStep method.
 	EvaluateQueryForStepFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
 
 	// FetchAnalysisValueFunc mocks the FetchAnalysisValue method.
@@ -48,7 +51,7 @@ type KeptnSLIProviderMock struct {
 			// Provider is the provider argument value.
 			Provider metricsapi.KeptnMetricsProvider
 		}
-		// EvaluateQuery holds details about calls to the EvaluateQuery method.
+		// EvaluateQueryForStep holds details about calls to the EvaluateQueryForStep method.
 		EvaluateQueryForStep []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
@@ -116,7 +119,7 @@ func (mock *KeptnSLIProviderMock) EvaluateQueryCalls() []struct {
 
 // EvaluateQueryForStep calls EvaluateQueryForStepFunc.
 func (mock *KeptnSLIProviderMock) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
-	if mock.EvaluateQueryFunc == nil {
+	if mock.EvaluateQueryForStepFunc == nil {
 		panic("KeptnSLIProviderMock.EvaluateQueryForStepFunc: method is nil but KeptnSLIProvider.EvaluateQueryForStep was just called")
 	}
 	callInfo := struct {

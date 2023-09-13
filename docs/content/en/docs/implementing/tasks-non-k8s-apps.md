@@ -1,7 +1,7 @@
 ---
 title: Keptn for Non-Kubernetes Applications
 description: Using Keptn with Non-Kubernetes Applications
-weight: 20
+weight: 95
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

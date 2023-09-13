@@ -1,4 +1,38 @@
 apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: ready
+  namespace: $NAMESPACE
+spec:
+  provider:
+    name: my-mocked-provider
+    namespace: $NAMESPACE
+  query: 'sum(kube_pod_container_status_ready{namespace="{{.ns}}"})'
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: ed-my-proj-dev-svc1
+  namespace: $NAMESPACE
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: ready
+        namespace: $NAMESPACE
+      target:
+        failure:
+          lessThan:
+            fixedValue: 2
+        warning:
+          lessThan:
+            fixedValue: 3
+      weight: 1
+      keyObjective: false
+  totalScore:
+    passPercentage: 90
+    warningPercentage: 75
+---
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
   name: analysis-sample
@@ -11,4 +45,4 @@ spec:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
-    namespace: keptn-lifecycle-toolkit-system
+    namespace: $NAMESPACE

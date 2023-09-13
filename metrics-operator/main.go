@@ -29,7 +29,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+	certwebhook "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -51,6 +51,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
 )
 
 var (
@@ -141,10 +142,16 @@ func main() {
 
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:                 scheme,
-		MetricsBindAddress:     metricsAddr,
-		Port:                   9443,
+	opt := ctrl.Options{
+		Scheme: scheme,
+		Metrics: server.Options{
+			BindAddress: metricsAddr,
+		},
+		Client: ctrlclient.Options{
+			Cache: &ctrlclient.CacheOptions{
+				DisableFor: disableCacheFor,
+			},
+		},
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "3f8532ca.keptn.sh",
@@ -159,8 +166,42 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
-		ClientDisableCacheFor: disableCacheFor, // due to https://github.com/kubernetes-sigs/controller-runtime/issues/550
-		// We disable secret informer cache so that the operator won't need clusterrole list access to secrets
+	}
+
+	var webhookBuilder certwebhook.Builder
+	if !disableWebhook {
+		webhookBuilder = certwebhook.NewWebhookServerBuilder().
+			LoadCertOptionsFromFlag().
+			SetPort(9443).
+			SetNamespace(env.PodNamespace).
+			SetPodName(env.PodName)
+		opt.WebhookServer = webhookBuilder.GetWebhookServer()
+	}
+
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+		Scheme: scheme,
+		Metrics: server.Options{
+			BindAddress: metricsAddr,
+		},
+		Client: ctrlclient.Options{
+			Cache: &ctrlclient.CacheOptions{
+				DisableFor: disableCacheFor,
+			},
+		},
+		HealthProbeBindAddress: probeAddr,
+		LeaderElection:         enableLeaderElection,
+		LeaderElectionID:       "3f8532ca.keptn.sh",
+		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
+		// when the Manager ends. This requires the binary to immediately end when the
+		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
+		// speeds up voluntary leader transitions as the new leader don't have to wait
+		// LeaseDuration time first.
+		//
+		// In the default scaffold provided, the program ends immediately after
+		// the manager stops, so would be fine to enable this option. However,
+		// if you are doing or is intended to do any operation such as perform cleanups
+		// after the manager stops then its usage might be unsafe.
+		// LeaderElectionReleaseOnCancel: true,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -207,37 +248,22 @@ func main() {
 	setupProbes(mgr)
 
 	if !disableWebhook {
-		webhookBuilder := webhook.NewWebhookBuilder().
-			SetNamespace(env.PodNamespace).
-			SetPodName(env.PodName).
-			SetManagerProvider(
-				webhook.NewWebhookManagerProvider(
-					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
-			).
-			SetCertificateWatcher(
-				certificates.NewCertificateWatcher(
-					mgr.GetAPIReader(),
-					mgr.GetWebhookServer().CertDir,
-					env.PodNamespace,
-					certCommon.SecretName,
-					setupLog,
-				),
-			)
-
-		setupLog.Info("starting webhook and manager")
-		if err := webhookBuilder.Run(mgr, nil); err != nil {
-			setupLog.Error(err, "problem running manager")
-			os.Exit(1)
-		}
-
-	} else {
-		flag.Parse()
-		setupLog.Info("starting manager")
-		setupLog.Info("Keptn metrics-operator is alive")
-		if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-			setupLog.Error(err, "problem running manager")
-			os.Exit(1)
-		}
+		webhookBuilder.SetCertificateWatcher(
+			certificates.NewCertificateWatcher(
+				mgr.GetAPIReader(),
+				webhookBuilder.GetOptions().CertDir,
+				env.PodNamespace,
+				certCommon.SecretName,
+				setupLog,
+			))
+		webhookBuilder.Register(mgr, nil)
+		setupLog.Info("starting webhook")
+	}
+	setupLog.Info("starting manager")
+	setupLog.Info("Keptn metrics-operator is alive")
+	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
 	}
 }
 

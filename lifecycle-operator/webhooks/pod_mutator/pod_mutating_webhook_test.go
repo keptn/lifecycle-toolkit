@@ -959,8 +959,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	decoder, err := admission.NewDecoder(runtime.NewScheme())
-	require.Nil(t, err)
+	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
@@ -1118,8 +1117,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	decoder, err := admission.NewDecoder(runtime.NewScheme())
-	require.Nil(t, err)
+	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
@@ -1239,8 +1237,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	decoder, err := admission.NewDecoder(runtime.NewScheme())
-	require.Nil(t, err)
+	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
@@ -1347,8 +1344,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	decoder, err := admission.NewDecoder(runtime.NewScheme())
-	require.Nil(t, err)
+	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,

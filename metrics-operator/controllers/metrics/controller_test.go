@@ -37,10 +37,10 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 
 	client := fake.NewClient(&provider)
 	r := &KeptnMetricReconciler{
-		Client:     client,
-		Scheme:     client.Scheme(),
-		Log:        testr.New(t),
-		NewFactory: providers.NewProvider,
+		Client:          client,
+		Scheme:          client.Scheme(),
+		Log:             testr.New(t),
+		ProviderFactory: providers.NewProvider,
 	}
 
 	// fetch existing provider based on source
@@ -145,7 +145,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 		req             controllerruntime.Request
 		want            controllerruntime.Result
 		wantMetric      *metricsapi.KeptnMetric
-		providerFactory providers.NewFactory
+		providerFactory providers.ProviderFactory
 		wantErr         error
 	}{
 		{
@@ -318,10 +318,10 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &KeptnMetricReconciler{
-				Client:     tt.client,
-				Scheme:     tt.client.Scheme(),
-				Log:        testr.New(t),
-				NewFactory: tt.providerFactory,
+				Client:          tt.client,
+				Scheme:          tt.client.Scheme(),
+				Log:             testr.New(t),
+				ProviderFactory: tt.providerFactory,
 			}
 			got, err := r.Reconcile(tt.ctx, tt.req)
 			if tt.wantErr != nil {

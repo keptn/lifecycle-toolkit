@@ -44,7 +44,7 @@ type KeptnMetricReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
-	providers.NewFactory
+	providers.ProviderFactory
 }
 
 // clusterrole
@@ -94,7 +94,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 	// load the provider
-	provider, err2 := r.NewFactory(metricProvider.GetType(), r.Log, r.Client)
+	provider, err2 := r.ProviderFactory(metricProvider.GetType(), r.Log, r.Client)
 	if err2 != nil {
 		r.Log.Error(err2, "Failed to get the correct Metric Provider")
 		return ctrl.Result{Requeue: false}, err2

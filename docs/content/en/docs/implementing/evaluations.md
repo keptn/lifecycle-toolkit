@@ -3,7 +3,7 @@ title: Evaluations
 description: Understand Keptn evaluations and how to use them
 weight: 150
 ---
-A `KeptnEvaluation` is a `KeptnMetric` that has a defined target value.
+A `KeptnEvaluation` checks whether a `KeptnMetric` meets a defined target value.
 A `KeptnEvaluation` resource is defined in a
 [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
 yaml file.

@@ -246,6 +246,11 @@ spec:
                       past results should be stored in the status of a KeptnMetric
                     maximum: 255
                     type: integer
+                required:
+                - aggregation
+                - interval
+                - step
+                - storedResults
                 type: object
             required:
             - fetchIntervalSeconds
@@ -313,6 +318,11 @@ spec:
                             a KeptnMetric
                           maximum: 255
                           type: integer
+                      required:
+                      - aggregation
+                      - interval
+                      - step
+                      - storedResults
                       type: object
                     value:
                       description: Value represents the resulting value
@@ -325,11 +335,6 @@ spec:
               value:
                 description: Value represents the resulting value
                 type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - results
-            - value
             type: object
         type: object
     served: true

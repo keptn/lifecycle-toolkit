@@ -38,15 +38,15 @@ type KeptnMetricSpec struct {
 // KeptnMetricStatus defines the observed state of KeptnMetric
 type KeptnMetricStatus struct {
 	// Value represents the resulting value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 	// RawValue represents the resulting value in raw format
-	RawValue []byte `json:"rawValue"`
+	RawValue []byte `json:"rawValue,omitempty"`
 	// LastUpdated represents the time when the status data was last updated
-	LastUpdated metav1.Time `json:"lastUpdated"`
+	LastUpdated metav1.Time `json:"lastUpdated,omitempty"`
 	// ErrMsg represents the error details when the query could not be evaluated
 	ErrMsg string `json:"errMsg,omitempty"`
 	// IntervalResults contain a slice of all the interval results
-	IntervalResults []IntervalResult `json:"results"`
+	IntervalResults []IntervalResult `json:"results,omitempty"`
 }
 
 // ProviderRef represents the provider object
@@ -59,15 +59,15 @@ type ProviderRef struct {
 type RangeSpec struct {
 	// Interval specifies the duration of the time interval for the data query
 	// +kubebuilder:default:="5m"
-	Interval string `json:"interval,omitempty"`
+	Interval string `json:"interval"`
 	// Step represents the query resolution step width for the data query
-	Step string `json:"step,omitempty"`
+	Step string `json:"step"`
 	// Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median
 	// +kubebuilder:validation:Enum:=p90;p95;p99;max;min;avg;median
-	Aggregation string `json:"aggregation,omitempty"`
+	Aggregation string `json:"aggregation"`
 	// StoredResults indicates the upper limit of how many past results should be stored in the status of a KeptnMetric
 	// +kubebuilder:validation:Maximum:=255
-	StoredResults uint `json:"storedResults,omitempty"`
+	StoredResults uint `json:"storedResults"`
 }
 
 type IntervalResult struct {

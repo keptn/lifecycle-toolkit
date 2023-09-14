@@ -53,7 +53,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{Raw: "{\"pass\":true}", Pass: true},
+			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
 			res:     metricstypes.AnalysisResult{Pass: true},
 		},
 	}

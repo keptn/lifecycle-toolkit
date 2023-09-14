@@ -121,6 +121,11 @@ local-image: clean
 clean:
 	rm -rf ./bin
 
+##golangci-lint
+.PHONY: lint
+lint:
+	golangci-lint run --config ../.golangci.yml -v
+
 
 #### developer build   ####
 

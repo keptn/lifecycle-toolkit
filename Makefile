@@ -38,6 +38,23 @@ load-test:
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
 	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
 
+#Run tests for subfiles
+.PHONY: metrics-operator-test
+metrics-operator-test:
+        $(MAKE) -C metrics-operator test
+
+.PHONY: certmanager-test
+certmanager-test:
+        $(MAKE) -C klt-cert-manager test
+
+.PHONY: operator-test
+operator-test:
+        $(MAKE) -C lifecycle-operator test
+
+.PHONY: scheduler-test
+scheduler-test:
+        $(MAKE) -C scheduler test
+
 .PHONY: install-prometheus
 install-prometheus:
 	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
@@ -99,3 +116,20 @@ include docs/Makefile
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
+
+##Run lint for the subfiles
+.PHONY: metrics-operator-lint
+metrics-operator-lint:
+        $(MAKE) -C metrics-operator lint
+
+.PHONY: certmanager-lint
+certmanager-lint:
+        $(MAKE) -C klt-cert-manager lint
+
+.PHONY: operator-lint
+operator-lint:
+        $(MAKE) -C lifecycle-operator lint
+
+.PHONY: scheduler-lint
+scheduler-lint:
+        $(MAKE) -C scheduler lint

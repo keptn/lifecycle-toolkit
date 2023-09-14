@@ -46,3 +46,12 @@ spec:
   analysisDefinition:
     name: ed-my-proj-dev-svc1
     namespace: $NAMESPACE
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-mocked-provider
+  namespace: $NAMESPACE
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"

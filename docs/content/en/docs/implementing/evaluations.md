@@ -12,21 +12,11 @@ The example
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnEvaluationDefinition
-metadata:
-  name: app-pre-deploy-eval-2
-  namespace: podtato-kubectl
-spec:
-  objectives:
-    - keptnMetricRef:
-        name: available-cpus
-        namespace: podtato-kubectl
-      evaluationTarget: ">4"`
+{{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
 ```
 
-The `evaluationTarget` is set to be `>4`,
-so this evaluation ensures that more than 4 CPUs are available
+The `evaluationTarget` is set to be `>1`,
+so this evaluation ensures that more than 1 CPU is available
 before the workload or application is deployed.
 
 The example
@@ -36,19 +26,17 @@ file defines the
 that is named  `available-cpus`:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
-kind: KeptnMetric
-metadata:
-  name: available-cpus
-  namespace: podtato-kubectl
-spec:
-  provider:
-    name: my-provider
-  query: "sum(kube_node_status_capacity{resource='cpu'})"
-  fetchIntervalSeconds: 10
+{{< embed path="/examples/sample-app/base/metric.yaml" >}}
 ```
 
-To integrate your `KeptnEvaluation` resource, you must:
+To run an evaluation on one of your 
+[Workloads](https://kubernetes.io/docs/concepts/workloads/)
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+or
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/),
+you must:
 
 * Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
   [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),

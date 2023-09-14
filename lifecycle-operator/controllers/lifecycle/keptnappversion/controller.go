@@ -172,7 +172,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 		appVersion.SetEndTime()
 	}
 
-	err := r.Client.Status().Update(ctx, appVersion)
+	err := r.Client.Update(ctx, appVersion)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err

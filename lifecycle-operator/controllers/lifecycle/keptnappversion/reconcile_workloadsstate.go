@@ -59,7 +59,7 @@ func (r *KeptnAppVersionReconciler) reconcileWorkloads(ctx context.Context, appV
 	r.Log.Info("Workload status", "status", appVersion.Status.WorkloadStatus)
 
 	// Write Status Field
-	err = r.Client.Status().Update(ctx, appVersion)
+	err = r.Client.Update(ctx, appVersion)
 	return overallState, err
 }
 
@@ -81,7 +81,7 @@ func (r *KeptnAppVersionReconciler) handleUnaccessibleWorkloadInstanceList(ctx c
 	}
 	appVersion.Status.WorkloadOverallStatus = apicommon.StateUnknown
 	appVersion.Status.WorkloadStatus = newStatus
-	return r.Client.Status().Update(ctx, appVersion)
+	return r.Client.Update(ctx, appVersion)
 }
 
 func getWorkloadInstanceName(appName string, workloadName string, version string) string {

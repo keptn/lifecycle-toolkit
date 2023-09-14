@@ -111,7 +111,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}
 
 		app.Status.CurrentVersion = app.Spec.Version
-		if err := r.Client.Status().Update(ctx, app); err != nil {
+		if err := r.Client.Update(ctx, app); err != nil {
 			r.Log.Error(err, "could not update Current Version of App")
 			return ctrl.Result{}, err
 		}
@@ -192,7 +192,7 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 			}
 		} else if !deprecatedAppVersion.Status.Status.IsDeprecated() {
 			deprecatedAppVersion.DeprecateRemainingPhases(common.PhaseDeprecated)
-			if err := r.Client.Status().Update(ctx, deprecatedAppVersion); err != nil {
+			if err := r.Client.Update(ctx, deprecatedAppVersion); err != nil {
 				r.Log.Error(err, "could not update appVersion %s status", deprecatedAppVersion.Name)
 				lastResultErr = err
 			}

@@ -42,7 +42,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context
 	}
 
 	// Write Status Field
-	err = r.Client.Status().Update(ctx, workloadInstance)
+	err = r.Client.Update(ctx, workloadInstance)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

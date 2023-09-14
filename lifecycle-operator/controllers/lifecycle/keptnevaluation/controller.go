@@ -137,7 +137,7 @@ func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, ev
 
 func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
-	err := r.Client.Status().Update(ctx, evaluation)
+	err := r.Client.Update(ctx, evaluation)
 	if err != nil {
 		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		span.SetStatus(codes.Error, err.Error())
@@ -235,7 +235,7 @@ func updateStatusSummary(statusSummary apicommon.StatusSummary, statusItem *klcv
 func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
 	evaluation.SetEndTime()
 
-	err := r.Client.Status().Update(ctx, evaluation)
+	err := r.Client.Update(ctx, evaluation)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")

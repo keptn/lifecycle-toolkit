@@ -10,10 +10,7 @@ yaml file.
 The example
 [app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app-pre-deploy-eval.yaml)
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
-
-```yaml
 {{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
-```
 
 The `evaluationTarget` is set to be `>1`,
 so this evaluation ensures that more than 1 CPU is available
@@ -24,10 +21,7 @@ The example
 file defines the
 [KeptnMetric](../yaml-crd-ref/metric.md) resource
 that is named  `available-cpus`:
-
-```yaml
 {{< embed path="/examples/sample-app/base/metric.yaml" >}}
-```
 
 To run an evaluation on one of your
 [Workloads](https://kubernetes.io/docs/concepts/workloads/)

@@ -61,7 +61,7 @@ that are relevant only to documentation
   the syntax is:
 
   ```md
-    \{\{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >\}\}
+{{</* embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" */>}}
   ```
 
 * `markdownlint` enforces limits on line length.

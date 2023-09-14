@@ -6,13 +6,4 @@ commands:
   #  substitutes current time and namespace, making sure they are changed to env var first
   # to prevent bad files in case of a test interrupt
   - script: |
-      current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      initial_timestamp=$(date -u -d "$current_time" +%s)
-      export CURRENT_TIME="$current_time"
-      export LATER="$current_time"
-      echo "templating time" $CURRENT_TIME $LATER
-      envsubst <"install.yaml" >out.yaml
-  - command: kubectl apply -f out.yaml
-  #  rewrites the env var not to push useless date changes when running locally
-  - script: |
-      rm out.yaml
+      envsubst < install.yaml | kubectl apply -f -

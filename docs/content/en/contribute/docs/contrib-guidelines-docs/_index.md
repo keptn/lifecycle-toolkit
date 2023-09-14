@@ -51,7 +51,7 @@ that are relevant only to documentation
     for the same reason.
 
 * When you want to display a sample file that exists in the repository,
-  use the `embed path` syntax
+  use the `embed path` shortcode syntax
   (which automatically pulls the current version of the file into your document)
   rather than copying the text.
   This ensures that, when the sample file is updated,
@@ -60,7 +60,9 @@ that are relevant only to documentation
   For example, to embed the `examples/sample-app/version3/app-pre-deploy-eval.yaml` file,
   the syntax is:
 
-  \{\{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
+     ```md
+     {{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
+     ```
 
 * `markdownlint` enforces limits on line length.
   Links to other documents are exempted from this limit

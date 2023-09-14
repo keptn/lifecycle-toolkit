@@ -87,6 +87,11 @@ build: generate fmt vet ## Build manager binary.
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
 
+##golangci-lint
+.PHONY: lint
+lint:
+	golangci-lint run --config ../.golangci.yml -v
+
 ##@ Deployment
 
 ifndef ignore-not-found

@@ -1,9 +1,7 @@
 ---
 title: Integrate Keptn with your applications
 description: How to integrate Keptn into your Kubernetes cluster
-layout: quickstart
 weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 Keptn works

@@ -60,9 +60,9 @@ that are relevant only to documentation
   For example, to embed the `examples/sample-app/version3/app-pre-deploy-eval.yaml` file,
   the syntax is:
 
-     ```md
-     \{\{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
-     ```
+  ```md
+    \{\{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
+  ```
 
 * `markdownlint` enforces limits on line length.
   Links to other documents are exempted from this limit

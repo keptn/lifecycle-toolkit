@@ -29,7 +29,7 @@ that is named  `available-cpus`:
 {{< embed path="/examples/sample-app/base/metric.yaml" >}}
 ```
 
-To run an evaluation on one of your 
+To run an evaluation on one of your
 [Workloads](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),

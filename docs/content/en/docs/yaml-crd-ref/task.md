@@ -60,7 +60,7 @@ spec:
   * **workloadVersion** - `KeptnWorkload` version
       for which the `KeptnTask` is being executed.
   * **appName** - Name of the
-      [KeptnApp](../yaml-crd-ref/app) resource
+      [KeptnApp](../yaml-crd-ref/app.md) resource
       for which the `KeptnTask` is being executed.
   * **appVersion** - Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
@@ -203,5 +203,5 @@ spec:
 
 ## See also
 
-* [KeptnTaskDefinition](taskdefinition)
-* [Keptn for Non-Kubernetes Applications](../implementing/tasks-non-k8s-apps)
+* [KeptnTaskDefinition](taskdefinition.md)
+* [Keptn for Non-Kubernetes Applications](../implementing/tasks-non-k8s-apps.md)

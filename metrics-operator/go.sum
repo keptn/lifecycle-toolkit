@@ -266,8 +266,8 @@ github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7V
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230913063529-469578edabb0 h1:o/s55/xwgZe+AgCbEReZLrDC7dHubsRk7j7RXXGSpQc=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230913063529-469578edabb0/go.mod h1:+Kion1lq0BnlGJOfO1HQeApnTD2huIIiIrNzFMwWwjs=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230915062319-b2853f9ecdfb h1:95+wDGbz28EyzuWU0x6iCB1ezCJG9kBTUyq8sSa8cMk=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230915062319-b2853f9ecdfb/go.mod h1:p2jpDC9PY8IGBQZ69KibXR+5YnRlWlej4mE75EGGnTs=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=

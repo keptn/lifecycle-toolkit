@@ -194,7 +194,6 @@ func main() {
 			Scheme:                mgr.GetScheme(),
 			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
 			MaxWorkers:            2,
-			Namespace:             env.PodNamespace,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,
 		}).SetupWithManager(mgr); err != nil {

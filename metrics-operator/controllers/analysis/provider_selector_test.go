@@ -11,6 +11,7 @@ import (
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -75,7 +76,32 @@ func TestProvidersPool(t *testing.T) {
 
 	analysis, analysisDef, template, provider := getTestCRDs()
 
+	provider2 := metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-provider",
+			Namespace: "default2",
+		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type:         "prometheus",
+			TargetServer: "localhost:2000",
+		},
+	}
+
+	template2 := metricsapi.AnalysisValueTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-template",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisValueTemplateSpec{
+			Provider: metricsapi.ObjectReference{
+				Name: "my-provider",
+			},
+			Query: "this is a {{.good}} query{{.dot}}",
+		},
+	}
+
 	provider.Spec.Type = "mock-provider"
+	provider2.Spec.Type = "mock-provider"
 
 	testCases := []struct {
 		name           string
@@ -101,6 +127,13 @@ func TestProvidersPool(t *testing.T) {
 				Query: "this is a good query.",
 			},
 		},
+		{
+			name:       "Success - provider in different namespace",
+			mockClient: fake2.NewClient(&analysis, &analysisDef, &template2, &provider2),
+			providerResult: &metricstypes.ProviderRequest{
+				Query: "this is a good query.",
+			},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -118,7 +151,7 @@ func TestProvidersPool(t *testing.T) {
 				IObjectivesEvaluator: mockEvaluator,
 				Client:               tc.mockClient,
 				log:                  mockLogger,
-				Namespace:            "default",
+				Namespace:            "default2",
 				Objectives: map[int][]metricsapi.Objective{
 					1: analysisDef.Spec.Objectives,
 				},

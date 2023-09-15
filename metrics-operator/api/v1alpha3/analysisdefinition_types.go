@@ -124,3 +124,10 @@ func init() {
 func (o *OperatorValue) GetFloatValue() float64 {
 	return o.FixedValue.AsApproximateFloat64()
 }
+
+func (o *Objective) GetAnalysisValueTemplateNamespace(namespace string) string {
+	if o.AnalysisValueTemplateRef.Namespace == "" {
+		return namespace
+	}
+	return o.AnalysisValueTemplateRef.Namespace
+}

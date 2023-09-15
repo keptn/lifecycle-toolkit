@@ -41,7 +41,6 @@ type AnalysisReconciler struct {
 	Scheme     *runtime.Scheme
 	Log        logr.Logger
 	MaxWorkers int //maybe 2 or 4 as def
-	Namespace  string
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
 }
@@ -74,13 +73,10 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef := &metricsapi.AnalysisDefinition{}
-	if analysis.Spec.AnalysisDefinition.Namespace == "" {
-		analysis.Spec.AnalysisDefinition.Namespace = a.Namespace
-	}
 	err := a.Client.Get(ctx,
 		types.NamespacedName{
 			Name:      analysis.Spec.AnalysisDefinition.Name,
-			Namespace: analysis.Spec.AnalysisDefinition.Namespace},
+			Namespace: analysis.GetAnalysisDefinitionNamespace()},
 		analysisDef,
 	)
 
@@ -89,7 +85,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			a.Log.Info(
 				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeue",
 					analysis.Spec.AnalysisDefinition.Name,
-					analysis.Spec.AnalysisDefinition.Namespace),
+					analysis.GetAnalysisDefinitionNamespace()),
 			)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
@@ -107,7 +103,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysis.GetAnalysisDefinitionNamespace())
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {

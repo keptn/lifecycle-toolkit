@@ -82,7 +82,7 @@ spec:
   or in the Keptn name space.
     * **context** - Contextual information about the task execution
       * **appName** - Name of the
-          [KeptnApp](../yaml-crd-ref/app) resource
+          [KeptnApp](../yaml-crd-ref/app.md) resource
           for which the `KeptnTask` is being executed.
       * **appVersion** - Version of the `KeptnApp` resource
           for which the `KeptnTask` is being executed.

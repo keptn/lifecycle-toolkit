@@ -13,7 +13,7 @@ To do this:
 
 1. [Install and enable a Kubernetes cluster](#install-and-enable-a-kubernetes-cluster)
 1. [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
-1. [Create a KeptnTask](#create-and-appy-a-keptntask)
+1. [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
 1. [Re-run the KeptnTask](#re-run-the-keptntask)
 
 ## Install and enable a Kubernetes cluster
@@ -79,7 +79,6 @@ you must manually create a
 a new (and uniquely named)
 [KeptnTask](../yaml-crd-ref/task)
 YAML file to describe that resource.
-
 
 The `KeptnTask` references the `KeptnTaskDefinition`
 in the `spec.taskDefinition` field.
@@ -168,5 +167,3 @@ You can then apply this file with the following command:
 ```yaml
 kubectl --apply test-task-2.yaml
 ```
-
-

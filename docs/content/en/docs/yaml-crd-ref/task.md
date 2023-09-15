@@ -205,4 +205,3 @@ spec:
 
 * [KeptnTaskDefinition](taskdefinition)
 * [Keptn for Non-Kubernetes Applications](../implementing/tasks-non-k8s-apps)
-

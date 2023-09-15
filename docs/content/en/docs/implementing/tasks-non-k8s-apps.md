@@ -19,12 +19,12 @@ To do this:
 ## Install and enable a Kubernetes cluster
 
 You must still
-[install](../install/install/#use-helm-chart)
+[install](../install/install.md/#use-helm-chart)
 and
-[enable](../install/install/#enable-keptn-for-your-cluster)
+[enable](../install/install.md/#enable-keptn-for-your-cluster)
 Keptn on a Kubernetes cluster,
 but this can be a very lightweight, single-node KinD cluster; see
-[Create local Kubernetes cluster](../install/k8s/#create-local-kubernetes-cluster).
+[Create local Kubernetes cluster](../install/k8s.md/#create-local-kubernetes-cluster).
 Keptn only triggers on-demand `KeptnTask` resources
 so resource utilization is minimal.
 
@@ -34,7 +34,7 @@ where the deployment is running?
 ## Create a KeptnTaskDefinition
 
 When you have Keptn installed, create a
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition/)
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
 YAML file that defines what you want to execute.
 See
 [Deployment tasks](../implementing/tasks/)
@@ -65,7 +65,7 @@ but you can also use the `deno-runtime` or `python-runtime` runners.
 ## Create and apply a KeptnTask
 
 You must manually create the
-[KeptnTask](../yaml-crd-ref/task)
+[KeptnTask](../yaml-crd-ref/task.md)
 the resource.
 In the standard operating mode, when Keptn is managing workloads,
 the creation of the `KeptnTask` resource is automatic.

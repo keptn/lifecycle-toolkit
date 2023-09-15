@@ -39,9 +39,5 @@ patches:
 # - path: patches/webhook_in_lifecycle_keptnevaluationdefinitions.yaml
 # - path: patches/webhook_in_lifecycle_keptnevaluations.yaml
 # - path: patches/webhook_in_options_keptnconfigs.yaml
-# - path: patches/webhook_in_lifecycle_keptnapps.yaml
-# - path: patches/webhook_in_lifecycle_keptnappversions.yaml
-# - path: patches/webhook_in_lifecycle_keptnworkloadinstances.yaml
-# - path: patches/webhook_in_lifecycle_keptnevaluationproviders.yaml
 # - path: patches/webhook_in_keptnappcreationrequests.yaml
 # +kubebuilder:scaffold:crdkustomizewebhookpatch

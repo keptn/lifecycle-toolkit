@@ -77,7 +77,7 @@ each time you want to rerun this task
 Each time you want to execute a `KeptnTask` resource,
 you must manually create a
 a new (and uniquely named)
-[KeptnTask](../yaml-crd-ref/task)
+[KeptnTask](../yaml-crd-ref/task.md)
 YAML file to describe that resource.
 
 The `KeptnTask` references the `KeptnTaskDefinition`

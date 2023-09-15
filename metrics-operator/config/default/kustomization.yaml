@@ -15,13 +15,13 @@ namespace: keptn-lifecycle-toolkit-system
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ../crd
-- ../rbac
-- ../manager
-- ../metrics
-- ../webhook
-  # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
-  # crd/kustomization.yaml
+  - ../crd
+  - ../rbac
+  - ../manager
+  - ../metrics
+  - ../webhook
+# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
+# crd/kustomization.yaml
 # [CERTMANAGER] To enable cert-manager, uncomment all sections with 'CERTMANAGER'. 'WEBHOOK' components are required.
 # - ../certmanager
 # [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.

@@ -2,23 +2,46 @@
 title: Keptn for Non-Kubernetes Applications
 description: Using Keptn with Non-Kubernetes Applications
 weight: 95
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-It is possible to trigger Keptn Tasks for workloads and applications that are deployed outside of Kubernetes.
+Keptn Tasks can be triggered for workloads and applications
+that are deployed outside of Kubernetes.
+For example, Keptn could trigger load and performance tests
+for an application that is deployed on a virtual machine.
 
-For example, to trigger a load test for an application deployed on a virtual machine.
+To do this:
 
-You will still need to deploy Keptn on a Kubernetes cluster, but this can be a very lightweight, single-node kind cluster.
-Keptn's only job is to trigger on-demand tasks, so resource utilization will be minimal.
+1. [Install and enable a Kubernetes cluster](#install-and-enable-a-kubernetes-cluster)
+1. [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
+1. [Create a KeptnTask](#create-and-appy-a-keptntask)
+1. [Re-run the KeptnTask](#re-run-the-keptntask)
 
-## Step 1: Create a KeptnTaskDefinition
+## Install and enable a Kubernetes cluster
 
-When you have Keptn installed, [create a KeptnTaskDefinition](../implementing/tasks/).
+You must still
+[install](../install/install/#use-helm-chart)
+and
+[enable](../install/install/#enable-keptn-for-your-cluster)
+Keptn on a Kubernetes cluster,
+but this can be a very lightweight, single-node KinD cluster; see
+[Create local Kubernetes cluster](../install/k8s/#create-local-kubernetes-cluster).
+Keptn only triggers on-demand `KeptnTask` resources
+so resource utilization is minimal.
 
-A `KeptnTaskDefinition` defines **what** you want to execute.
+TODO: How is this cluster associated with the VM
+where the deployment is running?
 
-For example:
+## Create a KeptnTaskDefinition
+
+When you have Keptn installed, create a
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition/)
+YAML file that defines what you want to execute.
+See
+[Deployment tasks](../implementing/tasks/)
+for more information.
+
+For example, you might create a `test-task-definition.yaml` file
+with the following content:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -35,15 +58,33 @@ spec:
       - 'hello world'
 ```
 
-## Step 2: Create a KeptnTask for each run
+This example uses the `container-runtime` runner
+because it allows the most flexibility
+but you can also use the `deno-runtime` or `python-runtime` runners.
 
-Each time you want to execute a `KeptnTaskDefinition`, a new (and uniquely named) `KeptnTask` must be created.
+## Create and apply a KeptnTask
 
-In the standard operating mode, when Keptn is managing workloads, the creation of the `KeptnTask` CR is automatic.
-
+You must manually create the
+[KeptnTask](../yaml-crd-ref/task)
+the resource.
+In the standard operating mode, when Keptn is managing workloads,
+the creation of the `KeptnTask` resource is automatic.
 Here though, we must create it ourselves.
 
-The `KeptnTask` references the `KeptnTaskDefinition` in the `spec.taskDefinition` field:
+Moreover, you must create a new (and uniquely named)
+`KeptnTask` resource
+each time you want to rerun this task
+Each time you want to execute a `KeptnTask` resource,
+you must manually create a
+a new (and uniquely named)
+[KeptnTask](../yaml-crd-ref/task)
+YAML file to describe that resource.
+
+
+The `KeptnTask` references the `KeptnTaskDefinition`
+in the `spec.taskDefinition` field.
+For example, you might create a `test-task.yaml` file
+with the following content:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -65,13 +106,32 @@ spec:
     workloadVersion: "1.0.0"
 ```
 
-Applying this file will cause Keptn to create a Job and a Pod and run the `KeptnTaskDefinition`.
+TODO: This file does not match what I see in the API Reference.
+See specific comments in the `KeptnTask` reference page.
+When we resolve those issues, I will modify this file appropriately.
 
-`kubectl get keptntasks` and `kubectl get pods` will show the current status of the jobs.
+You can then apply this YAML file with the following command:
 
-## Running More KeptnTasks
+```yaml
+kubectl --apply test-task.yaml
+```
 
-For subsequent KeptnTask runs, the `KeptnTask` name needs to be unique, update the follow fields:
+Applying this file causes Keptn to create a Job and a Pod
+and run the executables defined
+in the associated `KeptnTaskDefinition` resource.
+
+Use the following commands to show the current status of the jobs:
+
+```shell
+kubectl get keptntasks 
+kubectl get pods
+```
+
+## Re-run the KeptnTask
+
+For subsequent KeptnTask runs,
+the `KeptnTask` name and version fields must be unique,
+so copy the `KeptnTask` file you have and update the following fields:
 
 - `name`
 - `spec.appVersion`
@@ -79,7 +139,9 @@ For subsequent KeptnTask runs, the `KeptnTask` name needs to be unique, update t
 - `spec.context.appVersion`
 - `spec.context.workloadVersion`
 
-For example:
+A standard practice is to just increment the values of these fields.
+For example, you could create a `test-task-2.yaml` file
+with the following content:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -100,3 +162,11 @@ spec:
     workloadName: "my-workload"
     workloadVersion: "1.0.1"
 ```
+
+You can then apply this file with the following command:
+
+```yaml
+kubectl --apply test-task-2.yaml
+```
+
+

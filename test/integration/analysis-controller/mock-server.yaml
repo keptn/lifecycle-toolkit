@@ -1,0 +1,143 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mockserver
+  namespace: $NAMESPACE
+spec:
+  ports:
+    - name: serviceport
+      port: 1080
+      protocol: TCP
+      targetPort: serviceport
+  selector:
+    app: mockserver
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mockserver
+  name: mockserver
+  namespace: $NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mockserver
+  template:
+    metadata:
+      labels:
+        app: mockserver
+      name: mockserver
+    spec:
+      containers:
+        - env:
+            - name: MOCKSERVER_LOG_LEVEL
+              value: INFO
+            - name: SERVER_PORT
+              value: "1080"
+          image: mockserver/mockserver:mockserver-5.13.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: serviceport
+            timeoutSeconds: 1
+          name: mockserver
+          ports:
+            - containerPort: 1080
+              name: serviceport
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: serviceport
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config-volume
+            - mountPath: /libs
+              name: libs-volume
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: mockserver-config
+            optional: true
+          name: config-volume
+        - configMap:
+            defaultMode: 420
+            name: mockserver-config
+            optional: true
+          name: libs-volume
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mockserver-config
+  namespace: $NAMESPACE
+data:
+  initializerJson.json: |-
+    [
+      {
+        "httpRequest": {
+          "path": "/api/v1/query_range",
+          "method": "POST"
+        },
+        "httpResponse": {
+          "body": {
+            "status": "success",
+            "data": {
+              "resultType": "matrix",
+              "result": [
+                {
+                  "metric": {
+                    "__name__": "metric-name",
+                    "job": "",
+                    "instance": ""
+                  },
+                  "values": [[1669714193.275, "4"]]
+                }
+              ]
+            }
+          },
+          "statusCode": 200
+        }
+      }
+    ]
+  mockserver.properties: |-
+    ###############################
+    # MockServer & Proxy Settings #
+    ###############################
+    # Socket & Port Settings
+    # socket timeout in milliseconds (default 120000)
+    mockserver.maxSocketTimeout=120000
+    # Certificate Generation
+    # dynamically generated CA key pair (if they don't already exist in
+    specified directory)
+    mockserver.dynamicallyCreateCertificateAuthorityCertificate=true
+    # save dynamically generated CA key pair in working directory
+    mockserver.directoryToSaveDynamicSSLCertificate=.
+    # certificate domain name (default "localhost")
+    mockserver.sslCertificateDomainName=localhost
+    # comma separated list of ip addresses for Subject Alternative Name domain
+    names (default empty list)
+    mockserver.sslSubjectAlternativeNameDomains=www.example.com,www.another.com
+    # comma separated list of ip addresses for Subject Alternative Name ips
+    (default empty list)
+    mockserver.sslSubjectAlternativeNameIps=127.0.0.1
+    # CORS
+    # enable CORS for MockServer REST API
+    mockserver.enableCORSForAPI=true
+    # enable CORS for all responses
+    mockserver.enableCORSForAllResponses=true
+    # Json Initialization
+    mockserver.initializationJsonPath=/config/initializerJson.json

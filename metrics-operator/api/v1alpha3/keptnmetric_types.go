@@ -73,7 +73,7 @@ type RangeSpec struct {
 type IntervalResult struct {
 	// Value represents the resulting value
 	Value string `json:"value"`
-	// RawValue represents the resulting value in raw format
+	// Range represents the time range for which this data was queried
 	Range *RangeSpec `json:"range,omitempty"`
 	// LastUpdated represents the time when the status data was last updated
 	LastUpdated metav1.Time `json:"lastUpdated"`

@@ -203,7 +203,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `value` _string_ | Value represents the resulting value |
-| `range` _[RangeSpec](#rangespec)_ | RawValue represents the resulting value in raw format |
+| `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which this data was queried |
 | `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
 | `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 

@@ -23,7 +23,6 @@ import (
 
 	// nolint:gci
 	// +kubebuilder:scaffold:imports
-
 	"go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
 )

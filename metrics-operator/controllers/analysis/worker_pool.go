@@ -83,11 +83,11 @@ func (aw WorkersPool) CollectAnalysisResults(ctx context.Context) (map[string]me
 			res, err2 := aw.GetResult(ctx)
 			if err2 != nil {
 				err = err2
-			}
-			// TODO for some reason not all values are there
-			results[analysis.ComputeKey(res.Objective)] = *res
-			if res.ErrMsg != "" {
-				err = errors.New(res.ErrMsg)
+			} else {
+				results[analysis.ComputeKey(res.Objective)] = *res
+				if res.ErrMsg != "" {
+					err = errors.New(res.ErrMsg)
+				}
 			}
 		}
 	}

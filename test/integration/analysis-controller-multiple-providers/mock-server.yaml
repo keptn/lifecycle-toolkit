@@ -94,7 +94,7 @@ data:
           "body" : {
             "type" : "PARAMETERS",
             "parameters" : {
-              "query" : [ "query-1" ]           
+              "query" : [ "query-1" ]
             }
           }
         },

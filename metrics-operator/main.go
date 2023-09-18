@@ -56,7 +56,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/metric"
 
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-
 )
 
 var (

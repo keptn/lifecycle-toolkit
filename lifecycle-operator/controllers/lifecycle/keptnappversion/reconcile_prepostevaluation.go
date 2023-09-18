@@ -42,7 +42,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 	}
 
 	// Write Status Field
-	err = r.Client.Update(ctx, appVersion)
+	err = r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

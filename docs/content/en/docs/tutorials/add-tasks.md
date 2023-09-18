@@ -56,7 +56,7 @@ The page should remain blank, but when toggling back to `http://localhost:8084`,
 
 Every request sent to that unique URL will be logged here.
 
-![webhook.site entry](/docs/tutorials/assets/webhook.site.2.png)
+![webhook.site entry](../assets/webhook.site.2.png)
 
 ## Add a Post Deployment Task
 
@@ -126,7 +126,7 @@ runsendevent1-*****   1/1           6s         2m
 
 The webhook sync should show this:
 
-![webhook sync](/docs/tutorials/assets/webhook.site.3.png)
+![webhook sync](../assets/webhook.site.3.png)
 
 Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../implementing/tasks-non-k8s-apps.md).
 

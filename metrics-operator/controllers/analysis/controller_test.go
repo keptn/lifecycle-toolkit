@@ -101,6 +101,62 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 	}
 }
 
+func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishes(t *testing.T) {
+	analysis, analysisDef, template, _ := getTestCRDs()
+
+	analysis.Status = metricsapi.AnalysisStatus{
+		StoredValues: map[string]metricsapi.ProviderResult{
+			"default": {
+				Objective: metricsapi.ObjectReference{
+					Name:      "my-analysis-def",
+					Namespace: "default",
+				},
+				Value: "1",
+			},
+		},
+	}
+	require.NotNil(t, analysis.Status.StoredValues)
+
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	fclient := fake2.NewClient(&analysis, &analysisDef, &template)
+	a := &AnalysisReconciler{
+		Client:                fclient,
+		Scheme:                fclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return metricstypes.AnalysisResult{Pass: true}
+			}},
+	}
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+
+	status := &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true}
+
+	got, err := a.Reconcile(context.TODO(), req)
+
+	require.Nil(t, err)
+	require.Equal(t, controllerruntime.Result{}, got)
+	resAnalysis := metricsapi.Analysis{}
+	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
+	require.Nil(t, err)
+	require.Nil(t, resAnalysis.Status.StoredValues)
+	require.Equal(t, *status, resAnalysis.Status)
+
+}
+
 func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsapi.AnalysisValueTemplate, metricsapi.KeptnMetricsProvider) {
 	analysis := metricsapi.Analysis{
 		ObjectMeta: metav1.ObjectMeta{

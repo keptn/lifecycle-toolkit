@@ -121,6 +121,12 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	err = a.evaluateObjectives(ctx, res, analysisDef, analysis)
 
+	// if evaluation was successful remove the stored values
+	if err == nil {
+		analysis.Status.StoredValues = nil
+		err = a.updateStatus(ctx, analysis)
+	}
+
 	return ctrl.Result{}, err
 }
 

@@ -40,7 +40,7 @@ func UpdateAppRevision(c client.Client, name string, revision uint) error {
 	return c.Update(context.TODO(), app)
 }
 
-func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha3.KeptnWorkloadRef, status lfcv1alpha3.KeptnAppVersionStatus) error {
+func ReturnAppVersion(namespace string, appName string, version string, workloads []lfcv1alpha3.KeptnWorkloadRef, status lfcv1alpha3.KeptnAppVersionStatus) *lfcv1alpha3.KeptnAppVersion {
 	appVersionName := fmt.Sprintf("%s-%s", appName, version)
 	app := &lfcv1alpha3.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
@@ -61,7 +61,7 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 		},
 		Status: status,
 	}
-	return c.Create(context.TODO(), app)
+	return app
 }
 
 func InitAppMeters() apicommon.KeptnMeters {

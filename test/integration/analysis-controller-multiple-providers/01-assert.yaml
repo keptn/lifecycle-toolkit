@@ -8,4 +8,4 @@ spec:
 status:
   pass: true
   # yamllint disable-line rule:line-length
-  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}},"fulfilled":false},"warning":false,"pass":true},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true,"warning":false}'
+  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"5"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"4"}},"fulfilled":false},"warning":false,"pass":true},"value":11,"score":2},{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"20"}},"fulfilled":false},"warnResult":{"operator":{"greaterThan":{"fixedValue":"15"}},"fulfilled":true},"warning":true,"pass":false},"value":20,"score":0.5},{"result":{"failResult":{"operator":{"notInRange":{"lowBound":"25","highBound":"35"}},"fulfilled":false},"warnResult":{"operator":{},"fulfilled":false},"warning":false,"pass":true},"value":30,"score":1}],"totalScore":3.5,"maximumScore":4,"pass":true,"warning":false}'

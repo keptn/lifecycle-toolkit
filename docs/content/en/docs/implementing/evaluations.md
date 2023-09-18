@@ -72,5 +72,5 @@ Note the following:
   are not evaluated.
 * The results of the `KeptnEvaluationDefinition` executions
   are written to a
-  [KeptnEvaluation](../../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
+  [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
   resource.

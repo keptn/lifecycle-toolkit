@@ -63,7 +63,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 				APIVersion: "metrics.keptn.sh/v1alpha3",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name: key,
+				Name: ConvertResourceName(key),
 			},
 			Spec: metricsapi.AnalysisValueTemplateSpec{
 				Query: convertQuery(query),

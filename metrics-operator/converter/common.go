@@ -3,6 +3,8 @@ package converter
 import (
 	"fmt"
 	"math"
+	"regexp"
+	"strings"
 
 	"gopkg.in/inf.v0"
 )
@@ -30,6 +32,8 @@ func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
 const MaxInt = math.MaxInt
 const MinInt = -MaxInt - 1
 
+const MaxResourceNameLength = 63
+
 type Operator struct {
 	Value     *inf.Dec
 	Operation string
@@ -46,4 +50,20 @@ func isGreaterOrEqual(op string) bool {
 
 func isLessOrEqual(op string) bool {
 	return op == "<" || op == "<="
+}
+
+func ConvertResourceName(name string) string {
+	// Replace non-alphanumeric characters with '-'
+	re := regexp.MustCompile("[^a-z0-9]+")
+	normalized := re.ReplaceAllString(strings.ToLower(name), "-")
+
+	// Remove leading and trailing '-'
+	normalized = strings.Trim(normalized, "-")
+
+	// Ensure the name is no longer than 63 characters
+	if len(normalized) > MaxResourceNameLength {
+		normalized = normalized[:MaxResourceNameLength]
+	}
+
+	return normalized
 }

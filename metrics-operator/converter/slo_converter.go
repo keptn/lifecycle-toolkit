@@ -129,7 +129,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 		}
 		objective := metricsapi.Objective{
 			AnalysisValueTemplateRef: metricsapi.ObjectReference{
-				Name:      o.Name,
+				Name:      ConvertResourceName(o.Name),
 				Namespace: namespace,
 			},
 			KeyObjective: o.KeySLI,

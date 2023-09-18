@@ -19,7 +19,7 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
-  name: response_time_p95
+  name: response-time-p95
 spec:
   provider:
     name: dynatrace

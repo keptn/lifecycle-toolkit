@@ -96,7 +96,7 @@ metadata:
 spec:
   objectives:
   - analysisValueTemplateRef:
-      name: response_time_p90
+      name: response-time-p90
       namespace: default
     target:
       failure:
@@ -109,7 +109,7 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p91
+      name: response-time-p91
       namespace: default
     target:
       failure:
@@ -118,7 +118,7 @@ spec:
           lowBound: "600"
     weight: 5
   - analysisValueTemplateRef:
-      name: response_time_p80
+      name: response-time-p80
       namespace: default
     target:
       failure:
@@ -130,7 +130,7 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p70
+      name: response-time-p70
       namespace: default
     target:
       failure:
@@ -142,7 +142,7 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p95
+      name: response-time-p95
       namespace: default
     target:
       failure:
@@ -165,7 +165,7 @@ spec:
       namespace: default
     target: {}
   - analysisValueTemplateRef:
-      name: error_rate
+      name: error-rate
       namespace: default
     target: {}
   totalScore:

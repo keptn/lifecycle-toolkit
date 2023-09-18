@@ -37,6 +37,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
@@ -197,9 +198,10 @@ func main() {
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Log:    metricsLogger.V(env.KeptnMetricControllerLogLevel),
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		Log:             metricsLogger.V(env.KeptnMetricControllerLogLevel),
+		ProviderFactory: providers.NewProvider,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 		os.Exit(1)

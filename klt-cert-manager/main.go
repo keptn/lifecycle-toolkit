@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/kelseyhightower/envconfig"
-	webhookcontroller "github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -111,7 +111,7 @@ func main() {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
-	certificateReconciler := webhookcontroller.NewReconciler(webhookcontroller.CertificateReconcilerConfig{
+	certificateReconciler := keptnwebhookcontroller.NewReconciler(keptnwebhookcontroller.CertificateReconcilerConfig{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CancelMgrFunc: nil,

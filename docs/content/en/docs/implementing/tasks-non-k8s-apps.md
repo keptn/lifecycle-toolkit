@@ -87,10 +87,6 @@ kind: KeptnTask
 metadata:
   name: runhelloworld2
 spec:
-  workload: "my-workload"
-  workloadVersion: "1.0.1"
-  appVersion: "1.0.1"
-  app: "my-app"
   taskDefinition: helloworldtask
   context:
     appName: "my-app"

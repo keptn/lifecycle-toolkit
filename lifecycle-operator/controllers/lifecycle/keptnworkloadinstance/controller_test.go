@@ -3,6 +3,7 @@ package keptnworkloadinstance
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 	"testing"
 	"time"
@@ -803,7 +804,6 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileNoActionRequired(t *testing.T)
 }
 
 func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) {
-	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
@@ -835,12 +835,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 		},
 	}
 
-	err := r.Client.Create(context.TODO(), wi)
-
-	require.Nil(t, err)
-
-	err = controllercommon.AddAppVersion(
-		r.Client,
+	app := controllercommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -854,7 +849,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
-	require.Nil(t, err)
+	r, eventChannel, _ := setupReconciler(wi, app)
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -885,7 +880,6 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 }
 
 func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {
-	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
@@ -925,12 +919,8 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {
 		},
 	}
 
-	err := r.Client.Create(context.TODO(), wi)
+	app := controllercommon.ReturnAppVersion(
 
-	require.Nil(t, err)
-
-	err = controllercommon.AddAppVersion(
-		r.Client,
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -944,7 +934,8 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
-	require.Nil(t, err)
+
+	r, eventChannel, _ := setupReconciler(app, wi)
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -975,7 +966,6 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {
 }
 
 func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *testing.T) {
-	r, eventChannel, _ := setupReconciler()
 
 	testNamespace := "some-ns"
 
@@ -1004,12 +994,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 	// simulate a KWI that has been cancelled due to a failed pre deployment check
 	wi.DeprecateRemainingPhases(apicommon.PhaseWorkloadPreDeployment)
 
-	err := r.Client.Create(context.TODO(), wi)
-
-	require.Nil(t, err)
-
-	err = controllercommon.AddAppVersion(
-		r.Client,
+	app := controllercommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -1023,7 +1008,8 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
-	require.Nil(t, err)
+
+	r, eventChannel, _ := setupReconciler(wi, app)
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -1043,7 +1029,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileDoNotRetryAfterFailedPhase(t *
 
 }
 
-func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITracerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -1059,7 +1045,7 @@ func setupReconciler() (*KeptnWorkloadInstanceReconciler, chan string, *fake.ITr
 		return tr
 	}}
 
-	fakeClient := fake.NewClient()
+	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).Build()
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnWorkloadInstanceReconciler{
 		Client:        fakeClient,

@@ -57,7 +57,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			err := ps.Client.Get(ctx,
 				types.NamespacedName{
 					Name:      j.AnalysisValueTemplateRef.Name,
-					Namespace: j.GetAnalysisValueTemplateNamespace(ps.Namespace)},
+					Namespace: j.AnalysisValueTemplateRef.GetNamespace(ps.Namespace)},
 				templ,
 			)
 
@@ -68,12 +68,11 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 				return
 			}
 
-			ns := templ.GetProviderNamespace(ps.Namespace)
 			providerRef := &metricsapi.KeptnMetricsProvider{}
 			err = ps.Client.Get(ctx,
 				types.NamespacedName{
 					Name:      templ.Spec.Provider.Name,
-					Namespace: ns},
+					Namespace: templ.Spec.Provider.GetNamespace(ps.Namespace)},
 				providerRef,
 			)
 

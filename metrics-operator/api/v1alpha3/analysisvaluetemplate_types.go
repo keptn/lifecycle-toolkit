@@ -56,10 +56,3 @@ type AnalysisValueTemplateList struct {
 func init() {
 	SchemeBuilder.Register(&AnalysisValueTemplate{}, &AnalysisValueTemplateList{})
 }
-
-func (a *AnalysisValueTemplate) GetProviderNamespace(namespace string) string {
-	if !a.Spec.Provider.IsNamespaceSet() {
-		return namespace
-	}
-	return a.Spec.Provider.Namespace
-}

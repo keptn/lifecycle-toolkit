@@ -72,11 +72,12 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//find AnalysisDefinition to have the collection of Objectives
+	analysisDefNamespace := analysis.Spec.AnalysisDefinition.GetNamespace(analysis.Namespace)
 	analysisDef := &metricsapi.AnalysisDefinition{}
 	err := a.Client.Get(ctx,
 		types.NamespacedName{
 			Name:      analysis.Spec.AnalysisDefinition.Name,
-			Namespace: analysis.GetAnalysisDefinitionNamespace()},
+			Namespace: analysisDefNamespace},
 		analysisDef,
 	)
 
@@ -85,7 +86,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			a.Log.Info(
 				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeue",
 					analysis.Spec.AnalysisDefinition.Name,
-					analysis.GetAnalysisDefinitionNamespace()),
+					analysisDefNamespace),
 			)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
@@ -103,7 +104,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysis.GetAnalysisDefinitionNamespace())
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysisDefNamespace)
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {

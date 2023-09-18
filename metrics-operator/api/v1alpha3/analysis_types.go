@@ -86,10 +86,3 @@ type Timeframe struct {
 func init() {
 	SchemeBuilder.Register(&Analysis{}, &AnalysisList{})
 }
-
-func (a *Analysis) GetAnalysisDefinitionNamespace() string {
-	if !a.Spec.AnalysisDefinition.IsNamespaceSet() {
-		return a.Namespace
-	}
-	return a.Spec.AnalysisDefinition.Namespace
-}

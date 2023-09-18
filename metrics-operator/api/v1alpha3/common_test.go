@@ -15,3 +15,13 @@ func TestObjectReference_IsNamespaceSet(t *testing.T) {
 
 	require.True(t, o.IsNamespaceSet())
 }
+
+func TestObjectReference_GetNamespace(t *testing.T) {
+	o := ObjectReference{}
+
+	require.Equal(t, "default", o.GetNamespace("default"))
+
+	o.Namespace = "ns"
+
+	require.Equal(t, "ns", o.GetNamespace("default"))
+}

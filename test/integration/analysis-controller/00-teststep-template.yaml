@@ -2,6 +2,6 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 commands:
   - script: |
-      kubectl apply -f mock-server.yaml
+      kubectl apply -f mock-server.yaml -n $NAMESPACE
   - script: |
-      envsubst < install.yaml | kubectl apply -f -
+      envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE

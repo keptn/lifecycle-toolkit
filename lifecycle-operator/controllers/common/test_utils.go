@@ -13,7 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func AddApp(c client.Client, name string) error {
+func GetApp(name string) *lfcv1alpha3.KeptnApp {
 	app := &lfcv1alpha3.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
@@ -26,7 +26,7 @@ func AddApp(c client.Client, name string) error {
 		},
 		Status: lfcv1alpha3.KeptnAppStatus{},
 	}
-	return c.Create(context.TODO(), app)
+	return app
 }
 
 func UpdateAppRevision(c client.Client, name string, revision uint) error {

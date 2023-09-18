@@ -1045,7 +1045,8 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadInstanceReconciler, c
 		return tr
 	}}
 
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).Build()
+	fakeClient := fake.NewClient(objs...)
+
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnWorkloadInstanceReconciler{
 		Client:        fakeClient,

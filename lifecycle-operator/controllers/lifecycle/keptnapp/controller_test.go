@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -73,8 +74,6 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 
 func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
-	r, _, tracer := setupReconciler()
-
 	tests := []struct {
 		name           string
 		req            ctrl.Request
@@ -115,12 +114,10 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	// setting up fakeclient CRD data
 
-	err := controllercommon.AddApp(r.Client, "myapp")
-	require.Nil(t, err)
-	err = controllercommon.AddApp(r.Client, "myfinishedapp")
-	require.Nil(t, err)
-	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
-	require.Nil(t, err)
+	app := controllercommon.GetApp("myapp")
+	appfin := controllercommon.GetApp("myfinishedapp")
+	appver := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	r, _, tracer := setupReconciler(app, appfin, appver)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -151,12 +148,10 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 }
 
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
-	r, _, _ := setupReconciler()
 
-	err := controllercommon.AddApp(r.Client, "myapp")
-	require.Nil(t, err)
-
-	_, err = r.Reconcile(context.TODO(), ctrl.Request{
+	app := controllercommon.GetApp("myapp")
+	r, _, _ := setupReconciler(app)
+	_, err := r.Reconcile(context.TODO(), ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
 			Name:      "myapp",
@@ -189,7 +184,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Equal(t, apicommon.StateDeprecated, keptnappversion.Status.Status)
 }
 
-func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -205,7 +200,7 @@ func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 		return tr
 	}}
 
-	fakeClient := fake.NewClient()
+	fakeClient := fake.NewClient(objs...)
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{

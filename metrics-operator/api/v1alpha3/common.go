@@ -6,3 +6,7 @@ type ObjectReference struct {
 	// Namespace defines the namespace of the referenced object
 	Namespace string `json:"namespace,omitempty"`
 }
+
+func (o *ObjectReference) IsNamespaceSet() bool {
+	return o.Namespace != ""
+}

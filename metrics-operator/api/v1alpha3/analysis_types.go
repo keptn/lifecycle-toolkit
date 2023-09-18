@@ -88,7 +88,7 @@ func init() {
 }
 
 func (a *Analysis) GetAnalysisDefinitionNamespace() string {
-	if a.Spec.AnalysisDefinition.Namespace == "" {
+	if !a.Spec.AnalysisDefinition.IsNamespaceSet() {
 		return a.Namespace
 	}
 	return a.Spec.AnalysisDefinition.Namespace

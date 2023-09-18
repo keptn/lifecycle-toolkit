@@ -126,7 +126,7 @@ func (o *OperatorValue) GetFloatValue() float64 {
 }
 
 func (o *Objective) GetAnalysisValueTemplateNamespace(namespace string) string {
-	if o.AnalysisValueTemplateRef.Namespace == "" {
+	if !o.AnalysisValueTemplateRef.IsNamespaceSet() {
 		return namespace
 	}
 	return o.AnalysisValueTemplateRef.Namespace

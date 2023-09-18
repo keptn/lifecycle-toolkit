@@ -58,7 +58,7 @@ func init() {
 }
 
 func (a *AnalysisValueTemplate) GetProviderNamespace(namespace string) string {
-	if a.Spec.Provider.Namespace == "" {
+	if !a.Spec.Provider.IsNamespaceSet() {
 		return namespace
 	}
 	return a.Spec.Provider.Namespace

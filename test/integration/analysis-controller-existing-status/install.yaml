@@ -47,11 +47,12 @@ spec:
     name: ed-my-proj-dev-svc1
     namespace: $NAMESPACE
 status:
-  gibberish:
-    - value: 1
-      objective:
-        name: notready
-        namespace: $NAMESPACE
+  storedValues:
+    my-provider-query-1:
+      objectiveReference:
+        name: objective-template-1
+      value: 1
+      errMsg: ""
 
 ---
 apiVersion: metrics.keptn.sh/v1alpha3

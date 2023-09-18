@@ -3,10 +3,12 @@ title: Evaluations
 description: Understand Keptn evaluations and how to use them
 weight: 150
 ---
-A `KeptnEvaluation` checks whether a value in `KeptnMetric` meets a defined target value defined in `KeptnEvaluationDefinition`.
-A `KeptnEvaluationDefinition` resource is defined in a
+
+A
 [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
-yaml file.
+resource contains a series of `objectives`,
+each of which checks whether a defined `KeptnMetric` resource
+meets a defined target value.
 The example
 [app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app-pre-deploy-eval.yaml)
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
@@ -37,14 +39,15 @@ you must:
   [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
   and
   [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-  to include each evaluation and task you want to run
+  to identify the `KeptnEvaluationDefinition` resource you want to run
   pre- and post-deployment for the specific workloads.
 * Manually edit all
   [KeptnApp](../yaml-crd-ref/app.md) resources
-  to specify the evaluations to be run
+  to specify the `KeptnEvaluationDefinition` to be run
   pre- and post-deployment for the `KeptnApp` itself.
 
-See [Pre- and post-deployment checks](../implementing/integrate/#pre--and-post-deployment-checks)
+See
+[Pre- and post-deployment checks](../implementing/integrate/#pre--and-post-deployment-checks)
 for details.
 
 Note the following:
@@ -55,15 +58,19 @@ Note the following:
   available memory, disk space, and other resources
   that are required for the deployment.
 * The `KeptnMetric` resources that are referenced
-  in a `KeptnEvaluationDefinition` resource
-  can be defined on different namespaces in the cluster.
-* All `KeptnEvaluation` resources
-  that are defined by `KeptnEvaluationDefinition` resources at the same level
-  (either pre-deployment or post-deployment)
-  execute in parallel.
+  in a `KeptnMetricDefinition` resource
+  * can be defined on different namespaces in the cluster
+  * can query different instances of different types of data providers
+* Each deployment has a single
+  `KeptnEvaluationDefinition` resource for pre-deployment
+  and another for post-deployment.
 * All objectives within a `KeptnEvaluationDefinition` resource
   are evaluated in order.
   If the evaluation of an objective fails,
   the `KeptnEvaluation` itself fails
   and the objectives listed after the failed objection
   are not evaluated.
+* The results of the `KeptnEvaluationDefinition` executions
+  are written to a
+  [KeptnEvaluation](../../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
+  resource.

@@ -1,6 +1,8 @@
 package analysis
 
 import (
+	"time"
+
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -9,7 +11,6 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"time"
 )
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/analysispool_mock.go . IAnalysisPool

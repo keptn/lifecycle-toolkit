@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analyses.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -19,124 +19,124 @@ spec:
     singular: analysis
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .spec.analysisDefinition.name
-          name: AnalysisDefinition
-          type: string
-        - jsonPath: .status.warning
-          name: Warning
-          type: string
-        - jsonPath: .status.pass
-          name: Pass
-          type: string
-      name: v1alpha3
-      schema:
-        openAPIV3Schema:
-          description: Analysis is the Schema for the analyses API
-          properties:
-            apiVersion:
-              description: 'APIVersion defines the versioned schema of this representation
+  - additionalPrinterColumns:
+    - jsonPath: .spec.analysisDefinition.name
+      name: AnalysisDefinition
+      type: string
+    - jsonPath: .status.warning
+      name: Warning
+      type: string
+    - jsonPath: .status.pass
+      name: Pass
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: Analysis is the Schema for the analyses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-              type: string
-            kind:
-              description: 'Kind is a string value representing the REST resource this
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: AnalysisSpec defines the desired state of Analysis
-              properties:
-                analysisDefinition:
-                  description: AnalysisDefinition refers to the AnalysisDefinition,
-                    a CRD that stores the AnalysisValuesTemplates
-                  properties:
-                    name:
-                      description: Name defines the name of the referenced object
-                      type: string
-                    namespace:
-                      description: Namespace defines the namespace of the referenced
-                        object
-                      type: string
-                  required:
-                    - name
-                  type: object
-                args:
-                  additionalProperties:
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnalysisSpec defines the desired state of Analysis
+            properties:
+              analysisDefinition:
+                description: AnalysisDefinition refers to the AnalysisDefinition,
+                  a CRD that stores the AnalysisValuesTemplates
+                properties:
+                  name:
+                    description: Name defines the name of the referenced object
                     type: string
-                  description: Args corresponds to a map of key/value pairs that can
-                    be used to substitute placeholders in the AnalysisValueTemplate
-                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
-                  type: object
-                timeframe:
-                  description: Timeframe specifies the range for the corresponding query
-                    in the AnalysisValueTemplate
-                  properties:
-                    from:
-                      description: From is the time of start for the query, this field
-                        follows RFC3339 time format
-                      format: date-time
-                      type: string
-                    to:
-                      description: To is the time of end for the query, this field follows
-                        RFC3339 time format
-                      format: date-time
-                      type: string
-                  required:
-                    - from
-                    - to
-                  type: object
-              required:
-                - analysisDefinition
-                - timeframe
-              type: object
-            status:
-              description: AnalysisStatus stores the status of the overall analysis
-                returns also pass or warnings
-              properties:
-                pass:
-                  description: Pass returns whether the SLO is satisfied
-                  type: boolean
-                raw:
-                  description: Raw contains the raw result of the SLO computation
+                  namespace:
+                    description: Namespace defines the namespace of the referenced
+                      object
+                    type: string
+                required:
+                - name
+                type: object
+              args:
+                additionalProperties:
                   type: string
-                storedValues:
-                  additionalProperties:
-                    description: ProviderResult stores reference of already collected
-                      provider query associated to its objective template
-                    properties:
-                      errMsg:
-                        description: ErrMsg stores any possible error at retrieval time
-                        type: string
-                      objectiveReference:
-                        description: Objective store reference to corresponding objective
-                          template
-                        properties:
-                          name:
-                            description: Name defines the name of the referenced object
-                            type: string
-                          namespace:
-                            description: Namespace defines the namespace of the referenced
-                              object
-                            type: string
-                        required:
-                          - name
-                        type: object
-                      value:
-                        description: Value is the value the provider returned
-                        type: string
-                    type: object
-                  description: StoredValues contains all analysis values that have already
-                    been retrieved successfully
+                description: Args corresponds to a map of key/value pairs that can
+                  be used to substitute placeholders in the AnalysisValueTemplate
+                  query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
+                type: object
+              timeframe:
+                description: Timeframe specifies the range for the corresponding query
+                  in the AnalysisValueTemplate
+                properties:
+                  from:
+                    description: From is the time of start for the query, this field
+                      follows RFC3339 time format
+                    format: date-time
+                    type: string
+                  to:
+                    description: To is the time of end for the query, this field follows
+                      RFC3339 time format
+                    format: date-time
+                    type: string
+                required:
+                - from
+                - to
+                type: object
+            required:
+            - analysisDefinition
+            - timeframe
+            type: object
+          status:
+            description: AnalysisStatus stores the status of the overall analysis
+              returns also pass or warnings
+            properties:
+              pass:
+                description: Pass returns whether the SLO is satisfied
+                type: boolean
+              raw:
+                description: Raw contains the raw result of the SLO computation
+                type: string
+              storedValues:
+                additionalProperties:
+                  description: ProviderResult stores reference of already collected
+                    provider query associated to its objective template
+                  properties:
+                    errMsg:
+                      description: ErrMsg stores any possible error at retrieval time
+                      type: string
+                    objectiveReference:
+                      description: Objective store reference to corresponding objective
+                        template
+                      properties:
+                        name:
+                          description: Name defines the name of the referenced object
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            object
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    value:
+                      description: Value is the value the provider returned
+                      type: string
                   type: object
-                warning:
-                  description: Warning returns whether the analysis returned a warning
-                  type: boolean
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                description: StoredValues contains all analysis values that have already
+                  been retrieved successfully
+                type: object
+              warning:
+                description: Warning returns whether the analysis returned a warning
+                type: boolean
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

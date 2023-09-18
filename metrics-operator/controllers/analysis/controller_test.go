@@ -115,7 +115,6 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 			},
 		},
 	}
-	require.NotNil(t, analysis.Status.StoredValues)
 
 	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
 		mymock := fake.IAnalysisPoolMock{

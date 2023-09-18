@@ -1,24 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: testy
+---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   name: ready
-  namespace: $NAMESPACE
+  namespace: testy
 spec:
   provider:
     name: my-mocked-provider
-    namespace: $NAMESPACE
+    namespace: testy
   query: 'sum(kube_pod_container_status_ready{namespace="{{.ns}}"})'
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
-  namespace: $NAMESPACE
+  namespace: testy
 spec:
   objectives:
     - analysisValueTemplateRef:
         name: ready
-        namespace: $NAMESPACE
+        namespace: testy
       target:
         failure:
           lessThan:
@@ -36,7 +41,7 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
   name: analysis-sample
-  namespace: $NAMESPACE
+  namespace: testy
 spec:
   timeframe:
     from: 2023-09-14T07:33:19Z
@@ -45,7 +50,7 @@ spec:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
-    namespace: $NAMESPACE
+    namespace: testy
 status:
   storedValues:
     my-provider-query-1:
@@ -59,7 +64,7 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: my-mocked-provider
-  namespace: $NAMESPACE
+  namespace: testy
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: "http://mockserver.testy.svc.cluster.local:1080"

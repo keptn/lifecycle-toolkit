@@ -2,8 +2,6 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 commands:
   - script: |
-      envsubst < mock-server.yaml  | kubectl apply -f -
-  #  substitutes current time and namespace, making sure they are changed to env var first
-  # to prevent bad files in case of a test interrupt
+      kubectl apply -f mock-server.yaml -n $NAMESPACE
   - script: |
-      envsubst < install.yaml | kubectl apply -f -
+      envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE

@@ -25,6 +25,54 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()
 
+	analysis2 := metricsapi.Analysis{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{
+					Time: time.Now(),
+				},
+				To: metav1.Time{
+					Time: time.Now(),
+				},
+			},
+			Args: map[string]string{
+				"good": "good",
+				"dot":  ".",
+			},
+			AnalysisDefinition: metricsapi.ObjectReference{
+				Name:      "my-analysis-def",
+				Namespace: "default2",
+			},
+		},
+	}
+
+	analysisDef2 := metricsapi.AnalysisDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis-def",
+			Namespace: "default2",
+		},
+		Spec: metricsapi.AnalysisDefinitionSpec{
+			Objectives: []metricsapi.Objective{
+				{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
+						Name:      "my-template",
+						Namespace: "default",
+					},
+					Weight:       1,
+					KeyObjective: false,
+				},
+			},
+			TotalScore: metricsapi.TotalScore{
+				PassPercentage:    0,
+				WarningPercentage: 0,
+			},
+		},
+	}
+
 	tests := []struct {
 		name    string
 		client  client.Client
@@ -51,6 +99,13 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		}, {
 			name:    "succeeded, status updated",
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
+			want:    controllerruntime.Result{},
+			wantErr: false,
+			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
+			res:     metricstypes.AnalysisResult{Pass: true},
+		}, {
+			name:    "succeeded - analysis in different namespace, status updated",
+			client:  fake2.NewClient(&analysis2, &analysisDef2, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
 			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},

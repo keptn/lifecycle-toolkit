@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnappversions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -135,9 +135,11 @@ spec:
                 additionalProperties:
                   additionalProperties:
                     type: string
-                  description: MapCarrier is a TextMapCarrier that uses a map held in
-                    memory as a storage medium for propagated key-value pairs.
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
                   type: object
+                description: PhaseTraceID is a map storing TraceIDs of OpenTelemetry
+                  spans in lifecycle phases
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
@@ -363,8 +365,8 @@ spec:
                 additionalProperties:
                   additionalProperties:
                     type: string
-                  description: MapCarrier is a TextMapCarrier that uses a map held in
-                    memory as a storage medium for propagated key-value pairs.
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
                   type: object
                 type: object
               postDeploymentEvaluationStatus:
@@ -374,7 +376,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -397,7 +399,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -420,7 +422,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -443,7 +445,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -549,7 +551,7 @@ spec:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -557,15 +559,15 @@ spec:
                 description: PostDeploymentTasks is a list of all tasks to be performed
                   during the post-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations to
-                  be performed during the pre-deployment phase of the KeptnApp. The
-                  items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -573,7 +575,7 @@ spec:
                 description: PreDeploymentTasks is a list of all tasks to be performed
                   during the pre-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -601,8 +603,8 @@ spec:
                 description: Workloads is a list of all KeptnWorkloads that are part
                   of the KeptnApp.
                 items:
-                  description: KeptnWorkloadRef refers to a KeptnWorkload that is part
-                    of a KeptnApp
+                  description: KeptnWorkloadRef refers to a KeptnWorkload that is
+                    part of a KeptnApp
                   properties:
                     name:
                       description: Name is the name of the KeptnWorkload.
@@ -634,16 +636,16 @@ spec:
                 additionalProperties:
                   additionalProperties:
                     type: string
-                  description: MapCarrier is a TextMapCarrier that uses a map held in
-                    memory as a storage medium for propagated key-value pairs.
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
                   type: object
                 description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
                   spans of each phase of the KeptnAppVersion.
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
-                description: PostDeploymentEvaluationStatus indicates the current status
-                  of the KeptnAppVersion's PostDeploymentEvaluation phase.
+                description: PostDeploymentEvaluationStatus indicates the current
+                  status of the KeptnAppVersion's PostDeploymentEvaluation phase.
                 type: string
               postDeploymentEvaluationTaskStatus:
                 description: PostDeploymentEvaluationTaskStatus indicates the current
@@ -651,7 +653,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -662,8 +664,8 @@ spec:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
-                      description: StartTime represents the time at which the Item (Evaluation/Task)
-                        started.
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -673,16 +675,16 @@ spec:
                 type: array
               postDeploymentStatus:
                 default: Pending
-                description: PostDeploymentStatus indicates the current status of the
-                  KeptnAppVersion's PostDeployment phase.
+                description: PostDeploymentStatus indicates the current status of
+                  the KeptnAppVersion's PostDeployment phase.
                 type: string
               postDeploymentTaskStatus:
-                description: PostDeploymentTaskStatus indicates the current state of
-                  each postDeploymentTask of the KeptnAppVersion.
+                description: PostDeploymentTaskStatus indicates the current state
+                  of each postDeploymentTask of the KeptnAppVersion.
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -693,8 +695,8 @@ spec:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
-                      description: StartTime represents the time at which the Item (Evaluation/Task)
-                        started.
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -713,7 +715,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -724,8 +726,8 @@ spec:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
-                      description: StartTime represents the time at which the Item (Evaluation/Task)
-                        started.
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -744,7 +746,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -755,8 +757,8 @@ spec:
                       description: Name is the name of the Evaluation/Task
                       type: string
                     startTime:
-                      description: StartTime represents the time at which the Item (Evaluation/Task)
-                        started.
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
                       format: date-time
                       type: string
                     status:
@@ -765,8 +767,8 @@ spec:
                   type: object
                 type: array
               startTime:
-                description: StartTime represents the time at which the deployment of
-                  the KeptnAppVersion started.
+                description: StartTime represents the time at which the deployment
+                  of the KeptnAppVersion started.
                 format: date-time
                 type: string
               status:
@@ -775,8 +777,8 @@ spec:
                 type: string
               workloadOverallStatus:
                 default: Pending
-                description: WorkloadOverallStatus indicates the current status of the
-                  KeptnAppVersion's Workload deployment phase.
+                description: WorkloadOverallStatus indicates the current status of
+                  the KeptnAppVersion's Workload deployment phase.
                 type: string
               workloadStatus:
                 description: WorkloadStatus contains the current status of each KeptnWorkload
@@ -788,8 +790,8 @@ spec:
                       description: Status indicates the current status of the KeptnWorkload.
                       type: string
                     workload:
-                      description: Workload refers to a KeptnWorkload that is part of
-                        the KeptnAppVersion.
+                      description: Workload refers to a KeptnWorkload that is part
+                        of the KeptnAppVersion.
                       properties:
                         name:
                           description: Name is the name of the KeptnWorkload.
@@ -809,9 +811,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

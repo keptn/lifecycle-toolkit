@@ -12,4 +12,3 @@ status:
       objectiveReference:
         name: ready
         namespace: testy
-        

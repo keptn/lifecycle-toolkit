@@ -83,7 +83,7 @@ func ConvertResourceName(name string) string {
 	// Remove leading and trailing '-'
 	normalized = strings.Trim(normalized, "-")
 
-	// Ensure the name is no longer than 63 characters
+	// Ensure the name is no longer than 253 characters
 	if len(normalized) > MaxResourceNameLength {
 		normalized = normalized[:MaxResourceNameLength]
 	}

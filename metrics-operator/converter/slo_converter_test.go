@@ -2255,3 +2255,56 @@ func TestIsSuperInterval(t *testing.T) {
 
 	}
 }
+
+func TestSLOConverter_validateInput(t *testing.T) {
+	type args struct {
+		analysisDef string
+		namespace   string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "no analysisDefinition name",
+			args: args{
+				analysisDef: "",
+				namespace:   "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "no namespace",
+			args: args{
+				analysisDef: "analysis-def",
+				namespace:   "",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid analysisDefinition name",
+			args: args{
+				analysisDef: "analysis_def",
+				namespace:   "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid namespace",
+			args: args{
+				analysisDef: "analysis-def",
+				namespace:   "my_namespace",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &SLOConverter{}
+			if err := c.validateInput(tt.args.analysisDef, tt.args.namespace); (err != nil) != tt.wantErr {
+				t.Errorf("validateInput() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

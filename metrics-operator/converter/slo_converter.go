@@ -61,9 +61,9 @@ func (o *Objective) hasNotSupportedCriteria() bool {
 }
 
 func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace string) (string, error) {
-	//check that provider and namespace is set
-	if analysisDef == "" || namespace == "" {
-		return "", fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
+	// validate inputs
+	if err := c.validateInput(analysisDef, namespace); err != nil {
+		return "", err
 	}
 
 	// unmarshall content
@@ -140,6 +140,21 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 		indexObjectives++
 	}
 	return definition, nil
+}
+
+func (c *SLOConverter) validateInput(analysisDef, namespace string) error {
+	// check that provider and namespace is set
+	if analysisDef == "" || namespace == "" {
+		fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
+	}
+	if err := ValidateResourceName(analysisDef); err != nil {
+		return err
+	}
+	if err := ValidateResourceName(namespace); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // removes % symbol from the scoring values and converts to numeric value

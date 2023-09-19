@@ -167,3 +167,56 @@ func TestConvertQuery(t *testing.T) {
 
 	}
 }
+
+func TestSLIConverter_validateInput(t *testing.T) {
+	type args struct {
+		provider  string
+		namespace string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "no provider name",
+			args: args{
+				provider:  "",
+				namespace: "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "no namespace",
+			args: args{
+				provider:  "provider",
+				namespace: "",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid provider name",
+			args: args{
+				provider:  "provider_name",
+				namespace: "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid namespace",
+			args: args{
+				provider:  "provider",
+				namespace: "my_namespace",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &SLIConverter{}
+			if err := c.validateInput(tt.args.provider, tt.args.namespace); (err != nil) != tt.wantErr {
+				t.Errorf("validateInput() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

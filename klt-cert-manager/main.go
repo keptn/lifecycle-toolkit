@@ -8,7 +8,6 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
-
 	// nolint:gci
 	// +kubebuilder:scaffold:imports
 	"go.opentelemetry.io/otel/exporters/prometheus"

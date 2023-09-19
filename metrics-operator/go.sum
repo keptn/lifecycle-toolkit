@@ -42,8 +42,8 @@ dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/DataDog/datadog-api-client-go/v2 v2.16.0 h1:wwroXLmBlO5/o+uS1UxDpuMIkhIL6gJAu6m0ttGM5Yc=
-github.com/DataDog/datadog-api-client-go/v2 v2.16.0/go.mod h1:uJd7G1BONVIyiVw684VMn2XYI1FfN1tx4bRGenAf2bo=
+github.com/DataDog/datadog-api-client-go/v2 v2.17.0 h1:0jI5TotLfWgsydMg/QTHkuoqNCFKSMorjU3ki/fbVI8=
+github.com/DataDog/datadog-api-client-go/v2 v2.17.0/go.mod h1:uJd7G1BONVIyiVw684VMn2XYI1FfN1tx4bRGenAf2bo=
 github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=
 github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/NYTimes/gziphandler v1.1.1 h1:ZUDjpQae29j0ryrS0u/B8HZfJBtBQHjqw2rQ2cqUQ3I=
@@ -266,8 +266,8 @@ github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7V
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230913063529-469578edabb0 h1:o/s55/xwgZe+AgCbEReZLrDC7dHubsRk7j7RXXGSpQc=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230913063529-469578edabb0/go.mod h1:+Kion1lq0BnlGJOfO1HQeApnTD2huIIiIrNzFMwWwjs=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230915062319-b2853f9ecdfb h1:95+wDGbz28EyzuWU0x6iCB1ezCJG9kBTUyq8sSa8cMk=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230915062319-b2853f9ecdfb/go.mod h1:p2jpDC9PY8IGBQZ69KibXR+5YnRlWlej4mE75EGGnTs=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=

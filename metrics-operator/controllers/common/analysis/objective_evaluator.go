@@ -63,7 +63,7 @@ func getValueFromMap(values map[string]v1alpha3.ProviderResult, key string) (flo
 }
 
 func ComputeKey(obj v1alpha3.ObjectReference) string {
-	if obj.Namespace == "" {
+	if !obj.IsNamespaceSet() {
 		return obj.Name
 	}
 	return obj.Name + "-" + obj.Namespace

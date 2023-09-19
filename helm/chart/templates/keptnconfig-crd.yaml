@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -49,9 +49,9 @@ spec:
                 type: string
               keptnAppCreationRequestTimeoutSeconds:
                 default: 30
-                description: KeptnAppCreationRequestTimeoutSeconds is used to set the
-                  interval in which automatic app discovery searches for workload to
-                  put into the same auto-generated KeptnApp
+                description: KeptnAppCreationRequestTimeoutSeconds is used to set
+                  the interval in which automatic app discovery searches for workload
+                  to put into the same auto-generated KeptnApp
                 type: integer
             type: object
           status:
@@ -62,9 +62,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

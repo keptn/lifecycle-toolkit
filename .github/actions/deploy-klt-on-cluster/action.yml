@@ -5,12 +5,12 @@ inputs:
     required: false
     description: "Version of kind that should be used"
     # renovate: datasource=github-releases depName=kubernetes-sigs/kind
-    default: "v0.17.0"
+    default: "v0.18.0"
   k8s-version:
     required: false
     description: "Kubernetes that should be used"
     # renovate: datasource=github-releases depName=kubernetes/kubernetes
-    default: "v1.25.3"
+    default: "v1.27.3"
   runtime_tag:
     description: "Tag for the runner image"
     required: true
@@ -62,7 +62,7 @@ runs:
       run: |
         echo "Installing KLT using manifests"
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
-        sed -i 's/ghcr.io\/keptn\/functions-runtime:.*/localhost:5000\/keptn\/functions-runtime:${{ inputs.runtime_tag }}/g' \
+        sed -i 's/ghcr.io\/keptn\/deno-runtime:.*/localhost:5000\/keptn\/deno-runtime:${{ inputs.runtime_tag }}/g' \
           ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
         sed -i 's/ghcr.io\/keptn\/python-runtime:.*/localhost:5000\/keptn\/python-runtime:${{ inputs.runtime_tag }}/g' \
           ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
@@ -89,17 +89,21 @@ runs:
       shell: bash
       run: |
         echo "Installing KLT using helm"
-        make helm-package
         helm version
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ./helm/chart  \
           --set scheduler.scheduler.imagePullPolicy=Never \
           --set scheduler.scheduler.image.tag=${{ inputs.runtime_tag }} \
+          --set scheduler.scheduler.image.repository="localhost:5000/keptn/scheduler" \
           --set lifecycleOperator.manager.imagePullPolicy=Never \
           --set lifecycleOperator.manager.image.tag=${{ inputs.runtime_tag }} \
+          --set lifecycleOperator.manager.image.repository="localhost:5000/keptn/lifecycle-operator" \
           --set metricsOperator.manager.imagePullPolicy=Never \
+          --set metricsOperator.manager.env.enableKeptnAnalysis="true" \
           --set metricsOperator.manager.image.tag=${{ inputs.runtime_tag }} \
-          --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/functions-runtime:${{ inputs.runtime_tag }} \
+          --set metricsOperator.manager.image.repository="localhost:5000/keptn/metrics-operator" \
+          --set lifecycleOperator.manager.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \
           --set lifecycleOperator.manager.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
           --set certificateOperator.manager.imagePullPolicy=Never \
           --set certificateOperator.manager.image.tag=${{ inputs.runtime_tag }} \
+          --set certificateOperator.manager.image.repository="localhost:5000/keptn/certificate-operator" \
           --debug --wait --timeout 1m

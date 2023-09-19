@@ -1,10 +1,8 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.1.0
-# renovate: datasource=github-tags depName=helm/helm
-HELM_VERSION ?= v3.12.2
-CHART_APPVERSION ?= v0.8.1 # x-release-please-version
+KUSTOMIZE_VERSION?=v5.1.1
+CHART_APPVERSION ?= v0.8.2 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -23,19 +21,11 @@ $(LOCALBIN):
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
-HELMIFY ?=  $(LOCALBIN)/helmify
-
-.PHONY: helmify
-helmify: $(HELMIFY) ## Download helmify locally if necessary.
-$(HELMIFY): $(LOCALBIN)
-	test -s $(LOCALBIN)/helmify || GOBIN=$(LOCALBIN) go install github.com/keptn/helmify/cmd/helmify@17737f7ff50279e758006221f11187a232becf1c
 
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
-
-
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
@@ -59,8 +49,6 @@ install-prometheus:
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
 
-
-
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests
@@ -70,29 +58,6 @@ KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/k
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
 $(KUSTOMIZE): $(LOCALBIN)
 	test -s $(LOCALBIN)/kustomize || { curl -s $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
-
-.PHONY: release-helm-manifests
-release-helm-manifests: helmify
-	echo "building helm overlay"
-	kustomize build ./helm/overlay  > helmchart.yaml
-	envsubst < helmchart.yaml > tmp.yaml; mv tmp.yaml helmchart.yaml
-	cat helmchart.yaml | $(HELMIFY) -probes=true -image-pull-secrets=true -vv helm/chart
-
-.PHONY: helm-package
-helm-package:
-	$(MAKE) build-release-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-	$(MAKE) release-helm-manifests CHART_APPVERSION=$(CHART_APPVERSION) RELEASE_REGISTRY=$(RELEASE_REGISTRY)
-
-.PHONY: build-release-manifests
-build-release-manifests:
-	$(MAKE) -C lifecycle-operator generate
-	$(MAKE) -C klt-cert-manager generate
-	$(MAKE) -C metrics-operator generate
-
-	$(MAKE) -C lifecycle-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
-	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
-	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
-	$(MAKE) -C metrics-operator release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG) ARCH=$(ARCH) CHART_APPVERSION=$(CHART_APPVERSION)
 
 .PHONY: build-deploy-operator
 build-deploy-operator:

@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       runtime_tag:
-        description: "Tag for the functions runner image"
+        description: "Tag for the runner images"
         type: "string"
         required: true
 env:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-klt-on-cluster

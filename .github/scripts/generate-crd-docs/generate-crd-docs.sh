@@ -8,7 +8,7 @@
 # Inputs: None
 
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
-GENERATOR_VERSION=master
+GENERATOR_VERSION=v0.0.9
 API_DOMAIN="keptn.sh"
 OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'
@@ -58,11 +58,13 @@ for api_group in "$OPERATOR_API_ROOT"*; do
     mkdir -p "$OUTPUT_PATH"
 
     echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
+    # max-depth should be bumped when the number of nested structures of CRDs will exceed 10
     crd-ref-docs \
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \
       --renderer="$RENDERER" \
       --config "$RENDERER_CONFIG_FILE" \
+      --max-depth 10 \
       --output-path "$OUTPUT_PATH/_index.md"
     echo "---------------------"
   done
@@ -100,11 +102,13 @@ for api_version in "$METRICS_API_ROOT"*; do
   mkdir -p "$OUTPUT_PATH"
 
   echo "Generating CRD docs for $sanitized_api_group.$API_DOMAIN/$sanitized_api_version..."
+  # max-depth should be bumped when the number of nested structures of CRDs will exceed 10
   crd-ref-docs \
     --templates-dir "$TEMPLATE_DIR" \
     --source-path="./$api_version" \
     --renderer="$RENDERER" \
     --config "$RENDERER_CONFIG_FILE" \
+    --max-depth 10 \
     --output-path "$OUTPUT_PATH/_index.md"
   echo "---------------------"
 done

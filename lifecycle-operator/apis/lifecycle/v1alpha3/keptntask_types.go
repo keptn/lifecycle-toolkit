@@ -32,20 +32,13 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	// Workload defines the KeptnWorkload for which the KeptnTask is executed.
-	Workload string `json:"workload"`
-	// WorkloadVersion defines the version of the KeptnWorkload for which the KeptnTask is executed.
-	WorkloadVersion string `json:"workloadVersion"`
-	// AppName defines the KeptnApp for which the KeptnTask is executed.
-	AppName string `json:"app"`
-	// AppVersion defines the version of the KeptnApp for which the KeptnTask is executed.
-	AppVersion string `json:"appVersion"`
 	// TaskDefinition refers to the name of the KeptnTaskDefinition
 	// which includes the specification for the task to be performed.
 	// The KeptnTaskDefinition can be
-	// located in the same namespace as the KeptnTask, or in the KLT namespace.
+	// located in the same namespace as the KeptnTask, or in the Keptn namespace.
 	TaskDefinition string `json:"taskDefinition"`
 	// Context contains contextual information about the task execution.
+	// +optional
 	Context TaskContext `json:"context"`
 	// Parameters contains parameters that will be passed to the job that executes the task.
 	Parameters TaskParameters `json:"parameters,omitempty"`
@@ -71,16 +64,22 @@ type KeptnTaskSpec struct {
 
 type TaskContext struct {
 	// WorkloadName the name of the KeptnWorkload the KeptnTask is being executed for.
+	// +optional
 	WorkloadName string `json:"workloadName"`
 	// AppName the name of the KeptnApp the KeptnTask is being executed for.
+	// +optional
 	AppName string `json:"appName"`
 	// AppVersion the version of the KeptnApp the KeptnTask is being executed for.
+	// +optional
 	AppVersion string `json:"appVersion"`
 	// WorkloadVersion the version of the KeptnWorkload the KeptnTask is being executed for.
+	// +optional
 	WorkloadVersion string `json:"workloadVersion"`
 	// TaskType indicates whether the KeptnTask is part of the pre- or postDeployment phase.
+	// +optional
 	TaskType string `json:"taskType"`
 	// ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload.
+	// +optional
 	ObjectType string `json:"objectType"`
 }
 
@@ -181,10 +180,10 @@ func (t *KeptnTask) IsEndTimeSet() bool {
 
 func (t KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.AppName.String(t.Spec.Context.AppName),
+		common.AppVersion.String(t.Spec.Context.AppVersion),
+		common.WorkloadName.String(t.Spec.Context.WorkloadName),
+		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
 		common.TaskName.String(t.Name),
 		common.TaskType.String(string(t.Spec.Type)),
 	}
@@ -192,10 +191,10 @@ func (t KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
 
 func (t KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.AppName.String(t.Spec.Context.AppName),
+		common.AppVersion.String(t.Spec.Context.AppVersion),
+		common.WorkloadName.String(t.Spec.Context.WorkloadName),
+		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
 		common.TaskName.String(t.Name),
 		common.TaskType.String(string(t.Spec.Type)),
 		common.TaskStatus.String(string(t.Status.Status)),
@@ -207,27 +206,27 @@ func (t KeptnTask) SetSpanAttributes(span trace.Span) {
 }
 
 func (t KeptnTask) CreateKeptnAnnotations() map[string]string {
-	if t.Spec.Workload != "" {
+	if t.Spec.Context.WorkloadName != "" {
 		return common.MergeMaps(t.Annotations, map[string]string{
-			common.AppAnnotation:      t.Spec.AppName,
-			common.WorkloadAnnotation: t.Spec.Workload,
-			common.VersionAnnotation:  t.Spec.WorkloadVersion,
+			common.AppAnnotation:      t.Spec.Context.AppName,
+			common.WorkloadAnnotation: t.Spec.Context.WorkloadName,
+			common.VersionAnnotation:  t.Spec.Context.WorkloadVersion,
 			common.TaskNameAnnotation: t.Name,
 		})
 	}
 	return common.MergeMaps(t.Annotations, map[string]string{
-		common.AppAnnotation:      t.Spec.AppName,
-		common.VersionAnnotation:  t.Spec.AppVersion,
+		common.AppAnnotation:      t.Spec.Context.AppName,
+		common.VersionAnnotation:  t.Spec.Context.AppVersion,
 		common.TaskNameAnnotation: t.Name,
 	})
 }
 
 func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
+		common.AppName.String(t.Spec.Context.AppName),
+		common.AppVersion.String(t.Spec.Context.AppVersion),
+		common.WorkloadName.String(t.Spec.Context.WorkloadName),
+		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
 		common.TaskName.String(t.Name),
 		common.TaskType.String(string(t.Spec.Type)),
 	}
@@ -247,10 +246,10 @@ func (t KeptnTask) GetSpanName(phase string) string {
 
 func (t KeptnTask) GetEventAnnotations() map[string]string {
 	return map[string]string{
-		"appName":            t.Spec.AppName,
-		"appVersion":         t.Spec.AppVersion,
-		"workloadName":       t.Spec.Workload,
-		"workloadVersion":    t.Spec.WorkloadVersion,
+		"appName":            t.Spec.Context.AppName,
+		"appVersion":         t.Spec.Context.AppVersion,
+		"workloadName":       t.Spec.Context.WorkloadName,
+		"workloadVersion":    t.Spec.Context.WorkloadVersion,
 		"taskName":           t.Name,
 		"taskDefinitionName": t.Spec.TaskDefinition,
 	}

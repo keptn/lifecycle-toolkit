@@ -1,38 +1,38 @@
 ---
-title: Install and enable KLT
-description: Install the Keptn Lifecycle Toolkit
+title: Install and enable Keptn
+description: Install Keptn
 weight: 35
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-The Keptn Lifecycle Toolkit must be installed, enabled, and integrated
+Keptn must be installed, enabled, and integrated
 into each cluster you want to monitor.
-This is because KLT communicates with the Kubernetes scheduler
+This is because Keptn communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
 and tracing all activities of all deployment workloads on the cluster.
 
-Two methods are supported for installing the Keptn Lifecycle Toolkit (KLT):
+Two methods are supported for installing Keptn:
 
 * Releases v0.7.0 and later can be installed using
   the [Helm Chart](#use-helm-chart).
   This is the preferred strategy because it allows you to customize your cluster.
 
-* Releases v0.10.0 and earlier can be installed using
+* Releases v0.8.2 and earlier can be installed using
   the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
 
-After KLT is installed, you must
-[Enable KLT for your cluster](#enable-klt-for-your-cluster)
-in order to run some KLT functionality.
+After Keptn is installed, you must
+[Enable Keptn for your cluster](#enable-keptn-for-your-cluster)
+in order to run some Keptn functionality.
 
 You are then ready to
-[Integrate KLT with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate).
 
 ## Use Helm Chart
 
-Version v0.7.0 and later of the Lifecycle Toolkit
+Version v0.7.0 and later of Keptn
 should be installed using Helm Charts.
 The command sequence to fetch and install the latest release is:
 
@@ -49,7 +49,7 @@ as well as for upgrades.
 Some helpful hints:
 
 * Use the `--version <version>` flag on the
-  `helm upgrade --install` command line to specify a different KLT version.
+  `helm upgrade --install` command line to specify a different Keptn version.
 
 * Use the following command sequence to see a list of available versions:
 
@@ -58,7 +58,7 @@ Some helpful hints:
   helm search repo klt
   ```
 
-* To verify that the KLT components are installed in your cluster,
+* To verify that the Keptn components are installed in your cluster,
   run the following command:
 
   ```shell
@@ -76,7 +76,7 @@ or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
 [helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
-file, modify some values, and use the modified file to install KLT:
+file, modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
 
@@ -86,7 +86,7 @@ file, modify some values, and use the modified file to install KLT:
 
 1. Edit your local copy to modify some values
 
-1. Install KLT by adding the following string to your `helm upgrade` command line:
+1. Install Keptn by adding the following string to your `helm upgrade` command line:
 
    ```shell
    --values=values.yaml
@@ -109,7 +109,7 @@ For more information,see
 
 ## Use manifests
 
-Versions v0.10.0 and earlier of the Lifecycle Toolkit can be installed using manifests,
+Versions v0.8.2 and earlier of the Lifecycle Toolkit can be installed using manifests,
 although we recommend that you use Helm Charts
 because they allow you to easily customize your configuration.
 
@@ -126,7 +126,7 @@ kubectl wait \
 ```
 
 Use a command sequence like the following
-to install the Lifecycle Toolkit from the manifest,
+to install Keptn from the manifest,
 specifying the version you want to install.
 
 ```shell
@@ -136,14 +136,14 @@ kubectl wait --for=condition=Available deployment/lifecycle-operator \
    -n keptn-lifecycle-toolkit-system --timeout=120s
 ```
 
-The Lifecycle Toolkit and its dependencies are now installed and ready to use.
+Keptn and its dependencies are now installed and ready to use.
 
-## Enable KLT for your cluster
+## Enable Keptn for your cluster
 
-To enable the Keptn Lifecycle Controller in your cluster,
+To enable the Keptn in your cluster,
 annotate the Kubernetes
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-resource.
+resource for each namespace in the cluster.
 For an example of this, see
 [simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
 file, which looks like this:
@@ -159,3 +159,7 @@ metadata:
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 This annotation tells the webhook to handle the namespace.
+
+After enabling Keptn for your namespace(s),
+you are ready to
+[Integrate Keptn with your applications](../implementing/integrate).

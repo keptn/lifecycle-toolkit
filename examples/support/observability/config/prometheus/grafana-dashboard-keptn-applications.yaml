@@ -34,7 +34,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -84,7 +84,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Succeeded\", keptn_deployment_app_name=\"$Application\"}",
@@ -119,7 +119,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -168,7 +168,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
@@ -183,7 +183,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -233,7 +233,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Failed\", keptn_deployment_app_name=\"$Application\"}",
@@ -270,7 +270,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -321,7 +321,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "avg by(keptn_deployment_app_previousversion, keptn_deployment_app_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
@@ -337,7 +337,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -391,7 +391,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "avg by(keptn_deployment_workload_previousversion) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
@@ -407,7 +407,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -457,7 +457,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max by(keptn_deployment_app_version) (keptn_app_deploymentduration{keptn_deployment_app_name=\"$Application\"})",
@@ -473,7 +473,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -550,7 +550,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
@@ -633,7 +633,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -697,7 +697,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "P1809F7CD0C75ACF3"
+                "uid": "prometheus"
               },
               "editorMode": "builder",
               "expr": "keptn_deployment_deploymentduration{keptn_deployment_app_name=\"$Application\"}",
@@ -757,7 +757,7 @@ data:
             },
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "prometheus"
             },
             "definition": "label_values(keptn_deployment_app_name)",
             "hide": 0,
@@ -778,7 +778,7 @@ data:
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "prometheus"
             },
             "filters": [],
             "hide": 0,

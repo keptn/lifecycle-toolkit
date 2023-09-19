@@ -17,17 +17,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v3.7.0
+        uses: actions/setup-node@v3.8.1
         with:
           node-version: 16
-
-      - name: Generate helm charts
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-        run: make helm-package
 
       - name: Install readme generator
         run: |
@@ -37,7 +32,7 @@ jobs:
           npm install --location=global ./
           cd ..
 
-      - name: Check Helm doc up to date
+      - name: Check if Helm doc is up to date
         run: |
           cd ./helm/chart/
           cp ./README.md ./README-old.md
@@ -55,35 +50,12 @@ jobs:
             echo "Helm values documentation is correct!"
           fi
 
-  helm-generation-check:
-    runs-on: ubuntu-latest
-
+  helm-tests:
+    name: Run helm tests
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v4
 
-      - name: Cache build tools
-        id: cache-build-tools
-        uses: actions/cache@v3
-        with:
-          path: ./bin
-          key: build-tools-${{ github.ref_name }}
-
-      - name: Generate helm charts
-        env:
-          RELEASE_REGISTRY: ghcr.io/keptn
-        run: make helm-package
-
-      - name: Compare YAML file changes
-        run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo ""
-            echo "There are no changes in the manifests"
-          else
-            echo ""
-            echo "Helm charts were not re-generated. Please regenerate them using make helm-package RELEASE_REGISTRY=ghcr.io/keptn"
-            echo ""
-            echo "=========== Diff ==========="
-            git diff
-            exit 1
-          fi
+      - name: Check if Helm template is up to date
+        run: ./.github/scripts/helm-test.sh

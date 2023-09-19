@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
   name: keptnmetrics.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
@@ -220,7 +220,7 @@ spec:
                   be queried
                 properties:
                   aggregation:
-                    description: 'Aggregation defines as the type of aggregation function
+                    description: 'Aggregation defines the type of aggregation function
                       to be applied on the data. Accepted values: p90, p95, p99, max,
                       min, avg, median'
                     enum:

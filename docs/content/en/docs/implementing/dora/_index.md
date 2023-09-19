@@ -5,7 +5,7 @@ weight: 65
 ---
 
 DORA metrics are an industry-standard set of measurements
-that are included in the Keptn Lifecycle Toolkit.
+that are included in Keptn;
 see the following for a description:
 
 - [What are DORA Metrics and Why Do They Matter?](https://codeclimate.com/blog/dora-metrics)
@@ -19,7 +19,7 @@ DORA metrics provide information such as:
 - Deployment time between versions
 - Average time between versions.
 
-The Keptn Lifecycle Toolkit starts collecting these metrics
+Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](../integrate/#basic-annotations)
 to the
@@ -35,11 +35,18 @@ or
 
 Metrics are collected only for the resources that are annotated.
 
-To view DORA metrics, run the following command:
+To view DORA metrics, run the following two commands:
+
+- Retrieve the service name with:
 
 ```shell
-kubectl port-forward -n keptn-lifecycle-toolkit-system \
-   svc/lifecycle-operator-metrics-service 2222
+kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
+```
+
+- Then port-forward to the name of your service:
+
+```shell
+kubectl -n keptn-lifecycle-toolkit-system port-forward service/<YOURNAME> 2222
 ```
 
 Then view the metrics at:

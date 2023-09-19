@@ -1,0 +1,286 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnworkloads.lifecycle.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnWorkload
+    listKind: KeptnWorkloadList
+    plural: keptnworkloads
+    singular: keptnworkload
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnWorkload is the Schema for the keptnworkloads API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnWorkloadSpec defines the desired state of KeptnWorkload
+            properties:
+              app:
+                type: string
+              postDeploymentEvaluations:
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              resourceReference:
+                properties:
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  uid:
+                    description: UID is a type that holds unique ID values, including
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
+                    type: string
+                required:
+                - kind
+                - name
+                - uid
+                type: object
+              version:
+                type: string
+            required:
+            - app
+            - resourceReference
+            - version
+            type: object
+          status:
+            description: KeptnWorkloadStatus defines the observed state of KeptnWorkload
+            properties:
+              currentVersion:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnWorkload is the Schema for the keptnworkloads API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnWorkloadSpec defines the desired state of KeptnWorkload
+            properties:
+              app:
+                type: string
+              postDeploymentEvaluations:
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                items:
+                  type: string
+                type: array
+              resourceReference:
+                properties:
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  uid:
+                    description: UID is a type that holds unique ID values, including
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
+                    type: string
+                required:
+                - kind
+                - name
+                - uid
+                type: object
+              version:
+                type: string
+            required:
+            - app
+            - resourceReference
+            - version
+            type: object
+          status:
+            description: KeptnWorkloadStatus defines the observed state of KeptnWorkload
+            properties:
+              currentVersion:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnWorkload is the Schema for the keptnworkloads API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnWorkload.
+            properties:
+              app:
+                description: AppName is the name of the KeptnApp containing the KeptnWorkload.
+                type: string
+              postDeploymentEvaluations:
+                description: PostDeploymentEvaluations is a list of all evaluations
+                  to be performed during the post-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
+                  namespace.
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                description: PostDeploymentTasks is a list of all tasks to be performed
+                  during the post-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
+                  namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                description: PreDeploymentTasks is a list of all tasks to be performed
+                  during the pre-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              resourceReference:
+                description: ResourceReference is a reference to the Kubernetes resource
+                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
+                  is representing.
+                properties:
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  uid:
+                    description: UID is a type that holds unique ID values, including
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
+                    type: string
+                required:
+                - kind
+                - name
+                - uid
+                type: object
+              version:
+                description: Version defines the version of the KeptnWorkload.
+                type: string
+            required:
+            - app
+            - resourceReference
+            - version
+            type: object
+          status:
+            description: Status describes the current state of the KeptnWorkload.
+            properties:
+              currentVersion:
+                description: CurrentVersion indicates the version that is currently
+                  deployed or being reconciled.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -209,11 +209,12 @@ var _ = Describe("Task", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				Expect(createdJob.Annotations).To(Equal(map[string]string{
-					"annotation1":        "annotation2",
-					"keptn.sh/task-name": task.Name,
-					"keptn.sh/version":   "",
-					"keptn.sh/workload":  "my-workload",
-					"keptn.sh/app":       "my-app",
+					"annotation1":                      "annotation2",
+					"keptn.sh/task-name":               task.Name,
+					"keptn.sh/version":                 "",
+					"keptn.sh/workload":                "my-workload",
+					"keptn.sh/app":                     "my-app",
+					"batch.kubernetes.io/job-tracking": "",
 				}))
 
 				Expect(createdJob.Labels).To(Equal(map[string]string{
@@ -256,9 +257,11 @@ func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha3.Ke
 			},
 		},
 		Spec: klcv1alpha3.KeptnTaskSpec{
-			Workload:       "my-workload",
-			AppName:        "my-app",
-			AppVersion:     "0.1.0",
+			Context: klcv1alpha3.TaskContext{
+				WorkloadName: "my-workload",
+				AppName:      "my-app",
+				AppVersion:   "0.1.0",
+			},
 			TaskDefinition: taskDefinitionName,
 		},
 	}

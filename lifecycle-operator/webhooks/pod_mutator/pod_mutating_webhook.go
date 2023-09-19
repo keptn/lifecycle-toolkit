@@ -39,7 +39,7 @@ type PodMutatingWebhook struct {
 	Client      client.Client
 	Tracer      trace.Tracer
 	Decoder     *admission.Decoder
-	EventSender controllercommon.EventSender
+	EventSender controllercommon.IEvent
 	Log         logr.Logger
 }
 
@@ -69,7 +69,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
-	// check if Lifecycle Controller is enabled for this namespace
+	// check if Lifecycle Operator is enabled for this namespace
 	namespace := &corev1.Namespace{}
 	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
 		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
@@ -77,15 +77,15 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
-		logger.Info("namespace is not enabled for lifecycle controller", "namespace", req.Namespace)
-		return admission.Allowed("namespace is not enabled for lifecycle controller")
+		logger.Info("namespace is not enabled for lifecycle operator", "namespace", req.Namespace)
+		return admission.Allowed("namespace is not enabled for lifecycle operator")
 	}
 
 	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
 	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	if ownerRef.Kind == "" {
-		msg := "owner of pod is not supported by lifecycle controller"
+		msg := "owner of pod is not supported by lifecycle operator"
 		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
 		return admission.Allowed(msg)
 	}
@@ -288,7 +288,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
 			logger.Error(err, "Could not create Workload")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
+			a.EventSender.Emit(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}
@@ -312,7 +312,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
 		logger.Error(err, "Could not update Workload")
-		a.EventSender.SendK8sEvent(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
+		a.EventSender.Emit(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
@@ -340,7 +340,7 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
 			logger.Error(err, "Could not create AppCreationRequest")
-			a.EventSender.SendK8sEvent(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
+			a.EventSender.Emit(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err
 		}

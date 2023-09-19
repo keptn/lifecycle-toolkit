@@ -1,0 +1,78 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: analysisvaluetemplates.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisValueTemplate
+    listKind: AnalysisValueTemplateList
+    plural: analysisvaluetemplates
+    singular: analysisvaluetemplate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisValueTemplate is the Schema for the analysisvaluetemplates
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec contains the specification for the AnalysisValueTemplate
+            properties:
+              provider:
+                description: Provider refers to the KeptnMetricsProvider which should
+                  be used to retrieve the data
+                properties:
+                  name:
+                    description: Name defines the name of the referenced object
+                    type: string
+                  namespace:
+                    description: Namespace defines the namespace of the referenced
+                      object
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run. It can include
+                  placeholders that are defined using the go template syntax. More
+                  info on go templating - https://pkg.go.dev/text/template
+                type: string
+            required:
+            - provider
+            - query
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

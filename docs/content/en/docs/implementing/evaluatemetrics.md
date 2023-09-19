@@ -16,7 +16,7 @@ or another standard dashboard application that you configure
 or can be retrieved using standard Kubernetes commands.
 
 For an introduction to Keptn metrics, see
-[Getting started with Keptn metrics](../getting-started/metrics).
+[Getting started with Keptn metrics](../intro/usecase_metrics.md).
 
 ## Keptn metric basics
 
@@ -26,6 +26,73 @@ Keptn metrics are implemented with two resources:
   define the metric to report
 * [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) --
   define the configuration for a data provider
+
+### Define KeptnMetricsProvider resources
+
+You must define a
+[KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
+for each instance of each data provider you are using.
+
+Note the following:
+
+* Each `KeptnMetricsProvider` resource is bound to a specific namespace.
+* Each `KeptnMetric` resource must be located in the same namespace
+  as the associated `KeptnMetricsProvider` resource.
+* `KeptnEvaluationDefinition` resources can reference metrics
+  from any namespace in the cluster.
+* To define metrics that can be used in evaluations
+  on all namespaces in the cluster,
+  create `KeptnMetricsProvider` and `KeptnMetric` resources
+  in a centralized namespace
+  such as `keptn-lifecycle-toolkit-system`.
+
+To configure a data provider into your Keptn cluster:
+
+1. Create a secret if your data provider uses one.
+   See
+   [Create secret text](../implementing/tasks/#create-secret-text).
+1. Install and configure each instance of each data provider
+   into your Keptn cluster,
+   following the instructions provided by the data source provider.
+   See
+   [Prepare your cluster for Keptn](../install/k8s.md/#prepare-your-cluster-for-keptn)
+for links.
+   Keptn supports using multiple instances of multiple data providers.
+1. Define a
+   [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
+   resource for each data source.
+
+For example, the `KeptnMetricProvider` resource
+for a Prometheus data source that does not use a secret
+could look like:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus-provider
+  namespace: simplenode-dev
+spec:
+  type: prometheus
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+```
+
+The `KeptnMetricProvider` resource for a Dynatrace provider
+that uses a secret could look like:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: dynatrace-provider
+  namespace: podtato-kubectl
+spec:
+  type: dynatrace
+  targetServer: "<dynatrace-tenant-url>"
+  secretKeyRef:
+    name: dt-api-token
+    key: DT_TOKEN
+```
 
 ## Accessing Metrics via the Kubernetes Custom Metrics API
 

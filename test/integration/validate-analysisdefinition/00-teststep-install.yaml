@@ -1,0 +1,8 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+apply:
+  - analysisdef_good.yaml
+  - analysisdef_good_empty_fail.yaml
+commands:
+  - command: kubectl apply -f analysisdef_bad.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test

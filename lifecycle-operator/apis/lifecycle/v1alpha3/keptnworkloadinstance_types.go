@@ -86,7 +86,7 @@ type KeptnWorkloadInstanceStatus struct {
 }
 
 type ItemStatus struct {
-	// DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+	// DefinitionName is the name of the EvaluationDefinition/TaskDefinition
 	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
@@ -353,9 +353,13 @@ func (w KeptnWorkloadInstance) GenerateTask(taskDefinition KeptnTaskDefinition, 
 			Annotations: taskDefinition.Annotations,
 		},
 		Spec: KeptnTaskSpec{
-			AppName:          w.GetAppName(),
-			WorkloadVersion:  w.GetVersion(),
-			Workload:         w.GetParentName(),
+			Context: TaskContext{
+				WorkloadName:    w.GetParentName(),
+				AppName:         w.GetAppName(),
+				WorkloadVersion: w.GetVersion(),
+				TaskType:        string(checkType),
+				ObjectType:      "Workload",
+			},
 			TaskDefinition:   taskDefinition.Name,
 			Parameters:       TaskParameters{},
 			SecureParameters: SecureParameters{},

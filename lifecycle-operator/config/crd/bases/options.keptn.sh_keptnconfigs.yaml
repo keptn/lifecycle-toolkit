@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
   name: keptnconfigs.options.keptn.sh
 spec:
   group: options.keptn.sh
@@ -37,6 +37,10 @@ spec:
               OTelCollectorUrl:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
+                type: string
+              cloudEventsEndpoint:
+                description: CloudEventsEndpoint can be used to set the endpoint where
+                  Cloud Events should be posted by the lifecycle operator
                 type: string
               keptnAppCreationRequestTimeoutSeconds:
                 default: 30

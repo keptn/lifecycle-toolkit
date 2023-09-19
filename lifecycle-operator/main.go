@@ -24,6 +24,7 @@ import (
 	"os"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
+	ce "github.com/cloudevents/sdk-go/v2"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
@@ -33,6 +34,7 @@ import (
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappversion"
@@ -55,6 +57,7 @@ import (
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -115,7 +118,7 @@ func main() {
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
-	keptnMeters := controllercommon.SetUpKeptnTaskMeters(meter)
+	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
 	go serveMetrics()
@@ -136,74 +139,88 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
-
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:                 scheme,
-		MetricsBindAddress:     metricsAddr,
-		Port:                   9443,
+	opt := ctrl.Options{
+		Scheme: scheme,
+		Metrics: server.Options{
+			BindAddress: metricsAddr,
+		},
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "6b866dd9.keptn.sh",
-		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
-		// when the Manager ends. This requires the binary to immediately end when the
-		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
-		// speeds up voluntary leader transitions as the new leader don't have to wait
-		// LeaseDuration time first.
-		//
-		// In the default scaffold provided, the program ends immediately after
-		// the manager stops, so would be fine to enable this option. However,
-		// if you are doing or is intended to do any operation such as perform cleanups
-		// after the manager stops then its usage might be unsafe.
-		// LeaderElectionReleaseOnCancel: true,
-		ClientDisableCacheFor: disableCacheFor, // due to https://github.com/kubernetes-sigs/controller-runtime/issues/550
-		// We disable secret informer cache so that the operator won't need clusterrole list access to secrets
-	})
+		Client: ctrlclient.Options{
+			Cache: &ctrlclient.CacheOptions{
+				DisableFor: disableCacheFor,
+			},
+		},
+	}
+
+	var webhookBuilder webhook.Builder
+	if !disableWebhook {
+		webhookBuilder = webhook.NewWebhookServerBuilder().
+			LoadCertOptionsFromFlag().
+			SetPort(9443).
+			SetNamespace(env.PodNamespace).
+			SetPodName(env.PodName)
+		opt.WebhookServer = webhookBuilder.GetWebhookServer()
+	}
+
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), opt)
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
 	// Enabling OTel
-	err = controllercommon.GetOtelInstance().InitOtelCollector("")
+	err = telemetry.GetOtelInstance().InitOtelCollector("")
 	if err != nil {
 		setupLog.Error(err, "unable to initialize OTel tracer options")
 	}
 
-	spanHandler := &controllercommon.SpanHandler{}
+	spanHandler := &telemetry.SpanHandler{}
 
-	taskLogger := ctrl.Log.WithName("KeptnTask Controller")
+	// create Cloud Event client
+	ceClient, err := ce.NewClientHTTP()
+	if err != nil {
+		setupLog.Error(err, "failed to create CloudEvent client")
+		os.Exit(1)
+	}
+
+	taskLogger := ctrl.Log.WithName("KeptnTask Controller").V(env.KeptnTaskControllerLogLevel)
+	taskRecorder := mgr.GetEventRecorderFor("keptntask-controller")
 	taskReconciler := &keptntask.KeptnTaskReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           taskLogger.V(env.KeptnTaskControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptntask-controller")),
+		Log:           taskLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
 		Meters:        keptnMeters,
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
 		os.Exit(1)
 	}
 
-	taskDefinitionLogger := ctrl.Log.WithName("KeptnTaskDefinition Controller")
+	taskDefinitionLogger := ctrl.Log.WithName("KeptnTaskDefinition Controller").V(env.KeptnTaskDefinitionControllerLogLevel)
+	taskDefinitionRecorder := mgr.GetEventRecorderFor("keptntaskdefinition-controller")
 	taskDefinitionReconciler := &keptntaskdefinition.KeptnTaskDefinitionReconciler{
 		Client:      mgr.GetClient(),
 		Scheme:      mgr.GetScheme(),
-		Log:         taskDefinitionLogger.V(env.KeptnTaskDefinitionControllerLogLevel),
-		EventSender: controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptntaskdefinition-controller")),
+		Log:         taskDefinitionLogger,
+		EventSender: controllercommon.NewEventMultiplexer(taskDefinitionLogger, taskDefinitionRecorder, ceClient),
 	}
 	if err = (taskDefinitionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
 
-	appLogger := ctrl.Log.WithName("KeptnApp Controller")
+	appLogger := ctrl.Log.WithName("KeptnApp Controller").V(env.KeptnAppControllerLogLevel)
+	appRecorder := mgr.GetEventRecorderFor("keptnapp-controller")
 	appReconciler := &keptnapp.KeptnAppReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           appLogger.V(env.KeptnAppControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnapp-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		Log:           appLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(appLogger, appRecorder, ceClient),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (appReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnApp")
@@ -221,27 +238,29 @@ func main() {
 		os.Exit(1)
 	}
 
-	workloadLogger := ctrl.Log.WithName("KeptnWorkload Controller")
+	workloadLogger := ctrl.Log.WithName("KeptnWorkload Controller").V(env.KeptnWorkloadControllerLogLevel)
+	workloadRecorder := mgr.GetEventRecorderFor("keptnworkload-controller")
 	workloadReconciler := &keptnworkload.KeptnWorkloadReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           workloadLogger.V(env.KeptnWorkloadControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkload-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		Log:           workloadLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(workloadLogger, workloadRecorder, ceClient),
+		TracerFactory: telemetry.GetOtelInstance(),
 	}
 	if err = (workloadReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
 
-	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller")
+	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller").V(env.KeptnWorkloadInstanceControllerLogLevel)
+	workloadInstanceRecorder := mgr.GetEventRecorderFor("keptnworkloadinstance-controller")
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           workloadInstanceLogger.V(env.KeptnWorkloadInstanceControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnworkloadinstance-controller")),
+		Log:           workloadInstanceLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(workloadInstanceLogger, workloadInstanceRecorder, ceClient),
 		Meters:        keptnMeters,
-		TracerFactory: controllercommon.GetOtelInstance(),
+		TracerFactory: telemetry.GetOtelInstance(),
 		SpanHandler:   spanHandler,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
@@ -249,13 +268,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller")
+	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller").V(env.KeptnAppVersionControllerLogLevel)
+	appVersionRecorder := mgr.GetEventRecorderFor("keptnappversion-controller")
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           appVersionLogger.V(env.KeptnAppVersionControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnappversion-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		Log:           appVersionLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(appVersionLogger, appVersionRecorder, ceClient),
+		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
 	}
@@ -264,13 +284,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	evaluationLogger := ctrl.Log.WithName("KeptnEvaluation Controller")
+	evaluationLogger := ctrl.Log.WithName("KeptnEvaluation Controller").V(env.KeptnEvaluationControllerLogLevel)
+	evaluationRecorder := mgr.GetEventRecorderFor("keptnevaluation-controller")
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Log:           evaluationLogger.V(env.KeptnEvaluationControllerLogLevel),
-		EventSender:   controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptnevaluation-controller")),
-		TracerFactory: controllercommon.GetOtelInstance(),
+		Log:           evaluationLogger,
+		EventSender:   controllercommon.NewEventMultiplexer(evaluationLogger, evaluationRecorder, ceClient),
+		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		Namespace:     env.PodNamespace,
 	}
@@ -279,11 +300,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	configLogger := ctrl.Log.WithName("KeptnConfig Controller")
+	configLogger := ctrl.Log.WithName("KeptnConfig Controller").V(env.KeptnOptionsControllerLogLevel)
 	configReconciler := &controlleroptions.KeptnConfigReconciler{
 		Client:              mgr.GetClient(),
 		Scheme:              mgr.GetScheme(),
-		Log:                 configLogger.V(env.KeptnOptionsControllerLogLevel),
+		Log:                 configLogger,
 		DefaultCollectorURL: env.KeptnOptionsCollectorURL,
 	}
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
@@ -313,7 +334,7 @@ func main() {
 	}
 	// +kubebuilder:scaffold:builder
 
-	controllercommon.SetUpKeptnMeters(meter, mgr.GetClient())
+	telemetry.SetUpKeptnMeters(meter, mgr.GetClient())
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")
@@ -324,54 +345,36 @@ func main() {
 		os.Exit(1)
 	}
 	if !disableWebhook {
-		webhookBuilder := webhook.NewWebhookBuilder().
-			SetNamespace(env.PodNamespace).
-			SetPodName(env.PodName).
-			SetManagerProvider(
-				webhook.NewWebhookManagerProvider(
-					mgr.GetWebhookServer().CertDir, "tls.key", "tls.crt"),
-			).
-			SetCertificateWatcher(
-				certificates.NewCertificateWatcher(
-					mgr.GetAPIReader(),
-					mgr.GetWebhookServer().CertDir,
-					env.PodNamespace,
-					certCommon.SecretName,
-					setupLog,
-				),
-			)
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(
+			certificates.NewCertificateWatcher(
+				mgr.GetAPIReader(),
+				webhookBuilder.GetOptions().CertDir,
+				env.PodNamespace,
+				certCommon.SecretName,
+				setupLog,
+			))
 
-		setupLog.Info("starting webhook and manager")
-
-		decoder, err := admission.NewDecoder(mgr.GetScheme())
-		if err != nil {
-			setupLog.Error(err, "unable to initialize decoder")
-			os.Exit(1)
-		}
-
-		if err := webhookBuilder.Run(mgr, map[string]*ctrlWebhook.Admission{
+		setupLog.Info(fmt.Sprintf("%v", webhookBuilder))
+		webhookLogger := ctrl.Log.WithName("Mutating Webhook")
+		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")
+		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
 					Client:      mgr.GetClient(),
 					Tracer:      otel.Tracer("keptn/webhook"),
-					EventSender: controllercommon.NewEventSender(mgr.GetEventRecorderFor("keptn/webhook")),
-					Decoder:     decoder,
-					Log:         ctrl.Log.WithName("Mutating Webhook"),
+					EventSender: controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					Decoder:     admission.NewDecoder(mgr.GetScheme()),
+					Log:         webhookLogger,
 				},
 			},
-		}); err != nil {
-			setupLog.Error(err, "problem running manager")
-			os.Exit(1)
-		}
-
-	} else {
-		flag.Parse()
-		setupLog.Info("starting manager")
-		setupLog.Info("Keptn lifecycle operator is alive")
-		if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-			setupLog.Error(err, "problem running manager")
-			os.Exit(1)
-		}
+		})
+		setupLog.Info("starting webhook")
+	}
+	setupLog.Info("starting manager")
+	setupLog.Info("Keptn lifecycle-operator is alive")
+	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
 	}
 
 }

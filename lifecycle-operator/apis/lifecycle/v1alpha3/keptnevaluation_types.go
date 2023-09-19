@@ -43,7 +43,7 @@ type KeptnEvaluationSpec struct {
 	// EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
 	// which includes the objectives for the KeptnEvaluation.
 	// The KeptnEvaluationDefinition can be
-	// located in the same namespace as the KeptnEvaluation, or in the KLT namespace.
+	// located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
 	// missed evaluation objective, before considering the KeptnEvaluation to be failed.

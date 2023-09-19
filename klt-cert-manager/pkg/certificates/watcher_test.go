@@ -305,9 +305,9 @@ func newFakeClient(objs ...client.Object) client.Reader {
 
 func TestNewCertificateWatcher(t *testing.T) {
 	logger := testr.New(t)
-	client := newFakeClient()
+	fclient := newFakeClient()
 	want := &CertificateWatcher{
-		apiReader:             client,
+		apiReader:             fclient,
 		fs:                    afero.NewOsFs(),
 		namespace:             "default",
 		certificateSecretName: "my-secret",
@@ -316,7 +316,7 @@ func TestNewCertificateWatcher(t *testing.T) {
 		ICertificateHandler:   defaultCertificateHandler{},
 		Log:                   testr.New(t),
 	}
-	got := NewCertificateWatcher(client, "test", "default", "my-secret", logger)
+	got := NewCertificateWatcher(fclient, "test", "default", "my-secret", logger)
 	require.EqualValues(t, got, want)
 
 }

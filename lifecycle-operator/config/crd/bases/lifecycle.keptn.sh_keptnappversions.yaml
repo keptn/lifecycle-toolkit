@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
   name: keptnappversions.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -123,6 +123,8 @@ spec:
                   description: MapCarrier is a TextMapCarrier that uses a map held
                     in memory as a storage medium for propagated key-value pairs.
                   type: object
+                description: PhaseTraceID is a map storing TraceIDs of OpenTelemetry
+                  spans in lifecycle phases
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
@@ -359,7 +361,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -382,7 +384,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -405,7 +407,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -428,7 +430,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       format: date-time
@@ -534,7 +536,7 @@ spec:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -542,7 +544,7 @@ spec:
                 description: PostDeploymentTasks is a list of all tasks to be performed
                   during the post-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -550,7 +552,7 @@ spec:
                 description: PreDeploymentEvaluations is a list of all evaluations
                   to be performed during the pre-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -558,7 +560,7 @@ spec:
                 description: PreDeploymentTasks is a list of all tasks to be performed
                   during the pre-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -636,7 +638,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -667,7 +669,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -698,7 +700,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)
@@ -729,7 +731,7 @@ spec:
                 items:
                   properties:
                     definitionName:
-                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefiniton
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
                       type: string
                     endTime:
                       description: EndTime represents the time at which the Item (Evaluation/Task)

@@ -28,6 +28,12 @@ spec:
   fetchIntervalSeconds: <#-seconds>
   range:
     interval: "<timeframe>"
+  status:
+    properties:
+      value: <resulting value in human-readable language>
+      rawValue: <resulting value, in raw format>
+      errMsg: <error details if the query could not be evaluated>
+      lastUpdated: <time when the status data was last updated>
 ```
 
 ## Fields
@@ -64,6 +70,15 @@ spec:
   * **range**
     * **interval** -- Timeframe for which the metric would be queried.
     Defaults to 5m.
+
+* **status**
+  * Keptn fills in this information when the metric is evaluated.
+    It always records the time the metric was last evaluated.
+    If the evaluation is successful,
+    this stores the result in both human-readable and raw format.
+    If the evaluation is not successful,
+    this stores error details that you can use to understand the problem
+    such as a forbidden code.
 
 ## Usage
 
@@ -115,7 +130,7 @@ Beginning with the `v1alpha3` API version,
 Keptn allows you to define multiple instances of the same data source.
 In earlier versions, you could use multiple data sources
 but only one instance of each.
-Consequently the `v1alpha1` and `v1alpha2` API versions
+Consequently, the `v1alpha1` and `v1alpha2` API versions
 define the `provider` field with the type of the data provider
 (`prometheus`, `dynatrace`, or `dql`)
 rather than the particular name assigned
@@ -141,5 +156,5 @@ spec:
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [KeptnMetricsProvider](metricsprovider.md)
 * Implementing [Keptn Metrics](../implementing/evaluatemetrics.md)
-* [Getting started with Keptn metrics](../getting-started/metrics)
-* Architecture of the [Keptn Metrics Operator](../concepts/architecture/components/metrics-operator/_index.md)
+* [Getting started with Keptn metrics](../intro/usecase_metrics.md)
+* Architecture of the [Keptn Metrics Operator](../architecture/components/metrics-operator/_index.md)

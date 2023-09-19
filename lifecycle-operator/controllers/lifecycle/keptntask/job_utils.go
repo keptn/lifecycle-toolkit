@@ -21,7 +21,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
 		r.Log.Error(err, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition))
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
+		r.EventSender.Emit(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 
@@ -47,7 +47,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	err = r.Client.Create(ctx, job)
 	if err != nil {
 		r.Log.Error(err, "could not create Job")
-		r.EventSender.SendK8sEvent(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateFailed, fmt.Sprintf("could not create Job: %s ", task.Name), "")
+		r.EventSender.Emit(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateFailed, fmt.Sprintf("could not create Job: %s ", task.Name), "")
 		return job.Name, err
 	}
 
@@ -73,24 +73,6 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 		return nil, err
 	}
 	return job, nil
-}
-
-func setupTaskContext(task *klcv1alpha3.KeptnTask) klcv1alpha3.TaskContext {
-	taskContext := klcv1alpha3.TaskContext{}
-
-	if task.Spec.Workload != "" {
-		taskContext.WorkloadName = task.Spec.Workload
-		taskContext.WorkloadVersion = task.Spec.WorkloadVersion
-		taskContext.ObjectType = "Workload"
-
-	} else {
-		taskContext.ObjectType = "Application"
-		taskContext.AppVersion = task.Spec.AppVersion
-	}
-	taskContext.TaskType = string(task.Spec.Type)
-	taskContext.AppName = task.Spec.AppName
-
-	return taskContext
 }
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {

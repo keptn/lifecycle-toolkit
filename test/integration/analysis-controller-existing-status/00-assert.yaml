@@ -1,0 +1,14 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: analysis-sample
+  namespace: testy
+spec:
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+status:
+  storedValues:
+    ready-testy:
+      objectiveReference:
+        name: ready
+        namespace: testy

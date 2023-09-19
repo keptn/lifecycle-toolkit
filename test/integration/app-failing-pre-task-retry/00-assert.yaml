@@ -14,9 +14,10 @@ status:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTask
 spec:
-  app: podtato-head
-  appVersion: '1.3'
-  checkType: pre
+  context:
+    appName: podtato-head
+    appVersion: '1.3'
+    taskType: pre
   retries: 2
   taskDefinition: pre-task-retries
   timeout: 5m0s

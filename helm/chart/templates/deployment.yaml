@@ -1,0 +1,495 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: certificate-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kuberentes.io/instance: certificate-operator
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  {{- include "chart.labels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: keptn-scheduler
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: lifecycle-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: metrics-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+  {{- include "chart.labels" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificate-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/component: manager
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: certificate-operator
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.certificateOperator.replicas }}
+  selector:
+    matchLabels:
+      control-plane: certificate-operator
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        control-plane: certificate-operator
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      containers:
+      - args:
+        - --leader-elect
+        command:
+        - /manager
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LABEL_SELECTOR_KEY
+          value: {{ .Values.certificateOperator.manager.env.labelSelectorKey | quote }}
+        - name: LABEL_SELECTOR_VALUE
+          value: {{ .Values.certificateOperator.manager.env.labelSelectorValue | quote }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.certificateOperator.manager.image.repository }}:{{ .Values.certificateOperator.manager.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.certificateOperator.manager.imagePullPolicy }}
+        name: manager
+        resources: {{- toYaml .Values.certificateOperator.manager.resources | nindent 10
+          }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.certificateOperator.manager.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.certificateOperator.manager.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          readOnlyRootFilesystem: {{ .Values.certificateOperator.manager.containerSecurityContext.readOnlyRootFilesystem
+            }}
+          runAsGroup: {{ .Values.certificateOperator.manager.containerSecurityContext.runAsGroup
+            }}
+          runAsUser: {{ .Values.certificateOperator.manager.containerSecurityContext.runAsUser
+            }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.certificateOperator.manager.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        {{- if .Values.certificateOperator.manager.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.certificateOperator.manager.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 8081
+         initialDelaySeconds: 15
+         periodSeconds: 20
+        {{- end }}
+        {{- if .Values.certificateOperator.manager.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.certificateOperator.manager.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /readyz
+           port: 8081
+         initialDelaySeconds: 5
+         periodSeconds: 10
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: certificate-operator
+      terminationGracePeriodSeconds: 10
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifecycle-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: lifecycle-operator
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.lifecycleOperator.replicas }}
+  selector:
+    matchLabels:
+      control-plane: lifecycle-operator
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        control-plane: lifecycle-operator
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+        metrics.dynatrace.com/port: "2222"
+        metrics.dynatrace.com/scrape: "true"
+    spec:
+      containers:
+      - args:
+        - --leader-elect
+        command:
+        - /manager
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: FUNCTION_RUNNER_IMAGE
+          value: {{ .Values.lifecycleOperator.manager.env.functionRunnerImage | quote }}
+        - name: PYTHON_RUNNER_IMAGE
+          value: {{ .Values.lifecycleOperator.manager.env.pythonRunnerImage | quote }}
+        - name: OTEL_COLLECTOR_URL
+          value: {{ .Values.lifecycleOperator.manager.env.otelCollectorUrl | quote }}
+        - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnAppControllerLogLevel | quote
+            }}
+        - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel
+            | quote }}
+        - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel
+            | quote }}
+        - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel
+            | quote }}
+        - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskControllerLogLevel | quote
+            }}
+        - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel
+            | quote }}
+        - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel
+            | quote }}
+        - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel
+            | quote }}
+        - name: OPTIONS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.manager.env.optionsControllerLogLevel | quote
+            }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.lifecycleOperator.manager.image.repository }}:{{ .Values.lifecycleOperator.manager.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.lifecycleOperator.manager.imagePullPolicy }}
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        - containerPort: 2222
+          name: metrics
+          protocol: TCP
+        resources: {{- toYaml .Values.lifecycleOperator.manager.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          privileged: {{ .Values.lifecycleOperator.manager.containerSecurityContext.privileged
+            }}
+          runAsGroup: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsGroup
+            }}
+          runAsNonRoot: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsNonRoot
+            }}
+          runAsUser: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsUser
+            }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs/
+          name: certs-dir
+        - mountPath: /tmp/metrics-adapter/serving-certs
+          name: adapter-certs-dir
+        {{- if .Values.lifecycleOperator.manager.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 8081
+         initialDelaySeconds: 15
+         periodSeconds: 20
+        {{- end }}
+        {{- if .Values.lifecycleOperator.manager.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /readyz
+           port: 8081
+         initialDelaySeconds: 5
+         periodSeconds: 10
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: lifecycle-operator
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: certs-dir
+      - emptyDir: {}
+        name: adapter-certs-dir
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: metrics-operator
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.metricsOperator.replicas }}
+  selector:
+    matchLabels:
+      control-plane: metrics-operator
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        control-plane: metrics-operator
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      containers:
+      - args:
+        - webhook-server
+        - --leader-elect
+        - --adapter-port=6443
+        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+        - --v=10
+        command:
+        - /manager
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: EXPOSE_KEPTN_METRICS
+          value: {{ .Values.metricsOperator.manager.env.exposeKeptnMetrics | quote }}
+        - name: ENABLE_ANALYSIS
+          value: {{ .Values.metricsOperator.manager.env.enableKeptnAnalysis | quote }}
+        - name: METRICS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.metricsOperator.manager.env.metricsControllerLogLevel | quote
+            }}
+        - name: ANALYSIS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.metricsOperator.manager.env.analysisControllerLogLevel | quote
+            }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.metricsOperator.manager.image.repository }}:{{ .Values.metricsOperator.manager.image.tag
+          | default .Chart.AppVersion }}
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        - containerPort: 9999
+          name: metrics
+          protocol: TCP
+        - containerPort: 6443
+          name: custom-metrics
+          protocol: TCP
+        resources: {{- toYaml .Values.metricsOperator.manager.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.metricsOperator.manager.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.metricsOperator.manager.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          privileged: {{ .Values.metricsOperator.manager.containerSecurityContext.privileged
+            }}
+          runAsGroup: {{ .Values.metricsOperator.manager.containerSecurityContext.runAsGroup
+            }}
+          runAsNonRoot: {{ .Values.metricsOperator.manager.containerSecurityContext.runAsNonRoot
+            }}
+          runAsUser: {{ .Values.metricsOperator.manager.containerSecurityContext.runAsUser
+            }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.metricsOperator.manager.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs/
+          name: certs-dir
+        - mountPath: /tmp/metrics-adapter/serving-certs
+          name: adapter-certs-dir
+        {{- if .Values.metricsOperator.manager.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.metricsOperator.manager.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 8081
+         initialDelaySeconds: 15
+         periodSeconds: 20
+        {{- end }}
+        {{- if .Values.metricsOperator.manager.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.metricsOperator.manager.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /readyz
+           port: 8081
+         initialDelaySeconds: 5
+         periodSeconds: 10
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: metrics-operator
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: certs-dir
+      - emptyDir: {}
+        name: adapter-certs-dir
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    component: scheduler
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.scheduler.replicas }}
+  selector:
+    matchLabels:
+      component: scheduler
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: scheduler
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - command:
+        - /bin/kube-scheduler
+        - --config=/etc/kubernetes/scheduler-config.yaml
+        env:
+        - name: OTEL_COLLECTOR_URL
+          value: {{ .Values.scheduler.scheduler.env.otelCollectorUrl | quote }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.scheduler.scheduler.image.repository }}:{{ .Values.scheduler.scheduler.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.scheduler.scheduler.imagePullPolicy }}
+        name: scheduler
+        resources: {{- toYaml .Values.scheduler.scheduler.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          privileged: {{ .Values.scheduler.scheduler.containerSecurityContext.privileged
+            }}
+          readOnlyRootFilesystem: {{ .Values.scheduler.scheduler.containerSecurityContext.readOnlyRootFilesystem
+            }}
+          runAsNonRoot: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsNonRoot
+            }}
+          runAsUser: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsUser }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        volumeMounts:
+        - mountPath: /etc/kubernetes
+          name: scheduler-config
+          readOnly: true
+        {{- if .Values.scheduler.scheduler.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 10259
+           scheme: HTTPS
+         initialDelaySeconds: 15
+        {{- end }}
+        {{- if .Values.scheduler.scheduler.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /healthz
+           port: 10259
+           scheme: HTTPS
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      serviceAccountName: keptn-scheduler
+      volumes:
+      - configMap:
+          name: scheduler-config
+        name: scheduler-config
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}

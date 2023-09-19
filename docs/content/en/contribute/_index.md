@@ -1,6 +1,6 @@
 ---
 title: Contributing to Keptn
-description: How to contribute to the Keptn projects
+description: How to contribute to the Keptn project
 linktitle: Contributing
 weight: 400
 menu:

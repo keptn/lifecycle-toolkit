@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -19,6 +18,7 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -150,7 +150,16 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 
 	app := controllercommon.GetApp("myapp")
-	r, _, _ := setupReconciler(app)
+	app.Spec.Revision = uint(2)
+	app.Generation = int64(2)
+	appVersion := &lfcv1alpha3.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapp-1.0.0-6b86b273",
+			Namespace: "default",
+		},
+	}
+	r, _, _ := setupReconciler(app, appVersion)
+
 	_, err := r.Reconcile(context.TODO(), ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
@@ -161,21 +170,6 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Nil(t, err)
 
 	keptnappversion := &lfcv1alpha3.KeptnAppVersion{}
-	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
-	require.Nil(t, err)
-
-	err = controllercommon.UpdateAppRevision(r.Client, "myapp", 2)
-	require.Nil(t, err)
-
-	_, err = r.Reconcile(context.TODO(), ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: "default",
-			Name:      "myapp",
-		},
-	})
-
-	require.Nil(t, err)
-
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-d4735e3a"}, keptnappversion)
 	require.Nil(t, err)
 

@@ -82,8 +82,8 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-.PHONY: test
-test: manifests fmt vet generate envtest ## Run tests.
+.PHONY: unit-test
+unit-test: manifests fmt vet generate envtest ## Run tests.
 	go test ./cmd/... -v -coverprofile cover-cmd.out
 	go test ./apis/... -v -coverprofile cover-apis.out
 	go test ./controllers/... -v -coverprofile cover-pkg.out

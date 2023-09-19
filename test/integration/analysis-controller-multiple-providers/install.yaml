@@ -2,40 +2,33 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   name: value-1
-  namespace: $NAMESPACE
 spec:
   provider:
     name: my-first-mocked-provider
-    namespace: $NAMESPACE
   query: 'query-1'
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   name: value-2
-  namespace: $NAMESPACE
 spec:
   provider:
     name: my-second-mocked-provider
-    namespace: $NAMESPACE
   query: 'query-2'
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   name: value-3
-  namespace: $NAMESPACE
 spec:
   provider:
     name: my-third-mocked-provider
-    namespace: $NAMESPACE
   query: 'query-3'
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
-  namespace: $NAMESPACE
 spec:
   objectives:
     - analysisValueTemplateRef:
@@ -80,7 +73,6 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
   name: analysis-sample
-  namespace: $NAMESPACE
 spec:
   timeframe:
     from: 2023-09-14T07:33:19Z
@@ -89,13 +81,11 @@ spec:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
-    namespace: $NAMESPACE
 ---
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: my-first-mocked-provider
-  namespace: $NAMESPACE
 spec:
   type: prometheus
   targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
@@ -104,7 +94,6 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: my-second-mocked-provider
-  namespace: $NAMESPACE
 spec:
   type: prometheus
   targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
@@ -113,7 +102,6 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: my-third-mocked-provider
-  namespace: $NAMESPACE
 spec:
   type: prometheus
   targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"

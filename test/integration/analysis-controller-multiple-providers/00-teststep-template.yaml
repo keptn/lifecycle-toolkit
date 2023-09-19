@@ -6,4 +6,4 @@ commands:
   #  substitutes current time and namespace, making sure they are changed to env var first
   # to prevent bad files in case of a test interrupt
   - script: |
-      envsubst < install.yaml | kubectl apply -f -
+      envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE

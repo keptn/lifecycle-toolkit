@@ -39,7 +39,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcileDeployment(ctx context.Contex
 		workloadInstance.Status.DeploymentStatus = apicommon.StateProgressing
 	}
 
-	err = r.Client.Update(ctx, workloadInstance)
+	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

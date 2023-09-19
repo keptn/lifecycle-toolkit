@@ -185,7 +185,7 @@ func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(c
 		workloadInstance.SetEndTime()
 	}
 
-	err := r.Client.Update(ctx, workloadInstance)
+	err := r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err

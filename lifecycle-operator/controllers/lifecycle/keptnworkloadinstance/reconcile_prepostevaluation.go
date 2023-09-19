@@ -42,7 +42,7 @@ func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostEvaluation(ctx context
 	}
 
 	// Write Status Field
-	err = r.Client.Update(ctx, workloadInstance)
+	err = r.Client.Status().Update(ctx, workloadInstance)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

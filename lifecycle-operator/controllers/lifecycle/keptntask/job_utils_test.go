@@ -36,7 +36,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.Nil(t, err)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Update(context.TODO(), taskDefinition)
+	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -108,7 +108,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	require.Nil(t, err)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Update(context.TODO(), taskDefinition)
+	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{

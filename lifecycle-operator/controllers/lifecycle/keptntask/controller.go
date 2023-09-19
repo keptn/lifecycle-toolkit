@@ -82,7 +82,7 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	task.SetStartTime()
 
 	defer func() {
-		err := r.Client.Update(ctx, task)
+		err := r.Client.Status().Update(ctx, task)
 		if err != nil {
 			r.Log.Error(err, "could not update KeptnTask status reference for: "+task.Name)
 		}

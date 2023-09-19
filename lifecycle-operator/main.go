@@ -371,7 +371,7 @@ func main() {
 		setupLog.Info("starting webhook")
 	}
 	setupLog.Info("starting manager")
-	setupLog.Info("Keptn metrics-operator is alive")
+	setupLog.Info("Keptn lifecycle-operator is alive")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)

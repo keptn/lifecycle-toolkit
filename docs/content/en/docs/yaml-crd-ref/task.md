@@ -120,9 +120,8 @@ kubectl get pods
 ```
 
 Each time you want to rerun the `KeptnTask` resource,
-you must update the follow fields
-to create a unique `KeptnTask` name
-the `KeptnTask` name needs to be unique, update the follow fields:
+you must update the following fields
+to create a unique `KeptnTask` resource:
 
 * `name`
 * `spec.appVersion`

@@ -1,7 +1,7 @@
 ---
 title: OpenTelemetry observability
 description: How to standardize access to OpenTelemetry observability data
-weight: 140
+weight: 40
 ---
 
 
@@ -116,6 +116,10 @@ To install Prometheus into the `monitoring` namespace,
 using the default configuration included with Keptn,
 use the following commands.
 Use similar commands if you define a different configuration::
+
+> **Note**
+You must clone  the `lifecycle-toolkit` repository and `cd` into the correct directory
+(`examples/support/observability`) before running the following commands.
 
 ```shell
 kubectl create namespace monitoring

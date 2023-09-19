@@ -3,6 +3,8 @@ package converter
 import (
 	"fmt"
 	"math"
+	"regexp"
+	"strings"
 
 	"gopkg.in/inf.v0"
 )
@@ -27,8 +29,20 @@ func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
 	return fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
 }
 
+func NewUnsupportedResourceNameErr(name string) error {
+	return fmt.Errorf(
+		"unsupported resource name: %s. Provided reosource name must match the pattern %s and must not have more than %d characters.",
+		name,
+		K8sResourceNameRegexp,
+		MaxResourceNameLength,
+	)
+}
+
 const MaxInt = math.MaxInt
 const MinInt = -MaxInt - 1
+
+const MaxResourceNameLength = 253
+const K8sResourceNameRegexp = "^[a-z0-9]([-a-z0-9.]*[a-z0-9])?$"
 
 type Operator struct {
 	Value     *inf.Dec
@@ -46,4 +60,33 @@ func isGreaterOrEqual(op string) bool {
 
 func isLessOrEqual(op string) bool {
 	return op == "<" || op == "<="
+}
+
+func ValidateResourceName(name string) error {
+	pattern := "^[a-z0-9]([-a-z0-9.]*[a-z0-9])?$"
+
+	// Compile the regular expression.
+	regex := regexp.MustCompile(pattern)
+
+	// Check if the provided name matches the pattern.
+	if !regex.MatchString(name) || len(name) > MaxResourceNameLength {
+		return NewUnsupportedResourceNameErr(name)
+	}
+	return nil
+}
+
+func ConvertResourceName(name string) string {
+	// Replace non-alphanumeric characters with '-'
+	re := regexp.MustCompile("[^a-z0-9]+")
+	normalized := re.ReplaceAllString(strings.ToLower(name), "-")
+
+	// Remove leading and trailing '-'
+	normalized = strings.Trim(normalized, "-")
+
+	// Ensure the name is no longer than 253 characters
+	if len(normalized) > MaxResourceNameLength {
+		normalized = normalized[:MaxResourceNameLength]
+	}
+
+	return normalized
 }

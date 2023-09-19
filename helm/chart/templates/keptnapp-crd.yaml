@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -184,7 +184,7 @@ spec:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -192,15 +192,15 @@ spec:
                 description: PostDeploymentTasks is a list of all tasks to be performed
                   during the post-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations to
-                  be performed during the pre-deployment phase of the KeptnApp. The
-                  items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the KLT namespace.
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -208,7 +208,7 @@ spec:
                 description: PreDeploymentTasks is a list of all tasks to be performed
                   during the pre-deployment phase of the KeptnApp. The items of this
                   list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the KLT namespace.
+                  namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -227,8 +227,8 @@ spec:
                 description: Workloads is a list of all KeptnWorkloads that are part
                   of the KeptnApp.
                 items:
-                  description: KeptnWorkloadRef refers to a KeptnWorkload that is part
-                    of a KeptnApp
+                  description: KeptnWorkloadRef refers to a KeptnWorkload that is
+                    part of a KeptnApp
                   properties:
                     name:
                       description: Name is the name of the KeptnWorkload.
@@ -257,9 +257,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

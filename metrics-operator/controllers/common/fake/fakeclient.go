@@ -14,7 +14,7 @@ import (
 // NewClient returns a new controller-runtime fake Client configured with the Operator's scheme, and initialized with objs.
 func NewClient(objs ...client.Object) client.Client {
 	setupSchemes()
-	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(objs...).Build()
+	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithStatusSubresource(objs...).WithObjects(objs...).Build()
 }
 
 func setupSchemes() {

@@ -11,6 +11,7 @@ import (
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -75,28 +76,109 @@ func TestProvidersPool(t *testing.T) {
 
 	analysis, analysisDef, template, provider := getTestCRDs()
 
+	provider2 := metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-provider",
+			Namespace: "default2",
+		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type:         "prometheus",
+			TargetServer: "localhost:2000",
+		},
+	}
+
+	template2 := metricsapi.AnalysisValueTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-template",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisValueTemplateSpec{
+			Provider: metricsapi.ObjectReference{
+				Name: "my-provider",
+			},
+			Query: "this is a {{.good}} query{{.dot}}",
+		},
+	}
+
+	analysisDef2 := metricsapi.AnalysisDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis-def",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisDefinitionSpec{
+			Objectives: []metricsapi.Objective{
+				{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
+						Name: "my-template",
+					},
+					Weight:       1,
+					KeyObjective: false,
+				},
+			},
+			TotalScore: metricsapi.TotalScore{
+				PassPercentage:    0,
+				WarningPercentage: 0,
+			},
+		},
+	}
+
+	template3 := metricsapi.AnalysisValueTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-template",
+			Namespace: "default2",
+		},
+		Spec: metricsapi.AnalysisValueTemplateSpec{
+			Provider: metricsapi.ObjectReference{
+				Name:      "my-provider",
+				Namespace: "default",
+			},
+			Query: "this is a {{.good}} query{{.dot}}",
+		},
+	}
+
 	provider.Spec.Type = "mock-provider"
+	provider2.Spec.Type = "mock-provider"
 
 	testCases := []struct {
 		name           string
 		expectedErr    string
 		mockClient     client.Client
+		analysisDef    metricsapi.AnalysisDefinition
 		providerResult *metricstypes.ProviderRequest
 	}{
 
 		{
 			name:        "MissingTemplate",
 			expectedErr: "analysisvaluetemplates.metrics.keptn.sh \"my-template\" not found",
+			analysisDef: analysisDef,
 			mockClient:  fake2.NewClient(&analysis, &analysisDef),
 		},
 		{
 			name:        "MissingProvider",
 			expectedErr: "keptnmetricsproviders.metrics.keptn.sh \"my-provider\" not found",
+			analysisDef: analysisDef,
 			mockClient:  fake2.NewClient(&analysis, &analysisDef, &template),
 		},
 		{
-			name:       "Success",
-			mockClient: fake2.NewClient(&analysis, &analysisDef, &template, &provider),
+			name:        "Success",
+			mockClient:  fake2.NewClient(&analysis, &analysisDef, &template, &provider),
+			analysisDef: analysisDef,
+			providerResult: &metricstypes.ProviderRequest{
+				Query: "this is a good query.",
+			},
+		},
+		{
+			name:        "Success - provider in same namespace",
+			mockClient:  fake2.NewClient(&analysis, &analysisDef, &template2, &provider2),
+			analysisDef: analysisDef,
+			providerResult: &metricstypes.ProviderRequest{
+				Query: "this is a good query.",
+			},
+		},
+		{
+			name:        "Success - analysisValueTemplate in same namespace",
+			mockClient:  fake2.NewClient(&analysis, &analysisDef2, &template3, &provider),
+			analysisDef: analysisDef2,
 			providerResult: &metricstypes.ProviderRequest{
 				Query: "this is a good query.",
 			},
@@ -118,9 +200,9 @@ func TestProvidersPool(t *testing.T) {
 				IObjectivesEvaluator: mockEvaluator,
 				Client:               tc.mockClient,
 				log:                  mockLogger,
-				Namespace:            "default",
+				Namespace:            "default2",
 				Objectives: map[int][]metricsapi.Objective{
-					1: analysisDef.Spec.Objectives,
+					1: tc.analysisDef.Spec.Objectives,
 				},
 				Analysis: &analysis,
 				results:  resultChan,

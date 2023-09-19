@@ -127,11 +127,11 @@ func TestKeptnMetric_validateRangeInterval(t *testing.T) {
 			var err error
 			switch tt.verb {
 			case "create":
-				err = s.ValidateCreate()
+				_, err = s.ValidateCreate()
 			case "update":
-				err = s.ValidateUpdate(tt.oldSpec)
+				_, err = s.ValidateUpdate(tt.oldSpec)
 			case "delete":
-				err = s.ValidateDelete()
+				_, err = s.ValidateDelete()
 			}
 			if tt.want == nil {
 				require.Nil(t, err)
@@ -474,11 +474,11 @@ func TestKeptnMetric_validateRangeStep(t *testing.T) {
 			var err error
 			switch tt.verb {
 			case "create":
-				err = s.ValidateCreate()
+				_, err = s.ValidateCreate()
 			case "update":
-				err = s.ValidateUpdate(tt.oldSpec)
+				_, err = s.ValidateUpdate(tt.oldSpec)
 			case "delete":
-				err = s.ValidateDelete()
+				_, err = s.ValidateDelete()
 			}
 			if tt.want == nil {
 				require.Nil(t, err)

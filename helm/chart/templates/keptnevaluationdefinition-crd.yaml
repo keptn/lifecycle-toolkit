@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -146,18 +146,18 @@ spec:
             properties:
               objectives:
                 description: Objectives is a list of objectives that have to be met
-                  for a KeptnEvaluation referencing this KeptnEvaluationDefinition to
-                  be successful.
+                  for a KeptnEvaluation referencing this KeptnEvaluationDefinition
+                  to be successful.
                 items:
                   properties:
                     evaluationTarget:
-                      description: EvaluationTarget specifies the target value for the
-                        references KeptnMetric. Needs to start with either '<' or '>',
-                        followed by the target value (e.g. '<10').
+                      description: EvaluationTarget specifies the target value for
+                        the references KeptnMetric. Needs to start with either '<'
+                        or '>', followed by the target value (e.g. '<10').
                       type: string
                     keptnMetricRef:
-                      description: KeptnMetricRef references the KeptnMetric that should
-                        be evaluated.
+                      description: KeptnMetricRef references the KeptnMetric that
+                        should be evaluated.
                       properties:
                         name:
                           description: Name is the name of the referenced KeptnMetric.
@@ -185,9 +185,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

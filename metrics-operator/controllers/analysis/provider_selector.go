@@ -41,7 +41,6 @@ func (ps ProvidersPool) StartProviders(ctx context.Context, numJobs int) {
 		ps.providers[provider] = channel
 		go ps.Evaluate(ctx, provider, channel)
 	}
-
 }
 
 func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
@@ -64,8 +63,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			if err != nil {
 				ps.log.Error(err, "Failed to get AnalysisValueTemplate")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
-				ps.cancel()
-				return
+				continue
 			}
 
 			providerRef := &metricsapi.KeptnMetricsProvider{}
@@ -79,20 +77,18 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			if err != nil {
 				ps.log.Error(err, "Failed to get KeptnMetricsProvider")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
-				ps.cancel()
-				return
+				continue
 			}
 
 			templatedQuery, err := generateQuery(templ.Spec.Query, ps.Analysis.Spec.Args)
 			if err != nil {
 				ps.log.Error(err, "Failed to substitute args in AnalysisValueTemplate")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
-				ps.cancel()
-				return
+				continue
 			}
 			//send job to provider solver
 			ps.providers[providerRef.Spec.Type] <- metricstypes.ProviderRequest{
-				Objective: &j,
+				Objective: j,
 				Query:     templatedQuery,
 				Provider:  providerRef,
 			}

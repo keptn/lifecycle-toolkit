@@ -72,6 +72,44 @@ func TestWorkersPool_CollectAnalysisResults(t *testing.T) {
 	require.Equal(t, res2, results["t2"])
 }
 
+func TestWorkersPool_CollectAnalysisResultsWithError(t *testing.T) {
+	// Create a fake WorkersPool instance for testing
+	resChan := make(chan metricsapi.ProviderResult, 2)
+	fakePool := WorkersPool{
+		IProvidersPool: ProvidersPool{
+			results: resChan,
+		},
+		numJobs: 2,
+	}
+
+	res1 := metricsapi.ProviderResult{
+		Objective: metricsapi.ObjectReference{Name: "t1"},
+		Value:     "result1",
+		ErrMsg:    "",
+	}
+
+	res2 := metricsapi.ProviderResult{
+		Objective: metricsapi.ObjectReference{Name: "t2"},
+		Value:     "result2",
+		ErrMsg:    "unexpected error",
+	}
+
+	// Create and send mock results to the results channel
+	go func() {
+		time.Sleep(time.Second)
+		resChan <- res1
+		resChan <- res2
+	}()
+
+	// Collect the results
+	results, err := fakePool.CollectAnalysisResults(context.TODO())
+
+	// Check the collected results
+	require.NotNil(t, err)
+	require.Equal(t, res1, results["t1"])
+	require.Equal(t, res2, results["t2"])
+}
+
 func TestWorkersPool_CollectAnalysisResultsTimeout(t *testing.T) {
 	// Create a fake WorkersPool instance for testing
 	resChan := make(chan metricsapi.ProviderResult, 2)
